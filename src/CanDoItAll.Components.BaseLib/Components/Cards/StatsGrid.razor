@@ -1,0 +1,16 @@
+@namespace CanDoItAll.Components.BaseLib
+@inherits StyledComponentBase
+
+<Grid Gap="LayoutGap.Medium"
+      ColumnsMd="2"
+      ColumnsXl="4"
+      Class="@Class"
+      Style="@Style"
+      @attributes="AdditionalAttributes">
+    @ChildContent
+</Grid>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
