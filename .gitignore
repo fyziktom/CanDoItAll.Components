@@ -7,6 +7,20 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
+output
+.codex/live-targets
+.codex/live-runner
+.codex/runlogs
+.codex/tmp
+.codex/temp
+.codex-artifacts
+.codex-tmp
+.codex-temp
+.playwright-mcp
+evidence
+codex/bundles/input/
+codex/bundles/realistic-project-memory-validation/validation/loader-stdout.log
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -27,6 +41,11 @@ bld/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+.artifacts/
+!Templates/Processes/processes/business-plan-development/artifacts/
+!Templates/Processes/processes/business-plan-development/artifacts/*.json
+!Templates/Processes/processes/business-plan-development/artifacts/*.md
+.vs/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
@@ -35,9 +54,6 @@ ScaffoldingReadMe.txt
 *.nupkg
 # NuGet Symbol Packages
 *.snupkg
-
-# dotenv environment variables file
-.env
 
 # Others
 ~$*
@@ -55,3 +71,15 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Node
+node_modules/
+
+
+output
+.mcp-state/
+.playwright
+.playwright-cli
+
+.codex-obj
+CanDoItAll.Mcp.ProjectStructure.settings.local.json
