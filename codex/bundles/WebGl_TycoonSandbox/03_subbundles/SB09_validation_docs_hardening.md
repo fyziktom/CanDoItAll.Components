@@ -1,5 +1,9 @@
 # SB09 - Validation, docs, and hardening
 
+## Status
+
+Completed. Proof: `bundle://proof/SB09/manifest.md`.
+
 ## Build validation
 
 Run:

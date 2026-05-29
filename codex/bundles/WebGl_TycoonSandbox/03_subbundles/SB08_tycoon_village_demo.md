@@ -1,5 +1,9 @@
 # SB08 - Generic tycoon village demo
 
+## Status
+
+Completed. Proof: `bundle://proof/SB08/manifest.md`.
+
 ## Goal
 
 Render a small generic village scene using repository GLB assets and the new generic scene contracts.

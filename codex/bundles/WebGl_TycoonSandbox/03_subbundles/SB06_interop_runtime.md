@@ -1,5 +1,9 @@
 # SB06 - Generic interop runtime
 
+## Status
+
+Completed. Proof: `bundle://proof/SB06/manifest.md`.
+
 ## Goal
 
 Add a separate generic WebGL scene runtime, keeping workbench runtime intact.

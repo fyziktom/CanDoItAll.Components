@@ -1,0 +1,244 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+@page "/tycoon-village"
+
+<PageTitle>WebGL Tycoon Village</PageTitle>
+
+<div class="webgl-page webgl-page--fill">
+    <PageScaffold MaxWidthClass="max-w-full" FillHeight="true">
+        <Header>
+            <PageHeader Eyebrow="Browser proof" Title="Generic Tycoon Village" Description="Domain-neutral scene rendering with GLB assets, fallback primitives, symbols, hover, selection, and deterministic snapshots.">
+                <Actions>
+                    <Button Text="Fit" Icon="center_focus_weak" Size="ButtonSize.Small" Click="@FitViewAsync" />
+                    <Button Text="Reset" Icon="restart_alt" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ResetCameraAsync" />
+                    <Button Text="@SymbolsButtonText" Icon="@SymbolsButtonIcon" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ToggleSymbols" />
+                    <Button Text="@LabelsButtonText" Icon="@LabelsButtonIcon" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ToggleLabels" />
+                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofSnapshotAsync" />
+                </Actions>
+            </PageHeader>
+        </Header>
+
+        <ChildContent>
+            <div class="webgl-village-workspace">
+                <section class="webgl-village-stage" data-testid="webgl-village-stage">
+                    <WebGlSceneView @ref="sceneView"
+                                    Scene="@scene"
+                                    Options="@runtimeOptions"
+                                    AriaLabel="Generic tycoon village WebGL scene"
+                                    SelectionChanged="HandleSelectionChanged"
+                                    HoverChanged="HandleHoverChanged"
+                                    RuntimeReady="HandleRuntimeReady"
+                                    RuntimeError="HandleRuntimeError" />
+                </section>
+
+                <aside class="webgl-village-panel" aria-label="Village inspector">
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Inspector</span>
+                            <StatusBadge Text="@RuntimeStatusText" Tone="@RuntimeStatusTone" />
+                        </div>
+
+                        @if (selectedObject is not null)
+                        {
+                            <div class="webgl-selected-object">
+                                <p class="webgl-selected-object__eyebrow">@selectedObject.Kind / @selectedObject.Family</p>
+                                <h2>@selectedObject.Title</h2>
+                                <p>@selectedObject.Description</p>
+                                <dl>
+                                    <div>
+                                        <dt>Object id</dt>
+                                        <dd data-testid="webgl-selected-object-id">@selectedObject.Id</dd>
+                                    </div>
+                                    <div>
+                                        <dt>Asset</dt>
+                                        <dd>@selectedObject.AssetId</dd>
+                                    </div>
+                                    <div>
+                                        <dt>Tags</dt>
+                                        <dd>@string.Join(", ", selectedObject.Tags)</dd>
+                                    </div>
+                                </dl>
+                                <Button Text="Focus selected" Icon="filter_center_focus" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@FocusSelectedAsync" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="webgl-empty-panel">
+                                <p data-testid="webgl-selected-object-id">none</p>
+                                <span>Select a building, prop, marker, or agent in the scene.</span>
+                            </div>
+                        }
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Proof Snapshot</span>
+                            <StatusBadge Text="deterministic" Tone="success" />
+                        </div>
+                        <dl class="webgl-proof-grid">
+                            <div>
+                                <dt>Objects</dt>
+                                <dd data-testid="webgl-proof-object-count">@DisplayObjectCount</dd>
+                            </div>
+                            <div>
+                                <dt>Symbols</dt>
+                                <dd data-testid="webgl-proof-symbol-count">@DisplaySymbolCount</dd>
+                            </div>
+                            <div>
+                                <dt>Loaded assets</dt>
+                                <dd data-testid="webgl-proof-loaded-asset-count">@DisplayLoadedAssetCount</dd>
+                            </div>
+                            <div>
+                                <dt>Fallbacks</dt>
+                                <dd data-testid="webgl-proof-fallback-count">@DisplayFallbackCount</dd>
+                            </div>
+                        </dl>
+                        <p class="webgl-proof-note" data-testid="webgl-hovered-object-id">Hover: @(string.IsNullOrWhiteSpace(hoveredObjectId) ? "none" : hoveredObjectId)</p>
+                        @if (!string.IsNullOrWhiteSpace(runtimeError))
+                        {
+                            <p class="webgl-runtime-error" data-testid="webgl-runtime-error">@runtimeError</p>
+                        }
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Scene Contents</span>
+                            <StatusBadge Text="@($"{scene.Objects.Count} objects")" Tone="info" />
+                        </div>
+                        <div class="webgl-object-list">
+                            @foreach (var item in scene.Objects)
+                            {
+                                <button type="button"
+                                        class="@(selectedObject?.Id == item.Id ? "webgl-object-list__item is-active" : "webgl-object-list__item")"
+                                        @onclick="() => SelectFromListAsync(item.Id)">
+                                    <span>@item.Title</span>
+                                    <small>@item.Kind</small>
+                                </button>
+                            }
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </ChildContent>
+    </PageScaffold>
+</div>
+
+@code {
+    private readonly WebGlSceneModel scene = WebGlSandboxVillageSceneFactory.Create();
+    private readonly WebGlRuntimeOptions runtimeOptions = new()
+    {
+        DeterministicMode = true,
+        ShowDiagnosticsPanel = true,
+        ShowLabels = false,
+        ShowSymbols = true,
+        AutoFitOnCreate = true
+    };
+
+    private WebGlSceneView? sceneView;
+    private WebGlSceneObject? selectedObject;
+    private WebGlSceneProofSnapshot? latestSnapshot;
+    private string hoveredObjectId = string.Empty;
+    private string runtimeStatusText = "initializing";
+    private string runtimeStatusTone = "info";
+    private string runtimeError = string.Empty;
+
+    private string RuntimeStatusText => runtimeStatusText;
+    private string RuntimeStatusTone => runtimeStatusTone;
+    private string SymbolsButtonText => scene.UiState.ShowSymbols ? "Symbols on" : "Symbols off";
+    private string SymbolsButtonIcon => scene.UiState.ShowSymbols ? "visibility" : "visibility_off";
+    private string LabelsButtonText => scene.UiState.ShowLabels ? "Labels on" : "Labels off";
+    private string LabelsButtonIcon => scene.UiState.ShowLabels ? "label" : "label_off";
+    private int DisplayObjectCount => latestSnapshot?.ObjectCount ?? scene.Objects.Count;
+    private int DisplaySymbolCount => latestSnapshot?.SymbolCount ?? scene.Objects.Sum(static item => item.Symbols.Count);
+    private int DisplayLoadedAssetCount => latestSnapshot?.LoadedAssetCount ?? 0;
+    private int DisplayFallbackCount => latestSnapshot?.FallbackObjectCount ?? 0;
+
+    private async Task FitViewAsync()
+    {
+        if (sceneView is not null)
+        {
+            await sceneView.FitViewAsync();
+        }
+    }
+
+    private async Task ResetCameraAsync()
+    {
+        if (sceneView is not null)
+        {
+            await sceneView.ResetCameraAsync();
+        }
+    }
+
+    private async Task FocusSelectedAsync()
+    {
+        if (sceneView is not null && selectedObject is not null)
+        {
+            await sceneView.FocusObjectAsync(selectedObject.Id);
+        }
+    }
+
+    private async Task SelectFromListAsync(string objectId)
+    {
+        selectedObject = scene.Objects.FirstOrDefault(item => item.Id == objectId);
+        scene.UiState.Selection.SelectedObjectIds = selectedObject is null ? [] : [selectedObject.Id];
+        scene.UiState.Selection.PrimaryObjectId = selectedObject?.Id ?? string.Empty;
+        scene.UiState.Revision += 1;
+        if (sceneView is not null && selectedObject is not null)
+        {
+            await sceneView.FocusObjectAsync(selectedObject.Id);
+        }
+    }
+
+    private void ToggleSymbols()
+    {
+        scene.UiState.ShowSymbols = !scene.UiState.ShowSymbols;
+        runtimeOptions.ShowSymbols = scene.UiState.ShowSymbols;
+        scene.UiState.Revision += 1;
+    }
+
+    private void ToggleLabels()
+    {
+        scene.UiState.ShowLabels = !scene.UiState.ShowLabels;
+        runtimeOptions.ShowLabels = scene.UiState.ShowLabels;
+        scene.UiState.Revision += 1;
+    }
+
+    private async Task CaptureProofSnapshotAsync()
+    {
+        if (sceneView is null)
+        {
+            return;
+        }
+
+        latestSnapshot = await sceneView.GetProofSnapshotAsync();
+    }
+
+    private Task HandleSelectionChanged(WebGlSceneSelectionChangedEventArgs args)
+    {
+        selectedObject = scene.Objects.FirstOrDefault(item => item.Id == args.PrimaryObjectId);
+        scene.UiState.Selection.SelectedObjectIds = [.. args.SelectedObjectIds];
+        scene.UiState.Selection.PrimaryObjectId = args.PrimaryObjectId ?? string.Empty;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task HandleHoverChanged(WebGlSceneHoverChangedEventArgs args)
+    {
+        hoveredObjectId = args.ObjectId ?? string.Empty;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task HandleRuntimeReady(WebGlRuntimeReadyEventArgs args)
+    {
+        runtimeStatusText = "ready";
+        runtimeStatusTone = "success";
+        runtimeError = string.Empty;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task HandleRuntimeError(WebGlRuntimeErrorEventArgs args)
+    {
+        runtimeStatusText = "runtime error";
+        runtimeStatusTone = "danger";
+        runtimeError = args.Detail;
+        return InvokeAsync(StateHasChanged);
+    }
+}

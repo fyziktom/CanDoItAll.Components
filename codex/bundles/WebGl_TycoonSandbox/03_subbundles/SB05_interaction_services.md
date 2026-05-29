@@ -1,5 +1,9 @@
 # SB05 - Interaction contracts and services
 
+## Status
+
+Completed. Proof: `repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneSelectionChangedEventArgs.cs` and `bundle://proof/SB08/browser/webgl-tycoon-village-final-proof.json`.
+
 ## Goal
 
 Add generic interaction contracts without breaking workbench-specific events.

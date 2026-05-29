@@ -1,0 +1,44 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+@page "/asset-catalog"
+
+<PageTitle>WebGL Asset Catalog</PageTitle>
+
+<div class="webgl-page">
+    <PageScaffold MaxWidthClass="max-w-[1320px]">
+        <Header>
+            <PageHeader Eyebrow="WebGL assets" Title="Sandbox catalog" Description="Logical asset ids resolve to repository GLB files where possible, with primitive fallbacks for missing model categories." />
+        </Header>
+        <ChildContent>
+            <div class="webgl-table-shell">
+                <table class="webgl-asset-table">
+                    <thead>
+                        <tr>
+                            <th>Asset id</th>
+                            <th>Format</th>
+                            <th>Primitive</th>
+                            <th>URI</th>
+                            <th>Tags</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var asset in catalog.Assets)
+                        {
+                            <tr>
+                                <td><code>@asset.Id</code></td>
+                                <td>@asset.Format</td>
+                                <td>@asset.PrimitiveKind</td>
+                                <td class="webgl-asset-table__uri">@asset.Uri</td>
+                                <td>@string.Join(", ", asset.Tags)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </ChildContent>
+    </PageScaffold>
+</div>
+
+@code {
+    private readonly WebGlAssetCatalog catalog = WebGlSandboxAssetCatalogFactory.Create();
+}
+
