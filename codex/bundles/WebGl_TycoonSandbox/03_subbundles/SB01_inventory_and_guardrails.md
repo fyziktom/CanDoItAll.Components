@@ -1,5 +1,12 @@
 # SB01 - Inventory and guardrails
 
+## Status
+
+Completed. Inventory artifact and prepared gate transcript are recorded at:
+
+- `repo://artifacts/webgl-symbolic-tycoon-sandbox/01_INVENTORY.md`
+- `bundle://proof/SB01/transcripts/prepared-validation.txt`
+
 ## Goal
 
 Before coding, inspect current WebGL implementation and identify all files that must remain compatible.

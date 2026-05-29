@@ -1,0 +1,54 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+@page "/tycoon-village"
+
+<PageTitle>WebGL Tycoon Village</PageTitle>
+
+<div class="webgl-page webgl-page--fill">
+    <PageScaffold MaxWidthClass="max-w-full" FillHeight="true">
+        <Header>
+            <PageHeader Eyebrow="Large-screen browser proof" Title="Generic Tycoon Village" Description="Domain-neutral scene rendering with asset profiles, drag, motion, patching, export/import, and deterministic snapshots.">
+                <Actions>
+                    <Button Text="Primitive" Icon="deployed_code" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.Primitive)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.Primitive))" />
+                    <Button Text="Mixed GLB" Icon="view_in_ar" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.MixedGlb)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.MixedGlb))" />
+                    <Button Text="High GLB" Icon="texture" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.HighDetailGlb)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.HighDetailGlb))" />
+                    <Button Text="Fit" Icon="center_focus_weak" Size="ButtonSize.Small" Click="@FitViewAsync" />
+                    <Button Text="Runner motion" Icon="directions_run" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@MoveRunnerToPlazaAsync" />
+                    <Button Text="Export" Icon="ios_share" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ExportSceneStateAsync" />
+                    <Button Text="Import" Icon="input" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ImportSceneStateAsync" />
+                    <Button Text="Missing asset" Icon="report" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Warning" Variant="Variant.Outlined" Click="@TriggerMissingAssetFallbackAsync" />
+                    <Button Text="@SymbolsButtonText" Icon="@SymbolsButtonIcon" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ToggleSymbols" />
+                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofSnapshotAsync" />
+                </Actions>
+            </PageHeader>
+        </Header>
+
+        <ChildContent>
+            <div class="webgl-village-workspace">
+                <section class="webgl-village-stage" data-testid="webgl-village-stage">
+                    <WebGlSceneView @ref="sceneView"
+                                    Scene="@scene"
+                                    Options="@runtimeOptions"
+                                    AriaLabel="Generic tycoon village WebGL scene"
+                                    SelectionChanged="HandleSelectionChanged"
+                                    HoverChanged="HandleHoverChanged"
+                                    ObjectsMoved="HandleObjectsMoved"
+                                    RuntimeReady="HandleRuntimeReady"
+                                    RuntimeError="HandleRuntimeError" />
+                </section>
+
+                <TycoonVillageInspectorPanel Scene="@scene"
+                                             SelectedObject="@selectedObject"
+                                             LatestSnapshot="@latestSnapshot"
+                                             RuntimeStatusText="@runtimeStatusText"
+                                             RuntimeStatusTone="@runtimeStatusTone"
+                                             RuntimeError="@runtimeError"
+                                             HoveredObjectId="@hoveredObjectId"
+                                             LastMoveStatus="@lastMoveStatus"
+                                             ExportStatus="@exportStatus"
+                                             ActiveAssetProfile="@selectedAssetProfile"
+                                             FocusSelected="@FocusSelectedAsync"
+                                             SelectObject="@SelectFromListAsync" />
+            </div>
+        </ChildContent>
+    </PageScaffold>
+</div>

@@ -38,6 +38,16 @@ Do not replace the existing `WebGlWorkbench` with a breaking rewrite. Add the ne
 8. Add tycoon village sample data factory and page.
 9. Validate builds, asset loading, deterministic snapshots, and browser proof.
 
+## Execution Status
+
+Completed on 2026-05-29.
+
+- Prepared validation: `bundle://proof/SB01/transcripts/prepared-validation.txt`
+- Final validation: `bundle://proof/SB09/transcripts/completed-validation.txt`
+- Execution report: `bundle://reviews/01-execution-report.md`
+- Implementation report: `repo://artifacts/webgl-symbolic-tycoon-sandbox/IMPLEMENTATION_REPORT.md`
+- Browser proof: `bundle://proof/SB08/browser/webgl-tycoon-village-final-desktop.png`, `bundle://proof/SB08/browser/webgl-tycoon-village-final-mobile.png`, and `bundle://proof/SB08/browser/webgl-tycoon-village-final-proof.json`
+
 ## Important coding conventions
 
 All source code comments must be in English.

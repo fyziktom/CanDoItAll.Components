@@ -1,5 +1,9 @@
 # SB04 - Generic symbol system
 
+## Status
+
+Completed. Proof: `repo://src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs` and `bundle://proof/SB08/browser/webgl-tycoon-village-final-desktop.png`.
+
 ## Goal
 
 Add generic "objects above objects" support for tycoon-like visualization.

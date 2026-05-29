@@ -1,5 +1,9 @@
 # SB03 - Asset catalog and services
 
+## Status
+
+Completed. Proof: `bundle://proof/SB03/manifest.md`.
+
 ## Goal
 
 Add reusable asset catalog contracts and lightweight services.

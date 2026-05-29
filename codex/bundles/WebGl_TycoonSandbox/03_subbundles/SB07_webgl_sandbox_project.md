@@ -1,5 +1,9 @@
 # SB07 - Standalone generic WebGL sandbox
 
+## Status
+
+Completed. Proof: `bundle://proof/SB07/transcripts/webglsandbox-build-initial.txt`.
+
 ## Goal
 
 Create a separate sandbox project dedicated to WebGL proof pages.

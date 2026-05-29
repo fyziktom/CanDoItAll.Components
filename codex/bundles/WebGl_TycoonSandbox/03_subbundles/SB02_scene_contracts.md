@@ -1,5 +1,9 @@
 # SB02 - Generic scene contracts
 
+## Status
+
+Completed. Proof: `bundle://proof/SB02/manifest.md`.
+
 ## Goal
 
 Add domain-neutral C# models for generic WebGL scenes.

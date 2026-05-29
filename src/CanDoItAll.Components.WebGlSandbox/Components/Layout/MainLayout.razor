@@ -1,0 +1,41 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+<ThemeHost>
+    <div class="webgl-shell">
+        <aside class="webgl-nav">
+            <a class="webgl-brand" href="/">
+                <span class="webgl-brand__eyebrow">CanDoItAll</span>
+                <span class="webgl-brand__title">WebGL Sandbox</span>
+            </a>
+            <nav class="webgl-nav__links" aria-label="WebGL sandbox routes">
+                <a class="@ResolveNavClass("/")" href="/">Overview</a>
+                <a class="@ResolveNavClass("/tycoon-village")" href="/tycoon-village">Tycoon Village</a>
+                <a class="@ResolveNavClass("/asset-catalog")" href="/asset-catalog">Asset Catalog</a>
+            </nav>
+        </aside>
+        <main class="webgl-main">
+            <DialogHost />
+            <Tooltip />
+            <Notification />
+            @Body
+        </main>
+    </div>
+</ThemeHost>
+
+@code {
+    private string ResolveNavClass(string route)
+    {
+        var current = "/" + Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', 2)[0].Trim('/');
+        if (current == "/")
+        {
+            current = "/";
+        }
+
+        return string.Equals(current, route, StringComparison.OrdinalIgnoreCase)
+            ? "webgl-nav__link is-active"
+            : "webgl-nav__link";
+    }
+}
+
