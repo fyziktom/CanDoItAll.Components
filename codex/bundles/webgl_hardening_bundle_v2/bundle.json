@@ -1,0 +1,20 @@
+{
+  "bundleId": "CanDoItAll.Components.WebGl.RuntimeHardening.v2",
+  "targetRepository": "fyziktom/CanDoItAll.Components",
+  "targetBranchPolicy": "Use current checked-out branch only; do not create a new branch.",
+  "scope": "Generic WebGlLib and WebGlSandbox hardening",
+  "outOfScope": [
+    "Economy-specific visualization",
+    "Process-specific visualization",
+    "Full run engine",
+    "Pathfinding",
+    "Physics/collision",
+    "TypeScript migration"
+  ],
+  "validation": [
+    "npm run webgllib:audit-scene-runtime",
+    "dotnet build CanDoItAll.Components.slnx",
+    "dotnet test tests/CanDoItAll.Components.WebGlLib.Tests/CanDoItAll.Components.WebGlLib.Tests.csproj",
+    "large-screen browser proof"
+  ]
+}
