@@ -87,7 +87,7 @@ export function isVisualGuideNode(node) {
         kind.includes("pointer");
 }
 
-export function isProcessStepNode(node) {
+export function isFlowNode(node) {
     return !isVisualGuideNode(node) && !isRoleNode(node) && !isBranchNode(node);
 }
 

@@ -244,7 +244,7 @@ public sealed class WebGlWorkbenchChrome
 {
     public string HintText { get; set; } = string.Empty;
 
-    public string EmptyStateTitle { get; set; } = "No process geometry";
+    public string EmptyStateTitle { get; set; } = "No scene geometry";
 
     public string EmptyStateDescription { get; set; } = "Load one of the representative template packs to review the concept stage.";
 

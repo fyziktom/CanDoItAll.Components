@@ -15,10 +15,10 @@ public static class WebGlSceneDocumentSerializer
         WriteIndented = false
     };
 
-    public static string Serialize(WebGlSceneDocument document)
+    public static string Serialize(WebGlSceneDocument document, WebGlSceneDocumentSerializerOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(document);
-        var normalized = Normalize(document);
+        var normalized = Normalize(document, options);
         normalized.SceneContentHash = ComputeSceneContentHash(normalized);
         normalized.ContentHash = string.Empty;
         normalized.DocumentHash = string.Empty;
@@ -57,13 +57,20 @@ public static class WebGlSceneDocumentSerializer
         ValidateObjectIds(document.Scene, result);
         ValidateLinks(document.Scene, result);
         ValidateAssets(document.Scene, result);
+        ValidateVectors(document.Scene, result);
 
         return result;
     }
 
-    public static WebGlSceneDocument Normalize(WebGlSceneDocument document)
+    public static WebGlSceneDocument Normalize(WebGlSceneDocument document, WebGlSceneDocumentSerializerOptions? options = null)
     {
+        options ??= new WebGlSceneDocumentSerializerOptions();
         var scene = Clone(document.Scene ?? new WebGlSceneModel());
+        if (!options.IncludeUiState)
+        {
+            scene.UiState = new WebGlSceneUiState();
+        }
+
         SortSceneMetadata(scene);
         scene.AssetsByIdSort();
         return new WebGlSceneDocument
@@ -71,7 +78,8 @@ public static class WebGlSceneDocumentSerializer
             SchemaVersion = string.IsNullOrWhiteSpace(document.SchemaVersion) ? CurrentSchemaVersion : document.SchemaVersion,
             DocumentId = document.DocumentId,
             Scene = scene,
-            RuntimeOptions = document.RuntimeOptions ?? new WebGlRuntimeOptions(),
+            RuntimeOptions = options.IncludeRuntimeOptions ? document.RuntimeOptions ?? new WebGlRuntimeOptions() : new WebGlRuntimeOptions(),
+            Diagnostics = options.IncludeDiagnostics ? document.Diagnostics ?? new WebGlRuntimeDiagnostics() : new WebGlRuntimeDiagnostics(),
             SavedAtUtc = document.SavedAtUtc.ToUniversalTime(),
             Source = document.Source,
             SceneContentHash = document.SceneContentHash,
@@ -187,11 +195,16 @@ public static class WebGlSceneDocumentSerializer
             .Select(static item => item.Id)
             .Where(static id => !string.IsNullOrWhiteSpace(id))
             .ToHashSet(StringComparer.Ordinal);
+        var linkIds = new HashSet<string>(StringComparer.Ordinal);
         foreach (var link in scene.Links)
         {
             if (string.IsNullOrWhiteSpace(link.Id))
             {
                 result.Errors.Add("Scene link id is required.");
+            }
+            else if (!linkIds.Add(link.Id))
+            {
+                result.Errors.Add($"Duplicate scene link id '{link.Id}'.");
             }
 
             if (!ids.Contains(link.SourceObjectId) || !ids.Contains(link.TargetObjectId))
@@ -214,6 +227,11 @@ public static class WebGlSceneDocumentSerializer
 
         foreach (var asset in scene.AssetCatalog.Assets)
         {
+            if (string.IsNullOrWhiteSpace(asset.Id))
+            {
+                result.Errors.Add("Asset id is required.");
+            }
+
             if (!string.IsNullOrWhiteSpace(asset.FallbackAssetId) && !assetIds.Contains(asset.FallbackAssetId))
             {
                 result.Warnings.Add($"Asset '{asset.Id}' references fallback asset '{asset.FallbackAssetId}' that is not present in the catalog.");
@@ -223,6 +241,39 @@ public static class WebGlSceneDocumentSerializer
             {
                 result.Warnings.Add($"Asset '{asset.Id}' variant '{variant.Id}' references fallback asset '{variant.FallbackAssetId}' that is not present in the catalog.");
             }
+        }
+    }
+
+    private static void ValidateVectors(WebGlSceneModel scene, WebGlSceneDocumentValidationResult result)
+    {
+        ValidateVector("camera target", scene.Camera.Target, result);
+        foreach (var sceneObject in scene.Objects)
+        {
+            ValidateVector($"object '{sceneObject.Id}' position", sceneObject.Position, result);
+            ValidateVector($"object '{sceneObject.Id}' rotation", sceneObject.Rotation, result);
+            ValidateVector($"object '{sceneObject.Id}' scale", sceneObject.Scale, result);
+            ValidateVector($"object '{sceneObject.Id}' size", sceneObject.Size, result);
+        }
+
+        foreach (var asset in scene.AssetCatalog.Assets)
+        {
+            ValidateVector($"asset '{asset.Id}' bounds hint", asset.BoundsHint, result);
+            ValidateVector($"asset '{asset.Id}' import rotation offset", asset.ImportOptions.RotationOffset, result);
+            ValidateVector($"asset '{asset.Id}' import position offset", asset.ImportOptions.PositionOffset, result);
+            foreach (var variant in asset.Variants)
+            {
+                ValidateVector($"asset '{asset.Id}' variant '{variant.Id}' scale", variant.Scale, result);
+                ValidateVector($"asset '{asset.Id}' variant '{variant.Id}' import rotation offset", variant.ImportOptions.RotationOffset, result);
+                ValidateVector($"asset '{asset.Id}' variant '{variant.Id}' import position offset", variant.ImportOptions.PositionOffset, result);
+            }
+        }
+    }
+
+    private static void ValidateVector(string scope, WebGlVector3 vector, WebGlSceneDocumentValidationResult result)
+    {
+        if (!double.IsFinite(vector.X) || !double.IsFinite(vector.Y) || !double.IsFinite(vector.Z))
+        {
+            result.Errors.Add($"Invalid vector value in {scope}.");
         }
     }
 
@@ -251,10 +302,8 @@ public static class WebGlSceneDocumentSerializer
     {
         var normalized = key.Trim().ToLowerInvariant();
         return normalized.StartsWith("run.", StringComparison.Ordinal) ||
-               normalized.StartsWith("economy.", StringComparison.Ordinal) ||
-               normalized.StartsWith("ledger.", StringComparison.Ordinal) ||
-               normalized.StartsWith("account.", StringComparison.Ordinal) ||
-               normalized.StartsWith("market.", StringComparison.Ordinal);
+               normalized.StartsWith("runtime.", StringComparison.Ordinal) ||
+               normalized.StartsWith("playback.", StringComparison.Ordinal);
     }
 
     private static Dictionary<string, string> FilterSceneContentMetadata(Dictionary<string, string>? metadata)

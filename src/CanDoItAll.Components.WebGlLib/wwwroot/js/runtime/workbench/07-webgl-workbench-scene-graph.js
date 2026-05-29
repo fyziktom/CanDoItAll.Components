@@ -2,7 +2,7 @@ import {
     THREE,
     clamp,
     isBranchNode,
-    isProcessStepNode,
+    isFlowNode,
     isRoleNode,
     isVisualGuideNode,
     resolveAnchorPosition,
@@ -729,16 +729,16 @@ function isStructuralFlowEdge(edge) {
 }
 
 function resolveStepEndpoints(state) {
-    const processNodes = (state.surface.nodes || []).filter(isProcessStepNode);
-    if (!processNodes.length) {
+    const flowNodes = (state.surface.nodes || []).filter(isFlowNode);
+    if (!flowNodes.length) {
         return {
             firstNode: null,
             lastNode: null
         };
     }
 
-    const inboundCounts = new Map(processNodes.map(node => [node.id, 0]));
-    const outboundCounts = new Map(processNodes.map(node => [node.id, 0]));
+    const inboundCounts = new Map(flowNodes.map(node => [node.id, 0]));
+    const outboundCounts = new Map(flowNodes.map(node => [node.id, 0]));
 
     for (const edge of state.surface.edges || []) {
         if (!isStructuralFlowEdge(edge)) {
@@ -760,8 +760,8 @@ function resolveStepEndpoints(state) {
         }
     }
 
-    const firstNode = processNodes.find(node => (inboundCounts.get(node.id) || 0) === 0) || processNodes[0];
-    const lastNode = [...processNodes].reverse().find(node => (outboundCounts.get(node.id) || 0) === 0) || processNodes[processNodes.length - 1];
+    const firstNode = flowNodes.find(node => (inboundCounts.get(node.id) || 0) === 0) || flowNodes[0];
+    const lastNode = [...flowNodes].reverse().find(node => (outboundCounts.get(node.id) || 0) === 0) || flowNodes[flowNodes.length - 1];
     return {
         firstNode,
         lastNode

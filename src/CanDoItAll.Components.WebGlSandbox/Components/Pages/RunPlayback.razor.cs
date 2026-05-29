@@ -1,0 +1,221 @@
+using CanDoItAll.Components.BaseLib;
+using CanDoItAll.Components.WebGlLib;
+using CanDoItAll.Components.WebGlRunLib;
+using CanDoItAll.Components.WebGlSandbox;
+using Microsoft.AspNetCore.Components;
+
+namespace CanDoItAll.Components.WebGlSandbox.Components.Pages;
+
+public partial class RunPlayback
+{
+    private readonly WebGlRuntimeOptions runtimeOptions = new()
+    {
+        DeterministicMode = true,
+        RenderMode = WebGlRenderModes.Auto,
+        AssetQualityProfile = WebGlAssetQualityProfiles.Primitive,
+        ShowLabels = false,
+        ShowSymbols = false
+    };
+    private readonly WebGlRunDocument runDocument = CreateRunDocument();
+    private WebGlRunPlaybackState playbackState = new() { RunId = new("generic-run-demo") };
+    private WebGlSceneModel scene = CreateScene();
+    private WebGlSceneView? sceneView;
+    private WebGlSceneProofSnapshot? latestSnapshot;
+    private string statusText = "Ready.";
+
+    private string PlaybackStatus => playbackState.IsPlaying ? "playing" : "paused";
+    private string PlaybackTone => playbackState.IsPlaying ? "success" : "info";
+
+    private async Task PlayAsync()
+    {
+        if (playbackState.IsPlaying)
+        {
+            return;
+        }
+
+        playbackState.IsPlaying = true;
+        while (playbackState.IsPlaying)
+        {
+            await StepAsync();
+            if (playbackState.CurrentFrameIndex >= runDocument.Timeline.Frames.Max(item => item.Index))
+            {
+                playbackState.IsPlaying = false;
+                break;
+            }
+
+            await Task.Delay(420);
+        }
+    }
+
+    private Task PauseAsync()
+    {
+        playbackState.IsPlaying = false;
+        statusText = "Paused.";
+        return Task.CompletedTask;
+    }
+
+    private async Task StepAsync()
+    {
+        var next = runDocument.Timeline.Frames.FirstOrDefault(item => item.Index > playbackState.CurrentFrameIndex)
+            ?? runDocument.Timeline.Frames.First();
+        await ApplyFrameAsync(next);
+    }
+
+    private Task SeekStartAsync() => SeekAsync(0);
+
+    private async Task SeekAsync(long frameIndex)
+    {
+        scene = CreateScene();
+        playbackState.CurrentFrameIndex = 0;
+        if (sceneView is not null)
+        {
+            await sceneView.ImportSceneAsync(scene);
+        }
+
+        foreach (var frame in runDocument.Timeline.Frames.Where(item => item.Index <= frameIndex))
+        {
+            await ApplyFrameAsync(frame);
+        }
+    }
+
+    private async Task ApplyFrameAsync(WebGlRunFrame frame)
+    {
+        if (sceneView is null)
+        {
+            return;
+        }
+
+        foreach (var framePatch in frame.ScenePatches)
+        {
+            await sceneView.ApplyPatchDetailedAsync(framePatch.Patch);
+        }
+
+        foreach (var motion in frame.Motions)
+        {
+            await sceneView.EnqueueMotionDetailedAsync(motion);
+        }
+
+        playbackState.CurrentFrameIndex = frame.Index;
+        statusText = $"Applied generic frame {frame.Index}.";
+        await CaptureProofAsync();
+    }
+
+    private async Task CaptureProofAsync()
+        => latestSnapshot = sceneView is null ? null : await sceneView.GetProofSnapshotAsync();
+
+    private Task HandleMotionCompleted(WebGlSceneCommandResult result)
+    {
+        statusText = $"Motion completed: {result.CommandId}.";
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private static WebGlRunDocument CreateRunDocument()
+        => new()
+        {
+            RunId = new("generic-run-demo"),
+            InitialScene = new WebGlSceneDocument { Scene = CreateScene() },
+            Timeline =
+            {
+                Frames =
+                [
+                    Frame(0, 0, new WebGlVector3(-3, 0, 0)),
+                    Frame(1, 1, new WebGlVector3(-1, 0, -1.2)),
+                    Frame(2, 2, new WebGlVector3(1.4, 0, 0.8)),
+                    Frame(3, 3, new WebGlVector3(3, 0, 0))
+                ]
+            },
+            Metadata =
+            {
+                ["boundary"] = "generic-webgl-runlib",
+                ["domain"] = "generic"
+            }
+        };
+
+    private static WebGlRunFrame Frame(long index, double timeSeconds, WebGlVector3 target)
+        => new()
+        {
+            Index = index,
+            TimeSeconds = timeSeconds,
+            Motions =
+            [
+                new WebGlObjectMotionCommand
+                {
+                    MotionId = $"run.motion.{index}",
+                    ObjectId = "object.runner",
+                    TargetPosition = target,
+                    DurationSeconds = 0.32,
+                    Easing = WebGlMotionEasings.EaseInOut
+                }
+            ]
+        };
+
+    private static WebGlSceneModel CreateScene()
+        => new()
+        {
+            SceneId = "generic-run-playback",
+            Title = "Generic Run Playback",
+            AssetCatalog = WebGlSandboxAssetCatalogFactory.Create(),
+            Environment = new WebGlSceneEnvironment
+            {
+                BackgroundColor = "#101827",
+                GroundColor = "#253349",
+                GridColor = "#94a3b8",
+                GroundSize = 14,
+                GridDivisions = 14,
+                FogEnabled = false
+            },
+            Camera = new WebGlSceneCamera
+            {
+                ViewMode = WebGlSceneViewModes.Isometric,
+                Distance = 13,
+                Target = new WebGlVector3(0, 0.6, 0)
+            },
+            UiState = new WebGlSceneUiState
+            {
+                ShowLabels = false,
+                ShowSymbols = false,
+                ActiveAssetProfile = WebGlAssetQualityProfiles.Primitive
+            },
+            Objects =
+            [
+                new WebGlSceneObject
+                {
+                    Id = "object.runner",
+                    Kind = "marker",
+                    Family = "generic-run",
+                    Title = "Runner",
+                    AssetId = "asset.symbol.marker.default",
+                    Position = new WebGlVector3(-3, 0, 0),
+                    Size = new WebGlVector3(0.8, 0.8, 0.8),
+                    Color = "#38bdf8",
+                    IsSelectable = true
+                },
+                new WebGlSceneObject
+                {
+                    Id = "object.goal",
+                    Kind = "marker",
+                    Family = "generic-run",
+                    Title = "Goal",
+                    AssetId = "asset.symbol.ready.default",
+                    Position = new WebGlVector3(3, 0, 0),
+                    Size = new WebGlVector3(0.8, 0.8, 0.8),
+                    Color = "#22c55e"
+                }
+            ],
+            Links =
+            [
+                new WebGlSceneLink
+                {
+                    Id = "link.path",
+                    SourceObjectId = "object.runner",
+                    TargetObjectId = "object.goal",
+                    Kind = "timeline-path"
+                }
+            ],
+            Metadata =
+            {
+                ["demo"] = "run-playback",
+                ["domain"] = "generic"
+            }
+        };
+}

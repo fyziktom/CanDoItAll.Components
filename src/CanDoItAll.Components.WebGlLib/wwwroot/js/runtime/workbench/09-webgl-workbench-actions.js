@@ -281,7 +281,7 @@ function openContextMenu(state, event, deps) {
         nodeId = hitTarget.nodeId || null;
         const node = nodeId ? state.nodeLookup.get(nodeId) : null;
         title = node?.title || "Node actions";
-        subtitle = node?.kind || "Process node";
+        subtitle = node?.kind || "Scene node";
         items.push({ id: "menu:select-node", label: "Select node", tone: "accent" });
         if (state.chromeState.connectSourceAnchorId && state.chromeState.connectSourceNodeId !== nodeId) {
             items.push({ id: "menu:connect-to-node", label: "Connect here", tone: "positive" });

@@ -10,6 +10,8 @@ public sealed class WebGlSceneDocument
 
     public WebGlRuntimeOptions RuntimeOptions { get; set; } = new();
 
+    public WebGlRuntimeDiagnostics Diagnostics { get; set; } = new();
+
     public DateTimeOffset SavedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 
     public string Source { get; set; } = string.Empty;
@@ -26,6 +28,15 @@ public sealed class WebGlSceneDocument
 public interface IWebGlSceneDocumentMigrator
 {
     WebGlSceneDocumentMigrationResult Migrate(WebGlSceneDocument document);
+}
+
+public sealed class WebGlSceneDocumentSerializerOptions
+{
+    public bool IncludeUiState { get; set; } = true;
+
+    public bool IncludeRuntimeOptions { get; set; } = true;
+
+    public bool IncludeDiagnostics { get; set; } = true;
 }
 
 public sealed class WebGlSceneDocumentMigrationResult

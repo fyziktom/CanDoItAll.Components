@@ -336,7 +336,7 @@ function syncEdges(state) {
 function syncEmptyState(state) {
     const hasNodes = (state.surface.nodes?.length || 0) > 0;
     state.shell.emptyState.classList.toggle("is-visible", !hasNodes);
-    state.shell.emptyTitle.textContent = state.surface.chrome?.emptyStateTitle || "No process geometry";
+    state.shell.emptyTitle.textContent = state.surface.chrome?.emptyStateTitle || "No scene geometry";
     state.shell.emptyBody.textContent = state.surface.chrome?.emptyStateDescription || "";
 }
 
