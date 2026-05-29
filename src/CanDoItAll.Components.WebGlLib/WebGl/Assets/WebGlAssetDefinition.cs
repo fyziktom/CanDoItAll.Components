@@ -14,6 +14,12 @@ public sealed class WebGlAssetDefinition
 
     public string PrimitiveKind { get; set; } = WebGlPrimitiveKinds.Box;
 
+    public string QualityTier { get; set; } = WebGlAssetQualityTiers.Unknown;
+
+    public string PreferredVariantId { get; set; } = string.Empty;
+
+    public WebGlAssetPerformanceHint PerformanceHint { get; set; } = new();
+
     public string DisplayName { get; set; } = string.Empty;
 
     public string ThumbnailUri { get; set; } = string.Empty;
@@ -72,4 +78,3 @@ public static class WebGlPrimitiveKinds
     public const string Marker = "marker";
     public const string Gear = "gear";
 }
-

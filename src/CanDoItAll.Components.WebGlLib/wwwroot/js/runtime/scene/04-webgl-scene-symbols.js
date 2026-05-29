@@ -1,6 +1,7 @@
 import {
     THREE,
     clamp,
+    disposeObject3D,
     resolveFiniteNumber,
     resolveObjectSize,
     resolveString
@@ -10,9 +11,11 @@ import { syncAssetVisual } from "./03-webgl-scene-assets.js";
 export function rebuildSymbols(state) {
     clearSymbols(state);
     if (state.options.showSymbols === false || state.sceneModel.uiState?.showSymbols === false) {
+        state.diagnostics.animatedSymbolCount = 0;
         return;
     }
 
+    let animatedSymbolCount = 0;
     for (const sceneObject of state.sceneModel.objects || []) {
         const symbols = (sceneObject.symbols || [])
             .filter(symbol => symbol?.isVisible !== false)
@@ -27,17 +30,26 @@ export function rebuildSymbols(state) {
             const symbolGroup = createSymbolGroup(state, sceneObject, symbol, size, index - center);
             state.symbolGroups.set(symbolGroup.userData.symbolRuntimeId, symbolGroup);
             state.scene.add(symbolGroup);
+            if (symbolGroup.userData.effectKey && symbolGroup.userData.effectKey !== "none") {
+                animatedSymbolCount += 1;
+            }
         });
     }
+
+    state.diagnostics.animatedSymbolCount = animatedSymbolCount;
 }
 
 export function clearSymbols(state) {
     for (const group of state.symbolGroups.values()) {
         state.scene.remove(group);
         group.userData.disposed = true;
+        disposeObject3D(group);
     }
 
     state.symbolGroups.clear();
+    if (state.diagnostics) {
+        state.diagnostics.animatedSymbolCount = 0;
+    }
 }
 
 function createSymbolGroup(state, sceneObject, symbol, objectSize, offsetIndex) {
@@ -63,6 +75,7 @@ function createSymbolGroup(state, sceneObject, symbol, objectSize, offsetIndex) 
         effectKey: resolveString(symbol.effectKey, "none"),
         intensity,
         baseScale: symbolScale,
+        heightOffset,
         billboardToCamera: symbol.billboardToCamera !== false,
         tooltip: symbol.tooltip || ""
     };
@@ -106,7 +119,6 @@ export function syncSymbolAnimation(state, elapsedSeconds) {
                 break;
             case "shake":
                 break;
-                break;
             case "scale-by-intensity":
                 scale = baseScale * (0.82 + intensity * 0.62);
                 break;
@@ -141,4 +153,24 @@ export function syncSymbolAnimation(state, elapsedSeconds) {
             }
         });
     }
+}
+
+export function syncSymbolPositionsForObject(state, objectId) {
+    const sceneObject = state.objectLookup.get(objectId);
+    if (!sceneObject) {
+        return;
+    }
+
+    const size = resolveObjectSize(sceneObject);
+    const ownerSymbols = Array.from(state.symbolGroups.values())
+        .filter(group => group.userData.ownerObjectId === objectId);
+    const center = (ownerSymbols.length - 1) / 2;
+    ownerSymbols.forEach((group, index) => {
+        const offsetIndex = index - center;
+        const spacing = Math.max(0.58, size.x * 0.38);
+        const basePosition = state.objectPositions.get(objectId) || new THREE.Vector3();
+        const heightOffset = resolveFiniteNumber(group.userData.heightOffset, 1.2);
+        group.position.set(basePosition.x + offsetIndex * spacing, basePosition.y + size.y + heightOffset, basePosition.z);
+        group.userData.basePosition = group.position.clone();
+    });
 }

@@ -1,6 +1,8 @@
 import { THREE, focusHost } from "./02-webgl-scene-core.js";
+import { beginDrag, cancelDrag, completeDrag, isClickSuppressed, updateDrag } from "./12-webgl-scene-drag.js";
+import { syncObjectRings } from "./11-webgl-scene-graph.js";
 
-function resolvePointer(state, event) {
+export function resolvePointer(state, event) {
     const rect = state.renderer.domElement.getBoundingClientRect();
     return {
         rect,
@@ -12,7 +14,7 @@ function resolvePointer(state, event) {
     };
 }
 
-function findHit(state, event) {
+export function findHit(state, event) {
     if (!state.hitMeshes.length) {
         return null;
     }
@@ -23,12 +25,7 @@ function findHit(state, event) {
     for (const hit of hits) {
         const objectId = hit.object?.userData?.objectId || hit.object?.parent?.userData?.objectId;
         if (objectId) {
-            return {
-                objectId,
-                point: hit.point,
-                screenX: pointer.x,
-                screenY: pointer.y
-            };
+            return { objectId, point: hit.point, screenX: pointer.x, screenY: pointer.y };
         }
     }
 
@@ -36,6 +33,10 @@ function findHit(state, event) {
 }
 
 export function handlePointerMove(state, event) {
+    if (updateDrag(state, event)) {
+        return;
+    }
+
     if (state.sceneModel.interaction?.allowHover === false) {
         return;
     }
@@ -47,13 +48,14 @@ export function handlePointerMove(state, event) {
     }
 
     state.hoveredObjectId = nextHoveredObjectId;
-    syncSelectionVisuals(state);
+    state.sceneModel.uiState.hoveredObjectId = nextHoveredObjectId;
+    syncObjectRings(state);
     notifyHoverChanged(state, {
         objectId: nextHoveredObjectId || null,
         screenX: hit?.screenX || 0,
         screenY: hit?.screenY || 0
     });
-    state.scheduleRender();
+    state.scheduleRender("hover");
 }
 
 export function handlePointerDown(state, event) {
@@ -61,10 +63,25 @@ export function handlePointerDown(state, event) {
         clientX: event.clientX,
         clientY: event.clientY
     };
+    beginDrag(state, event, findHit(state, event));
+}
+
+export function handlePointerUp(state, event) {
+    completeDrag(state, event);
+}
+
+export function handlePointerCancel(state, event) {
+    cancelDrag(state, event);
+}
+
+export function handleKeyDown(state, event) {
+    if (event.key === "Escape") {
+        cancelDrag(state, event);
+    }
 }
 
 export function handleClick(state, event) {
-    if (state.sceneModel.interaction?.allowClickSelection === false) {
+    if (state.sceneModel.interaction?.allowClickSelection === false || isClickSuppressed(state)) {
         return;
     }
 
@@ -94,17 +111,12 @@ export function handleClick(state, event) {
     }
 
     const next = new Set(state.selectedObjectIds);
-    if (next.has(hit.objectId)) {
-        next.delete(hit.objectId);
-    } else {
-        next.add(hit.objectId);
-    }
-
+    next.has(hit.objectId) ? next.delete(hit.objectId) : next.add(hit.objectId);
     selectObjects(state, Array.from(next));
 }
 
 export function handleDoubleClick(state, event) {
-    if (state.sceneModel.interaction?.focusOnDoubleClick === false) {
+    if (state.sceneModel.interaction?.focusOnDoubleClick === false || isClickSuppressed(state)) {
         return;
     }
 
@@ -123,58 +135,36 @@ export function selectObjects(state, objectIds) {
         primaryObjectId,
         contextActionId: ""
     };
-    syncSelectionVisuals(state);
+    syncObjectRings(state);
     notifySelectionChanged(state);
     notifyStateChanged(state);
     focusHost(state);
-    state.scheduleRender();
+    state.scheduleRender("selection");
 }
 
-export function syncSelectionVisuals(state) {
-    for (const [objectId, group] of state.objectGroups.entries()) {
-        const selected = state.selectedObjectIds.has(objectId);
-        const hovered = state.hoveredObjectId === objectId;
-        if (group.userData.selectionRing) {
-            group.userData.selectionRing.visible = selected;
-        }
-
-        if (group.userData.hoverRing) {
-            group.userData.hoverRing.visible = hovered && !selected;
-        }
-    }
-}
-
-function notifySelectionChanged(state) {
-    if (!state.dotNetRef) {
-        return;
-    }
-
-    const selectedObjectIds = Array.from(state.selectedObjectIds);
-    state.dotNetRef
-        .invokeMethodAsync("OnSceneSelectionChanged", JSON.stringify({
-            primaryObjectId: selectedObjectIds[0] || null,
-            selectedObjectIds
-        }))
-        .catch(error => console.warn("WebGL scene selection callback failed.", error));
-}
-
-function notifyHoverChanged(state, args) {
-    if (!state.dotNetRef) {
-        return;
-    }
-
-    state.dotNetRef
-        .invokeMethodAsync("OnSceneHoverChanged", JSON.stringify(args))
-        .catch(error => console.warn("WebGL scene hover callback failed.", error));
-}
-
-function notifyStateChanged(state) {
-    if (!state.dotNetRef) {
-        return;
-    }
-
-    state.dotNetRef
-        .invokeMethodAsync("OnSceneStateChanged", JSON.stringify(state.sceneModel.uiState || {}))
+export function notifyStateChanged(state) {
+    state.dotNetRef?.invokeMethodAsync("OnSceneStateChanged", JSON.stringify(state.sceneModel.uiState || {}))
         .catch(error => console.warn("WebGL scene state callback failed.", error));
 }
 
+export function notifyObjectsMoved(state, positions) {
+    if (!positions.length) {
+        return;
+    }
+
+    state.dotNetRef?.invokeMethodAsync("OnObjectsMoved", JSON.stringify({ positions }))
+        .catch(error => console.warn("WebGL scene objects moved callback failed.", error));
+}
+
+function notifySelectionChanged(state) {
+    const selectedObjectIds = Array.from(state.selectedObjectIds);
+    state.dotNetRef?.invokeMethodAsync("OnSceneSelectionChanged", JSON.stringify({
+        primaryObjectId: selectedObjectIds[0] || null,
+        selectedObjectIds
+    })).catch(error => console.warn("WebGL scene selection callback failed.", error));
+}
+
+function notifyHoverChanged(state, args) {
+    state.dotNetRef?.invokeMethodAsync("OnSceneHoverChanged", JSON.stringify(args))
+        .catch(error => console.warn("WebGL scene hover callback failed.", error));
+}

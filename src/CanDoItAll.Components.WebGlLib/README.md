@@ -43,8 +43,9 @@ The existing workbench surface remains node/edge oriented and continues to use:
 The generic scene layer is additive and uses:
 
 - `WebGlSceneModel`, `WebGlSceneObject`, `WebGlSceneLink`, and `WebGlSceneProofSnapshot`
-- `WebGlAssetCatalog` and `IWebGlAssetCatalogProvider`
+- `WebGlAssetCatalog`, `WebGlAssetVariant`, `WebGlAssetPerformanceHint`, and `IWebGlAssetCatalogProvider`
 - `WebGlStatusSymbol` and `IWebGlSymbolPolicy`
+- `WebGlScenePatch` and `WebGlObjectMotionCommand`
 - `WebGlSceneView`
 - `window.CanDoItAll.webglScene`
 
@@ -66,7 +67,13 @@ npm run webgllib:build-assets
 npm run webgllib:verify-assets
 ```
 
-The runtime loads GLB/GLTF assets asynchronously and renders fallback primitives when a model id or URI cannot be resolved.
+The runtime loads GLB/GLTF assets asynchronously and renders fallback primitives when a model id or URI cannot be resolved. Asset variants support `primitive`, `model-low`, `model-medium`, and `model-high` quality tiers, with runtime selection by explicit object metadata or scene/runtime profile.
+
+## Runtime Hardening
+
+`WebGlSceneView` now exposes export/import, patch, object transform, and motion methods. The JavaScript runtime supports drag-on-ground-plane for draggable objects, transform-only patches without full scene rebuilds, smooth render-layer motion, `auto`/`continuous`/`on-demand` render modes, and explicit create/runtime diagnostics.
+
+`WebGlLib` remains a render substrate. Simulation clocks, run lifecycle, pathfinding, physics, persistence providers, economy rules, and domain semantics belong in a future `WebGlRunLib` or consuming domain package.
 
 ## Related Docs
 

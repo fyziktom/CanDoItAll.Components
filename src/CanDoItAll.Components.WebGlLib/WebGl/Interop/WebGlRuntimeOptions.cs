@@ -10,6 +10,10 @@ public sealed class WebGlRuntimeOptions
 
     public double MaximumDevicePixelRatio { get; set; } = 2;
 
+    public string RenderMode { get; set; } = WebGlRenderModes.Auto;
+
+    public string AssetQualityProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
+
     public bool ShowDiagnosticsPanel { get; set; } = true;
 
     public bool ShowLabels { get; set; } = true;
@@ -20,4 +24,3 @@ public sealed class WebGlRuntimeOptions
 
     public string RuntimeKey { get; set; } = string.Empty;
 }
-

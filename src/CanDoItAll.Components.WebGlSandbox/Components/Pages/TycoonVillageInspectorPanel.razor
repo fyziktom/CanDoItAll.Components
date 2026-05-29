@@ -1,0 +1,134 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+
+<aside class="webgl-village-panel" aria-label="Village inspector">
+    <section class="webgl-panel-section">
+        <div class="webgl-panel-heading">
+            <span>Inspector</span>
+            <StatusBadge Text="@RuntimeStatusText" Tone="@RuntimeStatusTone" />
+        </div>
+
+        @if (SelectedObject is not null)
+        {
+            <div class="webgl-selected-object">
+                <p class="webgl-selected-object__eyebrow">@SelectedObject.Kind / @SelectedObject.Family</p>
+                <h2>@SelectedObject.Title</h2>
+                <p>@SelectedObject.Description</p>
+                <dl>
+                    <div>
+                        <dt>Object id</dt>
+                        <dd data-testid="webgl-selected-object-id">@SelectedObject.Id</dd>
+                    </div>
+                    <div>
+                        <dt>Asset</dt>
+                        <dd>@SelectedObject.AssetId</dd>
+                    </div>
+                    <div>
+                        <dt>Tags</dt>
+                        <dd>@string.Join(", ", SelectedObject.Tags)</dd>
+                    </div>
+                </dl>
+                <Button Text="Focus selected" Icon="filter_center_focus" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@FocusSelected" />
+            </div>
+        }
+        else
+        {
+            <div class="webgl-empty-panel">
+                <p data-testid="webgl-selected-object-id">none</p>
+                <span>Select a draggable object in the scene.</span>
+            </div>
+        }
+    </section>
+
+    <section class="webgl-panel-section">
+        <div class="webgl-panel-heading">
+            <span>Proof Snapshot</span>
+            <StatusBadge Text="@ActiveAssetProfile" Tone="success" />
+        </div>
+        <dl class="webgl-proof-grid">
+            <div>
+                <dt>Objects</dt>
+                <dd data-testid="webgl-proof-object-count">@DisplayObjectCount</dd>
+            </div>
+            <div>
+                <dt>Loaded</dt>
+                <dd data-testid="webgl-proof-loaded-asset-count">@DisplayLoadedAssetCount</dd>
+            </div>
+            <div>
+                <dt>Models</dt>
+                <dd data-testid="webgl-proof-model-count">@DisplayModelCount</dd>
+            </div>
+            <div>
+                <dt>Fallbacks</dt>
+                <dd data-testid="webgl-proof-fallback-count">@DisplayFallbackCount</dd>
+            </div>
+        </dl>
+        <p class="webgl-proof-note" data-testid="webgl-hovered-object-id">Hover: @(string.IsNullOrWhiteSpace(HoveredObjectId) ? "none" : HoveredObjectId)</p>
+        <p class="webgl-proof-note" data-testid="webgl-last-move">@LastMoveStatus</p>
+        <p class="webgl-proof-note" data-testid="webgl-export-status">@ExportStatus</p>
+        @if (!string.IsNullOrWhiteSpace(RuntimeError))
+        {
+            <p class="webgl-runtime-error" data-testid="webgl-runtime-error">@RuntimeError</p>
+        }
+    </section>
+
+    <section class="webgl-panel-section">
+        <div class="webgl-panel-heading">
+            <span>Scene Contents</span>
+            <StatusBadge Text="@($"{Scene.Objects.Count} objects")" Tone="info" />
+        </div>
+        <div class="webgl-object-list">
+            @foreach (var item in Scene.Objects)
+            {
+                <button type="button"
+                        class="@(SelectedObject?.Id == item.Id ? "webgl-object-list__item is-active" : "webgl-object-list__item")"
+                        @onclick="() => SelectObject.InvokeAsync(item.Id)">
+                    <span>@item.Title</span>
+                    <small>@item.Kind</small>
+                </button>
+            }
+        </div>
+    </section>
+</aside>
+
+@code {
+    [Parameter, EditorRequired]
+    public WebGlSceneModel Scene { get; set; } = default!;
+
+    [Parameter]
+    public WebGlSceneObject? SelectedObject { get; set; }
+
+    [Parameter]
+    public WebGlSceneProofSnapshot? LatestSnapshot { get; set; }
+
+    [Parameter]
+    public string RuntimeStatusText { get; set; } = "initializing";
+
+    [Parameter]
+    public string RuntimeStatusTone { get; set; } = "info";
+
+    [Parameter]
+    public string RuntimeError { get; set; } = string.Empty;
+
+    [Parameter]
+    public string HoveredObjectId { get; set; } = string.Empty;
+
+    [Parameter]
+    public string LastMoveStatus { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ExportStatus { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
+
+    [Parameter]
+    public EventCallback FocusSelected { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SelectObject { get; set; }
+
+    private int DisplayObjectCount => LatestSnapshot?.ObjectCount ?? Scene.Objects.Count;
+    private int DisplayLoadedAssetCount => LatestSnapshot?.LoadedAssetCount ?? 0;
+    private int DisplayModelCount => LatestSnapshot?.ModelInstanceCount ?? 0;
+    private int DisplayFallbackCount => LatestSnapshot?.FallbackObjectCount ?? 0;
+}

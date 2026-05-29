@@ -37,10 +37,12 @@ dotnet run --project src/CanDoItAll.Components.WebGlSandbox/CanDoItAll.Component
 
 Useful routes:
 
-- `/tycoon-village` renders the generic village scene with GLB assets, primitive fallbacks, status symbols, selection, and proof snapshots.
-- `/asset-catalog` lists logical asset ids and the GLB or primitive fallback that backs each one.
+- `/tycoon-village` renders the generic village scene with primitive, mixed GLB, and high-detail GLB profiles, drag/move, motion, export/import, missing-asset fallback, status symbols, selection, and proof snapshots.
+- `/asset-catalog` lists logical asset ids, quality tiers, variants, and the GLB or primitive fallback that backs each one.
 
 Domain-specific repositories should map their own data into `WebGlSceneModel` outside this repository. Keep `CanDoItAll.Components.WebGlLib` domain-neutral.
+
+Current WebGL hardening proof is large-screen only by design; small-screen layout tuning is out of scope for this bundle.
 
 ## Pack
 

@@ -37,6 +37,27 @@ public sealed class WebGlAssetCatalogValidator
             {
                 result.Warnings.Add($"Model asset '{asset.Id}' has no URI and will require a fallback.");
             }
+
+            foreach (var variant in asset.Variants)
+            {
+                if (string.IsNullOrWhiteSpace(variant.Id))
+                {
+                    result.Errors.Add($"Asset '{asset.Id}' contains a variant without an id.");
+                }
+
+                if (string.Equals(variant.Format, WebGlAssetFormats.Primitive, StringComparison.Ordinal) &&
+                    string.IsNullOrWhiteSpace(variant.PrimitiveKind))
+                {
+                    result.Errors.Add($"Primitive variant on '{asset.Id}' must declare a primitive kind.");
+                }
+
+                if ((string.Equals(variant.Format, WebGlAssetFormats.Glb, StringComparison.Ordinal) ||
+                     string.Equals(variant.Format, WebGlAssetFormats.Gltf, StringComparison.Ordinal)) &&
+                    string.IsNullOrWhiteSpace(variant.Uri))
+                {
+                    result.Warnings.Add($"Model variant '{variant.Id}' on '{asset.Id}' has no URI and will require a fallback.");
+                }
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(catalog.DefaultFallbackAssetId) && !ids.Contains(catalog.DefaultFallbackAssetId))
@@ -49,6 +70,11 @@ public sealed class WebGlAssetCatalogValidator
             if (!string.IsNullOrWhiteSpace(asset.FallbackAssetId) && !ids.Contains(asset.FallbackAssetId))
             {
                 result.Warnings.Add($"Fallback asset '{asset.FallbackAssetId}' for '{asset.Id}' is not present in the catalog.");
+            }
+
+            foreach (var variant in asset.Variants.Where(variant => !string.IsNullOrWhiteSpace(variant.FallbackAssetId) && !ids.Contains(variant.FallbackAssetId)))
+            {
+                result.Warnings.Add($"Fallback asset '{variant.FallbackAssetId}' for variant '{variant.Id}' on '{asset.Id}' is not present in the catalog.");
             }
         }
 
@@ -64,4 +90,3 @@ public sealed class WebGlAssetCatalogValidationResult
 
     public bool IsValid => Errors.Count == 0;
 }
-

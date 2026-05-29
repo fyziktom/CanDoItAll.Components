@@ -79,6 +79,7 @@ export function normalizeScene(scene) {
     normalized.environment = normalized.environment || {};
     normalized.camera = normalized.camera || {};
     normalized.uiState = normalized.uiState || {};
+    normalized.uiState.activeAssetProfile = normalizeAssetProfile(normalized.uiState.activeAssetProfile);
     normalized.interaction = normalized.interaction || {};
     normalized.objects = Array.isArray(normalized.objects) ? normalized.objects : [];
     normalized.links = Array.isArray(normalized.links) ? normalized.links : [];
@@ -92,12 +93,48 @@ export function normalizeOptions(options) {
         preserveDrawingBuffer: options?.preserveDrawingBuffer !== false,
         enableAntialiasing: options?.enableAntialiasing !== false,
         maximumDevicePixelRatio: clamp(resolveFiniteNumber(options?.maximumDevicePixelRatio, 2), 1, 3),
+        renderMode: normalizeRenderMode(options?.renderMode),
+        assetQualityProfile: normalizeAssetProfile(options?.assetQualityProfile),
         showDiagnosticsPanel: options?.showDiagnosticsPanel !== false,
         showLabels: options?.showLabels !== false,
         showSymbols: options?.showSymbols !== false,
         autoFitOnCreate: options?.autoFitOnCreate !== false,
         runtimeKey: resolveString(options?.runtimeKey, "")
     };
+}
+
+export function normalizeRenderMode(value) {
+    const mode = resolveString(value, "auto").toLowerCase();
+    return mode === "continuous" || mode === "on-demand" ? mode : "auto";
+}
+
+export function normalizeAssetProfile(value) {
+    const profile = resolveString(value, "primitive").toLowerCase();
+    switch (profile) {
+        case "mixed":
+        case "glb-mixed":
+        case "model":
+        case "model-low":
+            return "model-low";
+        case "high":
+        case "glb-high":
+        case "model-high":
+            return "model-high";
+        case "model-medium":
+            return "model-medium";
+        case "primitive":
+            return "primitive";
+        default:
+            return profile || "primitive";
+    }
+}
+
+export function resolveActiveAssetProfile(state) {
+    return normalizeAssetProfile(
+        state?.options?.assetQualityProfile ||
+        state?.sceneModel?.uiState?.activeAssetProfile ||
+        state?.sceneModel?.metadata?.activeAssetProfile ||
+        "primitive");
 }
 
 export function resolveObjectPosition(sceneObject) {
@@ -180,18 +217,32 @@ export function focusHost(state) {
 }
 
 export function buildDiagnosticsSnapshot(state) {
+    const diagnostics = state.diagnostics || {};
     return {
-        createCount: state.diagnostics.createCount,
-        updateCount: state.diagnostics.updateCount,
-        renderCount: state.diagnostics.renderCount,
-        loadedAssetCount: state.diagnostics.loadedAssetIds.size,
-        missingAssetCount: state.diagnostics.missingAssetIds.size,
-        fallbackObjectCount: state.diagnostics.fallbackObjectIds.size,
+        createCount: diagnostics.createCount || 0,
+        updateCount: diagnostics.updateCount || 0,
+        renderCount: diagnostics.renderCount || 0,
+        loadedAssetCount: diagnostics.loadedAssetIds?.size || 0,
+        missingAssetCount: diagnostics.missingAssetIds?.size || 0,
+        fallbackObjectCount: diagnostics.fallbackObjectIds?.size || 0,
+        modelInstanceCount: diagnostics.modelInstanceIds?.size || 0,
+        primitiveInstanceCount: diagnostics.primitiveInstanceIds?.size || 0,
+        activeMotionCount: state.motions?.size || 0,
+        animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
+        estimatedTriangleCount: diagnostics.estimatedTriangleCount || 0,
+        estimatedVertexCount: diagnostics.estimatedVertexCount || 0,
         objectCount: state.sceneModel.objects.length,
         symbolCount: state.symbolGroups.size,
         deterministicMode: state.options.deterministicMode,
-        lastError: state.diagnostics.lastError || "",
-        missingAssetIds: Array.from(state.diagnostics.missingAssetIds)
+        activeAssetProfile: resolveActiveAssetProfile(state),
+        renderMode: state.options.renderMode || "auto",
+        lastFrameReason: diagnostics.lastFrameReason || "",
+        frameTimeMs: round(diagnostics.frameTimeMs || 0, 2),
+        largestLoadedAssetId: diagnostics.largestLoadedAssetId || "",
+        lastError: diagnostics.lastError || "",
+        missingAssetIds: Array.from(diagnostics.missingAssetIds || []),
+        failedAssetUris: Array.from(diagnostics.failedAssetUris || []),
+        missingFallbackAssetIds: Array.from(diagnostics.missingFallbackAssetIds || []),
+        failedPatchCommands: Array.from(diagnostics.failedPatchCommands || [])
     };
 }
-

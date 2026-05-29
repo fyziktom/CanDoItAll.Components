@@ -5,8 +5,8 @@ Standalone Blazor Web App for validating generic WebGlLib scene rendering.
 ## Routes
 
 - `/` links to available proof pages.
-- `/tycoon-village` renders a domain-neutral tycoon-style village with buildings, props, agents, status symbols, selection, camera commands, and deterministic proof snapshots.
-- `/asset-catalog` lists logical asset ids, repository GLB mappings, primitive fallbacks, tags, and source metadata.
+- `/tycoon-village` renders a domain-neutral tycoon-style village with primitive, mixed GLB, and high-detail GLB asset profiles, drag/move, motion, export/import, missing-asset fallback, and deterministic proof snapshots.
+- `/asset-catalog` lists logical asset ids, variants, repository GLB mappings, primitive fallbacks, tags, and source metadata.
 
 ## Run
 
@@ -20,10 +20,6 @@ Create a scene factory that returns `WebGlSceneModel`, add a page that hosts `We
 
 ## Asset Strategy
 
-`WebGlSandboxAssetCatalogFactory` maps the repository GLB inventory to generic logical ids and supplies primitive fallbacks for categories without exact models. Current GLB inventory:
+This sandbox is intentionally tuned and validated for large-screen proof work only. Do not spend bundle time on small-screen layout tuning until that becomes an explicit requirement.
 
-- `1gears.glb`
-- `gears.glb`
-- `lowpoly_person_boxing.glb`
-- `question_box.glb`
-
+`WebGlSandboxAssetCatalogFactory` maps the repository GLB inventory plus `3DModels/glb` into generic logical ids and supplies primitive fallbacks for every model category. Use `npm run webgllib:inventory-glb` to refresh `artifacts/webgl-scene-hardening/glb-inventory.json`.

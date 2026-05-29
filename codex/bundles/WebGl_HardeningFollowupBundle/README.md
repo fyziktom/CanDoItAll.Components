@@ -1,5 +1,9 @@
 # CanDoItAll.Components WebGL hardening follow-up bundle v1
 
+Status: completed.
+
+Execution note: per user instruction, this bundle is large-screen-only. Small-screen layout tuning was explicitly out of scope and was not performed.
+
 Tento bundle navazuje na větev:
 
 ```text

@@ -74,8 +74,10 @@
                 if (created)
                 {
                     appliedSceneKey = pendingSceneKey;
+                    return;
                 }
 
+                await RuntimeError.InvokeAsync(new WebGlRuntimeErrorEventArgs(Scene.SceneId, "WebGL scene create failed.", "The JavaScript runtime returned false during scene creation."));
                 return;
             }
 
@@ -158,6 +160,27 @@
     public Task<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync()
         => JsRuntime.InvokeAsync<WebGlRuntimeDiagnostics?>("CanDoItAll.webglScene.getDiagnostics", host).AsTask();
 
+    public Task<WebGlSceneModel?> ExportSceneAsync()
+        => JsRuntime.InvokeAsync<WebGlSceneModel?>("CanDoItAll.webglScene.exportScene", host).AsTask();
+
+    public Task<bool> ImportSceneAsync(WebGlSceneModel sceneModel)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.importScene", host, sceneModel, Options).AsTask();
+
+    public Task<bool> ApplyPatchAsync(WebGlScenePatch patch)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.applyPatch", host, patch).AsTask();
+
+    public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.setObjectTransform", host, objectId, transform).AsTask();
+
+    public Task<bool> MoveObjectAsync(string objectId, WebGlVector3 position)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.moveObject", host, objectId, position).AsTask();
+
+    public Task<bool> EnqueueMotionAsync(WebGlObjectMotionCommand command)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.enqueueMotion", host, command).AsTask();
+
+    public Task<bool> ClearMotionsAsync(string? objectId = null)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.clearMotions", host, objectId).AsTask();
+
     public async ValueTask DisposeAsync()
     {
         if (string.IsNullOrWhiteSpace(appliedSceneKey))
@@ -186,4 +209,3 @@
     private static T? Deserialize<T>(string json)
         => System.Text.Json.JsonSerializer.Deserialize<T>(json, SerializerOptions);
 }
-

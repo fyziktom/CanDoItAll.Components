@@ -8,6 +8,8 @@ public sealed class WebGlSceneModel
 
     public string Description { get; set; } = string.Empty;
 
+    public int Revision { get; set; }
+
     public WebGlAssetCatalog AssetCatalog { get; set; } = new();
 
     public WebGlSceneEnvironment Environment { get; set; } = new();
@@ -43,8 +45,9 @@ public sealed class WebGlSceneUiState
 
     public bool DeterministicMode { get; set; } = true;
 
+    public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
+
     public int Revision { get; set; }
 
     public Dictionary<string, string> Metadata { get; set; } = [];
 }
-
