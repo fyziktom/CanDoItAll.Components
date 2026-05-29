@@ -99,7 +99,8 @@ export function normalizeOptions(options) {
         showLabels: options?.showLabels !== false,
         showSymbols: options?.showSymbols !== false,
         autoFitOnCreate: options?.autoFitOnCreate !== false,
-        runtimeKey: resolveString(options?.runtimeKey, "")
+        runtimeKey: resolveString(options?.runtimeKey, ""),
+        maxCommandResultHistory: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandResultHistory, 100)))
     };
 }
 
@@ -211,9 +212,16 @@ export function buildDiagnosticsSnapshot(state) {
         motionFailedCount: diagnostics.motionFailedCount || 0,
         animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
         isRenderLoopActive: !!diagnostics.isRenderLoopActive,
+        renderSchedulerMode: diagnostics.renderSchedulerMode || state.options.renderMode || "auto",
+        lastScheduledReason: diagnostics.lastScheduledReason || "",
+        lastDeltaSeconds: round(diagnostics.lastDeltaSeconds || 0, 4),
         estimatedTriangleCount: diagnostics.estimatedTriangleCount || 0,
         estimatedVertexCount: diagnostics.estimatedVertexCount || 0,
         objectCount: state.sceneModel.objects.length,
+        visibleObjectCount: diagnostics.visibilityCounts?.visibleObjectCount || 0,
+        hiddenObjectCount: diagnostics.visibilityCounts?.hiddenObjectCount || 0,
+        visibleLinkCount: diagnostics.visibilityCounts?.visibleLinkCount || 0,
+        hiddenLinkCount: diagnostics.visibilityCounts?.hiddenLinkCount || 0,
         symbolCount: state.symbolGroups.size,
         deterministicMode: state.options.deterministicMode,
         activeAssetProfile: resolveActiveAssetProfile(state),
@@ -222,6 +230,13 @@ export function buildDiagnosticsSnapshot(state) {
         frameTimeMs: round(diagnostics.frameTimeMs || 0, 2),
         idleSinceMs: diagnostics.idleSinceTimestamp ? round(performance.now() - diagnostics.idleSinceTimestamp, 0) : 0,
         largestLoadedAssetId: diagnostics.largestLoadedAssetId || "",
+        assetCacheEntryCount: diagnostics.assetCacheEntryCount || 0,
+        assetCacheHitCount: diagnostics.assetCacheHitCount || 0,
+        assetCacheMissCount: diagnostics.assetCacheMissCount || 0,
+        disposedTemplateCount: diagnostics.disposedTemplateCount || 0,
+        disposedGeometryCount: diagnostics.disposedGeometryCount || 0,
+        disposedMaterialCount: diagnostics.disposedMaterialCount || 0,
+        disposedTextureCount: diagnostics.disposedTextureCount || 0,
         lastError: diagnostics.lastError || "",
         missingAssetIds: Array.from(diagnostics.missingAssetIds || []),
         failedAssetUris: Array.from(diagnostics.failedAssetUris || []),

@@ -62,4 +62,95 @@ public sealed class WebGlScenePatchReducerTests
         Assert.False(result.Success);
         Assert.Contains(result.Errors, error => error.Contains("does not match", StringComparison.Ordinal));
     }
+
+    [Fact]
+    public void Apply_rejects_added_object_without_id_without_throwing()
+    {
+        var scene = new WebGlSceneModel { SceneId = "scene" };
+        var patch = new WebGlScenePatch
+        {
+            SceneId = "scene",
+            AddObjects = [new WebGlSceneObject()]
+        };
+
+        var result = new WebGlScenePatchReducer().Apply(scene, patch);
+
+        Assert.False(result.Success);
+        Assert.Contains(result.Errors, error => error.Contains("Added object id", StringComparison.Ordinal));
+        Assert.Empty(scene.Objects);
+    }
+
+    [Fact]
+    public void Validate_can_fail_strict_base_revision()
+    {
+        var scene = new WebGlSceneModel { SceneId = "scene", UiState = { Revision = 4 } };
+        var patch = new WebGlScenePatch
+        {
+            SceneId = "scene",
+            BaseRevision = 3,
+            Metadata = { ["strictBaseRevision"] = "true" }
+        };
+
+        var result = new WebGlScenePatchReducer().Validate(scene, patch);
+
+        Assert.False(result.Success);
+        Assert.Contains(result.Errors, error => error.Contains("base revision", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Validate_rejects_added_link_missing_endpoint_by_default()
+    {
+        var scene = new WebGlSceneModel
+        {
+            SceneId = "scene",
+            Objects = [new WebGlSceneObject { Id = "object.a" }]
+        };
+        var patch = new WebGlScenePatch
+        {
+            SceneId = "scene",
+            AddLinks =
+            [
+                new WebGlSceneLink
+                {
+                    Id = "link.missing",
+                    SourceObjectId = "object.a",
+                    TargetObjectId = "object.missing"
+                }
+            ]
+        };
+
+        var result = new WebGlScenePatchReducer().Validate(scene, patch);
+
+        Assert.False(result.Success);
+        Assert.Contains(result.Errors, error => error.Contains("missing endpoint", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Apply_deduplicates_affected_ids_and_increments_revision_once()
+    {
+        var scene = new WebGlSceneModel
+        {
+            SceneId = "scene",
+            UiState = { Revision = 4 },
+            Objects =
+            [
+                new WebGlSceneObject { Id = "object.a" }
+            ]
+        };
+        var patch = new WebGlScenePatch
+        {
+            SceneId = "scene",
+            ObjectPatches =
+            [
+                new WebGlSceneObjectPatch { ObjectId = "object.a", Position = new WebGlVector3(1, 0, 0) },
+                new WebGlSceneObjectPatch { ObjectId = "object.a", Color = "#f00" }
+            ]
+        };
+
+        var result = new WebGlScenePatchReducer().Apply(scene, patch);
+
+        Assert.True(result.Success);
+        Assert.Equal(5, result.Revision);
+        Assert.Equal(["object.a"], result.AffectedObjectIds);
+    }
 }

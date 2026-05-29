@@ -21,5 +21,22 @@ public sealed class WebGlInteractionOptions
     public bool FitViewOnCreate { get; set; } = true;
 
     public bool FocusOnDoubleClick { get; set; } = true;
+
+    public string DragAxisLock { get; set; } = string.Empty;
+
+    public double DragSnapGridSize { get; set; }
+
+    public WebGlDragBounds? DragBounds { get; set; }
+}
+
+public sealed class WebGlDragBounds
+{
+    public double MinX { get; set; } = double.NegativeInfinity;
+
+    public double MaxX { get; set; } = double.PositiveInfinity;
+
+    public double MinZ { get; set; } = double.NegativeInfinity;
+
+    public double MaxZ { get; set; } = double.PositiveInfinity;
 }
 

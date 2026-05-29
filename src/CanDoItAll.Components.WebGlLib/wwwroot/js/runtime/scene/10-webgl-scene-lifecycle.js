@@ -29,6 +29,7 @@ import { buildDecorations, clearDynamicScene, rebuildScene } from "./11-webgl-sc
 import { attachRenderLoop } from "./15-webgl-scene-render-loop.js";
 import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
 import { buildHostShell } from "./19-webgl-scene-shell.js";
+import { createAssetCache, disposeAssetCache } from "./21-webgl-scene-asset-cache.js";
 
 export function createState(host, dotNetRef, scene, options) {
     const sceneModel = normalizeScene(scene);
@@ -180,9 +181,10 @@ export function dispose(state) {
     state.controls.removeEventListener("change", state.handlers.controlsChange);
     state.controls.dispose();
     clearDynamicScene(state);
+    disposeAssetCache(state);
     for (const decoration of Object.values(state.decorations || {})) {
         state.scene.remove(decoration);
-        disposeSceneObjectTree(decoration);
+        disposeSceneObjectTree(decoration, state.diagnostics);
     }
 
     state.renderer.dispose();
@@ -216,7 +218,7 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         initialCamera: clonePayload(sceneModel.camera || {}),
         options,
         assetLookup: buildAssetLookup(sceneModel.assetCatalog),
-        assetCache: new Map(),
+        assetCache: createAssetCache(),
         objectLookup: new Map(),
         objectGroups: new Map(),
         objectPositions: new Map(),
@@ -236,6 +238,8 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         cameraDampingFrames: 0,
         diagnostics: createDiagnostics(),
         commandResults: [],
+        nextCommandSequence: 0,
+        nextMotionSequence: 0,
         decorations: {},
         handlers: {}
     };
@@ -269,7 +273,23 @@ function createDiagnostics() {
         lastFrameReason: "",
         frameTimeMs: 0,
         isRenderLoopActive: false,
-        idleSinceTimestamp: 0
+        idleSinceTimestamp: 0,
+        renderSchedulerMode: "auto",
+        lastScheduledReason: "",
+        lastDeltaSeconds: 0,
+        assetCacheEntryCount: 0,
+        assetCacheHitCount: 0,
+        assetCacheMissCount: 0,
+        disposedTemplateCount: 0,
+        disposedGeometryCount: 0,
+        disposedMaterialCount: 0,
+        disposedTextureCount: 0,
+        visibilityCounts: {
+            visibleObjectCount: 0,
+            hiddenObjectCount: 0,
+            visibleLinkCount: 0,
+            hiddenLinkCount: 0
+        }
     };
 }
 

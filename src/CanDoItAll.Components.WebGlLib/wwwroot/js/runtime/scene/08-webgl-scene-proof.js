@@ -5,6 +5,10 @@ export function getProofSnapshot(state) {
         sceneId: state.sceneModel.sceneId || "",
         objectCount: state.sceneModel.objects?.length || 0,
         linkCount: state.sceneModel.links?.length || 0,
+        visibleObjectCount: state.diagnostics.visibilityCounts?.visibleObjectCount || 0,
+        hiddenObjectCount: state.diagnostics.visibilityCounts?.hiddenObjectCount || 0,
+        visibleLinkCount: state.diagnostics.visibilityCounts?.visibleLinkCount || 0,
+        hiddenLinkCount: state.diagnostics.visibilityCounts?.hiddenLinkCount || 0,
         symbolCount,
         loadedAssetCount: state.diagnostics.loadedAssetIds.size,
         missingAssetCount: state.diagnostics.missingAssetIds.size,
@@ -27,8 +31,11 @@ export function getProofSnapshot(state) {
             deterministicMode: String(state.options.deterministicMode),
             renderMode: state.options.renderMode || "auto",
             lastFrameReason: state.diagnostics.lastFrameReason || "",
+            lastScheduledReason: state.diagnostics.lastScheduledReason || "",
+            lastDeltaSeconds: String(state.diagnostics.lastDeltaSeconds || 0),
             frameTimeMs: String(Math.round((state.diagnostics.frameTimeMs || 0) * 100) / 100),
             isRenderLoopActive: String(!!state.diagnostics.isRenderLoopActive),
+            assetCacheEntryCount: String(state.diagnostics.assetCacheEntryCount || 0),
             modelDiagnosticsCount: String(state.diagnostics.modelDiagnostics?.size || 0)
         }
     };

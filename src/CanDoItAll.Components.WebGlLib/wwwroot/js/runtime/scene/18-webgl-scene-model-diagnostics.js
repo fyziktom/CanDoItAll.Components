@@ -16,7 +16,9 @@ export function normalizeModelImportOptions(asset) {
         forceDoubleSidedMaterial: options.forceDoubleSidedMaterial === true,
         normalizeMaterialVisibility: options.normalizeMaterialVisibility === true,
         debugBounds: options.debugBounds === true,
-        disableTint: options.disableTint === true
+        disableTint: options.disableTint === true,
+        cameraPresetHint: String(options.cameraPresetHint || ""),
+        knownIssueNotes: Array.isArray(options.knownIssueNotes) ? options.knownIssueNotes : []
     };
 }
 
@@ -153,7 +155,10 @@ export function addDebugBounds(wrapper, model, color = "#facc15") {
         }));
     helper.name = "webgl-model-debug-bounds";
     helper.position.copy(center);
-    wrapper.add(helper);
+    const axes = new THREE.AxesHelper(Math.max(0.5, Math.max(size.x, size.y, size.z) * 0.65));
+    axes.name = "webgl-model-debug-axes";
+    axes.position.copy(center);
+    wrapper.add(helper, axes);
     return helper;
 }
 

@@ -16,6 +16,9 @@
                     <Button Text="Export" Icon="ios_share" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ExportSceneStateAsync" />
                     <Button Text="Import" Icon="input" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ImportSceneStateAsync" />
                     <Button Text="Missing asset" Icon="report" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Warning" Variant="Variant.Outlined" Click="@TriggerMissingAssetFallbackAsync" />
+                    <Button Text="@LayerButtonText("layer.buildings", "Buildings")" Icon="domain" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.buildings")" Variant="Variant.Outlined" Click="@ToggleBuildingsLayerAsync" />
+                    <Button Text="@LayerButtonText("layer.agents", "Agents")" Icon="groups" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.agents")" Variant="Variant.Outlined" Click="@ToggleAgentsLayerAsync" />
+                    <Button Text="@LayerButtonText("layer.props", "Props")" Icon="park" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.props")" Variant="Variant.Outlined" Click="@TogglePropsLayerAsync" />
                     <Button Text="@SymbolsButtonText" Icon="@SymbolsButtonIcon" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ToggleSymbols" />
                     <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofSnapshotAsync" />
                 </Actions>

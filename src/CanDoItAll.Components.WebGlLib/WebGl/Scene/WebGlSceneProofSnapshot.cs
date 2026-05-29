@@ -8,6 +8,14 @@ public sealed class WebGlSceneProofSnapshot
 
     public int LinkCount { get; set; }
 
+    public int VisibleObjectCount { get; set; }
+
+    public int HiddenObjectCount { get; set; }
+
+    public int VisibleLinkCount { get; set; }
+
+    public int HiddenLinkCount { get; set; }
+
     public int SymbolCount { get; set; }
 
     public int LoadedAssetCount { get; set; }

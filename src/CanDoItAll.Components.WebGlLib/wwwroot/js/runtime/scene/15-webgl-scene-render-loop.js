@@ -3,45 +3,12 @@ import { syncViewport } from "./06-webgl-scene-camera.js";
 import { syncOverlays } from "./07-webgl-scene-overlays.js";
 import { syncDecorations } from "./11-webgl-scene-graph.js";
 import { advanceMotions } from "./14-webgl-scene-motion.js";
+import { createRenderScheduler } from "./22-webgl-scene-scheduler.js";
 
 export function attachRenderLoop(state) {
-    state.scheduleRender = reason => scheduleRender(state, reason);
+    state.renderScheduler = createRenderScheduler(state, (timestamp, reason) => render(state, timestamp, reason));
+    state.scheduleRender = reason => state.renderScheduler.schedule(reason);
     scheduleRender(state, "create");
-}
-
-function requestNextFrame(state) {
-    if (state.animationHandle) {
-        return;
-    }
-
-    state.diagnostics.isRenderLoopActive = true;
-    state.diagnostics.idleSinceTimestamp = 0;
-    const loop = timestamp => {
-        state.animationHandle = 0;
-        if (!state.host.__webglSceneState) {
-            state.diagnostics.isRenderLoopActive = false;
-            return;
-        }
-
-        const reason = resolveRenderReason(state);
-        if (reason) {
-            state.isRenderingFrame = true;
-            try {
-                render(state, timestamp || performance.now(), reason);
-            } finally {
-                state.isRenderingFrame = false;
-            }
-        }
-
-        if (resolveRenderReason(state)) {
-            state.animationHandle = requestAnimationFrame(loop);
-            return;
-        }
-
-        state.diagnostics.isRenderLoopActive = false;
-        state.diagnostics.idleSinceTimestamp = performance.now();
-    };
-    state.animationHandle = requestAnimationFrame(loop);
 }
 
 function render(state, timestamp, reason) {
@@ -49,6 +16,7 @@ function render(state, timestamp, reason) {
     const deltaSeconds = state.lastRenderTimestamp
         ? Math.min(0.08, (timestamp - state.lastRenderTimestamp) / 1000)
         : 1 / 60;
+    state.diagnostics.lastDeltaSeconds = deltaSeconds;
     state.lastRenderTimestamp = timestamp;
     state.renderRequested = false;
     state.renderReason = "";
@@ -69,37 +37,6 @@ function render(state, timestamp, reason) {
     }
 }
 
-function resolveRenderReason(state) {
-    const mode = state.options.renderMode || "auto";
-    if (mode === "continuous") {
-        return "continuous";
-    }
-
-    if (state.motions.size > 0) {
-        return "motion";
-    }
-
-    if (mode === "auto" && state.diagnostics.animatedSymbolCount > 0) {
-        return "symbol-effect";
-    }
-
-    if (mode === "auto" && state.cameraDampingFrames > 0) {
-        return "camera-damping";
-    }
-
-    if (state.renderRequested) {
-        return state.renderReason || "invalidated";
-    }
-
-    return "";
-}
-
 function scheduleRender(state, reason = "invalidated") {
-    state.renderRequested = true;
-    state.renderReason = reason;
-    if (state.isRenderingFrame) {
-        return;
-    }
-
-    requestNextFrame(state);
+    state.renderScheduler.schedule(reason);
 }

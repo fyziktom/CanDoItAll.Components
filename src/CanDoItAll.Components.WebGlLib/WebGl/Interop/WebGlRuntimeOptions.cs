@@ -22,5 +22,7 @@ public sealed class WebGlRuntimeOptions
 
     public bool AutoFitOnCreate { get; set; } = true;
 
+    public int MaxCommandResultHistory { get; set; } = 100;
+
     public string RuntimeKey { get; set; } = string.Empty;
 }

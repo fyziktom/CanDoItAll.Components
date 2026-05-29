@@ -12,7 +12,14 @@ import { selectObjects } from "./05-webgl-scene-interaction.js";
 import { focusObject, fitView, resetCamera } from "./06-webgl-scene-camera.js";
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
 import { applyPatch, applyPatchDetailed, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
-import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
+import {
+    cancelMotion,
+    cancelMotionDetailed,
+    clearMotions,
+    clearMotionsDetailed,
+    enqueueMotion,
+    enqueueMotionDetailed
+} from "./14-webgl-scene-motion.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
 
 const root = window.CanDoItAll = window.CanDoItAll || {};
@@ -139,6 +146,14 @@ root.webglScene = {
     clearMotionsDetailed(host, objectId) {
         const state = resolveState(host);
         return state ? clearMotionsDetailed(state, objectId) : null;
+    },
+    cancelMotion(host, motionId) {
+        const state = resolveState(host);
+        return state ? cancelMotion(state, motionId) : false;
+    },
+    cancelMotionDetailed(host, motionId) {
+        const state = resolveState(host);
+        return state ? cancelMotionDetailed(state, motionId) : null;
     },
     triggerSelectObject(host, objectId) {
         const state = resolveState(host);

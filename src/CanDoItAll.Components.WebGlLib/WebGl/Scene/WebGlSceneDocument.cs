@@ -14,7 +14,27 @@ public sealed class WebGlSceneDocument
 
     public string Source { get; set; } = string.Empty;
 
+    public string SceneContentHash { get; set; } = string.Empty;
+
+    public string DocumentHash { get; set; } = string.Empty;
+
     public string ContentHash { get; set; } = string.Empty;
 
     public Dictionary<string, string> Metadata { get; set; } = [];
+}
+
+public interface IWebGlSceneDocumentMigrator
+{
+    WebGlSceneDocumentMigrationResult Migrate(WebGlSceneDocument document);
+}
+
+public sealed class WebGlSceneDocumentMigrationResult
+{
+    public WebGlSceneDocument Document { get; set; } = new();
+
+    public bool Changed { get; set; }
+
+    public List<string> AppliedMigrations { get; set; } = [];
+
+    public List<string> Warnings { get; set; } = [];
 }

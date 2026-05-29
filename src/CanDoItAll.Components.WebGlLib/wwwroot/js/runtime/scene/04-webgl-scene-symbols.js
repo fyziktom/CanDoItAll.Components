@@ -7,6 +7,7 @@ import {
 } from "./02-webgl-scene-core.js";
 import { syncAssetVisual } from "./03-webgl-scene-assets.js";
 import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
+import { isObjectVisible } from "./23-webgl-scene-indexes.js";
 
 export function rebuildSymbols(state) {
     clearSymbols(state);
@@ -17,6 +18,10 @@ export function rebuildSymbols(state) {
 
     let animatedSymbolCount = 0;
     for (const sceneObject of state.sceneModel.objects || []) {
+        if (!isObjectVisible(state, sceneObject)) {
+            continue;
+        }
+
         const symbols = (sceneObject.symbols || [])
             .filter(symbol => symbol?.isVisible !== false)
             .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
@@ -43,7 +48,7 @@ export function clearSymbols(state) {
     for (const group of state.symbolGroups.values()) {
         state.scene.remove(group);
         group.userData.disposed = true;
-        disposeSceneObjectTree(group);
+        disposeSceneObjectTree(group, state.diagnostics);
     }
 
     state.symbolGroups.clear();

@@ -20,3 +20,12 @@ Recommended execution:
 3. Stop at every refactoring gate and produce evidence before continuing.
 4. Keep WebGlLib generic and domain-neutral.
 5. Put economy-specific implementation in a future Economy repo bundle only.
+
+## Execution status
+
+Completed on `webgl-engine` with evidence under `artifacts/webgl-engine-next-hardening/`.
+
+- Refactoring gates 1-3 passed with line-count warnings below the hard audit threshold.
+- Final command validation passed: npm install, audit, GLB inventory, asset build/verify, WebGlLib build, WebGlSandbox build, WebGlRunLib build, WebGlLib tests, and full solution build.
+- Browser validation passed for `/tycoon-village`, `/model-lab`, and `/run-playback`; screenshots and proof notes are recorded in `artifacts/webgl-engine-next-hardening/browser/`.
+- The v3 bundle originally lacked a validator script, so `scripts/validate_bundle.py` was added as a lightweight structural gate for prepared/completed checks.

@@ -32,11 +32,25 @@ public sealed class WebGlRuntimeDiagnostics
 
     public bool IsRenderLoopActive { get; set; }
 
+    public string RenderSchedulerMode { get; set; } = WebGlRenderModes.Auto;
+
+    public string LastScheduledReason { get; set; } = string.Empty;
+
+    public double LastDeltaSeconds { get; set; }
+
     public int EstimatedTriangleCount { get; set; }
 
     public int EstimatedVertexCount { get; set; }
 
     public int ObjectCount { get; set; }
+
+    public int VisibleObjectCount { get; set; }
+
+    public int HiddenObjectCount { get; set; }
+
+    public int VisibleLinkCount { get; set; }
+
+    public int HiddenLinkCount { get; set; }
 
     public int SymbolCount { get; set; }
 
@@ -53,6 +67,20 @@ public sealed class WebGlRuntimeDiagnostics
     public double IdleSinceMs { get; set; }
 
     public string LargestLoadedAssetId { get; set; } = string.Empty;
+
+    public int AssetCacheEntryCount { get; set; }
+
+    public int AssetCacheHitCount { get; set; }
+
+    public int AssetCacheMissCount { get; set; }
+
+    public int DisposedTemplateCount { get; set; }
+
+    public int DisposedGeometryCount { get; set; }
+
+    public int DisposedMaterialCount { get; set; }
+
+    public int DisposedTextureCount { get; set; }
 
     public string LastError { get; set; } = string.Empty;
 

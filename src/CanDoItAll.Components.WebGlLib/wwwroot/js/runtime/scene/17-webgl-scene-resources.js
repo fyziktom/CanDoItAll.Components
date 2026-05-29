@@ -28,7 +28,7 @@ export function markOwnedMaterial(material) {
     return material;
 }
 
-export function disposeSceneObjectTree(object) {
+export function disposeSceneObjectTree(object, diagnostics = null) {
     if (!object) {
         return;
     }
@@ -36,14 +36,14 @@ export function disposeSceneObjectTree(object) {
     object.traverse(child => {
         const ownership = resolveOwnership(child);
         if (ownership.ownsGeometry) {
-            disposeOwnedGeometry(child.geometry);
+            disposeOwnedGeometry(child.geometry, diagnostics);
         }
 
-        disposeOwnedMaterial(child.material, ownership.ownsMaterial);
+        disposeOwnedMaterial(child.material, ownership.ownsMaterial, diagnostics);
     });
 }
 
-export function disposeOwnedMaterial(material, force = true) {
+export function disposeOwnedMaterial(material, force = true, diagnostics = null) {
     for (const item of normalizeMaterials(material)) {
         if (!item) {
             continue;
@@ -54,12 +54,19 @@ export function disposeOwnedMaterial(material, force = true) {
             continue;
         }
 
-        disposeMaterialTextures(item);
+        disposeMaterialTextures(item, diagnostics);
         item.dispose?.();
+        if (diagnostics) {
+            diagnostics.disposedMaterialCount = (diagnostics.disposedMaterialCount || 0) + 1;
+        }
     }
 }
 
-export function disposeOwnedGeometry(geometry) {
+export function disposeOwnedGeometry(geometry, diagnostics = null) {
+    if (geometry && diagnostics) {
+        diagnostics.disposedGeometryCount = (diagnostics.disposedGeometryCount || 0) + 1;
+    }
+
     geometry?.dispose?.();
 }
 
@@ -92,7 +99,7 @@ function normalizeMaterials(material) {
     return Array.isArray(material) ? material : [material];
 }
 
-function disposeMaterialTextures(material) {
+function disposeMaterialTextures(material, diagnostics = null) {
     const textureKeys = [
         "map",
         "alphaMap",
@@ -108,6 +115,10 @@ function disposeMaterialTextures(material) {
     ];
 
     for (const key of textureKeys) {
+        if (material[key] && diagnostics) {
+            diagnostics.disposedTextureCount = (diagnostics.disposedTextureCount || 0) + 1;
+        }
+
         material[key]?.dispose?.();
     }
 }

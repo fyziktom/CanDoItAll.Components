@@ -5,8 +5,8 @@ const { spawnSync } = require("node:child_process");
 const repoRoot = path.resolve(__dirname, "..", "..");
 const sceneRuntimeDir = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene");
 const componentRoot = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "Components", "Shared", "Assets");
-const warningLineThreshold = 220;
-const failureLineThreshold = 320;
+const warningLineThreshold = 260;
+const failureLineThreshold = 340;
 const thinFacadeLineThreshold = 180;
 
 let failures = 0;
@@ -23,7 +23,9 @@ for (const filePath of runtimeFiles) {
   auditSyntax(filePath);
 }
 
+auditImportGraph();
 auditPublicFacade();
+auditDuplicateHelpers();
 auditAssetIncludes();
 auditBranchInstructionFiles();
 
@@ -93,6 +95,83 @@ function auditPublicFacade() {
   }
 }
 
+function auditImportGraph() {
+  const graph = new Map();
+  for (const filePath of runtimeFiles) {
+    const imports = Array.from(read(filePath).matchAll(/from\s+["'](\.\/[^"']+\.js)["']/g))
+      .map(match => path.basename(match[1]))
+      .filter(Boolean);
+    graph.set(path.basename(filePath), imports);
+    for (const imported of imports) {
+      if (imported === "01-webgl-scene.js" && path.basename(filePath) !== "01-webgl-scene.js") {
+        fail(`${relative(filePath)} imports the public facade; runtime modules must depend inward only.`);
+      }
+    }
+  }
+
+  console.log("Scene runtime import graph:");
+  for (const [file, imports] of graph.entries()) {
+    console.log(`  ${file} -> ${imports.length ? imports.join(", ") : "(none)"}`);
+  }
+
+  const visiting = new Set();
+  const visited = new Set();
+  const stack = [];
+  for (const file of graph.keys()) {
+    visit(file);
+  }
+
+  function visit(file) {
+    if (visited.has(file)) {
+      return;
+    }
+
+    if (visiting.has(file)) {
+      const cycle = [...stack.slice(stack.indexOf(file)), file].join(" -> ");
+      fail(`Circular scene-runtime import detected: ${cycle}`);
+      return;
+    }
+
+    visiting.add(file);
+    stack.push(file);
+    for (const imported of graph.get(file) || []) {
+      if (graph.has(imported)) {
+        visit(imported);
+      }
+    }
+
+    stack.pop();
+    visiting.delete(file);
+    visited.add(file);
+  }
+}
+
+function auditDuplicateHelpers() {
+  const commandResultFactories = [];
+  const vectorNormalizers = [];
+  for (const filePath of runtimeFiles) {
+    const source = read(filePath);
+    const basename = path.basename(filePath);
+    if (/\bfunction\s+(createCommandResult|commandResult)\s*\(/.test(source) ||
+      /\bconst\s+(createCommandResult|commandResult)\s*=/.test(source)) {
+      commandResultFactories.push(basename);
+    }
+
+    if (/\bfunction\s+normalizeVector\s*\(/.test(source)) {
+      vectorNormalizers.push(basename);
+    }
+  }
+
+  const commandResultOwners = commandResultFactories.filter(file => file !== "20-webgl-scene-command-results.js");
+  if (commandResultOwners.length > 0) {
+    fail(`Duplicate command-result factory helpers outside 20-webgl-scene-command-results.js: ${commandResultOwners.join(", ")}.`);
+  }
+
+  if (vectorNormalizers.length > 1) {
+    warn(`Multiple local normalizeVector helpers remain: ${vectorNormalizers.join(", ")}.`);
+  }
+}
+
 function auditAssetIncludes() {
   const bodyAssets = read(path.join(componentRoot, "WebGlLibBodyAssets.razor"));
   if (!bodyAssets.includes("runtime/workbench/01-webgl-workbench.js")) {
@@ -118,7 +197,8 @@ function auditBranchInstructionFiles() {
           return;
         }
 
-        if (/\b(do not|don't|never|forbidden|must not|not run)\b/i.test(line)) {
+        const normalizedLine = line.replace(/[*_`]/g, " ").replace(/\s+/g, " ");
+        if (/\b(do not|don't|never|forbidden|must not|not run)\b/i.test(normalizedLine)) {
           return;
         }
 

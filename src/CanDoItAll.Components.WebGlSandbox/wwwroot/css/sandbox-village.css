@@ -222,7 +222,13 @@
     font-weight: 800;
 }
 
-.webgl-field select {
+.webgl-field--inline {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+}
+
+.webgl-field select,
+.webgl-field input[type="number"] {
     width: 100%;
     min-width: 0;
     padding: 0.58rem 0.65rem;
@@ -231,6 +237,18 @@
     background: #ffffff;
     color: #172033;
     font: inherit;
+}
+
+.webgl-recipe-json {
+    width: 100%;
+    min-width: 0;
+    resize: vertical;
+    padding: 0.65rem;
+    border: 1px solid rgba(100, 116, 139, 0.28);
+    border-radius: 0.45rem;
+    background: #0f172a;
+    color: #e2e8f0;
+    font: 0.78rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
 .webgl-warning-note {

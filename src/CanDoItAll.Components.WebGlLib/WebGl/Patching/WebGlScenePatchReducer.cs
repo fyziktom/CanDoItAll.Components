@@ -13,10 +13,21 @@ public sealed class WebGlScenePatchReducer
             return result;
         }
 
-        var objectsById = scene.Objects.ToDictionary(item => item.Id, StringComparer.Ordinal);
+        var objectsById = scene.Objects
+            .Where(static item => !string.IsNullOrWhiteSpace(item.Id))
+            .ToDictionary(item => item.Id, StringComparer.Ordinal);
         foreach (var objectId in patch.RemoveObjectIds.Where(static id => !string.IsNullOrWhiteSpace(id)))
         {
+            if (!objectsById.ContainsKey(objectId))
+            {
+                result.Warnings.Add($"Object '{objectId}' was not found for removal.");
+                continue;
+            }
+
             scene.Objects.RemoveAll(item => string.Equals(item.Id, objectId, StringComparison.Ordinal));
+            scene.Links.RemoveAll(item => string.Equals(item.SourceObjectId, objectId, StringComparison.Ordinal) ||
+                                          string.Equals(item.TargetObjectId, objectId, StringComparison.Ordinal));
+            objectsById.Remove(objectId);
             result.RemovedObjectIds.Add(objectId);
         }
 
@@ -44,12 +55,32 @@ public sealed class WebGlScenePatchReducer
 
         foreach (var linkId in patch.RemoveLinkIds.Where(static id => !string.IsNullOrWhiteSpace(id)))
         {
+            if (scene.Links.All(item => !string.Equals(item.Id, linkId, StringComparison.Ordinal)))
+            {
+                result.Warnings.Add($"Link '{linkId}' was not found for removal.");
+                continue;
+            }
+
             scene.Links.RemoveAll(item => string.Equals(item.Id, linkId, StringComparison.Ordinal));
             result.RemovedLinkIds.Add(linkId);
         }
 
+        var missingLinkEndpointMode = ResolveMetadata(patch, "missingLinkEndpointMode");
         foreach (var link in patch.AddLinks.Where(static item => !string.IsNullOrWhiteSpace(item.Id)))
         {
+            if (!objectsById.ContainsKey(link.SourceObjectId) || !objectsById.ContainsKey(link.TargetObjectId))
+            {
+                var message = $"Link '{link.Id}' references missing endpoint(s): '{link.SourceObjectId}' -> '{link.TargetObjectId}'.";
+                if (string.Equals(missingLinkEndpointMode, "warn", StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Warnings.Add(message);
+                    continue;
+                }
+
+                result.Errors.Add(message);
+                continue;
+            }
+
             scene.Links.RemoveAll(item => string.Equals(item.Id, link.Id, StringComparison.Ordinal));
             scene.Links.Add(link);
             result.AddedLinkIds.Add(link.Id);
@@ -79,7 +110,23 @@ public sealed class WebGlScenePatchReducer
 
         if (patch.BaseRevision > 0 && patch.BaseRevision != scene.UiState.Revision)
         {
-            result.Warnings.Add($"Patch base revision {patch.BaseRevision} does not match scene revision {scene.UiState.Revision}.");
+            var message = $"Patch base revision {patch.BaseRevision} does not match scene revision {scene.UiState.Revision}.";
+            if (IsStrictBaseRevision(patch))
+            {
+                result.Errors.Add(message);
+            }
+            else
+            {
+                result.Warnings.Add(message);
+            }
+        }
+
+        foreach (var sceneObject in patch.AddObjects)
+        {
+            if (string.IsNullOrWhiteSpace(sceneObject.Id))
+            {
+                result.Errors.Add("Added object id is required.");
+            }
         }
 
         foreach (var objectPatch in patch.ObjectPatches)
@@ -87,6 +134,37 @@ public sealed class WebGlScenePatchReducer
             if (string.IsNullOrWhiteSpace(objectPatch.ObjectId))
             {
                 result.Errors.Add("Object patch id is required.");
+            }
+        }
+
+        var availableObjectIds = scene.Objects
+            .Select(static item => item.Id)
+            .Where(static id => !string.IsNullOrWhiteSpace(id))
+            .Except(patch.RemoveObjectIds.Where(static id => !string.IsNullOrWhiteSpace(id)), StringComparer.Ordinal)
+            .Concat(patch.AddObjects.Select(static item => item.Id).Where(static id => !string.IsNullOrWhiteSpace(id)))
+            .ToHashSet(StringComparer.Ordinal);
+        var missingLinkEndpointMode = ResolveMetadata(patch, "missingLinkEndpointMode");
+        foreach (var link in patch.AddLinks)
+        {
+            if (string.IsNullOrWhiteSpace(link.Id))
+            {
+                result.Errors.Add("Added link id is required.");
+                continue;
+            }
+
+            if (availableObjectIds.Contains(link.SourceObjectId) && availableObjectIds.Contains(link.TargetObjectId))
+            {
+                continue;
+            }
+
+            var message = $"Link '{link.Id}' references missing endpoint(s): '{link.SourceObjectId}' -> '{link.TargetObjectId}'.";
+            if (string.Equals(missingLinkEndpointMode, "warn", StringComparison.OrdinalIgnoreCase))
+            {
+                result.Warnings.Add(message);
+            }
+            else
+            {
+                result.Errors.Add(message);
             }
         }
 
@@ -135,6 +213,13 @@ public sealed class WebGlScenePatchReducer
             target.Metadata = new Dictionary<string, string>(patch.Metadata, StringComparer.Ordinal);
         }
     }
+
+    private static bool IsStrictBaseRevision(WebGlScenePatch patch)
+        => string.Equals(ResolveMetadata(patch, "strictBaseRevision"), "true", StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(ResolveMetadata(patch, "baseRevisionMode"), "fail", StringComparison.OrdinalIgnoreCase);
+
+    private static string ResolveMetadata(WebGlScenePatch patch, string key)
+        => patch.Metadata.TryGetValue(key, out var value) ? value : string.Empty;
 }
 
 public sealed class WebGlScenePatchResult
@@ -161,18 +246,18 @@ public sealed class WebGlScenePatchResult
 
     public int Revision { get; set; }
 
-    public List<string> AffectedObjectIds =>
-    [
-        .. PatchedObjectIds,
-        .. AddedObjectIds,
-        .. RemovedObjectIds
-    ];
+    public List<string> AffectedObjectIds => PatchedObjectIds
+        .Concat(AddedObjectIds)
+        .Concat(RemovedObjectIds)
+        .Where(static id => !string.IsNullOrWhiteSpace(id))
+        .Distinct(StringComparer.Ordinal)
+        .ToList();
 
-    public List<string> AffectedLinkIds =>
-    [
-        .. AddedLinkIds,
-        .. RemovedLinkIds
-    ];
+    public List<string> AffectedLinkIds => AddedLinkIds
+        .Concat(RemovedLinkIds)
+        .Where(static id => !string.IsNullOrWhiteSpace(id))
+        .Distinct(StringComparer.Ordinal)
+        .ToList();
 
     public bool Success => IsValid;
 

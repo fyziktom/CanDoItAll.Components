@@ -33,6 +33,12 @@ public partial class TycoonVillage
 
     private string SymbolsButtonIcon => scene.UiState.ShowSymbols ? "visibility" : "visibility_off";
 
+    private string LayerButtonText(string layerId, string label)
+        => IsLayerVisible(layerId) ? $"{label} on" : $"{label} off";
+
+    private ButtonStyle LayerButtonStyle(string layerId)
+        => IsLayerVisible(layerId) ? ButtonStyle.Light : ButtonStyle.Warning;
+
     private ButtonStyle ProfileStyle(string profile)
         => string.Equals(selectedAssetProfile, profile, StringComparison.Ordinal)
             ? ButtonStyle.Primary
@@ -85,6 +91,28 @@ public partial class TycoonVillage
         runtimeOptions.ShowSymbols = scene.UiState.ShowSymbols;
         scene.UiState.Revision += 1;
     }
+
+    private async Task ToggleLayerAsync(string layerId)
+    {
+        var layer = scene.Layers.FirstOrDefault(item => item.Id == layerId);
+        if (layer is null)
+        {
+            return;
+        }
+
+        layer.IsVisible = !layer.IsVisible;
+        scene.UiState.Revision += 1;
+        latestSnapshot = sceneView is null ? null : await sceneView.GetProofSnapshotAsync();
+    }
+
+    private bool IsLayerVisible(string layerId)
+        => scene.Layers.FirstOrDefault(item => item.Id == layerId)?.IsVisible != false;
+
+    private Task ToggleBuildingsLayerAsync() => ToggleLayerAsync("layer.buildings");
+
+    private Task ToggleAgentsLayerAsync() => ToggleLayerAsync("layer.agents");
+
+    private Task TogglePropsLayerAsync() => ToggleLayerAsync("layer.props");
 
     private async Task MoveRunnerToPlazaAsync()
     {

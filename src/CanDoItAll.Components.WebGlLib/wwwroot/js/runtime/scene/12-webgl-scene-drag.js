@@ -1,6 +1,10 @@
 import { THREE, round, resolveObjectPosition } from "./02-webgl-scene-core.js";
-import { notifyObjectsMoved, notifyStateChanged, resolvePointer } from "./05-webgl-scene-interaction.js";
 import { updateObjectRuntimeTransform } from "./11-webgl-scene-graph.js";
+import {
+    notifyObjectsMoved,
+    notifyStateChanged,
+    resolvePointer
+} from "./24-webgl-scene-notifications.js";
 
 const dragThresholdPixels = 6;
 const clickSuppressMs = 250;
@@ -69,7 +73,7 @@ export function updateDrag(state, event) {
         y: round(drag.startPosition.y, 3),
         z: round(groundPoint.z - drag.offset.z, 3)
     };
-    sceneObject.position = nextPosition;
+    sceneObject.position = applyDragConstraints(state, nextPosition, drag.startPosition);
     updateObjectRuntimeTransform(state, drag.objectId, true);
     notifyStateChanged(state);
     event.preventDefault();
@@ -144,4 +148,44 @@ function intersectGroundPlane(state, event, y) {
     const point = new THREE.Vector3();
     state.raycaster.setFromCamera(pointer.ndc, state.camera);
     return state.raycaster.ray.intersectPlane(plane, point);
+}
+
+function applyDragConstraints(state, nextPosition, startPosition) {
+    const interaction = state.sceneModel.interaction || {};
+    const axisLock = String(interaction.dragAxisLock || "").toLowerCase();
+    const snap = Math.max(0, Number(interaction.dragSnapGridSize) || 0);
+    const bounds = interaction.dragBounds || {};
+    const constrained = {
+        x: axisLock === "z" ? startPosition.x : nextPosition.x,
+        y: nextPosition.y,
+        z: axisLock === "x" ? startPosition.z : nextPosition.z
+    };
+
+    if (snap > 0) {
+        constrained.x = Math.round(constrained.x / snap) * snap;
+        constrained.z = Math.round(constrained.z / snap) * snap;
+    }
+
+    constrained.x = clampFinite(constrained.x, bounds.minX ?? bounds.MinX, bounds.maxX ?? bounds.MaxX);
+    constrained.z = clampFinite(constrained.z, bounds.minZ ?? bounds.MinZ, bounds.maxZ ?? bounds.MaxZ);
+    return {
+        x: round(constrained.x, 3),
+        y: round(constrained.y, 3),
+        z: round(constrained.z, 3)
+    };
+}
+
+function clampFinite(value, min, max) {
+    const low = Number(min);
+    const high = Number(max);
+    let result = value;
+    if (Number.isFinite(low)) {
+        result = Math.max(low, result);
+    }
+
+    if (Number.isFinite(high)) {
+        result = Math.min(high, result);
+    }
+
+    return result;
 }

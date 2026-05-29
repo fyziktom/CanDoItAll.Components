@@ -9,6 +9,12 @@ import {
 import { syncAssetVisual } from "./03-webgl-scene-assets.js";
 import { rebuildSymbols, syncSymbolPositionsForObject } from "./04-webgl-scene-symbols.js";
 import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
+import {
+    buildSceneIndexes,
+    buildVisibilityCounts,
+    isLinkVisible,
+    isObjectVisible
+} from "./23-webgl-scene-indexes.js";
 
 export function buildDecorations(state) {
     const environment = state.sceneModel.environment || {};
@@ -45,19 +51,30 @@ export function syncDecorations(state) {
 
 export function rebuildScene(state) {
     clearDynamicScene(state);
+    state.sceneIndexes = buildSceneIndexes(state.sceneModel);
     state.objectLookup = new Map();
     state.objectPositions = new Map();
 
     for (const sceneObject of state.sceneModel.objects || []) {
+        state.objectLookup.set(sceneObject.id, sceneObject);
+        if (!isObjectVisible(state, sceneObject)) {
+            continue;
+        }
+
         addSceneObjectGroup(state, sceneObject);
     }
 
     for (const link of state.sceneModel.links || []) {
+        if (!isLinkVisible(state, link)) {
+            continue;
+        }
+
         addLinkGroup(state, link);
     }
 
     rebuildSymbols(state);
     syncObjectRings(state);
+    state.diagnostics.visibilityCounts = buildVisibilityCounts(state);
     state.shell.emptyState.classList.toggle("is-visible", (state.sceneModel.objects || []).length === 0);
     state.scheduleRender("scene-rebuild");
 }
@@ -113,7 +130,7 @@ export function removeSceneObjectGroup(state, objectId) {
     state.objectGroups.delete(objectId);
     state.objectLookup.delete(objectId);
     state.objectPositions.delete(objectId);
-    disposeSceneObjectTree(group);
+    disposeSceneObjectTree(group, state.diagnostics);
 }
 
 export function replaceSceneObjectGroup(state, sceneObject) {
@@ -185,7 +202,7 @@ export function removeLinkGroup(state, linkId) {
 
     const [group] = state.linkGroups.splice(index, 1);
     state.scene.remove(group);
-    disposeSceneObjectTree(group);
+    disposeSceneObjectTree(group, state.diagnostics);
 }
 
 export function syncObjectRings(state) {
@@ -206,18 +223,18 @@ export function clearDynamicScene(state) {
     for (const group of state.objectGroups.values()) {
         state.scene.remove(group);
         group.userData.disposed = true;
-        disposeSceneObjectTree(group);
+        disposeSceneObjectTree(group, state.diagnostics);
     }
 
     for (const linkGroup of state.linkGroups) {
         state.scene.remove(linkGroup);
-        disposeSceneObjectTree(linkGroup);
+        disposeSceneObjectTree(linkGroup, state.diagnostics);
     }
 
     for (const symbolGroup of state.symbolGroups.values()) {
         state.scene.remove(symbolGroup);
         symbolGroup.userData.disposed = true;
-        disposeSceneObjectTree(symbolGroup);
+        disposeSceneObjectTree(symbolGroup, state.diagnostics);
     }
 
     for (const label of state.labelElements.values()) {
@@ -230,6 +247,7 @@ export function clearDynamicScene(state) {
     state.labelElements.clear();
     state.hitMeshes.length = 0;
     resetInstanceDiagnostics(state);
+    state.diagnostics.visibilityCounts = buildVisibilityCounts(state);
 }
 
 function syncLinksForObject(state, objectId) {

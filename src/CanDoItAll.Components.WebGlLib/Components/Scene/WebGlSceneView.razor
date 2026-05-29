@@ -200,6 +200,12 @@
     public Task<WebGlSceneCommandResult?> ClearMotionsDetailedAsync(string? objectId = null)
         => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.clearMotionsDetailed", host, objectId).AsTask();
 
+    public Task<bool> CancelMotionAsync(string motionId)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.cancelMotion", host, motionId).AsTask();
+
+    public Task<WebGlSceneCommandResult?> CancelMotionDetailedAsync(string motionId)
+        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.cancelMotionDetailed", host, motionId).AsTask();
+
     public async ValueTask DisposeAsync()
     {
         if (string.IsNullOrWhiteSpace(appliedSceneKey))

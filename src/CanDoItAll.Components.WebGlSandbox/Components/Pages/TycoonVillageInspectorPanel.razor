@@ -50,6 +50,10 @@
                 <dd data-testid="webgl-proof-object-count">@DisplayObjectCount</dd>
             </div>
             <div>
+                <dt>Visible</dt>
+                <dd data-testid="webgl-proof-visible-object-count">@DisplayVisibleObjectCount</dd>
+            </div>
+            <div>
                 <dt>Loaded</dt>
                 <dd data-testid="webgl-proof-loaded-asset-count">@DisplayLoadedAssetCount</dd>
             </div>
@@ -128,6 +132,9 @@
     public EventCallback<string> SelectObject { get; set; }
 
     private int DisplayObjectCount => LatestSnapshot?.ObjectCount ?? Scene.Objects.Count;
+    private int DisplayVisibleObjectCount => LatestSnapshot?.VisibleObjectCount ?? Scene.Objects.Count(item => Scene.Layers
+        .Where(layer => layer.IsVisible == false)
+        .All(layer => !layer.ObjectIds.Contains(item.Id, StringComparer.Ordinal)));
     private int DisplayLoadedAssetCount => LatestSnapshot?.LoadedAssetCount ?? 0;
     private int DisplayModelCount => LatestSnapshot?.ModelInstanceCount ?? 0;
     private int DisplayFallbackCount => LatestSnapshot?.FallbackObjectCount ?? 0;

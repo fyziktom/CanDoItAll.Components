@@ -17,6 +17,10 @@ import {
     markOwnedMaterial,
     markSharedTemplateResource
 } from "./17-webgl-scene-resources.js";
+import {
+    deleteCachedTemplate,
+    getOrLoadTemplate
+} from "./21-webgl-scene-asset-cache.js";
 
 const modelLoader = new GLTFLoader();
 
@@ -26,22 +30,15 @@ export function loadModelAsset(state, asset) {
         return Promise.reject(new Error(`Asset '${asset?.id || ""}' has no URI.`));
     }
 
-    if (state.assetCache.has(uri)) {
-        return state.assetCache.get(uri);
-    }
-
-    const promise = modelLoader.loadAsync(uri)
+    return getOrLoadTemplate(state, uri, () => modelLoader.loadAsync(uri)
         .then(gltf => buildLoadedAssetTemplate(state, gltf, asset, uri))
         .catch(error => {
-            state.assetCache.delete(uri);
+            deleteCachedTemplate(state, uri);
             state.diagnostics.missingAssetIds.add(asset.id);
             state.diagnostics.failedAssetUris.add(uri);
             state.diagnostics.lastError = error?.message || String(error);
             throw error;
-        });
-
-    state.assetCache.set(uri, promise);
-    return promise;
+        }));
 }
 
 export function buildModelInstance(assetTemplate, sceneObject, asset, options = {}) {
