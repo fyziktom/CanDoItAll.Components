@@ -11,8 +11,8 @@ import {
 import { selectObjects } from "./05-webgl-scene-interaction.js";
 import { focusObject, fitView, resetCamera } from "./06-webgl-scene-camera.js";
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
-import { applyPatch, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
-import { clearMotions, enqueueMotion } from "./14-webgl-scene-motion.js";
+import { applyPatch, applyPatchDetailed, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
+import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
 
 const root = window.CanDoItAll = window.CanDoItAll || {};
@@ -112,6 +112,10 @@ root.webglScene = {
         const state = resolveState(host);
         return state ? applyPatch(state, patch) : false;
     },
+    applyPatchDetailed(host, patch) {
+        const state = resolveState(host);
+        return state ? applyPatchDetailed(state, patch) : null;
+    },
     setObjectTransform(host, objectId, transform) {
         const state = resolveState(host);
         return state ? setObjectTransform(state, objectId, transform) : false;
@@ -124,9 +128,17 @@ root.webglScene = {
         const state = resolveState(host);
         return state ? enqueueMotion(state, command) : false;
     },
+    enqueueMotionDetailed(host, command) {
+        const state = resolveState(host);
+        return state ? enqueueMotionDetailed(state, command) : null;
+    },
     clearMotions(host, objectId) {
         const state = resolveState(host);
         return state ? clearMotions(state, objectId) : false;
+    },
+    clearMotionsDetailed(host, objectId) {
+        const state = resolveState(host);
+        return state ? clearMotionsDetailed(state, objectId) : null;
     },
     triggerSelectObject(host, objectId) {
         const state = resolveState(host);

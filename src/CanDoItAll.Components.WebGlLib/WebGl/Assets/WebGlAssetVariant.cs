@@ -22,5 +22,7 @@ public sealed class WebGlAssetVariant
 
     public WebGlVector3 Scale { get; set; } = WebGlVector3.One;
 
+    public WebGlModelImportOptions ImportOptions { get; set; } = new();
+
     public Dictionary<string, string> Metadata { get; set; } = [];
 }

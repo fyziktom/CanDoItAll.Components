@@ -1,12 +1,12 @@
 import {
     THREE,
     clamp,
-    disposeObject3D,
     resolveFiniteNumber,
     resolveObjectSize,
     resolveString
 } from "./02-webgl-scene-core.js";
 import { syncAssetVisual } from "./03-webgl-scene-assets.js";
+import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
 
 export function rebuildSymbols(state) {
     clearSymbols(state);
@@ -43,7 +43,7 @@ export function clearSymbols(state) {
     for (const group of state.symbolGroups.values()) {
         state.scene.remove(group);
         group.userData.disposed = true;
-        disposeObject3D(group);
+        disposeSceneObjectTree(group);
     }
 
     state.symbolGroups.clear();

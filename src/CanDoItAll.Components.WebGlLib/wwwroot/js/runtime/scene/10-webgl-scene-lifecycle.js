@@ -27,6 +27,8 @@ import {
 } from "./06-webgl-scene-camera.js";
 import { buildDecorations, clearDynamicScene, rebuildScene } from "./11-webgl-scene-graph.js";
 import { attachRenderLoop } from "./15-webgl-scene-render-loop.js";
+import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
+import { buildHostShell } from "./19-webgl-scene-shell.js";
 
 export function createState(host, dotNetRef, scene, options) {
     const sceneModel = normalizeScene(scene);
@@ -95,6 +97,7 @@ export function updateState(state, scene, options) {
     state.diagnostics.updateCount += 1;
     rebuildScene(state);
     applyCameraState(state);
+    state.scheduleRender("scene-update");
 }
 
 export function importScene(state, scene, options) {
@@ -177,33 +180,15 @@ export function dispose(state) {
     state.controls.removeEventListener("change", state.handlers.controlsChange);
     state.controls.dispose();
     clearDynamicScene(state);
-    state.decorations.ground && state.scene.remove(state.decorations.ground);
-    state.decorations.grid && state.scene.remove(state.decorations.grid);
-    state.renderer.dispose();
-    state.host.innerHTML = "";
-    delete state.host.__webglSceneState;
-}
+    for (const decoration of Object.values(state.decorations || {})) {
+        state.scene.remove(decoration);
+        disposeSceneObjectTree(decoration);
+    }
 
-function buildHostShell(host) {
-    host.innerHTML = "";
-    host.classList.add("wgl-scene-runtime-host");
-    const stage = document.createElement("div");
-    stage.className = "wgl-scene-stage";
-    const labelLayer = document.createElement("div");
-    labelLayer.className = "wgl-scene-label-layer";
-    const emptyState = document.createElement("div");
-    emptyState.className = "wgl-scene-empty-state";
-    emptyState.innerHTML = "<div class=\"wgl-scene-empty-state__card\"><p class=\"wgl-scene-empty-state__title\">No scene objects</p><p class=\"wgl-scene-empty-state__body\">Add generic scene objects to render the WebGL proof surface.</p></div>";
-    const diagnosticsPanel = document.createElement("div");
-    diagnosticsPanel.className = "wgl-scene-diagnostics";
-    const diagnosticsTitle = document.createElement("p");
-    diagnosticsTitle.className = "wgl-scene-diagnostics__title";
-    diagnosticsTitle.textContent = "Runtime";
-    const diagnosticsMeta = document.createElement("p");
-    diagnosticsMeta.className = "wgl-scene-diagnostics__meta";
-    diagnosticsPanel.append(diagnosticsTitle, diagnosticsMeta);
-    host.append(stage, labelLayer, emptyState, diagnosticsPanel);
-    return { stage, labelLayer, emptyState, diagnosticsPanel, diagnosticsMeta };
+    state.renderer.dispose();
+    state.diagnostics.disposeCount += 1;
+    state.host.replaceChildren();
+    delete state.host.__webglSceneState;
 }
 
 function addLights(scene, environment) {
@@ -250,6 +235,7 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         lastRenderTimestamp: 0,
         cameraDampingFrames: 0,
         diagnostics: createDiagnostics(),
+        commandResults: [],
         decorations: {},
         handlers: {}
     };
@@ -258,6 +244,7 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
 function createDiagnostics() {
     return {
         createCount: 1,
+        disposeCount: 0,
         updateCount: 0,
         renderCount: 0,
         loadedAssetIds: new Set(),
@@ -268,6 +255,11 @@ function createDiagnostics() {
         failedAssetUris: new Set(),
         missingFallbackAssetIds: new Set(),
         failedPatchCommands: new Set(),
+        failedCommandDetails: [],
+        modelDiagnostics: new Map(),
+        motionAcceptedCount: 0,
+        motionCompletedCount: 0,
+        motionFailedCount: 0,
         animatedSymbolCount: 0,
         estimatedTriangleCount: 0,
         estimatedVertexCount: 0,
@@ -275,7 +267,9 @@ function createDiagnostics() {
         largestLoadedAssetBytes: 0,
         lastError: "",
         lastFrameReason: "",
-        frameTimeMs: 0
+        frameTimeMs: 0,
+        isRenderLoopActive: false,
+        idleSinceTimestamp: 0
     };
 }
 

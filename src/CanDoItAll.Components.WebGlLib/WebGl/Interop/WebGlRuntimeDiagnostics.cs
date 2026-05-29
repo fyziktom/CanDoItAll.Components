@@ -4,6 +4,8 @@ public sealed class WebGlRuntimeDiagnostics
 {
     public int CreateCount { get; set; }
 
+    public int DisposeCount { get; set; }
+
     public int UpdateCount { get; set; }
 
     public int RenderCount { get; set; }
@@ -20,7 +22,15 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int ActiveMotionCount { get; set; }
 
+    public int MotionAcceptedCount { get; set; }
+
+    public int MotionCompletedCount { get; set; }
+
+    public int MotionFailedCount { get; set; }
+
     public int AnimatedSymbolCount { get; set; }
+
+    public bool IsRenderLoopActive { get; set; }
 
     public int EstimatedTriangleCount { get; set; }
 
@@ -40,6 +50,8 @@ public sealed class WebGlRuntimeDiagnostics
 
     public double FrameTimeMs { get; set; }
 
+    public double IdleSinceMs { get; set; }
+
     public string LargestLoadedAssetId { get; set; } = string.Empty;
 
     public string LastError { get; set; } = string.Empty;
@@ -51,4 +63,8 @@ public sealed class WebGlRuntimeDiagnostics
     public List<string> MissingFallbackAssetIds { get; set; } = [];
 
     public List<string> FailedPatchCommands { get; set; } = [];
+
+    public List<WebGlSceneCommandResult> FailedCommandDetails { get; set; } = [];
+
+    public List<WebGlModelDiagnostics> ModelDiagnostics { get; set; } = [];
 }

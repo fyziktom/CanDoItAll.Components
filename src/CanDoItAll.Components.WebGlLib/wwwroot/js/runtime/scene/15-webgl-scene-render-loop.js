@@ -6,21 +6,40 @@ import { advanceMotions } from "./14-webgl-scene-motion.js";
 
 export function attachRenderLoop(state) {
     state.scheduleRender = reason => scheduleRender(state, reason);
-    startRenderLoop(state);
+    scheduleRender(state, "create");
 }
 
-function startRenderLoop(state) {
+function requestNextFrame(state) {
+    if (state.animationHandle) {
+        return;
+    }
+
+    state.diagnostics.isRenderLoopActive = true;
+    state.diagnostics.idleSinceTimestamp = 0;
     const loop = timestamp => {
+        state.animationHandle = 0;
         if (!state.host.__webglSceneState) {
+            state.diagnostics.isRenderLoopActive = false;
             return;
         }
 
         const reason = resolveRenderReason(state);
         if (reason) {
-            render(state, timestamp || performance.now(), reason);
+            state.isRenderingFrame = true;
+            try {
+                render(state, timestamp || performance.now(), reason);
+            } finally {
+                state.isRenderingFrame = false;
+            }
         }
 
-        state.animationHandle = requestAnimationFrame(loop);
+        if (resolveRenderReason(state)) {
+            state.animationHandle = requestAnimationFrame(loop);
+            return;
+        }
+
+        state.diagnostics.isRenderLoopActive = false;
+        state.diagnostics.idleSinceTimestamp = performance.now();
     };
     state.animationHandle = requestAnimationFrame(loop);
 }
@@ -31,6 +50,8 @@ function render(state, timestamp, reason) {
         ? Math.min(0.08, (timestamp - state.lastRenderTimestamp) / 1000)
         : 1 / 60;
     state.lastRenderTimestamp = timestamp;
+    state.renderRequested = false;
+    state.renderReason = "";
     syncViewport(state);
     syncDecorations(state);
     state.controls.update();
@@ -42,8 +63,6 @@ function render(state, timestamp, reason) {
     state.diagnostics.renderCount += 1;
     state.diagnostics.lastFrameReason = reason;
     state.diagnostics.frameTimeMs = performance.now() - start;
-    state.renderRequested = false;
-    state.renderReason = "";
     state.frame += 1;
     if (state.cameraDampingFrames > 0) {
         state.cameraDampingFrames -= 1;
@@ -78,4 +97,9 @@ function resolveRenderReason(state) {
 function scheduleRender(state, reason = "invalidated") {
     state.renderRequested = true;
     state.renderReason = reason;
+    if (state.isRenderingFrame) {
+        return;
+    }
+
+    requestNextFrame(state);
 }

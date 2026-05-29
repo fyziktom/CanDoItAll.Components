@@ -3,9 +3,13 @@ import { notifyStateChanged } from "./05-webgl-scene-interaction.js";
 import { updateObjectRuntimeTransform } from "./11-webgl-scene-graph.js";
 
 export function enqueueMotion(state, command) {
+    return enqueueMotionDetailed(state, command).success;
+}
+
+export function enqueueMotionDetailed(state, command) {
     const normalized = normalizeCommand(state, command);
     if (!normalized) {
-        return false;
+        return commandResult(state, "motion-enqueue", command?.motionId || "", false, [`Motion target '${command?.objectId || ""}' was not found.`]);
     }
 
     if (normalized.replaceExistingForObject !== false) {
@@ -17,25 +21,33 @@ export function enqueueMotion(state, command) {
     }
 
     state.motions.set(normalized.motionId, normalized);
+    state.diagnostics.motionAcceptedCount += 1;
     state.scheduleRender("motion-enqueued");
-    return true;
+    return commandResult(state, "motion-enqueue", normalized.motionId, true, [], [normalized.objectId]);
 }
 
 export function clearMotions(state, objectId) {
+    return clearMotionsDetailed(state, objectId).success;
+}
+
+export function clearMotionsDetailed(state, objectId) {
+    const affected = [];
     if (!objectId) {
+        affected.push(...Array.from(state.motions.values()).map(motion => motion.objectId));
         state.motions.clear();
         state.scheduleRender("motion-clear");
-        return true;
+        return commandResult(state, "motion-clear", "", true, [], affected);
     }
 
     for (const [motionId, motion] of state.motions.entries()) {
         if (motion.objectId === objectId) {
+            affected.push(motion.objectId);
             state.motions.delete(motionId);
         }
     }
 
     state.scheduleRender("motion-clear");
-    return true;
+    return commandResult(state, "motion-clear", "", true, [], affected);
 }
 
 export function advanceMotions(state, deltaSeconds) {
@@ -72,7 +84,12 @@ export function advanceMotions(state, deltaSeconds) {
     }
 
     for (const motionId of completed) {
+        const motion = state.motions.get(motionId);
         state.motions.delete(motionId);
+        if (motion) {
+            state.diagnostics.motionCompletedCount += 1;
+            notifyMotionCompleted(state, motion);
+        }
     }
 
     if (completed.length) {
@@ -142,7 +159,36 @@ function lerp(start, end, t) {
 
 function failMotion(state, message) {
     state.diagnostics.failedPatchCommands.add(message);
+    state.diagnostics.motionFailedCount += 1;
+    state.diagnostics.failedCommandDetails.push(commandResult(state, "motion", "", false, [message]));
     state.diagnostics.lastError = message;
     state.notifyRuntimeError?.("WebGL scene motion failed.", new Error(message));
     return null;
+}
+
+function commandResult(state, commandKind, commandId, success, errors = [], affectedObjectIds = []) {
+    const result = {
+        commandId: commandId || `${commandKind}:${Date.now()}`,
+        success,
+        succeeded: success,
+        sceneId: state.sceneModel.sceneId || "",
+        commandKind,
+        revision: state.sceneModel.uiState?.revision || 0,
+        errors,
+        warnings: [],
+        affectedObjectIds: Array.from(new Set(affectedObjectIds.filter(Boolean))),
+        affectedLinkIds: [],
+        diagnostics: {
+            activeMotionCount: String(state.motions?.size || 0),
+            renderCount: String(state.diagnostics.renderCount || 0)
+        }
+    };
+    state.commandResults.push(result);
+    return result;
+}
+
+function notifyMotionCompleted(state, motion) {
+    const result = commandResult(state, "motion-completed", motion.motionId, true, [], [motion.objectId]);
+    state.dotNetRef?.invokeMethodAsync("OnMotionCompleted", JSON.stringify(result))
+        .catch(error => console.warn("WebGL scene motion completion callback failed.", error));
 }

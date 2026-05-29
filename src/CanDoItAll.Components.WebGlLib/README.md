@@ -69,13 +69,24 @@ npm run webgllib:verify-assets
 
 The runtime loads GLB/GLTF assets asynchronously and renders fallback primitives when a model id or URI cannot be resolved. Asset variants support `primitive`, `model-low`, `model-medium`, and `model-high` quality tiers, with runtime selection by explicit object metadata or scene/runtime profile.
 
+Use `WebGlModelImportOptions` on assets or variants to tune generic model import behavior: unit scale, fit mode, center mode, rotation/position offsets, double-sided material normalization, debug bounds, material visibility normalization, and tint disabling. Runtime diagnostics report empty scenes, mesh/material counts, zero or extreme bounds, invisible meshes, transparent materials, invalid transforms, and camera clipping risk.
+
 ## Runtime Hardening
 
-`WebGlSceneView` now exposes export/import, patch, object transform, and motion methods. The JavaScript runtime supports drag-on-ground-plane for draggable objects, transform-only patches without full scene rebuilds, smooth render-layer motion, `auto`/`continuous`/`on-demand` render modes, and explicit create/runtime diagnostics.
+`WebGlSceneView` now exposes export/import, patch, object transform, detailed patch results, and detailed motion methods. The JavaScript runtime supports drag-on-ground-plane for draggable objects, transform-only patches without full scene rebuilds, smooth render-layer motion, `auto`/`continuous`/`on-demand` render modes, idle render-loop sleeping, explicit resource ownership/disposal, model diagnostics, and create/runtime diagnostics.
+
+`WebGlSceneDocument` is the generic save/load contract for scene layouts. It preserves scene data, runtime options, saved timestamp, source, metadata, and a deterministic content hash without adding storage providers or run semantics.
+
+Run the scene runtime audit before widening JavaScript changes:
+
+```powershell
+npm run webgllib:audit-scene-runtime
+```
 
 `WebGlLib` remains a render substrate. Simulation clocks, run lifecycle, pathfinding, physics, persistence providers, economy rules, and domain semantics belong in a future `WebGlRunLib` or consuming domain package.
 
 ## Related Docs
 
 - Repository overview: `README.md` at this repo root
+- Run-layer boundary: `docs/webgl/run-layer-boundary.md`
 - Main repo shared component docs: `C:\repositories\CanDoItAll\docs\ui-shared-components\README.md`

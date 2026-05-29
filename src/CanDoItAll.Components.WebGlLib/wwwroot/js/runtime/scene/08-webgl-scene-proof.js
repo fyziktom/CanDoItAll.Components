@@ -14,6 +14,8 @@ export function getProofSnapshot(state) {
         estimatedTriangleCount: state.diagnostics.estimatedTriangleCount || 0,
         estimatedVertexCount: state.diagnostics.estimatedVertexCount || 0,
         activeMotionCount: state.motions?.size || 0,
+        renderCount: state.diagnostics.renderCount || 0,
+        isRenderLoopActive: !!state.diagnostics.isRenderLoopActive,
         activeAssetProfile: state.sceneModel.uiState?.activeAssetProfile || state.options.assetQualityProfile || "primitive",
         largestLoadedAssetId: state.diagnostics.largestLoadedAssetId || "",
         selectedObjectIds: Array.from(state.selectedObjectIds || []),
@@ -25,7 +27,9 @@ export function getProofSnapshot(state) {
             deterministicMode: String(state.options.deterministicMode),
             renderMode: state.options.renderMode || "auto",
             lastFrameReason: state.diagnostics.lastFrameReason || "",
-            frameTimeMs: String(Math.round((state.diagnostics.frameTimeMs || 0) * 100) / 100)
+            frameTimeMs: String(Math.round((state.diagnostics.frameTimeMs || 0) * 100) / 100),
+            isRenderLoopActive: String(!!state.diagnostics.isRenderLoopActive),
+            modelDiagnosticsCount: String(state.diagnostics.modelDiagnostics?.size || 0)
         }
     };
 }

@@ -59,12 +59,18 @@ public sealed class WebGlScenePatchReducer
             ? patch.NextRevision
             : scene.UiState.Revision + 1;
         result.NextRevision = scene.UiState.Revision;
+        result.Revision = scene.UiState.Revision;
+        result.SceneId = scene.SceneId;
         return result;
     }
 
     public WebGlScenePatchResult Validate(WebGlSceneModel scene, WebGlScenePatch patch)
     {
-        var result = new WebGlScenePatchResult();
+        var result = new WebGlScenePatchResult
+        {
+            SceneId = scene.SceneId,
+            Revision = scene.UiState.Revision
+        };
         if (!string.IsNullOrWhiteSpace(patch.SceneId) &&
             !string.Equals(scene.SceneId, patch.SceneId, StringComparison.Ordinal))
         {
@@ -133,6 +139,10 @@ public sealed class WebGlScenePatchReducer
 
 public sealed class WebGlScenePatchResult
 {
+    public string SceneId { get; set; } = string.Empty;
+
+    public string CommandKind { get; set; } = "patch";
+
     public List<string> Errors { get; } = [];
 
     public List<string> Warnings { get; } = [];
@@ -148,6 +158,23 @@ public sealed class WebGlScenePatchResult
     public List<string> RemovedLinkIds { get; } = [];
 
     public int NextRevision { get; set; }
+
+    public int Revision { get; set; }
+
+    public List<string> AffectedObjectIds =>
+    [
+        .. PatchedObjectIds,
+        .. AddedObjectIds,
+        .. RemovedObjectIds
+    ];
+
+    public List<string> AffectedLinkIds =>
+    [
+        .. AddedLinkIds,
+        .. RemovedLinkIds
+    ];
+
+    public bool Success => IsValid;
 
     public bool IsValid => Errors.Count == 0;
 }

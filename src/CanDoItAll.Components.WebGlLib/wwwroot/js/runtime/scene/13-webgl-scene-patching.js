@@ -10,33 +10,46 @@ import {
 } from "./11-webgl-scene-graph.js";
 
 export function applyPatch(state, patch) {
+    return applyPatchDetailed(state, patch).success;
+}
+
+export function applyPatchDetailed(state, patch) {
+    const result = createCommandResult(state, "patch", patch?.commandId || patch?.metadata?.commandId || "");
     const normalized = normalizePatch(patch);
     if (!normalized) {
-        return failPatch(state, "Patch is missing.");
+        return completeCommandResult(state, failPatch(state, result, "Patch is missing."));
     }
 
     if (normalized.sceneId && normalized.sceneId !== state.sceneModel.sceneId) {
-        return failPatch(state, `Patch scene '${normalized.sceneId}' does not match '${state.sceneModel.sceneId}'.`);
+        return completeCommandResult(state, failPatch(state, result, `Patch scene '${normalized.sceneId}' does not match '${state.sceneModel.sceneId}'.`));
     }
 
     let changed = false;
     for (const objectId of normalized.removeObjectIds) {
         removeSceneObject(state, objectId);
+        result.affectedObjectIds.push(objectId);
         changed = true;
     }
 
     for (const sceneObject of normalized.addObjects) {
         addSceneObject(state, sceneObject);
+        result.affectedObjectIds.push(sceneObject?.id || "");
         changed = true;
     }
 
     for (const objectPatch of normalized.objectPatches) {
-        changed = applyObjectPatch(state, objectPatch) || changed;
+        const patchResult = applyObjectPatch(state, objectPatch, result);
+        if (patchResult) {
+            result.affectedObjectIds.push(objectPatch.objectId);
+        }
+
+        changed = patchResult || changed;
     }
 
     for (const linkId of normalized.removeLinkIds) {
         state.sceneModel.links = state.sceneModel.links.filter(link => link.id !== linkId);
         removeLinkGroup(state, linkId);
+        result.affectedLinkIds.push(linkId);
         changed = true;
     }
 
@@ -44,11 +57,12 @@ export function applyPatch(state, patch) {
         state.sceneModel.links = state.sceneModel.links.filter(item => item.id !== link.id);
         state.sceneModel.links.push(link);
         addLinkGroup(state, link);
+        result.affectedLinkIds.push(link.id || "");
         changed = true;
     }
 
     if (!changed) {
-        return true;
+        return completeCommandResult(state, result);
     }
 
     state.sceneModel.uiState.revision = normalized.nextRevision > 0
@@ -57,7 +71,7 @@ export function applyPatch(state, patch) {
     state.sceneModel.revision = state.sceneModel.uiState.revision;
     notifyStateChanged(state);
     state.scheduleRender("patch");
-    return true;
+    return completeCommandResult(state, result);
 }
 
 export function setObjectTransform(state, objectId, transform) {
@@ -80,14 +94,16 @@ export function moveObject(state, objectId, position) {
     });
 }
 
-function applyObjectPatch(state, patch) {
+function applyObjectPatch(state, patch, result) {
     if (!patch?.objectId) {
-        return failPatch(state, "Object patch id is missing.");
+        failPatch(state, result, "Object patch id is missing.");
+        return false;
     }
 
     const sceneObject = state.objectLookup.get(patch.objectId);
     if (!sceneObject) {
-        return failPatch(state, `Object '${patch.objectId}' was not found.`);
+        failPatch(state, result, `Object '${patch.objectId}' was not found.`);
+        return false;
     }
 
     const visualChanged = patch.assetId !== undefined ||
@@ -186,12 +202,60 @@ function normalizeVector(value, fallback) {
     };
 }
 
-function failPatch(state, message) {
+function createCommandResult(state, commandKind, commandId) {
+    return {
+        commandId: commandId || `${commandKind}:${Date.now()}`,
+        success: true,
+        succeeded: true,
+        sceneId: state.sceneModel.sceneId || "",
+        commandKind,
+        revision: state.sceneModel.uiState?.revision || 0,
+        errors: [],
+        warnings: [],
+        affectedObjectIds: [],
+        affectedLinkIds: [],
+        diagnostics: {}
+    };
+}
+
+function completeCommandResult(state, result) {
+    result.success = result.errors.length === 0;
+    result.succeeded = result.success;
+    result.revision = state.sceneModel.uiState?.revision || 0;
+    result.affectedObjectIds = unique(result.affectedObjectIds);
+    result.affectedLinkIds = unique(result.affectedLinkIds);
+    result.diagnostics = {
+        renderCount: String(state.diagnostics.renderCount || 0),
+        activeMotionCount: String(state.motions?.size || 0)
+    };
+    state.commandResults.push(result);
+    return result;
+}
+
+function failPatch(state, result, message) {
+    result.errors.push(message);
     state.diagnostics.failedPatchCommands.add(message);
+    state.diagnostics.failedCommandDetails.push({
+        commandId: result.commandId,
+        success: false,
+        succeeded: false,
+        sceneId: result.sceneId,
+        commandKind: result.commandKind,
+        revision: state.sceneModel.uiState?.revision || 0,
+        errors: [message],
+        warnings: [],
+        affectedObjectIds: [],
+        affectedLinkIds: [],
+        diagnostics: {}
+    });
     state.diagnostics.lastError = message;
     state.notifyRuntimeError?.("WebGL scene patch failed.", new Error(message));
     state.scheduleRender("patch-failed");
-    return false;
+    return result;
+}
+
+function unique(values) {
+    return Array.from(new Set(values.filter(Boolean)));
 }
 
 export function cloneSceneForExport(scene) {

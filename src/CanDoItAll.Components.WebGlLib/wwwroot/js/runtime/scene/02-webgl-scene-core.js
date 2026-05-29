@@ -185,29 +185,6 @@ export function createMaterial(color, options = {}) {
     });
 }
 
-export function disposeObject3D(object) {
-    if (!object) {
-        return;
-    }
-
-    object.traverse(child => {
-        if (child.userData?.skipDispose) {
-            return;
-        }
-
-        child.geometry?.dispose?.();
-        if (Array.isArray(child.material)) {
-            for (const material of child.material) {
-                material?.map?.dispose?.();
-                material?.dispose?.();
-            }
-        } else {
-            child.material?.map?.dispose?.();
-            child.material?.dispose?.();
-        }
-    });
-}
-
 export function focusHost(state) {
     try {
         state?.host?.focus?.({ preventScroll: true });
@@ -220,6 +197,7 @@ export function buildDiagnosticsSnapshot(state) {
     const diagnostics = state.diagnostics || {};
     return {
         createCount: diagnostics.createCount || 0,
+        disposeCount: diagnostics.disposeCount || 0,
         updateCount: diagnostics.updateCount || 0,
         renderCount: diagnostics.renderCount || 0,
         loadedAssetCount: diagnostics.loadedAssetIds?.size || 0,
@@ -228,7 +206,11 @@ export function buildDiagnosticsSnapshot(state) {
         modelInstanceCount: diagnostics.modelInstanceIds?.size || 0,
         primitiveInstanceCount: diagnostics.primitiveInstanceIds?.size || 0,
         activeMotionCount: state.motions?.size || 0,
+        motionAcceptedCount: diagnostics.motionAcceptedCount || 0,
+        motionCompletedCount: diagnostics.motionCompletedCount || 0,
+        motionFailedCount: diagnostics.motionFailedCount || 0,
         animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
+        isRenderLoopActive: !!diagnostics.isRenderLoopActive,
         estimatedTriangleCount: diagnostics.estimatedTriangleCount || 0,
         estimatedVertexCount: diagnostics.estimatedVertexCount || 0,
         objectCount: state.sceneModel.objects.length,
@@ -238,11 +220,14 @@ export function buildDiagnosticsSnapshot(state) {
         renderMode: state.options.renderMode || "auto",
         lastFrameReason: diagnostics.lastFrameReason || "",
         frameTimeMs: round(diagnostics.frameTimeMs || 0, 2),
+        idleSinceMs: diagnostics.idleSinceTimestamp ? round(performance.now() - diagnostics.idleSinceTimestamp, 0) : 0,
         largestLoadedAssetId: diagnostics.largestLoadedAssetId || "",
         lastError: diagnostics.lastError || "",
         missingAssetIds: Array.from(diagnostics.missingAssetIds || []),
         failedAssetUris: Array.from(diagnostics.failedAssetUris || []),
         missingFallbackAssetIds: Array.from(diagnostics.missingFallbackAssetIds || []),
-        failedPatchCommands: Array.from(diagnostics.failedPatchCommands || [])
+        failedPatchCommands: Array.from(diagnostics.failedPatchCommands || []),
+        failedCommandDetails: diagnostics.failedCommandDetails || [],
+        modelDiagnostics: Array.from(diagnostics.modelDiagnostics?.values?.() || [])
     };
 }

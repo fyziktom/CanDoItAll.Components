@@ -39,10 +39,15 @@ public sealed class WebGlScenePatchReducerTests
         var result = new WebGlScenePatchReducer().Apply(scene, patch);
 
         Assert.True(result.IsValid);
+        Assert.True(result.Success);
+        Assert.Equal("scene", result.SceneId);
+        Assert.Equal("patch", result.CommandKind);
+        Assert.Equal(5, result.Revision);
         Assert.Equal(new WebGlVector3(1, 0, 2), scene.Objects[0].Position);
         Assert.Equal("#38bdf8", scene.Objects[0].Color);
         Assert.Equal(5, scene.UiState.Revision);
         Assert.Contains("object.a", result.PatchedObjectIds);
+        Assert.Contains("object.a", result.AffectedObjectIds);
     }
 
     [Fact]
@@ -54,6 +59,7 @@ public sealed class WebGlScenePatchReducerTests
         var result = new WebGlScenePatchReducer().Validate(scene, patch);
 
         Assert.False(result.IsValid);
+        Assert.False(result.Success);
         Assert.Contains(result.Errors, error => error.Contains("does not match", StringComparison.Ordinal));
     }
 }

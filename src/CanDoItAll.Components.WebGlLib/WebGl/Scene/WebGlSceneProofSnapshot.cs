@@ -26,6 +26,10 @@ public sealed class WebGlSceneProofSnapshot
 
     public int ActiveMotionCount { get; set; }
 
+    public int RenderCount { get; set; }
+
+    public bool IsRenderLoopActive { get; set; }
+
     public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
 
     public string LargestLoadedAssetId { get; set; } = string.Empty;

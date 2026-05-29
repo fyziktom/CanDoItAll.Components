@@ -2,13 +2,13 @@ import {
     THREE,
     applyObjectTransform,
     createMaterial,
-    disposeObject3D,
     resolveFiniteNumber,
     resolveObjectPosition,
     resolveObjectSize
 } from "./02-webgl-scene-core.js";
 import { syncAssetVisual } from "./03-webgl-scene-assets.js";
 import { rebuildSymbols, syncSymbolPositionsForObject } from "./04-webgl-scene-symbols.js";
+import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
 
 export function buildDecorations(state) {
     const environment = state.sceneModel.environment || {};
@@ -113,7 +113,7 @@ export function removeSceneObjectGroup(state, objectId) {
     state.objectGroups.delete(objectId);
     state.objectLookup.delete(objectId);
     state.objectPositions.delete(objectId);
-    disposeObject3D(group);
+    disposeSceneObjectTree(group);
 }
 
 export function replaceSceneObjectGroup(state, sceneObject) {
@@ -185,7 +185,7 @@ export function removeLinkGroup(state, linkId) {
 
     const [group] = state.linkGroups.splice(index, 1);
     state.scene.remove(group);
-    disposeObject3D(group);
+    disposeSceneObjectTree(group);
 }
 
 export function syncObjectRings(state) {
@@ -206,18 +206,18 @@ export function clearDynamicScene(state) {
     for (const group of state.objectGroups.values()) {
         state.scene.remove(group);
         group.userData.disposed = true;
-        disposeObject3D(group);
+        disposeSceneObjectTree(group);
     }
 
     for (const linkGroup of state.linkGroups) {
         state.scene.remove(linkGroup);
-        disposeObject3D(linkGroup);
+        disposeSceneObjectTree(linkGroup);
     }
 
     for (const symbolGroup of state.symbolGroups.values()) {
         state.scene.remove(symbolGroup);
         symbolGroup.userData.disposed = true;
-        disposeObject3D(symbolGroup);
+        disposeSceneObjectTree(symbolGroup);
     }
 
     for (const label of state.labelElements.values()) {

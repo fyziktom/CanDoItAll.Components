@@ -1,6 +1,7 @@
-import { disposeObject3D, primitiveKinds, resolveActiveAssetProfile, resolveFiniteNumber, resolveString } from "./02-webgl-scene-core.js";
+import { primitiveKinds, resolveActiveAssetProfile, resolveFiniteNumber, resolveString } from "./02-webgl-scene-core.js";
 import { createPrimitiveVisual } from "./09-webgl-scene-primitives.js";
 import { buildModelInstance, loadModelAsset } from "./16-webgl-scene-models.js";
+import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
 
 export function buildAssetLookup(catalog) {
     const lookup = new Map();
@@ -46,7 +47,8 @@ function resolveFallbackAsset(state, missingAssetId) {
         displayName: "Fallback box",
         color: "#94a3b8",
         supportsTint: true,
-        boundsHint: { x: 1, y: 1, z: 1 }
+        boundsHint: { x: 1, y: 1, z: 1 },
+        importOptions: {}
     };
 }
 
@@ -97,7 +99,7 @@ export function syncAssetVisual(state, sceneObject, group, options = {}) {
             group.add(instance);
             if (fallback.parent === group) {
                 group.remove(fallback);
-                disposeObject3D(fallback);
+                disposeSceneObjectTree(fallback);
             }
 
             state.diagnostics.fallbackObjectIds.delete(objectId);
@@ -145,6 +147,7 @@ function mergeBaseAsset(asset, profile) {
         variantId: "",
         qualityTier: resolveString(asset?.qualityTier, profile),
         performanceHint: asset?.performanceHint || {},
+        importOptions: asset?.importOptions || {},
         requestedProfile: profile
     };
 }
@@ -161,6 +164,10 @@ function mergeVariant(asset, variant, profile) {
         color: variant.color || asset.color || "#94a3b8",
         qualityTier: variant.qualityTier || asset.qualityTier || profile,
         scale: variant.scale || { x: 1, y: 1, z: 1 },
+        importOptions: {
+            ...(asset.importOptions || {}),
+            ...(variant.importOptions || {})
+        },
         performanceHint: variant.performanceHint || asset.performanceHint || {},
         requestedProfile: profile
     };
@@ -190,6 +197,7 @@ function resolvePrimitiveFallback(state, baseAsset, resolvedAsset) {
         color: baseAsset?.color || "#94a3b8",
         supportsTint: true,
         boundsHint: baseAsset?.boundsHint || { x: 1, y: 1, z: 1 },
+        importOptions: {},
         requestedProfile: resolveActiveAssetProfile(state),
         performanceHint: {
             qualityTier: "primitive"

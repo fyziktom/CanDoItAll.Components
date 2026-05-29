@@ -51,6 +51,9 @@
     [Parameter]
     public EventCallback<WebGlRuntimeErrorEventArgs> RuntimeError { get; set; }
 
+    [Parameter]
+    public EventCallback<WebGlSceneCommandResult> MotionCompleted { get; set; }
+
     protected override void OnParametersSet()
     {
         pendingSceneKey = SerializePayload(Scene, Options);
@@ -142,6 +145,13 @@
         return args is null ? Task.CompletedTask : RuntimeError.InvokeAsync(args);
     }
 
+    [JSInvokable]
+    public Task OnMotionCompleted(string eventJson)
+    {
+        var args = Deserialize<WebGlSceneCommandResult>(eventJson);
+        return args is null ? Task.CompletedTask : MotionCompleted.InvokeAsync(args);
+    }
+
     public Task FitViewAsync()
         => JsRuntime.InvokeVoidAsync("CanDoItAll.webglScene.fitView", host).AsTask();
 
@@ -169,6 +179,9 @@
     public Task<bool> ApplyPatchAsync(WebGlScenePatch patch)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.applyPatch", host, patch).AsTask();
 
+    public Task<WebGlSceneCommandResult?> ApplyPatchDetailedAsync(WebGlScenePatch patch)
+        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.applyPatchDetailed", host, patch).AsTask();
+
     public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.setObjectTransform", host, objectId, transform).AsTask();
 
@@ -178,8 +191,14 @@
     public Task<bool> EnqueueMotionAsync(WebGlObjectMotionCommand command)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.enqueueMotion", host, command).AsTask();
 
+    public Task<WebGlSceneCommandResult?> EnqueueMotionDetailedAsync(WebGlObjectMotionCommand command)
+        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.enqueueMotionDetailed", host, command).AsTask();
+
     public Task<bool> ClearMotionsAsync(string? objectId = null)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.clearMotions", host, objectId).AsTask();
+
+    public Task<WebGlSceneCommandResult?> ClearMotionsDetailedAsync(string? objectId = null)
+        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.clearMotionsDetailed", host, objectId).AsTask();
 
     public async ValueTask DisposeAsync()
     {
