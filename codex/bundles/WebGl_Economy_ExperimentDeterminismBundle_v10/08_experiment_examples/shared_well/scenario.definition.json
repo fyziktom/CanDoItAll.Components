@@ -1,0 +1,193 @@
+{
+  "schemaVersion": "candoitall.economy.scenario-definition/v1",
+  "scenarioId": "simple.shared-well-community",
+  "displayName": "Shared Well Community",
+  "scenarioKind": "community-resource",
+  "baseCurrency": "TOKEN",
+  "startsAtUtc": "2026-01-01T00:00:00Z",
+  "stepCount": 8,
+  "stepDuration": "1.00:00:00",
+  "seed": 101,
+  "actors": [
+    {
+      "actorId": "near-household",
+      "kind": "household",
+      "displayName": "Near Household",
+      "role": "collector-reseller",
+      "homeLocationId": "near-home"
+    },
+    {
+      "actorId": "far-household",
+      "kind": "household",
+      "displayName": "Far Household",
+      "role": "buyer",
+      "homeLocationId": "far-home"
+    },
+    {
+      "actorId": "well-keeper",
+      "kind": "institution",
+      "displayName": "Well Keeper",
+      "role": "maintenance",
+      "homeLocationId": "keeper-office"
+    },
+    {
+      "actorId": "rule-council",
+      "kind": "institution",
+      "displayName": "Rule Council",
+      "role": "governance",
+      "homeLocationId": "council-hall"
+    }
+  ],
+  "resources": [
+    {
+      "resourceId": "water",
+      "kind": "water",
+      "displayName": "Water",
+      "unit": "bucket",
+      "capacity": 100
+    },
+    {
+      "resourceId": "labor",
+      "kind": "labor",
+      "displayName": "Maintenance labor",
+      "unit": "hour",
+      "capacity": 40
+    },
+    {
+      "resourceId": "cash",
+      "kind": "cash",
+      "displayName": "Local cash",
+      "unit": "token"
+    },
+    {
+      "resourceId": "trust",
+      "kind": "trust",
+      "displayName": "Trust",
+      "unit": "score",
+      "capacity": 100
+    },
+    {
+      "resourceId": "admin-time",
+      "kind": "admin",
+      "displayName": "Administrative burden",
+      "unit": "minute"
+    }
+  ],
+  "initialStores": [
+    {
+      "storeId": "store.well.water",
+      "ownerActorId": "well-keeper",
+      "resourceId": "water",
+      "locationId": "shared-well",
+      "displayName": "Well water",
+      "quantity": 92,
+      "unit": "bucket",
+      "capacity": 100
+    },
+    {
+      "storeId": "store.near.water",
+      "ownerActorId": "near-household",
+      "resourceId": "water",
+      "locationId": "near-home",
+      "displayName": "Near household water stock",
+      "quantity": 2,
+      "unit": "bucket",
+      "capacity": 20
+    },
+    {
+      "storeId": "store.far.water",
+      "ownerActorId": "far-household",
+      "resourceId": "water",
+      "locationId": "far-home",
+      "displayName": "Far household water stock",
+      "quantity": 1,
+      "unit": "bucket",
+      "capacity": 10
+    },
+    {
+      "storeId": "store.council.tax",
+      "ownerActorId": "rule-council",
+      "resourceId": "cash",
+      "locationId": "council-hall",
+      "displayName": "Council tax reserve",
+      "quantity": 0,
+      "unit": "token"
+    }
+  ],
+  "rules": [
+    {
+      "ruleId": "rule.water-draw-limit",
+      "displayName": "Daily draw limit",
+      "category": "allocation"
+    },
+    {
+      "ruleId": "rule.resale-tax",
+      "displayName": "Water resale tax",
+      "category": "tax"
+    },
+    {
+      "ruleId": "rule.admin-ledger",
+      "displayName": "Resale documentation",
+      "category": "admin"
+    }
+  ],
+  "scheduledEvents": [
+    {
+      "scheduledEventId": "event.near.collect.1",
+      "eventKind": "resource.use",
+      "stepIndex": 1,
+      "actorIds": [
+        "near-household"
+      ],
+      "resourceIds": [
+        "water"
+      ],
+      "sourceId": "shared-well",
+      "targetId": "near-household",
+      "sourceLocationId": "shared-well",
+      "targetLocationId": "near-home",
+      "magnitude": 8,
+      "duration": "00:20:00"
+    },
+    {
+      "scheduledEventId": "event.near.resell.2",
+      "eventKind": "market.trade",
+      "stepIndex": 2,
+      "actorIds": [
+        "near-household",
+        "far-household"
+      ],
+      "resourceIds": [
+        "water",
+        "cash"
+      ],
+      "sourceId": "near-household",
+      "targetId": "far-household",
+      "sourceLocationId": "near-home",
+      "targetLocationId": "far-home",
+      "magnitude": 3,
+      "duration": "00:30:00"
+    },
+    {
+      "scheduledEventId": "event.council.admin.2",
+      "eventKind": "actor.admin",
+      "stepIndex": 2,
+      "actorIds": [
+        "near-household",
+        "rule-council"
+      ],
+      "resourceIds": [
+        "admin-time"
+      ],
+      "sourceId": "near-household",
+      "targetId": "rule-council",
+      "sourceLocationId": "near-home",
+      "targetLocationId": "council-hall",
+      "magnitude": 1,
+      "duration": "00:15:00"
+    }
+  ],
+  "metadata": {
+    "examplePurpose": "readiness fixture only"
+  }
+}
