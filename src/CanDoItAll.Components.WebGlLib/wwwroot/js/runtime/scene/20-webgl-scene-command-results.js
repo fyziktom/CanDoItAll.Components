@@ -1,5 +1,7 @@
 const defaultMaxCommandResults = 100;
 const defaultMaxFailedCommands = 50;
+const defaultMaxBatchChildResults = 25;
+const defaultMaxBatchMessages = 25;
 
 export function createCommandResult(state, commandKind, commandId = "") {
     return {
@@ -58,6 +60,60 @@ export function completeCommandResult(state, result) {
     rememberCommandResult(state, result);
     notifyCommandResult(state, result);
     return result;
+}
+
+export function compactBatchResultForInterop(state, result) {
+    const totalCommandResultCount = result.commandResults.length;
+    const totalWarningCount = result.warnings.length;
+    const totalErrorCount = result.errors.length;
+    const childLimit = normalizeLimit(state?.options?.maxCommandBatchChildResults, defaultMaxBatchChildResults);
+    const messageLimit = normalizeLimit(state?.options?.maxCommandBatchMessages, defaultMaxBatchMessages);
+
+    result.commandResults = result.commandResults.slice(0, childLimit).map(compactChildCommandResult);
+    result.warnings = limitWithOverflow(result.warnings, messageLimit, totalWarningCount, "warning");
+    result.errors = limitWithOverflow(result.errors, messageLimit, totalErrorCount, "error");
+    result.metadata = {
+        ...result.metadata,
+        totalCommandResultCount: String(totalCommandResultCount),
+        returnedCommandResultCount: String(result.commandResults.length),
+        totalWarningCount: String(totalWarningCount),
+        returnedWarningCount: String(Math.min(totalWarningCount, messageLimit)),
+        totalErrorCount: String(totalErrorCount),
+        returnedErrorCount: String(Math.min(totalErrorCount, messageLimit))
+    };
+}
+
+function compactChildCommandResult(result) {
+    return {
+        commandId: result?.commandId || "",
+        success: result?.success !== false,
+        succeeded: result?.success !== false,
+        sceneId: result?.sceneId || "",
+        commandKind: result?.commandKind || "",
+        revision: Number(result?.revision) || 0,
+        errors: limitWithOverflow(result?.errors || [], defaultMaxBatchMessages, result?.errors?.length || 0, "error"),
+        warnings: limitWithOverflow(result?.warnings || [], defaultMaxBatchMessages, result?.warnings?.length || 0, "warning"),
+        affectedObjectIds: limitWithOverflow(result?.affectedObjectIds || [], defaultMaxBatchMessages, result?.affectedObjectIds?.length || 0, "affected object"),
+        affectedLinkIds: limitWithOverflow(result?.affectedLinkIds || [], defaultMaxBatchMessages, result?.affectedLinkIds?.length || 0, "affected link"),
+        diagnostics: result?.diagnostics || {},
+        metadata: {
+            ...(result?.metadata || {}),
+            totalAffectedObjectCount: String(result?.affectedObjectIds?.length || 0),
+            totalAffectedLinkCount: String(result?.affectedLinkIds?.length || 0)
+        }
+    };
+}
+
+function limitWithOverflow(values, limit, totalCount, label) {
+    const items = Array.isArray(values) ? values : [];
+    if (items.length <= limit) {
+        return items;
+    }
+
+    return [
+        ...items.slice(0, limit),
+        `${Math.max(0, totalCount - limit)} additional ${label} item(s) omitted from the interop result.`
+    ];
 }
 
 function rememberCommandResult(state, result) {

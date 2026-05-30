@@ -21,8 +21,23 @@ public sealed class WebGlRunFrameApplyResult
         {
             BatchId = $"run-frame:{frame.Index}",
             OrderingMode = ResolveOrderingMode(frame),
-            Patches = [.. frame.ScenePatches.Select(item => item.Patch)],
-            Motions = [.. frame.Motions],
+            Stages =
+            [
+                .. frame.Stages
+                    .OrderBy(static stage => stage.StartsAtSeconds)
+                    .ThenBy(static stage => stage.StageId, StringComparer.Ordinal)
+                    .Select(stage => new WebGlSceneCommandBatchStage
+                    {
+                        StageId = stage.StageId,
+                        OrderingMode = ResolveOrderingMode(stage),
+                        Patches = [.. stage.ScenePatches.Select(item => item.Patch)],
+                        Motions = [.. stage.Motions],
+                        WaitSeconds = stage.WaitSeconds,
+                        Metadata = new Dictionary<string, string>(stage.Metadata, StringComparer.Ordinal)
+                    })
+            ],
+            Patches = frame.Stages.Count == 0 ? [.. frame.ScenePatches.Select(item => item.Patch)] : [],
+            Motions = frame.Stages.Count == 0 ? [.. frame.Motions] : [],
             Metadata =
             {
                 ["frameIndex"] = frame.Index.ToString(System.Globalization.CultureInfo.InvariantCulture),
@@ -39,6 +54,19 @@ public sealed class WebGlRunFrameApplyResult
         };
     }
 
+    private static BatchOrderingMode ResolveOrderingMode(WebGlRunActionStage stage)
+    {
+        if (stage.Metadata.TryGetValue("orderingMode", out string? value) &&
+            Enum.TryParse(value, ignoreCase: true, out BatchOrderingMode parsed))
+        {
+            return parsed;
+        }
+
+        return stage.Motions.GroupBy(static motion => motion.ObjectId, StringComparer.Ordinal).Any(static group => group.Count() > 1)
+            ? BatchOrderingMode.Sequential
+            : BatchOrderingMode.CoalesceIndependent;
+    }
+
     private static BatchOrderingMode ResolveOrderingMode(WebGlRunFrame frame)
     {
         if (frame.Metadata.TryGetValue("orderingMode", out string? value) &&
@@ -47,7 +75,8 @@ public sealed class WebGlRunFrameApplyResult
             return parsed;
         }
 
-        return frame.Motions.GroupBy(static motion => motion.ObjectId, StringComparer.Ordinal).Any(static group => group.Count() > 1)
+        return frame.Stages.Count > 0 ||
+               frame.Motions.GroupBy(static motion => motion.ObjectId, StringComparer.Ordinal).Any(static group => group.Count() > 1)
             ? BatchOrderingMode.Sequential
             : BatchOrderingMode.CoalesceIndependent;
     }

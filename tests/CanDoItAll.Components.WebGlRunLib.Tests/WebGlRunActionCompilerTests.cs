@@ -42,6 +42,36 @@ public sealed class WebGlRunActionCompilerTests
         Assert.Equal(new WebGlVector3(0, 0, 0), timeline.Frames[2].Motions[0].TargetPosition);
     }
 
+    [Fact]
+    public void Compiler_keeps_pose_move_admin_and_return_as_ordered_stages()
+    {
+        var timeline = new WebGlRunActionCompiler().Compile(new WebGlRunActionPlan
+        {
+            FrameRate = 1,
+            ObjectBindings =
+            [
+                new WebGlRunObjectBinding { ObjectId = "actor", Position = new WebGlVector3(0, 0, 0), AnchorPosition = new WebGlVector3(0, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "target", Position = new WebGlVector3(4, 0, 0) }
+            ],
+            Actions =
+            [
+                Action("pose.walk", WebGlRunActionKinds.ChangePose, 0, "actor", parameters: new() { ["poseKey"] = "walking" }),
+                Action("move.target", WebGlRunActionKinds.MoveToObject, 0, "actor", "target"),
+                Action("admin.symbol", WebGlRunActionKinds.ShowSymbol, 0, "actor", parameters: new() { ["symbolKind"] = "document" }),
+                Action("return.home", WebGlRunActionKinds.ReturnToAnchor, 0, "actor")
+            ]
+        });
+
+        WebGlRunFrame frame = timeline.Frames.Single();
+        WebGlSceneCommandBatch batch = WebGlRunFrameApplyResult.FromFrame(frame).CommandBatch;
+
+        Assert.Equal(["pose.walk", "move.target", "admin.symbol", "return.home"], frame.Stages.Select(stage => stage.StageId).ToArray());
+        Assert.Equal(4, batch.Stages.Count);
+        Assert.Empty(batch.Motions);
+        Assert.Equal([0, 1, 0, 1], batch.Stages.Select(stage => stage.Motions.Count).ToArray());
+        Assert.Equal(0, batch.Metadata.GetValueOrDefault("droppedDuplicateMotionCount") is { } value ? int.Parse(value) : -1);
+    }
+
     private static WebGlRunAction Action(
         string id,
         string kind,

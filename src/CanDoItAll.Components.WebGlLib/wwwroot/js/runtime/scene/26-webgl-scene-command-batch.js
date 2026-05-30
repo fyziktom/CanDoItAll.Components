@@ -1,7 +1,7 @@
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
 import { applyPatchDetailed } from "./13-webgl-scene-patching.js";
 import { enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
-import { completeCommandResult, createCommandResult, warnCommand } from "./20-webgl-scene-command-results.js";
+import { compactBatchResultForInterop, completeCommandResult, createCommandResult, warnCommand } from "./20-webgl-scene-command-results.js";
 
 export function applyCommandBatch(state, batch) {
     const startedAt = performance.now();
@@ -24,6 +24,18 @@ export function applyCommandBatch(state, batch) {
         appendChildResult(result, motionResult);
     }
 
+    for (const stage of normalized.stages) {
+        for (const patch of stage.patches) {
+            const patchResult = applyPatchDetailed(state, patch);
+            appendChildResult(result, patchResult);
+        }
+
+        for (const motion of stage.motions) {
+            const motionResult = enqueueMotionDetailed(state, motion);
+            appendChildResult(result, motionResult);
+        }
+    }
+
     normalized.metrics.batchDurationMs = Math.round(performance.now() - startedAt);
     syncBatchDiagnostics(state, normalized.metrics);
     result.metrics = normalized.metrics;
@@ -31,10 +43,12 @@ export function applyCommandBatch(state, batch) {
     result.metadata = {
         ...result.metadata,
         batchCommandCount: String(normalized.metrics.batchCommandCount),
+        stageCount: String(normalized.metrics.stageCount),
         batchDurationMs: String(normalized.metrics.batchDurationMs),
         coalescedPatchCount: String(normalized.metrics.coalescedPatchCount),
         droppedDuplicateMotionCount: String(normalized.metrics.droppedDuplicateMotionCount)
     };
+    compactBatchResultForInterop(state, result);
     return completeCommandResult(state, result);
 }
 
@@ -54,9 +68,11 @@ function appendChildResult(batchResult, childResult) {
 function normalizeBatch(batch) {
     const patches = Array.isArray(batch?.patches) ? batch.patches : [];
     const motions = Array.isArray(batch?.motions) ? batch.motions : [];
+    const stages = Array.isArray(batch?.stages) ? batch.stages : [];
     const orderingMode = normalizeOrderingMode(batch?.orderingMode);
     const metrics = {
-        batchCommandCount: patches.length + motions.length,
+        batchCommandCount: countCommands(patches, motions, stages),
+        stageCount: stages.length,
         batchDurationMs: 0,
         coalescedPatchCount: 0,
         droppedDuplicateMotionCount: 0,
@@ -68,9 +84,46 @@ function normalizeBatch(batch) {
         batchId: batch?.batchId || "command-batch",
         patches: coalescePatches(patches, motions.length > 0, orderingMode, metrics, warnings, batch?.batchId || "command-batch"),
         motions: deduplicateMotions(motions, batch?.allowDuplicateMotionsPerObject === true, orderingMode, metrics, warnings, batch?.batchId || "command-batch"),
+        stages: stages.map(stage => normalizeStage(stage, batch, metrics, warnings)),
         metrics,
         warnings
     };
+}
+
+export function normalizeCommandBatchForAudit(batch) {
+    return normalizeBatch(batch);
+}
+
+function normalizeStage(stage, batch, metrics, warnings) {
+    const patches = Array.isArray(stage?.patches) ? stage.patches : [];
+    const motions = Array.isArray(stage?.motions) ? stage.motions : [];
+    const orderingMode = normalizeOrderingMode(stage?.orderingMode ?? batch?.orderingMode);
+    const stageMetrics = {
+        coalescedPatchCount: 0,
+        droppedDuplicateMotionCount: 0
+    };
+    const batchId = `${batch?.batchId || "command-batch"}:${stage?.stageId || "stage"}`;
+    const normalized = {
+        stageId: stage?.stageId || "",
+        orderingMode,
+        waitSeconds: Number(stage?.waitSeconds) || 0,
+        metadata: {
+            ...(stage?.metadata || {}),
+            orderingMode,
+            stageCommandCount: String(patches.length + motions.length)
+        },
+        patches: coalescePatches(patches, motions.length > 0, orderingMode, stageMetrics, warnings, batchId),
+        motions: deduplicateMotions(
+            motions,
+            stage?.allowDuplicateMotionsPerObject === true || batch?.allowDuplicateMotionsPerObject === true,
+            orderingMode,
+            stageMetrics,
+            warnings,
+            batchId)
+    };
+    metrics.coalescedPatchCount += stageMetrics.coalescedPatchCount;
+    metrics.droppedDuplicateMotionCount += stageMetrics.droppedDuplicateMotionCount;
+    return normalized;
 }
 
 function normalizeOrderingMode(value) {
@@ -181,9 +234,9 @@ function canCoalescePatches(patches, containsMotions) {
 }
 
 function isStatefulObjectPatch(objectPatch) {
-    return objectPatch?.assetId !== undefined ||
-        objectPatch?.symbols !== undefined ||
-        objectPatch?.metadata?.poseKey !== undefined;
+    return objectPatch?.assetId != null ||
+        objectPatch?.symbols != null ||
+        objectPatch?.metadata?.poseKey != null;
 }
 
 function mergeObjectPatch(existing, next) {
@@ -225,6 +278,14 @@ function deduplicateMotions(motions, allowDuplicates, orderingMode, metrics, war
     return deduplicated;
 }
 
+function countCommands(patches, motions, stages) {
+    return patches.length + motions.length + stages.reduce((count, stage) => {
+        return count +
+            (Array.isArray(stage?.patches) ? stage.patches.length : 0) +
+            (Array.isArray(stage?.motions) ? stage.motions.length : 0);
+    }, 0);
+}
+
 function isTruthy(value) {
     const normalized = String(value || "").toLowerCase();
     return normalized === "true" || normalized === "1" || normalized === "yes";
@@ -236,6 +297,7 @@ function syncBatchDiagnostics(state, metrics) {
     }
 
     state.diagnostics.batchCommandCount = metrics.batchCommandCount;
+    state.diagnostics.batchStageCount = metrics.stageCount;
     state.diagnostics.batchDurationMs = metrics.batchDurationMs;
     state.diagnostics.coalescedPatchCount = metrics.coalescedPatchCount;
     state.diagnostics.droppedDuplicateMotionCount = metrics.droppedDuplicateMotionCount;

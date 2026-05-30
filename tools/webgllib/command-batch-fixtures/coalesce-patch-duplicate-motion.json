@@ -1,0 +1,45 @@
+{
+  "name": "coalesce-patch-duplicate-motion",
+  "input": {
+    "batchId": "fixture.coalesce",
+    "patches": [
+      {
+        "objectPatches": [
+          {
+            "objectId": "actor.1",
+            "position": { "x": 1, "y": 0, "z": 0 }
+          }
+        ]
+      },
+      {
+        "objectPatches": [
+          {
+            "objectId": "actor.1",
+            "color": "#22c55e"
+          }
+        ]
+      }
+    ],
+    "motions": [
+      {
+        "motionId": "actor.1.out",
+        "objectId": "actor.1",
+        "targetPosition": { "x": 2, "y": 0, "z": 0 }
+      },
+      {
+        "motionId": "actor.1.back",
+        "objectId": "actor.1",
+        "targetPosition": { "x": 0, "y": 0, "z": 0 }
+      }
+    ]
+  },
+  "expected": {
+    "batchCommandCount": 4,
+    "stageCount": 0,
+    "patchCount": 1,
+    "motionCount": 1,
+    "coalescedPatchCount": 1,
+    "droppedDuplicateMotionCount": 1,
+    "stageSummaries": []
+  }
+}

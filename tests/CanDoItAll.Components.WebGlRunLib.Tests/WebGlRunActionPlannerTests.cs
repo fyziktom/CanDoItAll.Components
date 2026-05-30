@@ -60,6 +60,63 @@ public sealed class WebGlRunActionPlannerTests
     }
 
     [Fact]
+    public void Planner_normalizes_aliases_once_and_warns_on_conflicts()
+    {
+        var planner = new WebGlRunActionPlanner();
+
+        WebGlRunActionPlan plan = planner.Plan(new()
+        {
+            ActionId = "alias.conflict",
+            Kind = WebGlRunActionKinds.Wait,
+            ActionKind = WebGlRunActionKinds.MoveToObject,
+            ObjectId = "legacy-object",
+            SubjectObjectId = "actor",
+            TargetObjectId = "legacy-target",
+            Target = new() { ObjectId = "target", AnchorKey = WebGlRunAnchorKeys.Use }
+        }, CreatePlanningContext());
+
+        Assert.True(plan.IsValid, string.Join(Environment.NewLine, plan.Errors));
+        Assert.Single(plan.Motions);
+        Assert.Equal("actor", plan.Motions[0].ObjectId);
+        Assert.Contains(plan.Warnings, warning => warning.Contains("conflicting aliases", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Planner_adds_deterministic_distance_estimate_to_targeted_motion()
+    {
+        var planner = new WebGlRunActionPlanner();
+
+        WebGlRunActionPlan plan = planner.Plan(new()
+        {
+            ActionId = "distance.move",
+            ActionKind = WebGlRunActionKinds.MoveToObject,
+            SubjectObjectId = "actor",
+            Target = new() { ObjectId = "target", AnchorKey = WebGlRunAnchorKeys.Use }
+        }, CreatePlanningContext());
+
+        Assert.True(plan.IsValid, string.Join(Environment.NewLine, plan.Errors));
+        Assert.Equal("6.083", plan.Motions[0].Metadata["distanceEstimate"]);
+    }
+
+    [Fact]
+    public void Planner_falls_back_to_object_center_when_anchor_is_missing()
+    {
+        var planner = new WebGlRunActionPlanner();
+
+        WebGlRunActionPlan plan = planner.Plan(new()
+        {
+            ActionId = "anchor.missing",
+            ActionKind = WebGlRunActionKinds.MoveToObject,
+            SubjectObjectId = "actor",
+            Target = new() { ObjectId = "target", AnchorKey = "missing-anchor" }
+        }, CreatePlanningContext());
+
+        Assert.True(plan.IsValid, string.Join(Environment.NewLine, plan.Errors));
+        Assert.Equal(new WebGlVector3(4, 0, 0), plan.Motions[0].TargetPosition);
+        Assert.Contains(plan.Warnings, warning => warning.Contains("missing-anchor", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Planner_returns_failed_diagnostic_for_unresolved_target_without_throwing()
     {
         var planner = new WebGlRunActionPlanner();

@@ -10,5 +10,7 @@ public sealed class WebGlRunPlaybackResult
 
     public List<WebGlRunFrame> FramesToApply { get; } = [];
 
+    public bool RequiresSceneReset { get; set; }
+
     public WebGlRunPlaybackState State { get; set; } = new();
 }

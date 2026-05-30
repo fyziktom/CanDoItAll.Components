@@ -97,7 +97,7 @@ export function syncAssetVisual(state, sceneObject, group, options = {}) {
                 return;
             }
 
-            const instance = buildModelInstance(assetTemplate, sceneObject, asset, options);
+            const instance = buildModelInstance(assetTemplate, sceneObject, asset, options, state.diagnostics);
             group.add(instance);
             if (fallback.parent === group) {
                 group.remove(fallback);

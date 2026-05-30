@@ -1,4 +1,5 @@
 using CanDoItAll.Components.WebGlLib;
+using System.Text.Json;
 
 namespace CanDoItAll.Components.WebGlLib.Tests;
 
@@ -98,5 +99,80 @@ public sealed class WebGlSceneCommandBatchTests
         Assert.Equal(2, result.Batch.Patches.Count);
         Assert.Equal(0, result.Metrics.CoalescedPatchCount);
         Assert.Contains(result.Warnings, warning => warning.Contains("ordered semantics", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Batch_normalizer_preserves_stage_boundaries_and_duplicate_motions_across_stages()
+    {
+        var batch = new WebGlSceneCommandBatch
+        {
+            BatchId = "frame.staged",
+            OrderingMode = BatchOrderingMode.Sequential,
+            Stages =
+            [
+                new()
+                {
+                    StageId = "move.out",
+                    OrderingMode = BatchOrderingMode.Sequential,
+                    Motions =
+                    [
+                        new() { MotionId = "motion.out", ObjectId = "actor", TargetPosition = new WebGlVector3(4, 0, 0) }
+                    ]
+                },
+                new()
+                {
+                    StageId = "show.symbol",
+                    OrderingMode = BatchOrderingMode.Sequential,
+                    Patches =
+                    [
+                        new() { ObjectPatches = [new() { ObjectId = "actor", Symbols = [new() { Id = "admin", SemanticKind = "document" }] }] }
+                    ]
+                },
+                new()
+                {
+                    StageId = "move.back",
+                    OrderingMode = BatchOrderingMode.Sequential,
+                    Motions =
+                    [
+                        new() { MotionId = "motion.back", ObjectId = "actor", TargetPosition = new WebGlVector3(0, 0, 0) }
+                    ]
+                }
+            ]
+        };
+
+        WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
+
+        Assert.Equal(3, result.Batch.Stages.Count);
+        Assert.Empty(result.Batch.Motions);
+        Assert.Equal(0, result.Metrics.DroppedDuplicateMotionCount);
+        Assert.Equal([1, 0, 1], result.Batch.Stages.Select(stage => stage.Motions.Count).ToArray());
+        Assert.Equal("move.out", result.Batch.Stages[0].StageId);
+        Assert.Equal("move.back", result.Batch.Stages[2].StageId);
+    }
+
+    [Theory]
+    [InlineData("coalesce-patch-duplicate-motion.json")]
+    [InlineData("ordered-stages.json")]
+    public void Batch_normalizer_matches_shared_fixture_expectations(string fixtureFile)
+    {
+        using JsonDocument document = JsonDocument.Parse(File.ReadAllText(Path.Combine("..", "..", "..", "..", "..", "tools", "webgllib", "command-batch-fixtures", fixtureFile)));
+        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        WebGlSceneCommandBatch batch = document.RootElement.GetProperty("input").Deserialize<WebGlSceneCommandBatch>(options)!;
+        JsonElement expected = document.RootElement.GetProperty("expected");
+
+        WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
+
+        Assert.Equal(expected.GetProperty("batchCommandCount").GetInt32(), result.Metrics.BatchCommandCount);
+        Assert.Equal(expected.GetProperty("stageCount").GetInt32(), result.Metrics.StageCount);
+        Assert.Equal(expected.GetProperty("patchCount").GetInt32(), result.Batch.Patches.Count);
+        Assert.Equal(expected.GetProperty("motionCount").GetInt32(), result.Batch.Motions.Count);
+        Assert.Equal(expected.GetProperty("coalescedPatchCount").GetInt32(), result.Metrics.CoalescedPatchCount);
+        Assert.Equal(expected.GetProperty("droppedDuplicateMotionCount").GetInt32(), result.Metrics.DroppedDuplicateMotionCount);
+        Assert.Equal(
+            expected.GetProperty("stageSummaries").EnumerateArray().Select(item => item.GetProperty("stageId").GetString()).ToArray(),
+            result.Batch.Stages.Select(stage => stage.StageId).ToArray());
     }
 }

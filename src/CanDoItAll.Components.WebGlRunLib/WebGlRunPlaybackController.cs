@@ -6,6 +6,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
     private readonly WebGlRunTimeline? timeline;
     private readonly WebGlRunTimelineValidator timelineValidator;
     private readonly WebGlRunFrameResolver frameResolver;
+    private readonly long? maxFrameIndex;
 
     public WebGlRunPlaybackController(WebGlRunDocument document)
         : this(
@@ -28,6 +29,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         this.timelineValidator = timelineValidator;
         this.frameResolver = frameResolver ?? new WebGlRunFrameResolver();
         this.timeline = timeline;
+        maxFrameIndex = timeline?.Frames.Count > 0 ? timeline.Frames.Max(static item => item.Index) : null;
         State.RunId = runId ?? new WebGlRunId(string.Empty);
     }
 
@@ -65,6 +67,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         {
             State.IsPlaying = false;
             State.CurrentFrameIndex = 0;
+            result.RequiresSceneReset = true;
         }
 
         var targetFrameIndex = ResolveTargetFrameIndex(command);
@@ -80,6 +83,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
 
         if (timeline is not null && targetFrameIndex < State.CurrentFrameIndex)
         {
+            result.RequiresSceneReset = true;
             result.FramesToApply.AddRange(frameResolver.ResolveReplayFrames(timeline, targetFrameIndex));
         }
         else
@@ -112,7 +116,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
 
         while (State.IsPlaying)
         {
-            if (options.StopAtTimelineEnd && timeline is not null && State.CurrentFrameIndex >= timeline.Frames.Max(static item => item.Index))
+            if (options.StopAtTimelineEnd && maxFrameIndex is { } endFrameIndex && State.CurrentFrameIndex >= endFrameIndex)
             {
                 await ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Pause }, cancellationToken).ConfigureAwait(false);
                 break;

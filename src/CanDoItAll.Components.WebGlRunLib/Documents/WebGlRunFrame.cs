@@ -8,6 +8,23 @@ public sealed class WebGlRunFrame
 
     public double TimeSeconds { get; set; }
 
+    public List<WebGlRunActionStage> Stages { get; set; } = [];
+
+    public List<WebGlRunFramePatch> ScenePatches { get; set; } = [];
+
+    public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+
+    public Dictionary<string, string> Metadata { get; set; } = [];
+}
+
+public sealed class WebGlRunActionStage
+{
+    public string StageId { get; set; } = string.Empty;
+
+    public double StartsAtSeconds { get; set; }
+
+    public double WaitSeconds { get; set; }
+
     public List<WebGlRunFramePatch> ScenePatches { get; set; } = [];
 
     public List<WebGlObjectMotionCommand> Motions { get; set; } = [];

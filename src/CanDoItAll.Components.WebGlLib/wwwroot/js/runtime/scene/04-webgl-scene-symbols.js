@@ -57,6 +57,40 @@ export function clearSymbols(state) {
     }
 }
 
+export function rebuildSymbolsForObject(state, objectId) {
+    for (const group of Array.from(state.symbolGroups.values())) {
+        if (group.userData.ownerObjectId !== objectId) {
+            continue;
+        }
+
+        state.scene.remove(group);
+        group.userData.disposed = true;
+        disposeSceneObjectTree(group, state.diagnostics);
+        state.symbolGroups.delete(group.userData.symbolRuntimeId);
+    }
+
+    const sceneObject = state.objectLookup.get(objectId);
+    if (!sceneObject ||
+        state.options.showSymbols === false ||
+        state.sceneModel.uiState?.showSymbols === false ||
+        !isObjectVisible(state, sceneObject)) {
+        recomputeAnimatedSymbolCount(state);
+        return;
+    }
+
+    const symbols = (sceneObject.symbols || [])
+        .filter(symbol => symbol?.isVisible !== false)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    const size = resolveObjectSize(sceneObject);
+    const center = (symbols.length - 1) / 2;
+    symbols.forEach((symbol, index) => {
+        const symbolGroup = createSymbolGroup(state, sceneObject, symbol, size, index - center);
+        state.symbolGroups.set(symbolGroup.userData.symbolRuntimeId, symbolGroup);
+        state.scene.add(symbolGroup);
+    });
+    recomputeAnimatedSymbolCount(state);
+}
+
 function createSymbolGroup(state, sceneObject, symbol, objectSize, offsetIndex) {
     const symbolScale = Math.max(0.12, resolveFiniteNumber(symbol.scale, 1));
     const intensity = clamp(resolveFiniteNumber(symbol.intensity, 0), 0, 1);
@@ -178,4 +212,10 @@ export function syncSymbolPositionsForObject(state, objectId) {
         group.position.set(basePosition.x + offsetIndex * spacing, basePosition.y + size.y + heightOffset, basePosition.z);
         group.userData.basePosition = group.position.clone();
     });
+}
+
+function recomputeAnimatedSymbolCount(state) {
+    state.diagnostics.animatedSymbolCount = Array.from(state.symbolGroups.values())
+        .filter(group => group.userData.effectKey && group.userData.effectKey !== "none")
+        .length;
 }

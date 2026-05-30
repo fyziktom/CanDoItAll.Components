@@ -41,7 +41,7 @@ export function loadModelAsset(state, asset) {
         }));
 }
 
-export function buildModelInstance(assetTemplate, sceneObject, asset, options = {}) {
+export function buildModelInstance(assetTemplate, sceneObject, asset, options = {}, diagnostics = null) {
     const model = assetTemplate.hasSkinnedMesh ? cloneSkeleton(assetTemplate.template) : assetTemplate.template.clone(true);
     markInstanceResource(model, { ownsGeometry: false, ownsMaterial: false });
     const size = resolveObjectSize(sceneObject);
@@ -54,7 +54,7 @@ export function buildModelInstance(assetTemplate, sceneObject, asset, options = 
     model.rotation.set(importOptions.rotationOffset.x, importOptions.rotationOffset.y, importOptions.rotationOffset.z);
     model.position.copy(resolveModelOffset(assetTemplate, resolvedScale, importOptions));
     model.position.add(new THREE.Vector3(importOptions.positionOffset.x, importOptions.positionOffset.y, importOptions.positionOffset.z));
-    markModelInstance(model, sceneObject?.color || asset?.color, asset?.supportsTint !== false && !importOptions.disableTint);
+    markModelInstance(model, sceneObject?.color || asset?.color, asset?.supportsTint !== false && !importOptions.disableTint, diagnostics);
     normalizeImportedModelMaterials(model, importOptions);
 
     const wrapper = new THREE.Group();
@@ -109,7 +109,7 @@ function buildLoadedAssetTemplate(state, gltf, asset, uri) {
     return { template, size, center, min: bounds.min.clone(), hasSkinnedMesh };
 }
 
-function markModelInstance(instance, tintColor, supportsTint) {
+function markModelInstance(instance, tintColor, supportsTint, diagnostics = null) {
     instance.traverse(child => {
         child.frustumCulled = false;
         if (!child.isMesh || !supportsTint || !tintColor) {
@@ -118,6 +118,9 @@ function markModelInstance(instance, tintColor, supportsTint) {
 
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         child.material = Array.isArray(child.material) ? materials.map(material => material.clone()) : child.material?.clone?.();
+        if (diagnostics) {
+            diagnostics.materialCloneCount = (diagnostics.materialCloneCount || 0) + materials.filter(Boolean).length;
+        }
         markOwnedMaterial(child.material);
         for (const material of Array.isArray(child.material) ? child.material : [child.material]) {
             material?.color?.lerp?.(normalizeColor(tintColor), 0.38);

@@ -84,6 +84,8 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int DisposedTemplateCount { get; set; }
 
+    public int MaterialCloneCount { get; set; }
+
     public int DisposedGeometryCount { get; set; }
 
     public int DisposedMaterialCount { get; set; }
@@ -92,13 +94,23 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int BatchCommandCount { get; set; }
 
+    public int BatchStageCount { get; set; }
+
     public int BatchDurationMs { get; set; }
 
     public int CoalescedPatchCount { get; set; }
 
     public int DroppedDuplicateMotionCount { get; set; }
 
+    public int PatchedObjectCount { get; set; }
+
+    public int ReplacedObjectGroupCount { get; set; }
+
+    public int SymbolOnlyUpdateCount { get; set; }
+
     public int LinkUpdateCount { get; set; }
+
+    public int LinkGeometryRebuildCount { get; set; }
 
     public string LastError { get; set; } = string.Empty;
 

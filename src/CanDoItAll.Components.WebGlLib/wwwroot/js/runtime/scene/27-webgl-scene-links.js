@@ -37,6 +37,7 @@ export function syncLinksForObject(state, objectId) {
         const line = group.children[0];
         if (source && target && line) {
             line.geometry.dispose();
+            state.diagnostics.linkGeometryRebuildCount = (state.diagnostics.linkGeometryRebuildCount || 0) + 1;
             line.geometry = buildLinkGeometry(source, target);
         }
     }

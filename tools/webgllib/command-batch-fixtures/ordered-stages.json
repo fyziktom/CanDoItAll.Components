@@ -1,0 +1,80 @@
+{
+  "name": "ordered-stages",
+  "input": {
+    "batchId": "fixture.stages",
+    "orderingMode": 2,
+    "stages": [
+      {
+        "stageId": "pose-before-move",
+        "orderingMode": 2,
+        "patches": [
+          {
+            "metadata": { "preserveOrder": "true" },
+            "objectPatches": [
+              {
+                "objectId": "actor.1",
+                "metadata": { "poseKey": "walking" }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "stageId": "move-to-target",
+        "orderingMode": 2,
+        "motions": [
+          {
+            "motionId": "actor.1.to.target",
+            "objectId": "actor.1",
+            "targetPosition": { "x": 4, "y": 0, "z": 0 }
+          }
+        ]
+      },
+      {
+        "stageId": "admin-at-target",
+        "orderingMode": 2,
+        "patches": [
+          {
+            "objectPatches": [
+              {
+                "objectId": "actor.1",
+                "symbols": [
+                  {
+                    "id": "admin",
+                    "semanticKind": "document",
+                    "color": "#facc15"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "stageId": "return-home",
+        "orderingMode": 2,
+        "motions": [
+          {
+            "motionId": "actor.1.return",
+            "objectId": "actor.1",
+            "targetPosition": { "x": 0, "y": 0, "z": 0 }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "batchCommandCount": 4,
+    "stageCount": 4,
+    "patchCount": 0,
+    "motionCount": 0,
+    "coalescedPatchCount": 0,
+    "droppedDuplicateMotionCount": 0,
+    "stageSummaries": [
+      { "stageId": "pose-before-move", "patchCount": 1, "motionCount": 0 },
+      { "stageId": "move-to-target", "patchCount": 0, "motionCount": 1 },
+      { "stageId": "admin-at-target", "patchCount": 1, "motionCount": 0 },
+      { "stageId": "return-home", "patchCount": 0, "motionCount": 1 }
+    ]
+  }
+}

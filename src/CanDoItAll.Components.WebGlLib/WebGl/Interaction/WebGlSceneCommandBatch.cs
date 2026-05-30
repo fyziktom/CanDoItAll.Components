@@ -13,11 +13,30 @@ public sealed class WebGlSceneCommandBatch
 
     public BatchOrderingMode OrderingMode { get; set; } = BatchOrderingMode.CoalesceIndependent;
 
+    public List<WebGlSceneCommandBatchStage> Stages { get; set; } = [];
+
     public List<WebGlScenePatch> Patches { get; set; } = [];
 
     public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
 
     public bool AllowDuplicateMotionsPerObject { get; set; }
+
+    public Dictionary<string, string> Metadata { get; set; } = [];
+}
+
+public sealed class WebGlSceneCommandBatchStage
+{
+    public string StageId { get; set; } = string.Empty;
+
+    public BatchOrderingMode OrderingMode { get; set; } = BatchOrderingMode.CoalesceIndependent;
+
+    public List<WebGlScenePatch> Patches { get; set; } = [];
+
+    public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+
+    public bool AllowDuplicateMotionsPerObject { get; set; }
+
+    public double WaitSeconds { get; set; }
 
     public Dictionary<string, string> Metadata { get; set; } = [];
 }
@@ -34,6 +53,8 @@ public sealed class WebGlSceneCommandBatchResult : WebGlSceneCommandResult
 public sealed class WebGlSceneCommandBatchMetrics
 {
     public int BatchCommandCount { get; set; }
+
+    public int StageCount { get; set; }
 
     public int BatchDurationMs { get; set; }
 
@@ -71,20 +92,66 @@ public static class WebGlSceneCommandBatchNormalizer
             Batch = normalized,
             Metrics =
             {
-                BatchCommandCount = batch.Patches.Count + batch.Motions.Count,
-                EstimatedHostInteropCallCount = batch.Patches.Count + batch.Motions.Count > 0 ? 1 : 0
+                BatchCommandCount = CountCommands(batch),
+                StageCount = batch.Stages.Count,
+                EstimatedHostInteropCallCount = CountCommands(batch) > 0 ? 1 : 0
             }
         };
 
         normalized.Patches.AddRange(CoalescePatches(batch.Patches, batch.Motions.Count > 0, batch.OrderingMode, result));
         normalized.Motions.AddRange(DeduplicateMotions(batch.Motions, batch.AllowDuplicateMotionsPerObject, batch.OrderingMode, result));
+        foreach (WebGlSceneCommandBatchStage stage in batch.Stages)
+        {
+            normalized.Stages.Add(NormalizeStage(stage, batch, result));
+        }
+
         normalized.Metadata["orderingMode"] = batch.OrderingMode.ToString();
         normalized.Metadata["batchCommandCount"] = result.Metrics.BatchCommandCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        normalized.Metadata["stageCount"] = result.Metrics.StageCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         normalized.Metadata["coalescedPatchCount"] = result.Metrics.CoalescedPatchCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         normalized.Metadata["droppedDuplicateMotionCount"] = result.Metrics.DroppedDuplicateMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         normalized.Metadata["estimatedHostInteropCallCount"] = result.Metrics.EstimatedHostInteropCallCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         return result;
     }
+
+    private static WebGlSceneCommandBatchStage NormalizeStage(
+        WebGlSceneCommandBatchStage stage,
+        WebGlSceneCommandBatch parent,
+        WebGlSceneCommandBatchNormalizationResult result)
+    {
+        BatchOrderingMode orderingMode = stage.OrderingMode;
+        var normalized = new WebGlSceneCommandBatchStage
+        {
+            StageId = stage.StageId,
+            OrderingMode = orderingMode,
+            AllowDuplicateMotionsPerObject = stage.AllowDuplicateMotionsPerObject || parent.AllowDuplicateMotionsPerObject,
+            WaitSeconds = stage.WaitSeconds,
+            Metadata = new Dictionary<string, string>(stage.Metadata, StringComparer.Ordinal)
+        };
+        var stageResult = new WebGlSceneCommandBatchNormalizationResult
+        {
+            Batch = new WebGlSceneCommandBatch { BatchId = $"{parent.BatchId}:{stage.StageId}" }
+        };
+
+        normalized.Patches.AddRange(CoalescePatches(stage.Patches, stage.Motions.Count > 0, orderingMode, stageResult));
+        normalized.Motions.AddRange(DeduplicateMotions(
+            stage.Motions,
+            normalized.AllowDuplicateMotionsPerObject,
+            orderingMode,
+            stageResult));
+        normalized.Metadata["orderingMode"] = orderingMode.ToString();
+        normalized.Metadata["stageCommandCount"] = (stage.Patches.Count + stage.Motions.Count).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        result.Metrics.CoalescedPatchCount += stageResult.Metrics.CoalescedPatchCount;
+        result.Metrics.DroppedDuplicateMotionCount += stageResult.Metrics.DroppedDuplicateMotionCount;
+        result.Warnings.AddRange(stageResult.Warnings);
+        return normalized;
+    }
+
+    private static int CountCommands(WebGlSceneCommandBatch batch)
+        => batch.Patches.Count +
+           batch.Motions.Count +
+           batch.Stages.Sum(static stage => stage.Patches.Count + stage.Motions.Count);
 
     private static IReadOnlyList<WebGlScenePatch> CoalescePatches(
         IReadOnlyList<WebGlScenePatch> patches,

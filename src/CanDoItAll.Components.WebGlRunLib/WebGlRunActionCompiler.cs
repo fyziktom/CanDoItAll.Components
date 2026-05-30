@@ -4,6 +4,8 @@ namespace CanDoItAll.Components.WebGlRunLib;
 
 public sealed class WebGlRunActionCompiler
 {
+    private readonly WebGlRunActionNormalizer actionNormalizer = new();
+
     public WebGlRunTimeline Compile(WebGlRunActionPlan plan)
     {
         ArgumentNullException.ThrowIfNull(plan);
@@ -13,10 +15,21 @@ public sealed class WebGlRunActionCompiler
             .ToDictionary(static binding => binding.ObjectId, StringComparer.Ordinal);
         var frames = new Dictionary<long, WebGlRunFrame>();
 
-        foreach (var action in Flatten(plan.Actions).OrderBy(static action => action.StartsAtSeconds).ThenBy(static action => action.ActionId, StringComparer.Ordinal))
+        var normalizedActions = plan.Actions.Select(action => actionNormalizer.Normalize(action).Action).ToList();
+        foreach (var action in Flatten(normalizedActions)
+                     .Select(static (action, order) => new { action, order })
+                     .OrderBy(static item => item.action.StartsAtSeconds)
+                     .ThenBy(static item => item.order)
+                     .Select(static item => item.action))
         {
             var frame = GetOrCreateFrame(frames, action, frameRate);
             CompileAction(action, bindings, frame);
+        }
+
+        foreach (WebGlRunFrame frame in frames.Values)
+        {
+            frame.ScenePatches = [.. frame.Stages.SelectMany(static stage => stage.ScenePatches)];
+            frame.Motions = [.. frame.Stages.SelectMany(static stage => stage.Motions)];
         }
 
         return new WebGlRunTimeline
@@ -31,29 +44,30 @@ public sealed class WebGlRunActionCompiler
         IReadOnlyDictionary<string, WebGlRunObjectBinding> bindings,
         WebGlRunFrame frame)
     {
-        switch (action.ResolvedKind)
+        WebGlRunActionStage stage = GetOrCreateStage(frame, action);
+        switch (action.ActionKind)
         {
             case WebGlRunActionKinds.MoveToObject:
-                AddMotion(action, ResolvePosition(bindings, action.ResolvedTargetObjectId), frame);
+                AddMotion(action, ResolvePosition(bindings, action.Target.ObjectId), stage);
                 break;
             case WebGlRunActionKinds.MoveToPosition:
-                AddMotion(action, action.Target.Position ?? ResolvePosition(action.Parameters), frame);
+                AddMotion(action, action.Target.Position ?? ResolvePosition(action.Parameters), stage);
                 break;
             case WebGlRunActionKinds.ReturnToAnchor:
-                AddMotion(action, ResolveAnchor(bindings, action.ResolvedObjectId), frame);
+                AddMotion(action, ResolveAnchor(bindings, action.SubjectObjectId), stage);
                 break;
             case WebGlRunActionKinds.SetAsset:
-                AddPatch(action, frame, new WebGlSceneObjectPatch
+                AddPatch(action, stage, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.ResolvedObjectId,
+                    ObjectId = action.SubjectObjectId,
                     AssetId = Get(action.Parameters, "assetId")
                 });
                 break;
             case WebGlRunActionKinds.SetPose:
             case WebGlRunActionKinds.ChangePose:
-                AddPatch(action, frame, new WebGlSceneObjectPatch
+                AddPatch(action, stage, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.ResolvedObjectId,
+                    ObjectId = action.SubjectObjectId,
                     Metadata = new Dictionary<string, string>(StringComparer.Ordinal)
                     {
                         ["poseKey"] = FirstNonEmpty(action.PoseKey, Get(action.Parameters, "poseKey"))
@@ -62,9 +76,9 @@ public sealed class WebGlRunActionCompiler
                 break;
             case WebGlRunActionKinds.ShowSymbol:
             case WebGlRunActionKinds.UpdateSymbol:
-                AddPatch(action, frame, new WebGlSceneObjectPatch
+                AddPatch(action, stage, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.ResolvedObjectId,
+                    ObjectId = action.SubjectObjectId,
                     Symbols =
                     [
                         new WebGlStatusSymbol
@@ -80,9 +94,9 @@ public sealed class WebGlRunActionCompiler
                 });
                 break;
             case WebGlRunActionKinds.HideSymbol:
-                AddPatch(action, frame, new WebGlSceneObjectPatch
+                AddPatch(action, stage, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.ResolvedObjectId,
+                    ObjectId = action.SubjectObjectId,
                     Symbols = []
                 });
                 break;
@@ -94,7 +108,8 @@ public sealed class WebGlRunActionCompiler
             case WebGlRunActionKinds.ResourceTransferVisual:
             case WebGlRunActionKinds.SetLayerVisibility:
             case WebGlRunActionKinds.Wait:
-                frame.Metadata[$"action.{action.ActionId}"] = action.ResolvedKind;
+                stage.WaitSeconds = Math.Max(0, action.DurationSeconds);
+                frame.Metadata[$"action.{action.ActionId}"] = action.ActionKind;
                 break;
         }
     }
@@ -103,7 +118,7 @@ public sealed class WebGlRunActionCompiler
     {
         foreach (WebGlRunAction action in actions)
         {
-            if (action.ResolvedKind is WebGlRunActionKinds.Sequence or WebGlRunActionKinds.Parallel)
+            if (action.ActionKind is WebGlRunActionKinds.Sequence or WebGlRunActionKinds.Parallel)
             {
                 foreach (WebGlRunAction child in Flatten(action.Steps))
                 {
@@ -129,30 +144,57 @@ public sealed class WebGlRunActionCompiler
         return frame;
     }
 
-    private static void AddMotion(WebGlRunAction action, WebGlVector3? targetPosition, WebGlRunFrame frame)
+    private static WebGlRunActionStage GetOrCreateStage(WebGlRunFrame frame, WebGlRunAction action)
+    {
+        string stageId = string.IsNullOrWhiteSpace(action.Metadata.GetValueOrDefault("stageId"))
+            ? action.ActionId
+            : action.Metadata["stageId"];
+        WebGlRunActionStage? existing = frame.Stages.FirstOrDefault(item => string.Equals(item.StageId, stageId, StringComparison.Ordinal));
+        if (existing is not null)
+        {
+            return existing;
+        }
+
+        var stage = new WebGlRunActionStage
+        {
+            StageId = stageId,
+            StartsAtSeconds = action.StartsAtSeconds,
+            Metadata =
+            {
+                ["actionId"] = action.ActionId,
+                ["actionKind"] = action.ActionKind,
+                ["orderingMode"] = BatchOrderingMode.Sequential.ToString()
+            }
+        };
+        frame.Stages.Add(stage);
+        frame.Metadata["orderingMode"] = BatchOrderingMode.Sequential.ToString();
+        return stage;
+    }
+
+    private static void AddMotion(WebGlRunAction action, WebGlVector3? targetPosition, WebGlRunActionStage stage)
     {
         if (targetPosition is null)
         {
-            frame.Metadata[$"action.{action.ActionId}.warning"] = "target-position-missing";
+            stage.Metadata[$"action.{action.ActionId}.warning"] = "target-position-missing";
             return;
         }
 
-        frame.Motions.Add(new WebGlObjectMotionCommand
+        stage.Motions.Add(new WebGlObjectMotionCommand
         {
             MotionId = action.ActionId,
-            ObjectId = action.ResolvedObjectId,
+            ObjectId = action.SubjectObjectId,
             TargetPosition = targetPosition.Value,
             DurationSeconds = action.DurationSeconds,
             Easing = Get(action.Parameters, "easing", WebGlMotionEasings.EaseInOut),
             Metadata = new Dictionary<string, string>(action.Metadata, StringComparer.Ordinal)
             {
-                ["actionKind"] = action.ResolvedKind
+                ["actionKind"] = action.ActionKind
             }
         });
     }
 
-    private static void AddPatch(WebGlRunAction action, WebGlRunFrame frame, WebGlSceneObjectPatch objectPatch)
-        => frame.ScenePatches.Add(new WebGlRunFramePatch
+    private static void AddPatch(WebGlRunAction action, WebGlRunActionStage stage, WebGlSceneObjectPatch objectPatch)
+        => stage.ScenePatches.Add(new WebGlRunFramePatch
         {
             Id = action.ActionId,
             Patch = new WebGlScenePatch
@@ -161,7 +203,7 @@ public sealed class WebGlRunActionCompiler
                 Metadata =
                 {
                     ["commandId"] = action.ActionId,
-                    ["actionKind"] = action.ResolvedKind
+                    ["actionKind"] = action.ActionKind
                 }
             }
         });

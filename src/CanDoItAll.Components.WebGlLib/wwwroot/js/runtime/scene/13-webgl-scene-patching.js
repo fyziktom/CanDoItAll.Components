@@ -9,6 +9,7 @@ import {
     replaceSceneObjectGroup,
     updateObjectRuntimeTransform
 } from "./11-webgl-scene-graph.js";
+import { rebuildSymbolsForObject } from "./04-webgl-scene-symbols.js";
 import {
     completeCommandResult,
     createCommandResult,
@@ -143,10 +144,18 @@ function applyObjectPatch(state, patch, result) {
     }
 
     const transformChanged = patch.position !== undefined || patch.rotation !== undefined || patch.scale !== undefined;
+    const sizeChanged = patch.size !== undefined;
+    const symbolOnlyChanged = patch.symbols !== undefined &&
+        patch.assetId === undefined &&
+        patch.color === undefined &&
+        patch.metadata === undefined &&
+        !transformChanged &&
+        !sizeChanged;
     const visualChanged = patch.assetId !== undefined ||
         patch.color !== undefined ||
         patch.symbols !== undefined ||
         patch.metadata !== undefined;
+    state.diagnostics.patchedObjectCount = (state.diagnostics.patchedObjectCount || 0) + 1;
     if (patch.position !== undefined) {
         sceneObject.position = normalizePosition(patch.position);
     }
@@ -183,7 +192,12 @@ function applyObjectPatch(state, patch, result) {
         cancelObjectMotions(state, patch.objectId);
     }
 
-    if (visualChanged) {
+    if (symbolOnlyChanged) {
+        state.diagnostics.symbolOnlyUpdateCount = (state.diagnostics.symbolOnlyUpdateCount || 0) + 1;
+        rebuildSymbolsForObject(state, patch.objectId);
+        state.scheduleRender("symbol-only-patch");
+    } else if (visualChanged || sizeChanged) {
+        state.diagnostics.replacedObjectGroupCount = (state.diagnostics.replacedObjectGroupCount || 0) + 1;
         replaceSceneObjectGroup(state, sceneObject);
     } else {
         updateObjectRuntimeTransform(state, patch.objectId, patch.rotation === undefined && patch.scale === undefined);

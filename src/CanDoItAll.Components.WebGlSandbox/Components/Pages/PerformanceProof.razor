@@ -1,0 +1,105 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+@page "/performance-proof"
+
+<PageTitle>WebGL Performance Proof</PageTitle>
+
+<div class="webgl-page webgl-page--fill">
+    <PageScaffold MaxWidthClass="max-w-full" FillHeight="true">
+        <Header>
+            <PageHeader Eyebrow="Large-screen performance proof" Title="Command Batch Proof" Description="Desktop validation for generic actors, staged command batches, scene patching, motion, asset cache, and link diagnostics.">
+                <Actions>
+                    <Button Text="Run batch" Icon="play_arrow" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Primary" Click="@RunProofBatchAsync" />
+                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofAsync" />
+                </Actions>
+            </PageHeader>
+        </Header>
+        <ChildContent>
+            <div class="webgl-model-lab">
+                <section class="webgl-model-lab__stage" data-testid="webgl-performance-stage">
+                    <WebGlSceneView @ref="sceneView"
+                                    Scene="@scene"
+                                    Options="@runtimeOptions"
+                                    AriaLabel="WebGL command batch performance proof scene"
+                                    RuntimeReady="@HandleRuntimeReady"
+                                    RuntimeError="@HandleRuntimeError" />
+                </section>
+
+                <aside class="webgl-model-lab__panel" aria-label="Performance proof metrics">
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Status</span>
+                            <StatusBadge Text="@statusText" Tone="@statusTone" />
+                        </div>
+                        <p class="webgl-proof-note" data-testid="webgl-performance-status">@statusDetail</p>
+                        @if (!string.IsNullOrWhiteSpace(runtimeError))
+                        {
+                            <p class="webgl-runtime-error" data-testid="webgl-performance-error">@runtimeError</p>
+                        }
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Batch</span>
+                            <StatusBadge Text="@BatchCommandCountText" Tone="info" />
+                        </div>
+                        <dl class="webgl-proof-grid">
+                            <div>
+                                <dt>Commands</dt>
+                                <dd data-testid="webgl-performance-command-count">@BatchCommandCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Duration ms</dt>
+                                <dd data-testid="webgl-performance-batch-duration">@BatchDurationText</dd>
+                            </div>
+                            <div>
+                                <dt>Coalesced</dt>
+                                <dd data-testid="webgl-performance-coalesced-patches">@CoalescedPatchText</dd>
+                            </div>
+                            <div>
+                                <dt>Dropped motions</dt>
+                                <dd data-testid="webgl-performance-dropped-motions">@DroppedMotionText</dd>
+                            </div>
+                            <div>
+                                <dt>Stages</dt>
+                                <dd data-testid="webgl-performance-stage-count">@StageCountText</dd>
+                            </div>
+                        </dl>
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Runtime</span>
+                            <StatusBadge Text="@ObjectCountText" Tone="success" />
+                        </div>
+                        <dl class="webgl-proof-grid">
+                            <div>
+                                <dt>Objects</dt>
+                                <dd data-testid="webgl-performance-object-count">@ObjectCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Rendered frames</dt>
+                                <dd data-testid="webgl-performance-render-count">@RenderCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Active motions</dt>
+                                <dd data-testid="webgl-performance-active-motions">@ActiveMotionCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Cache hits</dt>
+                                <dd data-testid="webgl-performance-cache-hits">@CacheHitText</dd>
+                            </div>
+                            <div>
+                                <dt>Cache misses</dt>
+                                <dd data-testid="webgl-performance-cache-misses">@CacheMissText</dd>
+                            </div>
+                            <div>
+                                <dt>Link rebuilds</dt>
+                                <dd data-testid="webgl-performance-link-rebuilds">@LinkRebuildText</dd>
+                            </div>
+                        </dl>
+                    </section>
+                </aside>
+            </div>
+        </ChildContent>
+    </PageScaffold>
+</div>

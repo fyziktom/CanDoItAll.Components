@@ -5,6 +5,7 @@ namespace CanDoItAll.Components.WebGlRunLib;
 
 public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
 {
+    private readonly WebGlRunActionNormalizer actionNormalizer = new();
     private readonly WebGlRunVisualStateResolver visualStateResolver = new();
 
     public WebGlRunActionPlan Plan(WebGlRunAction action, WebGlRunPlanningContext context)
@@ -12,18 +13,20 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         ArgumentNullException.ThrowIfNull(action);
         ArgumentNullException.ThrowIfNull(context);
 
+        WebGlRunActionNormalizationResult normalization = actionNormalizer.Normalize(action);
         var plan = new WebGlRunActionPlan
         {
-            ActionId = action.ActionId,
+            ActionId = normalization.Action.ActionId,
             FrameRate = 1
         };
-        AppendAction(action, context, plan);
+        plan.Warnings.AddRange(normalization.Warnings);
+        AppendAction(normalization.Action, context, plan);
         return plan;
     }
 
     private void AppendAction(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan)
     {
-        string kind = NormalizeKind(action.ResolvedKind);
+        string kind = NormalizeKind(action.ActionKind);
         switch (kind)
         {
             case WebGlRunActionKinds.Sequence:
@@ -98,7 +101,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         var resolver = new WebGlRunTargetResolver();
         WebGlVector3? target = resolver.Resolve(new WebGlRunActionTarget
         {
-            ObjectId = action.ResolvedTargetObjectId,
+            ObjectId = action.Target.ObjectId,
             AnchorKey = action.Target.AnchorKey,
             Offset = action.Target.Offset,
             Position = action.Target.Position
@@ -106,13 +109,13 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         MergeDiagnostics(action, resolver, plan);
         if (target is { } targetPosition)
         {
-            AddMotion(action, targetPosition, plan, WebGlRunActionKinds.MoveToObject);
+            AddMotion(action, targetPosition, plan, WebGlRunActionKinds.MoveToObject, EstimateDistance(action.SubjectObjectId, targetPosition, context));
         }
     }
 
     private static void AddReturnToAnchor(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan)
     {
-        string objectId = action.ResolvedObjectId;
+        string objectId = action.SubjectObjectId;
         if (!context.ObjectIndex.TryGetValue(objectId, out WebGlSceneObject? sceneObject))
         {
             plan.Errors.Add($"Return object '{objectId}' was not found.");
@@ -122,7 +125,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         var resolver = new WebGlRunTargetResolver();
         WebGlVector3 target = resolver.ResolveAnchor(sceneObject, action.Target.AnchorKey, action.Target.Offset);
         MergeDiagnostics(action, resolver, plan);
-        AddMotion(action, target, plan, WebGlRunActionKinds.ReturnToAnchor);
+        AddMotion(action, target, plan, WebGlRunActionKinds.ReturnToAnchor, EstimateDistance(action.SubjectObjectId, target, context));
     }
 
     private void AddPosePatch(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan)
@@ -136,7 +139,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
 
         WebGlSceneObjectPatch objectPatch = new()
         {
-            ObjectId = action.ResolvedObjectId,
+            ObjectId = action.SubjectObjectId,
             AssetId = FirstNonEmpty(pose?.AssetId, action.Parameters.GetValueOrDefault("assetId"), null),
             Rotation = pose?.Rotation,
             Scale = pose?.Scale,
@@ -158,7 +161,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
     {
         if (replaceSymbols)
         {
-            AddPatch(action, plan, new WebGlSceneObjectPatch { ObjectId = action.ResolvedObjectId, Symbols = [] }, WebGlRunActionKinds.HideSymbol);
+            AddPatch(action, plan, new WebGlSceneObjectPatch { ObjectId = action.SubjectObjectId, Symbols = [] }, WebGlRunActionKinds.HideSymbol);
             return;
         }
 
@@ -178,23 +181,31 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
             EffectKey = FirstNonEmpty(symbol?.EffectKey, action.Parameters.GetValueOrDefault("effectKey"), WebGlSymbolEffects.Pulse),
             Tooltip = FirstNonEmpty(symbol?.Tooltip, action.Parameters.GetValueOrDefault("tooltip"))
         };
-        AddPatch(action, plan, new WebGlSceneObjectPatch { ObjectId = action.ResolvedObjectId, Symbols = [statusSymbol] }, WebGlRunActionKinds.ShowSymbol);
+        AddPatch(action, plan, new WebGlSceneObjectPatch { ObjectId = action.SubjectObjectId, Symbols = [statusSymbol] }, WebGlRunActionKinds.ShowSymbol);
     }
 
-    private static void AddMotion(WebGlRunAction action, WebGlVector3 target, WebGlRunActionPlan plan, string actionKind)
-        => plan.Motions.Add(new WebGlObjectMotionCommand
+    private static void AddMotion(WebGlRunAction action, WebGlVector3 target, WebGlRunActionPlan plan, string actionKind, double? distanceEstimate = null)
+    {
+        var metadata = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["actionId"] = action.ActionId,
+            ["actionKind"] = actionKind
+        };
+        if (distanceEstimate is { } distance)
+        {
+            metadata["distanceEstimate"] = distance.ToString("0.###", CultureInfo.InvariantCulture);
+        }
+
+        plan.Motions.Add(new WebGlObjectMotionCommand
         {
             MotionId = action.ActionId,
-            ObjectId = action.ResolvedObjectId,
+            ObjectId = action.SubjectObjectId,
             TargetPosition = target,
             DurationSeconds = action.DurationSeconds,
             Easing = FirstNonEmpty(action.Easing, action.Parameters.GetValueOrDefault("easing"), WebGlMotionEasings.Linear),
-            Metadata =
-            {
-                ["actionId"] = action.ActionId,
-                ["actionKind"] = actionKind
-            }
+            Metadata = metadata
         });
+    }
 
     private static void AddPatch(WebGlRunAction action, WebGlRunActionPlan plan, WebGlSceneObjectPatch objectPatch, string actionKind)
         => plan.Patches.Add(new WebGlScenePatch
@@ -230,4 +241,18 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
 
     private static bool TryDouble(IReadOnlyDictionary<string, string> values, string key, out double result)
         => double.TryParse(values.GetValueOrDefault(key), NumberStyles.Float, CultureInfo.InvariantCulture, out result);
+
+    private static double? EstimateDistance(string objectId, WebGlVector3 target, WebGlRunPlanningContext context)
+    {
+        if (!context.ObjectIndex.TryGetValue(objectId, out WebGlSceneObject? sceneObject))
+        {
+            return null;
+        }
+
+        WebGlVector3 position = sceneObject.Position;
+        double dx = target.X - position.X;
+        double dy = target.Y - position.Y;
+        double dz = target.Z - position.Z;
+        return Math.Sqrt(dx * dx + dy * dy + dz * dz);
+    }
 }

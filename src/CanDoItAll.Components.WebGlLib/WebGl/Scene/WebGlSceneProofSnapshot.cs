@@ -44,6 +44,8 @@ public sealed class WebGlSceneProofSnapshot
 
     public int LinkUpdateCount { get; set; }
 
+    public int LinkGeometryRebuildCount { get; set; }
+
     public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
 
     public string LargestLoadedAssetId { get; set; } = string.Empty;
