@@ -6,6 +6,16 @@ public sealed class WebGlRunAction
 {
     public string ActionId { get; set; } = string.Empty;
 
+    public string SequenceId { get; set; } = string.Empty;
+
+    public string ParentActionId { get; set; } = string.Empty;
+
+    public int StageIndex { get; set; } = -1;
+
+    public int OrderIndex { get; set; } = -1;
+
+    public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+
     public string Kind { get; set; } = string.Empty;
 
     public string ActionKind { get; set; } = string.Empty;
@@ -39,4 +49,11 @@ public sealed class WebGlRunAction
     public string ResolvedObjectId => !string.IsNullOrWhiteSpace(ObjectId) ? ObjectId : SubjectObjectId;
 
     public string ResolvedTargetObjectId => !string.IsNullOrWhiteSpace(Target.ObjectId) ? Target.ObjectId : TargetObjectId;
+}
+
+public static class WebGlRunStageExecutionPolicies
+{
+    public const string PreserveOrder = "preserve-order";
+    public const string Parallel = "parallel";
+    public const string CoalesceWithinStage = "coalesce-within-stage";
 }

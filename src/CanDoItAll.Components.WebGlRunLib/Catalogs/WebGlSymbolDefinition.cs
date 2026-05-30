@@ -16,5 +16,7 @@ public sealed class WebGlSymbolDefinition
 
     public string Tooltip { get; set; } = string.Empty;
 
+    public bool IsNoOpFallback { get; set; }
+
     public Dictionary<string, string> Metadata { get; set; } = [];
 }

@@ -3,9 +3,9 @@ const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
-const runtimeSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "26-webgl-scene-command-batch.js");
+const runtimeSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "28-webgl-scene-command-batch-normalizer.js");
 const fixtureDir = path.join(__dirname, "command-batch-fixtures");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-sharedwell-hardening-v8", "command-batch-parity");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-sharedwell-hardening-v9", "command-batch-parity");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });
@@ -42,11 +42,15 @@ function writeAuditRuntimeModule() {
 function summarize(normalized) {
   return {
     batchCommandCount: normalized.metrics.batchCommandCount,
+    commandCountBeforeNormalization: normalized.metrics.commandCountBeforeNormalization,
+    commandCountAfterNormalization: normalized.metrics.commandCountAfterNormalization,
     stageCount: normalized.metrics.stageCount,
     patchCount: normalized.patches.length,
     motionCount: normalized.motions.length,
     coalescedPatchCount: normalized.metrics.coalescedPatchCount,
     droppedDuplicateMotionCount: normalized.metrics.droppedDuplicateMotionCount,
+    preservedOrderedDuplicateMotionCount: normalized.metrics.preservedOrderedDuplicateMotionCount,
+    interopCallsAvoided: normalized.metrics.interopCallsAvoided,
     stageSummaries: normalized.stages.map(stage => ({
       stageId: stage.stageId,
       patchCount: stage.patches.length,
@@ -67,4 +71,3 @@ main().catch(error => {
   console.error(error?.stack || error);
   process.exit(1);
 });
-

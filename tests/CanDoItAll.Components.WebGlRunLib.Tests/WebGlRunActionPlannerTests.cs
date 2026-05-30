@@ -134,6 +134,78 @@ public sealed class WebGlRunActionPlannerTests
         Assert.Contains(plan.Errors, error => error.Contains("missing", StringComparison.OrdinalIgnoreCase));
     }
 
+    [Fact]
+    public void Target_resolver_reports_resolution_metadata_for_trade_anchor_and_explicit_position()
+    {
+        var resolver = new WebGlRunTargetResolver();
+        WebGlRunTargetResolution trade = resolver.ResolveTarget(new()
+        {
+            ObjectId = "target",
+            AnchorKey = WebGlRunAnchorKeys.Trade
+        }, CreatePlanningContext());
+
+        Assert.True(trade.Succeeded, string.Join(Environment.NewLine, trade.Errors));
+        Assert.Equal("target", trade.TargetObjectId);
+        Assert.Equal(WebGlRunAnchorKeys.Trade, trade.AnchorKey);
+        Assert.Equal("built-in-anchor", trade.AnchorKind);
+
+        var explicitResolver = new WebGlRunTargetResolver();
+        WebGlRunTargetResolution explicitPosition = explicitResolver.ResolveTarget(new()
+        {
+            Position = new WebGlVector3(9, 0, 2)
+        }, CreatePlanningContext());
+
+        Assert.True(explicitPosition.Succeeded);
+        Assert.Equal(new WebGlVector3(9, 0, 2), explicitPosition.Position);
+        Assert.Equal("explicit-position", explicitPosition.AnchorKind);
+    }
+
+    [Fact]
+    public void Visual_state_catalog_validator_checks_duplicates_assets_and_bindings()
+    {
+        var catalog = new WebGlVisualStateCatalog
+        {
+            Poses =
+            {
+                new() { PoseKey = "carry", AssetId = "asset.person.carry", AssetVariantId = "variant.carry" },
+                new() { PoseKey = "carry", AssetId = "asset.person.carry" },
+                new() { PoseKey = "admin-writing", AssetId = "missing.asset" },
+                new() { PoseKey = "noop", IsNoOpFallback = true }
+            },
+            Symbols =
+            {
+                new() { SymbolKey = "water", SymbolAssetId = "asset.symbol.water" },
+                new() { SymbolKey = "risk", SymbolAssetId = "missing.symbol" },
+                new() { SymbolKey = "noop", IsNoOpFallback = true }
+            },
+            ActionBindings =
+            {
+                new() { ActionKind = "collect", PoseKey = "carry", SymbolKey = "water" },
+                new() { ActionKind = "admin", PoseKey = "admin-writing", SymbolKey = "missing-symbol-key" }
+            }
+        };
+        var assets = new WebGlAssetCatalog
+        {
+            Assets =
+            {
+                new()
+                {
+                    Id = "asset.person.carry",
+                    Variants = { new() { Id = "variant.carry" } }
+                },
+                new() { Id = "asset.symbol.water" }
+            }
+        };
+
+        WebGlVisualStateCatalogValidationResult result = new WebGlVisualStateCatalogValidator().Validate(catalog, assets);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => error.Contains("Duplicate pose", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => error.Contains("missing.asset", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => error.Contains("missing.symbol", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => error.Contains("missing-symbol-key", StringComparison.Ordinal));
+    }
+
     private static WebGlRunPlanningContext CreatePlanningContext()
         => new()
         {

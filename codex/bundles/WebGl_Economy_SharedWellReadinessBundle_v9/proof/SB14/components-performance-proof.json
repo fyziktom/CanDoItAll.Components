@@ -1,0 +1,39 @@
+{
+  "generatedAtUtc": "2026-05-30T22:31:59.463Z",
+  "largeScreenOnly": true,
+  "operations": [
+    {
+      "name": "100 independent motions",
+      "elapsedMilliseconds": 1.973,
+      "inputMotionCount": 100,
+      "outputMotionCount": 100,
+      "interopCallsAvoided": 99,
+      "warnings": []
+    },
+    {
+      "name": "25 actors with 4 ordered stages",
+      "elapsedMilliseconds": 10.718,
+      "actorCount": 25,
+      "stageCount": 4,
+      "inputMotionCount": 100,
+      "outputMotionCount": 100,
+      "droppedDuplicateMotionCount": 0,
+      "warnings": []
+    },
+    {
+      "name": "300 links with indexed moved actor update",
+      "elapsedMilliseconds": 14.845,
+      "totalLinkCount": 300,
+      "movedActorLinkCount": 4,
+      "linksUpdatedLastFrame": 4,
+      "linkSyncScanCount": 4,
+      "linkSyncIndexedHitCount": 4,
+      "warnings": []
+    }
+  ],
+  "bottleneckNotes": [
+    "Command batching keeps 100 motion commands in one normalized host interop batch.",
+    "Ordered stage policy preserves stage boundaries and prevents duplicate-motion collapse across ordered stages.",
+    "Link synchronization uses linkGroupsByObjectId, so moving one actor updates only indexed adjacent links instead of scanning all scene links."
+  ]
+}

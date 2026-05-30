@@ -19,6 +19,8 @@ public sealed class WebGlRunActionCompiler
         foreach (var action in Flatten(normalizedActions)
                      .Select(static (action, order) => new { action, order })
                      .OrderBy(static item => item.action.StartsAtSeconds)
+                     .ThenBy(static item => item.action.StageIndex < 0 ? item.order : item.action.StageIndex)
+                     .ThenBy(static item => item.action.OrderIndex < 0 ? item.order : item.action.OrderIndex)
                      .ThenBy(static item => item.order)
                      .Select(static item => item.action))
         {
@@ -115,20 +117,47 @@ public sealed class WebGlRunActionCompiler
     }
 
     private static IEnumerable<WebGlRunAction> Flatten(IEnumerable<WebGlRunAction> actions)
+        => Flatten(actions, sequenceId: string.Empty, parentActionId: string.Empty);
+
+    private static IEnumerable<WebGlRunAction> Flatten(IEnumerable<WebGlRunAction> actions, string sequenceId, string parentActionId)
     {
+        var childIndex = 0;
         foreach (WebGlRunAction action in actions)
         {
             if (action.ActionKind is WebGlRunActionKinds.Sequence or WebGlRunActionKinds.Parallel)
             {
-                foreach (WebGlRunAction child in Flatten(action.Steps))
+                string nextSequenceId = string.IsNullOrWhiteSpace(action.SequenceId) ? action.ActionId : action.SequenceId;
+                foreach (WebGlRunAction child in Flatten(action.Steps, nextSequenceId, action.ActionId))
                 {
                     yield return child;
                 }
             }
             else
             {
+                if (string.IsNullOrWhiteSpace(action.SequenceId))
+                {
+                    action.SequenceId = sequenceId;
+                }
+
+                if (string.IsNullOrWhiteSpace(action.ParentActionId))
+                {
+                    action.ParentActionId = parentActionId;
+                }
+
+                if (action.StageIndex < 0)
+                {
+                    action.StageIndex = childIndex;
+                }
+
+                if (action.OrderIndex < 0)
+                {
+                    action.OrderIndex = childIndex;
+                }
+
                 yield return action;
             }
+
+            childIndex++;
         }
     }
 
@@ -158,18 +187,44 @@ public sealed class WebGlRunActionCompiler
         var stage = new WebGlRunActionStage
         {
             StageId = stageId,
+            SequenceId = action.SequenceId,
+            ParentActionId = action.ParentActionId,
+            StageIndex = action.StageIndex,
+            OrderIndex = action.OrderIndex,
+            ExecutionPolicy = ResolveExecutionPolicy(action),
             StartsAtSeconds = action.StartsAtSeconds,
             Metadata =
             {
                 ["actionId"] = action.ActionId,
                 ["actionKind"] = action.ActionKind,
-                ["orderingMode"] = BatchOrderingMode.Sequential.ToString()
+                ["sequenceId"] = action.SequenceId,
+                ["parentActionId"] = action.ParentActionId,
+                ["stageIndex"] = action.StageIndex.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ["orderIndex"] = action.OrderIndex.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ["executionPolicy"] = ResolveExecutionPolicy(action),
+                ["batchingPolicy"] = ResolveExecutionPolicy(action),
+                ["orderingMode"] = ResolveOrderingMode(action).ToString()
             }
         };
         frame.Stages.Add(stage);
         frame.Metadata["orderingMode"] = BatchOrderingMode.Sequential.ToString();
+        frame.Metadata["batchingPolicy"] = WebGlRunStageExecutionPolicies.PreserveOrder;
         return stage;
     }
+
+    private static string ResolveExecutionPolicy(WebGlRunAction action)
+        => !string.IsNullOrWhiteSpace(action.ExecutionPolicy)
+            ? action.ExecutionPolicy
+            : action.Metadata.GetValueOrDefault("executionPolicy", WebGlRunStageExecutionPolicies.PreserveOrder);
+
+    private static BatchOrderingMode ResolveOrderingMode(WebGlRunAction action)
+        => ResolveExecutionPolicy(action) switch
+        {
+            WebGlRunStageExecutionPolicies.PreserveOrder => BatchOrderingMode.PreserveOrder,
+            WebGlRunStageExecutionPolicies.Parallel => BatchOrderingMode.CoalesceIndependent,
+            WebGlRunStageExecutionPolicies.CoalesceWithinStage => BatchOrderingMode.CoalesceIndependent,
+            _ => BatchOrderingMode.PreserveOrder
+        };
 
     private static void AddMotion(WebGlRunAction action, WebGlVector3? targetPosition, WebGlRunActionStage stage)
     {

@@ -30,6 +30,9 @@ export function createLinkGroup(state, link) {
 
 export function syncLinksForObject(state, objectId) {
     const groups = state.linkGroupsByObjectId?.get(objectId) || [];
+    state.diagnostics.linksUpdatedLastFrame = groups.length;
+    state.diagnostics.linkSyncScanCount = (state.diagnostics.linkSyncScanCount || 0) + groups.length;
+    state.diagnostics.linkSyncIndexedHitCount = (state.diagnostics.linkSyncIndexedHitCount || 0) + groups.length;
     state.diagnostics.linkUpdateCount = (state.diagnostics.linkUpdateCount || 0) + groups.length;
     for (const group of groups) {
         const source = state.objectLookup.get(group.userData.sourceObjectId);

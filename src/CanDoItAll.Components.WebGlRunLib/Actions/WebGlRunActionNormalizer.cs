@@ -27,6 +27,13 @@ public sealed class WebGlRunActionNormalizer
         return new WebGlRunAction
         {
             ActionId = action.ActionId,
+            SequenceId = action.SequenceId,
+            ParentActionId = action.ParentActionId,
+            StageIndex = action.StageIndex,
+            OrderIndex = action.OrderIndex,
+            ExecutionPolicy = string.IsNullOrWhiteSpace(action.ExecutionPolicy)
+                ? WebGlRunStageExecutionPolicies.PreserveOrder
+                : action.ExecutionPolicy,
             Kind = string.Empty,
             ActionKind = actionKind,
             ObjectId = string.Empty,
@@ -36,8 +43,10 @@ public sealed class WebGlRunActionNormalizer
             {
                 ObjectId = targetObjectId,
                 AnchorKey = action.Target.AnchorKey,
+                FallbackAnchorKey = action.Target.FallbackAnchorKey,
                 Offset = action.Target.Offset,
-                Position = action.Target.Position
+                Position = action.Target.Position,
+                Metadata = new Dictionary<string, string>(action.Target.Metadata, StringComparer.Ordinal)
             },
             PoseKey = action.PoseKey,
             SymbolKey = action.SymbolKey,
@@ -68,4 +77,3 @@ public sealed class WebGlRunActionNormalizer
         return hasSecond ? second : first;
     }
 }
-

@@ -21,6 +21,16 @@ public sealed class WebGlRunActionStage
 {
     public string StageId { get; set; } = string.Empty;
 
+    public string SequenceId { get; set; } = string.Empty;
+
+    public string ParentActionId { get; set; } = string.Empty;
+
+    public int StageIndex { get; set; } = -1;
+
+    public int OrderIndex { get; set; } = -1;
+
+    public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+
     public double StartsAtSeconds { get; set; }
 
     public double WaitSeconds { get; set; }

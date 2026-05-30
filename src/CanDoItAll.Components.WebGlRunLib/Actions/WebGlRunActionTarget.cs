@@ -8,6 +8,8 @@ public sealed class WebGlRunActionTarget
 
     public string AnchorKey { get; set; } = WebGlRunAnchorKeys.Center;
 
+    public string FallbackAnchorKey { get; set; } = WebGlRunAnchorKeys.Center;
+
     public WebGlVector3 Offset { get; set; } = WebGlVector3.Zero;
 
     public WebGlVector3? Position { get; set; }

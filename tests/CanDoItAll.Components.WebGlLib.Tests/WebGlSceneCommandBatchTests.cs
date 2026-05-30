@@ -26,7 +26,10 @@ public sealed class WebGlSceneCommandBatchTests
 
         Assert.Equal(100, result.Batch.Motions.Count);
         Assert.Equal(100, result.Metrics.BatchCommandCount);
+        Assert.Equal(100, result.Metrics.CommandCountBeforeNormalization);
+        Assert.Equal(100, result.Metrics.CommandCountAfterNormalization);
         Assert.Equal(1, result.Metrics.EstimatedHostInteropCallCount);
+        Assert.Equal(99, result.Metrics.InteropCallsAvoided);
         Assert.Equal("1", result.Batch.Metadata["estimatedHostInteropCallCount"]);
     }
 
@@ -56,6 +59,8 @@ public sealed class WebGlSceneCommandBatchTests
         Assert.Single(result.Batch.Motions);
         Assert.Equal(1, result.Metrics.CoalescedPatchCount);
         Assert.Equal(1, result.Metrics.DroppedDuplicateMotionCount);
+        Assert.Equal(4, result.Metrics.CommandCountBeforeNormalization);
+        Assert.Equal(2, result.Metrics.CommandCountAfterNormalization);
         Assert.Contains(result.Warnings, warning => warning.Contains("Duplicate motion", StringComparison.Ordinal));
     }
 
@@ -77,6 +82,7 @@ public sealed class WebGlSceneCommandBatchTests
 
         Assert.Equal(2, result.Batch.Motions.Count);
         Assert.Equal(0, result.Metrics.DroppedDuplicateMotionCount);
+        Assert.Equal(1, result.Metrics.PreservedOrderedDuplicateMotionCount);
         Assert.Empty(result.Warnings);
         Assert.Equal("Sequential", result.Batch.Metadata["orderingMode"]);
     }
@@ -145,9 +151,32 @@ public sealed class WebGlSceneCommandBatchTests
         Assert.Equal(3, result.Batch.Stages.Count);
         Assert.Empty(result.Batch.Motions);
         Assert.Equal(0, result.Metrics.DroppedDuplicateMotionCount);
+        Assert.Equal(0, result.Metrics.PreservedOrderedDuplicateMotionCount);
         Assert.Equal([1, 0, 1], result.Batch.Stages.Select(stage => stage.Motions.Count).ToArray());
         Assert.Equal("move.out", result.Batch.Stages[0].StageId);
         Assert.Equal("move.back", result.Batch.Stages[2].StageId);
+    }
+
+    [Fact]
+    public void Batch_normalizer_respects_explicit_batching_policy()
+    {
+        var batch = new WebGlSceneCommandBatch
+        {
+            BatchId = "frame.policy",
+            BatchingPolicy = WebGlSceneBatchingPolicies.PreserveOrder,
+            Motions =
+            [
+                new() { MotionId = "motion.a.1", ObjectId = "object.a", TargetPosition = new WebGlVector3(1, 0, 0) },
+                new() { MotionId = "motion.a.2", ObjectId = "object.a", TargetPosition = new WebGlVector3(2, 0, 0) }
+            ]
+        };
+
+        WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
+
+        Assert.Equal(2, result.Batch.Motions.Count);
+        Assert.Equal(WebGlSceneBatchingPolicies.PreserveOrder, result.Batch.BatchingPolicy);
+        Assert.Equal(1, result.Metrics.PreservedOrderedDuplicateMotionCount);
+        Assert.Equal("1", result.Batch.Metadata["preservedOrderedDuplicateMotionCount"]);
     }
 
     [Theory]
@@ -166,11 +195,15 @@ public sealed class WebGlSceneCommandBatchTests
         WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
 
         Assert.Equal(expected.GetProperty("batchCommandCount").GetInt32(), result.Metrics.BatchCommandCount);
+        Assert.Equal(expected.GetProperty("commandCountBeforeNormalization").GetInt32(), result.Metrics.CommandCountBeforeNormalization);
+        Assert.Equal(expected.GetProperty("commandCountAfterNormalization").GetInt32(), result.Metrics.CommandCountAfterNormalization);
         Assert.Equal(expected.GetProperty("stageCount").GetInt32(), result.Metrics.StageCount);
         Assert.Equal(expected.GetProperty("patchCount").GetInt32(), result.Batch.Patches.Count);
         Assert.Equal(expected.GetProperty("motionCount").GetInt32(), result.Batch.Motions.Count);
         Assert.Equal(expected.GetProperty("coalescedPatchCount").GetInt32(), result.Metrics.CoalescedPatchCount);
         Assert.Equal(expected.GetProperty("droppedDuplicateMotionCount").GetInt32(), result.Metrics.DroppedDuplicateMotionCount);
+        Assert.Equal(expected.GetProperty("preservedOrderedDuplicateMotionCount").GetInt32(), result.Metrics.PreservedOrderedDuplicateMotionCount);
+        Assert.Equal(expected.GetProperty("interopCallsAvoided").GetInt32(), result.Metrics.InteropCallsAvoided);
         Assert.Equal(
             expected.GetProperty("stageSummaries").EnumerateArray().Select(item => item.GetProperty("stageId").GetString()).ToArray(),
             result.Batch.Stages.Select(stage => stage.StageId).ToArray());

@@ -70,6 +70,43 @@ public sealed class WebGlRunActionCompilerTests
         Assert.Empty(batch.Motions);
         Assert.Equal([0, 1, 0, 1], batch.Stages.Select(stage => stage.Motions.Count).ToArray());
         Assert.Equal(0, batch.Metadata.GetValueOrDefault("droppedDuplicateMotionCount") is { } value ? int.Parse(value) : -1);
+        Assert.All(batch.Stages, stage => Assert.Equal(WebGlSceneBatchingPolicies.PreserveOrder, stage.BatchingPolicy));
+        Assert.Equal([0, 1, 2, 3], frame.Stages.Select(stage => stage.StageIndex).ToArray());
+    }
+
+    [Fact]
+    public void Compiler_preserves_home_well_admin_home_motion_sequence_for_same_actor()
+    {
+        var timeline = new WebGlRunActionCompiler().Compile(new WebGlRunActionPlan
+        {
+            FrameRate = 1,
+            ObjectBindings =
+            [
+                new WebGlRunObjectBinding { ObjectId = "actor", Position = new WebGlVector3(0, 0, 0), AnchorPosition = new WebGlVector3(0, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "well", Position = new WebGlVector3(4, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "admin", Position = new WebGlVector3(8, 0, 0) }
+            ],
+            Actions =
+            [
+                new()
+                {
+                    ActionId = "sequence.shared-resource",
+                    ActionKind = WebGlRunActionKinds.Sequence,
+                    Steps =
+                    [
+                        Action("home.to.well", WebGlRunActionKinds.MoveToObject, 0, "actor", "well"),
+                        Action("well.to.admin", WebGlRunActionKinds.MoveToObject, 0, "actor", "admin"),
+                        Action("admin.to.home", WebGlRunActionKinds.ReturnToAnchor, 0, "actor")
+                    ]
+                }
+            ]
+        });
+
+        WebGlSceneCommandBatch batch = WebGlRunFrameApplyResult.FromFrame(timeline.Frames.Single()).CommandBatch;
+
+        Assert.Equal(["home.to.well", "well.to.admin", "admin.to.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
+        Assert.Equal([new WebGlVector3(4, 0, 0), new WebGlVector3(8, 0, 0), new WebGlVector3(0, 0, 0)], batch.Stages.Select(stage => stage.Motions.Single().TargetPosition).ToArray());
+        Assert.Equal(0, int.Parse(batch.Metadata["droppedDuplicateMotionCount"]));
     }
 
     private static WebGlRunAction Action(

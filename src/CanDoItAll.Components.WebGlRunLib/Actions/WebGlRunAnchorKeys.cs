@@ -13,4 +13,5 @@ public static class WebGlRunAnchorKeys
     public const string Work = "work";
     public const string Use = "use";
     public const string Admin = "admin";
+    public const string Trade = "trade";
 }

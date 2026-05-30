@@ -132,7 +132,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
     {
         string poseKey = FirstNonEmpty(action.PoseKey, action.Parameters.GetValueOrDefault("poseKey"));
         WebGlPoseDefinition? pose = visualStateResolver.ResolvePose(action, context);
-        if (pose is null)
+        if (pose is null || pose.IsNoOpFallback)
         {
             plan.Warnings.Add($"Pose '{poseKey}' was not found; metadata fallback marker was applied.");
         }
@@ -167,7 +167,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
 
         string symbolKey = FirstNonEmpty(action.SymbolKey, action.Parameters.GetValueOrDefault("symbolKey"), action.Parameters.GetValueOrDefault("symbolKind"), "status");
         WebGlSymbolDefinition? symbol = visualStateResolver.ResolveSymbol(action, context);
-        if (symbol is null)
+        if (symbol is null || symbol.IsNoOpFallback)
         {
             plan.Warnings.Add($"Symbol '{symbolKey}' was not found; fallback marker was applied.");
         }
