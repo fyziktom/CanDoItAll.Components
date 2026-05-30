@@ -57,4 +57,46 @@ public sealed class WebGlSceneCommandBatchTests
         Assert.Equal(1, result.Metrics.DroppedDuplicateMotionCount);
         Assert.Contains(result.Warnings, warning => warning.Contains("Duplicate motion", StringComparison.Ordinal));
     }
+
+    [Fact]
+    public void Batch_normalizer_preserves_sequential_duplicate_motions()
+    {
+        var batch = new WebGlSceneCommandBatch
+        {
+            BatchId = "frame.sequence",
+            OrderingMode = BatchOrderingMode.Sequential,
+            Motions =
+            [
+                new() { MotionId = "motion.a.out", ObjectId = "object.a", TargetPosition = new WebGlVector3(1, 0, 0) },
+                new() { MotionId = "motion.a.back", ObjectId = "object.a", TargetPosition = new WebGlVector3(0, 0, 0) }
+            ]
+        };
+
+        WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
+
+        Assert.Equal(2, result.Batch.Motions.Count);
+        Assert.Equal(0, result.Metrics.DroppedDuplicateMotionCount);
+        Assert.Empty(result.Warnings);
+        Assert.Equal("Sequential", result.Batch.Metadata["orderingMode"]);
+    }
+
+    [Fact]
+    public void Batch_normalizer_does_not_coalesce_add_remove_patch_sets()
+    {
+        var batch = new WebGlSceneCommandBatch
+        {
+            BatchId = "frame.ordered-patches",
+            Patches =
+            [
+                new() { RemoveObjectIds = ["object.a"] },
+                new() { ObjectPatches = [new() { ObjectId = "object.a", Color = "#22c55e" }] }
+            ]
+        };
+
+        WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
+
+        Assert.Equal(2, result.Batch.Patches.Count);
+        Assert.Equal(0, result.Metrics.CoalescedPatchCount);
+        Assert.Contains(result.Warnings, warning => warning.Contains("ordered semantics", StringComparison.Ordinal));
+    }
 }

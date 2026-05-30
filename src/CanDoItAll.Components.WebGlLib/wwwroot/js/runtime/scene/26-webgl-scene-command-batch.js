@@ -54,6 +54,7 @@ function appendChildResult(batchResult, childResult) {
 function normalizeBatch(batch) {
     const patches = Array.isArray(batch?.patches) ? batch.patches : [];
     const motions = Array.isArray(batch?.motions) ? batch.motions : [];
+    const orderingMode = normalizeOrderingMode(batch?.orderingMode);
     const metrics = {
         batchCommandCount: patches.length + motions.length,
         batchDurationMs: 0,
@@ -65,15 +66,37 @@ function normalizeBatch(batch) {
 
     return {
         batchId: batch?.batchId || "command-batch",
-        patches: coalescePatches(patches, metrics),
-        motions: deduplicateMotions(motions, batch?.allowDuplicateMotionsPerObject === true, metrics, warnings, batch?.batchId || "command-batch"),
+        patches: coalescePatches(patches, motions.length > 0, orderingMode, metrics, warnings, batch?.batchId || "command-batch"),
+        motions: deduplicateMotions(motions, batch?.allowDuplicateMotionsPerObject === true, orderingMode, metrics, warnings, batch?.batchId || "command-batch"),
         metrics,
         warnings
     };
 }
 
-function coalescePatches(patches, metrics) {
-    if (patches.length <= 1) {
+function normalizeOrderingMode(value) {
+    const mode = String(value ?? "coalesceIndependent").toLowerCase();
+    if (mode === "1" || mode === "preserveorder" || mode === "preserve-order") {
+        return "preserve-order";
+    }
+
+    if (mode === "2" || mode === "sequential") {
+        return "sequential";
+    }
+
+    return "coalesce-independent";
+}
+
+function preservesOrder(orderingMode) {
+    return orderingMode === "preserve-order" || orderingMode === "sequential";
+}
+
+function coalescePatches(patches, containsMotions, orderingMode, metrics, warnings, batchId) {
+    if (patches.length <= 1 || preservesOrder(orderingMode)) {
+        return patches;
+    }
+
+    if (!canCoalescePatches(patches, containsMotions)) {
+        warnings.push(`Patch coalescing was skipped for batch '${batchId}' because the patch set has ordered semantics.`);
         return patches;
     }
 
@@ -118,6 +141,51 @@ function coalescePatches(patches, metrics) {
     return [merged];
 }
 
+function canCoalescePatches(patches, containsMotions) {
+    let baseRevision = 0;
+    let nextRevision = 0;
+    for (const patch of patches) {
+        if ((patch?.addObjects || []).length ||
+            (patch?.removeObjectIds || []).length ||
+            (patch?.addLinks || []).length ||
+            (patch?.removeLinkIds || []).length) {
+            return false;
+        }
+
+        if (isTruthy(patch?.metadata?.preserveOrder) ||
+            isTruthy(patch?.metadata?.requiresOrderedSemantics) ||
+            isTruthy(patch?.metadata?.dependsOnIntermediateState)) {
+            return false;
+        }
+
+        if (Number(patch?.baseRevision) > 0) {
+            baseRevision ||= Number(patch.baseRevision);
+            if (baseRevision !== Number(patch.baseRevision)) {
+                return false;
+            }
+        }
+
+        if (Number(patch?.nextRevision) > 0) {
+            nextRevision ||= Number(patch.nextRevision);
+            if (nextRevision !== Number(patch.nextRevision)) {
+                return false;
+            }
+        }
+
+        if (containsMotions && (patch?.objectPatches || []).some(isStatefulObjectPatch)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function isStatefulObjectPatch(objectPatch) {
+    return objectPatch?.assetId !== undefined ||
+        objectPatch?.symbols !== undefined ||
+        objectPatch?.metadata?.poseKey !== undefined;
+}
+
 function mergeObjectPatch(existing, next) {
     if (!existing) {
         return { ...next, metadata: { ...(next?.metadata || {}) } };
@@ -133,8 +201,8 @@ function mergeObjectPatch(existing, next) {
     };
 }
 
-function deduplicateMotions(motions, allowDuplicates, metrics, warnings, batchId) {
-    if (allowDuplicates) {
+function deduplicateMotions(motions, allowDuplicates, orderingMode, metrics, warnings, batchId) {
+    if (allowDuplicates || preservesOrder(orderingMode)) {
         return motions;
     }
 
@@ -155,6 +223,11 @@ function deduplicateMotions(motions, allowDuplicates, metrics, warnings, batchId
     }
 
     return deduplicated;
+}
+
+function isTruthy(value) {
+    const normalized = String(value || "").toLowerCase();
+    return normalized === "true" || normalized === "1" || normalized === "yes";
 }
 
 function syncBatchDiagnostics(state, metrics) {

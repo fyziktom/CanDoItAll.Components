@@ -1,8 +1,17 @@
 namespace CanDoItAll.Components.WebGlLib;
 
+public enum BatchOrderingMode
+{
+    CoalesceIndependent = 0,
+    PreserveOrder = 1,
+    Sequential = 2
+}
+
 public sealed class WebGlSceneCommandBatch
 {
     public string BatchId { get; set; } = string.Empty;
+
+    public BatchOrderingMode OrderingMode { get; set; } = BatchOrderingMode.CoalesceIndependent;
 
     public List<WebGlScenePatch> Patches { get; set; } = [];
 
@@ -53,6 +62,7 @@ public static class WebGlSceneCommandBatchNormalizer
         var normalized = new WebGlSceneCommandBatch
         {
             BatchId = batch.BatchId,
+            OrderingMode = batch.OrderingMode,
             AllowDuplicateMotionsPerObject = batch.AllowDuplicateMotionsPerObject,
             Metadata = new Dictionary<string, string>(batch.Metadata, StringComparer.Ordinal)
         };
@@ -66,8 +76,9 @@ public static class WebGlSceneCommandBatchNormalizer
             }
         };
 
-        normalized.Patches.AddRange(CoalescePatches(batch.Patches, result.Metrics));
-        normalized.Motions.AddRange(DeduplicateMotions(batch.Motions, batch.AllowDuplicateMotionsPerObject, result));
+        normalized.Patches.AddRange(CoalescePatches(batch.Patches, batch.Motions.Count > 0, batch.OrderingMode, result));
+        normalized.Motions.AddRange(DeduplicateMotions(batch.Motions, batch.AllowDuplicateMotionsPerObject, batch.OrderingMode, result));
+        normalized.Metadata["orderingMode"] = batch.OrderingMode.ToString();
         normalized.Metadata["batchCommandCount"] = result.Metrics.BatchCommandCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         normalized.Metadata["coalescedPatchCount"] = result.Metrics.CoalescedPatchCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         normalized.Metadata["droppedDuplicateMotionCount"] = result.Metrics.DroppedDuplicateMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -75,10 +86,20 @@ public static class WebGlSceneCommandBatchNormalizer
         return result;
     }
 
-    private static IReadOnlyList<WebGlScenePatch> CoalescePatches(IReadOnlyList<WebGlScenePatch> patches, WebGlSceneCommandBatchMetrics metrics)
+    private static IReadOnlyList<WebGlScenePatch> CoalescePatches(
+        IReadOnlyList<WebGlScenePatch> patches,
+        bool containsMotions,
+        BatchOrderingMode orderingMode,
+        WebGlSceneCommandBatchNormalizationResult result)
     {
-        if (patches.Count <= 1)
+        if (patches.Count <= 1 || orderingMode is BatchOrderingMode.PreserveOrder or BatchOrderingMode.Sequential)
         {
+            return patches;
+        }
+
+        if (!CanCoalescePatches(patches, containsMotions))
+        {
+            result.Warnings.Add($"Patch coalescing was skipped for batch '{result.Batch.BatchId}' because the patch set has ordered semantics.");
             return patches;
         }
 
@@ -121,16 +142,68 @@ public static class WebGlSceneCommandBatchNormalizer
         }
 
         coalesced.ObjectPatches.AddRange(objectPatches.Values);
-        metrics.CoalescedPatchCount = Math.Max(0, originalPatchCount - objectPatches.Count);
+        result.Metrics.CoalescedPatchCount = Math.Max(0, originalPatchCount - objectPatches.Count);
         return [coalesced];
+    }
+
+    private static bool CanCoalescePatches(IReadOnlyList<WebGlScenePatch> patches, bool containsMotions)
+    {
+        var baseRevision = 0;
+        var nextRevision = 0;
+        foreach (WebGlScenePatch patch in patches)
+        {
+            if (patch.AddObjects.Count > 0 ||
+                patch.RemoveObjectIds.Count > 0 ||
+                patch.AddLinks.Count > 0 ||
+                patch.RemoveLinkIds.Count > 0)
+            {
+                return false;
+            }
+
+            if (IsTruthy(patch.Metadata.GetValueOrDefault("preserveOrder")) ||
+                IsTruthy(patch.Metadata.GetValueOrDefault("requiresOrderedSemantics")) ||
+                IsTruthy(patch.Metadata.GetValueOrDefault("dependsOnIntermediateState")))
+            {
+                return false;
+            }
+
+            if (patch.BaseRevision > 0)
+            {
+                baseRevision = baseRevision == 0 ? patch.BaseRevision : baseRevision;
+                if (baseRevision != patch.BaseRevision)
+                {
+                    return false;
+                }
+            }
+
+            if (patch.NextRevision > 0)
+            {
+                nextRevision = nextRevision == 0 ? patch.NextRevision : nextRevision;
+                if (nextRevision != patch.NextRevision)
+                {
+                    return false;
+                }
+            }
+
+            if (containsMotions && patch.ObjectPatches.Any(static item =>
+                    item.AssetId is not null ||
+                    item.Symbols is not null ||
+                    item.Metadata?.ContainsKey("poseKey") == true))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static IReadOnlyList<WebGlObjectMotionCommand> DeduplicateMotions(
         IReadOnlyList<WebGlObjectMotionCommand> motions,
         bool allowDuplicateMotionsPerObject,
+        BatchOrderingMode orderingMode,
         WebGlSceneCommandBatchNormalizationResult result)
     {
-        if (allowDuplicateMotionsPerObject)
+        if (allowDuplicateMotionsPerObject || orderingMode is BatchOrderingMode.PreserveOrder or BatchOrderingMode.Sequential)
         {
             return motions;
         }
@@ -185,4 +258,9 @@ public static class WebGlSceneCommandBatchNormalizer
             }
         }
     }
+
+    private static bool IsTruthy(string? value)
+        => string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(value, "1", StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
 }

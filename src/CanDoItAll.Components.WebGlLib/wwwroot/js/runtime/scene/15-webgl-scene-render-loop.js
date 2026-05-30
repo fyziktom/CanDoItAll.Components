@@ -31,6 +31,9 @@ function render(state, timestamp, reason) {
     state.diagnostics.renderCount += 1;
     state.diagnostics.lastFrameReason = reason;
     state.diagnostics.frameTimeMs = performance.now() - start;
+    state.diagnostics.totalFrameTimeMs = (state.diagnostics.totalFrameTimeMs || 0) + state.diagnostics.frameTimeMs;
+    state.diagnostics.averageFrameTimeMs = state.diagnostics.totalFrameTimeMs / Math.max(1, state.diagnostics.renderCount);
+    state.diagnostics.peakFrameTimeMs = Math.max(state.diagnostics.peakFrameTimeMs || 0, state.diagnostics.frameTimeMs);
     state.frame += 1;
     if (state.cameraDampingFrames > 0) {
         state.cameraDampingFrames -= 1;

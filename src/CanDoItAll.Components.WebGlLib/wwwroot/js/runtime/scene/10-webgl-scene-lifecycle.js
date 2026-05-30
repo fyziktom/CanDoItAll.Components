@@ -233,6 +233,7 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         objectPositions: new Map(),
         hitMeshes: [],
         linkGroups: [],
+        linkGroupsByObjectId: new Map(),
         symbolGroups: new Map(),
         labelElements: new Map(),
         selectedObjectIds: new Set(sceneModel.uiState?.selection?.selectedObjectIds || []),

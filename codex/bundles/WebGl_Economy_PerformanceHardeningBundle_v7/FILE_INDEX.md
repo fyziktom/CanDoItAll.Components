@@ -34,6 +34,7 @@
 - `02_subbundles/SB14_cross_repo_bridge_design_only.md`
 - `02_subbundles/SB15_performance_and_bottleneck_proofs.md`
 - `02_subbundles/SB16_refactoring_gate_and_closure.md`
+- `02_subbundles/SB17_components_run_play_menu_entry.md`
 
 ## Code skeletons
 
@@ -50,6 +51,10 @@
 ## Workbook
 
 - `05_spreadsheets/implementation_matrix.xlsx`
+
+## Reviews
+
+- `reviews/01_execution_report.md`
 
 ## Prompts and references
 

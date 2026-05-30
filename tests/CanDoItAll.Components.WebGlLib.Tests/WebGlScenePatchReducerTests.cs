@@ -153,4 +153,32 @@ public sealed class WebGlScenePatchReducerTests
         Assert.Equal(5, result.Revision);
         Assert.Equal(["object.a"], result.AffectedObjectIds);
     }
+
+    [Fact]
+    public void Apply_fails_safely_when_patch_targets_removed_object()
+    {
+        var scene = new WebGlSceneModel
+        {
+            SceneId = "scene",
+            Objects =
+            [
+                new WebGlSceneObject { Id = "object.a" }
+            ]
+        };
+        var remove = new WebGlScenePatch { SceneId = "scene", RemoveObjectIds = ["object.a"] };
+        var patchRemoved = new WebGlScenePatch
+        {
+            SceneId = "scene",
+            ObjectPatches = [new() { ObjectId = "object.a", Color = "#f00" }]
+        };
+
+        var reducer = new WebGlScenePatchReducer();
+        WebGlScenePatchResult removeResult = reducer.Apply(scene, remove);
+        WebGlScenePatchResult patchResult = reducer.Apply(scene, patchRemoved);
+
+        Assert.True(removeResult.Success);
+        Assert.True(patchResult.Success);
+        Assert.Contains(patchResult.Warnings, warning => warning.Contains("not found", StringComparison.Ordinal));
+        Assert.Empty(scene.Objects);
+    }
 }

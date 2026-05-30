@@ -38,6 +38,12 @@ public sealed class WebGlSceneProofSnapshot
 
     public bool IsRenderLoopActive { get; set; }
 
+    public double AverageFrameTimeMs { get; set; }
+
+    public double PeakFrameTimeMs { get; set; }
+
+    public int LinkUpdateCount { get; set; }
+
     public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
 
     public string LargestLoadedAssetId { get; set; } = string.Empty;

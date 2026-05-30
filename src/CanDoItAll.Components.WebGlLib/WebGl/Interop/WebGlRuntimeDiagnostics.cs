@@ -68,6 +68,10 @@ public sealed class WebGlRuntimeDiagnostics
 
     public double FrameTimeMs { get; set; }
 
+    public double AverageFrameTimeMs { get; set; }
+
+    public double PeakFrameTimeMs { get; set; }
+
     public double IdleSinceMs { get; set; }
 
     public string LargestLoadedAssetId { get; set; } = string.Empty;
@@ -93,6 +97,8 @@ public sealed class WebGlRuntimeDiagnostics
     public int CoalescedPatchCount { get; set; }
 
     public int DroppedDuplicateMotionCount { get; set; }
+
+    public int LinkUpdateCount { get; set; }
 
     public string LastError { get; set; } = string.Empty;
 

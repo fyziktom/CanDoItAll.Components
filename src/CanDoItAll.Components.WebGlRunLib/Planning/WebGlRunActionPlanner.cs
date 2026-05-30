@@ -3,142 +3,10 @@ using CanDoItAll.Components.WebGlLib;
 
 namespace CanDoItAll.Components.WebGlRunLib;
 
-public interface IWebGlRunActionPlanner
-{
-    WebGlRunActionPlan Plan(WebGlRunAction action, WebGlRunPlanningContext context);
-}
-
-public sealed class WebGlRunPlanningContext
-{
-    public WebGlSceneModel Scene { get; set; } = new();
-
-    public WebGlVisualStateCatalog VisualStates { get; set; } = new();
-
-    public Dictionary<string, WebGlVector3> ObjectPositions { get; set; } = [];
-
-    public Dictionary<string, string> Metadata { get; set; } = [];
-}
-
-public sealed class WebGlRunActionPlanningDiagnostics
-{
-    public List<string> Errors { get; set; } = [];
-
-    public List<string> Warnings { get; set; } = [];
-
-    public Dictionary<string, string> Metadata { get; set; } = [];
-}
-
-public sealed class WebGlRunTargetResolver
-{
-    public WebGlRunActionPlanningDiagnostics Diagnostics { get; } = new();
-
-    public WebGlVector3? Resolve(WebGlRunActionTarget target, WebGlRunPlanningContext context)
-    {
-        ArgumentNullException.ThrowIfNull(target);
-        ArgumentNullException.ThrowIfNull(context);
-
-        if (target.Position is { } position)
-        {
-            return Add(position, target.Offset);
-        }
-
-        if (string.IsNullOrWhiteSpace(target.ObjectId))
-        {
-            Diagnostics.Errors.Add("Target object id or explicit position is required.");
-            return null;
-        }
-
-        WebGlSceneObject? sceneObject = context.Scene.Objects.FirstOrDefault(
-            item => string.Equals(item.Id, target.ObjectId, StringComparison.Ordinal));
-        if (sceneObject is null)
-        {
-            Diagnostics.Errors.Add($"Target object '{target.ObjectId}' was not found.");
-            return null;
-        }
-
-        string anchorKey = string.IsNullOrWhiteSpace(target.AnchorKey)
-            ? WebGlRunAnchorKeys.Center
-            : target.AnchorKey;
-        return ResolveAnchor(sceneObject, anchorKey, target.Offset);
-    }
-
-    public WebGlVector3 ResolveAnchor(WebGlSceneObject sceneObject, string anchorKey, WebGlVector3 offset)
-    {
-        WebGlSceneObjectAnchor? explicitAnchor = sceneObject.Anchors.FirstOrDefault(
-            item => string.Equals(item.Key, anchorKey, StringComparison.OrdinalIgnoreCase));
-        if (explicitAnchor is not null)
-        {
-            return Add(explicitAnchor.Position ?? Add(sceneObject.Position, explicitAnchor.Offset), offset);
-        }
-
-        if (TryResolveMetadataAnchor(sceneObject, anchorKey, out WebGlVector3 metadataAnchor))
-        {
-            return Add(metadataAnchor, offset);
-        }
-
-        WebGlVector3 position = sceneObject.Position;
-        WebGlVector3 half = new(sceneObject.Size.X / 2, sceneObject.Size.Y / 2, sceneObject.Size.Z / 2);
-        WebGlVector3 resolved = anchorKey.ToLowerInvariant() switch
-        {
-            WebGlRunAnchorKeys.Base => position,
-            WebGlRunAnchorKeys.Top => Add(position, new WebGlVector3(0, sceneObject.Size.Y, 0)),
-            WebGlRunAnchorKeys.Front => Add(position, new WebGlVector3(0, 0, half.Z)),
-            WebGlRunAnchorKeys.Back => Add(position, new WebGlVector3(0, 0, -half.Z)),
-            WebGlRunAnchorKeys.Left => Add(position, new WebGlVector3(-half.X, 0, 0)),
-            WebGlRunAnchorKeys.Right => Add(position, new WebGlVector3(half.X, 0, 0)),
-            WebGlRunAnchorKeys.Home or WebGlRunAnchorKeys.Work or WebGlRunAnchorKeys.Use or WebGlRunAnchorKeys.Admin => position,
-            _ => position
-        };
-
-        if (!string.Equals(anchorKey, WebGlRunAnchorKeys.Center, StringComparison.OrdinalIgnoreCase) &&
-            !IsBuiltInAnchor(anchorKey))
-        {
-            Diagnostics.Warnings.Add($"Anchor '{anchorKey}' was not defined on object '{sceneObject.Id}', so center was used.");
-        }
-
-        return Add(resolved, offset);
-    }
-
-    private static bool IsBuiltInAnchor(string anchorKey)
-        => anchorKey.Equals(WebGlRunAnchorKeys.Center, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Base, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Top, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Front, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Back, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Left, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Right, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Home, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Work, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Use, StringComparison.OrdinalIgnoreCase) ||
-           anchorKey.Equals(WebGlRunAnchorKeys.Admin, StringComparison.OrdinalIgnoreCase);
-
-    private static bool TryResolveMetadataAnchor(WebGlSceneObject sceneObject, string anchorKey, out WebGlVector3 position)
-    {
-        position = WebGlVector3.Zero;
-        if (!sceneObject.Metadata.TryGetValue($"anchor.{anchorKey}", out string? encoded))
-        {
-            return false;
-        }
-
-        string[] parts = encoded.Split(',', StringSplitOptions.TrimEntries);
-        if (parts.Length != 3 ||
-            !decimal.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out decimal x) ||
-            !decimal.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out decimal y) ||
-            !decimal.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out decimal z))
-        {
-            return false;
-        }
-
-        position = new WebGlVector3((double)x, (double)y, (double)z);
-        return true;
-    }
-
-    private static WebGlVector3 Add(WebGlVector3 left, WebGlVector3 right)
-        => new(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
-}
-
 public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
 {
+    private readonly WebGlRunVisualStateResolver visualStateResolver = new();
+
     public WebGlRunActionPlan Plan(WebGlRunAction action, WebGlRunPlanningContext context)
     {
         ArgumentNullException.ThrowIfNull(action);
@@ -159,6 +27,12 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         switch (kind)
         {
             case WebGlRunActionKinds.Sequence:
+                plan.Metadata["orderingMode"] = BatchOrderingMode.Sequential.ToString();
+                foreach (WebGlRunAction step in action.Steps)
+                {
+                    AppendAction(step, context, plan);
+                }
+                break;
             case WebGlRunActionKinds.Parallel:
                 foreach (WebGlRunAction step in action.Steps)
                 {
@@ -188,6 +62,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
             case WebGlRunActionKinds.SetLayerVisibility:
             case WebGlRunActionKinds.Wait:
                 plan.Warnings.Add($"Action '{action.ActionId}' of kind '{kind}' does not emit a WebGL command.");
+                plan.DroppedStepIds.Add(action.ActionId);
                 break;
             case WebGlRunActionKinds.ApplyPatch:
             case WebGlRunActionKinds.ApplyScenePatch:
@@ -228,8 +103,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
             Offset = action.Target.Offset,
             Position = action.Target.Position
         }, context);
-        plan.Errors.AddRange(resolver.Diagnostics.Errors);
-        plan.Warnings.AddRange(resolver.Diagnostics.Warnings);
+        MergeDiagnostics(action, resolver, plan);
         if (target is { } targetPosition)
         {
             AddMotion(action, targetPosition, plan, WebGlRunActionKinds.MoveToObject);
@@ -239,8 +113,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
     private static void AddReturnToAnchor(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan)
     {
         string objectId = action.ResolvedObjectId;
-        WebGlSceneObject? sceneObject = context.Scene.Objects.FirstOrDefault(item => string.Equals(item.Id, objectId, StringComparison.Ordinal));
-        if (sceneObject is null)
+        if (!context.ObjectIndex.TryGetValue(objectId, out WebGlSceneObject? sceneObject))
         {
             plan.Errors.Add($"Return object '{objectId}' was not found.");
             return;
@@ -248,15 +121,14 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
 
         var resolver = new WebGlRunTargetResolver();
         WebGlVector3 target = resolver.ResolveAnchor(sceneObject, action.Target.AnchorKey, action.Target.Offset);
-        plan.Warnings.AddRange(resolver.Diagnostics.Warnings);
+        MergeDiagnostics(action, resolver, plan);
         AddMotion(action, target, plan, WebGlRunActionKinds.ReturnToAnchor);
     }
 
-    private static void AddPosePatch(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan)
+    private void AddPosePatch(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan)
     {
         string poseKey = FirstNonEmpty(action.PoseKey, action.Parameters.GetValueOrDefault("poseKey"));
-        WebGlPoseDefinition? pose = context.VisualStates.Poses.FirstOrDefault(
-            item => string.Equals(item.PoseKey, poseKey, StringComparison.Ordinal));
+        WebGlPoseDefinition? pose = visualStateResolver.ResolvePose(action, context);
         if (pose is null)
         {
             plan.Warnings.Add($"Pose '{poseKey}' was not found; metadata fallback marker was applied.");
@@ -282,7 +154,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         AddPatch(action, plan, objectPatch, WebGlRunActionKinds.ChangePose);
     }
 
-    private static void AddSymbolPatch(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan, bool replaceSymbols)
+    private void AddSymbolPatch(WebGlRunAction action, WebGlRunPlanningContext context, WebGlRunActionPlan plan, bool replaceSymbols)
     {
         if (replaceSymbols)
         {
@@ -291,8 +163,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         }
 
         string symbolKey = FirstNonEmpty(action.SymbolKey, action.Parameters.GetValueOrDefault("symbolKey"), action.Parameters.GetValueOrDefault("symbolKind"), "status");
-        WebGlSymbolDefinition? symbol = context.VisualStates.Symbols.FirstOrDefault(
-            item => string.Equals(item.SymbolKey, symbolKey, StringComparison.Ordinal));
+        WebGlSymbolDefinition? symbol = visualStateResolver.ResolveSymbol(action, context);
         if (symbol is null)
         {
             plan.Warnings.Add($"Symbol '{symbolKey}' was not found; fallback marker was applied.");
@@ -340,6 +211,16 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         => TryDouble(parameters, "x", out double x) && TryDouble(parameters, "y", out double y) && TryDouble(parameters, "z", out double z)
             ? new WebGlVector3(x, y, z)
             : null;
+
+    private static void MergeDiagnostics(WebGlRunAction action, WebGlRunTargetResolver resolver, WebGlRunActionPlan plan)
+    {
+        plan.Errors.AddRange(resolver.Diagnostics.Errors);
+        plan.Warnings.AddRange(resolver.Diagnostics.Warnings);
+        foreach (KeyValuePair<string, string> item in resolver.Diagnostics.Metadata)
+        {
+            plan.TargetResolutionDiagnostics[$"{action.ActionId}.{item.Key}"] = item.Value;
+        }
+    }
 
     private static string NormalizeKind(string value)
         => string.IsNullOrWhiteSpace(value) ? WebGlRunActionKinds.Wait : value;

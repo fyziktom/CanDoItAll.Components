@@ -3,7 +3,6 @@ import {
     applyObjectTransform,
     createMaterial,
     resolveFiniteNumber,
-    resolveObjectPosition,
     resolveObjectSize
 } from "./02-webgl-scene-core.js";
 import { syncAssetVisual } from "./03-webgl-scene-assets.js";
@@ -15,6 +14,12 @@ import {
     isLinkVisible,
     isObjectVisible
 } from "./23-webgl-scene-indexes.js";
+import {
+    createLinkGroup,
+    indexLinkGroup,
+    syncLinksForObject,
+    unindexLinkGroup
+} from "./27-webgl-scene-links.js";
 
 export function buildDecorations(state) {
     const environment = state.sceneModel.environment || {};
@@ -173,32 +178,9 @@ export function addLinkGroup(state, link) {
     }
 
     state.linkGroups.push(linkGroup);
+    indexLinkGroup(state, linkGroup);
     state.scene.add(linkGroup);
     return linkGroup;
-}
-
-export function createLinkGroup(state, link) {
-    const source = state.objectLookup.get(link.sourceObjectId);
-    const target = state.objectLookup.get(link.targetObjectId);
-    if (!source || !target) {
-        return null;
-    }
-
-    const material = new THREE.LineBasicMaterial({
-        color: link.color || "#94a3b8",
-        transparent: true,
-        opacity: resolveFiniteNumber(link.opacity, 0.75),
-        linewidth: Math.max(1, resolveFiniteNumber(link.width, 1))
-    });
-    const line = new THREE.Line(buildLinkGeometry(source, target), material);
-    const group = new THREE.Group();
-    group.userData = {
-        linkId: link.id || "",
-        sourceObjectId: link.sourceObjectId,
-        targetObjectId: link.targetObjectId
-    };
-    group.add(line);
-    return group;
 }
 
 export function removeLinkGroup(state, linkId) {
@@ -208,6 +190,7 @@ export function removeLinkGroup(state, linkId) {
     }
 
     const [group] = state.linkGroups.splice(index, 1);
+    unindexLinkGroup(state, group);
     state.scene.remove(group);
     disposeSceneObjectTree(group, state.diagnostics);
 }
@@ -250,38 +233,12 @@ export function clearDynamicScene(state) {
 
     state.objectGroups.clear();
     state.linkGroups.length = 0;
+    state.linkGroupsByObjectId?.clear();
     state.symbolGroups.clear();
     state.labelElements.clear();
     state.hitMeshes.length = 0;
     resetInstanceDiagnostics(state);
     state.diagnostics.visibilityCounts = buildVisibilityCounts(state);
-}
-
-function syncLinksForObject(state, objectId) {
-    for (const group of state.linkGroups) {
-        const sourceId = group.userData.sourceObjectId;
-        const targetId = group.userData.targetObjectId;
-        if (sourceId !== objectId && targetId !== objectId) {
-            continue;
-        }
-
-        const source = state.objectLookup.get(sourceId);
-        const target = state.objectLookup.get(targetId);
-        const line = group.children[0];
-        if (source && target && line) {
-            line.geometry.dispose();
-            line.geometry = buildLinkGeometry(source, target);
-        }
-    }
-}
-
-function buildLinkGeometry(source, target) {
-    const sourcePosition = resolveObjectPosition(source);
-    const targetPosition = resolveObjectPosition(target);
-    return new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(sourcePosition.x, 0.04, sourcePosition.z),
-        new THREE.Vector3(targetPosition.x, 0.04, targetPosition.z)
-    ]);
 }
 
 function createGroundRing(size, color, opacity) {

@@ -1,0 +1,23 @@
+using CanDoItAll.Components.WebGlLib;
+
+namespace CanDoItAll.Components.WebGlRunLib;
+
+public sealed class WebGlRunFrame
+{
+    public long Index { get; set; }
+
+    public double TimeSeconds { get; set; }
+
+    public List<WebGlRunFramePatch> ScenePatches { get; set; } = [];
+
+    public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+
+    public Dictionary<string, string> Metadata { get; set; } = [];
+}
+
+public sealed class WebGlRunFramePatch
+{
+    public string Id { get; set; } = string.Empty;
+
+    public WebGlScenePatch Patch { get; set; } = new();
+}

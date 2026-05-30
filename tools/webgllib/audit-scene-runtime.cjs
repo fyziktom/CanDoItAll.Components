@@ -5,8 +5,10 @@ const { spawnSync } = require("node:child_process");
 const repoRoot = path.resolve(__dirname, "..", "..");
 const sceneRuntimeDir = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene");
 const componentRoot = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "Components", "Shared", "Assets");
-const warningLineThreshold = 260;
-const failureLineThreshold = 340;
+const reportDir = path.join(repoRoot, "artifacts", "webgl-runtime-hardening-v7");
+const reportLines = ["# WebGL runtime audit v7", ""];
+const warningLineThreshold = 220;
+const failureLineThreshold = 320;
 const thinFacadeLineThreshold = 180;
 
 let failures = 0;
@@ -20,6 +22,7 @@ const runtimeFiles = fs.readdirSync(sceneRuntimeDir)
 for (const filePath of runtimeFiles) {
   auditLineCount(filePath);
   auditUnsafePatterns(filePath);
+  auditDomainNeutrality(filePath);
   auditSyntax(filePath);
 }
 
@@ -28,6 +31,10 @@ auditPublicFacade();
 auditDuplicateHelpers();
 auditAssetIncludes();
 auditBranchInstructionFiles();
+auditLargeScreenPolicyFiles();
+
+fs.mkdirSync(reportDir, { recursive: true });
+fs.writeFileSync(path.join(reportDir, "runtime-audit.md"), `${reportLines.join("\n")}\n`, "utf8");
 
 if (failures > 0) {
   console.error(`Scene runtime audit failed with ${failures} failure(s) and ${warnings} warning(s).`);
@@ -74,6 +81,16 @@ function auditUnsafePatterns(filePath) {
       if (item.pattern.test(line)) {
         fail(`${relativePath}:${lineNumber} uses forbidden ${item.label}.`);
       }
+    }
+  });
+}
+
+function auditDomainNeutrality(filePath) {
+  const relativePath = relative(filePath);
+  const forbiddenDomainWords = /\b(economy|ledger|account|water|well|entrepreneur|citizen)\b/i;
+  read(filePath).split(/\r?\n/).forEach((line, index) => {
+    if (forbiddenDomainWords.test(line)) {
+      fail(`${relativePath}:${index + 1} contains an Economy/domain-specific word in generic WebGL runtime code.`);
     }
   });
 }
@@ -213,6 +230,35 @@ function auditBranchInstructionFiles() {
   }
 }
 
+function auditLargeScreenPolicyFiles() {
+  const policyRoots = [
+    path.join(repoRoot, "docs", "webgl"),
+    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_PerformanceHardeningBundle_v7")
+  ];
+  const smallScreenTaskPattern = /\b(small[-\s]?screen|medium[-\s]?screen|mobile|tablet|phone)\b/i;
+  for (const root of policyRoots) {
+    for (const filePath of walk(root, [".md", ".yml", ".yaml"])) {
+      const lines = read(filePath).split(/\r?\n/);
+      lines.forEach((line, index) => {
+        if (!smallScreenTaskPattern.test(line)) {
+          return;
+        }
+
+        const nearby = lines
+          .slice(Math.max(0, index - 8), Math.min(lines.length, index + 4))
+          .join(" ")
+          .replace(/[*_`]/g, " ")
+          .replace(/\s+/g, " ");
+        if (/\b(do not|don't|never|forbidden|forbidden in this wave|must not|not|out of scope|no small|large-screen only|desktop\/large-screen)\b/i.test(nearby)) {
+          return;
+        }
+
+        fail(`${relative(filePath)}:${index + 1} may add small/medium/mobile WebGL optimization work.`);
+      });
+    }
+  }
+}
+
 function hasStaticInnerHtmlAllowlist(lines, index) {
   const nearby = [
     lines[index - 1] || "",
@@ -253,10 +299,12 @@ function relative(filePath) {
 
 function fail(message) {
   failures += 1;
+  reportLines.push(`- FAIL: ${message}`);
   console.error(`[FAIL] ${message}`);
 }
 
 function warn(message) {
   warnings += 1;
+  reportLines.push(`- WARN: ${message}`);
   console.log(`[WARN] ${message}`);
 }

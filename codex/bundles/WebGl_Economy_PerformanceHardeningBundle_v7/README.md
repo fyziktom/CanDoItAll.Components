@@ -27,6 +27,7 @@ The goal is not to couple the two repositories yet. The goal is to prepare both 
 - Harden scene command batching so it does not incorrectly coalesce ordered semantics.
 - Add large-screen-only validation gates.
 - Prepare Economy for loadable scenario definitions, simulation event streams, and visual intentions without WebGL coupling.
+- Add the missing WebGL Sandbox `Run Play` menu entry and home route card.
 - Add targeted tests and audit scripts.
 - Produce evidence reports after every refactoring gate.
 

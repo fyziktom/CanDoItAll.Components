@@ -30,6 +30,7 @@ export function createDiagnostics() {
         renderSchedulerMode: "auto",
         lastScheduledReason: "",
         lastDeltaSeconds: 0,
+        totalFrameTimeMs: 0,
         assetCacheEntryCount: 0,
         assetCacheHitCount: 0,
         assetCacheMissCount: 0,
@@ -41,6 +42,9 @@ export function createDiagnostics() {
         batchDurationMs: 0,
         coalescedPatchCount: 0,
         droppedDuplicateMotionCount: 0,
+        averageFrameTimeMs: 0,
+        peakFrameTimeMs: 0,
+        linkUpdateCount: 0,
         visibilityCounts: {
             visibleObjectCount: 0,
             hiddenObjectCount: 0,
