@@ -34,7 +34,20 @@ public sealed class WebGlSceneObject
 
     public List<WebGlStatusSymbol> Symbols { get; set; } = [];
 
+    public List<WebGlSceneObjectAnchor> Anchors { get; set; } = [];
+
     public List<string> Tags { get; set; } = [];
+
+    public Dictionary<string, string> Metadata { get; set; } = [];
+}
+
+public sealed class WebGlSceneObjectAnchor
+{
+    public string Key { get; set; } = string.Empty;
+
+    public WebGlVector3 Offset { get; set; } = WebGlVector3.Zero;
+
+    public WebGlVector3? Position { get; set; }
 
     public Dictionary<string, string> Metadata { get; set; } = [];
 }

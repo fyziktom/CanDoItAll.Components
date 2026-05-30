@@ -1,0 +1,11 @@
+﻿Cross-repo boundary scan
+StartedUtc: 2026-05-30T12:53:37.8633078Z
+Command: rg -n CanDoItAll.Economy src tests
+Matches: 0
+Command: rg -n "CanDoItAll.Components|WebGl|WebGL|Three" Simulation.* source paths
+Matches: 0
+Command: rg -n "ProjectReference.*(Ledger|BusinessObjects|Sdk)|using CanDoItAll.Economy.(Ledger|BusinessObjects|Sdk)" Simulation.SimpleAccounts
+Matches: 0
+Command: rg -n "Simulation.SimpleAccounts" Simulation.Ledger
+Matches: 0
+FinishedUtc: 2026-05-30T12:53:38.3126436Z

@@ -37,6 +37,10 @@ export function createDiagnostics() {
         disposedGeometryCount: 0,
         disposedMaterialCount: 0,
         disposedTextureCount: 0,
+        batchCommandCount: 0,
+        batchDurationMs: 0,
+        coalescedPatchCount: 0,
+        droppedDuplicateMotionCount: 0,
         visibilityCounts: {
             visibleObjectCount: 0,
             hiddenObjectCount: 0,

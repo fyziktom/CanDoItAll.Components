@@ -86,6 +86,14 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int DisposedTextureCount { get; set; }
 
+    public int BatchCommandCount { get; set; }
+
+    public int BatchDurationMs { get; set; }
+
+    public int CoalescedPatchCount { get; set; }
+
+    public int DroppedDuplicateMotionCount { get; set; }
+
     public string LastError { get; set; } = string.Empty;
 
     public List<string> MissingAssetIds { get; set; } = [];

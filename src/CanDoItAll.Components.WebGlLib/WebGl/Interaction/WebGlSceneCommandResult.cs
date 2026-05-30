@@ -1,6 +1,6 @@
 namespace CanDoItAll.Components.WebGlLib;
 
-public sealed class WebGlSceneCommandResult
+public class WebGlSceneCommandResult
 {
     public string CommandId { get; set; } = string.Empty;
 

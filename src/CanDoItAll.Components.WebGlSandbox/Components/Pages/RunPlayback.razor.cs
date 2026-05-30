@@ -18,7 +18,6 @@ public partial class RunPlayback
     };
     private readonly WebGlRunDocument runDocument;
     private readonly WebGlRunPlaybackController playbackController;
-    private readonly WebGlRunPlaybackClock playbackClock = new();
     private WebGlSceneModel scene = CreateScene();
     private WebGlSceneView? sceneView;
     private WebGlSceneProofSnapshot? latestSnapshot;
@@ -41,18 +40,10 @@ public partial class RunPlayback
             return;
         }
 
-        var playResult = await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Play });
-        await ApplyPlaybackResultAsync(playResult);
-        while (PlaybackState.IsPlaying)
+        var playResult = await playbackController.PlayToEndAsync(new SceneFrameApplier(this));
+        if (!playResult.Success)
         {
-            await StepAsync();
-            if (PlaybackState.CurrentFrameIndex >= runDocument.Timeline.Frames.Max(item => item.Index))
-            {
-                await PauseAsync();
-                break;
-            }
-
-            await Task.Delay(playbackClock.ResolveFrameDelay(runDocument.Timeline, PlaybackState.PlaybackSpeed));
+            statusText = string.Join(" ", playResult.Errors);
         }
     }
 
@@ -96,29 +87,22 @@ public partial class RunPlayback
 
         foreach (var frame in result.FramesToApply)
         {
-            await ApplyFrameAsync(frame);
+            await ApplyFrameAsync(WebGlRunFrameApplyResult.FromFrame(frame));
         }
     }
 
-    private async Task ApplyFrameAsync(WebGlRunFrame frame)
+    private async Task ApplyFrameAsync(WebGlRunFrameApplyResult frame)
     {
         if (sceneView is null)
         {
             return;
         }
 
-        foreach (var framePatch in frame.ScenePatches)
-        {
-            await sceneView.ApplyPatchDetailedAsync(framePatch.Patch);
-        }
+        await sceneView.ApplyCommandBatchAsync(frame.CommandBatch);
 
-        foreach (var motion in frame.Motions)
-        {
-            await sceneView.EnqueueMotionDetailedAsync(motion);
-        }
-
-        statusText = $"Applied generic frame {frame.Index}.";
+        statusText = $"Applied generic frame {frame.FrameIndex}.";
         await CaptureProofAsync();
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task CaptureProofAsync()
@@ -194,6 +178,15 @@ public partial class RunPlayback
             DurationSeconds = 0.32,
             Parameters = parameters ?? []
         };
+
+    private sealed class SceneFrameApplier(RunPlayback owner) : IWebGlRunFrameApplier
+    {
+        public async ValueTask ApplyAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await owner.ApplyFrameAsync(frame);
+        }
+    }
 
     private static WebGlSceneModel CreateScene()
         => new()

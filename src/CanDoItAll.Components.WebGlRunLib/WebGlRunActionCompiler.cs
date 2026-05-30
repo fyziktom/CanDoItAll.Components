@@ -13,7 +13,7 @@ public sealed class WebGlRunActionCompiler
             .ToDictionary(static binding => binding.ObjectId, StringComparer.Ordinal);
         var frames = new Dictionary<long, WebGlRunFrame>();
 
-        foreach (var action in plan.Actions.OrderBy(static action => action.StartsAtSeconds).ThenBy(static action => action.ActionId, StringComparer.Ordinal))
+        foreach (var action in Flatten(plan.Actions).OrderBy(static action => action.StartsAtSeconds).ThenBy(static action => action.ActionId, StringComparer.Ordinal))
         {
             var frame = GetOrCreateFrame(frames, action, frameRate);
             CompileAction(action, bindings, frame);
@@ -31,44 +31,46 @@ public sealed class WebGlRunActionCompiler
         IReadOnlyDictionary<string, WebGlRunObjectBinding> bindings,
         WebGlRunFrame frame)
     {
-        switch (action.ActionKind)
+        switch (action.ResolvedKind)
         {
             case WebGlRunActionKinds.MoveToObject:
-                AddMotion(action, ResolvePosition(bindings, action.TargetObjectId), frame);
+                AddMotion(action, ResolvePosition(bindings, action.ResolvedTargetObjectId), frame);
                 break;
             case WebGlRunActionKinds.MoveToPosition:
-                AddMotion(action, ResolvePosition(action.Parameters), frame);
+                AddMotion(action, action.Target.Position ?? ResolvePosition(action.Parameters), frame);
                 break;
             case WebGlRunActionKinds.ReturnToAnchor:
-                AddMotion(action, ResolveAnchor(bindings, action.SubjectObjectId), frame);
+                AddMotion(action, ResolveAnchor(bindings, action.ResolvedObjectId), frame);
                 break;
             case WebGlRunActionKinds.SetAsset:
                 AddPatch(action, frame, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.SubjectObjectId,
+                    ObjectId = action.ResolvedObjectId,
                     AssetId = Get(action.Parameters, "assetId")
                 });
                 break;
             case WebGlRunActionKinds.SetPose:
+            case WebGlRunActionKinds.ChangePose:
                 AddPatch(action, frame, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.SubjectObjectId,
+                    ObjectId = action.ResolvedObjectId,
                     Metadata = new Dictionary<string, string>(StringComparer.Ordinal)
                     {
-                        ["poseKey"] = Get(action.Parameters, "poseKey")
+                        ["poseKey"] = FirstNonEmpty(action.PoseKey, Get(action.Parameters, "poseKey"))
                     }
                 });
                 break;
             case WebGlRunActionKinds.ShowSymbol:
+            case WebGlRunActionKinds.UpdateSymbol:
                 AddPatch(action, frame, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.SubjectObjectId,
+                    ObjectId = action.ResolvedObjectId,
                     Symbols =
                     [
                         new WebGlStatusSymbol
                         {
                             Id = Get(action.Parameters, "symbolId", action.ActionId),
-                            SemanticKind = Get(action.Parameters, "symbolKind", "status"),
+                            SemanticKind = FirstNonEmpty(action.SymbolKey, Get(action.Parameters, "symbolKind", "status")),
                             SymbolAssetId = Get(action.Parameters, "symbolAssetId"),
                             Color = Get(action.Parameters, "color", "#facc15"),
                             EffectKey = Get(action.Parameters, "effectKey", WebGlSymbolEffects.Pulse),
@@ -80,16 +82,38 @@ public sealed class WebGlRunActionCompiler
             case WebGlRunActionKinds.HideSymbol:
                 AddPatch(action, frame, new WebGlSceneObjectPatch
                 {
-                    ObjectId = action.SubjectObjectId,
+                    ObjectId = action.ResolvedObjectId,
                     Symbols = []
                 });
                 break;
+            case WebGlRunActionKinds.Sequence:
+            case WebGlRunActionKinds.Parallel:
             case WebGlRunActionKinds.ApplyScenePatch:
+            case WebGlRunActionKinds.ApplyPatch:
             case WebGlRunActionKinds.PulseLink:
             case WebGlRunActionKinds.ResourceTransferVisual:
+            case WebGlRunActionKinds.SetLayerVisibility:
             case WebGlRunActionKinds.Wait:
-                frame.Metadata[$"action.{action.ActionId}"] = action.ActionKind;
+                frame.Metadata[$"action.{action.ActionId}"] = action.ResolvedKind;
                 break;
+        }
+    }
+
+    private static IEnumerable<WebGlRunAction> Flatten(IEnumerable<WebGlRunAction> actions)
+    {
+        foreach (WebGlRunAction action in actions)
+        {
+            if (action.ResolvedKind is WebGlRunActionKinds.Sequence or WebGlRunActionKinds.Parallel)
+            {
+                foreach (WebGlRunAction child in Flatten(action.Steps))
+                {
+                    yield return child;
+                }
+            }
+            else
+            {
+                yield return action;
+            }
         }
     }
 
@@ -116,13 +140,13 @@ public sealed class WebGlRunActionCompiler
         frame.Motions.Add(new WebGlObjectMotionCommand
         {
             MotionId = action.ActionId,
-            ObjectId = action.SubjectObjectId,
+            ObjectId = action.ResolvedObjectId,
             TargetPosition = targetPosition.Value,
             DurationSeconds = action.DurationSeconds,
             Easing = Get(action.Parameters, "easing", WebGlMotionEasings.EaseInOut),
             Metadata = new Dictionary<string, string>(action.Metadata, StringComparer.Ordinal)
             {
-                ["actionKind"] = action.ActionKind
+                ["actionKind"] = action.ResolvedKind
             }
         });
     }
@@ -137,7 +161,7 @@ public sealed class WebGlRunActionCompiler
                 Metadata =
                 {
                     ["commandId"] = action.ActionId,
-                    ["actionKind"] = action.ActionKind
+                    ["actionKind"] = action.ResolvedKind
                 }
             }
         });
@@ -155,6 +179,9 @@ public sealed class WebGlRunActionCompiler
 
     private static string Get(IReadOnlyDictionary<string, string> values, string key, string fallback = "")
         => values.TryGetValue(key, out var value) ? value : fallback;
+
+    private static string FirstNonEmpty(params string[] values)
+        => values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? string.Empty;
 
     private static bool TryDouble(IReadOnlyDictionary<string, string> values, string key, out double result)
         => double.TryParse(Get(values, key), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out result);

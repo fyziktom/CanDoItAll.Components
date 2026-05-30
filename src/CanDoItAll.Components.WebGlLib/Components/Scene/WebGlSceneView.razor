@@ -205,6 +205,9 @@
     public Task<WebGlSceneCommandResult?> ApplyPatchDetailedAsync(WebGlScenePatch patch)
         => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.applyPatchDetailed", host, patch).AsTask();
 
+    public Task<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(WebGlSceneCommandBatch batch)
+        => JsRuntime.InvokeAsync<WebGlSceneCommandBatchResult?>("CanDoItAll.webglScene.applyCommandBatch", host, batch).AsTask();
+
     public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.setObjectTransform", host, objectId, transform).AsTask();
 

@@ -1,26 +1,10 @@
-import {
-    createState,
-    dispose,
-    exportImageData,
-    exportScene,
-    importScene,
-    importSceneDetailed,
-    notifyCreateError,
-    resolveState,
-    updateState
-} from "./10-webgl-scene-lifecycle.js";
+import { createState, dispose, exportImageData, exportScene, importScene, importSceneDetailed, notifyCreateError, resolveState, updateState } from "./10-webgl-scene-lifecycle.js";
 import { selectObjects } from "./05-webgl-scene-interaction.js";
 import { focusObject, fitView, resetCamera } from "./06-webgl-scene-camera.js";
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
 import { applyPatch, applyPatchDetailed, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
-import {
-    cancelMotion,
-    cancelMotionDetailed,
-    clearMotions,
-    clearMotionsDetailed,
-    enqueueMotion,
-    enqueueMotionDetailed
-} from "./14-webgl-scene-motion.js";
+import { applyCommandBatch } from "./26-webgl-scene-command-batch.js";
+import { cancelMotion, cancelMotionDetailed, clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
 const root = window.CanDoItAll = window.CanDoItAll || {};
 root.webglScene = {
@@ -133,6 +117,10 @@ root.webglScene = {
     applyPatchDetailed(host, patch) {
         const state = resolveState(host);
         return state ? applyPatchDetailed(state, patch) : null;
+    },
+    applyCommandBatch(host, batch) {
+        const state = resolveState(host);
+        return state ? applyCommandBatch(state, batch) : null;
     },
     setObjectTransform(host, objectId, transform) {
         const state = resolveState(host);

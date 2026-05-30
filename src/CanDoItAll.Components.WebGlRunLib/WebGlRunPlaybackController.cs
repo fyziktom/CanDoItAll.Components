@@ -54,13 +54,22 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
             }
         }
 
-        var targetFrameIndex = ResolveTargetFrameIndex(command);
-        State.IsPlaying = string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
-                          (State.IsPlaying && !string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Pause, StringComparison.OrdinalIgnoreCase));
         if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Pause, StringComparison.OrdinalIgnoreCase))
         {
             State.IsPlaying = false;
+            result.CurrentFrame = timeline?.Frames.FirstOrDefault(frame => frame.Index == State.CurrentFrameIndex);
+            return result;
         }
+
+        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Reset, StringComparison.OrdinalIgnoreCase))
+        {
+            State.IsPlaying = false;
+            State.CurrentFrameIndex = 0;
+        }
+
+        var targetFrameIndex = ResolveTargetFrameIndex(command);
+        State.IsPlaying = string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
+                          State.IsPlaying;
 
         var frame = await frameSource.GetFrameAsync(State.RunId, targetFrameIndex, cancellationToken).ConfigureAwait(false);
         if (frame is null)
@@ -83,8 +92,68 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         return result;
     }
 
+    public async ValueTask<WebGlRunPlaybackResult> PlayToEndAsync(
+        IWebGlRunFrameApplier frameApplier,
+        WebGlRunPlaybackOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(frameApplier);
+        options ??= new WebGlRunPlaybackOptions();
+
+        WebGlRunPlaybackResult result = await ApplyDetailedAsync(
+            new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Play },
+            cancellationToken).ConfigureAwait(false);
+        if (!result.Success)
+        {
+            return result;
+        }
+
+        await ApplyFramesAsync(frameApplier, result, cancellationToken).ConfigureAwait(false);
+
+        while (State.IsPlaying)
+        {
+            if (options.StopAtTimelineEnd && timeline is not null && State.CurrentFrameIndex >= timeline.Frames.Max(static item => item.Index))
+            {
+                await ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Pause }, cancellationToken).ConfigureAwait(false);
+                break;
+            }
+
+            TimeSpan delay = timeline is null
+                ? TimeSpan.Zero
+                : new WebGlRunPlaybackClock().ResolveFrameDelay(timeline, State.PlaybackSpeed);
+            if (delay > TimeSpan.Zero)
+            {
+                if (options.DelayAsync is null)
+                {
+                    await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    await options.DelayAsync(delay, cancellationToken).ConfigureAwait(false);
+                }
+            }
+
+            result = await ApplyDetailedAsync(
+                new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Next },
+                cancellationToken).ConfigureAwait(false);
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            await ApplyFramesAsync(frameApplier, result, cancellationToken).ConfigureAwait(false);
+        }
+
+        return result;
+    }
+
     private long ResolveTargetFrameIndex(WebGlRunPlaybackCommand command)
     {
+        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Reset, StringComparison.OrdinalIgnoreCase))
+        {
+            return 0;
+        }
+
         if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Seek, StringComparison.OrdinalIgnoreCase))
         {
             return command.TargetFrameIndex ?? State.CurrentFrameIndex;
@@ -101,11 +170,23 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         }
 
         if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Step, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Next, StringComparison.OrdinalIgnoreCase))
         {
             return frameResolver.ResolveNextFrame(timeline, State.CurrentFrameIndex)?.Index ?? State.CurrentFrameIndex;
         }
 
         return command.TargetFrameIndex ?? State.CurrentFrameIndex;
+    }
+
+    private static async ValueTask ApplyFramesAsync(
+        IWebGlRunFrameApplier frameApplier,
+        WebGlRunPlaybackResult result,
+        CancellationToken cancellationToken)
+    {
+        foreach (WebGlRunFrame frame in result.FramesToApply)
+        {
+            await frameApplier.ApplyAsync(WebGlRunFrameApplyResult.FromFrame(frame), cancellationToken).ConfigureAwait(false);
+        }
     }
 }
