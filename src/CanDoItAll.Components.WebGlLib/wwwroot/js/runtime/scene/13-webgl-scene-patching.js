@@ -5,6 +5,7 @@ import {
     addSceneObjectGroup,
     removeLinkGroup,
     removeSceneObjectGroup,
+    rebuildScene,
     replaceSceneObjectGroup,
     updateObjectRuntimeTransform
 } from "./11-webgl-scene-graph.js";
@@ -103,6 +104,7 @@ export function applyPatchDetailed(state, patch) {
         ? normalized.nextRevision
         : (state.sceneModel.uiState.revision || 0) + 1;
     state.sceneModel.revision = state.sceneModel.uiState.revision;
+    rebuildScene(state);
     notifyStateChanged(state);
     state.scheduleRender("patch");
     return completeCommandResult(state, result);

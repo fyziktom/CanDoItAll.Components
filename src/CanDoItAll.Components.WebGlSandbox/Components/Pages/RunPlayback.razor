@@ -35,11 +35,11 @@
                         <dl class="webgl-proof-grid">
                             <div>
                                 <dt>Frame</dt>
-                                <dd data-testid="webgl-run-frame">@playbackState.CurrentFrameIndex</dd>
+                                <dd data-testid="webgl-run-frame">@PlaybackState.CurrentFrameIndex</dd>
                             </div>
                             <div>
                                 <dt>Playing</dt>
-                                <dd data-testid="webgl-run-playing">@playbackState.IsPlaying</dd>
+                                <dd data-testid="webgl-run-playing">@PlaybackState.IsPlaying</dd>
                             </div>
                             <div>
                                 <dt>Renders</dt>
@@ -62,7 +62,7 @@
                             @foreach (var frame in runDocument.Timeline.Frames)
                             {
                                 <button type="button"
-                                        class="@(playbackState.CurrentFrameIndex == frame.Index ? "webgl-object-list__item is-active" : "webgl-object-list__item")"
+                                        class="@(PlaybackState.CurrentFrameIndex == frame.Index ? "webgl-object-list__item is-active" : "webgl-object-list__item")"
                                         @onclick="() => SeekAsync(frame.Index)">
                                     <span>Frame @frame.Index</span>
                                     <small>@frame.TimeSeconds.ToString("0.0")s</small>

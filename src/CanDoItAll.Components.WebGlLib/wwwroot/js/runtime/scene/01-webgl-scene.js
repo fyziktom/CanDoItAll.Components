@@ -4,6 +4,7 @@ import {
     exportImageData,
     exportScene,
     importScene,
+    importSceneDetailed,
     notifyCreateError,
     resolveState,
     updateState
@@ -21,9 +22,7 @@ import {
     enqueueMotionDetailed
 } from "./14-webgl-scene-motion.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
-
 const root = window.CanDoItAll = window.CanDoItAll || {};
-
 root.webglScene = {
     create(host, dotNetRef, scene, options) {
         if (!host) {
@@ -69,6 +68,18 @@ root.webglScene = {
         } catch (error) {
             state.notifyRuntimeError("WebGL scene import failed.", error);
             return false;
+        }
+    },
+    importSceneDetailed(host, scene, options) {
+        const state = resolveState(host);
+        if (!state) {
+            return null;
+        }
+        try {
+            return importSceneDetailed(state, scene, options);
+        } catch (error) {
+            state.notifyRuntimeError("WebGL scene import failed.", error);
+            return null;
         }
     },
     dispose(host) {
@@ -160,7 +171,6 @@ root.webglScene = {
         if (!state) {
             return false;
         }
-
         selectObjects(state, objectId ? [objectId] : []);
         return true;
     }

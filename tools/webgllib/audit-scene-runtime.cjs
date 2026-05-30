@@ -197,7 +197,12 @@ function auditBranchInstructionFiles() {
           return;
         }
 
-        const normalizedLine = line.replace(/[*_`]/g, " ").replace(/\s+/g, " ");
+        const nearbyStart = Math.max(0, index - 5);
+        const normalizedLine = lines
+          .slice(nearbyStart, index + 1)
+          .join(" ")
+          .replace(/[*_`]/g, " ")
+          .replace(/\s+/g, " ");
         if (/\b(do not|don't|never|forbidden|must not|not run)\b/i.test(normalizedLine)) {
           return;
         }

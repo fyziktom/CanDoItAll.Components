@@ -54,6 +54,12 @@
     [Parameter]
     public EventCallback<WebGlSceneCommandResult> MotionCompleted { get; set; }
 
+    [Parameter]
+    public EventCallback<WebGlSceneCommandResult> CommandCompleted { get; set; }
+
+    [Parameter]
+    public EventCallback<WebGlSceneCommandResult> CommandFailed { get; set; }
+
     protected override void OnParametersSet()
     {
         pendingSceneKey = SerializePayload(Scene, Options);
@@ -152,6 +158,20 @@
         return args is null ? Task.CompletedTask : MotionCompleted.InvokeAsync(args);
     }
 
+    [JSInvokable]
+    public Task OnCommandCompleted(string eventJson)
+    {
+        var args = Deserialize<WebGlSceneCommandResult>(eventJson);
+        return args is null ? Task.CompletedTask : CommandCompleted.InvokeAsync(args);
+    }
+
+    [JSInvokable]
+    public Task OnCommandFailed(string eventJson)
+    {
+        var args = Deserialize<WebGlSceneCommandResult>(eventJson);
+        return args is null ? Task.CompletedTask : CommandFailed.InvokeAsync(args);
+    }
+
     public Task FitViewAsync()
         => JsRuntime.InvokeVoidAsync("CanDoItAll.webglScene.fitView", host).AsTask();
 
@@ -175,6 +195,9 @@
 
     public Task<bool> ImportSceneAsync(WebGlSceneModel sceneModel)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.importScene", host, sceneModel, Options).AsTask();
+
+    public Task<WebGlSceneCommandResult?> ImportSceneDetailedAsync(WebGlSceneModel sceneModel)
+        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.importSceneDetailed", host, sceneModel, Options).AsTask();
 
     public Task<bool> ApplyPatchAsync(WebGlScenePatch patch)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.applyPatch", host, patch).AsTask();

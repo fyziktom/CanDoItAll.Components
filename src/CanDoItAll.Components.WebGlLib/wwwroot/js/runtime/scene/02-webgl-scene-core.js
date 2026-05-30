@@ -222,6 +222,8 @@ export function buildDiagnosticsSnapshot(state) {
         hiddenObjectCount: diagnostics.visibilityCounts?.hiddenObjectCount || 0,
         visibleLinkCount: diagnostics.visibilityCounts?.visibleLinkCount || 0,
         hiddenLinkCount: diagnostics.visibilityCounts?.hiddenLinkCount || 0,
+        sceneIndexSyncCount: diagnostics.sceneIndexSyncCount || 0,
+        lastSceneIndexSyncReason: diagnostics.lastSceneIndexSyncReason || "",
         symbolCount: state.symbolGroups.size,
         deterministicMode: state.options.deterministicMode,
         activeAssetProfile: resolveActiveAssetProfile(state),

@@ -14,51 +14,58 @@ public partial class RunPlayback
         RenderMode = WebGlRenderModes.Auto,
         AssetQualityProfile = WebGlAssetQualityProfiles.Primitive,
         ShowLabels = false,
-        ShowSymbols = false
+        ShowSymbols = true
     };
-    private readonly WebGlRunDocument runDocument = CreateRunDocument();
-    private WebGlRunPlaybackState playbackState = new() { RunId = new("generic-run-demo") };
+    private readonly WebGlRunDocument runDocument;
+    private readonly WebGlRunPlaybackController playbackController;
+    private readonly WebGlRunPlaybackClock playbackClock = new();
     private WebGlSceneModel scene = CreateScene();
     private WebGlSceneView? sceneView;
     private WebGlSceneProofSnapshot? latestSnapshot;
     private string statusText = "Ready.";
 
-    private string PlaybackStatus => playbackState.IsPlaying ? "playing" : "paused";
-    private string PlaybackTone => playbackState.IsPlaying ? "success" : "info";
+    public RunPlayback()
+    {
+        runDocument = CreateRunDocument();
+        playbackController = new WebGlRunPlaybackController(runDocument);
+    }
+
+    private WebGlRunPlaybackState PlaybackState => playbackController.State;
+    private string PlaybackStatus => PlaybackState.IsPlaying ? "playing" : "paused";
+    private string PlaybackTone => PlaybackState.IsPlaying ? "success" : "info";
 
     private async Task PlayAsync()
     {
-        if (playbackState.IsPlaying)
+        if (PlaybackState.IsPlaying)
         {
             return;
         }
 
-        playbackState.IsPlaying = true;
-        while (playbackState.IsPlaying)
+        var playResult = await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Play });
+        await ApplyPlaybackResultAsync(playResult);
+        while (PlaybackState.IsPlaying)
         {
             await StepAsync();
-            if (playbackState.CurrentFrameIndex >= runDocument.Timeline.Frames.Max(item => item.Index))
+            if (PlaybackState.CurrentFrameIndex >= runDocument.Timeline.Frames.Max(item => item.Index))
             {
-                playbackState.IsPlaying = false;
+                await PauseAsync();
                 break;
             }
 
-            await Task.Delay(420);
+            await Task.Delay(playbackClock.ResolveFrameDelay(runDocument.Timeline, PlaybackState.PlaybackSpeed));
         }
     }
 
-    private Task PauseAsync()
+    private async Task PauseAsync()
     {
-        playbackState.IsPlaying = false;
+        await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Pause });
         statusText = "Paused.";
-        return Task.CompletedTask;
     }
 
     private async Task StepAsync()
     {
-        var next = runDocument.Timeline.Frames.FirstOrDefault(item => item.Index > playbackState.CurrentFrameIndex)
-            ?? runDocument.Timeline.Frames.First();
-        await ApplyFrameAsync(next);
+        var result = await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Next });
+        await ApplyPlaybackResultAsync(result);
     }
 
     private Task SeekStartAsync() => SeekAsync(0);
@@ -66,13 +73,28 @@ public partial class RunPlayback
     private async Task SeekAsync(long frameIndex)
     {
         scene = CreateScene();
-        playbackState.CurrentFrameIndex = 0;
         if (sceneView is not null)
         {
             await sceneView.ImportSceneAsync(scene);
         }
 
-        foreach (var frame in runDocument.Timeline.Frames.Where(item => item.Index <= frameIndex))
+        var result = await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand
+        {
+            Kind = WebGlRunPlaybackCommandKinds.Seek,
+            TargetFrameIndex = frameIndex
+        });
+        await ApplyPlaybackResultAsync(result);
+    }
+
+    private async Task ApplyPlaybackResultAsync(WebGlRunPlaybackResult result)
+    {
+        if (!result.Success)
+        {
+            statusText = string.Join(" ", result.Errors);
+            return;
+        }
+
+        foreach (var frame in result.FramesToApply)
         {
             await ApplyFrameAsync(frame);
         }
@@ -95,7 +117,6 @@ public partial class RunPlayback
             await sceneView.EnqueueMotionDetailedAsync(motion);
         }
 
-        playbackState.CurrentFrameIndex = frame.Index;
         statusText = $"Applied generic frame {frame.Index}.";
         await CaptureProofAsync();
     }
@@ -110,43 +131,68 @@ public partial class RunPlayback
     }
 
     private static WebGlRunDocument CreateRunDocument()
-        => new()
+    {
+        var compiler = new WebGlRunActionCompiler();
+        return new WebGlRunDocument
         {
             RunId = new("generic-run-demo"),
             InitialScene = new WebGlSceneDocument { Scene = CreateScene() },
-            Timeline =
-            {
-                Frames =
-                [
-                    Frame(0, 0, new WebGlVector3(-3, 0, 0)),
-                    Frame(1, 1, new WebGlVector3(-1, 0, -1.2)),
-                    Frame(2, 2, new WebGlVector3(1.4, 0, 0.8)),
-                    Frame(3, 3, new WebGlVector3(3, 0, 0))
-                ]
-            },
+            Timeline = compiler.Compile(CreateActionPlan()),
             Metadata =
             {
                 ["boundary"] = "generic-webgl-runlib",
                 ["domain"] = "generic"
             }
         };
+    }
 
-    private static WebGlRunFrame Frame(long index, double timeSeconds, WebGlVector3 target)
+    private static WebGlRunActionPlan CreateActionPlan()
         => new()
         {
-            Index = index,
-            TimeSeconds = timeSeconds,
-            Motions =
+            FrameRate = 1,
+            ObjectBindings =
             [
-                new WebGlObjectMotionCommand
+                new WebGlRunObjectBinding { ObjectId = "object.runner", Position = new WebGlVector3(-3, 0, 0), AnchorPosition = new WebGlVector3(-3, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "object.goal", Position = new WebGlVector3(3, 0, 0), AnchorPosition = new WebGlVector3(3, 0, 0) }
+            ],
+            Actions =
+            [
+                Action("run.move.target", WebGlRunActionKinds.MoveToObject, 0, "object.runner", "object.goal"),
+                Action("run.symbol.show", WebGlRunActionKinds.ShowSymbol, 1, "object.runner", parameters: new()
                 {
-                    MotionId = $"run.motion.{index}",
-                    ObjectId = "object.runner",
-                    TargetPosition = target,
-                    DurationSeconds = 0.32,
-                    Easing = WebGlMotionEasings.EaseInOut
-                }
+                    ["symbolKind"] = "generic-status",
+                    ["color"] = "#facc15",
+                    ["tooltip"] = "Generic status"
+                }),
+                Action("run.pose.work", WebGlRunActionKinds.SetPose, 1, "object.runner", parameters: new()
+                {
+                    ["poseKey"] = "active"
+                }),
+                Action("run.return.anchor", WebGlRunActionKinds.ReturnToAnchor, 2, "object.runner"),
+                Action("run.symbol.hide", WebGlRunActionKinds.HideSymbol, 3, "object.runner"),
+                Action("run.pose.restore", WebGlRunActionKinds.SetPose, 3, "object.runner", parameters: new()
+                {
+                    ["poseKey"] = "neutral"
+                })
             ]
+        };
+
+    private static WebGlRunAction Action(
+        string id,
+        string kind,
+        double startsAtSeconds,
+        string subjectObjectId,
+        string targetObjectId = "",
+        Dictionary<string, string>? parameters = null)
+        => new()
+        {
+            ActionId = id,
+            ActionKind = kind,
+            SubjectObjectId = subjectObjectId,
+            TargetObjectId = targetObjectId,
+            StartsAtSeconds = startsAtSeconds,
+            DurationSeconds = 0.32,
+            Parameters = parameters ?? []
         };
 
     private static WebGlSceneModel CreateScene()
@@ -173,7 +219,7 @@ public partial class RunPlayback
             UiState = new WebGlSceneUiState
             {
                 ShowLabels = false,
-                ShowSymbols = false,
+                ShowSymbols = true,
                 ActiveAssetProfile = WebGlAssetQualityProfiles.Primitive
             },
             Objects =

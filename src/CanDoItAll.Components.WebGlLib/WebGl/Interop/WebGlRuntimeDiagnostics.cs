@@ -52,6 +52,10 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int HiddenLinkCount { get; set; }
 
+    public int SceneIndexSyncCount { get; set; }
+
+    public string LastSceneIndexSyncReason { get; set; } = string.Empty;
+
     public int SymbolCount { get; set; }
 
     public bool DeterministicMode { get; set; }

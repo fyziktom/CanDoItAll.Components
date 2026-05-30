@@ -135,3 +135,38 @@ body {
     color: #475569;
     line-height: 1.55;
 }
+
+@media (max-width: 760px) {
+    .webgl-shell {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .webgl-nav {
+        position: static;
+        height: auto;
+        padding: 0.85rem;
+        border-right: 0;
+        border-bottom: 1px solid rgba(100, 116, 139, 0.28);
+    }
+
+    .webgl-nav__links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .webgl-nav__link {
+        padding: 0.62rem;
+        text-align: center;
+    }
+
+    .webgl-page {
+        padding: 0.85rem;
+    }
+
+    .webgl-page--fill {
+        min-height: auto;
+    }
+
+    .webgl-home-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

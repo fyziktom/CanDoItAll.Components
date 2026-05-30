@@ -56,6 +56,7 @@ export function completeCommandResult(state, result) {
         failedCommandCount: String(state?.diagnostics?.failedCommandDetails?.length || 0)
     };
     rememberCommandResult(state, result);
+    notifyCommandResult(state, result);
     return result;
 }
 
@@ -87,6 +88,17 @@ function rememberFailedCommand(state, result) {
         affectedLinkIds: unique(result.affectedLinkIds)
     });
     trimToLimit(state.diagnostics.failedCommandDetails, Math.min(limit, defaultMaxFailedCommands));
+}
+
+function notifyCommandResult(state, result) {
+    if (!state?.dotNetRef) {
+        return;
+    }
+
+    const methodName = result.success ? "OnCommandCompleted" : "OnCommandFailed";
+    state.dotNetRef
+        .invokeMethodAsync(methodName, JSON.stringify(result))
+        .catch(error => console.warn(`WebGL scene ${methodName} callback failed.`, error));
 }
 
 function buildCommandId(state, commandKind) {

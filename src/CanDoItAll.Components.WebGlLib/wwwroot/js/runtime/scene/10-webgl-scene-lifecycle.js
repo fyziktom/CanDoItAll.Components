@@ -29,7 +29,9 @@ import { buildDecorations, clearDynamicScene, rebuildScene } from "./11-webgl-sc
 import { attachRenderLoop } from "./15-webgl-scene-render-loop.js";
 import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
 import { buildHostShell } from "./19-webgl-scene-shell.js";
+import { completeCommandResult, createCommandResult } from "./20-webgl-scene-command-results.js";
 import { createAssetCache, disposeAssetCache } from "./21-webgl-scene-asset-cache.js";
+import { createDiagnostics } from "./25-webgl-scene-diagnostics.js";
 
 export function createState(host, dotNetRef, scene, options) {
     const sceneModel = normalizeScene(scene);
@@ -102,9 +104,16 @@ export function updateState(state, scene, options) {
 }
 
 export function importScene(state, scene, options) {
+    return importSceneDetailed(state, scene, options).success;
+}
+
+export function importSceneDetailed(state, scene, options) {
+    const result = createCommandResult(state, "scene-import", scene?.sceneId || "");
     updateState(state, scene, options || state.options);
     state.scheduleRender("scene-import");
-    return true;
+    result.affectedObjectIds.push(...(state.sceneModel.objects || []).map(item => item.id));
+    result.affectedLinkIds.push(...(state.sceneModel.links || []).map(item => item.id));
+    return completeCommandResult(state, result);
 }
 
 export function resolveState(host) {
@@ -242,54 +251,6 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         nextMotionSequence: 0,
         decorations: {},
         handlers: {}
-    };
-}
-
-function createDiagnostics() {
-    return {
-        createCount: 1,
-        disposeCount: 0,
-        updateCount: 0,
-        renderCount: 0,
-        loadedAssetIds: new Set(),
-        missingAssetIds: new Set(),
-        fallbackObjectIds: new Set(),
-        modelInstanceIds: new Set(),
-        primitiveInstanceIds: new Set(),
-        failedAssetUris: new Set(),
-        missingFallbackAssetIds: new Set(),
-        failedPatchCommands: new Set(),
-        failedCommandDetails: [],
-        modelDiagnostics: new Map(),
-        motionAcceptedCount: 0,
-        motionCompletedCount: 0,
-        motionFailedCount: 0,
-        animatedSymbolCount: 0,
-        estimatedTriangleCount: 0,
-        estimatedVertexCount: 0,
-        largestLoadedAssetId: "",
-        largestLoadedAssetBytes: 0,
-        lastError: "",
-        lastFrameReason: "",
-        frameTimeMs: 0,
-        isRenderLoopActive: false,
-        idleSinceTimestamp: 0,
-        renderSchedulerMode: "auto",
-        lastScheduledReason: "",
-        lastDeltaSeconds: 0,
-        assetCacheEntryCount: 0,
-        assetCacheHitCount: 0,
-        assetCacheMissCount: 0,
-        disposedTemplateCount: 0,
-        disposedGeometryCount: 0,
-        disposedMaterialCount: 0,
-        disposedTextureCount: 0,
-        visibilityCounts: {
-            visibleObjectCount: 0,
-            hiddenObjectCount: 0,
-            visibleLinkCount: 0,
-            hiddenLinkCount: 0
-        }
     };
 }
 

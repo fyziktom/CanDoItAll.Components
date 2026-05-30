@@ -51,7 +51,7 @@ export function syncDecorations(state) {
 
 export function rebuildScene(state) {
     clearDynamicScene(state);
-    state.sceneIndexes = buildSceneIndexes(state.sceneModel);
+    syncSceneIndexes(state, "scene-rebuild");
     state.objectLookup = new Map();
     state.objectPositions = new Map();
 
@@ -74,9 +74,16 @@ export function rebuildScene(state) {
 
     rebuildSymbols(state);
     syncObjectRings(state);
-    state.diagnostics.visibilityCounts = buildVisibilityCounts(state);
     state.shell.emptyState.classList.toggle("is-visible", (state.sceneModel.objects || []).length === 0);
     state.scheduleRender("scene-rebuild");
+}
+
+export function syncSceneIndexes(state, reason = "scene-index-sync") {
+    state.sceneIndexes = buildSceneIndexes(state.sceneModel);
+    state.diagnostics.visibilityCounts = buildVisibilityCounts(state);
+    state.diagnostics.sceneIndexSyncCount = (state.diagnostics.sceneIndexSyncCount || 0) + 1;
+    state.diagnostics.lastSceneIndexSyncReason = reason;
+    return state.sceneIndexes;
 }
 
 export function addSceneObjectGroup(state, sceneObject) {

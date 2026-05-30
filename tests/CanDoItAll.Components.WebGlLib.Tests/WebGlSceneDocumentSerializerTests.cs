@@ -108,6 +108,25 @@ public sealed class WebGlSceneDocumentSerializerTests
     }
 
     [Fact]
+    public void Scene_content_hash_ignores_object_link_asset_and_layer_order()
+    {
+        var firstDocument = CreateHashDocument();
+        firstDocument.Scene.Objects.Add(new WebGlSceneObject { Id = "object.b" });
+        firstDocument.Scene.Links.Add(new WebGlSceneLink { Id = "link.b", SourceObjectId = "object.a", TargetObjectId = "object.b" });
+        firstDocument.Scene.Layers.Add(new WebGlSceneLayer { Id = "layer.b", ObjectIds = ["object.b", "object.a"] });
+
+        var secondDocument = CreateHashDocument();
+        secondDocument.Scene.Objects.Insert(0, new WebGlSceneObject { Id = "object.b" });
+        secondDocument.Scene.Links.Insert(0, new WebGlSceneLink { Id = "link.b", SourceObjectId = "object.a", TargetObjectId = "object.b" });
+        secondDocument.Scene.Layers.Insert(0, new WebGlSceneLayer { Id = "layer.b", ObjectIds = ["object.a", "object.b"] });
+
+        var first = WebGlSceneDocumentSerializer.Deserialize(WebGlSceneDocumentSerializer.Serialize(firstDocument));
+        var second = WebGlSceneDocumentSerializer.Deserialize(WebGlSceneDocumentSerializer.Serialize(secondDocument));
+
+        Assert.Equal(first.SceneContentHash, second.SceneContentHash);
+    }
+
+    [Fact]
     public void Serialize_can_exclude_ui_runtime_options_and_diagnostics()
     {
         var document = CreateHashDocument();
@@ -155,6 +174,18 @@ public sealed class WebGlSceneDocumentSerializerTests
         Assert.Contains(validation.Errors, error => error.Contains("Duplicate", StringComparison.Ordinal));
         Assert.Contains(validation.Errors, error => error.Contains("missing endpoint", StringComparison.Ordinal));
         Assert.Contains(validation.Errors, error => error.Contains("Invalid vector", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Validate_warns_for_missing_asset_references()
+    {
+        var document = CreateHashDocument();
+        document.Scene.Objects[0].AssetId = "asset.missing";
+
+        var validation = WebGlSceneDocumentSerializer.Validate(document);
+
+        Assert.True(validation.IsValid);
+        Assert.Contains(validation.Warnings, warning => warning.Contains("asset.missing", StringComparison.Ordinal));
     }
 
     private static WebGlSceneDocument CreateHashDocument()

@@ -261,3 +261,35 @@
     font-size: 0.82rem;
     font-weight: 700;
 }
+
+@media (max-width: 900px) {
+    .webgl-village-workspace,
+    .webgl-model-lab {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .webgl-village-stage,
+    .webgl-model-lab__stage,
+    .webgl-model-lab__stage .wgl-scene-shell,
+    .webgl-model-lab__stage .wgl-scene-host {
+        min-height: 26rem;
+    }
+
+    .webgl-village-panel,
+    .webgl-model-lab__panel {
+        overflow: visible;
+    }
+}
+
+@media (max-width: 520px) {
+    .webgl-village-stage,
+    .webgl-model-lab__stage,
+    .webgl-model-lab__stage .wgl-scene-shell,
+    .webgl-model-lab__stage .wgl-scene-host {
+        min-height: 19rem;
+    }
+
+    .webgl-proof-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

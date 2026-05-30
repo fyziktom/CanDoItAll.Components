@@ -36,6 +36,8 @@ export function getProofSnapshot(state) {
             frameTimeMs: String(Math.round((state.diagnostics.frameTimeMs || 0) * 100) / 100),
             isRenderLoopActive: String(!!state.diagnostics.isRenderLoopActive),
             assetCacheEntryCount: String(state.diagnostics.assetCacheEntryCount || 0),
+            sceneIndexSyncCount: String(state.diagnostics.sceneIndexSyncCount || 0),
+            lastSceneIndexSyncReason: state.diagnostics.lastSceneIndexSyncReason || "",
             modelDiagnosticsCount: String(state.diagnostics.modelDiagnostics?.size || 0)
         }
     };
