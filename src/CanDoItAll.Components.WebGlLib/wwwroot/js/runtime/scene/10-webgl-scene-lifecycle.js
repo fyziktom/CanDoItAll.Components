@@ -239,6 +239,8 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         selectedObjectIds: new Set(sceneModel.uiState?.selection?.selectedObjectIds || []),
         hoveredObjectId: sceneModel.uiState?.hoveredObjectId || "",
         motions: new Map(),
+        motionQueuesByObjectId: new Map(),
+        pendingCommandStages: [],
         dragState: null,
         animationHandle: 0,
         renderRequested: true,

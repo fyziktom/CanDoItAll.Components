@@ -27,17 +27,7 @@ export function applyCommandBatch(state, batch) {
         appendChildResult(result, motionResult);
     }
 
-    for (const stage of normalized.stages) {
-        for (const patch of stage.patches) {
-            const patchResult = applyPatchDetailed(state, patch);
-            appendChildResult(result, patchResult);
-        }
-
-        for (const motion of stage.motions) {
-            const motionResult = enqueueMotionDetailed(state, motion);
-            appendChildResult(result, motionResult);
-        }
-    }
+    applyOrScheduleStages(state, normalized, result);
 
     normalized.metrics.batchDurationMs = Math.round(performance.now() - startedAt);
     syncBatchDiagnostics(state, normalized.metrics);
@@ -59,7 +49,69 @@ export function applyCommandBatch(state, batch) {
     return completeCommandResult(state, result);
 }
 
+export function advanceCommandBatchStages(state, deltaSeconds) {
+    const pending = state.pendingCommandStages || [];
+    if (!pending.length) {
+        return;
+    }
+
+    const ready = [];
+    for (const item of pending) {
+        item.remainingSeconds = Math.max(0, item.remainingSeconds - deltaSeconds);
+        if (item.remainingSeconds <= 0) {
+            ready.push(item);
+        }
+    }
+
+    state.pendingCommandStages = pending.filter(item => item.remainingSeconds > 0);
+    for (const item of ready) {
+        applyStage(state, item.stage, null);
+    }
+
+    if (state.pendingCommandStages.length) {
+        state.scheduleRender("command-stage");
+    }
+}
+
+function applyOrScheduleStages(state, normalized, result) {
+    let delaySeconds = 0;
+    for (const stage of normalized.stages) {
+        if (delaySeconds <= 0) {
+            applyStage(state, stage, result);
+        } else {
+            state.pendingCommandStages ??= [];
+            state.pendingCommandStages.push({
+                batchId: normalized.batchId,
+                stage,
+                remainingSeconds: delaySeconds
+            });
+        }
+
+        delaySeconds += Math.max(0, Number(stage.waitSeconds) || 0);
+    }
+
+    if ((state.pendingCommandStages || []).length) {
+        state.scheduleRender("command-stage");
+    }
+}
+
+function applyStage(state, stage, result) {
+    for (const patch of stage.patches) {
+        const patchResult = applyPatchDetailed(state, patch);
+        appendChildResult(result, patchResult);
+    }
+
+    for (const motion of stage.motions) {
+        const motionResult = enqueueMotionDetailed(state, motion);
+        appendChildResult(result, motionResult);
+    }
+}
+
 function appendChildResult(batchResult, childResult) {
+    if (!batchResult) {
+        return;
+    }
+
     if (!childResult) {
         batchResult.errors.push("Batch command returned no result.");
         return;

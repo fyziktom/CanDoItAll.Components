@@ -110,6 +110,31 @@ public sealed class WebGlRunActionCompilerTests
     }
 
     [Fact]
+    public void Compiler_projects_action_durations_to_stage_waits_for_runtime_scheduling()
+    {
+        var timeline = new WebGlRunActionCompiler().Compile(new WebGlRunActionPlan
+        {
+            FrameRate = 1,
+            ObjectBindings =
+            [
+                new WebGlRunObjectBinding { ObjectId = "actor", Position = new WebGlVector3(0, 0, 0), AnchorPosition = new WebGlVector3(0, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "target", Position = new WebGlVector3(4, 0, 0) }
+            ],
+            Actions =
+            [
+                Action("move.target", WebGlRunActionKinds.MoveToObject, 0, "actor", "target"),
+                Action("admin.symbol", WebGlRunActionKinds.ShowSymbol, 0, "actor", parameters: new() { ["symbolKind"] = "document" }),
+                Action("return.home", WebGlRunActionKinds.ReturnToAnchor, 0, "actor")
+            ]
+        });
+
+        WebGlSceneCommandBatch batch = WebGlRunFrameApplyResult.FromFrame(timeline.Frames.Single()).CommandBatch;
+
+        Assert.Equal([0.25, 0.25, 0.25], batch.Stages.Select(stage => stage.WaitSeconds).ToArray());
+        Assert.Equal(["move.target", "admin.symbol", "return.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
+    }
+
+    [Fact]
     public void Compiler_projects_stage_group_and_coalescing_scope_to_command_batch_stages()
     {
         var timeline = new WebGlRunActionCompiler().Compile(new WebGlRunActionPlan

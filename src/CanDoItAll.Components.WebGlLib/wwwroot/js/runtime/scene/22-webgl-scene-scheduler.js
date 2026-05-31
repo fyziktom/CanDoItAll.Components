@@ -32,6 +32,10 @@ export function resolveRenderReason(state) {
         return "motion";
     }
 
+    if ((state.pendingCommandStages || []).length > 0) {
+        return "command-stage";
+    }
+
     if (mode === "auto" && state.diagnostics.animatedSymbolCount > 0) {
         return "symbol-effect";
     }

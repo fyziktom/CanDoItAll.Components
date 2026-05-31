@@ -10,6 +10,7 @@ import {
     updateObjectRuntimeTransform
 } from "./11-webgl-scene-graph.js";
 import { rebuildSymbolsForObject } from "./04-webgl-scene-symbols.js";
+import { clearObjectMotionState } from "./29-webgl-scene-motion-queues.js";
 import {
     completeCommandResult,
     createCommandResult,
@@ -295,11 +296,7 @@ function validateLinkForAdd(state, link, normalized, result) {
 }
 
 function cancelObjectMotions(state, objectId) {
-    for (const [motionId, motion] of state.motions.entries()) {
-        if (motion.objectId === objectId) {
-            state.motions.delete(motionId);
-        }
-    }
+    clearObjectMotionState(state, objectId);
 }
 
 function normalizeBoolean(value) {

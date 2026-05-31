@@ -3,6 +3,7 @@ import { syncViewport } from "./06-webgl-scene-camera.js";
 import { syncOverlays } from "./07-webgl-scene-overlays.js";
 import { syncDecorations } from "./11-webgl-scene-graph.js";
 import { advanceMotions } from "./14-webgl-scene-motion.js";
+import { advanceCommandBatchStages } from "./26-webgl-scene-command-batch.js";
 import { createRenderScheduler } from "./22-webgl-scene-scheduler.js";
 
 export function attachRenderLoop(state) {
@@ -23,6 +24,7 @@ function render(state, timestamp, reason) {
     syncViewport(state);
     syncDecorations(state);
     state.controls.update();
+    advanceCommandBatchStages(state, deltaSeconds);
     advanceMotions(state, deltaSeconds);
     const elapsedSeconds = state.options.deterministicMode ? state.frame / 60 : timestamp / 1000;
     syncSymbolAnimation(state, elapsedSeconds);

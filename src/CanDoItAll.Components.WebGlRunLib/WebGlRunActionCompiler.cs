@@ -243,6 +243,7 @@ public sealed class WebGlRunActionCompiler
             return;
         }
 
+        stage.WaitSeconds = Math.Max(stage.WaitSeconds, Math.Max(0, action.DurationSeconds));
         stage.Motions.Add(new WebGlObjectMotionCommand
         {
             MotionId = action.ActionId,
@@ -258,7 +259,9 @@ public sealed class WebGlRunActionCompiler
     }
 
     private static void AddPatch(WebGlRunAction action, WebGlRunActionStage stage, WebGlSceneObjectPatch objectPatch)
-        => stage.ScenePatches.Add(new WebGlRunFramePatch
+    {
+        stage.WaitSeconds = Math.Max(stage.WaitSeconds, Math.Max(0, action.DurationSeconds));
+        stage.ScenePatches.Add(new WebGlRunFramePatch
         {
             Id = action.ActionId,
             Patch = new WebGlScenePatch
@@ -271,6 +274,7 @@ public sealed class WebGlRunActionCompiler
                 }
             }
         });
+    }
 
     private static WebGlVector3? ResolvePosition(IReadOnlyDictionary<string, WebGlRunObjectBinding> bindings, string objectId)
         => bindings.TryGetValue(objectId, out var binding) ? binding.Position : null;

@@ -11,6 +11,14 @@ import {
     failCommand
 } from "./20-webgl-scene-command-results.js";
 import { notifyStateChanged } from "./24-webgl-scene-notifications.js";
+import {
+    activateNextMotion,
+    clearObjectMotionState,
+    enqueueObjectMotion,
+    getObjectQueue,
+    hasObjectMotion,
+    removeQueuedMotion
+} from "./29-webgl-scene-motion-queues.js";
 
 export function enqueueMotion(state, command) {
     return enqueueMotionDetailed(state, command).success;
@@ -23,12 +31,19 @@ export function enqueueMotionDetailed(state, command) {
         return completeCommandResult(state, result);
     }
 
+    if (normalized.queueMode === "append" && hasObjectMotion(state, normalized.objectId)) {
+        enqueueObjectMotion(state, normalized);
+        state.diagnostics.motionAcceptedCount += 1;
+        result.commandId = normalized.motionId;
+        result.affectedObjectIds.push(normalized.objectId);
+        result.metadata.motionQueueMode = "append";
+        result.metadata.motionQueueDepth = String(getObjectQueue(state, normalized.objectId).length);
+        state.scheduleRender("motion-queued");
+        return completeCommandResult(state, result);
+    }
+
     if (normalized.queueMode !== "append" && normalized.replaceExistingForObject !== false) {
-        for (const [motionId, motion] of state.motions.entries()) {
-            if (motion.objectId === normalized.objectId) {
-                state.motions.delete(motionId);
-            }
-        }
+        clearObjectMotionState(state, normalized.objectId);
     }
 
     state.motions.set(normalized.motionId, normalized);
@@ -48,16 +63,12 @@ export function clearMotionsDetailed(state, objectId) {
     if (!objectId) {
         result.affectedObjectIds.push(...Array.from(state.motions.values()).map(motion => motion.objectId));
         state.motions.clear();
+        state.motionQueuesByObjectId?.clear();
         state.scheduleRender("motion-clear");
         return completeCommandResult(state, result);
     }
 
-    for (const [motionId, motion] of state.motions.entries()) {
-        if (motion.objectId === objectId) {
-            result.affectedObjectIds.push(motion.objectId);
-            state.motions.delete(motionId);
-        }
-    }
+    clearObjectMotionState(state, objectId, result);
 
     state.scheduleRender("motion-clear");
     return completeCommandResult(state, result);
@@ -69,8 +80,13 @@ export function cancelMotion(state, motionId) {
 
 export function cancelMotionDetailed(state, motionId) {
     const result = createCommandResult(state, "motion-cancel", motionId || "");
-    if (!motionId || !state.motions.has(motionId)) {
+    if (!motionId || (!state.motions.has(motionId) && !removeQueuedMotion(state, motionId, result))) {
         failCommand(state, result, `Motion '${motionId || ""}' was not found.`, "WebGL scene motion cancel failed.");
+        return completeCommandResult(state, result);
+    }
+
+    if (!state.motions.has(motionId)) {
+        state.scheduleRender("motion-cancel");
         return completeCommandResult(state, result);
     }
 
@@ -120,6 +136,7 @@ export function advanceMotions(state, deltaSeconds) {
         if (motion) {
             state.diagnostics.motionCompletedCount += 1;
             notifyMotionCompleted(state, motion);
+            activateNextMotion(state, motion.objectId, vectorPayload);
         }
     }
 
@@ -129,6 +146,7 @@ export function advanceMotions(state, deltaSeconds) {
 
     state.scheduleRender(state.motions.size ? "motion" : "motion-complete");
 }
+
 
 function normalizeCommand(state, command, result) {
     const objectId = command?.objectId || "";
