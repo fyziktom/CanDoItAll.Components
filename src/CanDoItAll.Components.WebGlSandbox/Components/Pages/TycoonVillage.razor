@@ -8,24 +8,27 @@
         <Header>
             <PageHeader Eyebrow="Large-screen browser proof" Title="Generic Tycoon Village" Description="Domain-neutral scene rendering with asset profiles, drag, motion, patching, export/import, and deterministic snapshots.">
                 <Actions>
-                    <Button Text="Primitive" Icon="deployed_code" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.Primitive)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.Primitive))" />
-                    <Button Text="Mixed GLB" Icon="view_in_ar" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.MixedGlb)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.MixedGlb))" />
-                    <Button Text="High GLB" Icon="texture" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.HighDetailGlb)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.HighDetailGlb))" />
-                    <Button Text="Fit" Icon="center_focus_weak" Size="ButtonSize.Small" Click="@FitViewAsync" />
-                    <Button Text="Runner motion" Icon="directions_run" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@MoveRunnerToPlazaAsync" />
-                    <Button Text="Export" Icon="ios_share" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ExportSceneStateAsync" />
-                    <Button Text="Import" Icon="input" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ImportSceneStateAsync" />
-                    <Button Text="Missing asset" Icon="report" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Warning" Variant="Variant.Outlined" Click="@TriggerMissingAssetFallbackAsync" />
-                    <Button Text="@LayerButtonText("layer.buildings", "Buildings")" Icon="domain" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.buildings")" Variant="Variant.Outlined" Click="@ToggleBuildingsLayerAsync" />
-                    <Button Text="@LayerButtonText("layer.agents", "Agents")" Icon="groups" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.agents")" Variant="Variant.Outlined" Click="@ToggleAgentsLayerAsync" />
-                    <Button Text="@LayerButtonText("layer.props", "Props")" Icon="park" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.props")" Variant="Variant.Outlined" Click="@TogglePropsLayerAsync" />
-                    <Button Text="@SymbolsButtonText" Icon="@SymbolsButtonIcon" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ToggleSymbols" />
-                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofSnapshotAsync" />
+
                 </Actions>
             </PageHeader>
         </Header>
 
         <ChildContent>
+            <Stack Orientation="Common.Orientation.Horizontal" Gap="1rem">
+                <Button Text="Primitive" Icon="deployed_code" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.Primitive)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.Primitive))" />
+                <Button Text="Mixed GLB" Icon="view_in_ar" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.MixedGlb)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.MixedGlb))" />
+                <Button Text="High GLB" Icon="texture" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.HighDetailGlb)" Variant="Variant.Outlined" Click="@(() => SetAssetProfileAsync(WebGlAssetQualityProfiles.HighDetailGlb))" />
+                <Button Text="Fit" Icon="center_focus_weak" Size="ButtonSize.Small" Click="@FitViewAsync" />
+                <Button Text="Runner motion" Icon="directions_run" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@MoveRunnerToPlazaAsync" />
+                <Button Text="Export" Icon="ios_share" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ExportSceneStateAsync" />
+                <Button Text="Import" Icon="input" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ImportSceneStateAsync" />
+                <Button Text="Missing asset" Icon="report" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Warning" Variant="Variant.Outlined" Click="@TriggerMissingAssetFallbackAsync" />
+                <Button Text="@LayerButtonText("layer.buildings", "Buildings")" Icon="domain" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.buildings")" Variant="Variant.Outlined" Click="@ToggleBuildingsLayerAsync" />
+                <Button Text="@LayerButtonText("layer.agents", "Agents")" Icon="groups" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.agents")" Variant="Variant.Outlined" Click="@ToggleAgentsLayerAsync" />
+                <Button Text="@LayerButtonText("layer.props", "Props")" Icon="park" Size="ButtonSize.Small" ButtonStyle="@LayerButtonStyle("layer.props")" Variant="Variant.Outlined" Click="@TogglePropsLayerAsync" />
+                <Button Text="@SymbolsButtonText" Icon="@SymbolsButtonIcon" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ToggleSymbols" />
+                <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofSnapshotAsync" />
+            </Stack>
             <div class="webgl-village-workspace">
                 <section class="webgl-village-stage" data-testid="webgl-village-stage">
                     <WebGlSceneView @ref="sceneView"
