@@ -10,7 +10,10 @@ export function hasObjectMotion(state, objectId) {
 }
 
 export function enqueueObjectMotion(state, motion) {
-    getObjectQueue(state, motion.objectId).push(motion);
+    const queue = getObjectQueue(state, motion.objectId);
+    queue.push(motion);
+    state.diagnostics.maxMotionQueueLength = Math.max(state.diagnostics.maxMotionQueueLength || 0, queue.length);
+    syncMotionQueueDiagnostics(state);
 }
 
 export function getObjectQueue(state, objectId) {
@@ -44,21 +47,28 @@ export function activateNextMotion(state, objectId, vectorPayload) {
     next.startRotation = resolveObjectRotation(sceneObject);
     next.startScale = resolveObjectScale(sceneObject);
     next.elapsedSeconds = 0;
-    state.motions.set(next.motionId, next);
+        state.motions.set(next.motionId, next);
+        syncMotionQueueDiagnostics(state);
 }
 
 export function clearObjectMotionState(state, objectId, result = null) {
+    let cancelledCount = 0;
     for (const [motionId, motion] of state.motions.entries()) {
         if (motion.objectId === objectId) {
             result?.affectedObjectIds.push(motion.objectId);
             state.motions.delete(motionId);
+            cancelledCount += 1;
         }
     }
 
     if (state.motionQueuesByObjectId?.has(objectId)) {
+        cancelledCount += state.motionQueuesByObjectId.get(objectId).length;
         result?.affectedObjectIds.push(objectId);
         state.motionQueuesByObjectId.delete(objectId);
     }
+
+    state.diagnostics.cancelledMotionCount = (state.diagnostics.cancelledMotionCount || 0) + cancelledCount;
+    syncMotionQueueDiagnostics(state);
 }
 
 export function removeQueuedMotion(state, motionId, result) {
@@ -70,12 +80,31 @@ export function removeQueuedMotion(state, motionId, result) {
 
         queue.splice(index, 1);
         result.affectedObjectIds.push(objectId);
+        state.diagnostics.cancelledMotionCount = (state.diagnostics.cancelledMotionCount || 0) + 1;
         if (queue.length === 0) {
             state.motionQueuesByObjectId.delete(objectId);
         }
 
+        syncMotionQueueDiagnostics(state);
         return true;
     }
 
     return false;
+}
+
+export function syncMotionQueueDiagnostics(state) {
+    if (!state?.diagnostics) {
+        return;
+    }
+
+    let queued = 0;
+    let maxLength = state.diagnostics.maxMotionQueueLength || 0;
+    for (const queue of state.motionQueuesByObjectId?.values?.() || []) {
+        queued += queue.length;
+        maxLength = Math.max(maxLength, queue.length);
+    }
+
+    state.diagnostics.activeMotionCount = state.motions?.size || 0;
+    state.diagnostics.queuedMotionCount = queued;
+    state.diagnostics.maxMotionQueueLength = maxLength;
 }

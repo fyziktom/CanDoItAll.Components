@@ -26,6 +26,7 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
             return plan;
         }
 
+        plan.Actions.Add(normalization.Action);
         AppendAction(normalization.Action, context, plan);
         return plan;
     }

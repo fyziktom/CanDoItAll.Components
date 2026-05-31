@@ -175,9 +175,7 @@ public sealed class WebGlRunActionCompiler
 
     private static WebGlRunActionStage GetOrCreateStage(WebGlRunFrame frame, WebGlRunAction action)
     {
-        string stageId = string.IsNullOrWhiteSpace(action.Metadata.GetValueOrDefault("stageId"))
-            ? action.ActionId
-            : action.Metadata["stageId"];
+        string stageId = new WebGlRunStageIdPolicy().Resolve(action);
         WebGlRunActionStage? existing = frame.Stages.FirstOrDefault(item => string.Equals(item.StageId, stageId, StringComparison.Ordinal));
         if (existing is not null)
         {
@@ -251,10 +249,8 @@ public sealed class WebGlRunActionCompiler
             TargetPosition = targetPosition.Value,
             DurationSeconds = action.DurationSeconds,
             Easing = Get(action.Parameters, "easing", WebGlMotionEasings.EaseInOut),
-            Metadata = new Dictionary<string, string>(action.Metadata, StringComparer.Ordinal)
-            {
-                ["actionKind"] = action.ActionKind
-            }
+            QueueMode = WebGlMotionQueueModes.Append,
+            Metadata = BuildCommandMetadata(action, stage)
         });
     }
 
@@ -267,11 +263,7 @@ public sealed class WebGlRunActionCompiler
             Patch = new WebGlScenePatch
             {
                 ObjectPatches = [objectPatch],
-                Metadata =
-                {
-                    ["commandId"] = action.ActionId,
-                    ["actionKind"] = action.ActionKind
-                }
+                Metadata = BuildCommandMetadata(action, stage)
             }
         });
     }
@@ -295,4 +287,19 @@ public sealed class WebGlRunActionCompiler
 
     private static bool TryDouble(IReadOnlyDictionary<string, string> values, string key, out double result)
         => double.TryParse(Get(values, key), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out result);
+
+    private static Dictionary<string, string> BuildCommandMetadata(WebGlRunAction action, WebGlRunActionStage stage)
+    {
+        var metadata = new Dictionary<string, string>(action.Metadata, StringComparer.Ordinal)
+        {
+            ["actionId"] = action.ActionId,
+            ["actionKind"] = action.ActionKind,
+            ["parentActionId"] = action.ParentActionId,
+            ["stageId"] = stage.StageId,
+            ["stageIndex"] = stage.StageIndex.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        };
+        metadata.TryAdd("visualActionId", action.Metadata.GetValueOrDefault("visualActionId", action.ActionId));
+        metadata.TryAdd("sourceEventId", action.Metadata.GetValueOrDefault("sourceEventId", string.Empty));
+        return metadata;
+    }
 }

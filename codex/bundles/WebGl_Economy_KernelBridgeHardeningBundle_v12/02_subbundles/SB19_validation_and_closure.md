@@ -1,5 +1,9 @@
 # SB19 - Validation and Closure
 
+## Goal
+
+Run the final cross-repo validation, close raw notes, and prove the bundle outcome is stable, maintainable, generic, bridge-ready, and free of WebGL small/medium/mobile optimization drift. Do not add small/medium/mobile/tablet optimization work.
+
 ## Required commands
 
 Components:

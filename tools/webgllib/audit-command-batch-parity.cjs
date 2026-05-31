@@ -53,6 +53,7 @@ function summarize(normalized) {
     interopCallsAvoided: normalized.metrics.interopCallsAvoided,
     stageSummaries: normalized.stages.map(stage => ({
       stageId: stage.stageId,
+      waitSeconds: stage.waitSeconds,
       patchCount: stage.patches.length,
       motionCount: stage.motions.length
     }))

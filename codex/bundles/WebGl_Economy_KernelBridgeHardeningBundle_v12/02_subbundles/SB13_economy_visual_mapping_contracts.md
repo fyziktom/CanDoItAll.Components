@@ -43,3 +43,9 @@ Example:
   "symbolCategory": "resource"
 }
 ```
+
+## Tests
+
+- Serialization round-trip for visual mapping definitions.
+- Validation rejects direct WebGL asset IDs in Economy-neutral mapping fields.
+- Shared-well and farmer-land fixtures can express event/action visual intent through the same mapping contract.

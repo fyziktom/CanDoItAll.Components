@@ -32,6 +32,7 @@ import { buildHostShell } from "./19-webgl-scene-shell.js";
 import { completeCommandResult, createCommandResult } from "./20-webgl-scene-command-results.js";
 import { createAssetCache, disposeAssetCache } from "./21-webgl-scene-asset-cache.js";
 import { createDiagnostics } from "./25-webgl-scene-diagnostics.js";
+import { cancelCommandStageRunner } from "./30-webgl-scene-stage-runner.js";
 
 export function createState(host, dotNetRef, scene, options) {
     const sceneModel = normalizeScene(scene);
@@ -91,6 +92,7 @@ export function createState(host, dotNetRef, scene, options) {
 }
 
 export function updateState(state, scene, options) {
+    cancelCommandStageRunner(state, "scene-update");
     state.sceneModel = normalizeScene(scene);
     state.options = normalizeOptions(options);
     state.sceneModel.uiState.activeAssetProfile = resolveActiveAssetProfile(state);
@@ -109,6 +111,7 @@ export function importScene(state, scene, options) {
 
 export function importSceneDetailed(state, scene, options) {
     const result = createCommandResult(state, "scene-import", scene?.sceneId || "");
+    cancelCommandStageRunner(state, "scene-import");
     updateState(state, scene, options || state.options);
     state.scheduleRender("scene-import");
     result.affectedObjectIds.push(...(state.sceneModel.objects || []).map(item => item.id));
@@ -178,6 +181,7 @@ export function dispose(state) {
     if (state.animationHandle) {
         cancelAnimationFrame(state.animationHandle);
     }
+    cancelCommandStageRunner(state, "dispose");
 
     state.resizeObserver?.disconnect();
     state.renderer.domElement.removeEventListener("pointermove", state.handlers.pointerMove);
@@ -240,7 +244,7 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         hoveredObjectId: sceneModel.uiState?.hoveredObjectId || "",
         motions: new Map(),
         motionQueuesByObjectId: new Map(),
-        pendingCommandStages: [],
+        commandStageRunner: null,
         dragState: null,
         animationHandle: 0,
         renderRequested: true,

@@ -1,5 +1,9 @@
 # SB18 - Performance Bottleneck Proofs
 
+## Goal
+
+Capture desktop/large-screen performance bottleneck evidence for the Components and Economy foundations without turning the work into a full optimization wave.
+
 ## Components bottlenecks
 
 - repeated motion updates on many objects

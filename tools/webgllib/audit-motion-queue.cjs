@@ -15,6 +15,8 @@ async function main() {
   runtime.enqueueMotionDetailed(state, motion("actor.to.home", 0, "append"));
   assertEqual(state.motions.size, 1, "one active motion after append enqueue");
   assertEqual(state.motionQueuesByObjectId.get("actor").length, 1, "one queued motion after append enqueue");
+  assertEqual(state.diagnostics.queuedMotionCount, 1, "diagnostics queued motion count after append enqueue");
+  assertEqual(state.diagnostics.maxMotionQueueLength, 1, "diagnostics max queue length after append enqueue");
 
   runtime.advanceMotions(state, 0.5);
   assertEqual(state.objectLookup.get("actor").position.x, 2, "halfway through first motion");
@@ -33,6 +35,9 @@ async function main() {
     generatedAtUtc: new Date().toISOString(),
     invariantId: "SB02.motion-queue.append-sequential",
     activeMotionCount: state.motions.size,
+    queuedMotionCount: state.diagnostics.queuedMotionCount,
+    maxMotionQueueLength: state.diagnostics.maxMotionQueueLength,
+    cancelledMotionCount: state.diagnostics.cancelledMotionCount,
     acceptedMotionCount: state.diagnostics.motionAcceptedCount,
     completedMotionCount: state.diagnostics.motionCompletedCount,
     finalPosition: state.objectLookup.get("actor").position
@@ -106,7 +111,10 @@ function createState() {
     diagnostics: {
       motionAcceptedCount: 0,
       motionCompletedCount: 0,
-      motionFailedCount: 0
+      motionFailedCount: 0,
+      queuedMotionCount: 0,
+      maxMotionQueueLength: 0,
+      cancelledMotionCount: 0
     },
     options: { deterministicMode: true },
     scheduleRender() {},

@@ -47,3 +47,9 @@ public interface IEconomyVisualActionWebGlMapper
 - Add design document and maybe compile-only contracts if safe.
 - Do not build final UI/demo.
 - Do not make Components depend on Economy.
+
+## Proof
+
+- Bridge project or design document references only the allowed projects.
+- Components has no Economy references.
+- Low-level Economy projects remain free of WebGL/Components references.

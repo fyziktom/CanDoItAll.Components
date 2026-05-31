@@ -41,4 +41,4 @@ Before building the actual bridge/demo, we still need:
    - shared-well readiness
    - farmer-land readiness
    - no domain leakage in generic layers
-   - no WebGL mobile optimization drift
+   - no WebGL mobile optimization drift; do not add small/medium/mobile/tablet optimization work

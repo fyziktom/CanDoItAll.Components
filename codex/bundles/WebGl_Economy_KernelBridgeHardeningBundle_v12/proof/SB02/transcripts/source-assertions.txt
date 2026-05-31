@@ -1,0 +1,23 @@
+﻿## SB02 source assertions
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:217:        currentCommandStageId: diagnostics.currentCommandStageId || "",
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:218:        completedCommandStageCount: diagnostics.completedCommandStageCount || 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:220:        queuedCommandStageCount: diagnostics.queuedCommandStageCount || 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:222:        commandStageWaitSeconds: diagnostics.commandStageWaitSeconds || 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\10-webgl-scene-lifecycle.js:35:import { cancelCommandStageRunner } from "./30-webgl-scene-stage-runner.js";
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\10-webgl-scene-lifecycle.js:95:    cancelCommandStageRunner(state, "scene-update");
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\10-webgl-scene-lifecycle.js:114:    cancelCommandStageRunner(state, "scene-import");
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\10-webgl-scene-lifecycle.js:184:    cancelCommandStageRunner(state, "dispose");
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:24:        currentCommandStageId: "",
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:25:        completedCommandStageCount: 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:27:        queuedCommandStageCount: 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:29:        commandStageWaitSeconds: 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:6:import { advanceCommandStageRunner, enqueueCommandStages, syncStageDiagnostics } from "./30-webgl-scene-stage-runner.js";
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:54:    advanceCommandStageRunner(state, deltaSeconds, stage => applyStage(state, stage, null));
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:58:    enqueueCommandStages(state, normalized.batchId, normalized.stages, stage => applyStage(state, stage, result));
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:1:export function enqueueCommandStages(state, batchId, stages, applyStage) {
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:21:export function advanceCommandStageRunner(state, deltaSeconds, applyStage) {
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:40:export function cancelCommandStageRunner(state, reason = "cancelled") {
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:63:    state.diagnostics.currentCommandStageId = runner.currentStageId || "";
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:64:    state.diagnostics.completedCommandStageCount = runner.completedCount || 0;
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:66:    state.diagnostics.queuedCommandStageCount = runner.queue?.length || 0;
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:67:    state.diagnostics.commandStageWaitSeconds = roundWait(runner.waitSeconds || 0);

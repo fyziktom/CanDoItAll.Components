@@ -17,7 +17,8 @@ import {
     enqueueObjectMotion,
     getObjectQueue,
     hasObjectMotion,
-    removeQueuedMotion
+    removeQueuedMotion,
+    syncMotionQueueDiagnostics
 } from "./29-webgl-scene-motion-queues.js";
 
 export function enqueueMotion(state, command) {
@@ -48,6 +49,7 @@ export function enqueueMotionDetailed(state, command) {
 
     state.motions.set(normalized.motionId, normalized);
     state.diagnostics.motionAcceptedCount += 1;
+    syncMotionQueueDiagnostics(state);
     result.commandId = normalized.motionId;
     result.affectedObjectIds.push(normalized.objectId);
     state.scheduleRender("motion-enqueued");
@@ -64,6 +66,7 @@ export function clearMotionsDetailed(state, objectId) {
         result.affectedObjectIds.push(...Array.from(state.motions.values()).map(motion => motion.objectId));
         state.motions.clear();
         state.motionQueuesByObjectId?.clear();
+        syncMotionQueueDiagnostics(state);
         state.scheduleRender("motion-clear");
         return completeCommandResult(state, result);
     }
@@ -92,6 +95,8 @@ export function cancelMotionDetailed(state, motionId) {
 
     const motion = state.motions.get(motionId);
     state.motions.delete(motionId);
+    state.diagnostics.cancelledMotionCount = (state.diagnostics.cancelledMotionCount || 0) + 1;
+    syncMotionQueueDiagnostics(state);
     result.affectedObjectIds.push(motion?.objectId || "");
     state.scheduleRender("motion-cancel");
     return completeCommandResult(state, result);
@@ -145,6 +150,7 @@ export function advanceMotions(state, deltaSeconds) {
     }
 
     state.scheduleRender(state.motions.size ? "motion" : "motion-complete");
+    syncMotionQueueDiagnostics(state);
 }
 
 

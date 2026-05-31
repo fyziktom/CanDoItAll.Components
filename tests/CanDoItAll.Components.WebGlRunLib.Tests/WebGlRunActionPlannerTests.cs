@@ -53,6 +53,8 @@ public sealed class WebGlRunActionPlannerTests
         }, context);
 
         Assert.True(plan.IsValid, string.Join(Environment.NewLine, plan.Errors));
+        Assert.Single(plan.Actions);
+        Assert.Equal(3, plan.Actions[0].Steps.Count);
         Assert.Single(plan.Motions);
         Assert.Equal(2, plan.Patches.Count);
         Assert.Equal("asset.person.working", plan.Patches[0].ObjectPatches[0].AssetId);

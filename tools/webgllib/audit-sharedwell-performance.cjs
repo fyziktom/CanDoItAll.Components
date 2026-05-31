@@ -7,7 +7,7 @@ const repoRoot = path.resolve(__dirname, "..", "..");
 const runtimeSceneDir = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene");
 const normalizerSourcePath = path.join(runtimeSceneDir, "28-webgl-scene-command-batch-normalizer.js");
 const linkSourcePath = path.join(runtimeSceneDir, "27-webgl-scene-links.js");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-sharedwell-hardening-v9", "performance");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-kernel-bridge-hardening-v12", "performance");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });

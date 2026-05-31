@@ -220,7 +220,10 @@ public sealed class WebGlSceneCommandBatchTests
 
     [Theory]
     [InlineData("coalesce-patch-duplicate-motion.json")]
+    [InlineData("ordered-patch-motion-pose.json")]
     [InlineData("ordered-stages.json")]
+    [InlineData("preserve-order-duplicate-motions.json")]
+    [InlineData("wait-stage.json")]
     public void Batch_normalizer_matches_shared_fixture_expectations(string fixtureFile)
     {
         using JsonDocument document = JsonDocument.Parse(File.ReadAllText(Path.Combine("..", "..", "..", "..", "..", "tools", "webgllib", "command-batch-fixtures", fixtureFile)));

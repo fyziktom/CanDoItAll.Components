@@ -28,12 +28,22 @@ public sealed class WebGlRunPlaybackControllerTests
     public async Task Seek_backward_replays_frames_from_start_to_target()
     {
         var document = CreateRunDocument();
+        document.Metadata["inputPackHash"] = "sha256:input";
+        document.Metadata["runPlanHash"] = "sha256:run";
+        document.Metadata["visualMappingHash"] = "sha256:visual";
         var controller = new WebGlRunPlaybackController(document);
         await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 3 });
 
         var result = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 1 });
 
         Assert.True(result.Success);
+        Assert.Equal(WebGlRunPlaybackCommandKinds.Seek, result.RequestedCommand);
+        Assert.Equal(1, result.TargetFrameIndex);
+        Assert.Equal(2, result.FramesApplied);
+        Assert.Equal(2, result.StagesQueued);
+        Assert.Equal("sha256:input", result.RunSourceProvenance["inputPackHash"]);
+        Assert.Equal("sha256:run", result.RunSourceProvenance["runPlanHash"]);
+        Assert.Equal("sha256:visual", result.RunSourceProvenance["visualMappingHash"]);
         Assert.Equal(1, controller.State.CurrentFrameIndex);
         Assert.Equal([0, 1], result.FramesToApply.Select(frame => frame.Index).ToArray());
     }
@@ -62,10 +72,21 @@ public sealed class WebGlRunPlaybackControllerTests
                 FrameRate = 1,
                 Frames =
                 [
-                    new WebGlRunFrame { Index = 0, TimeSeconds = 0 },
-                    new WebGlRunFrame { Index = 1, TimeSeconds = 1 },
-                    new WebGlRunFrame { Index = 3, TimeSeconds = 3 }
+                    Frame(0, 0),
+                    Frame(1, 1),
+                    Frame(3, 3)
                 ]
+            }
+        };
+
+    private static WebGlRunFrame Frame(long index, double timeSeconds)
+        => new()
+        {
+            Index = index,
+            TimeSeconds = timeSeconds,
+            Stages =
+            {
+                new WebGlRunActionStage { StageId = $"stage.{index}" }
             }
         };
 }

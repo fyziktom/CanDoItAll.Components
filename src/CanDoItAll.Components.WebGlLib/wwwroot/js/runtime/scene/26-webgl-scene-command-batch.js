@@ -3,6 +3,7 @@ import { applyPatchDetailed } from "./13-webgl-scene-patching.js";
 import { enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
 import { compactBatchResultForInterop, completeCommandResult, createCommandResult, warnCommand } from "./20-webgl-scene-command-results.js";
 import { normalizeCommandBatch, normalizeCommandBatchForAudit } from "./28-webgl-scene-command-batch-normalizer.js";
+import { advanceCommandStageRunner, enqueueCommandStages, syncStageDiagnostics } from "./30-webgl-scene-stage-runner.js";
 
 export { normalizeCommandBatchForAudit };
 
@@ -50,49 +51,15 @@ export function applyCommandBatch(state, batch) {
 }
 
 export function advanceCommandBatchStages(state, deltaSeconds) {
-    const pending = state.pendingCommandStages || [];
-    if (!pending.length) {
-        return;
-    }
-
-    const ready = [];
-    for (const item of pending) {
-        item.remainingSeconds = Math.max(0, item.remainingSeconds - deltaSeconds);
-        if (item.remainingSeconds <= 0) {
-            ready.push(item);
-        }
-    }
-
-    state.pendingCommandStages = pending.filter(item => item.remainingSeconds > 0);
-    for (const item of ready) {
-        applyStage(state, item.stage, null);
-    }
-
-    if (state.pendingCommandStages.length) {
-        state.scheduleRender("command-stage");
-    }
+    advanceCommandStageRunner(state, deltaSeconds, stage => applyStage(state, stage, null));
 }
 
 function applyOrScheduleStages(state, normalized, result) {
-    let delaySeconds = 0;
-    for (const stage of normalized.stages) {
-        if (delaySeconds <= 0) {
-            applyStage(state, stage, result);
-        } else {
-            state.pendingCommandStages ??= [];
-            state.pendingCommandStages.push({
-                batchId: normalized.batchId,
-                stage,
-                remainingSeconds: delaySeconds
-            });
-        }
-
-        delaySeconds += Math.max(0, Number(stage.waitSeconds) || 0);
-    }
-
-    if ((state.pendingCommandStages || []).length) {
+    enqueueCommandStages(state, normalized.batchId, normalized.stages, stage => applyStage(state, stage, result));
+    if ((state.commandStageRunner?.queue?.length || 0) > 0 || (state.commandStageRunner?.waitSeconds || 0) > 0) {
         state.scheduleRender("command-stage");
     }
+    syncStageDiagnostics(state);
 }
 
 function applyStage(state, stage, result) {
@@ -138,4 +105,5 @@ function syncBatchDiagnostics(state, metrics) {
     state.diagnostics.commandCountAfterNormalization = metrics.commandCountAfterNormalization;
     state.diagnostics.preservedOrderedDuplicateMotionCount = metrics.preservedOrderedDuplicateMotionCount;
     state.diagnostics.interopCallsAvoided = metrics.interopCallsAvoided;
+    syncStageDiagnostics(state);
 }

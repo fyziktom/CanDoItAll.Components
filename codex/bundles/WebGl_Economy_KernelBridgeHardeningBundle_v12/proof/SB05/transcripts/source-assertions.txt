@@ -1,0 +1,29 @@
+﻿## SB05 source assertions
+tools\webgllib\audit-command-batch-parity.cjs:7:const fixtureDir = path.join(__dirname, "command-batch-fixtures");
+tools\webgllib\audit-command-batch-parity.cjs:52:    preservedOrderedDuplicateMotionCount: normalized.metrics.preservedOrderedDuplicateMotionCount,
+tools\webgllib\audit-command-batch-parity.cjs:56:      waitSeconds: stage.waitSeconds,
+tools\webgllib\command-batch-fixtures\wait-stage.json:2:  "name": "wait-stage",
+tools\webgllib\command-batch-fixtures\wait-stage.json:4:    "batchId": "fixture.wait-stage",
+tools\webgllib\command-batch-fixtures\wait-stage.json:10:        "waitSeconds": 0.5,
+tools\webgllib\command-batch-fixtures\wait-stage.json:22:        "waitSeconds": 0.25,
+tools\webgllib\command-batch-fixtures\wait-stage.json:42:    "preservedOrderedDuplicateMotionCount": 0,
+tools\webgllib\command-batch-fixtures\wait-stage.json:45:      { "stageId": "move-to-target", "waitSeconds": 0.5, "patchCount": 0, "motionCount": 1 },
+tools\webgllib\command-batch-fixtures\wait-stage.json:46:      { "stageId": "return-home", "waitSeconds": 0.25, "patchCount": 0, "motionCount": 1 }
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneCommandBatchTests.cs:218:        Assert.Equal("1", result.Batch.Metadata["preservedOrderedDuplicateMotionCount"]);
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneCommandBatchTests.cs:223:    [InlineData("ordered-patch-motion-pose.json")]
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneCommandBatchTests.cs:225:    [InlineData("preserve-order-duplicate-motions.json")]
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneCommandBatchTests.cs:226:    [InlineData("wait-stage.json")]
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneCommandBatchTests.cs:229:        using JsonDocument document = JsonDocument.Parse(File.ReadAllText(Path.Combine("..", "..", "..", "..", "..", "tools", "webgllib", "command-batch-fixtures", fixtureFile)));
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneCommandBatchTests.cs:247:        Assert.Equal(expected.GetProperty("preservedOrderedDuplicateMotionCount").GetInt32(), result.Metrics.PreservedOrderedDuplicateMotionCount);
+tools\webgllib\command-batch-fixtures\preserve-order-duplicate-motions.json:2:  "name": "preserve-order-duplicate-motions",
+tools\webgllib\command-batch-fixtures\preserve-order-duplicate-motions.json:28:    "preservedOrderedDuplicateMotionCount": 1,
+tools\webgllib\command-batch-fixtures\ordered-patch-motion-pose.json:2:  "name": "ordered-patch-motion-pose",
+tools\webgllib\command-batch-fixtures\ordered-patch-motion-pose.json:47:    "preservedOrderedDuplicateMotionCount": 0,
+tools\webgllib\audit-stage-runner.cjs:79:function stage(stageId, waitSeconds) {
+tools\webgllib\audit-stage-runner.cjs:80:  return { stageId, waitSeconds, patches: [], motions: [] };
+tools\webgllib\command-batch-fixtures\coalesce-patch-duplicate-motion.json:45:    "preservedOrderedDuplicateMotionCount": 0,
+tools\webgllib\command-batch-fixtures\ordered-stages.json:75:    "preservedOrderedDuplicateMotionCount": 0,
+tools\webgllib\command-batch-fixtures\ordered-stages.json:78:      { "stageId": "pose-before-move", "waitSeconds": 0, "patchCount": 1, "motionCount": 0 },
+tools\webgllib\command-batch-fixtures\ordered-stages.json:79:      { "stageId": "move-to-target", "waitSeconds": 0, "patchCount": 0, "motionCount": 1 },
+tools\webgllib\command-batch-fixtures\ordered-stages.json:80:      { "stageId": "admin-at-target", "waitSeconds": 0, "patchCount": 1, "motionCount": 0 },
+tools\webgllib\command-batch-fixtures\ordered-stages.json:81:      { "stageId": "return-home", "waitSeconds": 0, "patchCount": 0, "motionCount": 1 }

@@ -7,6 +7,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
     private readonly WebGlRunTimelineValidator timelineValidator;
     private readonly WebGlRunFrameResolver frameResolver;
     private readonly long? maxFrameIndex;
+    private readonly Dictionary<string, string> runSourceProvenance;
 
     public WebGlRunPlaybackController(WebGlRunDocument document)
         : this(
@@ -14,7 +15,8 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
             new WebGlRunTimelineValidator(),
             new WebGlRunFrameResolver(),
             document.Timeline,
-            document.RunId)
+            document.RunId,
+            ExtractRunSourceProvenance(document.Metadata))
     {
     }
 
@@ -23,12 +25,14 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         WebGlRunTimelineValidator timelineValidator,
         WebGlRunFrameResolver? frameResolver = null,
         WebGlRunTimeline? timeline = null,
-        WebGlRunId? runId = null)
+        WebGlRunId? runId = null,
+        IReadOnlyDictionary<string, string>? runSourceProvenance = null)
     {
         this.frameSource = frameSource;
         this.timelineValidator = timelineValidator;
         this.frameResolver = frameResolver ?? new WebGlRunFrameResolver();
         this.timeline = timeline;
+        this.runSourceProvenance = new Dictionary<string, string>(runSourceProvenance ?? new Dictionary<string, string>(), StringComparer.Ordinal);
         maxFrameIndex = timeline?.Frames.Count > 0 ? timeline.Frames.Max(static item => item.Index) : null;
         State.RunId = runId ?? new WebGlRunId(string.Empty);
     }
@@ -45,7 +49,12 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         cancellationToken.ThrowIfCancellationRequested();
         ArgumentNullException.ThrowIfNull(command);
 
-        var result = new WebGlRunPlaybackResult { State = State };
+        var result = new WebGlRunPlaybackResult
+        {
+            RequestedCommand = command.Kind,
+            State = State,
+            RunSourceProvenance = new Dictionary<string, string>(runSourceProvenance, StringComparer.Ordinal)
+        };
         if (timeline is not null)
         {
             var validation = timelineValidator.Validate(timeline);
@@ -71,6 +80,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         }
 
         var targetFrameIndex = ResolveTargetFrameIndex(command);
+        result.TargetFrameIndex = targetFrameIndex;
         State.IsPlaying = string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
                           State.IsPlaying;
 
@@ -93,6 +103,8 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
 
         State.CurrentFrameIndex = frame.Index;
         result.CurrentFrame = frame;
+        result.FramesApplied = result.FramesToApply.Count;
+        result.StagesQueued = result.FramesToApply.Sum(static item => item.Stages.Count);
         return result;
     }
 
@@ -192,5 +204,13 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         {
             await frameApplier.ApplyAsync(WebGlRunFrameApplyResult.FromFrame(frame), cancellationToken).ConfigureAwait(false);
         }
+    }
+
+    private static Dictionary<string, string> ExtractRunSourceProvenance(IReadOnlyDictionary<string, string> metadata)
+    {
+        string[] keys = ["inputPackHash", "runPlanHash", "visualMappingHash"];
+        return keys
+            .Where(metadata.ContainsKey)
+            .ToDictionary(static key => key, key => metadata[key], StringComparer.Ordinal);
     }
 }

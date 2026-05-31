@@ -171,6 +171,51 @@ public sealed class WebGlRunActionCompilerTests
         Assert.Equal(WebGlSceneBatchingPolicies.PreserveOrder, batchStage.BatchingPolicy);
     }
 
+    [Fact]
+    public void Batch_builder_converts_sequence_action_plan_to_traceable_staged_batch()
+    {
+        var plan = new WebGlRunActionPlan
+        {
+            ActionId = "resource.sequence",
+            FrameRate = 1,
+            ObjectBindings =
+            [
+                new WebGlRunObjectBinding { ObjectId = "actor", Position = new WebGlVector3(0, 0, 0), AnchorPosition = new WebGlVector3(0, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "target", Position = new WebGlVector3(4, 0, 0) }
+            ],
+            Actions =
+            [
+                new()
+                {
+                    ActionId = "sequence.resource",
+                    ActionKind = WebGlRunActionKinds.Sequence,
+                    Metadata = { ["visualActionId"] = "visual.1", ["sourceEventId"] = "event.1" },
+                    Steps =
+                    [
+                        Action("pose.carry", WebGlRunActionKinds.ChangePose, 0, "actor", parameters: new() { ["poseKey"] = "carry" }),
+                        Action("move.target", WebGlRunActionKinds.MoveToObject, 0, "actor", "target"),
+                        Action("return.home", WebGlRunActionKinds.ReturnToAnchor, 0, "actor")
+                    ]
+                }
+            ]
+        };
+        plan.Actions[0].Steps[1].Metadata["visualActionId"] = "visual.1";
+        plan.Actions[0].Steps[1].Metadata["sourceEventId"] = "event.1";
+
+        WebGlSceneCommandBatch batch = new WebGlRunActionPlanBatchBuilder().Build(plan);
+
+        Assert.Equal("run-plan:resource.sequence", batch.BatchId);
+        Assert.Equal(["pose.carry", "move.target", "return.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
+        WebGlObjectMotionCommand motion = batch.Stages[1].Motions.Single();
+        Assert.Equal(WebGlMotionQueueModes.Append, motion.QueueMode);
+        Assert.Equal("move.target", motion.Metadata["actionId"]);
+        Assert.Equal("sequence.resource", motion.Metadata["parentActionId"]);
+        Assert.Equal("move.target", motion.Metadata["stageId"]);
+        Assert.Equal("1", motion.Metadata["stageIndex"]);
+        Assert.Equal("visual.1", motion.Metadata["visualActionId"]);
+        Assert.Equal("event.1", motion.Metadata["sourceEventId"]);
+    }
+
     private static WebGlRunAction Action(
         string id,
         string kind,

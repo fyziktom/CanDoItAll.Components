@@ -1,0 +1,37 @@
+Economy strict loader, transition registry, metrics, bridge, and audits source assertions:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:13:    public EconomyVisualMappingDefinition VisualMapping { get; set; } = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:25:    public EconomyVisualMappingDefinition VisualMapping { get; set; } = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:31:public interface IEconomyWebGlRunProjector
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:108:public sealed class EconomyWebGlRunProjector(IEconomyVisualActionWebGlMapper? actionMapper = null) : IEconomyWebGlRunProjector
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:13:public interface ISimulationEventHandlerRegistry
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:37:public sealed class SimpleSimulationEventHandlerRegistry : ISimulationEventHandlerRegistry
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.cs:45:    private readonly ISimulationEventHandlerRegistry handlerRegistry;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.cs:54:        ISimulationEventHandlerRegistry handlerRegistry,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:58:                AddMessage(context.Messages, "warning", "capacity-rejection", $"events.{context.Event.EventId}.targetStore", $"Target store '{to.StoreId}' rejected {accepted - available:0.###} over capacity.");
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:69:            AddMessage(context.Messages, severity, "insufficient-stock", $"events.{context.Event.EventId}.sourceStore", $"Source store '{from.StoreId}' had insufficient stock for {requested:0.###} requested units.");
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:71:            AddRejectedFlow(context, from, to, rejected, $"{reason}.insufficient-stock");
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingDefinition.cs:3:public sealed class EconomyVisualMappingDefinition
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingDefinition.cs:75:    public EconomyVisualMappingValidationResult Validate(EconomyVisualMappingDefinition mapping)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:5:public interface ISimulationExperimentInputPackLoader
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:27:    public EconomyVisualMappingDefinition VisualMapping { get; set; } = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:58:public sealed class SimulationExperimentInputPackLoader : ISimulationExperimentInputPackLoader
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:78:                StrictHashValidation = options.StrictMode,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:100:        result.VisualMapping = LoadInput<EconomyVisualMappingDefinition>(result, baseDirectory, "visual-mapping");
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:129:            return serializer.LoadFile<T>(SimulationExperimentInputPackValidator.ResolveInputPath(baseDirectory, input.Path));
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:53:    public bool StrictHashValidation { get; set; }
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:156:            Require(IsValidContentHash(input.ContentHash, options.StrictHashValidation), $"experimentInput.inputs.{input.Kind}.contentHash", options.StrictHashValidation
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:161:                Require(IsValidContentHash(manifestHash, options.StrictHashValidation), $"experimentInput.hashes.{input.Kind}", options.StrictHashValidation
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:170:            else if (options.StrictHashValidation)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:177:                string? fullPath = TryResolveInputPath(options.BaseDirectory, input.Path);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:192:        if (options.StrictHashValidation && !options.AllowExtraHashManifestEntries)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:204:            Require(!options.StrictHashValidation || IsValidContentHash(pack.Hashes.PackHash, strict: true), "experimentInput.hashes.packHash", "Pack hash must use sha256:<64 lowercase hexadecimal characters> in strict mode.", result);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:219:    public static string ResolveInputPath(string baseDirectory, string relativePath)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:220:        => TryResolveInputPath(baseDirectory, relativePath)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:223:    public static string? TryResolveInputPath(string baseDirectory, string relativePath)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:50:            "resource-owner-hhi" => CalculateOwnerHhi(frame.ResourceStores.Where(store => ResourceMatches(store, resourceId))),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:76:            return "resource-owner-hhi";
+35:auditCSharpFileSizes();
+238:    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_KernelBridgeHardeningBundle_v12")
+240:  const smallScreenTaskPattern = /\b(small[-\s]?screen|medium[-\s]?screen|mobile|tablet|phone)\b/i;
+245:        if (!smallScreenTaskPattern.test(line)) {
+264:function auditCSharpFileSizes() {
