@@ -1,0 +1,151 @@
+﻿.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:57:                ["simple.shared-well-community"] = SharedWellCommunityScenarioFactory.CreateScenario,
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:22:                Actor("farmer", "entrepreneur", "Farmer", "supplier", "farm"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:49:                Store("store.market.inventory", "farmer", "inventory", "farm", "Input inventory", 12, "units", 80),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:55:                Relationship("rel.baker.farmer", "baker", "farmer", "collaboration", 0.74m),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:68:                Scheduled("event.entrepreneur.supply", SimulationEventKind.ResourceTransfer, 2, ["farmer", "baker"], ["inventory"], "farmer", "baker", "farm", "bakery", 18),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:111:                SimpleSimulationScenarioFactory.Flow("flow.supply.flour.2", "farmer", "baker", "inventory", 18, "supply purchase"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:165:            SimpleSimulationScenarioFactory.Store("store.market.inventory", "farmer", "inventory", "inventory", "Input inventory", inventory, "units", 80, "farm"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:11:            ScenarioId = "simple.shared-well-community",
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:12:            DisplayName = "Shared Well Community",
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:21:                Actor("household-north", "household", "North Household", "water-user", "household-north-home", 16),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:22:                Actor("household-south", "household", "South Household", "water-user", "household-south-home", 10),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:23:                Actor("well-keeper", "institution", "Well Keeper", "maintenance", "well-keeper-workplace"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:32:                Location("shared-well", "resource-site", "Shared well", 0, 1.5m, 0),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:34:                Location("well-keeper-workplace", "workplace", "Well keeper workplace", 1.5m, 2.5m, 0)
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:38:                Resource("water", "water", "Water", "buckets", 100),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:43:                Resource("well-health", "infrastructure", "Well health", "score", 100)
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:47:                Store("store.well.water", "well-keeper", "water", "shared-well", "Well water", 92, "buckets", 100),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:48:                Store("store.maintenance.labor", "well-keeper", "labor", "well-keeper-workplace", "Maintenance labor", 18, "hours", 40),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:52:                Store("store.well.health", "well-keeper", "well-health", "shared-well", "Well health", 100, "score", 100),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:53:                Store("store.household-north.water", "household-north", "water", "household-north-home", "North inventory", 4, "buckets", 16),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:54:                Store("store.household-south.water", "household-south", "water", "household-south-home", "South inventory", 2, "buckets", 10),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:55:                Store("store.free-rider.water", "free-rider", "water", "free-rider-home", "Free rider inventory", 0, "buckets", 6)
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:59:                Relationship("rel.north.keeper", "household-north", "well-keeper", "collaboration", 0.82m),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:60:                Relationship("rel.south.keeper", "household-south", "well-keeper", "collaboration", 0.78m),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:66:                new() { RuleId = "rule.fair-draw", DisplayName = "Fair water draw", Category = "allocation" }
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:70:                Scheduled("event.shared-well.fair-draw", SimulationEventKind.ResourceUse, 1, ["household-north"], ["water"], "household-north", "water", "household-north-home", "shared-well", 9),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:71:                Scheduled("event.shared-well.contribution", SimulationEventKind.Maintenance, 1, ["household-south", "well-keeper"], ["labor"], "household-south", "labor", "household-south-home", "well-keeper-workplace", 5),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:72:                Scheduled("event.shared-well.free-rider-draw", SimulationEventKind.ResourceUse, 2, ["free-rider"], ["water"], "free-rider", "water", "free-rider-home", "shared-well", 14, TimeSpan.Zero, 0),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:73:                Scheduled("event.shared-well.north-surplus-trade", SimulationEventKind.Trade, 2, ["household-north", "free-rider"], ["water", "reserve-fund"], "household-north", "free-rider", "shared-well", "free-rider-home", 4, TimeSpan.FromMinutes(8), 4),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:74:                Scheduled("event.shared-well.missed-contribution", SimulationEventKind.RuleViolation, 2, ["free-rider", "rule-council"], ["labor", "compliance"], "free-rider", "rule-council", "free-rider-home", "council-place", -8, TimeSpan.FromMinutes(16), 8),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:75:                Scheduled("event.shared-well.repair", SimulationEventKind.Maintenance, 3, ["well-keeper"], ["reserve-fund", "well-health"], "reserve-fund", "well-health", "council-place", "shared-well", 7),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:76:                Scheduled("event.shared-well.enforcement", SimulationEventKind.RuleEnforcement, 3, ["rule-council", "free-rider"], ["trust"], "rule-council", "free-rider", "council-place", "free-rider-home", 5)
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:84:                ["seed"] = "shared-well",
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:98:        string runId = "run.simple.shared-well.001";
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:110:                SimpleSimulationScenarioFactory.Flow("flow.water.north.1", "well-keeper", "household-north", "water", 9, "draw water"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:111:                SimpleSimulationScenarioFactory.Flow("flow.labor.south.1", "household-south", "well-keeper", "labor", 5, "contribute maintenance")
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:115:                SimpleSimulationScenarioFactory.Flow("flow.water.free-rider.2", "well-keeper", "free-rider", "water", 14, "draw water"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:116:                SimpleSimulationScenarioFactory.Flow("flow.water.trade.2", "household-north", "free-rider", "water", 4, "surplus trade"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:121:                SimpleSimulationScenarioFactory.Issue("issue.shared-well.free-rider", "warning", "conflict", "Missed maintenance contribution", ["free-rider", "rule-council"], ["labor", "compliance"])
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:125:                SimpleSimulationScenarioFactory.Flow("flow.reserve.repair.3", "rule-council", "well-keeper", "reserve-fund", 7, "repair event"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:129:                SimpleSimulationScenarioFactory.Issue("issue.shared-well.repair-pressure", "info", "scarcity", "Reserve fund used for repair", ["well-keeper", "rule-council"], ["reserve-fund", "well-health"])
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:165:    private static List<SimulationResourceStore> SharedWellStores(decimal water, decimal labor, decimal trust, decimal compliance, decimal reserve, decimal northWater, decimal southWater, decimal freeRiderWater)
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:168:            SimpleSimulationScenarioFactory.Store("store.well.water", "well-keeper", "water", "water", "Well water", water, "buckets", 100, "shared-well"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:169:            SimpleSimulationScenarioFactory.Store("store.maintenance.labor", "well-keeper", "labor", "labor", "Maintenance labor", labor, "hours", 40, "well-keeper-workplace"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:173:            SimpleSimulationScenarioFactory.Store("store.well.health", "well-keeper", "well-health", "infrastructure", "Well health", Math.Min(100, water + labor), "score", 100, "shared-well"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:174:            SimpleSimulationScenarioFactory.Store("store.household-north.water", "household-north", "water", "water", "North inventory", northWater, "buckets", 16, "household-north-home"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:175:            SimpleSimulationScenarioFactory.Store("store.household-south.water", "household-south", "water", "water", "South inventory", southWater, "buckets", 10, "household-south-home"),
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:176:            SimpleSimulationScenarioFactory.Store("store.free-rider.water", "free-rider", "water", "water", "Free rider inventory", freeRiderWater, "buckets", 6, "free-rider-home")
+.\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:184:            actor.Metadata["carryCapacity.water"] = carryCapacity.Value.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:71:        Assert.Contains(firstPass, scenario => scenario.Manifest.ScenarioId == "simple.shared-well-community");
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:97:        SimpleSimulationScenario sharedWell = Assert.Single(firstPass, scenario => scenario.Manifest.ScenarioId == "simple.shared-well-community");
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:99:        Assert.Contains(sharedWell.Frames[3].ResourceStores, store => store.ResourceId == "well-health" && store.Quantity > 0);
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:128:        EconomyVisualFrame sharedWell = mapper.Map(Assert.Single(scenarios, scenario => scenario.Manifest.ScenarioId == "simple.shared-well-community").Frames[2]);
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:155:                "simple.shared-well-community" => SharedWellCommunityScenarioFactory.CreateScenario(roundTrip),
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:216:                new() { ResourceId = "water", Unit = "bucket", Capacity = 10 }
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:220:                new() { StoreId = "store.alias", OwnerActorId = "actor.b", ResourceId = "water", LocationId = "place.b", Quantity = 2 }
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:224:                new() { TemplateId = "event.alias", EventKind = SimulationEventKind.ResourceUse, StepIndex = 0, ActorId = "actor.b", PlaceId = "place.b", ResourceId = "water", Quantity = 1, Duration = TimeSpan.FromMinutes(5) }
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:254:            ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:260:                ["targetLocationId"] = "shared-well"
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:272:        Assert.Contains(result.Event.Participants, participant => participant.LocationId == "shared-well");
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:306:            ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:307:            ResourceLocationId = "shared-well",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:317:            ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:318:            ResourceLocationId = "shared-well",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:345:            TargetLocationId = "shared-well",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:353:            ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:356:        SimulationSurplusShortageResult surplus = new SimulationSurplusShortageDetector().Evaluate("actor", "water", quantity: 8, targetQuantity: 5);
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:365:            ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:392:                ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:393:                ResourceIds = ["water"],
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:394:                TargetId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:395:                PlaceId = "shared-well",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:405:                ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:406:                ResourceIds = ["water"],
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:411:        Assert.Equal(3, state.StoresById["store.free-rider.water"].Quantity);
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:412:        Assert.True(state.StoresById["store.well.water"].Quantity < 92);
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:415:        Assert.Contains(result.Delta.UpdatedResourceStores, store => store.StoreId == "store.free-rider.water");
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:444:        Assert.Contains(visual.Nodes, node => node.Kind == "location" && node.Metadata["locationId"] == "shared-well");
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:445:        Assert.Equal("node.location.shared-well", EconomyVisualBindingIndex.Create(visual).ResolveNodeId("shared-well"));
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:539:            TargetId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:541:            TargetLocationId = "shared-well"
+.\tests\CanDoItAll.Economy.Tests\EconomyReadinessProbeTests.cs:15:        ReadinessFlow sharedWell = RunFlow("shared-well", metricResourceId: "water");
+.\tests\CanDoItAll.Economy.Tests\EconomyReadinessProbeTests.cs:16:        ReadinessFlow farmerLand = RunFlow("farmer-land", metricResourceId: "land-parcel");
+.\tests\CanDoItAll.Economy.Tests\EconomyReadinessProbeTests.cs:34:        string path = Path.Combine(RepoRoot(), "artifacts", "economy", "readiness", "shared-well-and-farmer-land-readiness.json");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:9:    [InlineData("shared-well")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:10:    [InlineData("farmer-land")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:23:    [InlineData("shared-well")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:24:    [InlineData("farmer-land")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:39:    [InlineData("shared-well")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:40:    [InlineData("farmer-land")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:14:        SimulationExperimentInputPack first = serializer.LoadFile<SimulationExperimentInputPack>(Fixture("shared-well", "experiment.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:15:        SimulationExperimentInputPack second = serializer.LoadFile<SimulationExperimentInputPack>(Fixture("shared-well", "experiment.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:35:        SimulationScenarioDefinition definition = serializer.LoadFile<SimulationScenarioDefinition>(Fixture("shared-well", "scenario.definition.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:36:        SimulationPlacementDefinition placement = serializer.LoadFile<SimulationPlacementDefinition>(Fixture("shared-well", "placement.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:37:        SimulationParameterSetDefinition parameters = serializer.LoadFile<SimulationParameterSetDefinition>(Fixture("shared-well", "parameters.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:45:        Assert.Contains(applied.Locations, location => location.LocationId == "shared-well" && location.X == 0);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:46:        Assert.Equal("8", applied.Actors.Single(actor => actor.ActorId == "near-household").Metadata["carryCapacity"]);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:47:        Assert.Equal("3", applied.Actors.Single(actor => actor.ActorId == "near-household").Metadata["resourceRequirement.water.quantity"]);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:48:        Assert.Contains(applied.RuleDefinitions, rule => rule.RuleId == "rule.water-draw-limit" && rule.Parameters["resourceLimit.water.maxQuantity"] == "10");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:55:        parameters.ActorParameters.Single(actor => actor.ActorId == "near-household").CarryCapacity = 7;
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:63:        SimulationExperimentInputPack invalid = serializer.LoadFile<SimulationExperimentInputPack>(Fixture("shared-well", "experiment.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:73:                BaseDirectory = FixtureDirectory("shared-well"),
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:90:        SimulationExperimentInputPack pack = serializer.LoadFile<SimulationExperimentInputPack>(Fixture("shared-well", "experiment.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:149:            ActorId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:150:            ActorIds = ["water"],
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:151:            ResourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:152:            ResourceIds = ["water"],
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:153:            SourceId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:154:            TargetId = "water",
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:155:            Source = SimulationRef.Create(SimulationRefKinds.Actor, "water"),
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:156:            Target = SimulationRef.Create(SimulationRefKinds.Resource, "water")
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:164:        Assert.Contains(normalized.ParticipantRefs, item => item.Kind == SimulationRefKinds.Actor && item.Id == "water");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:165:        Assert.Contains(normalized.ParticipantRefs, item => item.Kind == SimulationRefKinds.Resource && item.Id == "water");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:172:        SimulationScenarioDefinition definition = serializer.LoadFile<SimulationScenarioDefinition>(Fixture("shared-well", "scenario.definition.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:173:        SimulationPlacementDefinition placement = serializer.LoadFile<SimulationPlacementDefinition>(Fixture("shared-well", "placement.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:174:        SimulationParameterSetDefinition parameters = serializer.LoadFile<SimulationParameterSetDefinition>(Fixture("shared-well", "parameters.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:183:        decimal nearDistance = new SimulationScenarioDistanceCalculator().ActorHomeToLocation(applied, "near-household", "shared-well");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:184:        decimal farDistance = new SimulationScenarioDistanceCalculator().ActorHomeToLocation(applied, "far-household", "shared-well");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:191:        Assert.Contains(stepTwo.ResourceStores, store => store.StoreId == "store.well.water" && store.Quantity < 92);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:206:        SimulationExperimentInputPack pack = serializer.LoadFile<SimulationExperimentInputPack>(Fixture("farmer-land", "experiment.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:207:        SimulationScenarioDefinition definition = serializer.LoadFile<SimulationScenarioDefinition>(Fixture("farmer-land", "scenario.definition.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:208:        SimulationPlacementDefinition placement = serializer.LoadFile<SimulationPlacementDefinition>(Fixture("farmer-land", "placement.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:209:        SimulationParameterSetDefinition parameters = serializer.LoadFile<SimulationParameterSetDefinition>(Fixture("farmer-land", "parameters.json"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:218:                new() { MetricId = "landConcentrationHhi", DisplayName = "Land concentration HHI" },
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:219:                new() { MetricId = "topFarmerLandShare", DisplayName = "Top farmer land share" }
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:223:                new() { InvariantId = "anti-oligarchy.cap", Description = "No farmer may own more than the treatment cap." }
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:231:                BaseDirectory = FixtureDirectory("farmer-land"),
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:239:            metric.Metadata["resourceId"] = "land-parcel";
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:245:        Assert.Contains(definition.Resources, resource => resource.ResourceId == "land-parcel" && resource.Capacity == 6);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:246:        Assert.Contains(definition.Objects, item => item.Kind == "land-parcel");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:249:        Assert.Contains(definition.RuleDefinitions, rule => rule.Parameters.ContainsKey("resourceLimit.land-parcel.maxQuantity"));
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:251:        Assert.Contains(experiment.ExpectedInvariants, invariant => invariant.InvariantId == "anti-oligarchy.cap");
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:252:        Assert.Contains(finalFrame.ResourceStores, store => store.StoreId == "store.expander.land" && store.Quantity > 3);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:253:        Assert.Contains(finalFrame.ResourceStores, store => store.StoreId == "store.small.land" && store.Quantity < 2);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:271:                TargetId = "store.farmer.grain",
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:276:                    new() { EffectKind = "relationship.delta", TargetId = "rel.farmer.market.trust", Value = 0.2m }
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:281:        Assert.Equal(15, state.StoresByActorAndResource["farmer\u001fgrain"].Quantity);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:282:        Assert.Equal(15, result.Frame.ResourceStores.Single(store => store.StoreId == "store.farmer.grain").Quantity);
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:297:                new() { StoreId = "store.a.land", OwnerActorId = "a", ResourceId = "land", Quantity = 9 },
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:298:                new() { StoreId = "store.b.land", OwnerActorId = "b", ResourceId = "land", Quantity = 1 }
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:303:            new SimulationMetricDefinition { MetricId = "topLandShare", Metadata = { ["kind"] = "top-owner-share", ["resourceId"] = "land" } }
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:359:                new() { ActorId = "farmer", HomeLocationId = "farm" },
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:373:                new() { StoreId = "store.farmer.grain", OwnerActorId = "farmer", ResourceId = "grain", LocationId = "farm", Quantity = 10, Unit = "unit" }
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:377:                new() { RelationshipId = "rel.farmer.market.trust", SourceActorId = "farmer", TargetActorId = "market", Kind = "trust", Strength = 0.5m }
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:386:                    ActorIds = ["farmer"],
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:388:                    SourceId = "farmer",
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:389:                    TargetId = "store.farmer.grain",
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:9:    [InlineData("shared-well")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:10:    [InlineData("farmer-land")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:65:    [InlineData("shared-well")]
+.\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:66:    [InlineData("farmer-land")]

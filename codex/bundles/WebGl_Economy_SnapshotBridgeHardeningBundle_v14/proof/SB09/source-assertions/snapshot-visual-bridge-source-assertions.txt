@@ -1,0 +1,52 @@
+﻿C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:9:public sealed class EconomyWebGlSnapshotVisualStateRequest
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:15:    public string PlaybackFrameId { get; set; } = string.Empty;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:16:    public long? PlaybackFrameIndex { get; set; }
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:17:    public List<string> ActiveActionIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:18:    public List<string> PendingActionIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:19:    public List<string> ActiveStageIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:20:    public List<string> PendingStageIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:21:    public Dictionary<string, string> RuntimeDiagnostics { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:24:public sealed class EconomyWebGlSnapshotVisualStateBuilder
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:26:    public SimulationRunSnapshot Attach(EconomyWebGlSnapshotVisualStateRequest request)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:34:    public SimulationSnapshotVisualState Build(EconomyWebGlSnapshotVisualStateRequest request)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:38:        long frameIndex = request.PlaybackFrameIndex ?? runFrame?.Index ?? request.VisualFrame.StepIndex;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:39:        string playbackFrameId = FirstNonEmpty(request.PlaybackFrameId, $"{request.Document.RunId.Value}.frame.{frameIndex}");
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:44:            PlaybackFrameId = playbackFrameId,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:45:            PlaybackFrameIndex = frameIndex,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:46:            NodeObjectIds = ResolveNodeObjectIds(request.Document.InitialScene.Scene),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:47:            ActiveActionIds = Sorted(request.ActiveActionIds),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:48:            PendingActionIds = request.PendingActionIds.Count == 0 ? ResolveActionIds(runFrame) : Sorted(request.PendingActionIds),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:49:            ActiveStageIds = Sorted(request.ActiveStageIds),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:50:            PendingStageIds = request.PendingStageIds.Count == 0 ? ResolveStageIds(runFrame) : Sorted(request.PendingStageIds),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:51:            RuntimeDiagnostics = ResolveDiagnostics(request, runFrame),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:64:    private static Dictionary<string, string> ResolveNodeObjectIds(WebGlSceneModel scene)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:85:    private static Dictionary<string, string> ResolveDiagnostics(EconomyWebGlSnapshotVisualStateRequest request, WebGlRunFrame? runFrame)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:87:        var diagnostics = new Dictionary<string, string>(request.RuntimeDiagnostics, StringComparer.Ordinal);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:55:                NodeObjectIds = { ["node.actor.a"] = "object.actor.a" },
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:294:        Assert.Equal(3, context.NodeObjectIds.Count);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:315:    public void SnapshotVisualStateBuilderAttachesProjectedPlaybackMetadata()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:358:        new EconomyWebGlSnapshotVisualStateBuilder().Attach(new()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:364:            ActiveActionIds = ["action.move"],
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:365:            PendingActionIds = ["action.next"],
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:366:            ActiveStageIds = [stage.StageId],
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:367:            PendingStageIds = ["stage.pending.runtime"],
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:368:            RuntimeDiagnostics = { ["runtime.queue"] = "stable" }
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:374:        Assert.Equal("probe.experiment.snapshot-visual.frame.1", snapshot.VisualState.PlaybackFrameId);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:375:        Assert.Equal(runFrame.Index, snapshot.VisualState.PlaybackFrameIndex);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:376:        Assert.Equal("object.node.actor.a", snapshot.VisualState.NodeObjectIds["node.actor.a"]);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:377:        Assert.Contains("action.move", snapshot.VisualState.ActiveActionIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:378:        Assert.Contains("action.next", snapshot.VisualState.PendingActionIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:379:        Assert.Contains(stage.StageId, snapshot.VisualState.ActiveStageIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:380:        Assert.Contains("stage.pending.runtime", snapshot.VisualState.PendingStageIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:381:        Assert.Equal("stable", snapshot.VisualState.RuntimeDiagnostics["runtime.queue"]);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:382:        Assert.Equal("1", snapshot.VisualState.RuntimeDiagnostics["runFrame.stageCount"]);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:17:    public SimulationSnapshotVisualState? VisualState { get; set; }
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:29:public sealed class SimulationSnapshotVisualState
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:32:    public string PlaybackFrameId { get; set; } = string.Empty;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:33:    public long PlaybackFrameIndex { get; set; }
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:34:    public Dictionary<string, string> NodeObjectIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:35:    public List<string> ActiveActionIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:36:    public List<string> PendingActionIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:37:    public List<string> ActiveStageIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:38:    public List<string> PendingStageIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:39:    public Dictionary<string, string> RuntimeDiagnostics { get; set; } = [];

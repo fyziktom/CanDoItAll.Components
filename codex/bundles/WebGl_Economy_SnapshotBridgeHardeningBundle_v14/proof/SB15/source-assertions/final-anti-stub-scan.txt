@@ -1,0 +1,9 @@
+﻿Final anti-stub scan for SB15
+Pattern: \bTODO\b|NotImplementedException|throw new NotImplementedException|return null;|return default;|\bstub\b|\bplaceholder\b|\bfake\b
+
+Reviewed matches:
+- repo://CanDoItAll.Components/src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/14-webgl-scene-motion.js:136 returns null only after failing a missing motion target command result; this is negative control flow, not a stub.
+- repo://CanDoItAll.Components/src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/01-webgl-scene.js:61 and :67 return null from host import wrapper when state resolution/import fails and errors are reported; this is runtime error handling, not a stub.
+- repo://CanDoItAll.Economy/src/CanDoItAll.Economy.Simulation.Abstractions/Snapshot/SimulationSnapshotStore.cs:47 returns default from TryGet for missing snapshot IDs; this is Try-pattern semantics, not an unfinished implementation.
+
+Result: no TODO, NotImplementedException, stub, placeholder, or fake implementation markers remain in changed production/test files. Null/default matches are reviewed negative/control-flow branches with exercised tests or runtime audits.

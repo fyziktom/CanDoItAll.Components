@@ -24,3 +24,19 @@ Tasks:
 
 Acceptance:
 - No domain-specific terms in generic abstractions/bridge/policies except allowlisted examples/tests.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB01 branch/source inventory and boundary guard.
+
+## Validation Depth
+
+Run boundary audit and forbidden-term scans across generic projects, refactor leaks or document allowlisted fixtures/tests/docs, and capture source assertions.
+
+## Progression Gate
+
+SB15 may proceed only after generic projects contain no unallowlisted example-domain terms and boundary audit passes.

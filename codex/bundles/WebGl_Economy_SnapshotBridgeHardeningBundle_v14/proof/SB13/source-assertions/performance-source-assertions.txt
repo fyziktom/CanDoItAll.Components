@@ -1,0 +1,34 @@
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:40:        List<EconomyVisualAction> actions = SelectFrameActions(input, visualFrame);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:82:        plan.ObjectBindings.AddRange(GetObjectBindings(context));
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:127:    private static List<EconomyVisualAction> SelectFrameActions(EconomyWebGlRunInput input, EconomyVisualFrame visualFrame)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:129:        var actions = new Dictionary<string, EconomyVisualAction>(StringComparer.Ordinal);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:143:    private static IReadOnlyList<WebGlRunObjectBinding> GetObjectBindings(EconomyWebGlMappingContext context)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:144:        => context.ObjectBindings ??= CreateBindings(context.Scene);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:146:    private static List<WebGlRunObjectBinding> CreateBindings(WebGlSceneModel scene)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:21:        OperationProof normalization = Measure("scenario normalization for 100 actors, 500 events, 1000 stores", () =>
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:35:        OperationProof materialization = Measure("100 actors, 500 events, 1000 stores materialization", () =>
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:75:        OperationProof visualMapping = Measure("visual frame mapping over 100 actors and 1000 stores", () =>
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:81:                ["linkCount"] = visualFrame.Links.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:86:        OperationProof bridgeProjection = Measure("WebGL bridge projection over mapped large frame", () =>
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:101:                ["linkCount"] = document.InitialScene.Scene.Links.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:108:        EconomyVisualFrame stressFrame = BuildVisualStressFrame(actorCount: 100, storeCount: 1000, linkCount: 1200, actionCount: 300);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:109:        OperationProof commandBatch = Measure("command batch generation for 300 visual actions and many links", () =>
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:124:                ["resourceStoreCount"] = 1000,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:125:                ["linkCount"] = stressFrame.Links.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:126:                ["visualActionCount"] = stressFrame.Actions.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:133:        OperationProof frameSmoke = Measure("1000 frame materialization smoke", () =>
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:148:            operations = new[] { normalization, materialization, hash, metrics, visualMapping, bridgeProjection, commandBatch, frameSmoke },
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:163:        Assert.True(materialization.ElapsedMilliseconds >= 0);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:164:        Assert.True(commandBatch.Values["visualActionCount"] is int actionCount && actionCount == 300);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:248:    private static EconomyVisualFrame BuildVisualStressFrame(int actorCount, int storeCount, int linkCount, int actionCount)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:298:        for (int linkIndex = 0; linkIndex < linkCount; linkIndex++)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:44:        context.NodeObjectIds.Clear();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:72:            context.NodeObjectIds[node.Id] = sceneObject.Id;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:82:            if (!context.NodeObjectIds.TryGetValue(link.SourceNodeId, out string? sourceObjectId) ||
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:83:                !context.NodeObjectIds.TryGetValue(link.TargetNodeId, out string? targetObjectId))
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:112:        document.Metadata["linkCount"] = document.Scene.Links.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:27:    public Dictionary<string, string> NodeObjectIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:28:    public List<WebGlRunObjectBinding>? ObjectBindings { get; set; }
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:55:        bool subjectUnresolved = !string.IsNullOrWhiteSpace(subjectNodeId) && !context.NodeObjectIds.ContainsKey(subjectNodeId);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:56:        bool targetUnresolved = !string.IsNullOrWhiteSpace(targetNodeId) && !context.NodeObjectIds.ContainsKey(targetNodeId);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:140:        => !string.IsNullOrWhiteSpace(nodeId) && context.NodeObjectIds.TryGetValue(nodeId, out string? objectId)

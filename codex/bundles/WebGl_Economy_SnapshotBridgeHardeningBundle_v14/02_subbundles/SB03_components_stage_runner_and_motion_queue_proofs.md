@@ -25,3 +25,19 @@ Tasks:
 
 Acceptance:
 - Shared-resource sequence can be represented as ordered stages without motion races.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB02 runtime audit and scheduler/domain guard.
+
+## Validation Depth
+
+Add or verify WebGlLib runtime tests for staged waits, queue append/activation, active and queued cancellation, object removal, dispose/import reset, and diagnostics fields.
+
+## Progression Gate
+
+SB04/SB05 may proceed only after stage and motion queue tests prove ordered stage playback cannot be faked by immediate execution or stale queued motion state.

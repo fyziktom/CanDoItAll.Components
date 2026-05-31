@@ -1,0 +1,71 @@
+﻿tools\webgllib\command-batch-fixtures\coalesce-patch-duplicate-motion.json:44:    "droppedDuplicateMotionCount": 1,
+tools\webgllib\command-batch-fixtures\ordered-patch-motion-pose.json:46:    "droppedDuplicateMotionCount": 0,
+tools\webgllib\command-batch-fixtures\ordered-stages.json:74:    "droppedDuplicateMotionCount": 0,
+tools\webgllib\command-batch-fixtures\preserve-order-duplicate-motions.json:27:    "droppedDuplicateMotionCount": 0,
+tools\webgllib\command-batch-fixtures\wait-stage.json:41:    "droppedDuplicateMotionCount": 0,
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:68:        Assert.Equal(["pose.walk", "move.target", "admin.symbol", "return.home"], frame.Stages.Select(stage => stage.StageId).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:69:        Assert.Equal(4, batch.Stages.Count);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:71:        Assert.Equal([0, 1, 0, 1], batch.Stages.Select(stage => stage.Motions.Count).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:72:        Assert.Equal(0, batch.Metadata.GetValueOrDefault("droppedDuplicateMotionCount") is { } value ? int.Parse(value) : -1);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:73:        Assert.All(batch.Stages, stage => Assert.Equal(WebGlSceneBatchingPolicies.PreserveOrder, stage.BatchingPolicy));
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:74:        Assert.Equal([0, 1, 2, 3], frame.Stages.Select(stage => stage.StageIndex).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:107:        Assert.Equal(["home.to.well", "well.to.admin", "admin.to.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:108:        Assert.Equal([new WebGlVector3(4, 0, 0), new WebGlVector3(8, 0, 0), new WebGlVector3(0, 0, 0)], batch.Stages.Select(stage => stage.Motions.Single().TargetPosition).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:109:        Assert.Equal(0, int.Parse(batch.Metadata["droppedDuplicateMotionCount"]));
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:133:        Assert.Equal([0.25, 0.25, 0.25], batch.Stages.Select(stage => stage.WaitSeconds).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:134:        Assert.Equal(["move.target", "admin.symbol", "return.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:164:        WebGlRunActionStage stage = timeline.Frames.Single().Stages.Single();
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:165:        WebGlSceneCommandBatchStage batchStage = WebGlRunFrameApplyResult.FromFrame(timeline.Frames.Single()).CommandBatch.Stages.Single();
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:171:        Assert.Equal(WebGlSceneBatchingPolicies.PreserveOrder, batchStage.BatchingPolicy);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:208:        Assert.Equal(["pose.carry", "move.target", "return.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionCompilerTests.cs:209:        WebGlObjectMotionCommand motion = batch.Stages[1].Motions.Single();
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionPlannerTests.cs:134:        Assert.Contains(unsupported.Errors, error => error.Contains("Unsupported", StringComparison.Ordinal));
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionPlannerTests.cs:197:    public void Planner_returns_failed_diagnostic_for_unresolved_target_without_throwing()
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:43:        Assert.Equal(2, result.StagesQueued);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:87:            Stages =
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionKinds.cs:18:    public const string PulseLink = "pulse-link";
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionKinds.cs:19:    public const string ResourceTransferVisual = "resource-transfer-visual";
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunAction.cs:21:    public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunAction.cs:60:    public const string PreserveOrder = "preserve-order";
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:42:                ? WebGlRunStageExecutionPolicies.PreserveOrder
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:76:            errors.Add($"Unsupported WebGL run action kind '{action.ActionKind}' for action '{action.ActionId}'.");
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:137:            or WebGlRunActionKinds.ResourceTransferVisual
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:138:            or WebGlRunActionKinds.PulseLink;
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:154:            or WebGlRunActionKinds.PulseLink
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:155:            or WebGlRunActionKinds.ResourceTransferVisual
+src\CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunFrame.cs:11:    public List<WebGlRunActionStage> Stages { get; set; } = [];
+src\CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunFrame.cs:36:    public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+src\CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunFrame.cs:40:    public double WaitSeconds { get; set; }
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:24:            BatchingPolicy = frame.Metadata.GetValueOrDefault("batchingPolicy", WebGlSceneBatchingPolicies.PreserveOrder),
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:25:            Stages =
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:27:                .. frame.Stages
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:39:                        WaitSeconds = stage.WaitSeconds,
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:43:            Patches = frame.Stages.Count == 0 ? [.. frame.ScenePatches.Select(item => item.Patch)] : [],
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:44:            Motions = frame.Stages.Count == 0 ? [.. frame.Motions] : [],
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:64:        if (string.Equals(policy, WebGlSceneBatchingPolicies.PreserveOrder, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:66:            return BatchOrderingMode.PreserveOrder;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:83:            WebGlRunCoalescingScopes.None => WebGlSceneBatchingPolicies.PreserveOrder,
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:87:                : stage.Metadata.GetValueOrDefault("batchingPolicy", WebGlSceneBatchingPolicies.PreserveOrder)
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunFrameApplyResult.cs:98:        return frame.Stages.Count > 0 ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:33:            frame.ScenePatches = [.. frame.Stages.SelectMany(static stage => stage.ScenePatches)];
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:34:            frame.Motions = [.. frame.Stages.SelectMany(static stage => stage.Motions)];
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:109:            case WebGlRunActionKinds.PulseLink:
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:110:            case WebGlRunActionKinds.ResourceTransferVisual:
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:113:                stage.WaitSeconds = Math.Max(0, action.DurationSeconds);
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:179:        WebGlRunActionStage? existing = frame.Stages.FirstOrDefault(item => string.Equals(item.StageId, stageId, StringComparison.Ordinal));
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:211:        frame.Stages.Add(stage);
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:213:        frame.Metadata["batchingPolicy"] = WebGlRunStageExecutionPolicies.PreserveOrder;
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:220:            WebGlRunCoalescingScopes.None => WebGlRunStageExecutionPolicies.PreserveOrder,
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:224:            : action.Metadata.GetValueOrDefault("executionPolicy", WebGlRunStageExecutionPolicies.PreserveOrder)
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:230:            WebGlRunStageExecutionPolicies.PreserveOrder => BatchOrderingMode.PreserveOrder,
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:233:            _ => BatchOrderingMode.PreserveOrder
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:244:        stage.WaitSeconds = Math.Max(stage.WaitSeconds, Math.Max(0, action.DurationSeconds));
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:259:        stage.WaitSeconds = Math.Max(stage.WaitSeconds, Math.Max(0, action.DurationSeconds));
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:107:        result.StagesQueued = result.FramesToApply.Sum(static item => item.Stages.Count);
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackResult.cs:13:    public int StagesQueued { get; set; }
+src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunStageContracts.cs:14:    public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+src\CanDoItAll.Components.WebGlRunLib\Planning\WebGlRunActionPlanBatchBuilder.cs:19:                BatchingPolicy = plan.Metadata.GetValueOrDefault("batchingPolicy", WebGlSceneBatchingPolicies.PreserveOrder),
+src\CanDoItAll.Components.WebGlRunLib\Planning\WebGlRunActionPlanBatchBuilder.cs:43:            BatchingPolicy = WebGlSceneBatchingPolicies.PreserveOrder,
+src\CanDoItAll.Components.WebGlRunLib\Planning\WebGlRunActionPlanBatchBuilder.cs:44:            Stages = [.. frameBatches.SelectMany(static batch => batch.Stages)],
+src\CanDoItAll.Components.WebGlRunLib\Planning\WebGlRunActionPlanBatchBuilder.cs:60:            : BatchOrderingMode.PreserveOrder;
+src\CanDoItAll.Components.WebGlRunLib\Planning\WebGlRunActionPlanner.cs:89:                plan.Errors.Add($"Unsupported WebGL run action kind '{kind}' for action '{action.ActionId}'.");

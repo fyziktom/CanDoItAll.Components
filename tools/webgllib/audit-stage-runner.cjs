@@ -4,12 +4,14 @@ const { pathToFileURL } = require("node:url");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
 const runtimeSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "30-webgl-scene-stage-runner.js");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-kernel-hardening-v12", "stage-runner");
+const schedulerSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "22-webgl-scene-scheduler.js");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-runtime-stage-runner-hardening-v14", "stage-runner");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });
   const runtimeModulePath = writeAuditRuntimeModule();
   const runtime = await import(`${pathToFileURL(runtimeModulePath).href}?v=${Date.now()}`);
+  const scheduler = await import(`${pathToFileURL(schedulerSourcePath).href}?v=${Date.now()}`);
   const state = createState();
   const applied = [];
 
@@ -42,10 +44,28 @@ async function main() {
   assertEqual(state.diagnostics.commandStageCancelledCount, 1, "cancel count");
   assertEqual(state.diagnostics.lastStageCancelReason, "audit-cancel", "cancel reason");
 
+  assertEqual(
+    scheduler.resolveRenderReason(createSchedulerState({ queue: [stage("queued.stage", 0)], waitSeconds: 0 })),
+    "command-stage",
+    "scheduler sees queued command stage runner state");
+  assertEqual(
+    scheduler.resolveRenderReason(createSchedulerState({ queue: [], waitSeconds: 0.25 })),
+    "command-stage",
+    "scheduler sees command stage runner wait state");
+  assertEqual(
+    scheduler.resolveRenderReason(createSchedulerState({ queue: [stage("cancelled.stage", 0)], waitSeconds: 0, cancelled: true })),
+    "",
+    "scheduler ignores cancelled command stage runner state");
+
   const proof = {
     generatedAtUtc: new Date().toISOString(),
     invariantId: "SB02.stage-runner.wait-barrier",
     applied,
+    schedulerAssertions: {
+      queuedRunnerReason: "command-stage",
+      waitingRunnerReason: "command-stage",
+      cancelledRunnerReason: ""
+    },
     diagnostics: {
       completedCommandStageCount: state.diagnostics.completedCommandStageCount,
       failedCommandStageCount: state.diagnostics.failedCommandStageCount,
@@ -76,6 +96,22 @@ function createState() {
   };
 }
 
+function createSchedulerState(runner) {
+  return {
+    options: { renderMode: "auto" },
+    diagnostics: { animatedSymbolCount: 0 },
+    motions: new Map(),
+    cameraDampingFrames: 0,
+    renderRequested: false,
+    renderReason: "",
+    commandStageRunner: {
+      queue: runner.queue || [],
+      waitSeconds: runner.waitSeconds || 0,
+      cancelled: runner.cancelled === true
+    }
+  };
+}
+
 function stage(stageId, waitSeconds) {
   return { stageId, waitSeconds, patches: [], motions: [] };
 }
@@ -98,4 +134,3 @@ main().catch(error => {
   console.error(error?.stack || error);
   process.exit(1);
 });
-

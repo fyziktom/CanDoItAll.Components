@@ -17,7 +17,6 @@ import {
     enqueueObjectMotion,
     getObjectQueue,
     hasObjectMotion,
-    removeQueuedMotion,
     syncMotionQueueDiagnostics
 } from "./29-webgl-scene-motion-queues.js";
 
@@ -74,31 +73,6 @@ export function clearMotionsDetailed(state, objectId) {
     clearObjectMotionState(state, objectId, result);
 
     state.scheduleRender("motion-clear");
-    return completeCommandResult(state, result);
-}
-
-export function cancelMotion(state, motionId) {
-    return cancelMotionDetailed(state, motionId).success;
-}
-
-export function cancelMotionDetailed(state, motionId) {
-    const result = createCommandResult(state, "motion-cancel", motionId || "");
-    if (!motionId || (!state.motions.has(motionId) && !removeQueuedMotion(state, motionId, result))) {
-        failCommand(state, result, `Motion '${motionId || ""}' was not found.`, "WebGL scene motion cancel failed.");
-        return completeCommandResult(state, result);
-    }
-
-    if (!state.motions.has(motionId)) {
-        state.scheduleRender("motion-cancel");
-        return completeCommandResult(state, result);
-    }
-
-    const motion = state.motions.get(motionId);
-    state.motions.delete(motionId);
-    state.diagnostics.cancelledMotionCount = (state.diagnostics.cancelledMotionCount || 0) + 1;
-    syncMotionQueueDiagnostics(state);
-    result.affectedObjectIds.push(motion?.objectId || "");
-    state.scheduleRender("motion-cancel");
     return completeCommandResult(state, result);
 }
 

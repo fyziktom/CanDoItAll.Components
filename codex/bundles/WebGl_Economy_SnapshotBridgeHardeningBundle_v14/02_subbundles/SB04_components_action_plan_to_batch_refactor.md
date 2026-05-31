@@ -13,3 +13,19 @@ Tasks:
 
 Acceptance:
 - Planner/compiler never silently drops a visual action without a diagnostic.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB03 stage runner and motion queue proof.
+
+## Validation Depth
+
+Add or verify WebGlRunLib tests and C# to JS parity fixtures for sequence/parallel semantics, wait barriers, unsupported action diagnostics, and ordered move/pose/symbol/move stages.
+
+## Progression Gate
+
+SB05 may proceed only after planner/compiler proof shows generic command batches preserve ordering and unsupported actions surface explicit diagnostics.

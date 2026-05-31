@@ -12,3 +12,19 @@ Tasks:
 
 Acceptance:
 - Bridge should not hardcode asset/pose/symbol choices.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB05 bridge projection proof.
+
+## Validation Depth
+
+Add or verify strict visual mapping schema/version loader tests, category/node/pose/symbol/anchor/action mapping validation, and missing asset or fallback-heavy diagnostics for both probes.
+
+## Progression Gate
+
+SB15 may proceed only after visual mapping proof shows bridge choices come from configurable schema data rather than hardcoded example assets.

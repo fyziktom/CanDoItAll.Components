@@ -22,3 +22,19 @@ Tasks:
 
 Acceptance:
 - Projected WebGlRunDocument contains an InitialScene and at least one frame with non-empty executable stages for a non-trivial action sequence.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB03 stage/motion proof and SB04 action plan to batch proof.
+
+## Validation Depth
+
+Add or verify bridge tests for initial scene projection, visual action stage projection, non-duplicated global input actions, diagnostics for unresolved/missing/fallback mappings, and shared-resource plus finite-resource probes.
+
+## Progression Gate
+
+SB06, SB11, SB12, and SB13 may proceed only after bridge proof demonstrates a traceable executable WebGL run document with non-empty stages and diagnostics for rejected shallow implementations.

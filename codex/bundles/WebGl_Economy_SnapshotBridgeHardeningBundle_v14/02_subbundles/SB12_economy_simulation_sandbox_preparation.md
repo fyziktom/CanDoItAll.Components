@@ -17,3 +17,19 @@ Tasks:
 
 Acceptance:
 - Clear wiring plan exists in Economy repo.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB05 bridge projection proof and SB07 snapshot contracts.
+
+## Validation Depth
+
+Add or verify an Economy-side design or skeleton that wires input pack, backend, visualization, bridge, and WebGL view boundaries without building the final demo.
+
+## Progression Gate
+
+SB15 may proceed only after the skeleton/design compiles or is documented clearly, remains in Economy, and does not create final-demo scope.

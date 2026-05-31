@@ -4,7 +4,8 @@ import { focusObject, fitView, resetCamera } from "./06-webgl-scene-camera.js";
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
 import { applyPatch, applyPatchDetailed, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
 import { applyCommandBatch } from "./26-webgl-scene-command-batch.js";
-import { cancelMotion, cancelMotionDetailed, clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
+import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
+import { cancelMotion, cancelMotionDetailed } from "./31-webgl-scene-motion-cancellation.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
 const root = window.CanDoItAll = window.CanDoItAll || {};
 root.webglScene = {

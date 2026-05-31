@@ -1,0 +1,39 @@
+15:    public void SharedResourceSnapshotAnalysisProbe_ExportsReimportsAndAnswersVisualStateQuestion()
+26:        SimulationMetricDefinition[] metrics = MetricDefinitions();
+27:        SimulationExpectedInvariantDefinition[] invariants = InvariantDefinitions();
+30:        SimulationRunSnapshot snapshot = BuildSnapshot(projection, frame, delta, metricValues, invariantValues);
+44:            RuntimeDiagnostics =
+46:                ["analysis.question"] = "why-does-the-visual-state-look-bad",
+51:        string exported = SimulationSnapshotJsonExport.Export(snapshot);
+52:        SimulationRunSnapshot imported = SimulationSnapshotJsonExport.Import(exported, validateHash: true);
+53:        SnapshotAnalysisResult analysis = Analyze(imported);
+57:        Assert.NotEmpty(imported.VisualState.NodeObjectIds);
+58:        Assert.True(analysis.ActorsDoingAdminCount > 0);
+59:        Assert.True(analysis.ActiveIssueCount > 0);
+60:        Assert.True(analysis.AdminBurdenMinutes > 0);
+61:        Assert.NotEmpty(analysis.StoreQuantities);
+62:        Assert.NotEmpty(analysis.TrustRelationships);
+63:        Assert.NotEmpty(analysis.ConflictRelationships);
+64:        Assert.True(analysis.TopResourceHolderShare > 0);
+83:                visualState = new
+88:                    nodeObjectCount = imported.VisualState.NodeObjectIds.Count,
+93:                    diagnostics = imported.VisualState.RuntimeDiagnostics
+98:    private static SimulationRunSnapshot BuildSnapshot(
+132:                ["analysisQuestion"] = "why-does-the-visual-state-look-bad",
+140:    private static SnapshotAnalysisResult Analyze(SimulationRunSnapshot snapshot)
+164:            ActorsDoingAdminCount = actorsDoingAdmin.Count,
+165:            ActiveIssueCount = activeIssues,
+166:            StoreQuantities = storeQuantities,
+167:            TrustRelationships = trust,
+168:            ConflictRelationships = conflict,
+169:            TopResourceHolderShare = topShare,
+170:            AdminBurdenMinutes = adminMinutes,
+197:    private static SimulationMetricDefinition[] MetricDefinitions()
+208:    private static SimulationExpectedInvariantDefinition[] InvariantDefinitions()
+232:        public int ActorsDoingAdminCount { get; set; }
+233:        public int ActiveIssueCount { get; set; }
+234:        public Dictionary<string, decimal> StoreQuantities { get; set; } = [];
+235:        public List<RelationshipSummary> TrustRelationships { get; set; } = [];
+236:        public List<RelationshipSummary> ConflictRelationships { get; set; } = [];
+237:        public decimal TopResourceHolderShare { get; set; }
+238:        public decimal AdminBurdenMinutes { get; set; }

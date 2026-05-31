@@ -1,0 +1,178 @@
+﻿Final source assertions for SB15
+Changed-path grep for production behavior names and proof assertions.
+
+PATH C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\01-webgl-scene.js
+PATH C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js
+PATH C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js
+PATH C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js
+PATH C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\31-webgl-scene-motion-cancellation.js
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingDefinition.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs
+PATH C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs
+PATH C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs
+PATH C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs
+PATH C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs
+PATH C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSandboxWorkflowTests.cs
+PATH C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs
+PATH C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs
+PATH C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs
+
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:71:            pack.SchemaVersion,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:81:                input.SchemaVersion,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:91:            placement.SchemaVersion,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:128:            parameters.SchemaVersion,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:5:    public static string HashSnapshot(SimulationRunSnapshot snapshot)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:8:            snapshot.SchemaVersion,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:22:            VisualState = ProjectVisualState(snapshot.VisualState),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:27:    private static object? ProjectVisualState(SimulationSnapshotVisualState? visualState)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:35:                NodeObjectIds = new SortedDictionary<string, string>(visualState.NodeObjectIds, StringComparer.Ordinal),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingDefinition.cs:5:    public string SchemaVersion { get; set; } = "visual-mapping/v1";
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingDefinition.cs:120:    public const string SupportedSchemaVersion = "visual-mapping/v1";
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingDefinition.cs:127:        Require(string.Equals(mapping.SchemaVersion, SupportedSchemaVersion, StringComparison.Ordinal), "visualMapping.schemaVersion", $"Visual mapping schema version must be '{SupportedSchemaVersion}'.", result);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:43:        context.VisualStates = CreateVisualStateCatalog(input.VisualMapping);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:44:        context.NodeObjectIds.Clear();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:72:            context.NodeObjectIds[node.Id] = sceneObject.Id;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:82:            if (!context.NodeObjectIds.TryGetValue(link.SourceNodeId, out string? sourceObjectId) ||
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:83:                !context.NodeObjectIds.TryGetValue(link.TargetNodeId, out string? targetObjectId))
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:191:    private static WebGlVisualStateCatalog CreateVisualStateCatalog(EconomyVisualMappingDefinition mapping)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:193:        var catalog = new WebGlVisualStateCatalog
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:241:            catalog.Poses.Add(WebGlVisualStateCatalogFallbacks.NoOpPose);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:246:            catalog.Symbols.Add(WebGlVisualStateCatalogFallbacks.NoOpSymbol);
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:16:    clearObjectMotionState,
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:46:        clearObjectMotionState(state, normalized.objectId);
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:73:    clearObjectMotionState(state, objectId, result);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:3:public sealed class SimulationRunSnapshot
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:6:    public string SchemaVersion { get; set; } = "candoitall.economy.simulation-snapshot/v1";
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:17:    public SimulationSnapshotVisualState? VisualState { get; set; }
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:24:        DeterministicHash = SimulationRunSnapshotHasher.CalculateHash(this);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:29:public sealed class SimulationSnapshotVisualState
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:34:    public Dictionary<string, string> NodeObjectIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:43:public static class SimulationRunSnapshotHasher
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:45:    public static string CalculateHash(SimulationRunSnapshot snapshot)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:48:        return SimulationDeterministicHash.HashSnapshot(snapshot);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:6:public static class SimulationRunSnapshotSerializer
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:14:    public static string Serialize(SimulationRunSnapshot snapshot, bool refreshHash = true)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:25:    public static SimulationRunSnapshot Deserialize(string json, bool validateHash = false)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:32:        SimulationRunSnapshot snapshot = JsonSerializer.Deserialize<SimulationRunSnapshot>(json, JsonOptions)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:37:            string expected = SimulationRunSnapshotHasher.CalculateHash(snapshot);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:9:public sealed class EconomyWebGlSnapshotVisualStateRequest
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:11:    public SimulationRunSnapshot Snapshot { get; set; } = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:24:public sealed class EconomyWebGlSnapshotVisualStateBuilder
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:26:    public SimulationRunSnapshot Attach(EconomyWebGlSnapshotVisualStateRequest request)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:29:        request.Snapshot.VisualState = Build(request);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:34:    public SimulationSnapshotVisualState Build(EconomyWebGlSnapshotVisualStateRequest request)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:46:            NodeObjectIds = ResolveNodeObjectIds(request.Document.InitialScene.Scene),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:64:    private static Dictionary<string, string> ResolveNodeObjectIds(WebGlSceneModel scene)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:85:    private static Dictionary<string, string> ResolveDiagnostics(EconomyWebGlSnapshotVisualStateRequest request, WebGlRunFrame? runFrame)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:13:public sealed class EconomyPerformanceProbeTests
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyPerformanceProbeTests.cs:16:    public void LargeGenericSimulationPerformanceProbe_WritesProofArtifact()
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:73:            VisualStates = context.VisualStates,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:82:        plan.ObjectBindings.AddRange(GetObjectBindings(context));
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:143:    private static IReadOnlyList<WebGlRunObjectBinding> GetObjectBindings(EconomyWebGlMappingContext context)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:144:        => context.ObjectBindings ??= CreateBindings(context.Scene);
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js:35:    const commandStageRunner = state.commandStageRunner;
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js:36:    if (commandStageRunner && !commandStageRunner.cancelled &&
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js:37:        ((commandStageRunner.queue?.length || 0) > 0 || (Number(commandStageRunner.waitSeconds) || 0) > 0)) {
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:23:    public static SimulationSnapshotDiffResult Compare(SimulationRunSnapshot left, SimulationRunSnapshot right)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:3:public interface ISimulationSnapshotStore
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:5:    void Save(SimulationRunSnapshot snapshot);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:7:    SimulationRunSnapshot? TryGet(string snapshotId);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:24:public sealed class InMemorySimulationSnapshotStore : ISimulationSnapshotStore
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:29:    public void Save(SimulationRunSnapshot snapshot)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:37:        string json = SimulationRunSnapshotSerializer.Serialize(snapshot);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:38:        SimulationRunSnapshot stored = SimulationRunSnapshotSerializer.Deserialize(json, validateHash: true);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:43:    public SimulationRunSnapshot? TryGet(string snapshotId)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:50:        return SimulationRunSnapshotSerializer.Deserialize(json, validateHash: true);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:72:    private static SimulationSnapshotDescriptor Descriptor(SimulationRunSnapshot snapshot)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:7:public sealed class SimulationSnapshotStoreTests
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:19:        SimulationRunSnapshot snapshot = BuildSnapshot(scenario, frame, delta, metricValues, invariantValues);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:21:        string exported = SimulationSnapshotJsonExport.Export(snapshot);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:22:        SimulationRunSnapshot imported = SimulationSnapshotJsonExport.Import(exported);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:28:        var store = new InMemorySimulationSnapshotStore();
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:30:        SimulationRunSnapshot stored = store.TryGet(imported.SnapshotId)!;
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:44:        SimulationRunSnapshot changed = SimulationSnapshotJsonExport.Import(exported);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:56:    private static SimulationRunSnapshot BuildSnapshot(
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs:63:        var snapshot = new SimulationRunSnapshot
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:12:public sealed class SimulationSnapshotAnalysisProbeTests
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:15:    public void SharedResourceSnapshotAnalysisProbe_ExportsReimportsAndAnswersVisualStateQuestion()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:30:        SimulationRunSnapshot snapshot = BuildSnapshot(projection, frame, delta, metricValues, invariantValues);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:32:        new EconomyWebGlSnapshotVisualStateBuilder().Attach(new()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:51:        string exported = SimulationSnapshotJsonExport.Export(snapshot);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:52:        SimulationRunSnapshot imported = SimulationSnapshotJsonExport.Import(exported, validateHash: true);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:56:        Assert.NotNull(imported.VisualState);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:57:        Assert.NotEmpty(imported.VisualState.NodeObjectIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:85:                    imported.VisualState.VisualFrameId,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:86:                    imported.VisualState.PlaybackFrameId,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:87:                    imported.VisualState.PlaybackFrameIndex,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:88:                    nodeObjectCount = imported.VisualState.NodeObjectIds.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:89:                    activeActionCount = imported.VisualState.ActiveActionIds.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:90:                    pendingActionCount = imported.VisualState.PendingActionIds.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:91:                    activeStageCount = imported.VisualState.ActiveStageIds.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:92:                    pendingStageCount = imported.VisualState.PendingStageIds.Count,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:93:                    diagnostics = imported.VisualState.RuntimeDiagnostics
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:98:    private static SimulationRunSnapshot BuildSnapshot(
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:105:        var snapshot = new SimulationRunSnapshot
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:140:    private static SnapshotAnalysisResult Analyze(SimulationRunSnapshot snapshot)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:75:        Assert.Equal(EconomyVisualMappingValidator.SupportedSchemaVersion, mapping.SchemaVersion);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:122:    public void VisualMappingStrictLoaderRejectsUnsupportedSchemaVersion()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:130:            SchemaVersion = "visual-mapping/v0",
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:55:                NodeObjectIds = { ["node.actor.a"] = "object.actor.a" },
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:294:        Assert.Equal(3, context.NodeObjectIds.Count);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:315:    public void SnapshotVisualStateBuilderAttachesProjectedPlaybackMetadata()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:342:        var snapshot = new SimulationRunSnapshot
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:358:        new EconomyWebGlSnapshotVisualStateBuilder().Attach(new()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:371:        Assert.NotNull(snapshot.VisualState);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:373:        Assert.Equal(visualFrame.FrameId, snapshot.VisualState.VisualFrameId);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:374:        Assert.Equal("probe.experiment.snapshot-visual.frame.1", snapshot.VisualState.PlaybackFrameId);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:375:        Assert.Equal(runFrame.Index, snapshot.VisualState.PlaybackFrameIndex);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:376:        Assert.Equal("object.node.actor.a", snapshot.VisualState.NodeObjectIds["node.actor.a"]);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:377:        Assert.Contains("action.move", snapshot.VisualState.ActiveActionIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:378:        Assert.Contains("action.next", snapshot.VisualState.PendingActionIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:379:        Assert.Contains(stage.StageId, snapshot.VisualState.ActiveStageIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:380:        Assert.Contains("stage.pending.runtime", snapshot.VisualState.PendingStageIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:381:        Assert.Equal("stable", snapshot.VisualState.RuntimeDiagnostics["runtime.queue"]);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:382:        Assert.Equal("1", snapshot.VisualState.RuntimeDiagnostics["runFrame.stageCount"]);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:383:        Assert.Equal(document.RunId.Value, snapshot.VisualState.Metadata["source.runDocumentId"]);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs:3:public static class SimulationSnapshotJsonExport
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs:5:    public static string Export(SimulationRunSnapshot snapshot)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs:6:        => SimulationRunSnapshotSerializer.Serialize(snapshot);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs:8:    public static SimulationRunSnapshot Import(string json, bool validateHash = true)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs:9:        => SimulationRunSnapshotSerializer.Deserialize(json, validateHash);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:11:        SimulationRunSnapshot snapshot = BuildSnapshot(includeVisualState: false);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:13:        string json = SimulationRunSnapshotSerializer.Serialize(snapshot);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:19:        SimulationRunSnapshot restored = SimulationRunSnapshotSerializer.Deserialize(json, validateHash: true);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:22:        Assert.Null(restored.VisualState);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:27:        Assert.NotEqual(originalHash, SimulationRunSnapshotHasher.CalculateHash(restored));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:31:        Assert.Throws<InvalidOperationException>(() => SimulationRunSnapshotSerializer.Deserialize(tamperedJson, validateHash: true));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:35:    public void SnapshotHash_IncludesOptionalVisualStateWithoutMakingItRequired()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:37:        SimulationRunSnapshot visualSnapshot = BuildSnapshot(includeVisualState: true);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:39:        string visualJson = SimulationRunSnapshotSerializer.Serialize(visualSnapshot);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:40:        SimulationRunSnapshot restoredVisual = SimulationRunSnapshotSerializer.Deserialize(visualJson, validateHash: true);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:42:        Assert.NotNull(restoredVisual.VisualState);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:44:        Assert.Equal("object.node.actor.alpha", restoredVisual.VisualState.NodeObjectIds["node.actor.alpha"]);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:45:        Assert.Contains("stage.pending.transfer", restoredVisual.VisualState.PendingStageIds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:47:        SimulationRunSnapshot neutralSnapshot = BuildSnapshot(includeVisualState: false);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:48:        string neutralJson = SimulationRunSnapshotSerializer.Serialize(neutralSnapshot);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:49:        SimulationRunSnapshot restoredNeutral = SimulationRunSnapshotSerializer.Deserialize(neutralJson, validateHash: true);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:51:        Assert.Null(restoredNeutral.VisualState);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:55:    private static SimulationRunSnapshot BuildSnapshot(bool includeVisualState)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:90:            VisualState = includeVisualState ? BuildVisualState() : null,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:99:                ["rendererNeutral"] = includeVisualState ? "false" : "true"
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:183:    private static SimulationSnapshotVisualState BuildVisualState()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotTests.cs:189:            NodeObjectIds =
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js:54:export function clearObjectMotionState(state, objectId, result = null) {
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:27:    public Dictionary<string, string> NodeObjectIds { get; set; } = [];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:28:    public List<WebGlRunObjectBinding>? ObjectBindings { get; set; }
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:31:    public WebGlVisualStateCatalog VisualStates { get; set; } = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:55:        bool subjectUnresolved = !string.IsNullOrWhiteSpace(subjectNodeId) && !context.NodeObjectIds.ContainsKey(subjectNodeId);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:56:        bool targetUnresolved = !string.IsNullOrWhiteSpace(targetNodeId) && !context.NodeObjectIds.ContainsKey(targetNodeId);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:140:        => !string.IsNullOrWhiteSpace(nodeId) && context.NodeObjectIds.TryGetValue(nodeId, out string? objectId)

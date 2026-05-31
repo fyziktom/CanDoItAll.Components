@@ -1,0 +1,481 @@
+﻿.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:27:    public Dictionary<string, string> NodeObjectIds { get; set; } = [];
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:54:        bool subjectUnresolved = !string.IsNullOrWhiteSpace(subjectNodeId) && !context.NodeObjectIds.ContainsKey(subjectNodeId);
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:55:        bool targetUnresolved = !string.IsNullOrWhiteSpace(targetNodeId) && !context.NodeObjectIds.ContainsKey(targetNodeId);
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:139:        => !string.IsNullOrWhiteSpace(nodeId) && context.NodeObjectIds.TryGetValue(nodeId, out string? objectId)
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunProjector.cs:56:        document.Metadata["nodeObjectMappingCount"] = context.NodeObjectIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:15:    public string PlaybackFrameId { get; set; } = string.Empty;
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:16:    public long? PlaybackFrameIndex { get; set; }
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:38:        long frameIndex = request.PlaybackFrameIndex ?? runFrame?.Index ?? request.VisualFrame.StepIndex;
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:39:        string playbackFrameId = FirstNonEmpty(request.PlaybackFrameId, $"{request.Document.RunId.Value}.frame.{frameIndex}");
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:44:            PlaybackFrameId = playbackFrameId,
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:45:            PlaybackFrameIndex = frameIndex,
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:46:            NodeObjectIds = ResolveNodeObjectIds(request.Document.InitialScene.Scene),
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:56:                ["source.snapshotId"] = request.Snapshot.SnapshotId
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:64:    private static Dictionary<string, string> ResolveNodeObjectIds(WebGlSceneModel scene)
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:44:        context.NodeObjectIds.Clear();
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:72:            context.NodeObjectIds[node.Id] = sceneObject.Id;
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:82:            if (!context.NodeObjectIds.TryGetValue(link.SourceNodeId, out string? sourceObjectId) ||
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:83:                !context.NodeObjectIds.TryGetValue(link.TargetNodeId, out string? targetObjectId))
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:261:        foreach (KeyValuePair<string, string> metric in node.Metrics)
+.\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:263:            metadata[$"metric.{metric.Key}"] = metric.Value;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:16:    public const string Resource = "resource";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:17:    public const string Store = "store";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:20:    public const string Rule = "rule";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:27:    public const string ResourceCollect = "resource.collect";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:28:    public const string ResourceUse = "resource.use";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:29:    public const string ResourceTransfer = "resource.transfer";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:37:    public const string RuleCheck = "rule.check";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:38:    public const string RuleViolation = "rule.violation";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:39:    public const string RuleEnforcement = "rule.enforcement";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationRef.cs:40:    public const string RelationshipChange = "relationship.change";
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMappingPolicy.cs:32:            SimulationEventKind.RuleEnforcementApply or SimulationEventKind.RuleCheckEvaluate => "rule",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMappingPolicy.cs:33:            SimulationEventKind.RuleApplied => "rule",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMappingPolicy.cs:36:            SimulationEventKind.ActorResourceNeed or SimulationEventKind.ActorResourceCollect or SimulationEventKind.ActorResourceUse => simulationEvent.ResourceIds.FirstOrDefault() ?? "resource",
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:5:    public static string HashSnapshot(SimulationRunSnapshot snapshot)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:8:            snapshot.SchemaVersion,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:9:            snapshot.SnapshotId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:10:            snapshot.RunId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:11:            snapshot.ScenarioId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:12:            snapshot.StepIndex,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:13:            snapshot.SimulatedAtUtc,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:14:            FrameHash = HashFrame(snapshot.Frame),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:15:            LastDeltaHash = snapshot.LastDelta is null
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:17:                : HashDelta(snapshot.LastDelta),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:18:            AppliedEvents = snapshot.AppliedEvents.OrderBy(item => item.EventId, StringComparer.Ordinal).Select(ProjectEvent),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:19:            PendingEvents = snapshot.PendingEvents.OrderBy(item => item.EventId, StringComparer.Ordinal).Select(ProjectEvent),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:20:            Metrics = snapshot.Metrics.OrderBy(item => item.MetricId, StringComparer.Ordinal).Select(ProjectMetric),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:21:            Invariants = snapshot.Invariants.OrderBy(item => item.InvariantId, StringComparer.Ordinal).Select(ProjectInvariant),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:22:            VisualState = ProjectVisualState(snapshot.VisualState),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:23:            ProvenanceHashes = new SortedDictionary<string, string>(snapshot.ProvenanceHashes, StringComparer.Ordinal),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:24:            Metadata = StableMetadata(snapshot.Metadata)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:33:                visualState.PlaybackFrameId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:34:                visualState.PlaybackFrameIndex,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.Snapshot.cs:35:                NodeObjectIds = new SortedDictionary<string, string>(visualState.NodeObjectIds, StringComparer.Ordinal),
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualSymbolPolicy.cs:7:    public static EconomyVisualSymbol FromIssue(SimulationIssue issue, string targetNodeId)
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualSymbolPolicy.cs:10:            Id = $"symbol.issue.{issue.IssueId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualSymbolPolicy.cs:12:            Category = EconomyVisualCategoryPolicy.NormalizeCategory(issue.Category),
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualSymbolPolicy.cs:13:            Severity = issue.Severity,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualSymbolPolicy.cs:14:            Label = issue.Title,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualSymbolPolicy.cs:17:                ["issueId"] = issue.IssueId
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:32:        foreach (SimulationResourceStore store in frame.ResourceStores)
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:36:                Id = $"node.resource.{store.StoreId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:37:                Kind = "resource",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:40:                    ["storeId"] = store.StoreId,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:41:                    ["resourceId"] = store.ResourceId,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:42:                    ["locationId"] = store.Metadata.GetValueOrDefault("locationId", string.Empty)
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:77:                sequence.Steps.Add(MarkInternal(CreateAction(simulationEvent, bindings, EconomyVisualActionKind.ShowSymbol, "resource")));
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualActionMapper.cs:104:            actions.Add(CreateAction(simulationEvent, bindings, EconomyVisualActionKind.PulseRelationship, "relationship"));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:142:            ResourceParameters = parameters.ResourceParameters.OrderBy(resource => resource.ResourceId, StringComparer.Ordinal).Select(resource => new
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:144:                resource.ResourceId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:145:                resource.StorageCapacity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:146:                resource.ExternalDemand,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:147:                resource.ResaleMarkup,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:148:                Metadata = StableMetadata(resource.Metadata)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:150:            RuleParameters = parameters.RuleParameters.OrderBy(rule => rule.RuleId, StringComparer.Ordinal).Select(rule => new
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:152:                rule.RuleId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:153:                ResourceLimits = rule.ResourceLimits.OrderBy(limit => limit.ResourceId, StringComparer.Ordinal).ThenBy(limit => limit.Period, StringComparer.Ordinal),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:154:                rule.TaxRate,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:155:                rule.FeeRate,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:156:                rule.AdminMinutesPerTrade,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:157:                rule.EnforcementThreshold,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:158:                Metadata = StableMetadata(rule.Metadata)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:265:    private static object ProjectStore(SimulationResourceStore store)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:266:        => new { store.StoreId, store.OwnerActorId, store.ResourceId, store.ResourceKind, store.DisplayName, store.Quantity, store.Unit, store.Capacity, Metadata = StableMetadata(store.Metadata) };
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:271:    private static object ProjectRelationship(SimulationRelationship relationship)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:272:        => new { relationship.RelationshipId, relationship.SourceActorId, relationship.TargetActorId, relationship.Kind, relationship.Strength, Metadata = StableMetadata(relationship.Metadata) };
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:299:    private static object ProjectRule(SimulationRuleRef rule)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:300:        => new { rule.RuleId, rule.DisplayName, rule.Category, Metadata = StableMetadata(rule.Metadata) };
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:302:    private static object ProjectIssue(SimulationIssue issue)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:305:            issue.IssueId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:306:            issue.Severity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:307:            issue.Category,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:308:            issue.Title,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:309:            issue.Description,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:310:            issue.IsResolved,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:311:            ActorIds = issue.ActorIds.OrderBy(id => id, StringComparer.Ordinal),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:312:            ResourceIds = issue.ResourceIds.OrderBy(id => id, StringComparer.Ordinal),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:313:            Metadata = StableMetadata(issue.Metadata)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:322:    private static object ProjectMetric(SimulationMetricValue metric)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:323:        => new { metric.MetricId, metric.Value, metric.Unit, Metadata = StableMetadata(metric.Metadata) };
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:325:    private static object ProjectInvariant(SimulationInvariantEvaluationResult invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Hashing\SimulationDeterministicHash.cs:326:        => new { invariant.InvariantId, invariant.Passed, invariant.Severity, invariant.Message, Metadata = StableMetadata(invariant.Metadata) };
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualLayoutStrategy.cs:12:    public static EconomyVisualLayoutHint ResourceLayout(SimulationResourceStore store, int index)
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualLayoutStrategy.cs:13:        => TryMetadataLayout(store.Metadata, "resources", out EconomyVisualLayoutHint layout)
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualLayoutStrategy.cs:15:            : new() { Zone = "resources", X = index * 1.5m, Y = 1.5m, Z = 0 };
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:44:    IReadOnlyList<SimulationEvent> ExpandRuleEvents(SimulationBehaviorExpansionContext context, SimulationRuleRef rule);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:153:                Clone(simulationEvent, SimulationEventKind.ActorTravel, "travel", 0, 0, "resource-need"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:154:                Clone(simulationEvent, SimulationEventKind.ActorResourceCollect, "collect", 1, 1, "resource-need"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:155:                Clone(simulationEvent, SimulationEventKind.ActorResourceUse, "use", 2, 2, "resource-need"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:156:                Clone(simulationEvent, SimulationEventKind.ActorReturnHome, "return", 3, 3, "resource-need")
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:164:                Clone(simulationEvent, SimulationEventKind.ActorTravel, "travel", 0, 0, "resource-use"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:165:                Clone(simulationEvent, SimulationEventKind.ActorResourceUse, "use", 1, 1, "resource-use"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:166:                Clone(simulationEvent, SimulationEventKind.ActorReturnHome, "return", 2, 2, "resource-use")
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:179:                Clone(simulationEvent, SimulationEventKind.RuleCheckEvaluate, "rule-check", 5, 5, "trade-policy")
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:187:                Clone(simulationEvent, SimulationEventKind.RuleViolationDetect, "violation", 0, 0, "rule-policy"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:188:                Clone(simulationEvent, SimulationEventKind.ActorAdminPerform, "admin", 1, 1, "rule-policy"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:189:                Clone(simulationEvent, SimulationEventKind.RuleEnforcementApply, "enforcement", 2, 2, "rule-policy"),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:190:                Clone(simulationEvent, SimulationEventKind.RelationshipConflictChange, "conflict", 3, 3, "rule-policy")
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualAction.cs:130:            index.Add(node.Metadata.GetValueOrDefault("resourceId"), node.Id, "resource");
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualAction.cs:131:            index.Add(node.Metadata.GetValueOrDefault("storeId"), node.Id, "store");
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualAction.cs:168:    public const string ResourceTransferVisual = "resource-transfer-visual";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:131:            Require(actor.CarryCapacity >= 0, $"parameters.actor.{actor.ActorId}.carryCapacity", "Carry capacity must be non-negative.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:135:                Require(!string.IsNullOrWhiteSpace(requirement.ResourceId), $"parameters.actor.{actor.ActorId}.resourceRequirements.resourceId", "Resource requirement id is required.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:136:                Require(requirement.RequiredQuantity >= 0, $"parameters.actor.{actor.ActorId}.resourceRequirements.{requirement.ResourceId}.requiredQuantity", "Required quantity must be non-negative.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:140:        foreach (SimulationRuleParameter rule in parameters.RuleParameters)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:142:            Require(!string.IsNullOrWhiteSpace(rule.RuleId), "parameters.rule.ruleId", "Rule id is required.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:143:            Require(rule.TaxRate is >= 0 and <= 1, $"parameters.rule.{rule.RuleId}.taxRate", "Tax rate must be between 0 and 1.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:144:            Require(rule.FeeRate is >= 0 and <= 1, $"parameters.rule.{rule.RuleId}.feeRate", "Fee rate must be between 0 and 1.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:145:            foreach (SimulationRuleResourceLimit limit in rule.ResourceLimits)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:147:                Require(!string.IsNullOrWhiteSpace(limit.ResourceId), $"parameters.rule.{rule.RuleId}.resourceLimits.resourceId", "Rule resource limit id is required.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:148:                Require(limit.MaxQuantity >= 0, $"parameters.rule.{rule.RuleId}.resourceLimits.{limit.ResourceId}.maxQuantity", "Rule resource limit quantity must be non-negative.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:204:                actor.Metadata[$"resourceRequirement.{requirement.ResourceId}.quantity"] = requirement.RequiredQuantity.ToString(System.Globalization.CultureInfo.InvariantCulture);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:205:                actor.Metadata[$"resourceRequirement.{requirement.ResourceId}.period"] = requirement.Period;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:209:        foreach (SimulationRuleParameter ruleParameter in parameters.RuleParameters)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:211:            SimulationScenarioRuleDefinition rule = normalized.RuleDefinitions.FirstOrDefault(item => string.Equals(item.RuleId, ruleParameter.RuleId, StringComparison.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:214:                    RuleId = ruleParameter.RuleId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:215:                    DisplayName = ruleParameter.RuleId
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:217:            if (!normalized.RuleDefinitions.Contains(rule))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:219:                normalized.RuleDefinitions.Add(rule);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:222:            SetRuleParameter(rule, "taxRate", ruleParameter.TaxRate);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:223:            SetRuleParameter(rule, "feeRate", ruleParameter.FeeRate);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:224:            SetRuleParameter(rule, "adminMinutesPerTrade", ruleParameter.AdminMinutesPerTrade);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:225:            SetRuleParameter(rule, "enforcementThreshold", ruleParameter.EnforcementThreshold);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:226:            foreach (SimulationRuleResourceLimit limit in ruleParameter.ResourceLimits)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:228:                rule.Parameters[$"resourceLimit.{limit.ResourceId}.maxQuantity"] = limit.MaxQuantity.ToString(System.Globalization.CultureInfo.InvariantCulture);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:229:                rule.Parameters[$"resourceLimit.{limit.ResourceId}.period"] = limit.Period;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:246:    private static void SetRuleParameter(SimulationScenarioRuleDefinition rule, string key, decimal value)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:250:            rule.Parameters[key] = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:5:    void Save(SimulationRunSnapshot snapshot);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:7:    SimulationRunSnapshot? TryGet(string snapshotId);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:11:    bool Delete(string snapshotId);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:26:    private readonly Dictionary<string, string> snapshotsById = new(StringComparer.Ordinal);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:29:    public void Save(SimulationRunSnapshot snapshot)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:31:        ArgumentNullException.ThrowIfNull(snapshot);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:32:        if (string.IsNullOrWhiteSpace(snapshot.SnapshotId))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:34:            throw new ArgumentException("Snapshot id is required.", nameof(snapshot));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:37:        string json = SimulationRunSnapshotSerializer.Serialize(snapshot);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:38:        SimulationRunSnapshot stored = SimulationRunSnapshotSerializer.Deserialize(json, validateHash: true);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:39:        snapshotsById[stored.SnapshotId] = json;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:40:        descriptorsById[stored.SnapshotId] = Descriptor(stored);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:43:    public SimulationRunSnapshot? TryGet(string snapshotId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:45:        if (string.IsNullOrWhiteSpace(snapshotId) || !snapshotsById.TryGetValue(snapshotId, out string? json))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:61:    public bool Delete(string snapshotId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:63:        if (string.IsNullOrWhiteSpace(snapshotId))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:68:        descriptorsById.Remove(snapshotId);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:69:        return snapshotsById.Remove(snapshotId);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:72:    private static SimulationSnapshotDescriptor Descriptor(SimulationRunSnapshot snapshot)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:75:            SnapshotId = snapshot.SnapshotId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:76:            RunId = snapshot.RunId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:77:            ScenarioId = snapshot.ScenarioId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:78:            StepIndex = snapshot.StepIndex,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:79:            SimulatedAtUtc = snapshot.SimulatedAtUtc,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs:80:            DeterministicHash = snapshot.DeterministicHash
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:133:        CheckDuplicates(definition.Resources.Select(item => item.ResourceId), "resources", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:136:        CheckDuplicates(definition.Stores.Select(item => item.StoreId), "stores", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:139:        CheckDuplicates(definition.Relationships.Select(item => item.RelationshipId), "relationships", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:142:        CheckDuplicates(definition.RuleDefinitions.Select(item => item.RuleId), "ruleDefinitions", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:145:        HashSet<string> resources = [.. definition.Resources.Select(item => item.ResourceId)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:149:        HashSet<string> stores = [.. definition.InitialStores.Select(item => item.StoreId)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:151:        HashSet<string> rules = [.. definition.Rules.Select(item => item.RuleId).Concat(definition.RuleDefinitions.Select(item => item.RuleId))];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:152:        HashSet<string> anyReference = [.. actors.Concat(resources).Concat(locations).Concat(stores).Concat(entities).Concat(places).Concat(objects).Concat(rules)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:164:        foreach (SimulationScenarioResourceDefinition resource in definition.Resources)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:166:            Require(resource.Capacity is null or >= 0 || resource.AllowsNegativeCapacity, $"resources.{resource.ResourceId}.capacity", "Negative capacity is not allowed for this resource.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:169:        foreach (SimulationScenarioStoreDefinition store in definition.InitialStores)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:171:            RequireReference(store.OwnerActorId, actors, $"initialStores.{store.StoreId}.ownerActorId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:172:            RequireReference(store.ResourceId, resources, $"initialStores.{store.StoreId}.resourceId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:173:            RequireReference(store.LocationId, locations, $"initialStores.{store.StoreId}.locationId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:174:            Require(store.Capacity is null or >= 0 || store.AllowsNegativeCapacity, $"initialStores.{store.StoreId}.capacity", "Negative capacity is not allowed for this store.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:177:        foreach (SimulationScenarioStoreDefinition store in definition.Stores)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:179:            RequireReference(store.OwnerActorId, anyReference, $"stores.{store.StoreId}.ownerActorId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:180:            RequireReference(store.ResourceId, resources, $"stores.{store.StoreId}.resourceId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:181:            RequireReference(store.LocationId, anyReference, $"stores.{store.StoreId}.locationId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:182:            Require(store.Capacity is null or >= 0 || store.AllowsNegativeCapacity, $"stores.{store.StoreId}.capacity", "Negative capacity is not allowed for this store.", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:190:        foreach (SimulationScenarioRelationshipDefinition relationship in definition.Relationships)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:192:            RequireReference(relationship.SourceActorId, actors, $"relationships.{relationship.RelationshipId}.sourceActorId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:193:            RequireReference(relationship.TargetActorId, actors, $"relationships.{relationship.RelationshipId}.targetActorId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:205:            foreach (string resourceId in scheduledEvent.ResourceIds)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:207:                RequireReference(resourceId, resources, $"scheduledEvents.{scheduledEvent.ScheduledEventId}.resourceIds", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioValidation.cs:223:            RequireReference(template.ResourceId, resources, $"eventTemplates.{template.TemplateId}.resourceId", result);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:37:    public string SchemaVersion { get; set; } = "institution-rules/v1";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:53:    public string SchemaVersion { get; set; } = "invariants/v1";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:98:        result.InstitutionRules = LoadInput<SimulationInstitutionRulesDefinition>(result, baseDirectory, "rules");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:101:        result.Invariants = LoadInput<SimulationExpectedInvariantsDocument>(result, baseDirectory, "invariants");
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualCategoryPolicy.cs:8:        "resource",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualCategoryPolicy.cs:10:        "rule",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualCategoryPolicy.cs:27:            : value is "rule" or "compliance" ? "rule"
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualCategoryPolicy.cs:30:            : "resource";
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualCategoryPolicy.cs:35:            : "resource";
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:24:                new() { Id = "layer.resources", Category = "resource", Title = "Resources", Order = 1 },
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:53:            .Concat(frame.ResourceStores.Select(store => (
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:54:                LocationId: store.Metadata.GetValueOrDefault("locationId", string.Empty),
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:109:        foreach (SimulationResourceStore store in frame.ResourceStores.OrderBy(item => item.StoreId, StringComparer.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:113:                Id = $"node.resource.{store.StoreId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:114:                Kind = "resource",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:115:                Category = EconomyVisualCategoryPolicy.NormalizeResourceCategory(store.ResourceKind),
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:116:                Title = store.DisplayName,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:117:                Layout = EconomyVisualLayoutStrategy.ResourceLayout(store, index),
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:120:                    ["quantity"] = store.Quantity.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture),
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:121:                    ["unit"] = store.Unit
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:125:                    ["ownerActorId"] = store.OwnerActorId,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:126:                    ["resourceId"] = store.ResourceId,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:127:                    ["storeId"] = store.StoreId,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:128:                    ["locationId"] = store.Metadata.GetValueOrDefault("locationId", string.Empty)
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:132:            if (store.Capacity is > 0)
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:134:                node.Metrics["capacityUsed"] = (store.Quantity / store.Capacity.Value).ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:140:                Id = $"link.owns.{store.OwnerActorId}.{store.StoreId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:141:                SourceNodeId = $"node.actor.{store.OwnerActorId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:143:                Kind = "ownership",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:144:                Category = "resource",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:153:        foreach (SimulationRelationship relationship in frame.Relationships.OrderBy(item => item.RelationshipId, StringComparer.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:157:                Id = $"link.relationship.{relationship.RelationshipId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:158:                SourceNodeId = $"node.actor.{relationship.SourceActorId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:159:                TargetNodeId = $"node.actor.{relationship.TargetActorId}",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:160:                Kind = "relationship",
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:161:                Category = EconomyVisualCategoryPolicy.NormalizeCategory(relationship.Kind),
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:162:                Weight = relationship.Strength,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:165:                    ["relationshipId"] = relationship.RelationshipId
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:186:                    ["resourceId"] = flow.ResourceId,
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:195:        foreach (SimulationIssue issue in frame.Issues.OrderBy(item => item.IssueId, StringComparer.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:197:            string target = issue.ActorIds.FirstOrDefault() is { Length: > 0 } actorId
+.\src\CanDoItAll.Economy.Simulation.Visualization\EconomyVisualFrameMapper.cs:200:            EconomyVisualSymbol symbol = EconomyVisualSymbolPolicy.FromIssue(issue, target);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:75:        List<string> resourceIds = [.. simulationEvent.ResourceIds.Where(static resourceId => !string.IsNullOrWhiteSpace(resourceId))];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:78:            resourceIds.RemoveAll(resourceId => string.Equals(resourceId, simulationEvent.ResourceId, StringComparison.Ordinal));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:79:            resourceIds.Insert(0, simulationEvent.ResourceId);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:81:        else if (resourceIds.Count > 0)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:83:            simulationEvent.ResourceId = resourceIds[0];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:86:        simulationEvent.ResourceIds = [.. resourceIds.Distinct(StringComparer.Ordinal)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:134:        AddParticipant(participants, simulationEvent.ResourceId, "resource", resourceId: simulationEvent.ResourceId);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:233:        string resourceId = "",
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:246:            ResourceId = resourceId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:44:        string resourceId = definition.Metadata.GetValueOrDefault("resourceId", string.Empty);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:47:            "resource-total" => frame.ResourceStores
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:48:                .Where(store => ResourceMatches(store, resourceId))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:49:                .Sum(static store => store.Quantity),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:50:            "resource-owner-hhi" => CalculateOwnerHhi(frame.ResourceStores.Where(store => ResourceMatches(store, resourceId))),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:51:            "top-owner-share" => CalculateTopOwnerShare(frame.ResourceStores.Where(store => ResourceMatches(store, resourceId))),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:52:            "issue-count" or "rule-violation-count" => CountIssues(frame, definition),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:55:            "stock-depletion-rate" => StockDepletionRate(frame, definition, resourceId),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:56:            "relationship-aggregate" or "relationship-trust-aggregate" or "relationship-conflict-aggregate" => RelationshipAggregate(frame, definition),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:58:            "transfer-volume" or "trade-volume" => TransferTradeVolume(frame, definition, resourceId),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:71:    private static string InferKind(string metricId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:73:        if (metricId.Contains("hhi", StringComparison.OrdinalIgnoreCase) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:74:            metricId.Contains("concentration", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:76:            return "resource-owner-hhi";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:79:        if (metricId.Contains("top", StringComparison.OrdinalIgnoreCase) &&
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:80:            metricId.Contains("share", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:85:        if (metricId.Contains("violation", StringComparison.OrdinalIgnoreCase) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:86:            metricId.Contains("issue", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:88:            return "issue-count";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:91:        if (metricId.Contains("access", StringComparison.OrdinalIgnoreCase) &&
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:92:            metricId.Contains("cost", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:97:        if (metricId.Contains("depletion", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:102:        if (metricId.Contains("trust", StringComparison.OrdinalIgnoreCase) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:103:            metricId.Contains("conflict", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:105:            return "relationship-aggregate";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:108:        if (metricId.Contains("admin", StringComparison.OrdinalIgnoreCase) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:109:            metricId.Contains("burden", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:114:        if (metricId.Contains("transfer", StringComparison.OrdinalIgnoreCase) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:115:            metricId.Contains("trade", StringComparison.OrdinalIgnoreCase))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:117:            return "transfer-volume";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:120:        return "resource-total";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:123:    private static bool ResourceMatches(SimulationResourceStore store, string resourceId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:124:        => string.IsNullOrWhiteSpace(resourceId) || string.Equals(store.ResourceId, resourceId, StringComparison.Ordinal);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:126:    private static decimal CalculateOwnerHhi(IEnumerable<SimulationResourceStore> stores)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:128:        decimal[] quantities = [.. stores
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:129:            .GroupBy(static store => store.OwnerActorId, StringComparer.Ordinal)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:130:            .Select(static group => group.Sum(store => Math.Max(0, store.Quantity)))];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:135:    private static decimal CalculateTopOwnerShare(IEnumerable<SimulationResourceStore> stores)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:137:        decimal[] quantities = [.. stores
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:138:            .GroupBy(static store => store.OwnerActorId, StringComparer.Ordinal)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:139:            .Select(static group => group.Sum(store => Math.Max(0, store.Quantity)))];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:147:        return frame.Issues.Count(issue => string.IsNullOrWhiteSpace(category) || string.Equals(issue.Category, category, StringComparison.Ordinal));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:171:    private static decimal StockDepletionRate(SimulationFrame frame, SimulationMetricDefinition definition, string resourceId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:173:        decimal current = frame.ResourceStores.Where(store => ResourceMatches(store, resourceId)).Sum(static store => store.Quantity);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:178:                .Where(flow => ResourceMatches(flow, resourceId) && string.IsNullOrWhiteSpace(flow.ToStoreId))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:187:        string kind = definition.Metadata.GetValueOrDefault("relationshipKind", definition.Metadata.GetValueOrDefault("kindFilter", string.Empty));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:189:            .Where(relationship => string.IsNullOrWhiteSpace(kind) || string.Equals(relationship.Kind, kind, StringComparison.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:190:            .Select(static relationship => relationship.Strength)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:206:    private static decimal TransferTradeVolume(SimulationFrame frame, SimulationMetricDefinition definition, string resourceId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:210:            .Where(flow => ResourceMatches(flow, resourceId) &&
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:212:                           (flow.Reason.Contains("transfer", StringComparison.OrdinalIgnoreCase) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:218:            .Where(simulationEvent => ResourceMatches(simulationEvent, resourceId) &&
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:224:    private static bool ResourceMatches(SimulationResourceFlow flow, string resourceId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:225:        => string.IsNullOrWhiteSpace(resourceId) || string.Equals(flow.ResourceId, resourceId, StringComparison.Ordinal);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:227:    private static bool ResourceMatches(SimulationEvent simulationEvent, string resourceId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:228:        => string.IsNullOrWhiteSpace(resourceId) || string.Equals(simulationEvent.ResourceId, resourceId, StringComparison.Ordinal) || simulationEvent.ResourceIds.Contains(resourceId, StringComparer.Ordinal);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:85:    public const string ActorResourceCollect = "actor.resource.collect";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:86:    public const string ActorResourceNeed = "actor.resource.need";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:87:    public const string ActorResourceInventoryBuild = "actor.resource.inventory-build";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:88:    public const string ActorResourceUse = "actor.resource.use";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:89:    public const string ActorResourceTransfer = "actor.resource.transfer";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:97:    public const string RuleCheckEvaluate = "rule.check.evaluate";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:98:    public const string RuleViolationDetect = "rule.violation.detect";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:99:    public const string RuleEnforcementApply = "rule.enforcement.apply";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:100:    public const string RelationshipTrustChange = "relationship.trust.change";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:101:    public const string RelationshipConflictChange = "relationship.conflict.change";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:102:    public const string ResourceStockChange = "resource.stock.change";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:103:    public const string ResourceScarcitySignal = "resource.scarcity.signal";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:105:    public const string ResourceUse = "resource-use";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:106:    public const string ResourceTransfer = "resource-transfer";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:110:    public const string StoreChanged = "store-changed";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:111:    public const string RelationshipChanged = "relationship-changed";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:112:    public const string IssueRaised = "issue-raised";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:113:    public const string IssueResolved = "issue-resolved";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:114:    public const string RuleApplied = "rule-applied";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:122:    public const string RuleCheck = "rule-check";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:123:    public const string RuleViolation = "rule-violation";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:124:    public const string RuleEnforcement = "rule-enforcement";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:125:    public const string RelationshipChange = "relationship-change";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs:5:    public static string Export(SimulationRunSnapshot snapshot)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotJsonExport.cs:6:        => SimulationRunSnapshotSerializer.Serialize(snapshot);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:89:        decimal capacity = ResolveCarryCapacity(definition, request.ActorId, request.ResourceId);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:90:        decimal accepted = capacity <= 0 ? request.RequestedQuantity : Math.Min(capacity, request.RequestedQuantity);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:93:            Capacity = capacity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:99:    internal static decimal ResolveCarryCapacity(SimulationScenarioDefinition definition, string actorId, string resourceId)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:103:            (TryReadDecimal(actor.Metadata, $"carryCapacity.{resourceId}", out decimal resourceCapacity) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:104:             TryReadDecimal(actor.Metadata, "carryCapacity", out resourceCapacity)))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:106:            return resourceCapacity;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:110:            .Where(store => string.Equals(store.OwnerActorId, actorId, StringComparison.Ordinal) &&
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:111:                            string.Equals(store.ResourceId, resourceId, StringComparison.Ordinal) &&
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:112:                            store.Capacity is not null)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:113:            .Select(store => store.Capacity!.Value)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:138:    public SimulationSurplusShortageResult Evaluate(string actorId, string resourceId, decimal quantity, decimal targetQuantity)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:142:            ResourceId = resourceId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:266:                ["resourceId"] = request.ResourceId
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:112:        "rules",
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:115:        "invariants"
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:14:    public static string Serialize(SimulationRunSnapshot snapshot, bool refreshHash = true)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:16:        ArgumentNullException.ThrowIfNull(snapshot);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:19:            snapshot.RefreshDeterministicHash();
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:22:        return JsonSerializer.Serialize(snapshot, JsonOptions);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:32:        SimulationRunSnapshot snapshot = JsonSerializer.Deserialize<SimulationRunSnapshot>(json, JsonOptions)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:33:            ?? throw new InvalidOperationException("Snapshot JSON did not contain a simulation snapshot.");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:37:            string expected = SimulationRunSnapshotHasher.CalculateHash(snapshot);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:38:            if (!string.Equals(snapshot.DeterministicHash, expected, StringComparison.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshotSerializer.cs:44:        return snapshot;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:37:        CompareItems(result, "resourceStores", left.Frame.ResourceStores, right.Frame.ResourceStores, static store => store.StoreId, StoreFingerprint);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:39:        CompareItems(result, "issues", left.Frame.Issues, right.Frame.Issues, static issue => issue.IssueId, IssueFingerprint);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:40:        CompareItems(result, "metrics", left.Metrics, right.Metrics, static metric => metric.MetricId, MetricFingerprint);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:41:        CompareItems(result, "invariants", left.Invariants, right.Invariants, static invariant => invariant.InvariantId, InvariantFingerprint);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:91:    private static string StoreFingerprint(SimulationResourceStore store)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:92:        => Join(store.OwnerActorId, store.ResourceId, store.ResourceKind, store.DisplayName, Number(store.Quantity), store.Unit, Number(store.Capacity), Metadata(store.Metadata));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:97:    private static string IssueFingerprint(SimulationIssue issue)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:98:        => Join(issue.Severity, issue.Category, issue.Title, issue.Description, issue.IsResolved.ToString(), string.Join(",", issue.ActorIds.OrderBy(static id => id, StringComparer.Ordinal)), string.Join(",", issue.ResourceIds.OrderBy(static id => id, StringComparer.Ordinal)), Metadata(issue.Metadata));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:100:    private static string MetricFingerprint(SimulationMetricValue metric)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:101:        => Join(Number(metric.Value), metric.Unit, Metadata(metric.Metadata));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:103:    private static string InvariantFingerprint(SimulationInvariantEvaluationResult invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotDiff.cs:104:        => Join(invariant.Passed.ToString(), invariant.Severity, invariant.Message, Metadata(invariant.Metadata));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:5:    private readonly SimulationFrameMetricEvaluator metricEvaluator = new();
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:9:        IEnumerable<SimulationExpectedInvariantDefinition> invariants,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:10:        IEnumerable<SimulationMetricDefinition> metrics)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:13:        ArgumentNullException.ThrowIfNull(invariants);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:14:        ArgumentNullException.ThrowIfNull(metrics);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:16:        Dictionary<string, SimulationMetricValue> values = metricEvaluator
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:17:            .Evaluate(frame, metrics)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:19:            .ToDictionary(static metric => metric.MetricId, StringComparer.Ordinal);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:20:        return [.. invariants.Select(invariant => EvaluateInvariant(frame, invariant, values))];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:25:        SimulationExpectedInvariantDefinition invariant,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:26:        IReadOnlyDictionary<string, SimulationMetricValue> metricValues)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:28:        string kind = invariant.Metadata.GetValueOrDefault("kind", string.Empty);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:31:            "no-store-below-zero" => NoStoreBelowZero(frame, invariant),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:32:            "max-resource-share" => MaxResourceShare(frame, invariant),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:33:            "resource-total-conserved" or "total-conserved-resource" => ResourceTotalConserved(frame, invariant),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:34:            "known-frame-references" => KnownFrameReferences(frame, invariant),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:35:            "known-event-participants" => KnownEventParticipants(frame, invariant),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:36:            "visual-action-known-node" => VisualActionKnownNode(frame, invariant),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:37:            _ => MetricThreshold(invariant, metricValues)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:42:        SimulationExpectedInvariantDefinition invariant,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:43:        IReadOnlyDictionary<string, SimulationMetricValue> metricValues)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:45:        string metricId = invariant.Metadata.GetValueOrDefault("metricId", string.Empty);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:46:        decimal value = metricValues.TryGetValue(metricId, out SimulationMetricValue? metric) ? metric.Value : 0;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:48:        if (TryDecimal(invariant.Metadata, "max", out decimal max))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:53:        if (TryDecimal(invariant.Metadata, "min", out decimal min))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:60:            InvariantId = invariant.InvariantId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:62:            Severity = invariant.Severity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:64:                ? $"Invariant '{invariant.InvariantId}' passed."
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:65:                : $"Invariant '{invariant.InvariantId}' failed for metric '{metricId}' with value {value}.",
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:68:                ["metricId"] = metricId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:74:    private static SimulationInvariantEvaluationResult NoStoreBelowZero(SimulationFrame frame, SimulationExpectedInvariantDefinition invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:76:        bool allowNegative = string.Equals(invariant.Metadata.GetValueOrDefault("allowNegativeStores"), "true", StringComparison.OrdinalIgnoreCase);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:77:        SimulationResourceStore[] negativeStores = [.. frame.ResourceStores.Where(static store => store.Quantity < 0)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:78:        return Result(invariant, allowNegative || negativeStores.Length == 0, negativeStores.Length, "negativeStoreCount");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:81:    private static SimulationInvariantEvaluationResult MaxResourceShare(SimulationFrame frame, SimulationExpectedInvariantDefinition invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:83:        string resourceId = invariant.Metadata.GetValueOrDefault("resourceId", string.Empty);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:85:            .Where(store => string.IsNullOrWhiteSpace(resourceId) || string.Equals(store.ResourceId, resourceId, StringComparison.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:86:            .GroupBy(static store => store.OwnerActorId, StringComparer.Ordinal)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:87:            .Select(static group => group.Sum(store => Math.Max(0, store.Quantity)))];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:90:        decimal max = ReadInvariantDecimal(invariant, "maxShare") ?? ReadInvariantDecimal(invariant, "max") ?? 1;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:91:        return Result(invariant, share <= max, share, "topOwnerShare");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:94:    private static SimulationInvariantEvaluationResult ResourceTotalConserved(SimulationFrame frame, SimulationExpectedInvariantDefinition invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:96:        string resourceId = invariant.Metadata.GetValueOrDefault("resourceId", string.Empty);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:98:            .Where(store => string.IsNullOrWhiteSpace(resourceId) || string.Equals(store.ResourceId, resourceId, StringComparison.Ordinal))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:99:            .Sum(static store => store.Quantity);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:100:        decimal expected = ReadInvariantDecimal(invariant, "expectedTotal") ?? current;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:101:        decimal tolerance = ReadInvariantDecimal(invariant, "tolerance") ?? 0;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:102:        return Result(invariant, Math.Abs(current - expected) <= tolerance, current, "resourceTotal");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:105:    private static SimulationInvariantEvaluationResult KnownFrameReferences(SimulationFrame frame, SimulationExpectedInvariantDefinition invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:108:        HashSet<string> resources = [.. frame.ResourceStores.Select(static store => store.ResourceId)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:109:        HashSet<string> stores = [.. frame.ResourceStores.Select(static store => store.StoreId)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:113:            (!string.IsNullOrWhiteSpace(flow.ResourceId) && !resources.Contains(flow.ResourceId)) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:114:            (!string.IsNullOrWhiteSpace(flow.FromStoreId) && !stores.Contains(flow.FromStoreId)) ||
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:115:            (!string.IsNullOrWhiteSpace(flow.ToStoreId) && !stores.Contains(flow.ToStoreId)));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:116:        return Result(invariant, missing == 0, missing, "missingReferenceCount");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:119:    private static SimulationInvariantEvaluationResult KnownEventParticipants(SimulationFrame frame, SimulationExpectedInvariantDefinition invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:122:        HashSet<string> resources = [.. frame.ResourceStores.Select(static store => store.ResourceId)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:125:            simulationEvent.ResourceIds.Any(resourceId => !resources.Contains(resourceId)));
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:126:        return Result(invariant, missing == 0, missing, "missingParticipantCount");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:129:    private static SimulationInvariantEvaluationResult VisualActionKnownNode(SimulationFrame frame, SimulationExpectedInvariantDefinition invariant)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:132:        return Result(invariant, missing == 0, missing, "missingVisualNodeCount");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:135:    private static SimulationInvariantEvaluationResult Result(SimulationExpectedInvariantDefinition invariant, bool passed, decimal value, string valueKey)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:138:            InvariantId = invariant.InvariantId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:140:            Severity = invariant.Severity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:141:            Message = passed ? $"Invariant '{invariant.InvariantId}' passed." : $"Invariant '{invariant.InvariantId}' failed.",
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:151:    private static decimal? ReadInvariantDecimal(SimulationExpectedInvariantDefinition invariant, string key)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationInvariantEvaluation.cs:152:        => decimal.TryParse(invariant.Metadata.GetValueOrDefault(key), System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal value)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:147:        var stores = CanonicalById(definition.InitialStores, static store => store.StoreId, Clone, "initialStores", messages);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:148:        foreach (SimulationScenarioStoreDefinition store in definition.Stores)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:150:            if (string.IsNullOrWhiteSpace(store.StoreId) || stores.ContainsKey(store.StoreId))
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:152:                if (stores.TryGetValue(store.StoreId, out SimulationScenarioStoreDefinition? initial) &&
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:153:                    initial.Quantity != store.Quantity)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:155:                    Warn(messages, "aliases.stores", $"Store '{store.StoreId}' quantity differs from canonical InitialStores value.");
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:161:            stores[store.StoreId] = Clone(store);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:164:        return [.. stores.Values.OrderBy(static store => store.StoreId, StringComparer.Ordinal)];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:236:    private static SimulationScenarioResourceDefinition Clone(SimulationScenarioResourceDefinition resource)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:239:            ResourceId = resource.ResourceId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:240:            Kind = resource.Kind,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:241:            DisplayName = resource.DisplayName,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:242:            Unit = resource.Unit,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:243:            Capacity = resource.Capacity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:244:            AllowsNegativeCapacity = resource.AllowsNegativeCapacity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:245:            Metadata = new Dictionary<string, string>(resource.Metadata, StringComparer.Ordinal)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:258:    private static SimulationScenarioStoreDefinition Clone(SimulationScenarioStoreDefinition store)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:261:            StoreId = store.StoreId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:262:            OwnerActorId = store.OwnerActorId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:263:            ResourceId = store.ResourceId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:264:            LocationId = store.LocationId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:265:            DisplayName = store.DisplayName,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:266:            Quantity = store.Quantity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:267:            Unit = store.Unit,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:268:            Capacity = store.Capacity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:269:            AllowsNegativeCapacity = store.AllowsNegativeCapacity,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:270:            Metadata = new Dictionary<string, string>(store.Metadata, StringComparer.Ordinal)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:283:    private static SimulationScenarioRelationshipDefinition Clone(SimulationScenarioRelationshipDefinition relationship)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:286:            RelationshipId = relationship.RelationshipId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:287:            SourceActorId = relationship.SourceActorId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:288:            TargetActorId = relationship.TargetActorId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:289:            Kind = relationship.Kind,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:290:            Strength = relationship.Strength,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:291:            Metadata = new Dictionary<string, string>(relationship.Metadata, StringComparer.Ordinal)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:294:    private static SimulationScenarioRuleDefinition Clone(SimulationScenarioRuleDefinition rule)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:297:            RuleId = rule.RuleId,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:298:            DisplayName = rule.DisplayName,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:299:            Category = rule.Category,
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:300:            Parameters = new Dictionary<string, string>(rule.Parameters, StringComparer.Ordinal),
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioDefinitionNormalizer.cs:301:            Metadata = new Dictionary<string, string>(rule.Metadata, StringComparer.Ordinal)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:6:    public string SchemaVersion { get; set; } = "candoitall.economy.simulation-snapshot/v1";
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:32:    public string PlaybackFrameId { get; set; } = string.Empty;
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:33:    public long PlaybackFrameIndex { get; set; }
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:34:    public Dictionary<string, string> NodeObjectIds { get; set; } = [];
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:45:    public static string CalculateHash(SimulationRunSnapshot snapshot)
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:47:        ArgumentNullException.ThrowIfNull(snapshot);
+.\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationRunSnapshot.cs:48:        return SimulationDeterministicHash.HashSnapshot(snapshot);

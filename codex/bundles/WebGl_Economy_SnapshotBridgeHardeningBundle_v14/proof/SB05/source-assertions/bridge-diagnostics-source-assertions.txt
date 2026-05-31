@@ -1,0 +1,12 @@
+﻿tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:166:    public void ProjectorRecordsDiagnosticsForUnresolvedMappingsMissingAssetsAndWaitFallbacks()
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:208:        Assert.Contains(document.Metadata.Values, value => value.Contains("no resolved visual asset mapping", StringComparison.Ordinal));
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:209:        Assert.Contains(document.Metadata.Values, value => value.Contains("mapped to Wait fallback", StringComparison.Ordinal));
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:210:        Assert.Contains(document.Metadata.Values, value => value.Contains("no resolved subject object", StringComparison.Ordinal));
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:211:        Assert.Contains(document.Metadata.Values, value => value.Contains("no resolved target object", StringComparison.Ordinal));
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:212:        Assert.Contains(document.Metadata.Values, value => value.Contains("invalid WebGL action plan", StringComparison.Ordinal));
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:219:    public void ProjectorCreatesExecutableStagesForSharedAndFiniteResourceProbes(string probeId, string eventKind)
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:125:            context.Diagnostics.Add($"Node '{node.Id}' category '{node.Category}' has no resolved visual asset mapping.");
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:92:            context.Diagnostics.Add($"Action '{action.ActionId}' produced an invalid WebGL action plan: {errors}");
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:62:            context.Diagnostics.Add($"Action '{action.ActionId}' kind '{requestedActionKind}' mapped to Wait fallback.");
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:102:            context.Diagnostics.Add($"Action '{action.ActionId}' has no resolved subject object.");
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:108:            context.Diagnostics.Add($"Action '{action.ActionId}' has no resolved target object.");

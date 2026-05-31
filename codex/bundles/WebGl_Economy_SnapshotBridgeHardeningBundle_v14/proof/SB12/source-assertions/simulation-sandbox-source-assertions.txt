@@ -1,0 +1,30 @@
+﻿C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSandboxWorkflowTests.cs:2:using CanDoItAll.Economy.SimulationSandbox;
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSandboxWorkflowTests.cs:7:public sealed class SimulationSandboxWorkflowTests
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSandboxWorkflowTests.cs:12:    public void SimulationSandboxWorkflow_WiresInputPackBackendVisualFramesAndBridgeWithoutRequiringFinalDemo(string scenario)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSandboxWorkflowTests.cs:14:        EconomySimulationSandboxProjection projection = new EconomySimulationSandboxWorkflow().Project(
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:14:    public void BridgeProjectReferencesOnlyAllowedProjects()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:18:            .Descendants("ProjectReference")
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:69:        var projector = new EconomyWebGlRunProjector();
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:96:        SimulationScenarioDefinitionValidationResult validation = new EconomyWebGlRunValidator().Validate(document);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:114:        var projector = new EconomyWebGlRunProjector();
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:170:        var projector = new EconomyWebGlRunProjector();
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:228:        var projector = new EconomyWebGlRunProjector();
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:301:    public void SimulationSandboxHostsJoinedProjectionWithoutMovingBridgeToComponents()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:303:        string projectPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "src", "CanDoItAll.Economy.SimulationSandbox", "CanDoItAll.Economy.SimulationSandbox.csproj"));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:305:        string[] projectReferences = [.. project.Descendants("ProjectReference").Select(element => element.Attribute("Include")?.Value ?? string.Empty)];
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:339:        WebGlRunDocument document = new EconomyWebGlRunProjector().Project(input, new() { RunIdPrefix = "probe", FrameRate = 24 });
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:7:namespace CanDoItAll.Economy.SimulationSandbox;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:9:public sealed class EconomySimulationSandboxWorkflow
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:11:    private readonly SimulationExperimentInputPackLoader loader = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:12:    private readonly SimpleSimulationStateTransitionEngine transitionEngine = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:13:    private readonly EconomyVisualFrameMapper visualFrameMapper = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:14:    private readonly EconomyWebGlRunProjector projector = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:15:    private readonly EconomyWebGlRunValidator validator = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:17:    public EconomySimulationSandboxProjection Project(string experimentJsonPath, EconomyWebGlProjectionOptions? options = null)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:65:public sealed class EconomySimulationSandboxProjection
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:4:    <AssemblyName>CanDoItAll.Economy.SimulationSandbox</AssemblyName>
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:5:    <RootNamespace>CanDoItAll.Economy.SimulationSandbox</RootNamespace>
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:8:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:9:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.SimpleAccounts\CanDoItAll.Economy.Simulation.SimpleAccounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:10:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:11:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj" />

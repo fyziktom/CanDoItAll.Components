@@ -32,7 +32,9 @@ export function resolveRenderReason(state) {
         return "motion";
     }
 
-    if ((state.pendingCommandStages || []).length > 0) {
+    const commandStageRunner = state.commandStageRunner;
+    if (commandStageRunner && !commandStageRunner.cancelled &&
+        ((commandStageRunner.queue?.length || 0) > 0 || (Number(commandStageRunner.waitSeconds) || 0) > 0)) {
         return "command-stage";
     }
 

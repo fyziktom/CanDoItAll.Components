@@ -47,8 +47,8 @@ export function activateNextMotion(state, objectId, vectorPayload) {
     next.startRotation = resolveObjectRotation(sceneObject);
     next.startScale = resolveObjectScale(sceneObject);
     next.elapsedSeconds = 0;
-        state.motions.set(next.motionId, next);
-        syncMotionQueueDiagnostics(state);
+    state.motions.set(next.motionId, next);
+    syncMotionQueueDiagnostics(state);
 }
 
 export function clearObjectMotionState(state, objectId, result = null) {

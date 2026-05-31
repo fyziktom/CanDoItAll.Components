@@ -22,3 +22,19 @@ Tasks:
 Acceptance:
 - Snapshot is renderer-neutral.
 - Snapshot can be produced without WebGL.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB01 branch/source inventory and baseline Economy state.
+
+## Validation Depth
+
+Add or verify renderer-neutral snapshot contracts, deterministic hashing, serializer behavior, and tests that snapshot creation does not require WebGL references.
+
+## Progression Gate
+
+SB08/SB09/SB12 may proceed only after snapshot contracts are stable, hashable, serializable, and independent of Components/WebGL.

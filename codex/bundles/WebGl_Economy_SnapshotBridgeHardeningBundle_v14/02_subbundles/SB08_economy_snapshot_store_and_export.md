@@ -18,3 +18,19 @@ Tasks:
 
 Acceptance:
 - User can pause a run and export a full data snapshot for analysis.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB07 snapshot contracts.
+
+## Validation Depth
+
+Add or verify store/export/import/diff tests that materialize a run, snapshot at step 2, JSON roundtrip, preserve deterministic hash, and evaluate metrics/invariants from snapshot data.
+
+## Progression Gate
+
+SB09/SB13/SB14 may proceed only after snapshot persistence and export proof shows pause/export/analyze data can survive a roundtrip without hash drift.

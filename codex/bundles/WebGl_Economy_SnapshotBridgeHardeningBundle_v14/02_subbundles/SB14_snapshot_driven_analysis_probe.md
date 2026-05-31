@@ -17,3 +17,19 @@ Probe:
 
 Acceptance:
 - The snapshot can answer "why does the visual state look bad?" without manually inspecting runtime internals.
+
+## Status
+
+Completed.
+
+## Prerequisites
+
+SB08 snapshot store/export and SB09 visual snapshot attachment.
+
+## Validation Depth
+
+Add or verify a snapshot analysis probe that materializes a shared-resource input pack, snapshots a rule/admin burden step, evaluates metrics/issues/stores/relationships/resource holder share, exports JSON, re-imports, and verifies hash.
+
+## Progression Gate
+
+SB15 may proceed only after analysis proof demonstrates the pause/analyze question can be answered from snapshot data and optional visual attachment, not runtime internals.

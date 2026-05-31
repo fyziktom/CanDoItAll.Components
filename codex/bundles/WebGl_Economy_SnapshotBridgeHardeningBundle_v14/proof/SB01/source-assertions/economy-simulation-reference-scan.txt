@@ -1,0 +1,82 @@
+﻿src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationConsistencyValidator.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationScenarioFactory.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationBackend.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Frames.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunValidator.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:4:using CanDoItAll.Components.WebGlLib;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSimulationSource.cs:1:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSimulationSource.cs:3:public sealed class LedgerSnapshotSimulationSource
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSimulationSource.cs:6:    public string LedgerId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSimulationSource.cs:10:    public List<LedgerProjectionActorBalance> ActorBalances { get; set; } = [];
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSimulationSource.cs:11:    public List<LedgerProjectionEvidence> Evidence { get; set; } = [];
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSimulationSource.cs:15:public sealed class LedgerProjectionActorBalance
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSimulationSource.cs:24:public sealed class LedgerProjectionEvidence
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunProjector.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSequenceValidator.cs:1:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSequenceValidator.cs:3:public static class LedgerSnapshotSequenceValidator
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSequenceValidator.cs:5:    public static void Validate(IReadOnlyList<LedgerSnapshotSimulationSource> snapshots)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSequenceValidator.cs:9:        foreach (LedgerSnapshotSimulationSource snapshot in snapshots)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSnapshotSequenceValidator.cs:18:                throw new InvalidOperationException("Ledger snapshot sequences must be non-decreasing.");
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerScenarioForkDescriptor.cs:1:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerScenarioForkDescriptor.cs:3:public sealed class LedgerScenarioForkDescriptor
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerScenarioForkDescriptor.cs:6:    public string LedgerId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationIssueMapper.cs:3:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationIssueMapper.cs:5:public sealed class LedgerSimulationIssueMapper
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationIssueMapper.cs:7:    public List<SimulationIssue> MapIssues(IEnumerable<LedgerProjectionEvidence> evidence)
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:2:using CanDoItAll.Components.WebGlRunLib;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:3:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:5:public sealed class LedgerProjectionFrameProjector
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:7:    private readonly LedgerBusinessObjectEvidenceMapper evidenceMapper = new();
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:8:    private readonly LedgerSimulationIssueMapper issueMapper = new();
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:9:    private readonly LedgerSimulationEventProjector eventProjector = new();
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:11:    public SimulationFrame Project(LedgerSnapshotSimulationSource source, SimulationScenarioManifest manifest, SimulationRunIdentity run, int stepIndex)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:24:                    ["ledgerId"] = source.LedgerId
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerProjectionFrameProjector.cs:61:                ["ledgerId"] = source.LedgerId,
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationEventProjector.cs:3:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationEventProjector.cs:5:public sealed class LedgerSimulationEventProjector
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationEventProjector.cs:7:    public IReadOnlyList<SimulationEvent> ProjectEvents(LedgerSnapshotSimulationSource source, int stepIndex)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationEventProjector.cs:16:    private static SimulationEvent ProjectEvent(LedgerProjectionEvidence evidence, LedgerSnapshotSimulationSource source, int stepIndex)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationEventProjector.cs:44:                ["ledgerId"] = source.LedgerId,
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:6:    <ComponentsRepoRoot Condition="'$(ComponentsRepoRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\CanDoItAll.Components</ComponentsRepoRoot>
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:7:    <ComponentsWebGlRunLibProject>$(ComponentsRepoRoot)\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj</ComponentsWebGlRunLibProject>
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:8:    <UseComponentsWebGlRunLibPackage Condition="'$(UseComponentsWebGlRunLibPackage)' == ''">false</UseComponentsWebGlRunLibPackage>
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:9:    <ComponentsWebGlRunLibPackageVersion Condition="'$(ComponentsWebGlRunLibPackageVersion)' == ''">0.1.0</ComponentsWebGlRunLibPackageVersion>
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:14:    <ProjectReference Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:15:    <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:17:  <Target Name="ValidateComponentsWebGlRunLibReference" BeforeTargets="ResolveReferences" Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and !Exists('$(ComponentsWebGlRunLibProject)')">
+src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:18:    <Error Text="CanDoItAll.Components.WebGlRunLib project reference was not found at '$(ComponentsWebGlRunLibProject)'. Set ComponentsRepoRoot to the local CanDoItAll.Components checkout or set UseComponentsWebGlRunLibPackage=true with ComponentsWebGlRunLibPackageVersion." />
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerBusinessObjectEvidenceMapper.cs:3:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerBusinessObjectEvidenceMapper.cs:5:public sealed class LedgerBusinessObjectEvidenceMapper
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerBusinessObjectEvidenceMapper.cs:7:    public List<SimulationArtifactRef> MapArtifacts(IEnumerable<LedgerProjectionEvidence> evidence)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:3:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:5:public sealed class LedgerSimulationBackend : ISimulationBackend
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:7:    private readonly LedgerProjectionFrameProjector projector = new();
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:10:    private readonly IReadOnlyDictionary<int, LedgerSnapshotSimulationSource> snapshotsByStep;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:12:    public LedgerSimulationBackend(
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:15:        IReadOnlyList<LedgerSnapshotSimulationSource> snapshots)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:17:        LedgerSnapshotSequenceValidator.Validate(snapshots);
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:32:        SupportsLedgerForks = true,
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerSimulationBackend.cs:55:        LedgerSnapshotSimulationSource source = snapshotsByStep.TryGetValue(stepIndex, out LedgerSnapshotSimulationSource? snapshot)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerScenarioForkDescriptorValidator.cs:1:namespace CanDoItAll.Economy.Simulation.Ledger;
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerScenarioForkDescriptorValidator.cs:3:public sealed class LedgerScenarioForkDescriptorValidator
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerScenarioForkDescriptorValidator.cs:5:    public IReadOnlyList<string> Validate(LedgerScenarioForkDescriptor descriptor)
+src\CanDoItAll.Economy.Simulation.Ledger\LedgerScenarioForkDescriptorValidator.cs:11:        Require(errors, !string.IsNullOrWhiteSpace(descriptor.LedgerId), "Ledger id is required.");
+src\CanDoItAll.Economy.Simulation.Ledger\CanDoItAll.Economy.Simulation.Ledger.csproj:4:    <AssemblyName>CanDoItAll.Economy.Simulation.Ledger</AssemblyName>
+src\CanDoItAll.Economy.Simulation.Ledger\CanDoItAll.Economy.Simulation.Ledger.csproj:5:    <RootNamespace>CanDoItAll.Economy.Simulation.Ledger</RootNamespace>
+src\CanDoItAll.Economy.Simulation.Ledger\CanDoItAll.Economy.Simulation.Ledger.csproj:9:    <ProjectReference Include="..\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj" />
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleAccountModels.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\CanDoItAll.Economy.Simulation.SimpleAccounts.csproj:4:    <AssemblyName>CanDoItAll.Economy.Simulation.SimpleAccounts</AssemblyName>
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\CanDoItAll.Economy.Simulation.SimpleAccounts.csproj:5:    <RootNamespace>CanDoItAll.Economy.Simulation.SimpleAccounts</RootNamespace>
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationDeltaBuilder.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:3:namespace CanDoItAll.Economy.Simulation.SimpleAccounts;
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:24:            ?? throw new InvalidOperationException($"SimpleAccounts cannot materialize scenario definition '{definition.ScenarioId}'.");
+src\CanDoItAll.Economy.Simulation.Abstractions\Backends\ISimulationBackend.cs:8:    public bool SupportsLedgerForks { get; set; }
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:2:using CanDoItAll.Components.WebGlRunLib;

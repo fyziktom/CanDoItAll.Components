@@ -50,3 +50,20 @@ Start with:
 Use the spreadsheet matrix for sequencing:
 
 `05_spreadsheets/implementation_matrix.xlsx`
+
+## Validation summary
+
+Status: Completed.
+
+Readiness gate:
+- `scripts/validate_bundle.py --stage prepared` passed before production code changes.
+- Dependency order is recorded in `plan/01-phase-plan.md`.
+- Raw notes and normalized requirements are mapped in `traceability/01-raw-note-closure.md`.
+
+Execution gate:
+- Each subbundle passed entry and closure gates before final closure.
+- Critical subbundles have artifact-backed proof under `proof/SBxx/`.
+- Final closure passed `scripts/validate_bundle.py --stage completed` plus the validation commands in `04_validation/validation_commands.md`.
+- Components validation: build passed, WebGlLib tests passed, WebGlRunLib tests passed, scene runtime audit passed, and stage/motion audits passed after neutral artifact-path proof regeneration.
+- Economy validation: build passed with known dependency warnings, full test suite passed, and simulation boundary audit passed.
+- Raw notes are closed note-by-note in `traceability/01-raw-note-closure.md`; residual follow-ups are listed in `proof/SB15/manifest.md`.
