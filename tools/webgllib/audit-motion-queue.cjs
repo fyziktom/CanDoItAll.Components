@@ -4,82 +4,98 @@ const { pathToFileURL } = require("node:url");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
 const runtimeSceneDir = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-runtime-motion-queue-hardening-v14", "motion-queue");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-runtime-motion-queue-hardening-v15", "motion-queue");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });
   const runtime = await import(`${pathToFileURL(writeAuditModule()).href}?v=${Date.now()}`);
-  const completedAssertions = [];
+  const assertions = [];
 
-  let state = createState();
-  runtime.enqueueMotionDetailed(state, motion("actor.to.target", 4, "append"));
-  runtime.enqueueMotionDetailed(state, motion("actor.to.home", 0, "append"));
-  assertEqual(state.motions.size, 1, "one active motion after append enqueue");
-  assertEqual(state.motionQueuesByObjectId.get("actor").length, 1, "one queued motion after append enqueue");
-  assertEqual(state.diagnostics.queuedMotionCount, 1, "diagnostics queued motion count after append enqueue");
-  assertEqual(state.diagnostics.maxMotionQueueLength, 1, "diagnostics max queue length after append enqueue");
-  completedAssertions.push("append queues after active motion");
-
-  runtime.advanceMotions(state, 0.5);
-  assertEqual(state.objectLookup.get("actor").position.x, 2, "halfway through first motion");
-  assertEqual([...state.motions.keys()][0], "actor.to.target", "first motion remains active before completion");
-
-  runtime.advanceMotions(state, 0.5);
-  assertEqual(state.objectLookup.get("actor").position.x, 4, "first motion completes at target");
-  assertEqual([...state.motions.keys()][0], "actor.to.home", "second motion activates only after first completion");
-  assertEqual(state.motions.get("actor.to.home").startPosition.x, 4, "queued motion starts from completed active transform");
-  assertEqual(state.motionQueuesByObjectId.has("actor"), false, "queue is empty after promotion");
-  completedAssertions.push("active completion activates next motion with updated start transform");
-
-  runtime.advanceMotions(state, 1);
-  assertEqual(state.objectLookup.get("actor").position.x, 0, "second motion completes at home");
-  assertEqual(state.motions.size, 0, "no active motion after queued sequence completes");
-
-  state = createState();
-  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
-  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
-  const queuedCancel = runtime.cancelMotionDetailed(state, "actor.queued");
-  assertEqual(queuedCancel.success, true, "queued motion cancel succeeds");
-  assertEqual(state.motions.size, 1, "active motion remains after queued cancel");
-  assertEqual(state.diagnostics.queuedMotionCount, 0, "queued cancel removes queue item");
-  completedAssertions.push("queued motion cancel removes only queued item");
-
-  state = createState();
-  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
-  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
-  runtime.advanceMotions(state, 0.5);
-  assertEqual(state.objectLookup.get("actor").position.x, 2, "active motion reaches mid-point before cancel");
-  const activeCancel = runtime.cancelMotionDetailed(state, "actor.active");
-  assertEqual(activeCancel.success, true, "active motion cancel succeeds");
-  assertEqual([...state.motions.keys()][0], "actor.queued", "queued motion promotes after active cancel");
-  assertEqual(state.motions.get("actor.queued").startPosition.x, 2, "promoted motion starts from current transform after cancel");
-  assertEqual(state.diagnostics.queuedMotionCount, 0, "active cancel drains one queued item into active state");
-  runtime.advanceMotions(state, 1);
-  assertEqual(state.objectLookup.get("actor").position.x, 8, "promoted motion reaches target after active cancel");
-  completedAssertions.push("active motion cancel promotes queued motion from current transform");
-
-  state = createState();
-  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
-  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
-  runtime.clearObjectMotionState(state, "actor");
-  assertEqual(state.motions.size, 0, "object removal clear removes active motion");
-  assertEqual(state.motionQueuesByObjectId.has("actor"), false, "object removal clear removes queued motions");
-  completedAssertions.push("object removal clear removes active and queued motion state");
+  assertOrderedSequence(runtime, assertions);
+  assertQueuePolicies(runtime, assertions);
+  assertEdgeCases(runtime, assertions);
 
   const proof = {
     generatedAtUtc: new Date().toISOString(),
-    invariantId: "SB03.motion-queue.edge-cases",
-    activeMotionCount: state.motions.size,
-    queuedMotionCount: state.diagnostics.queuedMotionCount,
-    maxMotionQueueLength: state.diagnostics.maxMotionQueueLength,
-    cancelledMotionCount: state.diagnostics.cancelledMotionCount,
-    acceptedMotionCount: state.diagnostics.motionAcceptedCount,
-    completedMotionCount: state.diagnostics.motionCompletedCount,
-    finalPosition: state.objectLookup.get("actor").position,
-    assertions: completedAssertions
+    invariantId: "SB04.motion-queue.policies",
+    assertions
   };
   fs.writeFileSync(path.join(reportDir, "motion-queue-proof.json"), `${JSON.stringify(proof, null, 2)}\n`, "utf8");
-  console.log("Motion queue audit passed for append, promotion, cancellation, and object-removal clearing.");
+  console.log("Motion queue audit passed for ordered sequence, queue policies, diagnostics, and edge cases.");
+}
+
+function assertOrderedSequence(runtime, assertions) {
+  const state = createState();
+  runtime.enqueueMotionDetailed(state, motion("actor.to.b", 4, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.to.c", 8, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.home", 0, "append"));
+  assertEqual(state.motions.size, 1, "one active motion after append sequence enqueue");
+  assertEqual(state.motionQueuesByObjectId.get("actor").length, 2, "two queued motions after append sequence enqueue");
+  assertDeepEqual(state.diagnostics.queuedMotionIds, ["actor.to.c", "actor.home"], "queued motion ids are exposed");
+
+  runtime.advanceMotions(state, 1);
+  assertEqual(state.objectLookup.get("actor").position.x, 4, "first motion completes at B");
+  assertEqual([...state.motions.keys()][0], "actor.to.c", "second motion activates after first completion");
+  assertEqual(state.motions.get("actor.to.c").startPosition.x, 4, "second motion starts from B");
+
+  runtime.advanceMotions(state, 1);
+  assertEqual(state.objectLookup.get("actor").position.x, 8, "second motion completes at C");
+  assertEqual([...state.motions.keys()][0], "actor.home", "home motion activates after second completion");
+  assertEqual(state.motions.get("actor.home").startPosition.x, 8, "home motion starts from C");
+
+  runtime.advanceMotions(state, 1);
+  assertEqual(state.objectLookup.get("actor").position.x, 0, "home motion completes at origin");
+  assertEqual(state.motions.size, 0, "no active motion after A-B-C-home sequence");
+  assertions.push("append queue moves A -> B -> C -> home with recalculated starts");
+}
+
+function assertQueuePolicies(runtime, assertions) {
+  let state = createState();
+  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.replace", 12, "replace"));
+  assertEqual([...state.motions.keys()][0], "actor.active", "replace keeps active motion");
+  assertDeepEqual(state.diagnostics.queuedMotionIds, ["actor.replace"], "replace swaps queued motions");
+  runtime.advanceMotions(state, 1);
+  assertEqual([...state.motions.keys()][0], "actor.replace", "replacement queued motion promotes after active completion");
+  assertEqual(state.motions.get("actor.replace").startPosition.x, 4, "replacement starts from active end");
+  assertions.push("replace policy swaps queued motions while preserving active motion");
+
+  state = createState();
+  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.cancel.replace", 2, "cancel-and-replace"));
+  assertDeepEqual([...state.motions.keys()], ["actor.cancel.replace"], "cancel-and-replace installs new active motion");
+  assertEqual(state.motionQueuesByObjectId.has("actor"), false, "cancel-and-replace clears queued motions");
+  assertEqual(state.diagnostics.cancelledMotionCount, 2, "cancel-and-replace counts cancelled active and queued motions");
+  assertions.push("cancel-and-replace clears active and queued motions before activating replacement");
+
+  state = createState();
+  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+  const rejected = runtime.enqueueMotionDetailed(state, motion("actor.rejected", 8, "reject-if-active"));
+  assertEqual(rejected.success, false, "reject-if-active fails while object has active motion");
+  assertDeepEqual([...state.motions.keys()], ["actor.active"], "reject-if-active preserves active motion");
+  assertions.push("reject-if-active refuses to change active or queued object motion state");
+}
+
+function assertEdgeCases(runtime, assertions) {
+  let state = createState();
+  runtime.enqueueMotionDetailed(state, {
+    motionId: "actor.zero",
+    objectId: "actor",
+    durationSeconds: 0,
+    queuePolicy: "cancel-and-replace",
+    targetPosition: { x: 0, y: 0, z: 0 }
+  });
+  runtime.advanceMotions(state, 1);
+  assertEqual(state.motions.size, 0, "zero-duration motion completes without hanging");
+  assertions.push("zero-duration motion normalizes to finite duration and completes");
+
+  state = createState();
+  const missing = runtime.enqueueMotionDetailed(state, motion("missing.object", 1, "append", "missing"));
+  assertEqual(missing.success, false, "missing object motion fails");
+  assertEqual(state.diagnostics.motionFailedCount, 1, "missing object increments failed motion diagnostics");
+  assertions.push("missing-object motion fails with diagnostics instead of queueing");
 }
 
 function writeAuditModule() {
@@ -153,6 +169,8 @@ function createState() {
       motionCompletedCount: 0,
       motionFailedCount: 0,
       queuedMotionCount: 0,
+      queuedMotionIds: [],
+      motionQueueSnapshot: [],
       maxMotionQueueLength: 0,
       cancelledMotionCount: 0
     },
@@ -162,12 +180,12 @@ function createState() {
   };
 }
 
-function motion(motionId, x, queueMode) {
+function motion(motionId, x, queuePolicy, objectId = "actor") {
   return {
     motionId,
-    objectId: "actor",
+    objectId,
     durationSeconds: 1,
-    queueMode,
+    queuePolicy,
     targetPosition: { x, y: 0, z: 0 }
   };
 }
@@ -175,6 +193,14 @@ function motion(motionId, x, queueMode) {
 function assertEqual(actual, expected, label) {
   if (actual !== expected) {
     throw new Error(`${label}: expected ${expected}, actual ${actual}`);
+  }
+}
+
+function assertDeepEqual(actual, expected, label) {
+  const actualJson = JSON.stringify(actual);
+  const expectedJson = JSON.stringify(expected);
+  if (actualJson !== expectedJson) {
+    throw new Error(`${label}: expected ${expectedJson}, actual ${actualJson}`);
   }
 }
 

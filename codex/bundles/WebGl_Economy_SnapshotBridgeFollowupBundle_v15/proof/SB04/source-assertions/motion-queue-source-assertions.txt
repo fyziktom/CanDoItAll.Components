@@ -1,0 +1,97 @@
+﻿Command: rg source assertions for SB04 queue policy, diagnostics, and anti-stub scan
+Repository: CanDoItAll.Components
+ExitCode: 0
+--- policy/diagnostic references (rg exit 0) ---
+.\tools\webgllib\audit-motion-queue.cjs:29:  runtime.enqueueMotionDetailed(state, motion("actor.to.b", 4, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:30:  runtime.enqueueMotionDetailed(state, motion("actor.to.c", 8, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:31:  runtime.enqueueMotionDetailed(state, motion("actor.home", 0, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:32:  assertEqual(state.motions.size, 1, "one active motion after append sequence enqueue");
+.\tools\webgllib\audit-motion-queue.cjs:33:  assertEqual(state.motionQueuesByObjectId.get("actor").length, 2, "two queued motions after append sequence enqueue");
+.\tools\webgllib\audit-motion-queue.cjs:34:  assertDeepEqual(state.diagnostics.queuedMotionIds, ["actor.to.c", "actor.home"], "queued motion ids are exposed");
+.\tools\webgllib\audit-motion-queue.cjs:49:  assertions.push("append queue moves A -> B -> C -> home with recalculated starts");
+.\tools\webgllib\audit-motion-queue.cjs:54:  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:55:  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:56:  runtime.enqueueMotionDetailed(state, motion("actor.replace", 12, "replace"));
+.\tools\webgllib\audit-motion-queue.cjs:57:  assertEqual([...state.motions.keys()][0], "actor.active", "replace keeps active motion");
+.\tools\webgllib\audit-motion-queue.cjs:58:  assertDeepEqual(state.diagnostics.queuedMotionIds, ["actor.replace"], "replace swaps queued motions");
+.\tools\webgllib\audit-motion-queue.cjs:60:  assertEqual([...state.motions.keys()][0], "actor.replace", "replacement queued motion promotes after active completion");
+.\tools\webgllib\audit-motion-queue.cjs:61:  assertEqual(state.motions.get("actor.replace").startPosition.x, 4, "replacement starts from active end");
+.\tools\webgllib\audit-motion-queue.cjs:62:  assertions.push("replace policy swaps queued motions while preserving active motion");
+.\tools\webgllib\audit-motion-queue.cjs:65:  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:66:  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:67:  runtime.enqueueMotionDetailed(state, motion("actor.cancel.replace", 2, "cancel-and-replace"));
+.\tools\webgllib\audit-motion-queue.cjs:68:  assertDeepEqual([...state.motions.keys()], ["actor.cancel.replace"], "cancel-and-replace installs new active motion");
+.\tools\webgllib\audit-motion-queue.cjs:69:  assertEqual(state.motionQueuesByObjectId.has("actor"), false, "cancel-and-replace clears queued motions");
+.\tools\webgllib\audit-motion-queue.cjs:70:  assertEqual(state.diagnostics.cancelledMotionCount, 2, "cancel-and-replace counts cancelled active and queued motions");
+.\tools\webgllib\audit-motion-queue.cjs:71:  assertions.push("cancel-and-replace clears active and queued motions before activating replacement");
+.\tools\webgllib\audit-motion-queue.cjs:74:  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+.\tools\webgllib\audit-motion-queue.cjs:75:  const rejected = runtime.enqueueMotionDetailed(state, motion("actor.rejected", 8, "reject-if-active"));
+.\tools\webgllib\audit-motion-queue.cjs:76:  assertEqual(rejected.success, false, "reject-if-active fails while object has active motion");
+.\tools\webgllib\audit-motion-queue.cjs:77:  assertDeepEqual([...state.motions.keys()], ["actor.active"], "reject-if-active preserves active motion");
+.\tools\webgllib\audit-motion-queue.cjs:78:  assertions.push("reject-if-active refuses to change active or queued object motion state");
+.\tools\webgllib\audit-motion-queue.cjs:87:    queuePolicy: "cancel-and-replace",
+.\tools\webgllib\audit-motion-queue.cjs:95:  const missing = runtime.enqueueMotionDetailed(state, motion("missing.object", 1, "append", "missing"));
+.\tools\webgllib\audit-motion-queue.cjs:115:    .replace(/import\s*\{[\s\S]*?\}\s*from\s*".*?";\s*/g, "")
+.\tools\webgllib\audit-motion-queue.cjs:116:    .replace(/^import .*?;\s*$/gm, "")
+.\tools\webgllib\audit-motion-queue.cjs:117:    .replace(/\bexport\s+function\s+/g, "function ");
+.\tools\webgllib\audit-motion-queue.cjs:172:      queuedMotionIds: [],
+.\tools\webgllib\audit-motion-queue.cjs:173:      motionQueueSnapshot: [],
+.\tools\webgllib\audit-motion-queue.cjs:183:function motion(motionId, x, queuePolicy, objectId = "actor") {
+.\tools\webgllib\audit-motion-queue.cjs:188:    queuePolicy,
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:17:    clearQueuedObjectMotions,
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:36:    if (normalized.queuePolicy === "reject-if-active" && hasObjectMotion(state, normalized.objectId)) {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:38:        result.metadata.queuePolicy = normalized.queuePolicy;
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:42:    if (normalized.queuePolicy === "replace") {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:43:        clearQueuedObjectMotions(state, normalized.objectId, result);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:46:    if (normalized.queuePolicy === "cancel-and-replace") {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:50:    if ((normalized.queuePolicy === "append" || normalized.queuePolicy === "replace") &&
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:56:        result.metadata.motionQueueMode = normalized.queuePolicy;
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:57:        result.metadata.queuePolicy = normalized.queuePolicy;
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:68:    result.metadata.queuePolicy = normalized.queuePolicy;
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:184:        replaceExistingForObject: command.replaceExistingForObject !== false,
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:185:        queuePolicy: normalizeQueuePolicy(command)
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:191:        command.queuePolicy ||
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:192:        command.metadata?.queuePolicy ||
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:198:        case "append":
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:199:        case "replace":
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:200:        case "cancel-and-replace":
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:201:        case "reject-if-active":
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:204:            return command.replaceExistingForObject === false ? "append" : "cancel-and-replace";
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\14-webgl-scene-motion.js:206:            return "cancel-and-replace";
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:126:            appendStageResult(runner, item, "skipped", "Stage payload was missing.");
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:134:            appendStageResult(runner, item, "completed", "");
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:140:            appendStageResult(runner, item, "failed", message);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:275:function appendStageResult(runner, item, status, error) {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\19-webgl-scene-shell.js:2:    host.replaceChildren();
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\19-webgl-scene-shell.js:26:    diagnosticsPanel.append(diagnosticsTitle, diagnosticsMeta);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\19-webgl-scene-shell.js:27:    host.append(stage, labelLayer, emptyState, diagnosticsPanel);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:23:        appendChildResult(result, patchResult);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:28:        appendChildResult(result, motionResult);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:68:        appendChildResult(result, patchResult);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:73:        appendChildResult(result, motionResult);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:77:function appendChildResult(batchResult, childResult) {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:23:        queuedMotionIds: state.diagnostics.queuedMotionIds || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:24:        motionQueueSnapshot: state.diagnostics.motionQueueSnapshot || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:67:            replacedObjectGroupCount: String(state.diagnostics.replacedObjectGroupCount || 0),
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:63:        replacedObjectGroupCount: 0,
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js:78:export function clearQueuedObjectMotions(state, objectId, result = null) {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js:121:    const queuedMotionIds = [];
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js:126:        queuedMotionIds.push(...ids);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js:127:        queueSnapshot.push({ objectId, queuedMotionIds: ids });
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js:133:    state.diagnostics.queuedMotionIds = queuedMotionIds;
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\29-webgl-scene-motion-queues.js:134:    state.diagnostics.motionQueueSnapshot = queueSnapshot;
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\07-webgl-scene-overlays.js:54:    label.append(title, meta);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\07-webgl-scene-overlays.js:55:    state.shell.labelLayer.appendChild(label);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\10-webgl-scene-lifecycle.js:60:    shell.stage.appendChild(renderer.domElement);
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\10-webgl-scene-lifecycle.js:129:        .replace(/^data:image\/png;base64,/, "");
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\10-webgl-scene-lifecycle.js:205:    state.host.replaceChildren();
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\11-webgl-scene-graph.js:148:export function replaceSceneObjectGroup(state, sceneObject) {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:212:        queuedMotionIds: diagnostics.queuedMotionIds || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:213:        motionQueueSnapshot: diagnostics.motionQueueSnapshot || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:278:        replacedObjectGroupCount: diagnostics.replacedObjectGroupCount || 0,
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\13-webgl-scene-patching.js:9:    replaceSceneObjectGroup,
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\13-webgl-scene-patching.js:201:        state.diagnostics.replacedObjectGroupCount = (state.diagnostics.replacedObjectGroupCount || 0) + 1;
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\13-webgl-scene-patching.js:202:        replaceSceneObjectGroup(state, sceneObject);
+
+--- anti-stub scan (rg exit 1; 1 means no matches) ---
+

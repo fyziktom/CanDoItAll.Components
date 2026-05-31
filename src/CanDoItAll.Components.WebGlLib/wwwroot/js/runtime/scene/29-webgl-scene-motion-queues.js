@@ -5,8 +5,12 @@ import {
 } from "./02-webgl-scene-core.js";
 
 export function hasObjectMotion(state, objectId) {
-    return Array.from(state.motions.values()).some(motion => motion.objectId === objectId) ||
-        getObjectQueue(state, objectId).length > 0;
+    return hasActiveObjectMotion(state, objectId) ||
+        (state.motionQueuesByObjectId?.get(objectId)?.length || 0) > 0;
+}
+
+export function hasActiveObjectMotion(state, objectId) {
+    return Array.from(state.motions.values()).some(motion => motion.objectId === objectId);
 }
 
 export function enqueueObjectMotion(state, motion) {
@@ -71,6 +75,20 @@ export function clearObjectMotionState(state, objectId, result = null) {
     syncMotionQueueDiagnostics(state);
 }
 
+export function clearQueuedObjectMotions(state, objectId, result = null) {
+    const queue = state.motionQueuesByObjectId?.get(objectId);
+    if (!queue?.length) {
+        return 0;
+    }
+
+    const cancelledCount = queue.length;
+    result?.affectedObjectIds.push(objectId);
+    state.motionQueuesByObjectId.delete(objectId);
+    state.diagnostics.cancelledMotionCount = (state.diagnostics.cancelledMotionCount || 0) + cancelledCount;
+    syncMotionQueueDiagnostics(state);
+    return cancelledCount;
+}
+
 export function removeQueuedMotion(state, motionId, result) {
     for (const [objectId, queue] of state.motionQueuesByObjectId || []) {
         const index = queue.findIndex(motion => motion.motionId === motionId);
@@ -99,12 +117,20 @@ export function syncMotionQueueDiagnostics(state) {
 
     let queued = 0;
     let maxLength = state.diagnostics.maxMotionQueueLength || 0;
-    for (const queue of state.motionQueuesByObjectId?.values?.() || []) {
+    const queueSnapshot = [];
+    const queuedMotionIds = [];
+    for (const [objectId, queue] of state.motionQueuesByObjectId || []) {
         queued += queue.length;
         maxLength = Math.max(maxLength, queue.length);
+        const ids = queue.map(motion => motion.motionId || "").filter(Boolean);
+        queuedMotionIds.push(...ids);
+        queueSnapshot.push({ objectId, queuedMotionIds: ids });
     }
 
     state.diagnostics.activeMotionCount = state.motions?.size || 0;
     state.diagnostics.queuedMotionCount = queued;
+    state.diagnostics.activeMotionIds = Array.from(state.motions?.keys?.() || []);
+    state.diagnostics.queuedMotionIds = queuedMotionIds;
+    state.diagnostics.motionQueueSnapshot = queueSnapshot;
     state.diagnostics.maxMotionQueueLength = maxLength;
 }

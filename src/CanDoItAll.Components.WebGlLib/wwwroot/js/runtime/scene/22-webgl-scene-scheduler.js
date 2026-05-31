@@ -1,3 +1,5 @@
+import { hasPendingCommandStageRunnerWork } from "./30-webgl-scene-stage-runner.js";
+
 export function createRenderScheduler(state, renderFrame) {
     return {
         schedule(reason = "invalidated") {
@@ -32,9 +34,7 @@ export function resolveRenderReason(state) {
         return "motion";
     }
 
-    const commandStageRunner = state.commandStageRunner;
-    if (commandStageRunner && !commandStageRunner.cancelled &&
-        ((commandStageRunner.queue?.length || 0) > 0 || (Number(commandStageRunner.waitSeconds) || 0) > 0)) {
+    if (hasPendingCommandStageRunnerWork(state)) {
         return "command-stage";
     }
 

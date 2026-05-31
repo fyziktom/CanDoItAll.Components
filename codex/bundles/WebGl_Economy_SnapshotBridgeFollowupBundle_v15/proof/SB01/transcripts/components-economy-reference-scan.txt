@@ -1,0 +1,16 @@
+﻿Command: rg -n --ignore-case "CanDoItAll\.Economy|Economy" .\src .\tests .\tools
+Repository: CanDoItAll.Components
+ExitCode: 
+0
+--- output ---
+.\tools\webgllib\audit-sharedwell-performance.cjs:10:const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-kernel-bridge-hardening-v12", "performance");
+.\tools\webgllib\audit-scene-runtime.cjs:8:const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-kernel-bridge-hardening-v12", "runtime");
+.\tools\webgllib\audit-scene-runtime.cjs:91:  const forbiddenDomainWords = /\b(economy|ledger|account|water|well|entrepreneur|citizen)\b/i;
+.\tools\webgllib\audit-scene-runtime.cjs:94:      fail(`${relativePath}:${index + 1} contains an Economy/domain-specific word in generic WebGL runtime code.`);
+.\tools\webgllib\audit-scene-runtime.cjs:237:    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_PerformanceHardeningBundle_v7"),
+.\tools\webgllib\audit-scene-runtime.cjs:238:    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_KernelBridgeHardeningBundle_v12"),
+.\tools\webgllib\audit-scene-runtime.cjs:239:    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_BridgeStabilityFollowupBundle_v13")
+.\tools\webgllib\audit-command-batch-parity.cjs:8:const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-sharedwell-hardening-v9", "command-batch-parity");
+.\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionPlannerTests.cs:116:            ActionKind = "economy-specific-action"
+.\src\CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunProvenance.cs:38:        "economy",
+.\src\CanDoItAll.Components.WebGlLib\README.md:86:`WebGlLib` remains a render substrate. Simulation clocks, run lifecycle, pathfinding, physics, persistence providers, economy rules, and domain semantics belong in a future `WebGlRunLib` or consuming domain package.

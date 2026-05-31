@@ -1,0 +1,44 @@
+﻿Command: rg source assertions for SB03 barriers, diagnostics, and anti-stub scan
+Repository: CanDoItAll.Components
+ExitCode: 0
+--- barrier/diagnostic references (rg exit 0) ---
+.\tools\webgllib\audit-stage-runner.cjs:43:  assertDeepEqual(applied, ["move.target"], "first time-delay stage applies immediately");
+.\tools\webgllib\audit-stage-runner.cjs:44:  assertEqual(state.diagnostics.commandStageBarrierPolicy, "time-delay", "time-delay barrier policy");
+.\tools\webgllib\audit-stage-runner.cjs:45:  assertEqual(state.diagnostics.completedCommandStageCount, 1, "completed count after first time-delay stage");
+.\tools\webgllib\audit-stage-runner.cjs:46:  assertEqual(state.diagnostics.queuedCommandStageCount, 2, "queued count after first time-delay stage");
+.\tools\webgllib\audit-stage-runner.cjs:49:  assertDeepEqual(applied, ["move.target"], "time-delay barrier holds before elapsed time");
+.\tools\webgllib\audit-stage-runner.cjs:53:  assertDeepEqual(applied, ["move.target", "change.pose", "move.home"], "all time-delay stages apply");
+.\tools\webgllib\audit-stage-runner.cjs:54:  assertEqual(state.diagnostics.commandStageResultLog.length, 3, "stage result log records time-delay stages");
+.\tools\webgllib\audit-stage-runner.cjs:55:  assertions.push("time-delay barrier preserves ordered wait stages and result log");
+.\tools\webgllib\audit-stage-runner.cjs:62:    stage("move.actor", { barrierPolicy: "wait-for-active-motions" }),
+.\tools\webgllib\audit-stage-runner.cjs:72:  assertEqual(state.diagnostics.commandStageBarrierPolicy, "wait-for-active-motions", "active-motion barrier policy");
+.\tools\webgllib\audit-stage-runner.cjs:77:  assertions.push("wait-for-active-motions waits for all active or queued motions before next stage");
+.\tools\webgllib\audit-stage-runner.cjs:85:    stage("wait.actor", { barrierPolicy: "wait-for-object-motions", barrierObjectIds: ["actor"] }),
+.\tools\webgllib\audit-stage-runner.cjs:91:  assertions.push("wait-for-object-motions only blocks selected object ids");
+.\tools\webgllib\audit-stage-runner.cjs:98:    stage("wait.idle", { barrierPolicy: "wait-for-render-idle" }),
+.\tools\webgllib\audit-stage-runner.cjs:105:  assertions.push("wait-for-render-idle waits for an idle render turn before next stage");
+.\tools\webgllib\audit-stage-runner.cjs:112:    stage("manual.pause", { barrierPolicy: "manual-step" }),
+.\tools\webgllib\audit-stage-runner.cjs:116:  assertDeepEqual(applied, ["manual.pause"], "manual-step barrier applies first stage only");
+.\tools\webgllib\audit-stage-runner.cjs:118:  assertDeepEqual(applied, ["manual.pause"], "manual-step barrier does not auto-advance");
+.\tools\webgllib\audit-stage-runner.cjs:120:  assertEqual(runtime.requestCommandStageManualStep(state), true, "manual step request accepted");
+.\tools\webgllib\audit-stage-runner.cjs:123:  assertDeepEqual(applied, ["manual.pause", "after.manual"], "manual-step request advances next stage");
+.\tools\webgllib\audit-stage-runner.cjs:124:  assertions.push("manual-step barrier requires explicit runtime step request");
+.\tools\webgllib\audit-stage-runner.cjs:133:    scheduler.resolveRenderReason(createSchedulerState({ queue: [], activeBarrier: { policy: "time-delay", remainingSeconds: 0.25 } })),
+.\tools\webgllib\audit-stage-runner.cjs:135:    "scheduler sees command stage runner time-delay state");
+.\tools\webgllib\audit-stage-runner.cjs:137:    scheduler.resolveRenderReason(createSchedulerState({ queue: [stage("manual.stage")], activeBarrier: { policy: "manual-step" } })),
+.\tools\webgllib\audit-stage-runner.cjs:139:    "scheduler ignores manual-step barrier without request");
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:230:        commandStageResultLog: diagnostics.commandStageResultLog || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:231:        commandStageQueueSnapshot: diagnostics.commandStageQueueSnapshot || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:30:        commandStageResultLog: state.diagnostics.commandStageResultLog || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:31:        commandStageQueueSnapshot: state.diagnostics.commandStageQueueSnapshot || [],
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:2:    timeDelay: "time-delay",
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:3:    waitForActiveMotions: "wait-for-active-motions",
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:4:    waitForObjectMotions: "wait-for-object-motions",
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:5:    waitForRenderIdle: "wait-for-render-idle",
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:6:    manualStep: "manual-step"
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:43:export function requestCommandStageManualStep(state) {
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:104:    state.diagnostics.commandStageResultLog = [...(runner.resultLog || [])];
+.\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:105:    state.diagnostics.commandStageQueueSnapshot = (runner.queue || []).map(item => ({
+
+--- anti-stub scan (rg exit 1; 1 means no matches) ---
+

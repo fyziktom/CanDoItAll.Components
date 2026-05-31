@@ -131,6 +131,11 @@ public sealed class WebGlRunActionCompilerTests
         WebGlSceneCommandBatch batch = WebGlRunFrameApplyResult.FromFrame(timeline.Frames.Single()).CommandBatch;
 
         Assert.Equal([0.25, 0.25, 0.25], batch.Stages.Select(stage => stage.WaitSeconds).ToArray());
+        Assert.Equal(
+            [WebGlSceneStageBarrierPolicies.WaitForObjectMotions, WebGlSceneStageBarrierPolicies.TimeDelay, WebGlSceneStageBarrierPolicies.WaitForObjectMotions],
+            batch.Stages.Select(stage => stage.BarrierPolicy).ToArray());
+        Assert.Equal(["actor"], batch.Stages[0].BarrierObjectIds.ToArray());
+        Assert.Equal(["actor"], batch.Stages[2].BarrierObjectIds.ToArray());
         Assert.Equal(["move.target", "admin.symbol", "return.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
     }
 
@@ -214,6 +219,35 @@ public sealed class WebGlRunActionCompilerTests
         Assert.Equal("1", motion.Metadata["stageIndex"]);
         Assert.Equal("visual.1", motion.Metadata["visualActionId"]);
         Assert.Equal("event.1", motion.Metadata["sourceEventId"]);
+        Assert.Equal(WebGlSceneStageBarrierPolicies.WaitForObjectMotions, batch.Stages[1].BarrierPolicy);
+        Assert.Equal(["actor"], batch.Stages[1].BarrierObjectIds.ToArray());
+    }
+
+    [Fact]
+    public void Batch_compiler_rejects_unsupported_action_without_wait_fallback()
+    {
+        var plan = new WebGlRunActionPlan
+        {
+            ActionId = "unsupported.plan",
+            Actions =
+            [
+                new()
+                {
+                    ActionId = "unsupported.action",
+                    ActionKind = "unsupported-domain-action",
+                    SubjectObjectId = "actor",
+                    DurationSeconds = 5
+                }
+            ]
+        };
+
+        WebGlSceneCommandBatch batch = new WebGlRunActionPlanBatchCompiler().Compile(plan);
+
+        Assert.False(plan.IsValid);
+        Assert.Contains(plan.Errors, error => error.Contains("Unsupported WebGL run action kind", StringComparison.Ordinal));
+        Assert.Empty(batch.Stages);
+        Assert.Empty(batch.Motions);
+        Assert.DoesNotContain(batch.Metadata, item => string.Equals(item.Key, "explicitNoOpMapping", StringComparison.Ordinal));
     }
 
     private static WebGlRunAction Action(

@@ -1,0 +1,46 @@
+﻿SB08 source assertions generated 2026-05-31.
+
+Line counts:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotBuilder.cs: 229
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotBuilderTests.cs: 195
+
+Production builder contract references:
+3:public interface ISimulationSnapshotBuilder
+5:    SimulationSnapshotBuildResult Build(SimulationSnapshotBuildRequest request);
+8:public sealed class SimulationSnapshotBuildRequest
+20:    public Dictionary<string, string> RuntimeDiagnostics { get; set; } = [];
+24:public sealed class SimulationSnapshotBuildResult
+34:    SimulationSnapshotProvenanceBuilder? provenanceBuilder = null) : ISimulationSnapshotBuilder
+36:    private readonly SimulationSnapshotProvenanceBuilder provenanceBuilder = provenanceBuilder ?? new SimulationSnapshotProvenanceBuilder();
+38:    public SimulationSnapshotBuildResult Build(SimulationSnapshotBuildRequest request)
+42:        var result = new SimulationSnapshotBuildResult();
+77:        SimulationSnapshotBuildRequest request,
+80:        SimulationSnapshotBuildResult result)
+103:    private static void EnsureFrameIdentity(SimulationSnapshotBuildRequest request, string runId, string scenarioId)
+114:    private static void EnsureHashes(SimulationSnapshotBuildRequest request)
+124:        SimulationSnapshotBuildRequest request,
+125:        SimulationSnapshotBuildResult result)
+131:        if (request.RuntimeDiagnostics.Count > 0)
+136:        if (request.VisualState is null && request.RuntimeDiagnostics.Count > 0)
+144:    private static SimulationSnapshotVisualState? BuildVisualState(SimulationSnapshotBuildRequest request)
+147:        if (request.RuntimeDiagnostics.Count == 0)
+153:        foreach (KeyValuePair<string, string> diagnostic in request.RuntimeDiagnostics.OrderBy(static item => item.Key, StringComparer.Ordinal))
+155:            visualState.RuntimeDiagnostics[diagnostic.Key] = diagnostic.Value;
+174:                RuntimeDiagnostics = new Dictionary<string, string>(visualState.RuntimeDiagnostics, StringComparer.Ordinal),
+182:public sealed class SimulationSnapshotProvenanceBuilder
+184:    public Dictionary<string, string> Build(SimulationSnapshotBuildRequest request, SimulationRunSnapshot snapshot)
+193:            ["snapshot.data"] = BuildDataHash(snapshot)
+
+Test coverage references:
+9:    public void BuilderCreatesSharedResourceSnapshotWithProvenance()
+24:        Assert.True(result.Snapshot.ProvenanceHashes.ContainsKey("snapshot.data"));
+29:    public void BuilderCreatesFiniteResourceMarketSnapshotWithVisualAndRuntimeInputs()
+35:        request.RuntimeDiagnostics["scheduler"] = "stable";
+36:        request.RuntimeDiagnostics["queueDepth"] = "2";
+44:        Assert.Equal("stable", result.Snapshot.VisualState.RuntimeDiagnostics["scheduler"]);
+45:        Assert.Equal("2", result.Snapshot.VisualState.RuntimeDiagnostics["queueDepth"]);
+51:    public void BuilderKeepsDataHashStableWhenRuntimeDiagnosticsChange()
+55:        stable.RuntimeDiagnostics["scheduler"] = "stable";
+59:        noisy.RuntimeDiagnostics["scheduler"] = "recovered-after-retry";
+64:        Assert.Equal(first.ProvenanceHashes["snapshot.data"], second.ProvenanceHashes["snapshot.data"]);
+66:        Assert.NotEqual(first.VisualState!.RuntimeDiagnostics["scheduler"], second.VisualState!.RuntimeDiagnostics["scheduler"]);

@@ -14,6 +14,15 @@ public static class WebGlSceneBatchingPolicies
     public const string CoalesceWithinStage = "coalesce-within-stage";
 }
 
+public static class WebGlSceneStageBarrierPolicies
+{
+    public const string TimeDelay = "time-delay";
+    public const string WaitForActiveMotions = "wait-for-active-motions";
+    public const string WaitForObjectMotions = "wait-for-object-motions";
+    public const string WaitForRenderIdle = "wait-for-render-idle";
+    public const string ManualStep = "manual-step";
+}
+
 public sealed class WebGlSceneCommandBatch
 {
     public string BatchId { get; set; } = string.Empty;
@@ -48,6 +57,10 @@ public sealed class WebGlSceneCommandBatchStage
     public bool AllowDuplicateMotionsPerObject { get; set; }
 
     public double WaitSeconds { get; set; }
+
+    public string BarrierPolicy { get; set; } = string.Empty;
+
+    public List<string> BarrierObjectIds { get; set; } = [];
 
     public Dictionary<string, string> Metadata { get; set; } = [];
 }
@@ -160,6 +173,8 @@ public static class WebGlSceneCommandBatchNormalizer
             BatchingPolicy = batchingPolicy,
             AllowDuplicateMotionsPerObject = stage.AllowDuplicateMotionsPerObject || parent.AllowDuplicateMotionsPerObject,
             WaitSeconds = stage.WaitSeconds,
+            BarrierPolicy = stage.BarrierPolicy,
+            BarrierObjectIds = [.. stage.BarrierObjectIds],
             Metadata = new Dictionary<string, string>(stage.Metadata, StringComparer.Ordinal)
         };
         var stageResult = new WebGlSceneCommandBatchNormalizationResult

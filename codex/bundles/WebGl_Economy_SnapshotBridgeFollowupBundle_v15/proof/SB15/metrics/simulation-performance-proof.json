@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "economy-performance-proof/v1",
+  "generatedForDate": "2026-05-31",
+  "largeScreenOnly": true,
+  "operations": [
+    {
+      "name": "scenario normalization for 250 actors, 1000 events, 500 stores",
+      "elapsedMilliseconds": 16.09,
+      "managedHeapDeltaBytes": 588080,
+      "values": {
+        "actorCount": 250,
+        "storeCount": 500,
+        "eventCount": 1000,
+        "messageCount": 0
+      }
+    },
+    {
+      "name": "250 actors, 1000 events, 500 stores materialization",
+      "elapsedMilliseconds": 148642.42,
+      "managedHeapDeltaBytes": 402492480,
+      "values": {
+        "actorCount": 250,
+        "storeCount": 500,
+        "eventCount": 1000,
+        "frameCount": 1001
+      }
+    },
+    {
+      "name": "large final frame hash canonicalization",
+      "elapsedMilliseconds": 29.185,
+      "managedHeapDeltaBytes": -16448,
+      "values": {
+        "storeCount": 500,
+        "flowCount": 1,
+        "hashLength": 64
+      }
+    },
+    {
+      "name": "metric and invariant evaluation over 500 stores",
+      "elapsedMilliseconds": 10.517,
+      "managedHeapDeltaBytes": 14000,
+      "values": {
+        "metricValue": 0.004000,
+        "invariantPassed": true
+      }
+    },
+    {
+      "name": "visual frame mapping over 250 actors and 500 stores",
+      "elapsedMilliseconds": 14.986,
+      "managedHeapDeltaBytes": 894360,
+      "values": {
+        "nodeCount": 1000,
+        "linkCount": 501,
+        "actionCount": 1,
+        "symbolCount": 0
+      }
+    },
+    {
+      "name": "WebGL bridge projection over mapped large frame",
+      "elapsedMilliseconds": 24.994,
+      "managedHeapDeltaBytes": -26792,
+      "values": {
+        "objectCount": 1000,
+        "linkCount": 501,
+        "frameCount": 1,
+        "stageCount": 1,
+        "commandCount": 1,
+        "nodeObjectMappingCount": 1000
+      }
+    },
+    {
+      "name": "command batch normalization for 1000 visual actions and staged WebGL commands",
+      "elapsedMilliseconds": 18.999,
+      "managedHeapDeltaBytes": 904,
+      "values": {
+        "actorCount": 250,
+        "resourceStoreCount": 500,
+        "linkCount": 1000,
+        "visualActionCount": 1000,
+        "stageCount": 1000,
+        "commandCount": 1000,
+        "objectCount": 750,
+        "nodeObjectMappingCount": 750,
+        "normalizedStageCount": 1000
+      }
+    },
+    {
+      "name": "100 snapshot export/import round trips",
+      "elapsedMilliseconds": 41418.496,
+      "managedHeapDeltaBytes": 1855304,
+      "values": {
+        "snapshotCount": 100,
+        "importedSnapshotCount": 100,
+        "totalJsonBytes": 25575790
+      }
+    }
+  ],
+  "memoryAllocationNotes": [
+    "Materialization stores all emitted frames and deltas in memory; this probe records heap delta as a bottleneck signal rather than an optimization target.",
+    "Hash canonicalization allocates canonical JSON for a large frame before hashing.",
+    "Store lookups use state indexes for id, actor/resource, and location/resource paths during event application.",
+    "Bridge object resolution uses node-object dictionaries during action mapping and link projection.",
+    "Command batch normalization is measured with 1000 visual actions and 500 or more staged WebGL commands.",
+    "Snapshot export/import is measured across 100 production snapshot serializer round trips."
+  ]
+}

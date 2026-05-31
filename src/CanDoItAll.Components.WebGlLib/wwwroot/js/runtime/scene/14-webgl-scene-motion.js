@@ -14,8 +14,10 @@ import { notifyStateChanged } from "./24-webgl-scene-notifications.js";
 import {
     activateNextMotion,
     clearObjectMotionState,
+    clearQueuedObjectMotions,
     enqueueObjectMotion,
     getObjectQueue,
+    hasActiveObjectMotion,
     hasObjectMotion,
     syncMotionQueueDiagnostics
 } from "./29-webgl-scene-motion-queues.js";
@@ -31,19 +33,31 @@ export function enqueueMotionDetailed(state, command) {
         return completeCommandResult(state, result);
     }
 
-    if (normalized.queueMode === "append" && hasObjectMotion(state, normalized.objectId)) {
+    if (normalized.queuePolicy === "reject-if-active" && hasObjectMotion(state, normalized.objectId)) {
+        failMotion(state, result, `Motion target '${normalized.objectId}' already has active or queued motion.`);
+        result.metadata.queuePolicy = normalized.queuePolicy;
+        return completeCommandResult(state, result);
+    }
+
+    if (normalized.queuePolicy === "replace") {
+        clearQueuedObjectMotions(state, normalized.objectId, result);
+    }
+
+    if (normalized.queuePolicy === "cancel-and-replace") {
+        clearObjectMotionState(state, normalized.objectId);
+    }
+
+    if ((normalized.queuePolicy === "append" || normalized.queuePolicy === "replace") &&
+        hasActiveObjectMotion(state, normalized.objectId)) {
         enqueueObjectMotion(state, normalized);
         state.diagnostics.motionAcceptedCount += 1;
         result.commandId = normalized.motionId;
         result.affectedObjectIds.push(normalized.objectId);
-        result.metadata.motionQueueMode = "append";
+        result.metadata.motionQueueMode = normalized.queuePolicy;
+        result.metadata.queuePolicy = normalized.queuePolicy;
         result.metadata.motionQueueDepth = String(getObjectQueue(state, normalized.objectId).length);
         state.scheduleRender("motion-queued");
         return completeCommandResult(state, result);
-    }
-
-    if (normalized.queueMode !== "append" && normalized.replaceExistingForObject !== false) {
-        clearObjectMotionState(state, normalized.objectId);
     }
 
     state.motions.set(normalized.motionId, normalized);
@@ -51,6 +65,7 @@ export function enqueueMotionDetailed(state, command) {
     syncMotionQueueDiagnostics(state);
     result.commandId = normalized.motionId;
     result.affectedObjectIds.push(normalized.objectId);
+    result.metadata.queuePolicy = normalized.queuePolicy;
     state.scheduleRender("motion-enqueued");
     return completeCommandResult(state, result);
 }
@@ -167,8 +182,29 @@ function normalizeCommand(state, command, result) {
         easing: command.easing || "linear",
         snapAtEnd: command.snapAtEnd !== false,
         replaceExistingForObject: command.replaceExistingForObject !== false,
-        queueMode: String(command.queueMode || command.metadata?.queueMode || "").toLowerCase()
+        queuePolicy: normalizeQueuePolicy(command)
     };
+}
+
+function normalizeQueuePolicy(command) {
+    const value = String(
+        command.queuePolicy ||
+        command.metadata?.queuePolicy ||
+        command.queueMode ||
+        command.metadata?.queueMode ||
+        ""
+    ).trim().toLowerCase();
+    switch (value) {
+        case "append":
+        case "replace":
+        case "cancel-and-replace":
+        case "reject-if-active":
+            return value;
+        case "":
+            return command.replaceExistingForObject === false ? "append" : "cancel-and-replace";
+        default:
+            return "cancel-and-replace";
+    }
 }
 
 function normalizePosition(value, fallback) {

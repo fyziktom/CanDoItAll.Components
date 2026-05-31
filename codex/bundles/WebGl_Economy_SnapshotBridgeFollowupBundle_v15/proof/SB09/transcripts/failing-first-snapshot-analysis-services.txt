@@ -1,0 +1,14 @@
+﻿SB09 failing-first snapshot analysis proof generated 2026-05-31.
+
+Production analyzer contract scan before SB09:
+
+Test-only analysis logic before SB09:
+140:    private static SnapshotAnalysisResult Analyze(SimulationRunSnapshot snapshot)
+151:        List<RelationshipSummary> trust = [.. snapshot.Frame.Relationships
+153:            .Select(static relationship => new RelationshipSummary(relationship.RelationshipId, relationship.SourceActorId, relationship.TargetActorId, relationship.Kind, relationship.Strength))];
+154:        List<RelationshipSummary> conflict = [.. snapshot.Frame.Relationships
+156:            .Select(static relationship => new RelationshipSummary(relationship.RelationshipId, relationship.SourceActorId, relationship.TargetActorId, relationship.Kind, relationship.Strength))];
+229:    private sealed class SnapshotAnalysisResult
+235:        public List<RelationshipSummary> TrustRelationships { get; set; } = [];
+236:        public List<RelationshipSummary> ConflictRelationships { get; set; } = [];
+242:    private sealed record RelationshipSummary(string RelationshipId, string SourceActorId, string TargetActorId, string Kind, decimal Strength);

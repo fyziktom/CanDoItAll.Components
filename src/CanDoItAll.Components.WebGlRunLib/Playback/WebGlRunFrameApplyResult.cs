@@ -37,6 +37,8 @@ public sealed class WebGlRunFrameApplyResult
                         Patches = [.. stage.ScenePatches.Select(item => item.Patch)],
                         Motions = [.. stage.Motions],
                         WaitSeconds = stage.WaitSeconds,
+                        BarrierPolicy = stage.BarrierPolicy,
+                        BarrierObjectIds = [.. stage.BarrierObjectIds],
                         Metadata = new Dictionary<string, string>(stage.Metadata, StringComparer.Ordinal)
                     })
             ],

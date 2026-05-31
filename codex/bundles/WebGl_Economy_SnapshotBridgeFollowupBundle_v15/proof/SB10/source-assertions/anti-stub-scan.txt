@@ -1,0 +1,8 @@
+SB10 anti-stub scan
+
+Command:
+rg -n "TODO|NotImplementedException|throw new NotSupportedException|return default;|stub|placeholder" C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotStore.cs C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationSnapshotStoreTests.cs
+
+Result:
+- No TODO, NotImplementedException, NotSupportedException, stub, or placeholder markers were found.
+- One expected `return default;` was found in `InMemorySimulationSnapshotStore.TryGet` when a requested snapshot id is missing.

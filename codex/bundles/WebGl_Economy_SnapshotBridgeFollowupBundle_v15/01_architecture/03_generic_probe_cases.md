@@ -56,3 +56,7 @@ Required generic capabilities:
 
 If a feature is only useful for one probe, it belongs in a fixture or test factory.
 If it is useful for both probes, it is probably a generic kernel capability.
+
+## Execution Closure
+
+SB13 proves the shared-resource probe through production loaders, visual action sequencing, WebGL projection, snapshot analysis, and forbidden production-term scans. SB14 proves the finite-resource market probe through capacity, ownership, demand, concentration metrics, anti-concentration invariant, fee event, snapshot diffing, and forbidden production-term scans. See `bundle://proof/SB13/manifest.md` and `bundle://proof/SB14/manifest.md`.

@@ -15,7 +15,27 @@ public sealed class WebGlRunActionCompiler
             .ToDictionary(static binding => binding.ObjectId, StringComparer.Ordinal);
         var frames = new Dictionary<long, WebGlRunFrame>();
 
-        var normalizedActions = plan.Actions.Select(action => actionNormalizer.Normalize(action).Action).ToList();
+        var normalizedResults = plan.Actions.Select(action => actionNormalizer.Normalize(action)).ToList();
+        foreach (string error in normalizedResults.SelectMany(static result => result.Errors))
+        {
+            if (!plan.Errors.Contains(error, StringComparer.Ordinal))
+            {
+                plan.Errors.Add(error);
+            }
+        }
+
+        foreach (string warning in normalizedResults.SelectMany(static result => result.Warnings))
+        {
+            if (!plan.Warnings.Contains(warning, StringComparer.Ordinal))
+            {
+                plan.Warnings.Add(warning);
+            }
+        }
+
+        var normalizedActions = normalizedResults
+            .Where(static result => result.IsValid)
+            .Select(static result => result.Action)
+            .ToList();
         foreach (var action in Flatten(normalizedActions)
                      .Select(static (action, order) => new { action, order })
                      .OrderBy(static item => item.action.StartsAtSeconds)
@@ -111,6 +131,12 @@ public sealed class WebGlRunActionCompiler
             case WebGlRunActionKinds.SetLayerVisibility:
             case WebGlRunActionKinds.Wait:
                 stage.WaitSeconds = Math.Max(0, action.DurationSeconds);
+                WebGlRunStageBarrierPolicy.Apply(action, stage, WebGlSceneStageBarrierPolicies.TimeDelay);
+                if (action.ActionKind is not WebGlRunActionKinds.Wait)
+                {
+                    stage.Metadata["explicitNoOpMapping"] = action.ActionKind;
+                }
+
                 frame.Metadata[$"action.{action.ActionId}"] = action.ActionKind;
                 break;
         }
@@ -242,6 +268,7 @@ public sealed class WebGlRunActionCompiler
         }
 
         stage.WaitSeconds = Math.Max(stage.WaitSeconds, Math.Max(0, action.DurationSeconds));
+        WebGlRunStageBarrierPolicy.Apply(action, stage, WebGlSceneStageBarrierPolicies.WaitForObjectMotions, action.SubjectObjectId);
         stage.Motions.Add(new WebGlObjectMotionCommand
         {
             MotionId = action.ActionId,
@@ -250,6 +277,7 @@ public sealed class WebGlRunActionCompiler
             DurationSeconds = action.DurationSeconds,
             Easing = Get(action.Parameters, "easing", WebGlMotionEasings.EaseInOut),
             QueueMode = WebGlMotionQueueModes.Append,
+            QueuePolicy = WebGlMotionQueueModes.Append,
             Metadata = BuildCommandMetadata(action, stage)
         });
     }
@@ -257,6 +285,11 @@ public sealed class WebGlRunActionCompiler
     private static void AddPatch(WebGlRunAction action, WebGlRunActionStage stage, WebGlSceneObjectPatch objectPatch)
     {
         stage.WaitSeconds = Math.Max(stage.WaitSeconds, Math.Max(0, action.DurationSeconds));
+        if (stage.WaitSeconds > 0)
+        {
+            WebGlRunStageBarrierPolicy.Apply(action, stage, WebGlSceneStageBarrierPolicies.TimeDelay);
+        }
+
         stage.ScenePatches.Add(new WebGlRunFramePatch
         {
             Id = action.ActionId,
@@ -282,7 +315,7 @@ public sealed class WebGlRunActionCompiler
     private static string Get(IReadOnlyDictionary<string, string> values, string key, string fallback = "")
         => values.TryGetValue(key, out var value) ? value : fallback;
 
-    private static string FirstNonEmpty(params string[] values)
+    private static string FirstNonEmpty(params string?[] values)
         => values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? string.Empty;
 
     private static bool TryDouble(IReadOnlyDictionary<string, string> values, string key, out double result)
@@ -302,4 +335,5 @@ public sealed class WebGlRunActionCompiler
         metadata.TryAdd("sourceEventId", action.Metadata.GetValueOrDefault("sourceEventId", string.Empty));
         return metadata;
     }
+
 }

@@ -39,6 +39,10 @@ public sealed class WebGlRunActionStage
 
     public double WaitSeconds { get; set; }
 
+    public string BarrierPolicy { get; set; } = string.Empty;
+
+    public List<string> BarrierObjectIds { get; set; } = [];
+
     public List<WebGlRunFramePatch> ScenePatches { get; set; } = [];
 
     public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
