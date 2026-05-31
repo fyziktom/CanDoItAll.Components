@@ -109,6 +109,43 @@ public sealed class WebGlRunActionCompilerTests
         Assert.Equal(0, int.Parse(batch.Metadata["droppedDuplicateMotionCount"]));
     }
 
+    [Fact]
+    public void Compiler_projects_stage_group_and_coalescing_scope_to_command_batch_stages()
+    {
+        var timeline = new WebGlRunActionCompiler().Compile(new WebGlRunActionPlan
+        {
+            FrameRate = 1,
+            ObjectBindings =
+            [
+                new WebGlRunObjectBinding { ObjectId = "actor", Position = new WebGlVector3(0, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "target", Position = new WebGlVector3(4, 0, 0) }
+            ],
+            Actions =
+            [
+                new()
+                {
+                    ActionId = "move.actor",
+                    ActionKind = WebGlRunActionKinds.MoveToObject,
+                    SubjectObjectId = "actor",
+                    TargetObjectId = "target",
+                    StartsAtSeconds = 0,
+                    DurationSeconds = 0.25,
+                    StageGroupId = "event.1",
+                    CoalescingScope = WebGlRunCoalescingScopes.None
+                }
+            ]
+        });
+
+        WebGlRunActionStage stage = timeline.Frames.Single().Stages.Single();
+        WebGlSceneCommandBatchStage batchStage = WebGlRunFrameApplyResult.FromFrame(timeline.Frames.Single()).CommandBatch.Stages.Single();
+
+        Assert.Equal("event.1", stage.StageGroupId);
+        Assert.Equal(WebGlRunCoalescingScopes.None, stage.CoalescingScope);
+        Assert.Equal("event.1", stage.Metadata["stageGroupId"]);
+        Assert.Equal(WebGlRunCoalescingScopes.None, stage.Metadata["coalescingScope"]);
+        Assert.Equal(WebGlSceneBatchingPolicies.PreserveOrder, batchStage.BatchingPolicy);
+    }
+
     private static WebGlRunAction Action(
         string id,
         string kind,

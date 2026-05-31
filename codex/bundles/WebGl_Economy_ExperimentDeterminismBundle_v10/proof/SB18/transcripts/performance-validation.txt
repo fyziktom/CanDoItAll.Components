@@ -1,0 +1,22 @@
+# SB18 performance validation transcript
+
+Components:
+
+```text
+npm run webgllib:audit-sharedwell-performance
+Shared Well WebGlLib performance audit passed. Wrote artifacts\webgl-economy-sharedwell-hardening-v9\performance\components-performance-proof.json.
+```
+
+Economy:
+
+```text
+$env:ECONOMY_PERFORMANCE_PROOF_PATH='bundle://proof/SB18/economy-performance-proof.json'
+dotnet test tests/CanDoItAll.Economy.Tests/CanDoItAll.Economy.Tests.csproj --no-restore -p:UseSharedCompilation=false --filter FullyQualifiedName~EconomyPerformanceProof_CompilesMaterializesAndMapsLargeGenericSharedResourceScenario
+Passed. Failed: 0, Passed: 1, Skipped: 0, Total: 1.
+```
+
+Scale covered:
+
+- Components command batching: 1000 independent motions plus ordered staged duplicate-motion safety.
+- Economy synthetic scenario: 100 actors x 50 scheduled steps, producing more than 1000 scheduled/expanded events and visual actions.
+- WebGL large-screen-only rule remained intact; no small/medium/mobile optimization proof was added.

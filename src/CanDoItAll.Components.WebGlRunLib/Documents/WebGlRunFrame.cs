@@ -27,6 +27,10 @@ public sealed class WebGlRunActionStage
 
     public int StageIndex { get; set; } = -1;
 
+    public string StageGroupId { get; set; } = string.Empty;
+
+    public string CoalescingScope { get; set; } = WebGlRunCoalescingScopes.StageOnly;
+
     public int OrderIndex { get; set; } = -1;
 
     public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;

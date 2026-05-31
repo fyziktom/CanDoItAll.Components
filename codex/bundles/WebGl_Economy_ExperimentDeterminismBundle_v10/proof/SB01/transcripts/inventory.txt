@@ -1,0 +1,76 @@
+# SB01 inventory transcript
+
+Command: `python scripts/validate_bundle.py --stage prepared`
+Working directory: `bundle://`
+Result: exit code 0
+
+Output:
+```text
+Bundle validation passed.
+```
+
+Command: `git status --short --branch`
+Working directory: `repo://CanDoItAll.Components`
+Result: exit code 0
+
+Output:
+```text
+## webgl-engine...origin/webgl-engine [ahead 1]
+```
+
+Command: `git rev-parse HEAD`
+Working directory: `repo://CanDoItAll.Components`
+Result: exit code 0
+
+Output:
+```text
+d22e1c50dbaa2e531bef99dd2adf01b6e96b5baa
+```
+
+Command: `git status --short --branch`
+Working directory: `repo://CanDoItAll.Economy`
+Result: exit code 0
+
+Output:
+```text
+## main...origin/main
+```
+
+Command: `git rev-parse HEAD`
+Working directory: `repo://CanDoItAll.Economy`
+Result: exit code 0
+
+Output:
+```text
+3828376e930335ac7f14fa642655cc0facba4237
+```
+
+Command: `git status --short --branch`
+Working directory: `repo://CanDoItAll`
+Result: exit code 0
+
+Output:
+```text
+## development...origin/development
+```
+
+Command: `git rev-parse HEAD`
+Working directory: `repo://CanDoItAll`
+Result: exit code 0
+
+Output:
+```text
+31e5bb8b1cfc6d6887db018ea0a325fce351e2a3
+```
+
+Inventory observations:
+- `repo://CanDoItAll.Components/src/CanDoItAll.Components.WebGlLib`
+- `repo://CanDoItAll.Components/src/CanDoItAll.Components.WebGlRunLib`
+- `repo://CanDoItAll.Components/src/CanDoItAll.Components.WebGlSandbox`
+- `repo://CanDoItAll.Components/tests/CanDoItAll.Components.WebGlLib.Tests`
+- `repo://CanDoItAll.Components/tests/CanDoItAll.Components.WebGlRunLib.Tests`
+- `repo://CanDoItAll.Economy/src/CanDoItAll.Economy.Simulation.Abstractions`
+- `repo://CanDoItAll.Economy/src/CanDoItAll.Economy.Simulation.SimpleAccounts`
+- `repo://CanDoItAll.Economy/src/CanDoItAll.Economy.Simulation.Ledger`
+- `repo://CanDoItAll.Economy/src/CanDoItAll.Economy.Simulation.Visualization`
+- `repo://CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests`

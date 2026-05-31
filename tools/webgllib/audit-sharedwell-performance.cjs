@@ -14,22 +14,22 @@ async function main() {
   const normalizer = await importModule(writeCommandBatchAuditModule());
   const links = await importModule(writeLinkAuditModule());
 
-  const motionProof = measure("100 independent motions", () => {
+  const motionProof = measure("1000 independent motions", () => {
     const batch = {
-      batchId: "proof.components.100-motions",
-      motions: Array.from({ length: 100 }, (_, index) => ({
+      batchId: "proof.components.1000-motions",
+      motions: Array.from({ length: 1000 }, (_, index) => ({
         motionId: `motion.${index}`,
         objectId: `actor.${index}`,
         targetPosition: { x: index, y: 0, z: 0 }
       }))
     };
     const normalized = normalizer.normalizeCommandBatchForAudit(batch);
-    assertEqual(normalized.metrics.commandCountBeforeNormalization, 100, "100 motions before normalization");
-    assertEqual(normalized.metrics.commandCountAfterNormalization, 100, "100 motions after normalization");
-    assertEqual(normalized.metrics.estimatedHostInteropCallCount, 1, "100 motions estimated interop calls");
-    assertEqual(normalized.metrics.interopCallsAvoided, 99, "100 motions avoided interop calls");
+    assertEqual(normalized.metrics.commandCountBeforeNormalization, 1000, "1000 motions before normalization");
+    assertEqual(normalized.metrics.commandCountAfterNormalization, 1000, "1000 motions after normalization");
+    assertEqual(normalized.metrics.estimatedHostInteropCallCount, 1, "1000 motions estimated interop calls");
+    assertEqual(normalized.metrics.interopCallsAvoided, 999, "1000 motions avoided interop calls");
     return {
-      inputMotionCount: 100,
+      inputMotionCount: 1000,
       outputMotionCount: normalized.motions.length,
       interopCallsAvoided: normalized.metrics.interopCallsAvoided,
       warnings: normalized.warnings || []
@@ -115,7 +115,7 @@ async function main() {
     largeScreenOnly: true,
     operations: [motionProof, stagedProof, linkProof],
     bottleneckNotes: [
-      "Command batching keeps 100 motion commands in one normalized host interop batch.",
+      "Command batching keeps 1000 motion commands in one normalized host interop batch.",
       "Ordered stage policy preserves stage boundaries and prevents duplicate-motion collapse across ordered stages.",
       "Link synchronization uses linkGroupsByObjectId, so moving one actor updates only indexed adjacent links instead of scanning all scene links."
     ]

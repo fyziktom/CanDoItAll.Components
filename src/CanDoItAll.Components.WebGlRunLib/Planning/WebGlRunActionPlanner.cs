@@ -20,6 +20,12 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
             FrameRate = 1
         };
         plan.Warnings.AddRange(normalization.Warnings);
+        plan.Errors.AddRange(normalization.Errors);
+        if (!normalization.IsValid)
+        {
+            return plan;
+        }
+
         AppendAction(normalization.Action, context, plan);
         return plan;
     }
@@ -194,6 +200,10 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
         if (distanceEstimate is { } distance)
         {
             metadata["distanceEstimate"] = distance.ToString("0.###", CultureInfo.InvariantCulture);
+            if (TryResolveSpeed(action, out double unitsPerSecond))
+            {
+                metadata["estimatedDurationSeconds"] = (distance / unitsPerSecond).ToString("0.###", CultureInfo.InvariantCulture);
+            }
         }
 
         plan.Motions.Add(new WebGlObjectMotionCommand
@@ -241,6 +251,22 @@ public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
 
     private static bool TryDouble(IReadOnlyDictionary<string, string> values, string key, out double result)
         => double.TryParse(values.GetValueOrDefault(key), NumberStyles.Float, CultureInfo.InvariantCulture, out result);
+
+    private static bool TryResolveSpeed(WebGlRunAction action, out double unitsPerSecond)
+    {
+        if (TryDouble(action.Parameters, "speedUnitsPerSecond", out unitsPerSecond) && unitsPerSecond > 0)
+        {
+            return true;
+        }
+
+        if (TryDouble(action.Metadata, "speedUnitsPerSecond", out unitsPerSecond) && unitsPerSecond > 0)
+        {
+            return true;
+        }
+
+        unitsPerSecond = 0;
+        return false;
+    }
 
     private static double? EstimateDistance(string objectId, WebGlVector3 target, WebGlRunPlanningContext context)
     {

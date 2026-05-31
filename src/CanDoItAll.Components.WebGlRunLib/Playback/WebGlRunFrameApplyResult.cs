@@ -78,9 +78,14 @@ public sealed class WebGlRunFrameApplyResult
     }
 
     private static string ResolveBatchingPolicy(WebGlRunActionStage stage)
-        => !string.IsNullOrWhiteSpace(stage.ExecutionPolicy)
-            ? stage.ExecutionPolicy
-            : stage.Metadata.GetValueOrDefault("batchingPolicy", WebGlSceneBatchingPolicies.PreserveOrder);
+        => stage.CoalescingScope switch
+        {
+            WebGlRunCoalescingScopes.None => WebGlSceneBatchingPolicies.PreserveOrder,
+            WebGlRunCoalescingScopes.Frame => WebGlSceneBatchingPolicies.Parallel,
+            _ => !string.IsNullOrWhiteSpace(stage.ExecutionPolicy)
+                ? stage.ExecutionPolicy
+                : stage.Metadata.GetValueOrDefault("batchingPolicy", WebGlSceneBatchingPolicies.PreserveOrder)
+        };
 
     private static BatchOrderingMode ResolveOrderingMode(WebGlRunFrame frame)
     {

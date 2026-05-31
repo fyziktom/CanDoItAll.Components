@@ -190,6 +190,8 @@ public sealed class WebGlRunActionCompiler
             SequenceId = action.SequenceId,
             ParentActionId = action.ParentActionId,
             StageIndex = action.StageIndex,
+            StageGroupId = action.StageGroupId,
+            CoalescingScope = action.CoalescingScope,
             OrderIndex = action.OrderIndex,
             ExecutionPolicy = ResolveExecutionPolicy(action),
             StartsAtSeconds = action.StartsAtSeconds,
@@ -199,6 +201,8 @@ public sealed class WebGlRunActionCompiler
                 ["actionKind"] = action.ActionKind,
                 ["sequenceId"] = action.SequenceId,
                 ["parentActionId"] = action.ParentActionId,
+                ["stageGroupId"] = action.StageGroupId,
+                ["coalescingScope"] = action.CoalescingScope,
                 ["stageIndex"] = action.StageIndex.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ["orderIndex"] = action.OrderIndex.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ["executionPolicy"] = ResolveExecutionPolicy(action),
@@ -213,9 +217,14 @@ public sealed class WebGlRunActionCompiler
     }
 
     private static string ResolveExecutionPolicy(WebGlRunAction action)
-        => !string.IsNullOrWhiteSpace(action.ExecutionPolicy)
+        => action.CoalescingScope switch
+        {
+            WebGlRunCoalescingScopes.None => WebGlRunStageExecutionPolicies.PreserveOrder,
+            WebGlRunCoalescingScopes.Frame => WebGlRunStageExecutionPolicies.Parallel,
+            _ => !string.IsNullOrWhiteSpace(action.ExecutionPolicy)
             ? action.ExecutionPolicy
-            : action.Metadata.GetValueOrDefault("executionPolicy", WebGlRunStageExecutionPolicies.PreserveOrder);
+            : action.Metadata.GetValueOrDefault("executionPolicy", WebGlRunStageExecutionPolicies.PreserveOrder)
+        };
 
     private static BatchOrderingMode ResolveOrderingMode(WebGlRunAction action)
         => ResolveExecutionPolicy(action) switch

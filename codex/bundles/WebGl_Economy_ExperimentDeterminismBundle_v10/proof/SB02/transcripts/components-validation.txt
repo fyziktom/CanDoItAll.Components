@@ -1,0 +1,23 @@
+# Components validation transcript
+
+Commands:
+
+```text
+dotnet test tests/CanDoItAll.Components.WebGlRunLib.Tests/CanDoItAll.Components.WebGlRunLib.Tests.csproj --no-restore -p:UseSharedCompilation=false
+dotnet test tests/CanDoItAll.Components.WebGlLib.Tests/CanDoItAll.Components.WebGlLib.Tests.csproj --no-restore -p:UseSharedCompilation=false
+npm run webgllib:audit-command-batch-parity
+npm run webgllib:audit-sharedwell-performance
+npm run webgllib:audit-scene-runtime
+```
+
+Results:
+
+```text
+WebGlRunLib.Tests: Passed. Failed: 0, Passed: 17, Skipped: 0, Total: 17.
+WebGlLib.Tests: Passed. Failed: 0, Passed: 32, Skipped: 0, Total: 32.
+Command batch parity audit passed for 2 fixture(s).
+Shared Well WebGlLib performance audit passed. Wrote artifacts\webgl-economy-sharedwell-hardening-v9\performance\components-performance-proof.json.
+Scene runtime audit passed with 9 warning(s). Warnings are line-count warnings in existing scene runtime modules; no forbidden small/medium/mobile WebGL optimization drift was reported.
+```
+
+Note: an earlier parallel WebGlLib test invocation collided with a `BaseLib` build output lock while WebGlRunLib tests were compiling. The same WebGlLib test command passed when rerun by itself.

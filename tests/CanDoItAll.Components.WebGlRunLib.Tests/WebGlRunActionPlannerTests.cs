@@ -91,11 +91,86 @@ public sealed class WebGlRunActionPlannerTests
             ActionId = "distance.move",
             ActionKind = WebGlRunActionKinds.MoveToObject,
             SubjectObjectId = "actor",
-            Target = new() { ObjectId = "target", AnchorKey = WebGlRunAnchorKeys.Use }
+            Target = new() { ObjectId = "target", AnchorKey = WebGlRunAnchorKeys.Use },
+            Parameters =
+            {
+                ["speedUnitsPerSecond"] = "2"
+            }
         }, CreatePlanningContext());
 
         Assert.True(plan.IsValid, string.Join(Environment.NewLine, plan.Errors));
         Assert.Equal("6.083", plan.Motions[0].Metadata["distanceEstimate"]);
+        Assert.Equal("3.041", plan.Motions[0].Metadata["estimatedDurationSeconds"]);
+    }
+
+    [Fact]
+    public void Planner_rejects_unsupported_missing_subject_and_missing_target_actions_after_normalization()
+    {
+        var planner = new WebGlRunActionPlanner();
+
+        WebGlRunActionPlan unsupported = planner.Plan(new()
+        {
+            ActionId = "bad.kind",
+            ActionKind = "economy-specific-action"
+        }, CreatePlanningContext());
+        WebGlRunActionPlan missingSubject = planner.Plan(new()
+        {
+            ActionId = "bad.subject",
+            ActionKind = WebGlRunActionKinds.MoveToObject,
+            Target = new() { ObjectId = "target" }
+        }, CreatePlanningContext());
+        WebGlRunActionPlan missingTarget = planner.Plan(new()
+        {
+            ActionId = "bad.target",
+            ActionKind = WebGlRunActionKinds.MoveToObject,
+            SubjectObjectId = "actor"
+        }, CreatePlanningContext());
+
+        Assert.False(unsupported.IsValid);
+        Assert.False(missingSubject.IsValid);
+        Assert.False(missingTarget.IsValid);
+        Assert.Contains(unsupported.Errors, error => error.Contains("Unsupported", StringComparison.Ordinal));
+        Assert.Contains(missingSubject.Errors, error => error.Contains("subject object id", StringComparison.Ordinal));
+        Assert.Contains(missingTarget.Errors, error => error.Contains("Target.ObjectId", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Run_document_provenance_validator_keeps_generic_input_refs_domain_neutral()
+    {
+        var validator = new WebGlRunDocumentProvenanceValidator();
+        var source = new RunSourceRef
+        {
+            SourceKind = "simulation-input-pack",
+            SourceId = "pack.shared-resource",
+            Inputs =
+            {
+                new() { Kind = "scenario", Path = "inputs/scenario.definition.json", ContentHash = "sha256:abc" },
+                new() { Kind = "placement", Path = "inputs/placement.json", ContentHash = "sha256:def" }
+            },
+            Hashes =
+            {
+                new() { Kind = "scenario", ContentHash = "sha256:abc" }
+            }
+        };
+        WebGlRunDocument document = new()
+        {
+            Metadata =
+            {
+                ["inputPackHash"] = "sha256:pack",
+                ["sourceKind"] = "simulation-input-pack"
+            }
+        };
+        WebGlRunDocument domainSpecific = new()
+        {
+            Metadata =
+            {
+                ["water.well.tax"] = "leaks domain vocabulary"
+            }
+        };
+
+        Assert.True(validator.Validate(source).IsValid);
+        Assert.True(validator.Validate(document).IsValid);
+        Assert.False(validator.Validate(domainSpecific).IsValid);
     }
 
     [Fact]

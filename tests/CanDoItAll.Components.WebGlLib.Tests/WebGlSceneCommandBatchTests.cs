@@ -34,6 +34,45 @@ public sealed class WebGlSceneCommandBatchTests
     }
 
     [Fact]
+    public void Batch_normalizer_handles_1000_patch_motion_items_with_deterministic_metrics()
+    {
+        var batch = new WebGlSceneCommandBatch
+        {
+            BatchId = "frame.performance.1000",
+            Patches =
+            [
+                .. Enumerable.Range(0, 1000).Select(index => new WebGlScenePatch
+                {
+                    ObjectPatches =
+                    [
+                        new() { ObjectId = $"object.{index}", Color = "#22c55e" }
+                    ]
+                })
+            ],
+            Motions =
+            [
+                .. Enumerable.Range(0, 1000).Select(index => new WebGlObjectMotionCommand
+                {
+                    MotionId = $"motion.{index}",
+                    ObjectId = $"object.{index}",
+                    TargetPosition = new WebGlVector3(index, 0, 0)
+                })
+            ]
+        };
+
+        WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
+
+        Assert.Equal(2000, result.Metrics.BatchCommandCount);
+        Assert.Equal(2000, result.Metrics.CommandCountBeforeNormalization);
+        Assert.Equal(1001, result.Metrics.CommandCountAfterNormalization);
+        Assert.Single(result.Batch.Patches);
+        Assert.Equal(1000, result.Batch.Patches[0].ObjectPatches.Count);
+        Assert.Equal(1000, result.Batch.Motions.Count);
+        Assert.Equal(1, result.Metrics.EstimatedHostInteropCallCount);
+        Assert.Equal(1999, result.Metrics.InteropCallsAvoided);
+    }
+
+    [Fact]
     public void Batch_normalizer_coalesces_object_patches_and_drops_duplicate_motions()
     {
         var batch = new WebGlSceneCommandBatch

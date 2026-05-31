@@ -49,3 +49,7 @@ Codex must work in the currently checked-out branch in each repository. It must 
 - `02_subbundles/*.md`
 - `08_experiment_examples/shared_well/*.json`
 - `08_experiment_examples/farmer_land/*.json`
+
+## Execution status
+
+Implemented and validated. Closure evidence lives in `reviews/01-execution-report.md`, with per-subbundle proof manifests under `proof/SB01` through `proof/SB19`.
