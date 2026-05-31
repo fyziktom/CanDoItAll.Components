@@ -235,7 +235,8 @@ function auditLargeScreenPolicyFiles() {
   const policyRoots = [
     path.join(repoRoot, "docs", "webgl"),
     path.join(repoRoot, "codex", "bundles", "WebGl_Economy_PerformanceHardeningBundle_v7"),
-    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_KernelBridgeHardeningBundle_v12")
+    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_KernelBridgeHardeningBundle_v12"),
+    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_BridgeStabilityFollowupBundle_v13")
   ];
   const smallScreenTaskPattern = /\b(small[-\s]?screen|medium[-\s]?screen|mobile|tablet|phone)\b/i;
   for (const root of policyRoots) {

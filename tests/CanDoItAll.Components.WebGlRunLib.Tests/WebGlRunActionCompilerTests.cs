@@ -202,7 +202,7 @@ public sealed class WebGlRunActionCompilerTests
         plan.Actions[0].Steps[1].Metadata["visualActionId"] = "visual.1";
         plan.Actions[0].Steps[1].Metadata["sourceEventId"] = "event.1";
 
-        WebGlSceneCommandBatch batch = new WebGlRunActionPlanBatchBuilder().Build(plan);
+        WebGlSceneCommandBatch batch = new WebGlRunActionPlanBatchCompiler().Compile(plan);
 
         Assert.Equal("run-plan:resource.sequence", batch.BatchId);
         Assert.Equal(["pose.carry", "move.target", "return.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
