@@ -1,0 +1,151 @@
+{
+  "snapshotId": "snapshot.run.simple.shared-well-community.state-transition.2",
+  "runId": "run.simple.shared-well-community.state-transition",
+  "stepIndex": 2,
+  "dataHash": "2edb6a195fc3cb1b30417358ff965dec6c7a3bb326776aeb6061a4e2eae34eed",
+  "summary": "The snapshot shows paperwork pressure because 3 actor(s) are performing admin work, admin burden is 0, 1 active issue(s) remain, 0 event(s) are pending, 36 visual stage/action item(s) are queued or active, and 0 invariant(s) failed.",
+  "findings": [
+    {
+      "findingId": "admin-burden.visible",
+      "analyzerId": "admin-burden",
+      "code": "admin-burden",
+      "severity": "warning",
+      "title": "Admin work is visible in the snapshot.",
+      "explanation": "3 actor(s) are associated with admin work and the admin burden metric is 0.",
+      "sourcePaths": [
+        "snapshot.frame.events",
+        "snapshot.metrics"
+      ],
+      "facts": {
+        "actorCount": "3",
+        "actorIds": "far-household,near-household,rule-council",
+        "adminMinutes": "0"
+      }
+    },
+    {
+      "findingId": "active-issue.open",
+      "analyzerId": "active-issue",
+      "code": "active-issues",
+      "severity": "warning",
+      "title": "Active issues remain in the snapshot.",
+      "explanation": "1 unresolved issue(s) are present.",
+      "sourcePaths": [
+        "snapshot.frame.issues"
+      ],
+      "facts": {
+        "activeIssueCount": "1",
+        "issueIds": "issue.event.free.violation.2.violation"
+      }
+    },
+    {
+      "findingId": "resource-concentration.top-holder",
+      "analyzerId": "resource-concentration",
+      "code": "resource-concentration",
+      "severity": "warning",
+      "title": "Resources are concentrated.",
+      "explanation": "The largest resource holder share is 0.884.",
+      "sourcePaths": [
+        "snapshot.frame.resourceStores",
+        "snapshot.metrics"
+      ],
+      "facts": {
+        "topHolderShare": "0.8842105263157894736842105263"
+      }
+    },
+    {
+      "findingId": "resource-scarcity.visible",
+      "analyzerId": "resource-scarcity",
+      "code": "resource-scarcity",
+      "severity": "warning",
+      "title": "Resource scarcity pressure is visible.",
+      "explanation": "2 store(s) are empty or below the low-stock threshold and 0 shortage metric(s) are positive.",
+      "sourcePaths": [
+        "snapshot.frame.resourceStores",
+        "snapshot.metrics"
+      ],
+      "facts": {
+        "scarceStoreCount": "2",
+        "shortageMetricCount": "0",
+        "storeIds": "store.council.tax,store.near.water",
+        "metricIds": "",
+        "lowestCapacityRatio": "0.05"
+      }
+    },
+    {
+      "findingId": "relationship-stress.visible",
+      "analyzerId": "relationship-stress",
+      "code": "relationship-stress",
+      "severity": "warning",
+      "title": "Relationship stress is visible.",
+      "explanation": "1 stressed relationship(s) are present.",
+      "sourcePaths": [
+        "snapshot.frame.relationships"
+      ],
+      "facts": {
+        "relationshipCount": "1",
+        "relationshipIds": "rel.near-household.rule-council.relationship.conflict.change"
+      }
+    },
+    {
+      "findingId": "pending-event.queue",
+      "analyzerId": "pending-event",
+      "code": "pending-events",
+      "severity": "info",
+      "title": "No future events are pending.",
+      "explanation": "0 event(s) are scheduled after this snapshot.",
+      "sourcePaths": [
+        "snapshot.pendingEvents"
+      ],
+      "facts": {
+        "pendingEventCount": "0"
+      }
+    },
+    {
+      "findingId": "visual-stage-pressure.queue",
+      "analyzerId": "visual-stage-pressure",
+      "code": "visual-stage-pressure",
+      "severity": "warning",
+      "title": "Visual playback has active or pending work.",
+      "explanation": "36 visual action, stage, motion, barrier, or command journal item(s) are active or pending.",
+      "sourcePaths": [
+        "snapshot.visualState.activeActionIds",
+        "snapshot.visualState.pendingActionIds",
+        "snapshot.visualState.activeStageIds",
+        "snapshot.visualState.pendingStageIds",
+        "snapshot.visualState.runtimeAttachment"
+      ],
+      "facts": {
+        "stagePressureCount": "36",
+        "activeActionCount": "0",
+        "pendingActionCount": "9",
+        "activeStageCount": "0",
+        "pendingStageCount": "9",
+        "activeMotionCount": "0",
+        "queuedMotionCount": "0",
+        "barrierBlockerCount": "0",
+        "commandJournalTailCount": "9",
+        "activeBarrierPolicy": "wait-seconds",
+        "renderDiagnosticsSummary": "frame=2;stages=9;motions=0;patches=16;barrierPolicy=wait-seconds"
+      }
+    },
+    {
+      "findingId": "invariant-summary.status",
+      "analyzerId": "invariant-summary",
+      "code": "invariant-summary",
+      "severity": "info",
+      "title": "All evaluated invariants passed.",
+      "explanation": "0 of 1 invariant(s) failed.",
+      "sourcePaths": [
+        "snapshot.invariants"
+      ],
+      "facts": {
+        "failedInvariantCount": "0",
+        "invariantCount": "1"
+      }
+    }
+  ],
+  "metadata": {
+    "question": "Headless real scenario readiness",
+    "analyzerCount": "9"
+  }
+}

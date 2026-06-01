@@ -1,0 +1,87 @@
+﻿
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalysis.cs:93:        int adminActors = 
+IntFact(report, "admin-burden", "actorCount");
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalysis.cs:94:        decimal adminMinutes 
+= DecimalFact(report, "admin-burden", "adminMinutes");
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalysis.cs:95:        int activeIssues = 
+IntFact(report, "active-issues", "activeIssueCount");
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalysis.cs:96:        int pendingEvents = 
+IntFact(report, "pending-events", "pendingEventCount");
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalysis.cs:97:        int visualStages = 
+IntFact(report, "visual-stage-pressure", "stagePressureCount");
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:7:    public string AnalyzerId 
+=> "admin-burden";
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:28:            Code = 
+"admin-burden",
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:43:        => 
+string.Equals(metric.Metadata.GetValueOrDefault("kind"), "admin-burden", StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:75:            Code = 
+"active-issues",
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:93:    public string AnalyzerId 
+=> "resource-concentration";
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:107:            Code = 
+"resource-concentration",
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:145:    public string 
+AnalyzerId => "relationship-stress";
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:162:            Code = 
+"relationship-stress",
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:186:            Code = 
+"pending-events",
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:201:    public string 
+AnalyzerId => "visual-stage-pressure";
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotAnalyzers.cs:234:            Code = 
+"visual-stage-pressure",
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotResourceScarcityAnalyzer.cs:7:    public 
+string AnalyzerId => "resource-scarcity";
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotResourceScarcityAnalyzer.cs:26:            
+Code = "resource-scarcity",
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotResourceScarcityAnalyzer.cs:53:        => 
+string.Equals(metric.Metadata.GetValueOrDefault("kind"), "resource-scarcity", StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotUnresolvedVisualMappingAnalyzer.cs:7:    
+public string AnalyzerId => "unresolved-visual-mapping";
+src\CanDoItAll.Economy.Simulation.Abstractions\Snapshot\SimulationSnapshotUnresolvedVisualMappingAnalyzer.cs:29:       
+     Code = "unresolved-visual-mapping",
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:71:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "admin-burden" && int.Parse(finding.Facts["actorCount"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:72:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "active-issues" && int.Parse(finding.Facts["activeIssueCount"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:73:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "resource-concentration" && decimal.Parse(finding.Facts["topHolderShare"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:74:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "relationship-stress");
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:75:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "pending-events");
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:76:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "visual-stage-pressure");
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:91:    public void 
+RealProbeSnapshotsProduceGenericAnalysisForSharedAndFiniteResources(string scenario)
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:104:        Assert.Contains(analysis.Findings, 
+static finding => finding.Code == "resource-concentration");
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:105:        Assert.Contains(analysis.Findings, 
+static finding => finding.Code == "visual-stage-pressure");
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:107:        Assert.Contains(analysis.Findings, 
+static finding => finding.Code == "pending-events");
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:114:    public void 
+GenericSnapshotAnalyzersCoverRequiredPressureCategoriesWithoutDomainTerms()
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:122:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "active-issues" && int.Parse(finding.Facts["activeIssueCount"]) == 1);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:123:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "admin-burden" && decimal.Parse(finding.Facts["adminMinutes"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:124:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "resource-concentration" && decimal.Parse(finding.Facts["topHolderShare"]) > 0.5m);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:125:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "resource-scarcity" && int.Parse(finding.Facts["scarceStoreCount"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:126:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "pending-events" && int.Parse(finding.Facts["pendingEventCount"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:127:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "relationship-stress" && int.Parse(finding.Facts["relationshipCount"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:128:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "visual-stage-pressure" && int.Parse(finding.Facts["queuedMotionCount"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:129:        Assert.Contains(analysis.Findings, 
+finding => finding.Code == "unresolved-visual-mapping" && int.Parse(finding.Facts["fallbackDiagnosticCount"]) > 0);
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:226:                new() { MetricId = 
+"adminBurdenMinutes", Value = 3, Unit = "minutes", Metadata = { ["kind"] = "admin-burden" } },
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:288:            new() { MetricId = 
+"adminBurdenMinutes", Unit = "minutes", Metadata = { ["kind"] = "admin-burden" } },
+
+

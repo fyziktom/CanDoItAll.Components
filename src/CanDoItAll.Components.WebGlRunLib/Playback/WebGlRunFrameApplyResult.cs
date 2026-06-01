@@ -8,6 +8,10 @@ public sealed class WebGlRunFrameApplyResult
 
     public double TimeSeconds { get; set; }
 
+    public bool RequiresSceneReset { get; set; }
+
+    public WebGlSceneDocument? InitialScene { get; set; }
+
     public WebGlSceneCommandBatch CommandBatch { get; set; } = new();
 
     public List<string> Errors { get; set; } = [];

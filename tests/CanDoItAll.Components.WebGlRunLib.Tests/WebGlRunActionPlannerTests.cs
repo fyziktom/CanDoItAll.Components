@@ -251,13 +251,13 @@ public sealed class WebGlRunActionPlannerTests
             },
             Symbols =
             {
-                new() { SymbolKey = "water", SymbolAssetId = "asset.symbol.water" },
+                new() { SymbolKey = "signal", SymbolAssetId = "asset.symbol.signal" },
                 new() { SymbolKey = "risk", SymbolAssetId = "missing.symbol" },
                 new() { SymbolKey = "noop", IsNoOpFallback = true }
             },
             ActionBindings =
             {
-                new() { ActionKind = "collect", PoseKey = "carry", SymbolKey = "water" },
+                new() { ActionKind = "collect", PoseKey = "carry", SymbolKey = "signal" },
                 new() { ActionKind = "admin", PoseKey = "admin-writing", SymbolKey = "missing-symbol-key" }
             }
         };
@@ -270,7 +270,7 @@ public sealed class WebGlRunActionPlannerTests
                     Id = "asset.person.carry",
                     Variants = { new() { Id = "variant.carry" } }
                 },
-                new() { Id = "asset.symbol.water" }
+                new() { Id = "asset.symbol.signal" }
             }
         };
 

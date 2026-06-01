@@ -138,7 +138,12 @@ function describeStageBarrierCore(state, barrier) {
                 ? { isReady: true, target: barrier.eventId, blockers: [] }
                 : { isReady: false, target: barrier.eventId, blockers: [`event:${barrier.eventId}`] };
         default:
-            return { isReady: true, target: barrier.policy || "unknown", blockers: [`unknown-policy:${barrier.policy || ""}`] };
+            return {
+                isReady: true,
+                target: barrier.policy || "unknown",
+                blockers: [`unknown-policy:${barrier.policy || ""}`],
+                warning: `unknown-policy:${barrier.policy || ""}`
+            };
     }
 }
 

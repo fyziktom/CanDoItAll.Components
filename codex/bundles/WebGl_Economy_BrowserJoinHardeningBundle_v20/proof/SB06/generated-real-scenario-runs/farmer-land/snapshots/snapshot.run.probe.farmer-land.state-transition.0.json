@@ -1,0 +1,376 @@
+{
+  "snapshotId": "snapshot.run.probe.farmer-land.state-transition.0",
+  "schemaVersion": "candoitall.economy.simulation-snapshot/v1",
+  "runId": "run.probe.farmer-land.state-transition",
+  "scenarioId": "probe.farmer-land",
+  "stepIndex": 0,
+  "simulatedAtUtc": "2026-01-01T00:00:00+00:00",
+  "frame": {
+    "frameId": "run.probe.farmer-land.state-transition.frame.0",
+    "run": {
+      "runId": "run.probe.farmer-land.state-transition",
+      "scenarioId": "probe.farmer-land",
+      "backendId": "simple-accounts",
+      "createdAtUtc": "2026-01-01T00:00:00+00:00",
+      "metadata": {
+        "deterministicSeed": "run.probe.farmer-land.state-transition"
+      }
+    },
+    "clock": {
+      "stepIndex": 0,
+      "simulatedAtUtc": "2026-01-01T00:00:00+00:00",
+      "stepDuration": "1.00:00:00"
+    },
+    "actors": [
+      {
+        "actorId": "buyer.external",
+        "kind": "market",
+        "displayName": "External Buyer",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "market.external",
+          "location.x": "6",
+          "location.y": "0",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "farmer.expander",
+        "kind": "farmer",
+        "displayName": "Expander Farmer",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "farm.expander",
+          "location.x": "3",
+          "location.y": "0",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "farmer.small",
+        "kind": "farmer",
+        "displayName": "Small Farmer",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "farm.small",
+          "location.x": "0",
+          "location.y": "0",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "land-board",
+        "kind": "institution",
+        "displayName": "Land Board",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "town-hall",
+          "location.x": "1",
+          "location.y": "2",
+          "location.z": "0"
+        }
+      }
+    ],
+    "resourceStores": [
+      {
+        "storeId": "store.expander.land",
+        "ownerActorId": "farmer.expander",
+        "resourceId": "land-parcel",
+        "resourceKind": "finite-spatial-resource",
+        "displayName": "Expander land",
+        "quantity": 3,
+        "unit": "parcel",
+        "capacity": 6,
+        "metadata": {
+          "locationId": "farm.expander"
+        }
+      },
+      {
+        "storeId": "store.external.cash",
+        "ownerActorId": "buyer.external",
+        "resourceId": "cash",
+        "resourceKind": "cash",
+        "displayName": "External demand cash",
+        "quantity": 100,
+        "unit": "token",
+        "metadata": {
+          "locationId": "market.external"
+        }
+      },
+      {
+        "storeId": "store.small.land",
+        "ownerActorId": "farmer.small",
+        "resourceId": "land-parcel",
+        "resourceKind": "finite-spatial-resource",
+        "displayName": "Small farmer land",
+        "quantity": 2,
+        "unit": "parcel",
+        "capacity": 6,
+        "metadata": {
+          "locationId": "farm.small"
+        }
+      }
+    ],
+    "flows": [],
+    "relationships": [],
+    "events": [],
+    "rules": [],
+    "issues": [],
+    "artifacts": [],
+    "deterministicHash": "93f642d9830e0576b97d99f69711b992ebc38931c86a0a862486b7f9ca751462",
+    "metadata": {
+      "materializer": "SimpleSimulationStateTransitionEngine",
+      "baseline": "true"
+    }
+  },
+  "appliedEvents": [],
+  "pendingEvents": [
+    {
+      "eventId": "event.expander.buy-land",
+      "kind": "actor.trade.sell",
+      "eventKind": "actor.trade.sell",
+      "stepIndex": 1,
+      "actorId": "farmer.expander",
+      "targetActorId": "farmer.small",
+      "placeId": "",
+      "resourceId": "land-parcel",
+      "quantity": 1,
+      "durationSeconds": 1800,
+      "actorIds": [
+        "farmer.expander",
+        "farmer.small"
+      ],
+      "resourceIds": [
+        "land-parcel",
+        "cash"
+      ],
+      "sourceId": "farmer.small",
+      "targetId": "farmer.expander",
+      "source": {
+        "kind": "actor",
+        "id": "farmer.small",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "farmer.expander",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:30:00",
+      "magnitude": 1,
+      "timing": {
+        "stepIndex": 1,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 0
+      },
+      "participants": [],
+      "effects": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.expander.invest",
+      "kind": "actor.work.perform",
+      "eventKind": "actor.work.perform",
+      "stepIndex": 1,
+      "actorId": "farmer.expander",
+      "targetActorId": "crop-output",
+      "placeId": "",
+      "resourceId": "crop-output",
+      "quantity": 8,
+      "durationSeconds": 7200,
+      "actorIds": [
+        "farmer.expander"
+      ],
+      "resourceIds": [
+        "crop-output"
+      ],
+      "sourceId": "farmer.expander",
+      "targetId": "crop-output",
+      "source": {
+        "kind": "actor",
+        "id": "farmer.expander",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "crop-output",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "02:00:00",
+      "magnitude": 8,
+      "timing": {
+        "stepIndex": 1,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 0
+      },
+      "participants": [],
+      "effects": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.land-board.check",
+      "kind": "rule.check.evaluate",
+      "eventKind": "rule.check.evaluate",
+      "stepIndex": 2,
+      "actorId": "land-board",
+      "targetActorId": "farmer.expander",
+      "placeId": "",
+      "resourceId": "land-parcel",
+      "quantity": 0.55,
+      "durationSeconds": 600,
+      "actorIds": [
+        "land-board",
+        "farmer.expander"
+      ],
+      "resourceIds": [
+        "land-parcel"
+      ],
+      "sourceId": "land-board",
+      "targetId": "rule.land-concentration-cap",
+      "source": {
+        "kind": "actor",
+        "id": "land-board",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "rule.land-concentration-cap",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:10:00",
+      "magnitude": 0.55,
+      "timing": {
+        "stepIndex": 2,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 0
+      },
+      "participants": [],
+      "effects": [],
+      "metadata": {}
+    }
+  ],
+  "metrics": [
+    {
+      "metricId": "landConcentrationHhi",
+      "value": 0.52,
+      "unit": "",
+      "metadata": {
+        "kind": "resource-owner-hhi",
+        "resourceId": "land-parcel"
+      }
+    },
+    {
+      "metricId": "topFarmerLandShare",
+      "value": 0.6,
+      "unit": "",
+      "metadata": {
+        "kind": "top-owner-share",
+        "resourceId": "land-parcel"
+      }
+    }
+  ],
+  "invariants": [
+    {
+      "invariantId": "anti-oligarchy.cap",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027anti-oligarchy.cap\u0027 passed.",
+      "metadata": {
+        "metricId": "topFarmerLandShare",
+        "value": "0.6"
+      }
+    }
+  ],
+  "visualState": {
+    "visualFrameId": "run.probe.farmer-land.state-transition.frame.0",
+    "playbackFrameId": "real-scenario-finite-resource.experiment.farmer-land.anti-oligarchy.v1.frame.0",
+    "playbackFrameIndex": 0,
+    "nodeObjectIds": {
+      "node.actor.buyer.external": "object.node.actor.buyer.external",
+      "node.actor.farmer.expander": "object.node.actor.farmer.expander",
+      "node.actor.farmer.small": "object.node.actor.farmer.small",
+      "node.actor.land-board": "object.node.actor.land-board",
+      "node.location.farm.expander": "object.node.location.farm.expander",
+      "node.location.farm.small": "object.node.location.farm.small",
+      "node.location.market.external": "object.node.location.market.external",
+      "node.location.town-hall": "object.node.location.town-hall",
+      "node.resource.store.expander.land": "object.node.resource.store.expander.land",
+      "node.resource.store.external.cash": "object.node.resource.store.external.cash",
+      "node.resource.store.small.land": "object.node.resource.store.small.land"
+    },
+    "activeActionIds": [],
+    "pendingActionIds": [],
+    "activeStageIds": [],
+    "pendingStageIds": [],
+    "runtimeDiagnostics": {
+      "document.diagnostic.0": "Action \u0027action.event.expander.buy-land.buy.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.expander.buy-land.buy.primary\u0027.",
+      "document.diagnostic.1": "Action \u0027action.event.expander.buy-land.fee.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.expander.buy-land.fee.primary\u0027.",
+      "document.diagnostic.2": "Node \u0027node.location.farm.expander\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "document.diagnostic.3": "Node \u0027node.location.farm.small\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "document.diagnostic.4": "Node \u0027node.location.market.external\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "document.diagnostic.5": "Node \u0027node.location.town-hall\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "runFrame.index": "0",
+      "runFrame.stageCount": "0"
+    },
+    "runtimeAttachment": {
+      "runtimeKind": "webgl-run",
+      "currentPlaybackCommand": "none",
+      "currentFrameIndex": 0,
+      "activeMotionIds": [],
+      "queuedMotionIds": [],
+      "activeStageIds": [],
+      "pendingStageIds": [],
+      "activeBarrierPolicy": "",
+      "activeBarrierBlockers": [],
+      "commandJournalTail": [],
+      "renderDiagnosticsSummary": "frame=0;stages=0;motions=0;patches=0;barrierPolicy=none",
+      "selectedObjectIds": [],
+      "selectedActionIds": [],
+      "diagnostics": {
+        "document.diagnostic.0": "Action \u0027action.event.expander.buy-land.buy.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.expander.buy-land.buy.primary\u0027.",
+        "document.diagnostic.1": "Action \u0027action.event.expander.buy-land.fee.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.expander.buy-land.fee.primary\u0027.",
+        "document.diagnostic.2": "Node \u0027node.location.farm.expander\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "document.diagnostic.3": "Node \u0027node.location.farm.small\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "document.diagnostic.4": "Node \u0027node.location.market.external\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "document.diagnostic.5": "Node \u0027node.location.town-hall\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "runFrame.index": "0",
+        "runFrame.stageCount": "0"
+      },
+      "metadata": {
+        "source.visualFrameId": "run.probe.farmer-land.state-transition.frame.0",
+        "source.playbackFrameId": "0",
+        "source.stageCount": "0"
+      }
+    },
+    "metadata": {
+      "source.visualRunId": "run.probe.farmer-land.state-transition",
+      "source.runDocumentId": "real-scenario-finite-resource.experiment.farmer-land.anti-oligarchy.v1",
+      "source.snapshotId": "snapshot.run.probe.farmer-land.state-transition.0"
+    }
+  },
+  "provenanceHashes": {
+    "scenario": "e0a2cbe6b94b3a7cfaebbec75dfb8253aa855249905ddc164420080128b541c5",
+    "frame": "93f642d9830e0576b97d99f69711b992ebc38931c86a0a862486b7f9ca751462",
+    "snapshot.data": "2464abfbbb8c8c0fce9be6bde915e0804fa9a991c877a9e0f363375b495e1a1f",
+    "snapshot.dataState": "2464abfbbb8c8c0fce9be6bde915e0804fa9a991c877a9e0f363375b495e1a1f",
+    "snapshot.visualState": "6ca141d1b1190962119f4a3260a051fe46e4427c1e67727475b75e7a596ea6b0",
+    "snapshot.visualRuntime": "6ca141d1b1190962119f4a3260a051fe46e4427c1e67727475b75e7a596ea6b0",
+    "snapshot.full": "58e431652b4b61b5bafc6c5b8959b221891bab84083c089a9a09f60a8d5ac9e1"
+  },
+  "metadata": {
+    "experimentId": "experiment.farmer-land.anti-oligarchy.v1",
+    "backendId": "simple-accounts",
+    "visualFrameId": "run.probe.farmer-land.state-transition.frame.0",
+    "builder": "SimulationSnapshotBuilder"
+  },
+  "deterministicHash": "58e431652b4b61b5bafc6c5b8959b221891bab84083c089a9a09f60a8d5ac9e1"
+}

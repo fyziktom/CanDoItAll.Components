@@ -75,7 +75,7 @@ public sealed class WebGlRunActionCompilerTests
     }
 
     [Fact]
-    public void Compiler_preserves_home_well_admin_home_motion_sequence_for_same_actor()
+    public void Compiler_preserves_home_checkpoint_admin_home_motion_sequence_for_same_actor()
     {
         var timeline = new WebGlRunActionCompiler().Compile(new WebGlRunActionPlan
         {
@@ -83,19 +83,19 @@ public sealed class WebGlRunActionCompilerTests
             ObjectBindings =
             [
                 new WebGlRunObjectBinding { ObjectId = "actor", Position = new WebGlVector3(0, 0, 0), AnchorPosition = new WebGlVector3(0, 0, 0) },
-                new WebGlRunObjectBinding { ObjectId = "well", Position = new WebGlVector3(4, 0, 0) },
+                new WebGlRunObjectBinding { ObjectId = "checkpoint", Position = new WebGlVector3(4, 0, 0) },
                 new WebGlRunObjectBinding { ObjectId = "admin", Position = new WebGlVector3(8, 0, 0) }
             ],
             Actions =
             [
                 new()
                 {
-                    ActionId = "sequence.shared-resource",
+                    ActionId = "sequence.shared-path",
                     ActionKind = WebGlRunActionKinds.Sequence,
                     Steps =
                     [
-                        Action("home.to.well", WebGlRunActionKinds.MoveToObject, 0, "actor", "well"),
-                        Action("well.to.admin", WebGlRunActionKinds.MoveToObject, 0, "actor", "admin"),
+                        Action("home.to.checkpoint", WebGlRunActionKinds.MoveToObject, 0, "actor", "checkpoint"),
+                        Action("checkpoint.to.admin", WebGlRunActionKinds.MoveToObject, 0, "actor", "admin"),
                         Action("admin.to.home", WebGlRunActionKinds.ReturnToAnchor, 0, "actor")
                     ]
                 }
@@ -104,7 +104,7 @@ public sealed class WebGlRunActionCompilerTests
 
         WebGlSceneCommandBatch batch = WebGlRunFrameApplyResult.FromFrame(timeline.Frames.Single()).CommandBatch;
 
-        Assert.Equal(["home.to.well", "well.to.admin", "admin.to.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
+        Assert.Equal(["home.to.checkpoint", "checkpoint.to.admin", "admin.to.home"], batch.Stages.Select(stage => stage.StageId).ToArray());
         Assert.Equal([new WebGlVector3(4, 0, 0), new WebGlVector3(8, 0, 0), new WebGlVector3(0, 0, 0)], batch.Stages.Select(stage => stage.Motions.Single().TargetPosition).ToArray());
         Assert.Equal(0, int.Parse(batch.Metadata["droppedDuplicateMotionCount"]));
     }

@@ -1,0 +1,76 @@
+{
+  "snapshotId": "snapshot.run.simple.shared-well-community.state-transition.0",
+  "runId": "run.simple.shared-well-community.state-transition",
+  "stepIndex": 0,
+  "dataHash": "cf7d3b55254baafad8a50b3cd4c4b34c31fda1f0c412bc5e2f7c9444e2869738",
+  "summary": "The snapshot has 4 finding(s): Resources are concentrated.; Resource scarcity pressure is visible.; Future events are pending..",
+  "findings": [
+    {
+      "findingId": "resource-concentration.top-holder",
+      "analyzerId": "resource-concentration",
+      "code": "resource-concentration",
+      "severity": "warning",
+      "title": "Resources are concentrated.",
+      "explanation": "The largest resource holder share is 0.968.",
+      "sourcePaths": [
+        "snapshot.frame.resourceStores",
+        "snapshot.metrics"
+      ],
+      "facts": {
+        "topHolderShare": "0.9684210526315789473684210526"
+      }
+    },
+    {
+      "findingId": "resource-scarcity.visible",
+      "analyzerId": "resource-scarcity",
+      "code": "resource-scarcity",
+      "severity": "warning",
+      "title": "Resource scarcity pressure is visible.",
+      "explanation": "3 store(s) are empty or below the low-stock threshold and 0 shortage metric(s) are positive.",
+      "sourcePaths": [
+        "snapshot.frame.resourceStores",
+        "snapshot.metrics"
+      ],
+      "facts": {
+        "scarceStoreCount": "3",
+        "shortageMetricCount": "0",
+        "storeIds": "store.council.tax,store.far.water,store.near.water",
+        "metricIds": "",
+        "lowestCapacityRatio": "0.1"
+      }
+    },
+    {
+      "findingId": "pending-event.queue",
+      "analyzerId": "pending-event",
+      "code": "pending-events",
+      "severity": "info",
+      "title": "Future events are pending.",
+      "explanation": "3 event(s) are scheduled after this snapshot.",
+      "sourcePaths": [
+        "snapshot.pendingEvents"
+      ],
+      "facts": {
+        "pendingEventCount": "3"
+      }
+    },
+    {
+      "findingId": "invariant-summary.status",
+      "analyzerId": "invariant-summary",
+      "code": "invariant-summary",
+      "severity": "warning",
+      "title": "Some invariants failed.",
+      "explanation": "1 of 1 invariant(s) failed.",
+      "sourcePaths": [
+        "snapshot.invariants"
+      ],
+      "facts": {
+        "failedInvariantCount": "1",
+        "invariantCount": "1"
+      }
+    }
+  ],
+  "metadata": {
+    "question": "Headless real scenario readiness",
+    "analyzerCount": "9"
+  }
+}

@@ -1,0 +1,1430 @@
+{
+  "snapshotId": "snapshot.run.simple.shared-well-community.state-transition.1",
+  "schemaVersion": "candoitall.economy.simulation-snapshot/v1",
+  "runId": "run.simple.shared-well-community.state-transition",
+  "scenarioId": "simple.shared-well-community",
+  "stepIndex": 1,
+  "simulatedAtUtc": "2026-01-02T00:00:00+00:00",
+  "frame": {
+    "frameId": "run.simple.shared-well-community.state-transition.frame.1",
+    "run": {
+      "runId": "run.simple.shared-well-community.state-transition",
+      "scenarioId": "simple.shared-well-community",
+      "backendId": "simple-accounts",
+      "createdAtUtc": "2026-01-01T00:00:00+00:00",
+      "metadata": {
+        "deterministicSeed": "run.simple.shared-well-community.state-transition"
+      }
+    },
+    "clock": {
+      "stepIndex": 1,
+      "simulatedAtUtc": "2026-01-02T00:00:00+00:00",
+      "stepDuration": "1.00:00:00"
+    },
+    "actors": [
+      {
+        "actorId": "far-household",
+        "kind": "household",
+        "displayName": "Far Household",
+        "role": "buyer",
+        "metadata": {
+          "homeLocationId": "far-home",
+          "location.x": "6",
+          "location.y": "0",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "near-household",
+        "kind": "household",
+        "displayName": "Near Household",
+        "role": "collector-reseller",
+        "metadata": {
+          "homeLocationId": "near-home",
+          "location.x": "1",
+          "location.y": "0",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "rule-council",
+        "kind": "institution",
+        "displayName": "Rule Council",
+        "role": "governance",
+        "metadata": {
+          "homeLocationId": "council-hall",
+          "location.x": "-2",
+          "location.y": "2",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "well-keeper",
+        "kind": "institution",
+        "displayName": "Well Keeper",
+        "role": "maintenance",
+        "metadata": {
+          "homeLocationId": "keeper-office",
+          "location.x": "0",
+          "location.y": "2",
+          "location.z": "0"
+        }
+      }
+    ],
+    "resourceStores": [
+      {
+        "storeId": "store.council.tax",
+        "ownerActorId": "rule-council",
+        "resourceId": "cash",
+        "resourceKind": "cash",
+        "displayName": "Council tax reserve",
+        "quantity": 0,
+        "unit": "token",
+        "metadata": {
+          "locationId": "council-hall"
+        }
+      },
+      {
+        "storeId": "store.far.water",
+        "ownerActorId": "far-household",
+        "resourceId": "water",
+        "resourceKind": "water",
+        "displayName": "Far water stock",
+        "quantity": 1,
+        "unit": "bucket",
+        "capacity": 10,
+        "metadata": {
+          "locationId": "far-home"
+        }
+      },
+      {
+        "storeId": "store.near.water",
+        "ownerActorId": "near-household",
+        "resourceId": "water",
+        "resourceKind": "water",
+        "displayName": "Near water stock",
+        "quantity": 10,
+        "unit": "bucket",
+        "capacity": 20,
+        "metadata": {
+          "locationId": "near-home"
+        }
+      },
+      {
+        "storeId": "store.well.water",
+        "ownerActorId": "well-keeper",
+        "resourceId": "water",
+        "resourceKind": "water",
+        "displayName": "Well water",
+        "quantity": 84,
+        "unit": "bucket",
+        "capacity": 100,
+        "metadata": {
+          "locationId": "shared-well"
+        }
+      }
+    ],
+    "flows": [
+      {
+        "flowId": "flow.event.near.collect.1.use.use-source",
+        "fromStoreId": "store.well.water",
+        "toStoreId": "store.near.water",
+        "fromActorId": "well-keeper",
+        "toActorId": "near-household",
+        "resourceId": "water",
+        "quantity": 8,
+        "unit": "bucket",
+        "reason": "use-source",
+        "occurredAtUtc": "2026-01-02T00:01:00+00:00",
+        "metadata": {
+          "sourceEventId": "event.near.collect.1.use"
+        }
+      }
+    ],
+    "relationships": [
+      {
+        "relationshipId": "rel.near.far.trust",
+        "sourceActorId": "near-household",
+        "targetActorId": "far-household",
+        "kind": "trust",
+        "strength": 0.5,
+        "metadata": {}
+      }
+    ],
+    "events": [
+      {
+        "eventId": "event.near.collect.1.travel",
+        "kind": "actor.travel",
+        "eventKind": "actor.travel",
+        "stepIndex": 1,
+        "actorId": "near-household",
+        "targetActorId": "near-household",
+        "placeId": "near-home",
+        "resourceId": "water",
+        "quantity": 8,
+        "durationSeconds": 1200,
+        "actorIds": [
+          "near-household"
+        ],
+        "resourceIds": [
+          "water"
+        ],
+        "sourceId": "shared-well",
+        "targetId": "near-household",
+        "source": {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        "participantRefs": [
+          {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "near-home",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "shared-well",
+            "metadata": {}
+          },
+          {
+            "kind": "resource",
+            "id": "water",
+            "metadata": {}
+          }
+        ],
+        "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+        "duration": "00:20:00",
+        "magnitude": 8,
+        "timing": {
+          "stepIndex": 1,
+          "offset": "00:00:00",
+          "duration": "00:20:00",
+          "order": 0
+        },
+        "participants": [
+          {
+            "participantId": "near-home",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "near-home",
+            "metadata": {}
+          },
+          {
+            "participantId": "near-household",
+            "role": "actor",
+            "actorId": "near-household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "shared-well",
+            "role": "source",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "water",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "water",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "metadata": {
+          "canonicalEventKind": "actor.travel",
+          "sourceLocationId": "shared-well",
+          "targetLocationId": "near-home",
+          "expansion": "resource-use",
+          "phase": "travel",
+          "sourceEventId": "event.near.collect.1",
+          "eventOrder": "0"
+        }
+      },
+      {
+        "eventId": "event.near.collect.1.use",
+        "kind": "actor.resource.use",
+        "eventKind": "actor.resource.use",
+        "stepIndex": 1,
+        "actorId": "near-household",
+        "targetActorId": "near-household",
+        "placeId": "near-home",
+        "resourceId": "water",
+        "quantity": 8,
+        "durationSeconds": 1200,
+        "actorIds": [
+          "near-household"
+        ],
+        "resourceIds": [
+          "water"
+        ],
+        "sourceId": "shared-well",
+        "targetId": "near-household",
+        "source": {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        "participantRefs": [
+          {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "near-home",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "shared-well",
+            "metadata": {}
+          },
+          {
+            "kind": "resource",
+            "id": "water",
+            "metadata": {}
+          }
+        ],
+        "occurredAtUtc": "2026-01-02T00:01:00+00:00",
+        "duration": "00:20:00",
+        "magnitude": 8,
+        "timing": {
+          "stepIndex": 1,
+          "offset": "00:01:00",
+          "duration": "00:20:00",
+          "order": 1
+        },
+        "participants": [
+          {
+            "participantId": "near-home",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "near-home",
+            "metadata": {}
+          },
+          {
+            "participantId": "near-household",
+            "role": "actor",
+            "actorId": "near-household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "shared-well",
+            "role": "source",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "water",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "water",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "metadata": {
+          "canonicalEventKind": "actor.resource.use",
+          "sourceLocationId": "shared-well",
+          "targetLocationId": "near-home",
+          "expansion": "resource-use",
+          "phase": "use",
+          "sourceEventId": "event.near.collect.1",
+          "eventOrder": "1"
+        }
+      },
+      {
+        "eventId": "event.near.collect.1.return",
+        "kind": "actor.return-home",
+        "eventKind": "actor.return-home",
+        "stepIndex": 1,
+        "actorId": "near-household",
+        "targetActorId": "near-household",
+        "placeId": "shared-well",
+        "resourceId": "water",
+        "quantity": 8,
+        "durationSeconds": 1200,
+        "actorIds": [
+          "near-household"
+        ],
+        "resourceIds": [
+          "water"
+        ],
+        "sourceId": "shared-well",
+        "targetId": "near-household",
+        "source": {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        "participantRefs": [
+          {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "near-home",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "shared-well",
+            "metadata": {}
+          },
+          {
+            "kind": "resource",
+            "id": "water",
+            "metadata": {}
+          }
+        ],
+        "occurredAtUtc": "2026-01-02T00:02:00+00:00",
+        "duration": "00:20:00",
+        "magnitude": 8,
+        "timing": {
+          "stepIndex": 1,
+          "offset": "00:02:00",
+          "duration": "00:20:00",
+          "order": 2
+        },
+        "participants": [
+          {
+            "participantId": "near-home",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "near-home",
+            "metadata": {}
+          },
+          {
+            "participantId": "near-household",
+            "role": "actor",
+            "actorId": "near-household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "shared-well",
+            "role": "source",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "water",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "water",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "metadata": {
+          "canonicalEventKind": "actor.return-home",
+          "sourceLocationId": "shared-well",
+          "targetLocationId": "near-home",
+          "expansion": "resource-use",
+          "phase": "return",
+          "sourceEventId": "event.near.collect.1",
+          "eventOrder": "2"
+        }
+      }
+    ],
+    "rules": [
+      {
+        "ruleId": "rule.water-draw-limit",
+        "displayName": "Daily draw limit",
+        "category": "allocation",
+        "metadata": {}
+      },
+      {
+        "ruleId": "rule.resale-tax",
+        "displayName": "Water resale tax",
+        "category": "tax",
+        "metadata": {}
+      },
+      {
+        "ruleId": "rule.admin-ledger",
+        "displayName": "Resale documentation",
+        "category": "admin",
+        "metadata": {}
+      }
+    ],
+    "issues": [],
+    "artifacts": [],
+    "deterministicHash": "e60f208b268de0d8c8e5d74e00ed53811dc214cf14459a0566209833861d781a",
+    "metadata": {
+      "materializer": "SimpleSimulationStateTransitionEngine"
+    }
+  },
+  "lastDelta": {
+    "deltaId": "run.simple.shared-well-community.state-transition.delta.0.1",
+    "runId": "run.simple.shared-well-community.state-transition",
+    "fromStepIndex": 0,
+    "toStepIndex": 1,
+    "updatedResourceStores": [
+      {
+        "storeId": "store.near.water",
+        "ownerActorId": "near-household",
+        "resourceId": "water",
+        "resourceKind": "water",
+        "displayName": "Near water stock",
+        "quantity": 10,
+        "unit": "bucket",
+        "capacity": 20,
+        "metadata": {
+          "locationId": "near-home"
+        }
+      },
+      {
+        "storeId": "store.well.water",
+        "ownerActorId": "well-keeper",
+        "resourceId": "water",
+        "resourceKind": "water",
+        "displayName": "Well water",
+        "quantity": 84,
+        "unit": "bucket",
+        "capacity": 100,
+        "metadata": {
+          "locationId": "shared-well"
+        }
+      }
+    ],
+    "addedFlows": [
+      {
+        "flowId": "flow.event.near.collect.1.use.use-source",
+        "fromStoreId": "store.well.water",
+        "toStoreId": "store.near.water",
+        "fromActorId": "well-keeper",
+        "toActorId": "near-household",
+        "resourceId": "water",
+        "quantity": 8,
+        "unit": "bucket",
+        "reason": "use-source",
+        "occurredAtUtc": "2026-01-02T00:01:00+00:00",
+        "metadata": {
+          "sourceEventId": "event.near.collect.1.use"
+        }
+      }
+    ],
+    "updatedRelationships": [],
+    "addedEvents": [
+      {
+        "eventId": "event.near.collect.1.travel",
+        "kind": "actor.travel",
+        "eventKind": "actor.travel",
+        "stepIndex": 1,
+        "actorId": "near-household",
+        "targetActorId": "near-household",
+        "placeId": "near-home",
+        "resourceId": "water",
+        "quantity": 8,
+        "durationSeconds": 1200,
+        "actorIds": [
+          "near-household"
+        ],
+        "resourceIds": [
+          "water"
+        ],
+        "sourceId": "shared-well",
+        "targetId": "near-household",
+        "source": {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        "participantRefs": [
+          {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "near-home",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "shared-well",
+            "metadata": {}
+          },
+          {
+            "kind": "resource",
+            "id": "water",
+            "metadata": {}
+          }
+        ],
+        "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+        "duration": "00:20:00",
+        "magnitude": 8,
+        "timing": {
+          "stepIndex": 1,
+          "offset": "00:00:00",
+          "duration": "00:20:00",
+          "order": 0
+        },
+        "participants": [
+          {
+            "participantId": "near-home",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "near-home",
+            "metadata": {}
+          },
+          {
+            "participantId": "near-household",
+            "role": "actor",
+            "actorId": "near-household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "shared-well",
+            "role": "source",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "water",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "water",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "metadata": {
+          "canonicalEventKind": "actor.travel",
+          "sourceLocationId": "shared-well",
+          "targetLocationId": "near-home",
+          "expansion": "resource-use",
+          "phase": "travel",
+          "sourceEventId": "event.near.collect.1",
+          "eventOrder": "0"
+        }
+      },
+      {
+        "eventId": "event.near.collect.1.use",
+        "kind": "actor.resource.use",
+        "eventKind": "actor.resource.use",
+        "stepIndex": 1,
+        "actorId": "near-household",
+        "targetActorId": "near-household",
+        "placeId": "near-home",
+        "resourceId": "water",
+        "quantity": 8,
+        "durationSeconds": 1200,
+        "actorIds": [
+          "near-household"
+        ],
+        "resourceIds": [
+          "water"
+        ],
+        "sourceId": "shared-well",
+        "targetId": "near-household",
+        "source": {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        "participantRefs": [
+          {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "near-home",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "shared-well",
+            "metadata": {}
+          },
+          {
+            "kind": "resource",
+            "id": "water",
+            "metadata": {}
+          }
+        ],
+        "occurredAtUtc": "2026-01-02T00:01:00+00:00",
+        "duration": "00:20:00",
+        "magnitude": 8,
+        "timing": {
+          "stepIndex": 1,
+          "offset": "00:01:00",
+          "duration": "00:20:00",
+          "order": 1
+        },
+        "participants": [
+          {
+            "participantId": "near-home",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "near-home",
+            "metadata": {}
+          },
+          {
+            "participantId": "near-household",
+            "role": "actor",
+            "actorId": "near-household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "shared-well",
+            "role": "source",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "water",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "water",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "metadata": {
+          "canonicalEventKind": "actor.resource.use",
+          "sourceLocationId": "shared-well",
+          "targetLocationId": "near-home",
+          "expansion": "resource-use",
+          "phase": "use",
+          "sourceEventId": "event.near.collect.1",
+          "eventOrder": "1"
+        }
+      },
+      {
+        "eventId": "event.near.collect.1.return",
+        "kind": "actor.return-home",
+        "eventKind": "actor.return-home",
+        "stepIndex": 1,
+        "actorId": "near-household",
+        "targetActorId": "near-household",
+        "placeId": "shared-well",
+        "resourceId": "water",
+        "quantity": 8,
+        "durationSeconds": 1200,
+        "actorIds": [
+          "near-household"
+        ],
+        "resourceIds": [
+          "water"
+        ],
+        "sourceId": "shared-well",
+        "targetId": "near-household",
+        "source": {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        "participantRefs": [
+          {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "near-home",
+            "metadata": {}
+          },
+          {
+            "kind": "location",
+            "id": "shared-well",
+            "metadata": {}
+          },
+          {
+            "kind": "resource",
+            "id": "water",
+            "metadata": {}
+          }
+        ],
+        "occurredAtUtc": "2026-01-02T00:02:00+00:00",
+        "duration": "00:20:00",
+        "magnitude": 8,
+        "timing": {
+          "stepIndex": 1,
+          "offset": "00:02:00",
+          "duration": "00:20:00",
+          "order": 2
+        },
+        "participants": [
+          {
+            "participantId": "near-home",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "near-home",
+            "metadata": {}
+          },
+          {
+            "participantId": "near-household",
+            "role": "actor",
+            "actorId": "near-household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "shared-well",
+            "role": "source",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "water",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "water",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "metadata": {
+          "canonicalEventKind": "actor.return-home",
+          "sourceLocationId": "shared-well",
+          "targetLocationId": "near-home",
+          "expansion": "resource-use",
+          "phase": "return",
+          "sourceEventId": "event.near.collect.1",
+          "eventOrder": "2"
+        }
+      }
+    ],
+    "addedIssues": [],
+    "addedArtifacts": [],
+    "resolvedIssueIds": [],
+    "deterministicHash": "8acc381904e50ff0ffcb5a82119740a3a2e63dd9e64626cfe9f5060615eeb5a0",
+    "metadata": {
+      "materializer": "SimpleSimulationStateTransitionEngine"
+    }
+  },
+  "appliedEvents": [
+    {
+      "eventId": "event.near.collect.1.travel",
+      "kind": "actor.travel",
+      "eventKind": "actor.travel",
+      "stepIndex": 1,
+      "actorId": "near-household",
+      "targetActorId": "near-household",
+      "placeId": "near-home",
+      "resourceId": "water",
+      "quantity": 8,
+      "durationSeconds": 1200,
+      "actorIds": [
+        "near-household"
+      ],
+      "resourceIds": [
+        "water"
+      ],
+      "sourceId": "shared-well",
+      "targetId": "near-household",
+      "source": {
+        "kind": "location",
+        "id": "shared-well",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "near-household",
+        "metadata": {}
+      },
+      "participantRefs": [
+        {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        {
+          "kind": "location",
+          "id": "near-home",
+          "metadata": {}
+        },
+        {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        {
+          "kind": "resource",
+          "id": "water",
+          "metadata": {}
+        }
+      ],
+      "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+      "duration": "00:20:00",
+      "magnitude": 8,
+      "timing": {
+        "stepIndex": 1,
+        "offset": "00:00:00",
+        "duration": "00:20:00",
+        "order": 0
+      },
+      "participants": [
+        {
+          "participantId": "near-home",
+          "role": "location",
+          "actorId": "",
+          "resourceId": "",
+          "locationId": "near-home",
+          "metadata": {}
+        },
+        {
+          "participantId": "near-household",
+          "role": "actor",
+          "actorId": "near-household",
+          "resourceId": "",
+          "locationId": "",
+          "metadata": {}
+        },
+        {
+          "participantId": "shared-well",
+          "role": "source",
+          "actorId": "",
+          "resourceId": "",
+          "locationId": "",
+          "metadata": {}
+        },
+        {
+          "participantId": "water",
+          "role": "resource",
+          "actorId": "",
+          "resourceId": "water",
+          "locationId": "",
+          "metadata": {}
+        }
+      ],
+      "effects": [],
+      "metadata": {
+        "canonicalEventKind": "actor.travel",
+        "sourceLocationId": "shared-well",
+        "targetLocationId": "near-home",
+        "expansion": "resource-use",
+        "phase": "travel",
+        "sourceEventId": "event.near.collect.1",
+        "eventOrder": "0"
+      }
+    },
+    {
+      "eventId": "event.near.collect.1.use",
+      "kind": "actor.resource.use",
+      "eventKind": "actor.resource.use",
+      "stepIndex": 1,
+      "actorId": "near-household",
+      "targetActorId": "near-household",
+      "placeId": "near-home",
+      "resourceId": "water",
+      "quantity": 8,
+      "durationSeconds": 1200,
+      "actorIds": [
+        "near-household"
+      ],
+      "resourceIds": [
+        "water"
+      ],
+      "sourceId": "shared-well",
+      "targetId": "near-household",
+      "source": {
+        "kind": "location",
+        "id": "shared-well",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "near-household",
+        "metadata": {}
+      },
+      "participantRefs": [
+        {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        {
+          "kind": "location",
+          "id": "near-home",
+          "metadata": {}
+        },
+        {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        {
+          "kind": "resource",
+          "id": "water",
+          "metadata": {}
+        }
+      ],
+      "occurredAtUtc": "2026-01-02T00:01:00+00:00",
+      "duration": "00:20:00",
+      "magnitude": 8,
+      "timing": {
+        "stepIndex": 1,
+        "offset": "00:01:00",
+        "duration": "00:20:00",
+        "order": 1
+      },
+      "participants": [
+        {
+          "participantId": "near-home",
+          "role": "location",
+          "actorId": "",
+          "resourceId": "",
+          "locationId": "near-home",
+          "metadata": {}
+        },
+        {
+          "participantId": "near-household",
+          "role": "actor",
+          "actorId": "near-household",
+          "resourceId": "",
+          "locationId": "",
+          "metadata": {}
+        },
+        {
+          "participantId": "shared-well",
+          "role": "source",
+          "actorId": "",
+          "resourceId": "",
+          "locationId": "",
+          "metadata": {}
+        },
+        {
+          "participantId": "water",
+          "role": "resource",
+          "actorId": "",
+          "resourceId": "water",
+          "locationId": "",
+          "metadata": {}
+        }
+      ],
+      "effects": [],
+      "metadata": {
+        "canonicalEventKind": "actor.resource.use",
+        "sourceLocationId": "shared-well",
+        "targetLocationId": "near-home",
+        "expansion": "resource-use",
+        "phase": "use",
+        "sourceEventId": "event.near.collect.1",
+        "eventOrder": "1"
+      }
+    },
+    {
+      "eventId": "event.near.collect.1.return",
+      "kind": "actor.return-home",
+      "eventKind": "actor.return-home",
+      "stepIndex": 1,
+      "actorId": "near-household",
+      "targetActorId": "near-household",
+      "placeId": "shared-well",
+      "resourceId": "water",
+      "quantity": 8,
+      "durationSeconds": 1200,
+      "actorIds": [
+        "near-household"
+      ],
+      "resourceIds": [
+        "water"
+      ],
+      "sourceId": "shared-well",
+      "targetId": "near-household",
+      "source": {
+        "kind": "location",
+        "id": "shared-well",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "near-household",
+        "metadata": {}
+      },
+      "participantRefs": [
+        {
+          "kind": "actor",
+          "id": "near-household",
+          "metadata": {}
+        },
+        {
+          "kind": "location",
+          "id": "near-home",
+          "metadata": {}
+        },
+        {
+          "kind": "location",
+          "id": "shared-well",
+          "metadata": {}
+        },
+        {
+          "kind": "resource",
+          "id": "water",
+          "metadata": {}
+        }
+      ],
+      "occurredAtUtc": "2026-01-02T00:02:00+00:00",
+      "duration": "00:20:00",
+      "magnitude": 8,
+      "timing": {
+        "stepIndex": 1,
+        "offset": "00:02:00",
+        "duration": "00:20:00",
+        "order": 2
+      },
+      "participants": [
+        {
+          "participantId": "near-home",
+          "role": "location",
+          "actorId": "",
+          "resourceId": "",
+          "locationId": "near-home",
+          "metadata": {}
+        },
+        {
+          "participantId": "near-household",
+          "role": "actor",
+          "actorId": "near-household",
+          "resourceId": "",
+          "locationId": "",
+          "metadata": {}
+        },
+        {
+          "participantId": "shared-well",
+          "role": "source",
+          "actorId": "",
+          "resourceId": "",
+          "locationId": "",
+          "metadata": {}
+        },
+        {
+          "participantId": "water",
+          "role": "resource",
+          "actorId": "",
+          "resourceId": "water",
+          "locationId": "",
+          "metadata": {}
+        }
+      ],
+      "effects": [],
+      "metadata": {
+        "canonicalEventKind": "actor.return-home",
+        "sourceLocationId": "shared-well",
+        "targetLocationId": "near-home",
+        "expansion": "resource-use",
+        "phase": "return",
+        "sourceEventId": "event.near.collect.1",
+        "eventOrder": "2"
+      }
+    }
+  ],
+  "pendingEvents": [
+    {
+      "eventId": "event.free.violation.2",
+      "kind": "rule.violation.detect",
+      "eventKind": "rule.violation.detect",
+      "stepIndex": 2,
+      "actorId": "near-household",
+      "targetActorId": "rule-council",
+      "placeId": "",
+      "resourceId": "water",
+      "quantity": -0.1,
+      "durationSeconds": 300,
+      "actorIds": [
+        "near-household",
+        "rule-council"
+      ],
+      "resourceIds": [
+        "water"
+      ],
+      "sourceId": "near-household",
+      "targetId": "rule.water-draw-limit",
+      "source": {
+        "kind": "actor",
+        "id": "near-household",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "rule.water-draw-limit",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:05:00",
+      "magnitude": -0.1,
+      "timing": {
+        "stepIndex": 2,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 0
+      },
+      "participants": [],
+      "effects": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.near.resell.2",
+      "kind": "actor.trade.sell",
+      "eventKind": "actor.trade.sell",
+      "stepIndex": 2,
+      "actorId": "near-household",
+      "targetActorId": "far-household",
+      "placeId": "",
+      "resourceId": "water",
+      "quantity": 3,
+      "durationSeconds": 1800,
+      "actorIds": [
+        "near-household",
+        "far-household"
+      ],
+      "resourceIds": [
+        "water",
+        "cash"
+      ],
+      "sourceId": "near-household",
+      "targetId": "far-household",
+      "source": {
+        "kind": "actor",
+        "id": "near-household",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "far-household",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:30:00",
+      "magnitude": 3,
+      "timing": {
+        "stepIndex": 2,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 0
+      },
+      "participants": [],
+      "effects": [],
+      "metadata": {}
+    }
+  ],
+  "metrics": [
+    {
+      "metricId": "ruleViolationCount",
+      "value": 0,
+      "unit": "",
+      "metadata": {
+        "kind": "issue-count"
+      }
+    },
+    {
+      "metricId": "wellDepletionRate",
+      "value": 95,
+      "unit": "",
+      "metadata": {
+        "kind": "resource-total",
+        "resourceId": "water"
+      }
+    }
+  ],
+  "invariants": [
+    {
+      "invariantId": "shared-well.violations-visible",
+      "passed": false,
+      "severity": "error",
+      "message": "Invariant \u0027shared-well.violations-visible\u0027 failed for metric \u0027ruleViolationCount\u0027 with value 0.",
+      "metadata": {
+        "metricId": "ruleViolationCount",
+        "value": "0"
+      }
+    }
+  ],
+  "visualState": {
+    "visualFrameId": "run.simple.shared-well-community.state-transition.frame.1",
+    "playbackFrameId": "real-scenario-shared-resource.experiment.shared-well.distance-trade-tax.v1.frame.1",
+    "playbackFrameIndex": 1,
+    "nodeObjectIds": {
+      "node.actor.far-household": "object.node.actor.far-household",
+      "node.actor.near-household": "object.node.actor.near-household",
+      "node.actor.rule-council": "object.node.actor.rule-council",
+      "node.actor.well-keeper": "object.node.actor.well-keeper",
+      "node.location.council-hall": "object.node.location.council-hall",
+      "node.location.far-home": "object.node.location.far-home",
+      "node.location.keeper-office": "object.node.location.keeper-office",
+      "node.location.near-home": "object.node.location.near-home",
+      "node.location.shared-well": "object.node.location.shared-well",
+      "node.resource.store.council.tax": "object.node.resource.store.council.tax",
+      "node.resource.store.far.water": "object.node.resource.store.far.water",
+      "node.resource.store.near.water": "object.node.resource.store.near.water",
+      "node.resource.store.well.water": "object.node.resource.store.well.water"
+    },
+    "activeActionIds": [],
+    "pendingActionIds": [
+      "action.event.near.collect.1.return.primary",
+      "action.event.near.collect.1.travel.primary",
+      "action.event.near.collect.1.use.sequence"
+    ],
+    "activeStageIds": [],
+    "pendingStageIds": [
+      "action.event.near.collect.1.return.primary",
+      "action.event.near.collect.1.travel.primary",
+      "action.event.near.collect.1.use.sequence"
+    ],
+    "runtimeDiagnostics": {
+      "document.diagnostic.0": "Action \u0027action.event.free.violation.2.conflict.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.primary\u0027.",
+      "document.diagnostic.1": "Action \u0027action.event.free.violation.2.conflict.relationship\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.relationship\u0027.",
+      "document.diagnostic.2": "Action \u0027action.event.free.violation.2.enforcement.relationship\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.enforcement.relationship\u0027.",
+      "document.diagnostic.3": "Action \u0027action.event.near.resell.2.buy.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.buy.primary\u0027.",
+      "document.diagnostic.4": "Action \u0027action.event.near.resell.2.fee.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.fee.primary\u0027.",
+      "document.diagnostic.5": "Node \u0027node.location.council-hall\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "document.diagnostic.6": "Node \u0027node.location.far-home\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "document.diagnostic.7": "Node \u0027node.location.keeper-office\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "document.diagnostic.8": "Node \u0027node.location.near-home\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "document.diagnostic.9": "Node \u0027node.location.shared-well\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+      "runFrame.index": "1",
+      "runFrame.stageCount": "3"
+    },
+    "runtimeAttachment": {
+      "runtimeKind": "webgl-run",
+      "currentPlaybackCommand": "motion",
+      "currentFrameIndex": 1,
+      "activeMotionIds": [
+        "action.event.near.collect.1.travel.primary"
+      ],
+      "queuedMotionIds": [
+        "action.event.near.collect.1.return.primary"
+      ],
+      "activeStageIds": [
+        "action.event.near.collect.1.travel.primary"
+      ],
+      "pendingStageIds": [
+        "action.event.near.collect.1.return.primary",
+        "action.event.near.collect.1.use.sequence"
+      ],
+      "activeBarrierPolicy": "wait-for-object-motions",
+      "activeBarrierBlockers": [
+        "object.node.actor.near-household"
+      ],
+      "commandJournalTail": [
+        "action.event.near.collect.1.travel.primary:motion",
+        "action.event.near.collect.1.use.sequence:wait",
+        "action.event.near.collect.1.return.primary:motion"
+      ],
+      "renderDiagnosticsSummary": "frame=1;stages=3;motions=4;patches=0;barrierPolicy=wait-for-object-motions",
+      "selectedObjectIds": [],
+      "selectedActionIds": [],
+      "diagnostics": {
+        "document.diagnostic.0": "Action \u0027action.event.free.violation.2.conflict.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.primary\u0027.",
+        "document.diagnostic.1": "Action \u0027action.event.free.violation.2.conflict.relationship\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.relationship\u0027.",
+        "document.diagnostic.2": "Action \u0027action.event.free.violation.2.enforcement.relationship\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.enforcement.relationship\u0027.",
+        "document.diagnostic.3": "Action \u0027action.event.near.resell.2.buy.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.buy.primary\u0027.",
+        "document.diagnostic.4": "Action \u0027action.event.near.resell.2.fee.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.fee.primary\u0027.",
+        "document.diagnostic.5": "Node \u0027node.location.council-hall\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "document.diagnostic.6": "Node \u0027node.location.far-home\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "document.diagnostic.7": "Node \u0027node.location.keeper-office\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "document.diagnostic.8": "Node \u0027node.location.near-home\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "document.diagnostic.9": "Node \u0027node.location.shared-well\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+        "runFrame.index": "1",
+        "runFrame.stageCount": "3"
+      },
+      "metadata": {
+        "source.visualFrameId": "run.simple.shared-well-community.state-transition.frame.1",
+        "source.playbackFrameId": "1",
+        "source.stageCount": "3"
+      }
+    },
+    "metadata": {
+      "source.visualRunId": "run.simple.shared-well-community.state-transition",
+      "source.runDocumentId": "real-scenario-shared-resource.experiment.shared-well.distance-trade-tax.v1",
+      "source.snapshotId": "snapshot.run.simple.shared-well-community.state-transition.1"
+    }
+  },
+  "provenanceHashes": {
+    "scenario": "138930e6dda5ae5937cf94b48c2d57d1584a6df126c8a1a7c8d47676f71bdc5f",
+    "frame": "e60f208b268de0d8c8e5d74e00ed53811dc214cf14459a0566209833861d781a",
+    "snapshot.data": "bd3e2c6c3b22b410882b25b41cf65bc9917291f5ee19ace86949c4934d4d7c6b",
+    "snapshot.dataState": "bd3e2c6c3b22b410882b25b41cf65bc9917291f5ee19ace86949c4934d4d7c6b",
+    "snapshot.visualState": "34fab72b840419775e8cbc30da8ef9f7bc0ab465895ebb9c0f89e44e67b64361",
+    "snapshot.visualRuntime": "34fab72b840419775e8cbc30da8ef9f7bc0ab465895ebb9c0f89e44e67b64361",
+    "lastDelta": "8acc381904e50ff0ffcb5a82119740a3a2e63dd9e64626cfe9f5060615eeb5a0",
+    "snapshot.full": "dc2c6458cebc9b38f9ad7e5d7178ebeaad26cc0abf2fa99d35715c0ae58c95ce"
+  },
+  "metadata": {
+    "experimentId": "experiment.shared-well.distance-trade-tax.v1",
+    "backendId": "simple-accounts",
+    "visualFrameId": "run.simple.shared-well-community.state-transition.frame.1",
+    "builder": "SimulationSnapshotBuilder"
+  },
+  "deterministicHash": "dc2c6458cebc9b38f9ad7e5d7178ebeaad26cc0abf2fa99d35715c0ae58c95ce"
+}

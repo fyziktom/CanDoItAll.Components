@@ -1,0 +1,2635 @@
+{
+  "schemaVersion": "webgl-run-document/v1",
+  "runId": {
+    "value": "real-scenario-shared-resource.experiment.shared-well.distance-trade-tax.v1"
+  },
+  "initialScene": {
+    "schemaVersion": "webgl-scene-document/v1",
+    "documentId": "real-scenario-shared-resource.experiment.shared-well.distance-trade-tax.v1.initial-scene",
+    "scene": {
+      "sceneId": "real-scenario-shared-resource.experiment.shared-well.distance-trade-tax.v1.scene",
+      "title": "experiment.shared-well.distance-trade-tax.v1",
+      "description": "",
+      "revision": 0,
+      "assetCatalog": {
+        "catalogId": "",
+        "version": "1.0",
+        "defaultFallbackAssetId": "",
+        "assets": [],
+        "modelImportRecipes": [],
+        "metadata": {}
+      },
+      "environment": {
+        "backgroundColor": "#0f172a",
+        "groundColor": "#1f2937",
+        "gridColor": "#64748b",
+        "groundSize": 36,
+        "gridDivisions": 24,
+        "ambientLightIntensity": 0.6,
+        "directionalLightIntensity": 1.2,
+        "fogEnabled": true,
+        "fogColor": "#0f172a",
+        "fogNear": 80,
+        "fogFar": 180
+      },
+      "camera": {
+        "projectionMode": "perspective",
+        "viewMode": "isometric",
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "distance": 32,
+        "zoom": 1,
+        "azimuth": -0.78,
+        "polar": 1.02,
+        "fieldOfView": 48
+      },
+      "uiState": {
+        "selection": {
+          "selectedObjectIds": [],
+          "primaryObjectId": "",
+          "contextActionId": ""
+        },
+        "hoveredObjectId": "",
+        "showGrid": true,
+        "showGround": true,
+        "showLabels": true,
+        "showSymbols": true,
+        "deterministicMode": true,
+        "activeAssetProfile": "primitive",
+        "revision": 0,
+        "metadata": {}
+      },
+      "interaction": {
+        "selectionMode": "single",
+        "allowHover": true,
+        "allowClickSelection": true,
+        "allowMultiSelect": false,
+        "allowDragOnGroundPlane": false,
+        "allowCameraPan": true,
+        "allowCameraZoom": true,
+        "allowCameraOrbit": true,
+        "fitViewOnCreate": true,
+        "focusOnDoubleClick": true,
+        "dragAxisLock": "",
+        "dragSnapGridSize": 0
+      },
+      "layers": [
+        {
+          "id": "layer.actors",
+          "title": "Actors",
+          "kind": "actor",
+          "isVisible": true,
+          "sortOrder": 0,
+          "objectIds": [
+            "object.node.actor.far-household",
+            "object.node.actor.near-household",
+            "object.node.actor.rule-council",
+            "object.node.actor.well-keeper",
+            "object.node.location.council-hall",
+            "object.node.location.far-home",
+            "object.node.location.keeper-office",
+            "object.node.location.near-home",
+            "object.node.location.shared-well"
+          ],
+          "metadata": {
+            "source.category": "actor"
+          }
+        },
+        {
+          "id": "layer.resources",
+          "title": "Resources",
+          "kind": "resource",
+          "isVisible": true,
+          "sortOrder": 1,
+          "objectIds": [
+            "object.node.resource.store.council.tax",
+            "object.node.resource.store.far.water",
+            "object.node.resource.store.near.water",
+            "object.node.resource.store.well.water"
+          ],
+          "metadata": {
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "layer.signals",
+          "title": "Signals",
+          "kind": "risk",
+          "isVisible": true,
+          "sortOrder": 2,
+          "objectIds": [],
+          "metadata": {
+            "source.category": "risk"
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "object.node.actor.far-household",
+          "kind": "actor",
+          "family": "actor",
+          "title": "Far Household",
+          "subtitle": "actor",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 6,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "far-household",
+            "role": "buyer",
+            "locationId": "far-home",
+            "source.nodeId": "node.actor.far-household",
+            "source.nodeKind": "actor",
+            "source.category": "actor",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.near-household",
+          "kind": "actor",
+          "family": "actor",
+          "title": "Near Household",
+          "subtitle": "actor",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "near-household",
+            "role": "collector-reseller",
+            "locationId": "near-home",
+            "source.nodeId": "node.actor.near-household",
+            "source.nodeKind": "actor",
+            "source.category": "actor",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.rule-council",
+          "kind": "institution",
+          "family": "institution",
+          "title": "Rule Council",
+          "subtitle": "institution",
+          "description": "",
+          "assetId": "asset.institution",
+          "position": {
+            "x": -2,
+            "y": 2,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#a78bfa",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "rule-council",
+            "role": "governance",
+            "locationId": "council-hall",
+            "source.nodeId": "node.actor.rule-council",
+            "source.nodeKind": "actor",
+            "source.category": "institution",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.well-keeper",
+          "kind": "institution",
+          "family": "institution",
+          "title": "Well Keeper",
+          "subtitle": "institution",
+          "description": "",
+          "assetId": "asset.institution",
+          "position": {
+            "x": 0,
+            "y": 2,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#a78bfa",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "well-keeper",
+            "role": "maintenance",
+            "locationId": "keeper-office",
+            "source.nodeId": "node.actor.well-keeper",
+            "source.nodeKind": "actor",
+            "source.category": "institution",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.location.council-hall",
+          "kind": "location",
+          "family": "location",
+          "title": "council-hall",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "",
+          "position": {
+            "x": -2,
+            "y": 2,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#ffffff",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "council-hall",
+            "locationOrder": "0",
+            "source.nodeId": "node.location.council-hall",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.far-home",
+          "kind": "location",
+          "family": "location",
+          "title": "far-home",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "",
+          "position": {
+            "x": 6,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#ffffff",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "far-home",
+            "locationOrder": "1",
+            "source.nodeId": "node.location.far-home",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.keeper-office",
+          "kind": "location",
+          "family": "location",
+          "title": "keeper-office",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "",
+          "position": {
+            "x": 0,
+            "y": 2,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#ffffff",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "keeper-office",
+            "locationOrder": "2",
+            "source.nodeId": "node.location.keeper-office",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.near-home",
+          "kind": "location",
+          "family": "location",
+          "title": "near-home",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "",
+          "position": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#ffffff",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "near-home",
+            "locationOrder": "3",
+            "source.nodeId": "node.location.near-home",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.shared-well",
+          "kind": "location",
+          "family": "location",
+          "title": "shared-well",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#ffffff",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "shared-well",
+            "locationOrder": "4",
+            "source.nodeId": "node.location.shared-well",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.resource.store.council.tax",
+          "kind": "resource",
+          "family": "resource",
+          "title": "Council tax reserve",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 0,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "rule-council",
+            "resourceId": "cash",
+            "storeId": "store.council.tax",
+            "locationId": "council-hall",
+            "source.nodeId": "node.resource.store.council.tax",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "0",
+            "metric.unit": "token"
+          }
+        },
+        {
+          "id": "object.node.resource.store.far.water",
+          "kind": "resource",
+          "family": "resource",
+          "title": "Far water stock",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 1.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "far-household",
+            "resourceId": "water",
+            "storeId": "store.far.water",
+            "locationId": "far-home",
+            "source.nodeId": "node.resource.store.far.water",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "1",
+            "metric.unit": "bucket",
+            "metric.capacityUsed": "0.1"
+          }
+        },
+        {
+          "id": "object.node.resource.store.near.water",
+          "kind": "resource",
+          "family": "resource",
+          "title": "Near water stock",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 3,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "near-household",
+            "resourceId": "water",
+            "storeId": "store.near.water",
+            "locationId": "near-home",
+            "source.nodeId": "node.resource.store.near.water",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "2",
+            "metric.unit": "bucket",
+            "metric.capacityUsed": "0.1"
+          }
+        },
+        {
+          "id": "object.node.resource.store.well.water",
+          "kind": "resource",
+          "family": "resource",
+          "title": "Well water",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 4.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "well-keeper",
+            "resourceId": "water",
+            "storeId": "store.well.water",
+            "locationId": "shared-well",
+            "source.nodeId": "node.resource.store.well.water",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "92",
+            "metric.unit": "bucket",
+            "metric.capacityUsed": "0.92"
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "link.link.owns.far-household.store.far.water",
+          "sourceObjectId": "object.node.actor.far-household",
+          "targetObjectId": "object.node.resource.store.far.water",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.far-household.store.far.water",
+            "source.sourceNodeId": "node.actor.far-household",
+            "source.targetNodeId": "node.resource.store.far.water",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.near-household.store.near.water",
+          "sourceObjectId": "object.node.actor.near-household",
+          "targetObjectId": "object.node.resource.store.near.water",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.near-household.store.near.water",
+            "source.sourceNodeId": "node.actor.near-household",
+            "source.targetNodeId": "node.resource.store.near.water",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.rule-council.store.council.tax",
+          "sourceObjectId": "object.node.actor.rule-council",
+          "targetObjectId": "object.node.resource.store.council.tax",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.rule-council.store.council.tax",
+            "source.sourceNodeId": "node.actor.rule-council",
+            "source.targetNodeId": "node.resource.store.council.tax",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.well-keeper.store.well.water",
+          "sourceObjectId": "object.node.actor.well-keeper",
+          "targetObjectId": "object.node.resource.store.well.water",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.well-keeper.store.well.water",
+            "source.sourceNodeId": "node.actor.well-keeper",
+            "source.targetNodeId": "node.resource.store.well.water",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.relationship.rel.near.far.trust",
+          "sourceObjectId": "object.node.actor.near-household",
+          "targetObjectId": "object.node.actor.far-household",
+          "kind": "relationship",
+          "label": "trust",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "relationshipId": "rel.near.far.trust",
+            "source.linkId": "link.relationship.rel.near.far.trust",
+            "source.sourceNodeId": "node.actor.near-household",
+            "source.targetNodeId": "node.actor.far-household",
+            "source.category": "trust"
+          }
+        }
+      ],
+      "metadata": {
+        "source.experimentId": "experiment.shared-well.distance-trade-tax.v1",
+        "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa"
+      }
+    },
+    "runtimeOptions": {
+      "deterministicMode": true,
+      "preserveDrawingBuffer": true,
+      "enableAntialiasing": true,
+      "maximumDevicePixelRatio": 2,
+      "renderMode": "auto",
+      "assetQualityProfile": "primitive",
+      "showDiagnosticsPanel": true,
+      "showLabels": true,
+      "showSymbols": true,
+      "autoFitOnCreate": true,
+      "maxCommandResultHistory": 100,
+      "runtimeKey": ""
+    },
+    "diagnostics": {
+      "createCount": 0,
+      "disposeCount": 0,
+      "updateCount": 0,
+      "renderCount": 0,
+      "loadedAssetCount": 0,
+      "missingAssetCount": 0,
+      "fallbackObjectCount": 0,
+      "modelInstanceCount": 0,
+      "primitiveInstanceCount": 0,
+      "activeMotionCount": 0,
+      "queuedMotionCount": 0,
+      "activeMotionIds": [],
+      "queuedMotionIds": [],
+      "motionQueueSnapshot": [],
+      "maxMotionQueueLength": 0,
+      "cancelledMotionCount": 0,
+      "motionAcceptedCount": 0,
+      "motionCompletedCount": 0,
+      "motionFailedCount": 0,
+      "animatedSymbolCount": 0,
+      "isRenderLoopActive": false,
+      "renderSchedulerMode": "auto",
+      "lastScheduledReason": "",
+      "lastDeltaSeconds": 0,
+      "estimatedTriangleCount": 0,
+      "estimatedVertexCount": 0,
+      "objectCount": 0,
+      "visibleObjectCount": 0,
+      "hiddenObjectCount": 0,
+      "visibleLinkCount": 0,
+      "hiddenLinkCount": 0,
+      "sceneIndexSyncCount": 0,
+      "lastSceneIndexSyncReason": "",
+      "symbolCount": 0,
+      "deterministicMode": false,
+      "activeAssetProfile": "primitive",
+      "renderMode": "auto",
+      "lastFrameReason": "",
+      "frameTimeMs": 0,
+      "averageFrameTimeMs": 0,
+      "peakFrameTimeMs": 0,
+      "idleSinceMs": 0,
+      "largestLoadedAssetId": "",
+      "assetCacheEntryCount": 0,
+      "assetCacheHitCount": 0,
+      "assetCacheMissCount": 0,
+      "disposedTemplateCount": 0,
+      "materialCloneCount": 0,
+      "disposedGeometryCount": 0,
+      "disposedMaterialCount": 0,
+      "disposedTextureCount": 0,
+      "batchCommandCount": 0,
+      "batchStageCount": 0,
+      "batchDurationMs": 0,
+      "currentCommandBatchId": "",
+      "currentCommandStageId": "",
+      "completedCommandStageCount": 0,
+      "failedCommandStageCount": 0,
+      "queuedCommandStageCount": 0,
+      "skippedCommandStageCount": 0,
+      "commandStageCancelledCount": 0,
+      "commandStageWaitSeconds": 0,
+      "commandStageBarrierPolicy": "",
+      "commandStageBarrierTarget": "",
+      "commandStageBarrierBlockers": [],
+      "commandStageBarrierEventId": "",
+      "commandStageBarrierObjectIds": [],
+      "commandStageBarrierElapsedSeconds": 0,
+      "commandStageBarrierTimeoutSeconds": 0,
+      "commandStageBarrierTimedOut": false,
+      "lastStageBarrierWarning": "",
+      "completedCommandStageIds": [],
+      "failedCommandStageIds": [],
+      "skippedCommandStageIds": [],
+      "lastStageError": "",
+      "commandStageResultLog": [],
+      "commandStageQueueSnapshot": [],
+      "commandStageJournalCount": 0,
+      "commandStageJournalDroppedCount": 0,
+      "commandStageJournalCounters": {},
+      "commandStageRecentResultIds": [],
+      "commandStageRecentJournalEntries": [],
+      "lastStageCancelReason": "",
+      "commandCountBeforeNormalization": 0,
+      "commandCountAfterNormalization": 0,
+      "coalescedPatchCount": 0,
+      "droppedDuplicateMotionCount": 0,
+      "preservedOrderedDuplicateMotionCount": 0,
+      "interopCallsAvoided": 0,
+      "patchedObjectCount": 0,
+      "replacedObjectGroupCount": 0,
+      "symbolOnlyUpdateCount": 0,
+      "linkUpdateCount": 0,
+      "linkGeometryRebuildCount": 0,
+      "lastError": "",
+      "missingAssetIds": [],
+      "failedAssetUris": [],
+      "missingFallbackAssetIds": [],
+      "failedPatchCommands": [],
+      "failedCommandDetails": [],
+      "modelDiagnostics": []
+    },
+    "savedAtUtc": "2026-06-01T19:52:40.1062582+00:00",
+    "source": "experiment.shared-well.distance-trade-tax.v1",
+    "sceneContentHash": "",
+    "documentHash": "",
+    "contentHash": "",
+    "metadata": {
+      "source.experimentId": "experiment.shared-well.distance-trade-tax.v1",
+      "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+      "bridge": "EconomyWebGlInitialSceneProjector",
+      "visualState.poseCount": "4",
+      "visualState.symbolCount": "5",
+      "objectCount": "13",
+      "linkCount": "5"
+    }
+  },
+  "timeline": {
+    "frameRate": 12,
+    "frames": [
+      {
+        "index": 0,
+        "timeSeconds": 0,
+        "stages": [],
+        "scenePatches": [],
+        "motions": [],
+        "metadata": {
+          "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.0",
+          "source.runId": "run.simple.shared-well-community.state-transition",
+          "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+          "source.frameHash": "42e5dceb72d6d99fc7a8d1349c59932628d977da248fa1382b09c06d7eae9ee7",
+          "orderingMode": "Sequential",
+          "batchingPolicy": "preserve-order",
+          "stageCount": "0",
+          "commandCount": "0"
+        }
+      },
+      {
+        "index": 1,
+        "timeSeconds": 1,
+        "stages": [
+          {
+            "stageId": "action.event.near.collect.1.travel.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 0,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 0,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 0,
+            "waitSeconds": 1200,
+            "barrierPolicy": "wait-for-object-motions",
+            "barrierObjectIds": [
+              "object.node.actor.near-household"
+            ],
+            "barrierEventId": "",
+            "scenePatches": [],
+            "motions": [
+              {
+                "motionId": "action.event.near.collect.1.travel.primary",
+                "objectId": "object.node.actor.near-household",
+                "targetPosition": {
+                  "x": 1,
+                  "y": 0,
+                  "z": 0
+                },
+                "speedUnitsPerSecond": 0,
+                "durationSeconds": 1200,
+                "easing": "ease-in-out",
+                "snapAtEnd": true,
+                "replaceExistingForObject": true,
+                "queueMode": "append",
+                "queuePolicy": "append",
+                "metadata": {
+                  "eventId": "event.near.collect.1.travel",
+                  "eventKind": "actor.travel",
+                  "originalEventKind": "actor.travel",
+                  "phase": "primary",
+                  "subjectSourceId": "near-household",
+                  "targetSourceId": "near-household",
+                  "targetPlaceId": "near-home",
+                  "targetLocationId": "near-home",
+                  "source.visualActionId": "action.event.near.collect.1.travel.primary",
+                  "source.eventId": "event.near.collect.1.travel",
+                  "bridge": "EconomyVisualActionWebGlMapper",
+                  "actionId": "action.event.near.collect.1.travel.primary",
+                  "actionKind": "move-to-object",
+                  "parentActionId": "",
+                  "stageId": "action.event.near.collect.1.travel.primary",
+                  "stageIndex": "0",
+                  "visualActionId": "action.event.near.collect.1.travel.primary",
+                  "sourceEventId": ""
+                }
+              }
+            ],
+            "metadata": {
+              "actionId": "action.event.near.collect.1.travel.primary",
+              "actionKind": "move-to-object",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-for-object-motions",
+              "barrierObjectIds": "object.node.actor.near-household",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.near.collect.1.travel.primary",
+              "source.eventId": "event.near.collect.1.travel",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.1",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.near.collect.1.travel.primary"
+            }
+          },
+          {
+            "stageId": "action.event.near.collect.1.use.sequence",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 1,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 1,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 60,
+            "waitSeconds": 1200,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [],
+            "motions": [],
+            "metadata": {
+              "orderingMode": "Sequential",
+              "source.visualActionId": "action.event.near.collect.1.use.sequence",
+              "source.eventId": "event.near.collect.1.use",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.1",
+              "actionId": "action.event.near.collect.1.use.sequence",
+              "frameBatchCount": "0",
+              "batchingPolicy": "preserve-order",
+              "batchCommandCount": "0",
+              "commandCountBeforeNormalization": "0",
+              "commandCountAfterNormalization": "0",
+              "stageCount": "0",
+              "coalescedPatchCount": "0",
+              "droppedDuplicateMotionCount": "0",
+              "preservedOrderedDuplicateMotionCount": "0",
+              "estimatedHostInteropCallCount": "0",
+              "interopCallsAvoided": "0",
+              "commandBatchId": "run-plan:action.event.near.collect.1.use.sequence",
+              "explicitWaitMarker": "true",
+              "waitMarkerKind": "wait-seconds"
+            }
+          },
+          {
+            "stageId": "action.event.near.collect.1.return.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 2,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 2,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 120,
+            "waitSeconds": 1200,
+            "barrierPolicy": "wait-for-object-motions",
+            "barrierObjectIds": [
+              "object.node.actor.near-household"
+            ],
+            "barrierEventId": "",
+            "scenePatches": [],
+            "motions": [
+              {
+                "motionId": "action.event.near.collect.1.return.primary",
+                "objectId": "object.node.actor.near-household",
+                "targetPosition": {
+                  "x": 1,
+                  "y": 0,
+                  "z": 0
+                },
+                "speedUnitsPerSecond": 0,
+                "durationSeconds": 1200,
+                "easing": "ease-in-out",
+                "snapAtEnd": true,
+                "replaceExistingForObject": true,
+                "queueMode": "append",
+                "queuePolicy": "append",
+                "metadata": {
+                  "eventId": "event.near.collect.1.return",
+                  "eventKind": "actor.return-home",
+                  "originalEventKind": "actor.return-home",
+                  "phase": "primary",
+                  "subjectSourceId": "near-household",
+                  "targetSourceId": "near-household",
+                  "targetPlaceId": "shared-well",
+                  "targetLocationId": "shared-well",
+                  "source.visualActionId": "action.event.near.collect.1.return.primary",
+                  "source.eventId": "event.near.collect.1.return",
+                  "bridge": "EconomyVisualActionWebGlMapper",
+                  "actionId": "action.event.near.collect.1.return.primary",
+                  "actionKind": "return-to-anchor",
+                  "parentActionId": "",
+                  "stageId": "action.event.near.collect.1.return.primary",
+                  "stageIndex": "0",
+                  "visualActionId": "action.event.near.collect.1.return.primary",
+                  "sourceEventId": ""
+                }
+              }
+            ],
+            "metadata": {
+              "actionId": "action.event.near.collect.1.return.primary",
+              "actionKind": "return-to-anchor",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-for-object-motions",
+              "barrierObjectIds": "object.node.actor.near-household",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.near.collect.1.return.primary",
+              "source.eventId": "event.near.collect.1.return",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.1",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.near.collect.1.return.primary"
+            }
+          }
+        ],
+        "scenePatches": [],
+        "motions": [
+          {
+            "motionId": "action.event.near.collect.1.travel.primary",
+            "objectId": "object.node.actor.near-household",
+            "targetPosition": {
+              "x": 1,
+              "y": 0,
+              "z": 0
+            },
+            "speedUnitsPerSecond": 0,
+            "durationSeconds": 1200,
+            "easing": "ease-in-out",
+            "snapAtEnd": true,
+            "replaceExistingForObject": true,
+            "queueMode": "append",
+            "queuePolicy": "append",
+            "metadata": {
+              "eventId": "event.near.collect.1.travel",
+              "eventKind": "actor.travel",
+              "originalEventKind": "actor.travel",
+              "phase": "primary",
+              "subjectSourceId": "near-household",
+              "targetSourceId": "near-household",
+              "targetPlaceId": "near-home",
+              "targetLocationId": "near-home",
+              "source.visualActionId": "action.event.near.collect.1.travel.primary",
+              "source.eventId": "event.near.collect.1.travel",
+              "bridge": "EconomyVisualActionWebGlMapper",
+              "actionId": "action.event.near.collect.1.travel.primary",
+              "actionKind": "move-to-object",
+              "parentActionId": "",
+              "stageId": "action.event.near.collect.1.travel.primary",
+              "stageIndex": "0",
+              "visualActionId": "action.event.near.collect.1.travel.primary",
+              "sourceEventId": ""
+            }
+          },
+          {
+            "motionId": "action.event.near.collect.1.return.primary",
+            "objectId": "object.node.actor.near-household",
+            "targetPosition": {
+              "x": 1,
+              "y": 0,
+              "z": 0
+            },
+            "speedUnitsPerSecond": 0,
+            "durationSeconds": 1200,
+            "easing": "ease-in-out",
+            "snapAtEnd": true,
+            "replaceExistingForObject": true,
+            "queueMode": "append",
+            "queuePolicy": "append",
+            "metadata": {
+              "eventId": "event.near.collect.1.return",
+              "eventKind": "actor.return-home",
+              "originalEventKind": "actor.return-home",
+              "phase": "primary",
+              "subjectSourceId": "near-household",
+              "targetSourceId": "near-household",
+              "targetPlaceId": "shared-well",
+              "targetLocationId": "shared-well",
+              "source.visualActionId": "action.event.near.collect.1.return.primary",
+              "source.eventId": "event.near.collect.1.return",
+              "bridge": "EconomyVisualActionWebGlMapper",
+              "actionId": "action.event.near.collect.1.return.primary",
+              "actionKind": "return-to-anchor",
+              "parentActionId": "",
+              "stageId": "action.event.near.collect.1.return.primary",
+              "stageIndex": "0",
+              "visualActionId": "action.event.near.collect.1.return.primary",
+              "sourceEventId": ""
+            }
+          }
+        ],
+        "metadata": {
+          "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.1",
+          "source.runId": "run.simple.shared-well-community.state-transition",
+          "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+          "source.frameHash": "e60f208b268de0d8c8e5d74e00ed53811dc214cf14459a0566209833861d781a",
+          "orderingMode": "Sequential",
+          "batchingPolicy": "preserve-order",
+          "stageCount": "3",
+          "commandCount": "2"
+        }
+      },
+      {
+        "index": 2,
+        "timeSeconds": 2,
+        "stages": [
+          {
+            "stageId": "action.event.free.violation.2.violation.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 0,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 0,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 0,
+            "waitSeconds": 300,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.free.violation.2.violation.primary.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "symbols": [
+                        {
+                          "id": "action.event.free.violation.2.violation.primary",
+                          "symbolAssetId": "",
+                          "semanticKind": "risk",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.free.violation.2.violation",
+                    "eventKind": "rule.violation.detect",
+                    "originalEventKind": "rule.violation.detect",
+                    "phase": "primary",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "rule.water-draw-limit",
+                    "targetPlaceId": "council-hall",
+                    "targetLocationId": "council-hall",
+                    "source.visualActionId": "action.event.free.violation.2.violation.primary",
+                    "source.eventId": "event.free.violation.2.violation",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.free.violation.2.violation.primary",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "action.event.free.violation.2.violation.primary",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.free.violation.2.violation.primary",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.free.violation.2.violation.primary",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.free.violation.2.violation.primary",
+              "source.eventId": "event.free.violation.2.violation",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.free.violation.2.violation.primary"
+            }
+          },
+          {
+            "stageId": "action.event.near.resell.2.collect.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 1,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 1,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 0,
+            "waitSeconds": 1800,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.near.resell.2.collect.primary.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "metadata": {
+                        "poseKey": "working"
+                      }
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.near.resell.2.collect",
+                    "eventKind": "actor.resource.collect",
+                    "originalEventKind": "actor.resource.collect",
+                    "phase": "primary",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "far-household",
+                    "targetPlaceId": "far-home",
+                    "targetLocationId": "far-home",
+                    "source.visualActionId": "action.event.near.resell.2.collect.primary",
+                    "source.eventId": "event.near.resell.2.collect",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.near.resell.2.collect.primary",
+                    "actionKind": "change-pose",
+                    "parentActionId": "",
+                    "stageId": "action.event.near.resell.2.collect.primary",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.near.resell.2.collect.primary",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.near.resell.2.collect.primary",
+              "actionKind": "change-pose",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.near.resell.2.collect.primary",
+              "source.eventId": "event.near.resell.2.collect",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.near.resell.2.collect.primary"
+            }
+          },
+          {
+            "stageId": "action.event.free.violation.2.admin.admin",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 2,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 2,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 60,
+            "waitSeconds": 300,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.free.violation.2.admin.admin.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "symbols": [
+                        {
+                          "id": "action.event.free.violation.2.admin.admin",
+                          "symbolAssetId": "",
+                          "semanticKind": "admin",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.free.violation.2.admin",
+                    "eventKind": "actor.admin.perform",
+                    "originalEventKind": "actor.admin.perform",
+                    "phase": "admin",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "rule.water-draw-limit",
+                    "targetPlaceId": "council-hall",
+                    "targetLocationId": "council-hall",
+                    "source.visualActionId": "action.event.free.violation.2.admin.admin",
+                    "source.eventId": "event.free.violation.2.admin",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.free.violation.2.admin.admin",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "action.event.free.violation.2.admin.admin",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.free.violation.2.admin.admin",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.free.violation.2.admin.admin",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.free.violation.2.admin.admin",
+              "source.eventId": "event.free.violation.2.admin",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.free.violation.2.admin.admin"
+            }
+          },
+          {
+            "stageId": "action.event.free.violation.2.admin.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 3,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 3,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 60,
+            "waitSeconds": 300,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.free.violation.2.admin.primary.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "symbols": [
+                        {
+                          "id": "action.event.free.violation.2.admin.primary",
+                          "symbolAssetId": "",
+                          "semanticKind": "admin",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.free.violation.2.admin",
+                    "eventKind": "actor.admin.perform",
+                    "originalEventKind": "actor.admin.perform",
+                    "phase": "primary",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "rule.water-draw-limit",
+                    "targetPlaceId": "council-hall",
+                    "targetLocationId": "council-hall",
+                    "source.visualActionId": "action.event.free.violation.2.admin.primary",
+                    "source.eventId": "event.free.violation.2.admin",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.free.violation.2.admin.primary",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "action.event.free.violation.2.admin.primary",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.free.violation.2.admin.primary",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.free.violation.2.admin.primary",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.free.violation.2.admin.primary",
+              "source.eventId": "event.free.violation.2.admin",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.free.violation.2.admin.primary"
+            }
+          },
+          {
+            "stageId": "action.event.near.resell.2.sell.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 4,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 4,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 60,
+            "waitSeconds": 1800,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [],
+            "motions": [],
+            "metadata": {
+              "orderingMode": "Sequential",
+              "source.visualActionId": "action.event.near.resell.2.sell.primary",
+              "source.eventId": "event.near.resell.2.sell",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "actionId": "action.event.near.resell.2.sell.primary",
+              "frameBatchCount": "0",
+              "batchingPolicy": "preserve-order",
+              "batchCommandCount": "0",
+              "commandCountBeforeNormalization": "0",
+              "commandCountAfterNormalization": "0",
+              "stageCount": "0",
+              "coalescedPatchCount": "0",
+              "droppedDuplicateMotionCount": "0",
+              "preservedOrderedDuplicateMotionCount": "0",
+              "estimatedHostInteropCallCount": "0",
+              "interopCallsAvoided": "0",
+              "commandBatchId": "run-plan:action.event.near.resell.2.sell.primary",
+              "explicitWaitMarker": "true",
+              "waitMarkerKind": "wait-seconds"
+            }
+          },
+          {
+            "stageId": "action.event.free.violation.2.enforcement.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 5,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 5,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 120,
+            "waitSeconds": 300,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.free.violation.2.enforcement.primary.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "symbols": [
+                        {
+                          "id": "action.event.free.violation.2.enforcement.primary",
+                          "symbolAssetId": "",
+                          "semanticKind": "rule",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.free.violation.2.enforcement",
+                    "eventKind": "rule.enforcement.apply",
+                    "originalEventKind": "rule.enforcement.apply",
+                    "phase": "primary",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "rule.water-draw-limit",
+                    "targetPlaceId": "council-hall",
+                    "targetLocationId": "council-hall",
+                    "source.visualActionId": "action.event.free.violation.2.enforcement.primary",
+                    "source.eventId": "event.free.violation.2.enforcement",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.free.violation.2.enforcement.primary",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "action.event.free.violation.2.enforcement.primary",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.free.violation.2.enforcement.primary",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.free.violation.2.enforcement.primary",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.free.violation.2.enforcement.primary",
+              "source.eventId": "event.free.violation.2.enforcement",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.free.violation.2.enforcement.primary"
+            }
+          },
+          {
+            "stageId": "action.event.near.resell.2.admin.admin",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 6,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 6,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 180,
+            "waitSeconds": 1800,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.near.resell.2.admin.admin.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "symbols": [
+                        {
+                          "id": "action.event.near.resell.2.admin.admin",
+                          "symbolAssetId": "",
+                          "semanticKind": "admin",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.near.resell.2.admin",
+                    "eventKind": "actor.admin.perform",
+                    "originalEventKind": "actor.admin.perform",
+                    "phase": "admin",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "far-household",
+                    "targetPlaceId": "far-home",
+                    "targetLocationId": "far-home",
+                    "source.visualActionId": "action.event.near.resell.2.admin.admin",
+                    "source.eventId": "event.near.resell.2.admin",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.near.resell.2.admin.admin",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "action.event.near.resell.2.admin.admin",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.near.resell.2.admin.admin",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.near.resell.2.admin.admin",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.near.resell.2.admin.admin",
+              "source.eventId": "event.near.resell.2.admin",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.near.resell.2.admin.admin"
+            }
+          },
+          {
+            "stageId": "action.event.near.resell.2.admin.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 7,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 7,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 180,
+            "waitSeconds": 1800,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.near.resell.2.admin.primary.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "symbols": [
+                        {
+                          "id": "action.event.near.resell.2.admin.primary",
+                          "symbolAssetId": "",
+                          "semanticKind": "admin",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.near.resell.2.admin",
+                    "eventKind": "actor.admin.perform",
+                    "originalEventKind": "actor.admin.perform",
+                    "phase": "primary",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "far-household",
+                    "targetPlaceId": "far-home",
+                    "targetLocationId": "far-home",
+                    "source.visualActionId": "action.event.near.resell.2.admin.primary",
+                    "source.eventId": "event.near.resell.2.admin",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.near.resell.2.admin.primary",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "action.event.near.resell.2.admin.primary",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.near.resell.2.admin.primary",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.near.resell.2.admin.primary",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.near.resell.2.admin.primary",
+              "source.eventId": "event.near.resell.2.admin",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.near.resell.2.admin.primary"
+            }
+          },
+          {
+            "stageId": "action.event.near.resell.2.rule-check.primary",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 8,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 8,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 300,
+            "waitSeconds": 1800,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "action.event.near.resell.2.rule-check.primary.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.near-household",
+                      "symbols": [
+                        {
+                          "id": "action.event.near.resell.2.rule-check.primary",
+                          "symbolAssetId": "",
+                          "semanticKind": "rule",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "eventId": "event.near.resell.2.rule-check",
+                    "eventKind": "rule.check.evaluate",
+                    "originalEventKind": "rule.check.evaluate",
+                    "phase": "primary",
+                    "subjectSourceId": "near-household",
+                    "targetSourceId": "far-household",
+                    "targetPlaceId": "far-home",
+                    "targetLocationId": "far-home",
+                    "source.visualActionId": "action.event.near.resell.2.rule-check.primary",
+                    "source.eventId": "event.near.resell.2.rule-check",
+                    "bridge": "EconomyVisualActionWebGlMapper",
+                    "actionId": "action.event.near.resell.2.rule-check.primary",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "action.event.near.resell.2.rule-check.primary",
+                    "stageIndex": "0",
+                    "visualActionId": "action.event.near.resell.2.rule-check.primary",
+                    "sourceEventId": ""
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "action.event.near.resell.2.rule-check.primary",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.near.resell.2.rule-check.primary",
+              "source.eventId": "event.near.resell.2.rule-check",
+              "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+              "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+              "commandBatchId": "run-plan:action.event.near.resell.2.rule-check.primary"
+            }
+          }
+        ],
+        "scenePatches": [
+          {
+            "id": "action.event.free.violation.2.violation.primary.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "symbols": [
+                    {
+                      "id": "action.event.free.violation.2.violation.primary",
+                      "symbolAssetId": "",
+                      "semanticKind": "risk",
+                      "intensity": 0,
+                      "color": "#facc15",
+                      "scale": 1,
+                      "heightOffset": 1.2,
+                      "anchor": "top",
+                      "billboardToCamera": true,
+                      "effectKey": "pulse",
+                      "tooltip": "",
+                      "sortOrder": 0,
+                      "isVisible": true,
+                      "metadata": {}
+                    }
+                  ]
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.free.violation.2.violation",
+                "eventKind": "rule.violation.detect",
+                "originalEventKind": "rule.violation.detect",
+                "phase": "primary",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "rule.water-draw-limit",
+                "targetPlaceId": "council-hall",
+                "targetLocationId": "council-hall",
+                "source.visualActionId": "action.event.free.violation.2.violation.primary",
+                "source.eventId": "event.free.violation.2.violation",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.free.violation.2.violation.primary",
+                "actionKind": "show-symbol",
+                "parentActionId": "",
+                "stageId": "action.event.free.violation.2.violation.primary",
+                "stageIndex": "0",
+                "visualActionId": "action.event.free.violation.2.violation.primary",
+                "sourceEventId": ""
+              }
+            }
+          },
+          {
+            "id": "action.event.near.resell.2.collect.primary.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "metadata": {
+                    "poseKey": "working"
+                  }
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.near.resell.2.collect",
+                "eventKind": "actor.resource.collect",
+                "originalEventKind": "actor.resource.collect",
+                "phase": "primary",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "far-household",
+                "targetPlaceId": "far-home",
+                "targetLocationId": "far-home",
+                "source.visualActionId": "action.event.near.resell.2.collect.primary",
+                "source.eventId": "event.near.resell.2.collect",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.near.resell.2.collect.primary",
+                "actionKind": "change-pose",
+                "parentActionId": "",
+                "stageId": "action.event.near.resell.2.collect.primary",
+                "stageIndex": "0",
+                "visualActionId": "action.event.near.resell.2.collect.primary",
+                "sourceEventId": ""
+              }
+            }
+          },
+          {
+            "id": "action.event.free.violation.2.admin.admin.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "symbols": [
+                    {
+                      "id": "action.event.free.violation.2.admin.admin",
+                      "symbolAssetId": "",
+                      "semanticKind": "admin",
+                      "intensity": 0,
+                      "color": "#facc15",
+                      "scale": 1,
+                      "heightOffset": 1.2,
+                      "anchor": "top",
+                      "billboardToCamera": true,
+                      "effectKey": "pulse",
+                      "tooltip": "",
+                      "sortOrder": 0,
+                      "isVisible": true,
+                      "metadata": {}
+                    }
+                  ]
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.free.violation.2.admin",
+                "eventKind": "actor.admin.perform",
+                "originalEventKind": "actor.admin.perform",
+                "phase": "admin",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "rule.water-draw-limit",
+                "targetPlaceId": "council-hall",
+                "targetLocationId": "council-hall",
+                "source.visualActionId": "action.event.free.violation.2.admin.admin",
+                "source.eventId": "event.free.violation.2.admin",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.free.violation.2.admin.admin",
+                "actionKind": "show-symbol",
+                "parentActionId": "",
+                "stageId": "action.event.free.violation.2.admin.admin",
+                "stageIndex": "0",
+                "visualActionId": "action.event.free.violation.2.admin.admin",
+                "sourceEventId": ""
+              }
+            }
+          },
+          {
+            "id": "action.event.free.violation.2.admin.primary.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "symbols": [
+                    {
+                      "id": "action.event.free.violation.2.admin.primary",
+                      "symbolAssetId": "",
+                      "semanticKind": "admin",
+                      "intensity": 0,
+                      "color": "#facc15",
+                      "scale": 1,
+                      "heightOffset": 1.2,
+                      "anchor": "top",
+                      "billboardToCamera": true,
+                      "effectKey": "pulse",
+                      "tooltip": "",
+                      "sortOrder": 0,
+                      "isVisible": true,
+                      "metadata": {}
+                    }
+                  ]
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.free.violation.2.admin",
+                "eventKind": "actor.admin.perform",
+                "originalEventKind": "actor.admin.perform",
+                "phase": "primary",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "rule.water-draw-limit",
+                "targetPlaceId": "council-hall",
+                "targetLocationId": "council-hall",
+                "source.visualActionId": "action.event.free.violation.2.admin.primary",
+                "source.eventId": "event.free.violation.2.admin",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.free.violation.2.admin.primary",
+                "actionKind": "show-symbol",
+                "parentActionId": "",
+                "stageId": "action.event.free.violation.2.admin.primary",
+                "stageIndex": "0",
+                "visualActionId": "action.event.free.violation.2.admin.primary",
+                "sourceEventId": ""
+              }
+            }
+          },
+          {
+            "id": "action.event.free.violation.2.enforcement.primary.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "symbols": [
+                    {
+                      "id": "action.event.free.violation.2.enforcement.primary",
+                      "symbolAssetId": "",
+                      "semanticKind": "rule",
+                      "intensity": 0,
+                      "color": "#facc15",
+                      "scale": 1,
+                      "heightOffset": 1.2,
+                      "anchor": "top",
+                      "billboardToCamera": true,
+                      "effectKey": "pulse",
+                      "tooltip": "",
+                      "sortOrder": 0,
+                      "isVisible": true,
+                      "metadata": {}
+                    }
+                  ]
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.free.violation.2.enforcement",
+                "eventKind": "rule.enforcement.apply",
+                "originalEventKind": "rule.enforcement.apply",
+                "phase": "primary",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "rule.water-draw-limit",
+                "targetPlaceId": "council-hall",
+                "targetLocationId": "council-hall",
+                "source.visualActionId": "action.event.free.violation.2.enforcement.primary",
+                "source.eventId": "event.free.violation.2.enforcement",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.free.violation.2.enforcement.primary",
+                "actionKind": "show-symbol",
+                "parentActionId": "",
+                "stageId": "action.event.free.violation.2.enforcement.primary",
+                "stageIndex": "0",
+                "visualActionId": "action.event.free.violation.2.enforcement.primary",
+                "sourceEventId": ""
+              }
+            }
+          },
+          {
+            "id": "action.event.near.resell.2.admin.admin.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "symbols": [
+                    {
+                      "id": "action.event.near.resell.2.admin.admin",
+                      "symbolAssetId": "",
+                      "semanticKind": "admin",
+                      "intensity": 0,
+                      "color": "#facc15",
+                      "scale": 1,
+                      "heightOffset": 1.2,
+                      "anchor": "top",
+                      "billboardToCamera": true,
+                      "effectKey": "pulse",
+                      "tooltip": "",
+                      "sortOrder": 0,
+                      "isVisible": true,
+                      "metadata": {}
+                    }
+                  ]
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.near.resell.2.admin",
+                "eventKind": "actor.admin.perform",
+                "originalEventKind": "actor.admin.perform",
+                "phase": "admin",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "far-household",
+                "targetPlaceId": "far-home",
+                "targetLocationId": "far-home",
+                "source.visualActionId": "action.event.near.resell.2.admin.admin",
+                "source.eventId": "event.near.resell.2.admin",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.near.resell.2.admin.admin",
+                "actionKind": "show-symbol",
+                "parentActionId": "",
+                "stageId": "action.event.near.resell.2.admin.admin",
+                "stageIndex": "0",
+                "visualActionId": "action.event.near.resell.2.admin.admin",
+                "sourceEventId": ""
+              }
+            }
+          },
+          {
+            "id": "action.event.near.resell.2.admin.primary.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "symbols": [
+                    {
+                      "id": "action.event.near.resell.2.admin.primary",
+                      "symbolAssetId": "",
+                      "semanticKind": "admin",
+                      "intensity": 0,
+                      "color": "#facc15",
+                      "scale": 1,
+                      "heightOffset": 1.2,
+                      "anchor": "top",
+                      "billboardToCamera": true,
+                      "effectKey": "pulse",
+                      "tooltip": "",
+                      "sortOrder": 0,
+                      "isVisible": true,
+                      "metadata": {}
+                    }
+                  ]
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.near.resell.2.admin",
+                "eventKind": "actor.admin.perform",
+                "originalEventKind": "actor.admin.perform",
+                "phase": "primary",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "far-household",
+                "targetPlaceId": "far-home",
+                "targetLocationId": "far-home",
+                "source.visualActionId": "action.event.near.resell.2.admin.primary",
+                "source.eventId": "event.near.resell.2.admin",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.near.resell.2.admin.primary",
+                "actionKind": "show-symbol",
+                "parentActionId": "",
+                "stageId": "action.event.near.resell.2.admin.primary",
+                "stageIndex": "0",
+                "visualActionId": "action.event.near.resell.2.admin.primary",
+                "sourceEventId": ""
+              }
+            }
+          },
+          {
+            "id": "action.event.near.resell.2.rule-check.primary.patch.0",
+            "patch": {
+              "sceneId": "",
+              "baseRevision": 0,
+              "nextRevision": 0,
+              "objectPatches": [
+                {
+                  "objectId": "object.node.actor.near-household",
+                  "symbols": [
+                    {
+                      "id": "action.event.near.resell.2.rule-check.primary",
+                      "symbolAssetId": "",
+                      "semanticKind": "rule",
+                      "intensity": 0,
+                      "color": "#facc15",
+                      "scale": 1,
+                      "heightOffset": 1.2,
+                      "anchor": "top",
+                      "billboardToCamera": true,
+                      "effectKey": "pulse",
+                      "tooltip": "",
+                      "sortOrder": 0,
+                      "isVisible": true,
+                      "metadata": {}
+                    }
+                  ]
+                }
+              ],
+              "addObjects": [],
+              "removeObjectIds": [],
+              "addLinks": [],
+              "removeLinkIds": [],
+              "metadata": {
+                "eventId": "event.near.resell.2.rule-check",
+                "eventKind": "rule.check.evaluate",
+                "originalEventKind": "rule.check.evaluate",
+                "phase": "primary",
+                "subjectSourceId": "near-household",
+                "targetSourceId": "far-household",
+                "targetPlaceId": "far-home",
+                "targetLocationId": "far-home",
+                "source.visualActionId": "action.event.near.resell.2.rule-check.primary",
+                "source.eventId": "event.near.resell.2.rule-check",
+                "bridge": "EconomyVisualActionWebGlMapper",
+                "actionId": "action.event.near.resell.2.rule-check.primary",
+                "actionKind": "show-symbol",
+                "parentActionId": "",
+                "stageId": "action.event.near.resell.2.rule-check.primary",
+                "stageIndex": "0",
+                "visualActionId": "action.event.near.resell.2.rule-check.primary",
+                "sourceEventId": ""
+              }
+            }
+          }
+        ],
+        "motions": [],
+        "metadata": {
+          "source.simulationFrameId": "run.simple.shared-well-community.state-transition.frame.2",
+          "source.runId": "run.simple.shared-well-community.state-transition",
+          "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+          "source.frameHash": "309afd091e59887a305bb9f72dcd76d01215fde4f85a45745761da3a736391fd",
+          "orderingMode": "Sequential",
+          "batchingPolicy": "preserve-order",
+          "action.action.event.free.violation.2.enforcement.relationship.errors": "Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.enforcement.relationship\u0027.",
+          "action.action.event.near.resell.2.buy.primary.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.buy.primary\u0027.",
+          "action.action.event.free.violation.2.conflict.primary.errors": "Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.primary\u0027.",
+          "action.action.event.free.violation.2.conflict.relationship.errors": "Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.relationship\u0027.",
+          "action.action.event.near.resell.2.fee.primary.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.fee.primary\u0027.",
+          "stageCount": "9",
+          "commandCount": "8"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "source.experimentId": "experiment.shared-well.distance-trade-tax.v1",
+    "source.inputPackHash": "sha256:abcf1073c9a13e6583ac60b838e1d3b13e16b401e0718fb13d738c05b2a296fa",
+    "bridge": "EconomyWebGlRunProjector",
+    "source.backendId": "simple-accounts",
+    "source.scenarioHash": "sha256:26b062d52bb322db68a1d0df6f2522b8aa9c39a921061cf92faf7786a6ca8170",
+    "source.visualMappingHash": "sha256:4948b435d963a88a087420b8dee270ee1438e417b9ab19a747d9a69aee791839",
+    "diagnostic.0": "Action \u0027action.event.free.violation.2.conflict.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.primary\u0027.",
+    "diagnostic.1": "Action \u0027action.event.free.violation.2.conflict.relationship\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.conflict.relationship\u0027.",
+    "diagnostic.2": "Action \u0027action.event.free.violation.2.enforcement.relationship\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027action.event.free.violation.2.enforcement.relationship\u0027.",
+    "diagnostic.3": "Action \u0027action.event.near.resell.2.buy.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.buy.primary\u0027.",
+    "diagnostic.4": "Action \u0027action.event.near.resell.2.fee.primary\u0027 produced an invalid WebGL action plan: Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027action.event.near.resell.2.fee.primary\u0027.",
+    "diagnostic.5": "Node \u0027node.location.council-hall\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+    "diagnostic.6": "Node \u0027node.location.far-home\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+    "diagnostic.7": "Node \u0027node.location.keeper-office\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+    "diagnostic.8": "Node \u0027node.location.near-home\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+    "diagnostic.9": "Node \u0027node.location.shared-well\u0027 category \u0027location\u0027 has no resolved visual asset mapping.",
+    "diagnosticCount": "10",
+    "nodeObjectMappingCount": "13",
+    "frameCount": "3"
+  }
+}

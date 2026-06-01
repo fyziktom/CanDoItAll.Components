@@ -1,0 +1,57 @@
+{
+  "snapshotId": "snapshot.run.probe.farmer-land.state-transition.0",
+  "runId": "run.probe.farmer-land.state-transition",
+  "stepIndex": 0,
+  "dataHash": "2464abfbbb8c8c0fce9be6bde915e0804fa9a991c877a9e0f363375b495e1a1f",
+  "summary": "The snapshot has 3 finding(s): Resources are concentrated.; Future events are pending.; All evaluated invariants passed..",
+  "findings": [
+    {
+      "findingId": "resource-concentration.top-holder",
+      "analyzerId": "resource-concentration",
+      "code": "resource-concentration",
+      "severity": "warning",
+      "title": "Resources are concentrated.",
+      "explanation": "The largest resource holder share is 0.6.",
+      "sourcePaths": [
+        "snapshot.frame.resourceStores",
+        "snapshot.metrics"
+      ],
+      "facts": {
+        "topHolderShare": "0.6"
+      }
+    },
+    {
+      "findingId": "pending-event.queue",
+      "analyzerId": "pending-event",
+      "code": "pending-events",
+      "severity": "info",
+      "title": "Future events are pending.",
+      "explanation": "3 event(s) are scheduled after this snapshot.",
+      "sourcePaths": [
+        "snapshot.pendingEvents"
+      ],
+      "facts": {
+        "pendingEventCount": "3"
+      }
+    },
+    {
+      "findingId": "invariant-summary.status",
+      "analyzerId": "invariant-summary",
+      "code": "invariant-summary",
+      "severity": "info",
+      "title": "All evaluated invariants passed.",
+      "explanation": "0 of 1 invariant(s) failed.",
+      "sourcePaths": [
+        "snapshot.invariants"
+      ],
+      "facts": {
+        "failedInvariantCount": "0",
+        "invariantCount": "1"
+      }
+    }
+  ],
+  "metadata": {
+    "question": "Headless real scenario readiness",
+    "analyzerCount": "9"
+  }
+}

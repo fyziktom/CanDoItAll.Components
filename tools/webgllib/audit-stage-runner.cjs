@@ -21,11 +21,13 @@ async function main() {
   assertNoneBarrier(runtime, assertions);
   assertWaitForActiveMotionsBarrier(runtime, assertions);
   assertWaitForObjectMotionsBarrier(runtime, assertions);
+  assertWaitForSameObjectMotionSequence(runtime, assertions);
   assertMissingObjectMotionTargetDiagnostics(runtime, assertions);
   assertWaitForRenderIdleBarrier(runtime, assertions);
   assertRenderIdleIgnoresForeverSymbols(runtime, assertions);
   assertWaitForEventBarrier(runtime, scheduler, assertions);
   assertManualStepDoesNotLeakAcrossBatches(runtime, assertions);
+  assertUnknownPolicyDiagnostics(runtime, assertions);
   assertBarrierTimeoutDiagnostics(runtime, assertions);
   assertCancelClearsRunnerAndJournal(runtime, assertions);
   assertDelayedFailureDiagnostics(runtime, assertions);
@@ -112,6 +114,27 @@ function assertWaitForObjectMotionsBarrier(runtime, assertions) {
   assertDeepEqual(applied, ["wait.actor", "after.actor"], "object-motion barrier ignores unrelated active motions");
   assertEqual(state.diagnostics.completedCommandStageCount, 2, "object-motion barrier completes both stages");
   assertions.push("wait-for-object-motions only blocks selected object ids");
+}
+
+function assertWaitForSameObjectMotionSequence(runtime, assertions) {
+  const state = createState();
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.same-object", [
+    stage("move.actor.first", { barrierPolicy: "wait-for-object-motions", barrierObjectIds: ["actor"] }),
+    stage("move.actor.second")
+  ], item => {
+    applied.push(item.stageId);
+    if (item.stageId === "move.actor.first") {
+      state.motions.set("motion.actor.first", { motionId: "motion.actor.first", objectId: "actor" });
+    }
+  });
+
+  assertDeepEqual(applied, ["move.actor.first"], "same-object second stage waits for first motion");
+  assertDeepEqual(state.diagnostics.commandStageBarrierBlockers, ["active:actor"], "same-object blocker names active object");
+  state.motions.clear();
+  runtime.advanceCommandStageRunner(state, 0.016, item => applied.push(item.stageId));
+  assertDeepEqual(applied, ["move.actor.first", "move.actor.second"], "same-object second stage releases after motion clears");
+  assertions.push("two-stage same-object motion sequence preserves visual order through object-motion barrier");
 }
 
 function assertMissingObjectMotionTargetDiagnostics(runtime, assertions) {
@@ -201,6 +224,23 @@ function assertManualStepDoesNotLeakAcrossBatches(runtime, assertions) {
 
   assertDeepEqual(applied, ["wait.manual.one", "after.manual.one", "wait.manual.two"], "second manual batch must wait for a fresh signal");
   assertions.push("manual-step events are scoped to the active batch and cannot leak across unrelated batches");
+}
+
+function assertUnknownPolicyDiagnostics(runtime, assertions) {
+  const state = createState();
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.unknown-policy", [
+    stage("unknown.policy", { barrierPolicy: "wait-for-unknown-thing" }),
+    stage("after.unknown.policy")
+  ], item => applied.push(item.stageId));
+
+  assertDeepEqual(applied, ["unknown.policy", "after.unknown.policy"], "unknown barrier policy is a warning no-op by default");
+  assertEqual(state.diagnostics.lastStageBarrierWarning, "unknown-policy:wait-for-unknown-thing", "unknown policy warning is visible");
+  assertEqual(
+    state.diagnostics.commandStageRecentJournalEntries.some(entry => entry.message === "unknown-policy:wait-for-unknown-thing"),
+    true,
+    "unknown policy warning is journaled");
+  assertions.push("unknown barrier policies produce explicit diagnostics while defaulting to no-op");
 }
 
 function assertBarrierTimeoutDiagnostics(runtime, assertions) {
