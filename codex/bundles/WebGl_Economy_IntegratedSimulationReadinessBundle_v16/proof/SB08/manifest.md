@@ -1,12 +1,14 @@
 # Proof manifest SB08
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB08/source-assertions.md`
+- Semantic invariants: `bundle://proof/SB08/semantic-invariants.md`
+- Changed-file hashes: `bundle://proof/SB08/changed-file-hashes.json`
+- File snapshot store tests: `bundle://proof/SB08/transcripts/economy-file-snapshot-store-tests.txt`
+
+## Result
+
+File snapshot store now persists descriptor index separately from full payloads and validates tamper resistance.

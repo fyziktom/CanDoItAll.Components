@@ -30,7 +30,7 @@ export function resolveRenderReason(state) {
         return "continuous";
     }
 
-    if (state.motions.size > 0) {
+    if (state.motions.size > 0 || hasQueuedMotions(state)) {
         return "motion";
     }
 
@@ -51,6 +51,16 @@ export function resolveRenderReason(state) {
     }
 
     return "";
+}
+
+function hasQueuedMotions(state) {
+    for (const queue of state.motionQueuesByObjectId?.values?.() || []) {
+        if (queue.length > 0) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function requestNextFrame(state, renderFrame) {

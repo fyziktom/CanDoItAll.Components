@@ -39,6 +39,7 @@ public sealed class WebGlRunFrameApplyResult
                         WaitSeconds = stage.WaitSeconds,
                         BarrierPolicy = stage.BarrierPolicy,
                         BarrierObjectIds = [.. stage.BarrierObjectIds],
+                        BarrierEventId = stage.BarrierEventId,
                         Metadata = new Dictionary<string, string>(stage.Metadata, StringComparer.Ordinal)
                     })
             ],

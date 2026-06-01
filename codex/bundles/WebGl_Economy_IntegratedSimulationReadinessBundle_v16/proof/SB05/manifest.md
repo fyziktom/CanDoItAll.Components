@@ -1,12 +1,14 @@
 # Proof manifest SB05
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB05/source-assertions.md`
+- Semantic invariants: `bundle://proof/SB05/semantic-invariants.md`
+- Changed-file hashes: `bundle://proof/SB05/changed-file-hashes.json`
+- Bridge tests: `bundle://proof/SB05/transcripts/economy-webgl-bridge-tests.txt`
+
+## Result
+
+Economy WebGL bridge projection hardening passed with strict mapping, traceability, diagnostic fallback, and explicit wait markers.

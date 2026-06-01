@@ -1,12 +1,14 @@
 # Proof manifest SB09
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB09/source-assertions.md`
+- Semantic invariants: `bundle://proof/SB09/semantic-invariants.md`
+- Changed-file hashes: `bundle://proof/SB09/changed-file-hashes.json`
+- Sandbox workflow tests: `bundle://proof/SB09/transcripts/economy-sandbox-workflow-tests.txt`
+
+## Result
+
+SimulationSandbox is backend-neutral, registry-selected, and attaches visual snapshot state in the joined Economy workflow.

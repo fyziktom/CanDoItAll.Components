@@ -16,11 +16,14 @@ public static class WebGlSceneBatchingPolicies
 
 public static class WebGlSceneStageBarrierPolicies
 {
-    public const string TimeDelay = "time-delay";
+    public const string None = "none";
+    public const string WaitSeconds = "wait-seconds";
+    public const string TimeDelay = WaitSeconds;
     public const string WaitForActiveMotions = "wait-for-active-motions";
     public const string WaitForObjectMotions = "wait-for-object-motions";
     public const string WaitForRenderIdle = "wait-for-render-idle";
-    public const string ManualStep = "manual-step";
+    public const string WaitForEvent = "wait-for-event";
+    public const string ManualStep = WaitForEvent;
 }
 
 public sealed class WebGlSceneCommandBatch
@@ -61,6 +64,8 @@ public sealed class WebGlSceneCommandBatchStage
     public string BarrierPolicy { get; set; } = string.Empty;
 
     public List<string> BarrierObjectIds { get; set; } = [];
+
+    public string BarrierEventId { get; set; } = string.Empty;
 
     public Dictionary<string, string> Metadata { get; set; } = [];
 }
@@ -175,6 +180,7 @@ public static class WebGlSceneCommandBatchNormalizer
             WaitSeconds = stage.WaitSeconds,
             BarrierPolicy = stage.BarrierPolicy,
             BarrierObjectIds = [.. stage.BarrierObjectIds],
+            BarrierEventId = stage.BarrierEventId,
             Metadata = new Dictionary<string, string>(stage.Metadata, StringComparer.Ordinal)
         };
         var stageResult = new WebGlSceneCommandBatchNormalizationResult
@@ -190,6 +196,13 @@ public static class WebGlSceneCommandBatchNormalizer
             stageResult));
         normalized.Metadata["orderingMode"] = orderingMode.ToString();
         normalized.Metadata["batchingPolicy"] = batchingPolicy;
+        normalized.Metadata["barrierPolicy"] = normalized.BarrierPolicy;
+        normalized.Metadata["barrierEventId"] = normalized.BarrierEventId;
+        if (normalized.BarrierObjectIds.Count > 0)
+        {
+            normalized.Metadata["barrierObjectIds"] = string.Join(",", normalized.BarrierObjectIds);
+        }
+
         normalized.Metadata["stageCommandCount"] = (stage.Patches.Count + stage.Motions.Count).ToString(System.Globalization.CultureInfo.InvariantCulture);
 
         result.Metrics.CoalescedPatchCount += stageResult.Metrics.CoalescedPatchCount;

@@ -4,6 +4,7 @@ import { focusObject, fitView, resetCamera } from "./06-webgl-scene-camera.js";
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
 import { applyPatch, applyPatchDetailed, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
 import { applyCommandBatch } from "./26-webgl-scene-command-batch.js";
+import { requestCommandStageManualStep, signalCommandStageEvent } from "./30-webgl-scene-stage-runner.js";
 import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
 import { cancelMotion, cancelMotionDetailed } from "./31-webgl-scene-motion-cancellation.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
@@ -122,6 +123,14 @@ root.webglScene = {
     applyCommandBatch(host, batch) {
         const state = resolveState(host);
         return state ? applyCommandBatch(state, batch) : null;
+    },
+    signalCommandStageEvent(host, eventId) {
+        const state = resolveState(host);
+        return state ? signalCommandStageEvent(state, eventId) : false;
+    },
+    requestCommandStageManualStep(host) {
+        const state = resolveState(host);
+        return state ? requestCommandStageManualStep(state) : false;
     },
     setObjectTransform(host, objectId, transform) {
         const state = resolveState(host);

@@ -100,7 +100,8 @@ export function normalizeOptions(options) {
         showSymbols: options?.showSymbols !== false,
         autoFitOnCreate: options?.autoFitOnCreate !== false,
         runtimeKey: resolveString(options?.runtimeKey, ""),
-        maxCommandResultHistory: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandResultHistory, 100)))
+        maxCommandResultHistory: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandResultHistory, 100))),
+        maxCommandStageJournalEntries: Math.max(20, Math.min(1000, resolveFiniteNumber(options?.maxCommandStageJournalEntries, 200)))
     };
 }
 
@@ -224,6 +225,9 @@ export function buildDiagnosticsSnapshot(state) {
         commandStageCancelledCount: diagnostics.commandStageCancelledCount || 0,
         commandStageWaitSeconds: diagnostics.commandStageWaitSeconds || 0,
         commandStageBarrierPolicy: diagnostics.commandStageBarrierPolicy || "",
+        commandStageBarrierTarget: diagnostics.commandStageBarrierTarget || "",
+        commandStageBarrierBlockers: diagnostics.commandStageBarrierBlockers || [],
+        commandStageBarrierEventId: diagnostics.commandStageBarrierEventId || "",
         commandStageBarrierObjectIds: diagnostics.commandStageBarrierObjectIds || [],
         completedCommandStageIds: diagnostics.completedCommandStageIds || [],
         failedCommandStageIds: diagnostics.failedCommandStageIds || [],
@@ -232,6 +236,11 @@ export function buildDiagnosticsSnapshot(state) {
         lastStageError: diagnostics.lastStageError || "",
         commandStageResultLog: diagnostics.commandStageResultLog || [],
         commandStageQueueSnapshot: diagnostics.commandStageQueueSnapshot || [],
+        commandStageJournalCount: diagnostics.commandStageJournalCount || 0,
+        commandStageJournalDroppedCount: diagnostics.commandStageJournalDroppedCount || 0,
+        commandStageJournalCounters: diagnostics.commandStageJournalCounters || {},
+        commandStageRecentResultIds: diagnostics.commandStageRecentResultIds || [],
+        commandStageRecentJournalEntries: diagnostics.commandStageRecentJournalEntries || [],
         lastStageCancelReason: diagnostics.lastStageCancelReason || "",
         animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
         isRenderLoopActive: !!diagnostics.isRenderLoopActive,

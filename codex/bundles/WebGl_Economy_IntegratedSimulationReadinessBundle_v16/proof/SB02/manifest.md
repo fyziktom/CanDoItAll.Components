@@ -1,12 +1,14 @@
 # Proof manifest SB02
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB02/source-assertions.md`
+- Changed-file hashes: `bundle://proof/SB02/changed-file-hashes.json`
+- Runtime audit: `bundle://proof/SB02/transcripts/components-scene-runtime-audit.txt`
+- Runtime line counts: `bundle://proof/SB02/transcripts/components-webgl-runtime-line-counts.txt`
+
+## Result
+
+Components JS runtime refactor gate passed with large-screen WebGL policy intact and no Economy reference leakage.

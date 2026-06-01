@@ -34,6 +34,44 @@ public sealed class WebGlSceneProofSnapshot
 
     public int ActiveMotionCount { get; set; }
 
+    public int QueuedMotionCount { get; set; }
+
+    public List<string> ActiveMotionIds { get; set; } = [];
+
+    public List<string> QueuedMotionIds { get; set; } = [];
+
+    public string CurrentCommandBatchId { get; set; } = string.Empty;
+
+    public string CurrentCommandStageId { get; set; } = string.Empty;
+
+    public int CompletedCommandStageCount { get; set; }
+
+    public int FailedCommandStageCount { get; set; }
+
+    public int SkippedCommandStageCount { get; set; }
+
+    public int QueuedCommandStageCount { get; set; }
+
+    public string CommandStageBarrierPolicy { get; set; } = string.Empty;
+
+    public double CommandStageWaitSeconds { get; set; }
+
+    public string CommandStageBarrierTarget { get; set; } = string.Empty;
+
+    public List<string> CommandStageBarrierBlockers { get; set; } = [];
+
+    public string CommandStageBarrierEventId { get; set; } = string.Empty;
+
+    public int CommandStageJournalCount { get; set; }
+
+    public int CommandStageJournalDroppedCount { get; set; }
+
+    public WebGlSceneCommandStageJournalCounters CommandStageJournalCounters { get; set; } = new();
+
+    public List<string> CommandStageRecentResultIds { get; set; } = [];
+
+    public List<WebGlSceneCommandStageJournalEntry> CommandStageRecentJournalEntries { get; set; } = [];
+
     public int RenderCount { get; set; }
 
     public bool IsRenderLoopActive { get; set; }
@@ -59,4 +97,38 @@ public sealed class WebGlSceneProofSnapshot
     public int ViewportHeight { get; set; }
 
     public Dictionary<string, string> Metadata { get; set; } = [];
+}
+
+public sealed class WebGlSceneCommandStageJournalCounters
+{
+    public int Started { get; set; }
+
+    public int Applied { get; set; }
+
+    public int Completed { get; set; }
+
+    public int Warnings { get; set; }
+
+    public int Failures { get; set; }
+}
+
+public sealed class WebGlSceneCommandStageJournalEntry
+{
+    public int Sequence { get; set; }
+
+    public int TimestampMs { get; set; }
+
+    public string EventKind { get; set; } = string.Empty;
+
+    public string BatchId { get; set; } = string.Empty;
+
+    public string StageId { get; set; } = string.Empty;
+
+    public string ResultId { get; set; } = string.Empty;
+
+    public string Status { get; set; } = string.Empty;
+
+    public string BarrierPolicy { get; set; } = string.Empty;
+
+    public string Message { get; set; } = string.Empty;
 }

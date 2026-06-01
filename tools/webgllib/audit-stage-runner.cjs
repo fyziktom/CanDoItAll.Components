@@ -4,6 +4,8 @@ const { pathToFileURL } = require("node:url");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
 const runtimeSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "30-webgl-scene-stage-runner.js");
+const barrierSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "32-webgl-scene-stage-barriers.js");
+const journalSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "33-webgl-scene-command-journal.js");
 const schedulerSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "22-webgl-scene-scheduler.js");
 const reportDir = path.join(repoRoot, "artifacts", "webgl-runtime-stage-runner-hardening-v15", "stage-runner");
 
@@ -16,10 +18,12 @@ async function main() {
 
   const assertions = [];
   assertTimeDelayBarrier(runtime, assertions);
+  assertNoneBarrier(runtime, assertions);
   assertWaitForActiveMotionsBarrier(runtime, assertions);
   assertWaitForObjectMotionsBarrier(runtime, assertions);
   assertWaitForRenderIdleBarrier(runtime, assertions);
-  assertManualStepBarrier(runtime, scheduler, assertions);
+  assertWaitForEventBarrier(runtime, scheduler, assertions);
+  assertCommandJournal(runtime, assertions);
   assertSchedulerIntegration(scheduler, assertions);
 
   const proof = {
@@ -28,7 +32,7 @@ async function main() {
     assertions
   };
   fs.writeFileSync(path.join(reportDir, "stage-runner-proof.json"), `${JSON.stringify(proof, null, 2)}\n`, "utf8");
-  console.log("Stage runner audit passed for time, motion, object, render-idle, manual barriers, and diagnostics.");
+  console.log("Stage runner audit passed for none, wait-seconds, motion, object, render-idle, event barriers, scheduler integration, and journal diagnostics.");
 }
 
 function assertTimeDelayBarrier(runtime, assertions) {
@@ -41,7 +45,7 @@ function assertTimeDelayBarrier(runtime, assertions) {
   ], item => applied.push(item.stageId));
 
   assertDeepEqual(applied, ["move.target"], "first time-delay stage applies immediately");
-  assertEqual(state.diagnostics.commandStageBarrierPolicy, "time-delay", "time-delay barrier policy");
+  assertEqual(state.diagnostics.commandStageBarrierPolicy, "wait-seconds", "wait-seconds barrier policy");
   assertEqual(state.diagnostics.completedCommandStageCount, 1, "completed count after first time-delay stage");
   assertEqual(state.diagnostics.queuedCommandStageCount, 2, "queued count after first time-delay stage");
 
@@ -51,8 +55,21 @@ function assertTimeDelayBarrier(runtime, assertions) {
   assertDeepEqual(applied, ["move.target", "change.pose"], "second stage applies after elapsed time");
   runtime.advanceCommandStageRunner(state, 0.25, item => applied.push(item.stageId));
   assertDeepEqual(applied, ["move.target", "change.pose", "move.home"], "all time-delay stages apply");
-  assertEqual(state.diagnostics.commandStageResultLog.length, 3, "stage result log records time-delay stages");
-  assertions.push("time-delay barrier preserves ordered wait stages and result log");
+  assertEqual(state.diagnostics.commandStageResultLog.length, 3, "stage result log records wait-seconds stages");
+  assertions.push("wait-seconds barrier preserves ordered wait stages and result log");
+}
+
+function assertNoneBarrier(runtime, assertions) {
+  const state = createState();
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.none", [
+    stage("first.none", { barrierPolicy: "none", waitSeconds: 10 }),
+    stage("second.none")
+  ], item => applied.push(item.stageId));
+
+  assertDeepEqual(applied, ["first.none", "second.none"], "none barrier ignores waitSeconds and drains immediately");
+  assertEqual(state.diagnostics.completedCommandStageCount, 2, "none barrier completes both stages");
+  assertions.push("none barrier explicitly disables waits");
 }
 
 function assertWaitForActiveMotionsBarrier(runtime, assertions) {
@@ -105,23 +122,44 @@ function assertWaitForRenderIdleBarrier(runtime, assertions) {
   assertions.push("wait-for-render-idle waits for an idle render turn before next stage");
 }
 
-function assertManualStepBarrier(runtime, scheduler, assertions) {
+function assertWaitForEventBarrier(runtime, scheduler, assertions) {
   const state = createState();
   const applied = [];
-  runtime.enqueueCommandStages(state, "batch.manual", [
-    stage("manual.pause", { barrierPolicy: "manual-step" }),
-    stage("after.manual")
+  runtime.enqueueCommandStages(state, "batch.event", [
+    stage("wait.event", { barrierPolicy: "wait-for-event", barrierEventId: "asset.loaded" }),
+    stage("after.event")
   ], item => applied.push(item.stageId));
 
-  assertDeepEqual(applied, ["manual.pause"], "manual-step barrier applies first stage only");
+  assertDeepEqual(applied, ["wait.event"], "event barrier applies first stage only");
   runtime.advanceCommandStageRunner(state, 1, item => applied.push(item.stageId));
-  assertDeepEqual(applied, ["manual.pause"], "manual-step barrier does not auto-advance");
-  assertEqual(scheduler.resolveRenderReason(state), "", "scheduler stays idle while manual step is pending");
-  assertEqual(runtime.requestCommandStageManualStep(state), true, "manual step request accepted");
-  assertEqual(scheduler.resolveRenderReason(state), "command-stage", "scheduler wakes after manual step request");
+  assertDeepEqual(applied, ["wait.event"], "event barrier does not auto-advance");
+  assertEqual(state.diagnostics.commandStageBarrierEventId, "asset.loaded", "event barrier id is visible");
+  assertDeepEqual(state.diagnostics.commandStageBarrierBlockers, ["event:asset.loaded"], "event barrier blocker is visible");
+  assertEqual(scheduler.resolveRenderReason(state), "", "scheduler stays idle while event is pending");
+  assertEqual(runtime.signalCommandStageEvent(state, "asset.loaded"), true, "event signal accepted");
+  assertEqual(scheduler.resolveRenderReason(state), "command-stage", "scheduler wakes after event signal");
   runtime.advanceCommandStageRunner(state, 0, item => applied.push(item.stageId));
-  assertDeepEqual(applied, ["manual.pause", "after.manual"], "manual-step request advances next stage");
-  assertions.push("manual-step barrier requires explicit runtime step request");
+  assertDeepEqual(applied, ["wait.event", "after.event"], "event signal advances next stage");
+  assertions.push("wait-for-event barrier requires explicit runtime event signal");
+}
+
+function assertCommandJournal(runtime, assertions) {
+  const state = createState({ maxCommandStageJournalEntries: 20 });
+  const applied = [];
+  runtime.enqueueCommandStages(
+    state,
+    "batch.journal",
+    Array.from({ length: 25 }, (_, index) => stage(`journal.${index + 1}`)),
+    item => applied.push(item.stageId));
+
+  assertEqual(applied.length, 25, "journal stages apply");
+  assertEqual(state.diagnostics.commandStageJournalCount, 20, "journal is bounded to configured size");
+  assertEqual(state.diagnostics.commandStageJournalDroppedCount > 0, true, "journal tracks dropped entries");
+  assertEqual(state.diagnostics.commandStageJournalCounters.started, 25, "journal counts started stages");
+  assertEqual(state.diagnostics.commandStageJournalCounters.applied, 25, "journal counts applied stages");
+  assertEqual(state.diagnostics.commandStageJournalCounters.completed, 25, "journal counts completed stages");
+  assertEqual(state.diagnostics.commandStageRecentResultIds.length > 0, true, "journal exposes recent result ids");
+  assertions.push("bounded command journal records delayed stage start, apply, completion, counters, and recent result ids");
 }
 
 function assertSchedulerIntegration(scheduler, assertions) {
@@ -130,13 +168,17 @@ function assertSchedulerIntegration(scheduler, assertions) {
     "command-stage",
     "scheduler sees queued command stage runner state");
   assertEqual(
-    scheduler.resolveRenderReason(createSchedulerState({ queue: [], activeBarrier: { policy: "time-delay", remainingSeconds: 0.25 } })),
+    scheduler.resolveRenderReason(createSchedulerState({ queue: [], activeBarrier: { policy: "wait-seconds", remainingSeconds: 0.25 } })),
     "command-stage",
     "scheduler sees command stage runner time-delay state");
   assertEqual(
-    scheduler.resolveRenderReason(createSchedulerState({ queue: [stage("manual.stage")], activeBarrier: { policy: "manual-step" } })),
+    scheduler.resolveRenderReason(createSchedulerState({ queue: [stage("event.stage")], activeBarrier: { policy: "wait-for-event", eventId: "external.ready" } })),
     "",
-    "scheduler ignores manual-step barrier without request");
+    "scheduler ignores event barrier without signal");
+  assertEqual(
+    scheduler.resolveRenderReason(createSchedulerState({ queue: [], activeBarrier: null, motionQueuesByObjectId: new Map([["actor", [motion("queued", 1, "append")]]]) })),
+    "motion",
+    "scheduler sees queued motions");
   assertEqual(
     scheduler.resolveRenderReason(createSchedulerState({ queue: [stage("cancelled.stage")], cancelled: true })),
     "",
@@ -145,7 +187,13 @@ function assertSchedulerIntegration(scheduler, assertions) {
 }
 
 function writeAuditRuntimeModule() {
-  const source = fs.readFileSync(runtimeSourcePath, "utf8");
+  const barrierSource = fs.readFileSync(barrierSourcePath, "utf8");
+  const journalSource = fs.readFileSync(journalSourcePath, "utf8");
+  fs.writeFileSync(path.join(reportDir, "stage-barriers-audit.mjs"), barrierSource, "utf8");
+  fs.writeFileSync(path.join(reportDir, "command-journal-audit.mjs"), journalSource, "utf8");
+  const source = fs.readFileSync(runtimeSourcePath, "utf8")
+    .replace('from "./32-webgl-scene-stage-barriers.js"', 'from "./stage-barriers-audit.mjs"')
+    .replace('from "./33-webgl-scene-command-journal.js"', 'from "./command-journal-audit.mjs"');
   const modulePath = path.join(reportDir, "stage-runner-runtime-audit.mjs");
   fs.writeFileSync(modulePath, source, "utf8");
   return modulePath;
@@ -159,13 +207,13 @@ function writeAuditSchedulerModule() {
   return modulePath;
 }
 
-function createState() {
+function createState(options = {}) {
   return {
     commandStageRunner: null,
     diagnostics: { animatedSymbolCount: 0 },
     motions: new Map(),
     motionQueuesByObjectId: new Map(),
-    options: { renderMode: "auto" },
+    options: { renderMode: "auto", ...options },
     cameraDampingFrames: 0,
     renderRequested: false,
     renderReason: "",
@@ -181,7 +229,7 @@ function createSchedulerState(runner) {
     options: { renderMode: "auto" },
     diagnostics: { animatedSymbolCount: 0 },
     motions: new Map(),
-    motionQueuesByObjectId: new Map(),
+    motionQueuesByObjectId: runner.motionQueuesByObjectId || new Map(),
     cameraDampingFrames: 0,
     renderRequested: false,
     renderReason: "",
@@ -200,8 +248,19 @@ function stage(stageId, options = {}) {
     waitSeconds: options.waitSeconds || 0,
     barrierPolicy: options.barrierPolicy || "",
     barrierObjectIds: options.barrierObjectIds || [],
+    barrierEventId: options.barrierEventId || "",
     patches: [],
     motions: options.motions || []
+  };
+}
+
+function motion(motionId, x, queuePolicy, objectId = "actor") {
+  return {
+    motionId,
+    objectId,
+    durationSeconds: 1,
+    queuePolicy,
+    targetPosition: { x, y: 0, z: 0 }
   };
 }
 

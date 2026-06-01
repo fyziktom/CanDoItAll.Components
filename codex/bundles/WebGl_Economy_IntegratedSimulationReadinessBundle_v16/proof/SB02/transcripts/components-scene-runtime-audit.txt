@@ -1,0 +1,53 @@
+﻿Command: node tools\webgllib\audit-scene-runtime.cjs
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+StartedAtUtc: 2026-06-01T00:28:18.7613118Z
+EndedAtUtc: 2026-06-01T00:28:26.9080007Z
+
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/02-webgl-scene-core.js has 303 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/03-webgl-scene-assets.js has 234 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/04-webgl-scene-symbols.js has 222 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/10-webgl-scene-lifecycle.js has 297 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/11-webgl-scene-graph.js has 267 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/13-webgl-scene-patching.js has 309 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/14-webgl-scene-motion.js has 276 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/18-webgl-scene-model-diagnostics.js has 238 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/28-webgl-scene-command-batch-normalizer.js has 301 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/30-webgl-scene-stage-runner.js has 246 lines; warning threshold is 220.
+[WARN] src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/32-webgl-scene-stage-barriers.js has 246 lines; warning threshold is 220.
+Scene runtime import graph:
+  01-webgl-scene.js -> 10-webgl-scene-lifecycle.js, 05-webgl-scene-interaction.js, 06-webgl-scene-camera.js, 08-webgl-scene-proof.js, 13-webgl-scene-patching.js, 26-webgl-scene-command-batch.js, 30-webgl-scene-stage-runner.js, 14-webgl-scene-motion.js, 31-webgl-scene-motion-cancellation.js, 02-webgl-scene-core.js
+  02-webgl-scene-core.js -> (none)
+  03-webgl-scene-assets.js -> 02-webgl-scene-core.js, 09-webgl-scene-primitives.js, 16-webgl-scene-models.js, 17-webgl-scene-resources.js
+  04-webgl-scene-symbols.js -> 02-webgl-scene-core.js, 03-webgl-scene-assets.js, 17-webgl-scene-resources.js, 23-webgl-scene-indexes.js
+  05-webgl-scene-interaction.js -> 02-webgl-scene-core.js, 12-webgl-scene-drag.js, 11-webgl-scene-graph.js, 24-webgl-scene-notifications.js
+  06-webgl-scene-camera.js -> 02-webgl-scene-core.js
+  07-webgl-scene-overlays.js -> 02-webgl-scene-core.js
+  08-webgl-scene-proof.js -> (none)
+  09-webgl-scene-primitives.js -> 02-webgl-scene-core.js
+  10-webgl-scene-lifecycle.js -> 02-webgl-scene-core.js, 03-webgl-scene-assets.js, 05-webgl-scene-interaction.js, 06-webgl-scene-camera.js, 11-webgl-scene-graph.js, 15-webgl-scene-render-loop.js, 17-webgl-scene-resources.js, 19-webgl-scene-shell.js, 20-webgl-scene-command-results.js, 21-webgl-scene-asset-cache.js, 25-webgl-scene-diagnostics.js, 30-webgl-scene-stage-runner.js
+  11-webgl-scene-graph.js -> 02-webgl-scene-core.js, 03-webgl-scene-assets.js, 04-webgl-scene-symbols.js, 17-webgl-scene-resources.js, 23-webgl-scene-indexes.js, 27-webgl-scene-links.js
+  12-webgl-scene-drag.js -> 02-webgl-scene-core.js, 11-webgl-scene-graph.js, 24-webgl-scene-notifications.js
+  13-webgl-scene-patching.js -> 02-webgl-scene-core.js, 24-webgl-scene-notifications.js, 11-webgl-scene-graph.js, 04-webgl-scene-symbols.js, 29-webgl-scene-motion-queues.js, 20-webgl-scene-command-results.js
+  14-webgl-scene-motion.js -> 02-webgl-scene-core.js, 11-webgl-scene-graph.js, 20-webgl-scene-command-results.js, 24-webgl-scene-notifications.js, 29-webgl-scene-motion-queues.js
+  15-webgl-scene-render-loop.js -> 04-webgl-scene-symbols.js, 06-webgl-scene-camera.js, 07-webgl-scene-overlays.js, 11-webgl-scene-graph.js, 14-webgl-scene-motion.js, 26-webgl-scene-command-batch.js, 22-webgl-scene-scheduler.js
+  16-webgl-scene-models.js -> 02-webgl-scene-core.js, 18-webgl-scene-model-diagnostics.js, 17-webgl-scene-resources.js, 21-webgl-scene-asset-cache.js
+  17-webgl-scene-resources.js -> (none)
+  18-webgl-scene-model-diagnostics.js -> 02-webgl-scene-core.js
+  19-webgl-scene-shell.js -> (none)
+  20-webgl-scene-command-results.js -> (none)
+  21-webgl-scene-asset-cache.js -> 17-webgl-scene-resources.js
+  22-webgl-scene-scheduler.js -> 30-webgl-scene-stage-runner.js
+  23-webgl-scene-indexes.js -> (none)
+  24-webgl-scene-notifications.js -> 02-webgl-scene-core.js
+  25-webgl-scene-diagnostics.js -> (none)
+  26-webgl-scene-command-batch.js -> 08-webgl-scene-proof.js, 13-webgl-scene-patching.js, 14-webgl-scene-motion.js, 20-webgl-scene-command-results.js, 28-webgl-scene-command-batch-normalizer.js, 30-webgl-scene-stage-runner.js
+  27-webgl-scene-links.js -> 02-webgl-scene-core.js
+  28-webgl-scene-command-batch-normalizer.js -> (none)
+  29-webgl-scene-motion-queues.js -> 02-webgl-scene-core.js
+  30-webgl-scene-stage-runner.js -> 32-webgl-scene-stage-barriers.js, 33-webgl-scene-command-journal.js
+  31-webgl-scene-motion-cancellation.js -> 20-webgl-scene-command-results.js, 29-webgl-scene-motion-queues.js
+  32-webgl-scene-stage-barriers.js -> (none)
+  33-webgl-scene-command-journal.js -> (none)
+Scene runtime audit passed with 11 warning(s).
+
+ExitCode: 0

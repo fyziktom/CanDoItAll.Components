@@ -1,12 +1,14 @@
 # Proof manifest SB13
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB13/source-assertions.md`
+- Semantic invariants: `bundle://proof/SB13/semantic-invariants.md`
+- Changed-file hashes: `bundle://proof/SB13/changed-file-hashes.json`
+- Headless bridge E2E tests: `bundle://proof/SB13/transcripts/economy-headless-bridge-e2e-tests.txt`
+
+## Result
+
+Headless joined pipeline proof passes for input pack, backend, visualization, WebGL projection, snapshots, and analysis.

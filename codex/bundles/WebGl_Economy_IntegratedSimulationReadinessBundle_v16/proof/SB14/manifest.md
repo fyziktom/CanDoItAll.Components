@@ -1,12 +1,14 @@
 # Proof manifest SB14
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB14/source-assertions.md`
+- Semantic invariants: `bundle://proof/SB14/semantic-invariants.md`
+- Changed-file hashes: `bundle://proof/SB14/changed-file-hashes.json`
+- Performance probe tests: `bundle://proof/SB14/transcripts/economy-performance-probe-tests.txt`
+
+## Result
+
+Performance/scalability probe passes with headless, large-screen-only scope retained.

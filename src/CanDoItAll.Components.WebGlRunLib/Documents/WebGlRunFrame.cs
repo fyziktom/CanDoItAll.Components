@@ -43,6 +43,8 @@ public sealed class WebGlRunActionStage
 
     public List<string> BarrierObjectIds { get; set; } = [];
 
+    public string BarrierEventId { get; set; } = string.Empty;
+
     public List<WebGlRunFramePatch> ScenePatches { get; set; } = [];
 
     public List<WebGlObjectMotionCommand> Motions { get; set; } = [];

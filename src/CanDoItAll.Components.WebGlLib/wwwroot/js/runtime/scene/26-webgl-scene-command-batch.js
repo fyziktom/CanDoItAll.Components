@@ -3,7 +3,7 @@ import { applyPatchDetailed } from "./13-webgl-scene-patching.js";
 import { enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
 import { compactBatchResultForInterop, completeCommandResult, createCommandResult, warnCommand } from "./20-webgl-scene-command-results.js";
 import { normalizeCommandBatch, normalizeCommandBatchForAudit } from "./28-webgl-scene-command-batch-normalizer.js";
-import { advanceCommandStageRunner, enqueueCommandStages, syncStageDiagnostics } from "./30-webgl-scene-stage-runner.js";
+import { advanceCommandStageRunner, enqueueCommandStages, hasPendingCommandStageRunnerWork, syncStageDiagnostics } from "./30-webgl-scene-stage-runner.js";
 
 export { normalizeCommandBatchForAudit };
 
@@ -56,7 +56,7 @@ export function advanceCommandBatchStages(state, deltaSeconds) {
 
 function applyOrScheduleStages(state, normalized, result) {
     enqueueCommandStages(state, normalized.batchId, normalized.stages, stage => applyStage(state, stage, result));
-    if ((state.commandStageRunner?.queue?.length || 0) > 0 || (state.commandStageRunner?.waitSeconds || 0) > 0) {
+    if (hasPendingCommandStageRunnerWork(state)) {
         state.scheduleRender("command-stage");
     }
     syncStageDiagnostics(state);

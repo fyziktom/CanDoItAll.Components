@@ -6,10 +6,10 @@ internal static class WebGlRunStageBarrierPolicy
 {
     public static void Apply(WebGlRunAction action, WebGlRunActionStage stage, string fallbackPolicy, params string[] objectIds)
     {
-        string policy = FirstNonEmpty(
+        string policy = NormalizePolicy(FirstNonEmpty(
             action.Metadata.GetValueOrDefault("barrierPolicy"),
             action.Parameters.GetValueOrDefault("barrierPolicy"),
-            fallbackPolicy);
+            fallbackPolicy));
         if (string.IsNullOrWhiteSpace(policy))
         {
             return;
@@ -29,8 +29,25 @@ internal static class WebGlRunStageBarrierPolicy
         {
             stage.Metadata["barrierObjectIds"] = string.Join(",", stage.BarrierObjectIds);
         }
+
+        string eventId = FirstNonEmpty(
+            action.Metadata.GetValueOrDefault("barrierEventId"),
+            action.Parameters.GetValueOrDefault("barrierEventId"));
+        if (!string.IsNullOrWhiteSpace(eventId))
+        {
+            stage.BarrierEventId = eventId;
+            stage.Metadata["barrierEventId"] = eventId;
+        }
     }
 
     private static string FirstNonEmpty(params string?[] values)
         => values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? string.Empty;
+
+    private static string NormalizePolicy(string policy)
+        => policy.Trim().ToLowerInvariant().Replace("_", "-") switch
+        {
+            "time-delay" or "timedelay" or "waitseconds" => WebGlSceneStageBarrierPolicies.WaitSeconds,
+            "manual-step" or "manualstep" => WebGlSceneStageBarrierPolicies.WaitForEvent,
+            _ => policy
+        };
 }

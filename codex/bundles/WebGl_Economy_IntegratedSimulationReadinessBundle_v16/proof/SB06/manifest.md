@@ -1,12 +1,15 @@
 # Proof manifest SB06
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB06/source-assertions.md`
+- Semantic invariants: `bundle://proof/SB06/semantic-invariants.md`
+- Changed-file hashes: `bundle://proof/SB06/changed-file-hashes.json`
+- Bridge line counts: `bundle://proof/SB06/transcripts/economy-bridge-line-counts.txt`
+- Boundary audit: `bundle://proof/SB06/transcripts/economy-boundary-audit.txt`
+
+## Result
+
+Bridge projector decomposition remains below the line ceiling and passes Economy boundary audit.

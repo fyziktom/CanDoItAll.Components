@@ -1,12 +1,14 @@
 # Proof manifest SB11
 
-Status: Prepared, not executed in this bundle creation step.
+Status: Completed
 
-Required during implementation:
+## Closure Artifacts
 
-- changed-file hashes
-- command transcripts
-- source assertions
-- semantic invariant notes
-- failing-first or red-team proof where behavior changes
-- passing validation output
+- Source assertions: `bundle://proof/SB11/source-assertions.md`
+- Changed-file hashes: `bundle://proof/SB11/changed-file-hashes.json`
+- Components reference scan: `bundle://proof/SB11/transcripts/components-economy-reference-scan.txt`
+- Economy domain boundary audit: `bundle://proof/SB11/transcripts/economy-domain-boundary-audit.txt`
+
+## Result
+
+Domain leakage audit passes for Components/Economy boundaries.

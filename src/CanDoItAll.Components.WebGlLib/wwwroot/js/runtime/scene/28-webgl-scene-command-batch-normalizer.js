@@ -52,10 +52,17 @@ function normalizeStage(stage, batch, metrics, warnings) {
         orderingMode,
         batchingPolicy,
         waitSeconds: Number(stage?.waitSeconds) || 0,
+        barrierPolicy: stage?.barrierPolicy || stage?.metadata?.barrierPolicy || "",
+        barrierObjectIds: Array.isArray(stage?.barrierObjectIds)
+            ? [...stage.barrierObjectIds]
+            : stringList(stage?.metadata?.barrierObjectIds),
+        barrierEventId: stage?.barrierEventId || stage?.metadata?.barrierEventId || "",
         metadata: {
             ...(stage?.metadata || {}),
             orderingMode,
             batchingPolicy,
+            barrierPolicy: stage?.barrierPolicy || stage?.metadata?.barrierPolicy || "",
+            barrierEventId: stage?.barrierEventId || stage?.metadata?.barrierEventId || "",
             stageCommandCount: String(patches.length + motions.length)
         },
         patches: coalescePatches(patches, motions.length > 0, orderingMode, stageMetrics, warnings, batchId),
@@ -71,6 +78,13 @@ function normalizeStage(stage, batch, metrics, warnings) {
     metrics.droppedDuplicateMotionCount += stageMetrics.droppedDuplicateMotionCount;
     metrics.preservedOrderedDuplicateMotionCount += stageMetrics.preservedOrderedDuplicateMotionCount;
     return normalized;
+}
+
+function stringList(value) {
+    return String(value || "")
+        .split(/[;,]/)
+        .map(item => item.trim())
+        .filter(Boolean);
 }
 
 function normalizeBatchingPolicy(value, orderingMode) {
