@@ -7,4 +7,6 @@ public interface IWebGlRunPlaybackController
     ValueTask<WebGlRunFrame?> ApplyAsync(WebGlRunPlaybackCommand command, CancellationToken cancellationToken = default);
 
     ValueTask<WebGlRunPlaybackResult> ApplyDetailedAsync(WebGlRunPlaybackCommand command, CancellationToken cancellationToken = default);
+
+    WebGlRunRuntimeSnapshot ExportRuntimeSnapshot();
 }

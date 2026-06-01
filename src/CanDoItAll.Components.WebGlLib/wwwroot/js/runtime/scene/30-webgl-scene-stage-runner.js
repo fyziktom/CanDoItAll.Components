@@ -9,6 +9,7 @@ import {
 } from "./32-webgl-scene-stage-barriers.js";
 import {
     appendCommandStageJournal,
+    resetCommandStageJournal,
     syncCommandJournalDiagnostics
 } from "./33-webgl-scene-command-journal.js";
 
@@ -76,8 +77,17 @@ export function cancelCommandStageRunner(state, reason = "cancelled") {
     runner.activeBarrier = null;
     runner.currentBatchId = "";
     runner.currentStageId = "";
+    runner.completedStageIds.length = 0;
+    runner.failedStageIds.length = 0;
+    runner.skippedStageIds.length = 0;
+    runner.resultLog.length = 0;
+    runner.resultSequence = 0;
+    runner.lastStageError = "";
+    resetCommandStageJournal(state);
     state.diagnostics.commandStageCancelledCount = (state.diagnostics.commandStageCancelledCount || 0) + 1;
     state.diagnostics.lastStageCancelReason = reason;
+    state.diagnostics.commandStageBarrierTimedOut = false;
+    state.diagnostics.lastStageBarrierWarning = "";
     appendCommandStageJournal(state, {
         eventKind: "stage-warning",
         status: "cancelled",
@@ -107,6 +117,16 @@ export function syncStageDiagnostics(state) {
     state.diagnostics.commandStageBarrierPolicy = runner.activeBarrier?.policy || "";
     state.diagnostics.commandStageBarrierTarget = barrier.target || "";
     state.diagnostics.commandStageBarrierBlockers = barrier.blockers || [];
+    state.diagnostics.commandStageBarrierElapsedSeconds = roundWait(runner.activeBarrier?.elapsedSeconds || 0);
+    state.diagnostics.commandStageBarrierTimeoutSeconds = roundWait(runner.activeBarrier?.timeoutSeconds || 0);
+    if (runner.activeBarrier) {
+        state.diagnostics.commandStageBarrierTimedOut = runner.activeBarrier.timedOut === true;
+    }
+
+    if (barrier.warning) {
+        state.diagnostics.lastStageBarrierWarning = barrier.warning;
+    }
+
     state.diagnostics.commandStageBarrierEventId = runner.activeBarrier?.eventId || "";
     state.diagnostics.commandStageBarrierObjectIds = [...(runner.activeBarrier?.objectIds || [])];
     state.diagnostics.completedCommandStageIds = [...(runner.completedStageIds || [])];
@@ -177,9 +197,26 @@ function completeReadyBarrier(state, runner) {
         return true;
     }
 
-    if (!isStageBarrierReady(state, runner.activeBarrier)) {
+    const barrierDescription = describeStageBarrier(state, runner.activeBarrier);
+    if (!barrierDescription.isReady) {
         syncStageDiagnostics(state);
         return false;
+    }
+
+    const warning = runner.activeBarrier.timedOut
+        ? `timeout:${runner.activeBarrier.stageId}`
+        : barrierDescription.warning || "";
+    if (warning) {
+        state.diagnostics.lastStageBarrierWarning = warning;
+        state.diagnostics.commandStageBarrierTimedOut = runner.activeBarrier.timedOut === true;
+        appendCommandStageJournal(state, {
+            eventKind: "stage-warning",
+            batchId: runner.activeBarrier.batchId,
+            stageId: runner.activeBarrier.stageId,
+            status: runner.activeBarrier.timedOut ? "timeout" : "warning",
+            barrierPolicy: runner.activeBarrier.policy,
+            message: warning
+        });
     }
 
     appendCommandStageJournal(state, {

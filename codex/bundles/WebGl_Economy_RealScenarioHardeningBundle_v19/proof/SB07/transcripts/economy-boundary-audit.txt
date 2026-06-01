@@ -1,0 +1,28 @@
+﻿Command: SB07 Economy low-level project reference boundary audit
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+RunLabel: sb07-economy-boundary-audit-fixed
+ExitCode: 0
+Output:
+Project: src\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj
+No project/package references matched the boundary keywords.
+Project: src\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj
+8:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+Project: src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj
+4:    <AssemblyName>CanDoItAll.Economy.Simulation.WebGlBridge</AssemblyName>
+5:    <RootNamespace>CanDoItAll.Economy.Simulation.WebGlBridge</RootNamespace>
+6:    <ComponentsRepoRoot Condition="'$(ComponentsRepoRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\CanDoItAll.Components</ComponentsRepoRoot>
+7:    <ComponentsWebGlRunLibProject>$(ComponentsRepoRoot)\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj</ComponentsWebGlRunLibProject>
+8:    <UseComponentsWebGlRunLibPackage Condition="'$(UseComponentsWebGlRunLibPackage)' == ''">false</UseComponentsWebGlRunLibPackage>
+9:    <ComponentsWebGlRunLibPackageVersion Condition="'$(ComponentsWebGlRunLibPackageVersion)' == ''">0.1.0</ComponentsWebGlRunLibPackageVersion>
+12:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+13:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj" />
+14:    <ProjectReference Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+15:    <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+17:  <Target Name="ValidateComponentsWebGlRunLibReference" BeforeTargets="ResolveReferences" Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and !Exists('$(ComponentsWebGlRunLibProject)')">
+18:    <Error Text="CanDoItAll.Components.WebGlRunLib project reference was not found at '$(ComponentsWebGlRunLibProject)'. Set ComponentsRepoRoot to the local CanDoItAll.Components checkout or set UseComponentsWebGlRunLibPackage=true with ComponentsWebGlRunLibPackageVersion." />
+Abstractions/Visualization Components/WebGL/backend source dependency scan:
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:12:    public const string FollowUp = "Bridge-bound visual field remains for current WebGL bridge compatibility; split it into a renderer-specific mapping extension later.";
+Ledger term scan notes:
+src\CanDoItAll.Economy.Simulation.Abstractions\Backends\ISimulationBackend.cs:8:    public bool SupportsLedgerForks { get; set; }
+Decision: Ledger text is generic backend capability vocabulary, not a Simulation.Ledger project dependency or namespace reference.
+Decision: Abstractions and Visualization have no Components/WebGL/backend project references; WebGlBridge references Abstractions, Visualization, and Components.WebGlRunLib only.

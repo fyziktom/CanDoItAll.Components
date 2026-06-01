@@ -1,0 +1,71 @@
+﻿Command: SB07 renderer-specific field and bridge-bound marker scan
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+RunLabel: sb07-renderer-specific-field-scan-extension-literals
+ExitCode: 0
+Output:
+Renderer-neutral terms remain: visual category, action kind, pose key, symbol category, anchor alias, relationship category.
+Remaining renderer/runtime compatibility fields are marked by EconomyVisualMappingBridgeBoundFields.DiagnosticCode and FollowUp.
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:233:        Assert.Contains(result.Messages, message => message.Code == EconomyVisualMappingBridgeBoundFields.DiagnosticCode && message.Path == "visualMapping.categories.assetId");
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:234:        Assert.Contains(result.Messages, message => message.Code == EconomyVisualMappingBridgeBoundFields.DiagnosticCode && message.Path == "visualMapping.symbolMappings.symbolAssetId");
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:235:        Assert.Contains(result.Messages, message => message.Code == EconomyVisualMappingBridgeBoundFields.DiagnosticCode && message.Path == "visualMapping.poseHints.assetVariantId");
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:236:        Assert.Contains(result.Messages, message => message.Code == EconomyVisualMappingBridgeBoundFields.DiagnosticCode && message.Path == "visualMapping.anchorAliases.anchorKey");
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:237:        Assert.Contains(result.Messages, message => message.Code == EconomyVisualMappingBridgeBoundFields.DiagnosticCode && message.Path == "visualMapping.fallbacks.diagnosticObjectId");
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:9:public static class EconomyVisualMappingBridgeBoundFields
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:187:            Warning(EconomyVisualMappingBridgeBoundFields.DiagnosticCode, path, EconomyVisualMappingBridgeBoundFields.FollowUp, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:11:    public const string DiagnosticCode = "bridge-bound-visual-field";
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:49:        Assert.Equal("asset.status", symbol.SymbolAssetId);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:67:        Assert.Equal("asset.actor", sceneObject.AssetId);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:74:        mapping.CategoryMappings[0].AssetId = string.Empty;
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:234:        Assert.Contains(result.Messages, message => message.Code == EconomyVisualMappingBridgeBoundFields.DiagnosticCode && message.Path == "visualMapping.symbolMappings.symbolAssetId");
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:255:                new() { VisualCategory = "actor", ObjectKind = "actor", Family = "actor", AssetId = "asset.actor", AnchorAlias = "head" },
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:256:                new() { VisualCategory = "resource", ObjectKind = "resource", Family = "resource", AssetId = "asset.resource" }
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:264:                new() { SymbolCategory = "status", SymbolKey = "status", SymbolAssetId = "asset.status", Color = "#facc15" }
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:268:                new() { PoseKey = "active", AssetId = "asset.actor" }
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingActionDefinitions.cs:21:    public string SymbolAssetId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingActionDefinitions.cs:33:    public string AssetId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingNodeDefinitions.cs:7:    public string AssetId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingNodeDefinitions.cs:17:    public string AssetId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:82:            CheckSemanticKey("visualMapping.nodes.assetId", node.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:83:            MarkBridgeBound("visualMapping.nodes.assetId", node.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:84:            if (string.IsNullOrWhiteSpace(node.AssetId))
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:93:            Require(!string.IsNullOrWhiteSpace(category.AssetId), $"visualMapping.categories.{category.VisualCategory}.assetId", "Category mapping requires an asset id.", result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:95:            CheckSemanticKey("visualMapping.categories.assetId", category.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:96:            MarkBridgeBound("visualMapping.categories.assetId", category.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:107:            CheckSemanticKey("visualMapping.poseHints.assetId", pose.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:109:            MarkBridgeBound("visualMapping.poseHints.assetId", pose.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:111:            if (string.IsNullOrWhiteSpace(pose.AssetId) && !pose.IsNoOpFallback)
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:124:            CheckSemanticKey("visualMapping.symbolMappings.symbolAssetId", symbol.SymbolAssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:125:            MarkBridgeBound("visualMapping.symbolMappings.symbolAssetId", symbol.SymbolAssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:126:            if (string.IsNullOrWhiteSpace(symbol.SymbolAssetId) && !symbol.IsNoOpFallback)
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:128:                Warning("missing-symbol-asset", $"visualMapping.symbolMappings.{symbolKey}.symbolAssetId", "Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.", result);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:49:        Assert.Equal("asset.status", symbol.SymbolAssetId);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:264:                new() { SymbolCategory = "status", SymbolKey = "status", SymbolAssetId = "asset.status", Color = "#facc15" }
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingActionDefinitions.cs:21:    public string SymbolAssetId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:124:            CheckSemanticKey("visualMapping.symbolMappings.symbolAssetId", symbol.SymbolAssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:125:            MarkBridgeBound("visualMapping.symbolMappings.symbolAssetId", symbol.SymbolAssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:126:            if (string.IsNullOrWhiteSpace(symbol.SymbolAssetId) && !symbol.IsNoOpFallback)
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:130:        mapping.Fallbacks.DiagnosticObjectId = "object.diagnostic.fallback";
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:227:        mapping.Fallbacks.DiagnosticObjectId = "object.diagnostic.fallback";
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingNodeDefinitions.cs:41:    public string DiagnosticObjectId { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:139:        if (!string.IsNullOrWhiteSpace(mapping.Fallbacks.DiagnosticObjectId))
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:141:            MarkBridgeBound("visualMapping.fallbacks.diagnosticObjectId", mapping.Fallbacks.DiagnosticObjectId, result);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:272:                new() { Alias = "head", AnchorKey = "head", OffsetY = 1 }
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingActionDefinitions.cs:10:    public string AnchorKey { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingActionDefinitions.cs:45:    public string AnchorKey { get; set; } = "center";
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:135:            Require(!string.IsNullOrWhiteSpace(alias.AnchorKey), $"visualMapping.anchorAliases.{alias.Alias}.anchorKey", "Anchor alias requires an anchor key.", result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:136:            MarkBridgeBound("visualMapping.anchorAliases.anchorKey", alias.AnchorKey, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:83:            MarkBridgeBound("visualMapping.nodes.assetId", node.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:96:            MarkBridgeBound("visualMapping.categories.assetId", category.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:109:            MarkBridgeBound("visualMapping.poseHints.assetId", pose.AssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:110:            MarkBridgeBound("visualMapping.poseHints.assetVariantId", pose.AssetVariantId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:125:            MarkBridgeBound("visualMapping.symbolMappings.symbolAssetId", symbol.SymbolAssetId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:136:            MarkBridgeBound("visualMapping.anchorAliases.anchorKey", alias.AnchorKey, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:141:            MarkBridgeBound("visualMapping.fallbacks.diagnosticObjectId", mapping.Fallbacks.DiagnosticObjectId, result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:183:    private static void MarkBridgeBound(string path, string value, EconomyVisualMappingValidationResult result)
+Renderer-specific value marker scan:
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:12: public const string FollowUp = "Bridge-bound visual field remains for current WebGL bridge compatibility; split it into a renderer-specific mapping extension later.";
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:22: ".fbx",
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:23: ".obj",
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:24: "threejs",
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:25: "babylon",
+Decision: source-level renderer matches are validator marker constants or the explicit bridge-bound follow-up note, not hard Components dependencies.

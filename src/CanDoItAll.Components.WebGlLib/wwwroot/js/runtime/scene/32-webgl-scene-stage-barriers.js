@@ -25,10 +25,13 @@ export function createStageBarrier(state, item) {
         batchId: item?.batchId || "",
         stageId: stage.stageId || "",
         remainingSeconds: policy === stageBarrierPolicies.waitSeconds ? waitSeconds : 0,
+        elapsedSeconds: 0,
+        timeoutSeconds: resolveBarrierTimeoutSeconds(state, stage),
+        timedOut: false,
         objectIds: resolveBarrierObjectIds(stage),
         eventId,
         idleFrameCount: 0,
-        signaled: isBarrierEventSignaled(state, eventId)
+        signaled: false
     };
 }
 
@@ -75,12 +78,11 @@ export function updateStageBarrier(state, barrier, deltaSeconds) {
         return;
     }
 
+    barrier.elapsedSeconds = roundWait((barrier.elapsedSeconds || 0) + Math.max(0, Number(deltaSeconds) || 0));
     if (barrier.policy === stageBarrierPolicies.waitSeconds) {
         barrier.remainingSeconds = Math.max(0, barrier.remainingSeconds - Math.max(0, Number(deltaSeconds) || 0));
     } else if (barrier.policy === stageBarrierPolicies.waitForRenderIdle && !hasAnyMotion(state)) {
         barrier.idleFrameCount += 1;
-    } else if (barrier.policy === stageBarrierPolicies.waitForEvent) {
-        barrier.signaled ||= isBarrierEventSignaled(state, barrier.eventId);
     }
 }
 
@@ -93,6 +95,23 @@ export function describeStageBarrier(state, barrier) {
         return { isReady: true, target: "", blockers: [] };
     }
 
+    const description = describeStageBarrierCore(state, barrier);
+    if (!description.isReady &&
+        barrier.timeoutSeconds > 0 &&
+        (barrier.elapsedSeconds || 0) >= barrier.timeoutSeconds) {
+        barrier.timedOut = true;
+        return {
+            isReady: true,
+            target: description.target,
+            blockers: [`timeout:${roundWait(barrier.elapsedSeconds)}/${roundWait(barrier.timeoutSeconds)}`, ...description.blockers],
+            warning: `timeout:${barrier.stageId}`
+        };
+    }
+
+    return description;
+}
+
+function describeStageBarrierCore(state, barrier) {
     switch (barrier.policy) {
         case stageBarrierPolicies.waitSeconds:
             return barrier.remainingSeconds <= 0
@@ -115,7 +134,7 @@ export function describeStageBarrier(state, barrier) {
                 return { isReady: false, target: "event", blockers: ["missing-event-id"] };
             }
 
-            return barrier.signaled || isBarrierEventSignaled(state, barrier.eventId)
+            return barrier.signaled
                 ? { isReady: true, target: barrier.eventId, blockers: [] }
                 : { isReady: false, target: barrier.eventId, blockers: [`event:${barrier.eventId}`] };
         default:
@@ -146,8 +165,6 @@ export function signalStageBarrierEvent(state, eventId) {
         return false;
     }
 
-    state.commandStageEvents ??= new Set();
-    state.commandStageEvents.add(key);
     const barrier = state.commandStageRunner?.activeBarrier;
     if (barrier?.policy === stageBarrierPolicies.waitForEvent && barrier.eventId === key) {
         barrier.signaled = true;
@@ -174,7 +191,7 @@ function describeMotionBarrier(state, target) {
 
 function describeObjectMotionBarrier(state, objectIds) {
     if (!objectIds?.length) {
-        return describeMotionBarrier(state, "object-motions");
+        return { isReady: true, target: "object-motions", blockers: ["missing-object-id"], warning: "missing-object-id" };
     }
 
     const objectSet = new Set(objectIds);
@@ -223,8 +240,14 @@ function resolveBarrierEventId(stage, policy) {
     return rawPolicy.includes("manual") && policy === stageBarrierPolicies.waitForEvent ? "manual-step" : "";
 }
 
-function isBarrierEventSignaled(state, eventId) {
-    return !!eventId && state.commandStageEvents?.has?.(eventId) === true;
+function resolveBarrierTimeoutSeconds(state, stage) {
+    const explicit = stage?.barrierTimeoutSeconds ||
+        stage?.BarrierTimeoutSeconds ||
+        stage?.metadata?.barrierTimeoutSeconds ||
+        stage?.metadata?.stageBarrierTimeoutSeconds;
+    const configured = explicit ?? state?.options?.commandStageBarrierTimeoutSeconds ?? 0;
+    const timeout = Number(configured);
+    return Number.isFinite(timeout) && timeout > 0 ? timeout : 0;
 }
 
 function hasAnyMotion(state) {

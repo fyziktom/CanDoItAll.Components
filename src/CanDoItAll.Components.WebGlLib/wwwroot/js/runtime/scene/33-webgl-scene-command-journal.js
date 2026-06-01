@@ -40,6 +40,11 @@ export function syncCommandJournalDiagnostics(state) {
     state.diagnostics.commandStageRecentJournalEntries = recentEntries;
 }
 
+export function resetCommandStageJournal(state) {
+    state.commandStageJournal = createCommandStageJournal();
+    syncCommandJournalDiagnostics(state);
+}
+
 function createCommandStageJournal() {
     return {
         sequence: 0,

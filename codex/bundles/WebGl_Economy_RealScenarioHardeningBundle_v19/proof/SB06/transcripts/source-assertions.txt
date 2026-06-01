@@ -1,0 +1,29 @@
+﻿Command: SB06 projector separation and diagnostics aggregator source assertions
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+RunLabel: sb06-source-assertions
+ExitCode: 0
+Output:
+Projector files remain separated for layer, node, link, symbol, visual-state catalog, initial scene, action-stage, and run projection.
+Action-stage projection now delegates mapping, planning, mapped-action validation, provenance, command compilation, and stage append responsibilities to separate methods.
+Run projection serializes bridge diagnostics through EconomyWebGlBridgeDiagnosticsAggregator instead of ad hoc metadata writes.
+Code references:
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlLayerProjector.cs:6:public sealed class EconomyWebGlLayerProjector
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlNodeProjector.cs:8:public sealed class EconomyWebGlNodeProjector(
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlLinkProjector.cs:6:public sealed class EconomyWebGlLinkProjector(EconomyWebGlProjectionDiagnostics? diagnostics = null)
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSymbolProjector.cs:7:public sealed class EconomyWebGlSymbolProjector
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlVisualStateCatalogProjector.cs:7:public sealed class EconomyWebGlVisualStateCatalogProjector
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:7:public sealed class EconomyWebGlActionStageProjector(IEconomyVisualActionWebGlMapper? actionMapper = null)
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlProjectionDiagnostics.cs:69:public sealed class EconomyWebGlBridgeDiagnosticsAggregator
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:70:        WebGlRunAction mapped = MapAction(action, context);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:140:    private WebGlRunAction MapAction(EconomyVisualAction action, EconomyWebGlMappingContext context)
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:71:        WebGlRunActionPlan plan = PlanAction(mapped, action, options, context);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:143:    private WebGlRunActionPlan PlanAction(
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:72:        AddMappedActionValidation(plan, mapped, context);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:155:    private void AddMappedActionValidation(WebGlRunActionPlan plan, WebGlRunAction mapped, EconomyWebGlMappingContext context)
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:73:        AddPlanProvenance(plan, action, frame, input);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:158:    private static void AddPlanProvenance(
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:81:        CompiledActionStages compiled = CompileActionStages(plan, action);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:181:    private CompiledActionStages CompileActionStages(WebGlRunActionPlan plan, EconomyVisualAction action)
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:82:        AppendCompiledStages(frame, action, input, compiled);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:85:    private void AppendCompiledStages(
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunProjector.cs:58:        diagnosticsAggregator.ApplyTo(document, context);

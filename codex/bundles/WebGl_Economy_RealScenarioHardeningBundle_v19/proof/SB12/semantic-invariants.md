@@ -1,0 +1,25 @@
+# SB12 Semantic Invariants
+
+Status: Completed
+
+## Invariants
+
+| Invariant ID | Expected behavior | Shallow-pass trap | Adversarial negative proof | Semantic positive proof | Anti-stub audit |
+|---|---|---|---|---|---|
+| SB12-I1 | The readiness report answers all five required SB12 questions, cites generated artifacts, and keeps `finalUiDemoClaimed` false. | A shallow report could write a generic summary without question-level fields or artifact citations. | `bundle://proof/SB12/transcripts/readiness-report-failing-first.txt` shows the committed baseline lacked the SB12 schema, required question markers, final UI flag, missing action list, strict failure count, and source citations. | `bundle://proof/SB12/transcripts/generated-readiness-report-assertions.txt` validates the generated report schema, required answers, citations, and no-final-UI claim. | `bundle://proof/SB12/transcripts/anti-stub-audit.txt` |
+| SB12-I2 | Shared-resource and finite-resource/ownership probes are backed by real headless runner artifacts, snapshots, snapshot analysis, and strict validation. | A shallow report could claim readiness without rerunning the SB08 artifact pipeline. | `bundle://proof/SB12/transcripts/readiness-report-failing-first.txt` shows the old readiness artifact was a test-local summary, not an artifact-backed readiness contract. | `bundle://proof/SB12/transcripts/readiness-reporter-tests.txt` and `bundle://proof/SB12/transcripts/generated-report-paths.txt` prove required scenario artifacts exist and strict failures are empty. | `bundle://proof/SB12/transcripts/anti-stub-audit.txt` |
+| SB12-I3 | The small-producer/community trade answer is based on existing core event kinds, fields, policies, handlers, and visual action kinds, with no new core C# types required. | A shallow answer could hard-code "yes" without citing existing production vocabulary. | `bundle://proof/SB12/transcripts/readiness-report-failing-first.txt` shows the baseline had no small-producer/community readiness answer. | `bundle://proof/SB12/transcripts/source-assertions.txt` verifies the reporter cites existing work, trade, admin, tax/fee, relationship, and visual action contracts. | `bundle://proof/SB12/transcripts/anti-stub-audit.txt` |
+| SB12-I4 | Browser playback readiness identifies data fields already present and exact browser actions deferred to SB13, without implementing or claiming a final UI demo. | A shallow report could blur missing runtime fields with missing browser proof, or accidentally claim the UI exists. | `bundle://proof/SB12/transcripts/readiness-report-failing-first.txt` shows the baseline had no missing browser playback action list. | `bundle://proof/SB12/transcripts/generated-readiness-report-assertions.txt` verifies no runtime data fields are missing, six SB13 browser actions are listed, and `finalUiDemoClaimed` is false. | `bundle://proof/SB12/transcripts/anti-stub-audit.txt` |
+
+## Production Behavior Artifact Matrix
+
+| Artifact | Producer | Consumer | Lifecycle | Negative-test citation |
+|---|---|---|---|---|
+| `EconomyRealScenarioReadinessReporter` | `repo://CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyRealScenarioReadinessReporter.cs` | SB12 report generation and SB13 smoke planning | Runs required scenario probes through `IEconomyRealScenarioRunner`, builds a readiness JSON artifact, and avoids scenario-specific production branching | `bundle://proof/SB12/transcripts/readiness-report-failing-first.txt` |
+| `real-scenario-readiness-report.json` | `repo://CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyRealScenarioReadinessReporter.cs` | Bundle proof, SB13 large-screen smoke criteria, later closure review | Written under `repo://CanDoItAll.Economy/artifacts/economy/readiness/` with question-level answers, artifact citations, browser gaps, and strict failure summary | `bundle://proof/SB12/transcripts/generated-readiness-report-assertions.txt` |
+| Required scenario readiness reports | `repo://CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyRealProbeArtifactExporter.cs` | SB12 aggregate report and SB14 performance gates | Written under each `real-scenario-runs/<scenario-id>` folder with backend, visual, WebGL, snapshot, and analysis artifacts | `bundle://proof/SB12/transcripts/generated-report-paths.txt` |
+| `EconomyReadinessProbeTests` | `repo://CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests/EconomyReadinessProbeTests.cs` | CI/test validation of the report contract | Generates the report and asserts required answers, artifact citations, strict zero failures, exact browser action gaps, and no final UI claim | `bundle://proof/SB12/transcripts/readiness-reporter-tests.txt` |
+
+## Contract
+
+SB12 is closed only if the generated readiness JSON answers every required question, references real generated artifacts, records zero remaining strict failures for the required probes, clearly separates present runtime fields from missing browser playback actions, states that the small producer/community probe needs no new core types, and does not claim a final UI demo exists.

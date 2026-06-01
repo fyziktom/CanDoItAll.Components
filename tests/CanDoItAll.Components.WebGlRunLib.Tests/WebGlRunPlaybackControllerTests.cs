@@ -107,8 +107,11 @@ public sealed class WebGlRunPlaybackControllerTests
 
         var seek = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 0 });
         var step = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Step });
+        var previous = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Previous });
         Assert.True(seek.RequiresSceneReset);
         Assert.Equal(1, step.TargetFrameIndex);
+        Assert.Equal(0, previous.TargetFrameIndex);
+        Assert.Equal("stage.bootstrap", controller.ExportRuntimeSnapshot().CurrentStageId);
     }
 
     private static WebGlRunDocument CreateRunDocument()

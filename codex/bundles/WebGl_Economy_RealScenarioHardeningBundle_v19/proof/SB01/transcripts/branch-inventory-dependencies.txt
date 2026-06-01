@@ -1,0 +1,139 @@
+﻿Command: SB01 branch inventory and dependency boundary guard
+RunLabel: sb01-branch-inventory-dependencies
+StartedUtc: 2026-06-01T14:27:56.9785507Z
+CodeAnalyticsComponentsSnapshot: snap-20260601142416-32ec9612
+CodeAnalyticsEconomySnapshot: snap-20260601142523-389ba89a
+CodeAnalyticsInventorySummary: Components WebGlLib -> no refs, WebGlRunLib -> WebGlLib; Economy Abstractions -> none, Visualization -> Abstractions, WebGlBridge -> Abstractions + Visualization + WebGlRunLib, SimulationSandbox -> Abstractions + Visualization + WebGlBridge.
+
+## Components branch
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+ExitCode: 0
+Output:
+webgl-engine
+
+## Components HEAD and subject
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+ExitCode: 0
+Output:
+cad0c85512b4a12d46678dbbdff1d8f15beefde0
+added bundle
+
+## Components status
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+ExitCode: 0
+Output:
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB01_cross_repo_inventory_and_branch_guard.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB02_components_runtime_stage_barrier_hardening.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB03_components_executable_run_document_controller.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB04_components_js_runtime_size_and_refactor_gate.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB05_economy_bridge_strict_execution_validation.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB06_economy_bridge_projector_refactoring.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB07_economy_visual_mapping_generic_schema.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB08_economy_simulation_sandbox_real_test_runner.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB09_economy_snapshot_runtime_state_attachment.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB10_economy_snapshot_analysis_service_hardening.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB11_economy_backend_selector_and_ledger_readiness.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB12_real_scenario_readiness_probe.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB13_large_screen_browser_smoke_plan.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB14_performance_and_scalability_gates.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/02_subbundles/SB15_validation_and_closure.md
+ M codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/README.md
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/FILE_INDEX.md
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/inputs/
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/plan/
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/proof/
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/requirements/
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/reviews/
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/scripts/
+?? codex/bundles/WebGl_Economy_RealScenarioHardeningBundle_v19/traceability/
+
+## Economy branch
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+ExitCode: 0
+Output:
+main
+
+## Economy HEAD and subject
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+ExitCode: 0
+Output:
+ee37d966bcb3082c45da9a572549ce5da473c105
+phase17
+
+## Economy status
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+ExitCode: 0
+Output:
+<no output>
+
+## Branch selection note
+Components branch selection is based on git branch --show-current, not the latest commit subject; the latest subject typo/content does not control branch selection.
+
+## Components source has no Economy project dependency text
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+ExitCode: 1
+Output:
+<no output>
+
+## Components generic runtime forbidden term scan
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+ExitCode: 1
+Output:
+<no output>
+
+## Economy project reference overview
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+ExitCode: 0
+Output:
+src/CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj:8:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:8:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:9:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.SimpleAccounts\CanDoItAll.Economy.Simulation.SimpleAccounts.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:10:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:11:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:3:using CanDoItAll.Economy.Simulation.SimpleAccounts;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlLinkProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlLayerProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlProjectionDiagnostics.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlVisualStateCatalogProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlVisualStateCatalogProjector.cs:2:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSymbolProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:2:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSnapshotVisualStateBuilder.cs:3:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunValidator.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunProjector.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlNodeProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlNodeProjector.cs:2:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlMappedActionValidator.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:7:    <ComponentsWebGlRunLibProject>$(ComponentsRepoRoot)\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj</ComponentsWebGlRunLibProject>
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:8:    <UseComponentsWebGlRunLibPackage Condition="'$(UseComponentsWebGlRunLibPackage)' == ''">false</UseComponentsWebGlRunLibPackage>
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:9:    <ComponentsWebGlRunLibPackageVersion Condition="'$(ComponentsWebGlRunLibPackageVersion)' == ''">0.1.0</ComponentsWebGlRunLibPackageVersion>
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:12:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:13:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj" />
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:14:    <ProjectReference Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:15:    <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:17:  <Target Name="ValidateComponentsWebGlRunLibReference" BeforeTargets="ResolveReferences" Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and !Exists('$(ComponentsWebGlRunLibProject)')">
+src/CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:18:    <Error Text="CanDoItAll.Components.WebGlRunLib project reference was not found at '$(ComponentsWebGlRunLibProject)'. Set ComponentsRepoRoot to the local CanDoItAll.Components checkout or set UseComponentsWebGlRunLibPackage=true with ComponentsWebGlRunLibPackageVersion." />
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:2:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:4:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:1:using CanDoItAll.Components.WebGlLib;
+src/CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:2:using CanDoItAll.Components.WebGlRunLib;
+
+## Economy low-level forbidden dependency scan
+WorkingDirectory: C:\repositories\CanDoItAll.Economy
+ExitCode: 0
+Output:
+src/CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj:1:<Project Sdk="Microsoft.NET.Sdk">
+src/CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj:1:<Project Sdk="Microsoft.NET.Sdk">
+
+## SB01 decision
+Entry gate: Passed after prepared validator.
+Closure gate: Passed with tracked downstream boundary findings.
+Components boundary: no Economy project dependency text and no forbidden domain terms in runtime JS/WebGlRunLib source.
+Boundary finding BF-SB01-001: Economy.Simulation.WebGlBridge source imports CanDoItAll.Components.WebGlLib types while its direct project/package dependency is WebGlRunLib; map to SB06/SB07 for bridge-bound refactor or explicit closure.
+Boundary finding BF-SB01-002: SimulationSandbox composes SimpleAccounts directly in the composition layer; map to SB11 for backend selector/ledger-readiness hardening and generic contract checks.
+ExitCode: 0

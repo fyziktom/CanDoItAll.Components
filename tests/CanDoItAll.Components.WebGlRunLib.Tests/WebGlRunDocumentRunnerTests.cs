@@ -41,6 +41,27 @@ public sealed class WebGlRunDocumentRunnerTests
     }
 
     [Fact]
+    public async Task Runner_steps_backward_with_scene_reset_and_traceable_stage_ids()
+    {
+        var applier = new RecordingFrameApplier();
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateRunDocument();
+
+        await runner.LoadAsync(document);
+        await runner.SeekAsync(1);
+        WebGlRunExecutionResult forward = await runner.ApplyCurrentFrameAsync();
+        WebGlRunExecutionResult backward = await runner.StepBackwardAsync();
+
+        Assert.True(forward.Succeeded);
+        Assert.True(backward.Succeeded);
+        Assert.Equal("step-backward", backward.Operation);
+        Assert.Equal(0, runner.State.CurrentFrameIndex);
+        Assert.Equal(["stage.bootstrap"], backward.AppliedStageIds.ToArray());
+        Assert.Equal("source.stage.bootstrap", backward.Diagnostics["sourceStageIds"]);
+        Assert.True(backward.AppliedInitialScene);
+    }
+
+    [Fact]
     public async Task Runner_reports_unresolved_runtime_targets_without_applying_frame()
     {
         var applier = new RecordingFrameApplier();

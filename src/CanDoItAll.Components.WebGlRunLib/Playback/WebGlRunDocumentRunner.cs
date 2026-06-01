@@ -161,16 +161,23 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         return result;
     }
 
-    public async ValueTask<WebGlRunExecutionResult> StepForwardAsync(CancellationToken cancellationToken = default)
+    public ValueTask<WebGlRunExecutionResult> StepForwardAsync(CancellationToken cancellationToken = default)
+        => StepAsync(WebGlRunPlaybackCommandKinds.Step, "step-forward", cancellationToken);
+    public ValueTask<WebGlRunExecutionResult> StepBackwardAsync(CancellationToken cancellationToken = default)
+        => StepAsync(WebGlRunPlaybackCommandKinds.Previous, "step-backward", cancellationToken);
+    private async ValueTask<WebGlRunExecutionResult> StepAsync(
+        string commandKind,
+        string operation,
+        CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (!EnsureLoaded(out WebGlRunExecutionResult result, "step-forward"))
+        if (!EnsureLoaded(out WebGlRunExecutionResult result, operation))
         {
             return result;
         }
 
         WebGlRunPlaybackResult playback = await controller!.ApplyDetailedAsync(
-            new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Step },
+            new WebGlRunPlaybackCommand { Kind = commandKind },
             cancellationToken).ConfigureAwait(false);
         MergePlaybackResult(result, playback);
         if (!result.Succeeded)
@@ -182,7 +189,7 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         pendingPlaybackResult = playback;
         UpdateStateFromPlayback(playback);
         WebGlRunExecutionResult apply = await ApplyCurrentFrameAsync(cancellationToken).ConfigureAwait(false);
-        apply.Operation = "step-forward";
+        apply.Operation = operation;
         return apply;
     }
 

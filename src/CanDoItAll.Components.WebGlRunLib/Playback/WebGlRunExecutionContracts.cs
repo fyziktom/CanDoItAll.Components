@@ -13,6 +13,8 @@ public interface IWebGlRunDocumentRunner
     ValueTask<WebGlRunExecutionResult> ApplyCurrentFrameAsync(CancellationToken cancellationToken = default);
 
     ValueTask<WebGlRunExecutionResult> StepForwardAsync(CancellationToken cancellationToken = default);
+
+    ValueTask<WebGlRunExecutionResult> StepBackwardAsync(CancellationToken cancellationToken = default);
 }
 
 public interface IWebGlRunInitialSceneApplier

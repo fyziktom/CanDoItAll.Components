@@ -21,15 +21,20 @@ async function main() {
   assertNoneBarrier(runtime, assertions);
   assertWaitForActiveMotionsBarrier(runtime, assertions);
   assertWaitForObjectMotionsBarrier(runtime, assertions);
+  assertMissingObjectMotionTargetDiagnostics(runtime, assertions);
   assertWaitForRenderIdleBarrier(runtime, assertions);
+  assertRenderIdleIgnoresForeverSymbols(runtime, assertions);
   assertWaitForEventBarrier(runtime, scheduler, assertions);
+  assertManualStepDoesNotLeakAcrossBatches(runtime, assertions);
+  assertBarrierTimeoutDiagnostics(runtime, assertions);
+  assertCancelClearsRunnerAndJournal(runtime, assertions);
   assertDelayedFailureDiagnostics(runtime, assertions);
   assertCommandJournal(runtime, assertions);
   assertSchedulerIntegration(scheduler, assertions);
 
   const proof = {
     generatedAtUtc: new Date().toISOString(),
-    invariantId: "SB03.stage-runner.barrier-diagnostics",
+    invariantId: "SB02.stage-runner.barrier-diagnostics",
     assertions
   };
   fs.writeFileSync(path.join(reportDir, "stage-runner-proof.json"), `${JSON.stringify(proof, null, 2)}\n`, "utf8");
@@ -109,6 +114,20 @@ function assertWaitForObjectMotionsBarrier(runtime, assertions) {
   assertions.push("wait-for-object-motions only blocks selected object ids");
 }
 
+function assertMissingObjectMotionTargetDiagnostics(runtime, assertions) {
+  const state = createState();
+  state.motions.set("motion.other", { objectId: "other" });
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.missing-object", [
+    stage("wait.missing-object", { barrierPolicy: "wait-for-object-motions" }),
+    stage("after.missing-object")
+  ], item => applied.push(item.stageId));
+
+  assertDeepEqual(applied, ["wait.missing-object", "after.missing-object"], "missing object-motion target must not wait on unrelated motions");
+  assertEqual(state.diagnostics.lastStageBarrierWarning, "missing-object-id", "missing object-motion target warning is visible");
+  assertions.push("wait-for-object-motions without object ids warns and does not leak to unrelated motions");
+}
+
 function assertWaitForRenderIdleBarrier(runtime, assertions) {
   const state = createState();
   const applied = [];
@@ -121,6 +140,21 @@ function assertWaitForRenderIdleBarrier(runtime, assertions) {
   runtime.advanceCommandStageRunner(state, 0.016, item => applied.push(item.stageId));
   assertDeepEqual(applied, ["wait.idle", "after.idle"], "render-idle barrier releases after idle frame");
   assertions.push("wait-for-render-idle waits for an idle render turn before next stage");
+}
+
+function assertRenderIdleIgnoresForeverSymbols(runtime, assertions) {
+  const state = createState();
+  state.diagnostics.animatedSymbolCount = 3;
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.symbol-idle", [
+    stage("wait.symbol.idle", { barrierPolicy: "wait-for-render-idle" }),
+    stage("after.symbol.idle")
+  ], item => applied.push(item.stageId));
+
+  assertDeepEqual(applied, ["wait.symbol.idle"], "render-idle barrier waits for a runtime turn even with animated symbols");
+  runtime.advanceCommandStageRunner(state, 0.016, item => applied.push(item.stageId));
+  assertDeepEqual(applied, ["wait.symbol.idle", "after.symbol.idle"], "forever animated symbols do not hold render-idle barrier");
+  assertions.push("wait-for-render-idle is based on motion/stage idleness, not endlessly animating symbols");
 }
 
 function assertWaitForEventBarrier(runtime, scheduler, assertions) {
@@ -142,6 +176,71 @@ function assertWaitForEventBarrier(runtime, scheduler, assertions) {
   runtime.advanceCommandStageRunner(state, 0, item => applied.push(item.stageId));
   assertDeepEqual(applied, ["wait.event", "after.event"], "event signal advances next stage");
   assertions.push("wait-for-event barrier requires explicit runtime event signal");
+}
+
+function assertManualStepDoesNotLeakAcrossBatches(runtime, assertions) {
+  const state = createState();
+  const acceptedWithoutBarrier = runtime.requestCommandStageManualStep(state);
+  assertEqual(acceptedWithoutBarrier, false, "manual step without active barrier is rejected");
+
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.manual.one", [
+    stage("wait.manual.one", { barrierPolicy: "wait-for-event", barrierEventId: "manual-step" }),
+    stage("after.manual.one")
+  ], item => applied.push(item.stageId));
+
+  assertDeepEqual(applied, ["wait.manual.one"], "first manual batch waits");
+  assertEqual(runtime.requestCommandStageManualStep(state), true, "manual step releases active barrier");
+  runtime.advanceCommandStageRunner(state, 0, item => applied.push(item.stageId));
+  assertDeepEqual(applied, ["wait.manual.one", "after.manual.one"], "first manual batch completes");
+
+  runtime.enqueueCommandStages(state, "batch.manual.two", [
+    stage("wait.manual.two", { barrierPolicy: "wait-for-event", barrierEventId: "manual-step" }),
+    stage("after.manual.two")
+  ], item => applied.push(item.stageId));
+
+  assertDeepEqual(applied, ["wait.manual.one", "after.manual.one", "wait.manual.two"], "second manual batch must wait for a fresh signal");
+  assertions.push("manual-step events are scoped to the active batch and cannot leak across unrelated batches");
+}
+
+function assertBarrierTimeoutDiagnostics(runtime, assertions) {
+  const state = createState();
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.timeout", [
+    stage("wait.timeout", {
+      barrierPolicy: "wait-for-event",
+      barrierEventId: "never.signaled",
+      barrierTimeoutSeconds: 0.05
+    }),
+    stage("after.timeout")
+  ], item => applied.push(item.stageId));
+
+  assertDeepEqual(applied, ["wait.timeout"], "timeout barrier applies first stage only");
+  runtime.advanceCommandStageRunner(state, 0.04, item => applied.push(item.stageId));
+  assertDeepEqual(applied, ["wait.timeout"], "timeout barrier holds before timeout");
+  runtime.advanceCommandStageRunner(state, 0.02, item => applied.push(item.stageId));
+  assertDeepEqual(applied, ["wait.timeout", "after.timeout"], "timeout barrier releases with diagnostics after timeout");
+  assertEqual(state.diagnostics.commandStageBarrierTimedOut, true, "timeout diagnostic remains visible");
+  assertEqual(state.diagnostics.lastStageBarrierWarning, "timeout:wait.timeout", "timeout warning identifies stage");
+  assertions.push("barrier timeout diagnostics release stuck barriers with explicit warning state");
+}
+
+function assertCancelClearsRunnerAndJournal(runtime, assertions) {
+  const state = createState({ maxCommandStageJournalEntries: 20 });
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.cancel", [
+    stage("wait.cancel", { barrierPolicy: "wait-for-event", barrierEventId: "cancel.ready" }),
+    stage("after.cancel")
+  ], item => applied.push(item.stageId));
+
+  assertEqual(state.diagnostics.commandStageJournalCount > 0, true, "journal has pre-cancel entries");
+  runtime.cancelCommandStageRunner(state, "audit cancel");
+  assertEqual(state.diagnostics.queuedCommandStageCount, 0, "cancel clears queued stages");
+  assertEqual(state.diagnostics.commandStageBarrierPolicy, "", "cancel clears active barrier");
+  assertEqual(state.diagnostics.commandStageResultLog.length, 0, "cancel clears result log");
+  assertEqual(state.diagnostics.commandStageJournalCount, 1, "cancel resets journal to cancellation entry");
+  assertEqual(state.diagnostics.commandStageRecentJournalEntries[0].status, "cancelled", "cancel journal entry remains");
+  assertions.push("cancel clears queue, active barrier, result log, and stale journal state");
 }
 
 function assertDelayedFailureDiagnostics(runtime, assertions) {
@@ -289,6 +388,7 @@ function stage(stageId, options = {}) {
     barrierPolicy: options.barrierPolicy || "",
     barrierObjectIds: options.barrierObjectIds || [],
     barrierEventId: options.barrierEventId || "",
+    barrierTimeoutSeconds: options.barrierTimeoutSeconds || 0,
     patches: [],
     motions: options.motions || []
   };
