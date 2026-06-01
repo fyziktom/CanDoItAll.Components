@@ -1,0 +1,131 @@
+﻿== Forbidden dependency scan: WebGlBridge production source -> SimpleAccounts/Ledger ==
+== WebGlBridge project references ==
+Project reference(s)
+--------------------
+..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj
+..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\..\..\..\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj
+== Simulation.Abstractions project references ==
+There are no Project to Project references in project src/CanDoItAll.Economy.Simulation.Abstractions/CanDoItAll.Economy.Simulation.Abstractions.csproj.
+== Simulation.Visualization project references ==
+Project reference(s)
+--------------------
+..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj
+== SimulationSandbox joined composition source scan ==
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:1:<Project Sdk="Microsoft.NET.Sdk">
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:8:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:9:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.SimpleAccounts\CanDoItAll.Economy.Simulation.SimpleAccounts.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:10:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:11:    <ProjectReference Include="..\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj" />
+src/CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:13:</Project>
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:3:using CanDoItAll.Economy.Simulation.Visualization;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:4:using CanDoItAll.Economy.Simulation.WebGlBridge;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:8:public sealed class EconomySimulationSandboxSessionService(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:10:    ISimulationSnapshotAnalysisService? analysisService = null) : IEconomySimulationSandboxSessionService
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:13:    private readonly ISimulationSnapshotAnalysisService analysisService = analysisService ?? new SimulationSnapshotAnalysisService();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:15:    public EconomySimulationSandboxSession Load(string experimentJsonPath, EconomyWebGlProjectionOptions? options = null)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:18:        return Project(new()
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:20:            SessionId = $"session.{Path.GetFileNameWithoutExtension(experimentJsonPath)}",
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:26:    public EconomySimulationSandboxSession Project(EconomySimulationSandboxSession session)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:31:        EconomySimulationSandboxProjection projection = workflow.Project(session.ExperimentJsonPath, session.Options);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:36:        session.Snapshots = [.. projection.Snapshots];
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:38:        session.IsProjected = true;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:39:        session.SessionId = string.IsNullOrWhiteSpace(session.Input.ExperimentInputPack.ExperimentId)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:40:            ? session.SessionId
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:50:    public EconomySimulationSandboxSession Step(EconomySimulationSandboxSession session)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:61:    public EconomySimulationSandboxSession Seek(EconomySimulationSandboxSession session, int stepIndex)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:72:            throw new InvalidOperationException($"Simulation step '{stepIndex}' is not available in session '{session.SessionId}'.");
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:79:    public EconomySimulationSandboxSession Pause(EconomySimulationSandboxSession session)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:86:    public EconomySimulationSandboxSession Resume(EconomySimulationSandboxSession session)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:93:    public SimulationRunSnapshot Snapshot(EconomySimulationSandboxSession session)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:96:        SimulationRunSnapshot snapshot = session.Snapshots
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:99:        session.CurrentSnapshot = snapshot;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:103:    public SimulationSnapshotAnalysisReport Analyze(EconomySimulationSandboxSession session, string question = "")
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:106:        SimulationSnapshotAnalysisReport analysis = analysisService.Analyze(Snapshot(session), question);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:111:    private static EconomySimulationSandboxSession RefreshCurrentViews(EconomySimulationSandboxSession session)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:116:        session.CurrentSnapshot = session.Snapshots.FirstOrDefault(snapshot => snapshot.StepIndex == session.CurrentStepIndex);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:123:    private static EconomyWebGlProjectionOptions CloneOptions(EconomyWebGlProjectionOptions options)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:3:using CanDoItAll.Economy.Simulation.SimpleAccounts;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:4:using CanDoItAll.Economy.Simulation.Visualization;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:5:using CanDoItAll.Economy.Simulation.WebGlBridge;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:58:        if (registry.Find(SimpleAccountsEconomySimulationBackend.BackendId) is null)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:60:            registry.Register(new SimpleAccountsEconomySimulationBackend());
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:78:        => new EconomySimulationBackendRegistry([backend ?? new SimpleAccountsEconomySimulationBackend()]);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:88:            SimpleAccountsEconomySimulationBackend.BackendId);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:94:public sealed class SimpleAccountsEconomySimulationBackend(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:138:public sealed class EconomyVisualizationPipeline(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:139:    IEconomyVisualFrameMapper? frameMapper = null) : IEconomyVisualizationPipeline
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:153:public sealed class EconomyWebGlProjectionPipeline(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:154:    IEconomyWebGlRunProjector? projector = null,
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:155:    EconomyWebGlRunValidator? validator = null) : IEconomyWebGlProjectionPipeline
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:157:    private readonly IEconomyWebGlRunProjector projector = projector ?? new EconomyWebGlRunProjector();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:158:    private readonly EconomyWebGlRunValidator validator = validator ?? new();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:160:    public EconomyWebGlProjectionPipelineResult Project(EconomyWebGlProjectionPipelineRequest request)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:163:        var input = new EconomyWebGlRunInput
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:177:        WebGlRunDocument document = projector.Project(input, request.Options);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:186:public sealed class EconomySnapshotPipeline(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:187:    ISimulationSnapshotBuilder? snapshotBuilder = null) : IEconomySnapshotPipeline
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:189:    private readonly ISimulationSnapshotBuilder snapshotBuilder = snapshotBuilder ?? new SimulationSnapshotBuilder();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:190:    private readonly EconomyWebGlSnapshotVisualStateBuilder visualStateBuilder = new();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:192:    public EconomySnapshotPipelineResult Build(EconomySnapshotPipelineRequest request)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:195:        var result = new EconomySnapshotPipelineResult();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:201:            SimulationSnapshotBuildResult snapshot = snapshotBuilder.Build(new()
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:203:                SnapshotId = snapshotId,
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:227:                result.Snapshots.Add(snapshot.Snapshot);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:265:    private SimulationSnapshotVisualState? BuildVisualState(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:266:        EconomySnapshotPipelineRequest request,
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:276:        WebGlRunFrame? runFrame = request.RunDocument.Timeline.Frames.FirstOrDefault(item => item.Index == frame.Clock.StepIndex);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:279:            Snapshot = new() { SnapshotId = snapshotId },
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:2:using CanDoItAll.Economy.Simulation.Visualization;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:3:using CanDoItAll.Economy.Simulation.WebGlBridge;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:10:    IEconomyVisualizationPipeline? visualizationPipeline = null,
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:11:    IEconomyWebGlProjectionPipeline? webGlProjectionPipeline = null,
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:12:    IEconomySnapshotPipeline? snapshotPipeline = null) : IEconomySimulationSandboxWorkflow
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:16:    private readonly IEconomyVisualizationPipeline visualizationPipeline = visualizationPipeline ?? new EconomyVisualizationPipeline();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:17:    private readonly IEconomyWebGlProjectionPipeline webGlProjectionPipeline = webGlProjectionPipeline ?? new EconomyWebGlProjectionPipeline();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:18:    private readonly IEconomySnapshotPipeline snapshotPipeline = snapshotPipeline ?? new EconomySnapshotPipeline();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:20:    public EconomySimulationSandboxProjection Project(string experimentJsonPath, EconomyWebGlProjectionOptions? options = null)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:44:        List<EconomyVisualFrame> visualFrames = [.. visualizationPipeline.Build(backend)];
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:45:        EconomyWebGlProjectionPipelineResult projection = webGlProjectionPipeline.Project(new()
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:52:        EconomySnapshotPipelineResult snapshots = snapshotPipeline.Build(new()
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:70:            Snapshots = snapshots.Snapshots,
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:1:using CanDoItAll.Components.WebGlRunLib;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:3:using CanDoItAll.Economy.Simulation.Visualization;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:4:using CanDoItAll.Economy.Simulation.WebGlBridge;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:10:    EconomySimulationSandboxProjection Project(string experimentJsonPath, EconomyWebGlProjectionOptions? options = null);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:13:public interface IEconomySimulationSandboxSessionService
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:15:    EconomySimulationSandboxSession Load(string experimentJsonPath, EconomyWebGlProjectionOptions? options = null);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:17:    EconomySimulationSandboxSession Project(EconomySimulationSandboxSession session);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:19:    EconomySimulationSandboxSession Step(EconomySimulationSandboxSession session);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:21:    EconomySimulationSandboxSession Seek(EconomySimulationSandboxSession session, int stepIndex);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:23:    EconomySimulationSandboxSession Pause(EconomySimulationSandboxSession session);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:25:    EconomySimulationSandboxSession Resume(EconomySimulationSandboxSession session);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:27:    SimulationRunSnapshot Snapshot(EconomySimulationSandboxSession session);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:29:    SimulationSnapshotAnalysisReport Analyze(EconomySimulationSandboxSession session, string question = "");
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:53:public interface IEconomyVisualizationPipeline
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:58:public interface IEconomyWebGlProjectionPipeline
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:60:    EconomyWebGlProjectionPipelineResult Project(EconomyWebGlProjectionPipelineRequest request);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:63:public interface IEconomySnapshotPipeline
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:65:    EconomySnapshotPipelineResult Build(EconomySnapshotPipelineRequest request);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:79:public sealed class EconomyWebGlProjectionPipelineRequest
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:84:    public EconomyWebGlProjectionOptions Options { get; set; } = new();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:87:public sealed class EconomyWebGlProjectionPipelineResult
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:89:    public WebGlRunDocument RunDocument { get; set; } = new();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:93:public sealed class EconomySnapshotPipelineRequest
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:98:    public WebGlRunDocument? RunDocument { get; set; }
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:101:public sealed class EconomySnapshotPipelineResult
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:103:    public List<SimulationRunSnapshot> Snapshots { get; set; } = [];
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:107:public sealed class EconomySimulationSandboxProjection
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:112:    public WebGlRunDocument RunDocument { get; set; } = new();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:113:    public List<SimulationRunSnapshot> Snapshots { get; set; } = [];
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:118:public sealed class EconomySimulationSandboxSession
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:120:    public string SessionId { get; set; } = string.Empty;
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:122:    public EconomyWebGlProjectionOptions Options { get; set; } = new();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:126:    public WebGlRunDocument RunDocument { get; set; } = new();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:127:    public List<SimulationRunSnapshot> Snapshots { get; set; } = [];
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:132:    public WebGlRunFrame? CurrentRunFrame { get; set; }
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:133:    public SimulationRunSnapshot? CurrentSnapshot { get; set; }
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:134:    public SimulationSnapshotAnalysisReport? CurrentAnalysis { get; set; }
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:137:    public bool IsProjected { get; set; }

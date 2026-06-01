@@ -33,17 +33,18 @@ public sealed class WebGlRunDocumentProvenanceValidationResult
 
 public sealed class WebGlRunDocumentProvenanceValidator
 {
-    private static readonly string[] DomainSpecificTerms =
-    [
-        "economy",
-        "ledger",
-        "account",
-        "water",
-        "well",
-        "farmer",
-        "tax",
-        "market"
-    ];
+    private readonly string[] disallowedTerms;
+
+    public WebGlRunDocumentProvenanceValidator()
+        : this([])
+    {
+    }
+
+    public WebGlRunDocumentProvenanceValidator(IEnumerable<string> disallowedTerms)
+    {
+        ArgumentNullException.ThrowIfNull(disallowedTerms);
+        this.disallowedTerms = [.. disallowedTerms.Where(static term => !string.IsNullOrWhiteSpace(term)).Distinct(StringComparer.OrdinalIgnoreCase)];
+    }
 
     public WebGlRunDocumentProvenanceValidationResult Validate(WebGlRunDocument document)
     {
@@ -77,7 +78,7 @@ public sealed class WebGlRunDocumentProvenanceValidator
         return result;
     }
 
-    private static void CheckMetadata(string scope, IReadOnlyDictionary<string, string> metadata, WebGlRunDocumentProvenanceValidationResult result)
+    private void CheckMetadata(string scope, IReadOnlyDictionary<string, string> metadata, WebGlRunDocumentProvenanceValidationResult result)
     {
         foreach (KeyValuePair<string, string> item in metadata)
         {
@@ -86,14 +87,14 @@ public sealed class WebGlRunDocumentProvenanceValidator
         }
     }
 
-    private static void CheckValue(string path, string value, WebGlRunDocumentProvenanceValidationResult result)
+    private void CheckValue(string path, string value, WebGlRunDocumentProvenanceValidationResult result)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
             return;
         }
 
-        foreach (string term in DomainSpecificTerms)
+        foreach (string term in disallowedTerms)
         {
             if (value.Contains(term, StringComparison.OrdinalIgnoreCase))
             {

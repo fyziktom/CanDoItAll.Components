@@ -139,7 +139,7 @@ public sealed class WebGlRunActionPlannerTests
     [Fact]
     public void Run_document_provenance_validator_keeps_generic_input_refs_domain_neutral()
     {
-        var validator = new WebGlRunDocumentProvenanceValidator();
+        var validator = new WebGlRunDocumentProvenanceValidator(["water", "well", "tax"]);
         var source = new RunSourceRef
         {
             SourceKind = "simulation-input-pack",

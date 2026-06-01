@@ -1,0 +1,216 @@
+using CanDoItAll.Components.WebGlLib;
+using CanDoItAll.Components.WebGlRunLib;
+
+namespace CanDoItAll.Components.WebGlRunLib.Tests;
+
+public sealed class WebGlRunDocumentRunnerTests
+{
+    [Fact]
+    public async Task Runner_applies_generic_frame_stages_with_traceable_diagnostics()
+    {
+        var applier = new RecordingFrameApplier();
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateRunDocument();
+
+        WebGlRunExecutionResult load = await runner.LoadAsync(document);
+        WebGlRunExecutionResult seek = await runner.SeekAsync(1);
+        WebGlRunExecutionResult apply = await runner.ApplyCurrentFrameAsync();
+
+        Assert.True(load.Succeeded);
+        Assert.True(seek.Succeeded);
+        Assert.True(apply.Succeeded);
+        Assert.True(runner.State.InitialSceneLoaded);
+        Assert.Equal(1, runner.State.CurrentFrameIndex);
+        Assert.Equal(["stage.move", "stage.pose", "stage.return"], apply.AppliedStageIds.ToArray());
+        Assert.Equal(["stage.move", "stage.pose", "stage.return"], runner.State.CompletedStageIds.ToArray());
+        Assert.Empty(runner.State.PendingStageIds);
+        Assert.Equal("run-frame:1", apply.Diagnostics["commandBatchId"]);
+        Assert.Equal("3", apply.Diagnostics["stageCount"]);
+        Assert.Equal("0", apply.Diagnostics["droppedDuplicateMotionCount"]);
+        Assert.Equal("source.frame.1", apply.Diagnostics["sourceFrameId"]);
+        Assert.Equal("source.stage.move,source.stage.pose,source.stage.return", apply.Diagnostics["sourceStageIds"]);
+
+        WebGlRunFrameApplyResult appliedFrame = Assert.Single(applier.AppliedFrames);
+        Assert.Equal(1, appliedFrame.FrameIndex);
+        Assert.Equal(["stage.move", "stage.pose", "stage.return"], appliedFrame.CommandBatch.Stages.Select(stage => stage.StageId).ToArray());
+        Assert.Equal([1, 0, 1], appliedFrame.CommandBatch.Stages.Select(stage => stage.Motions.Count).ToArray());
+        Assert.Equal(WebGlSceneStageBarrierPolicies.WaitForObjectMotions, appliedFrame.CommandBatch.Stages[0].BarrierPolicy);
+        Assert.Equal(WebGlSceneStageBarrierPolicies.WaitSeconds, appliedFrame.CommandBatch.Stages[1].BarrierPolicy);
+        Assert.Equal(WebGlSceneStageBarrierPolicies.WaitForObjectMotions, appliedFrame.CommandBatch.Stages[2].BarrierPolicy);
+        Assert.All(appliedFrame.CommandBatch.Stages, stage => Assert.Equal(WebGlSceneBatchingPolicies.PreserveOrder, stage.BatchingPolicy));
+    }
+
+    [Fact]
+    public async Task Runner_reports_unresolved_runtime_targets_without_applying_frame()
+    {
+        var applier = new RecordingFrameApplier();
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateRunDocument();
+        document.Timeline.Frames[1].Stages[0].Motions[0].ObjectId = "missing-actor";
+
+        await runner.LoadAsync(document);
+        await runner.SeekAsync(1);
+        WebGlRunExecutionResult apply = await runner.ApplyCurrentFrameAsync();
+
+        Assert.False(apply.Succeeded);
+        Assert.Contains(apply.Errors, error => error.Contains("missing-actor", StringComparison.Ordinal));
+        Assert.Equal("1", apply.Diagnostics["failedMotionCount"]);
+        Assert.Empty(applier.AppliedFrames);
+        Assert.Equal(["stage.move"], runner.State.FailedStageIds.ToArray());
+    }
+
+    private static WebGlRunDocument CreateRunDocument()
+        => new()
+        {
+            RunId = new("run.generic"),
+            InitialScene = new WebGlSceneDocument
+            {
+                Scene = new WebGlSceneModel
+                {
+                    SceneId = "scene.generic",
+                    Objects =
+                    {
+                        new WebGlSceneObject { Id = "actor", Kind = "actor", Position = WebGlVector3.Zero },
+                        new WebGlSceneObject { Id = "target", Kind = "target", Position = new WebGlVector3(4, 0, 0) }
+                    }
+                }
+            },
+            Timeline =
+            {
+                FrameRate = 1,
+                Frames =
+                {
+                    new WebGlRunFrame
+                    {
+                        Index = 0,
+                        TimeSeconds = 0,
+                        Metadata = { ["sourceFrameId"] = "source.frame.0" },
+                        Stages =
+                        {
+                            new WebGlRunActionStage
+                            {
+                                StageId = "stage.bootstrap",
+                                StageIndex = 0,
+                                SequenceId = "action.bootstrap",
+                                Metadata =
+                                {
+                                    ["actionId"] = "action.bootstrap",
+                                    ["sourceStageId"] = "source.stage.bootstrap"
+                                },
+                                ScenePatches =
+                                {
+                                    new WebGlRunFramePatch
+                                    {
+                                        Id = "patch.bootstrap",
+                                        Patch = new WebGlScenePatch { SceneId = "scene.generic" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new WebGlRunFrame
+                    {
+                        Index = 1,
+                        TimeSeconds = 1,
+                        Metadata = { ["sourceFrameId"] = "source.frame.1" },
+                        Stages =
+                        {
+                            new WebGlRunActionStage
+                            {
+                                StageId = "stage.move",
+                                StageIndex = 0,
+                                SequenceId = "action.move",
+                                BarrierPolicy = WebGlSceneStageBarrierPolicies.WaitForObjectMotions,
+                                BarrierObjectIds = { "actor" },
+                                Metadata =
+                                {
+                                    ["actionId"] = "action.move",
+                                    ["sourceStageId"] = "source.stage.move"
+                                },
+                                Motions =
+                                {
+                                    new WebGlObjectMotionCommand
+                                    {
+                                        MotionId = "motion.actor.to.target",
+                                        ObjectId = "actor",
+                                        TargetPosition = new WebGlVector3(4, 0, 0),
+                                        DurationSeconds = 0.25,
+                                        QueueMode = WebGlMotionQueueModes.Append,
+                                        Metadata = { ["actionId"] = "action.move" }
+                                    }
+                                }
+                            },
+                            new WebGlRunActionStage
+                            {
+                                StageId = "stage.pose",
+                                StageIndex = 1,
+                                SequenceId = "action.pose",
+                                WaitSeconds = 0.25,
+                                BarrierPolicy = WebGlSceneStageBarrierPolicies.WaitSeconds,
+                                Metadata =
+                                {
+                                    ["actionId"] = "action.pose",
+                                    ["sourceStageId"] = "source.stage.pose"
+                                },
+                                ScenePatches =
+                                {
+                                    new WebGlRunFramePatch
+                                    {
+                                        Id = "patch.pose",
+                                        Patch = new WebGlScenePatch
+                                        {
+                                            SceneId = "scene.generic",
+                                            ObjectPatches =
+                                            {
+                                                new WebGlSceneObjectPatch
+                                                {
+                                                    ObjectId = "actor",
+                                                    Metadata = new Dictionary<string, string> { ["poseKey"] = "active" }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            new WebGlRunActionStage
+                            {
+                                StageId = "stage.return",
+                                StageIndex = 2,
+                                SequenceId = "action.return",
+                                BarrierPolicy = WebGlSceneStageBarrierPolicies.WaitForObjectMotions,
+                                BarrierObjectIds = { "actor" },
+                                Metadata =
+                                {
+                                    ["actionId"] = "action.return",
+                                    ["sourceStageId"] = "source.stage.return"
+                                },
+                                Motions =
+                                {
+                                    new WebGlObjectMotionCommand
+                                    {
+                                        MotionId = "motion.actor.home",
+                                        ObjectId = "actor",
+                                        TargetPosition = WebGlVector3.Zero,
+                                        DurationSeconds = 0.25,
+                                        QueueMode = WebGlMotionQueueModes.Append,
+                                        Metadata = { ["actionId"] = "action.return" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+    private sealed class RecordingFrameApplier : IWebGlRunFrameApplier
+    {
+        public List<WebGlRunFrameApplyResult> AppliedFrames { get; } = [];
+
+        public ValueTask ApplyAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken = default)
+        {
+            AppliedFrames.Add(frame);
+            return ValueTask.CompletedTask;
+        }
+    }
+}

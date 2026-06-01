@@ -2,8 +2,17 @@ using CanDoItAll.Components.WebGlLib;
 
 namespace CanDoItAll.Components.WebGlRunLib;
 
-public sealed class WebGlRunSceneViewFrameApplier(WebGlSceneView sceneView, WebGlRunDocument document) : IWebGlRunFrameApplier
+public sealed class WebGlRunSceneViewFrameApplier(WebGlSceneView sceneView, WebGlRunDocument document) :
+    IWebGlRunFrameApplier,
+    IWebGlRunInitialSceneApplier
 {
+    public async ValueTask ApplyInitialSceneAsync(WebGlSceneDocument sceneDocument, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sceneDocument);
+        cancellationToken.ThrowIfCancellationRequested();
+        await sceneView.ImportSceneAsync(sceneDocument.Scene).ConfigureAwait(false);
+    }
+
     public async ValueTask ApplyAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(frame);
@@ -18,7 +27,7 @@ public sealed class WebGlRunSceneViewFrameApplier(WebGlSceneView sceneView, WebG
 
         if (result.RequiresSceneReset)
         {
-            await sceneView.ImportSceneAsync(document.InitialScene.Scene).ConfigureAwait(false);
+            await ApplyInitialSceneAsync(document.InitialScene, cancellationToken).ConfigureAwait(false);
         }
 
         foreach (WebGlRunFrame frame in result.FramesToApply)
