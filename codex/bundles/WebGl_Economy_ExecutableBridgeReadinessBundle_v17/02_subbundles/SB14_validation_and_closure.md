@@ -1,5 +1,9 @@
 # SB14 — Validation and closure
 
+## Goal
+
+Run the final cross-repo validation commands, verify bundle proof completeness, and close the execution report without hiding unresolved gaps.
+
 ## Required commands
 
 Run and capture transcripts:

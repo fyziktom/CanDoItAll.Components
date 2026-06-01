@@ -12,7 +12,10 @@ async function main() {
   const assertions = [];
 
   assertOrderedSequence(runtime, assertions);
+  assertParallelObjects(runtime, assertions);
   assertQueuePolicies(runtime, assertions);
+  assertCancellationAndClear(runtime, assertions);
+  assertDeterministicMotionIds(runtime, assertions);
   assertEdgeCases(runtime, assertions);
 
   const proof = {
@@ -21,7 +24,7 @@ async function main() {
     assertions
   };
   fs.writeFileSync(path.join(reportDir, "motion-queue-proof.json"), `${JSON.stringify(proof, null, 2)}\n`, "utf8");
-  console.log("Motion queue audit passed for ordered sequence, queue policies, diagnostics, and edge cases.");
+  console.log("Motion queue audit passed for ordered sequence, parallel objects, queue policies, cancellation, deterministic ids, diagnostics, and edge cases.");
 }
 
 function assertOrderedSequence(runtime, assertions) {
@@ -78,6 +81,69 @@ function assertQueuePolicies(runtime, assertions) {
   assertions.push("reject-if-active refuses to change active or queued object motion state");
 }
 
+function assertParallelObjects(runtime, assertions) {
+  const state = createState();
+  state.objectLookup.set("other", {
+    position: { x: 10, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 1, y: 1, z: 1 }
+  });
+
+  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append", "actor"));
+  runtime.enqueueMotionDetailed(state, motion("other.active", 14, "append", "other"));
+  assertDeepEqual([...state.motions.keys()].sort(), ["actor.active", "other.active"], "different objects run active motions in parallel");
+
+  runtime.advanceMotions(state, 1);
+  assertEqual(state.objectLookup.get("actor").position.x, 4, "actor parallel motion completes");
+  assertEqual(state.objectLookup.get("other").position.x, 14, "other parallel motion completes");
+  assertions.push("different objects move in parallel without queueing each other");
+}
+
+function assertCancellationAndClear(runtime, assertions) {
+  let state = createState();
+  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
+  const cancelQueued = runtime.cancelMotionDetailed(state, "actor.queued");
+  assertEqual(cancelQueued.success, true, "queued motion cancellation succeeds");
+  assertDeepEqual([...state.motions.keys()], ["actor.active"], "queued motion cancellation preserves active motion");
+  assertEqual(state.motionQueuesByObjectId.has("actor"), false, "queued motion cancellation removes queue");
+  assertions.push("cancelling a queued motion does not cancel active motion");
+
+  state = createState();
+  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append"));
+  runtime.enqueueMotionDetailed(state, motion("actor.queued", 8, "append"));
+  const clearResult = { affectedObjectIds: [] };
+  runtime.clearObjectMotionState(state, "actor", clearResult);
+  assertEqual(state.motions.size, 0, "clear object cancels active motion");
+  assertEqual(state.motionQueuesByObjectId.has("actor"), false, "clear object cancels queued motions");
+  assertEqual(state.diagnostics.cancelledMotionCount, 2, "clear object counts active and queued cancellations");
+  assertions.push("clear object cancels active and queued motions");
+
+  state = createState();
+  state.objectLookup.set("other", {
+    position: { x: 10, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 1, y: 1, z: 1 }
+  });
+  runtime.enqueueMotionDetailed(state, motion("actor.active", 4, "append", "actor"));
+  runtime.enqueueMotionDetailed(state, motion("other.active", 14, "append", "other"));
+  runtime.enqueueMotionDetailed(state, motion("other.queued", 18, "append", "other"));
+  const clearAll = runtime.clearMotionsDetailed(state);
+  assertDeepEqual(clearAll.affectedObjectIds.sort(), ["actor", "other"], "clear-all reports active and queued object ids");
+  assertEqual(state.diagnostics.cancelledMotionCount, 3, "clear-all counts active and queued motions");
+  assertions.push("clear-all reports affected objects from active and queued motions");
+}
+
+function assertDeterministicMotionIds(runtime, assertions) {
+  const first = createState();
+  const second = createState();
+  const firstResult = runtime.enqueueMotionDetailed(first, motion("", 4, "append"));
+  const secondResult = runtime.enqueueMotionDetailed(second, motion("", 4, "append"));
+  assertEqual(firstResult.commandId, "actor:motion:1", "first deterministic motion id");
+  assertEqual(secondResult.commandId, "actor:motion:1", "deterministic motion id repeats for equivalent state");
+  assertions.push("deterministic mode generates stable motion ids for equivalent runs");
+}
+
 function assertEdgeCases(runtime, assertions) {
   let state = createState();
   runtime.enqueueMotionDetailed(state, {
@@ -105,7 +171,7 @@ function writeAuditModule() {
   const modulePath = path.join(reportDir, "motion-queue-runtime-audit.mjs");
   fs.writeFileSync(
     modulePath,
-    `${runtimeStubs()}\n${queueSource}\n${cancellationSource}\n${motionSource}\nexport { enqueueMotionDetailed, cancelMotionDetailed, clearObjectMotionState, advanceMotions };\n`,
+    `${runtimeStubs()}\n${queueSource}\n${cancellationSource}\n${motionSource}\nexport { enqueueMotionDetailed, cancelMotionDetailed, clearMotionsDetailed, clearObjectMotionState, advanceMotions };\n`,
     "utf8");
   return modulePath;
 }

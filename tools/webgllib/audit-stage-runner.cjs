@@ -23,6 +23,7 @@ async function main() {
   assertWaitForObjectMotionsBarrier(runtime, assertions);
   assertWaitForRenderIdleBarrier(runtime, assertions);
   assertWaitForEventBarrier(runtime, scheduler, assertions);
+  assertDelayedFailureDiagnostics(runtime, assertions);
   assertCommandJournal(runtime, assertions);
   assertSchedulerIntegration(scheduler, assertions);
 
@@ -141,6 +142,45 @@ function assertWaitForEventBarrier(runtime, scheduler, assertions) {
   runtime.advanceCommandStageRunner(state, 0, item => applied.push(item.stageId));
   assertDeepEqual(applied, ["wait.event", "after.event"], "event signal advances next stage");
   assertions.push("wait-for-event barrier requires explicit runtime event signal");
+}
+
+function assertDelayedFailureDiagnostics(runtime, assertions) {
+  const state = createState({ maxCommandStageJournalEntries: 20 });
+  const applied = [];
+  runtime.enqueueCommandStages(state, "batch.failure", [
+    stage("delayed.before.failure", { waitSeconds: 0.1 }),
+    stage("delayed.failure")
+  ], item => {
+    applied.push(item.stageId);
+    if (item.stageId === "delayed.failure") {
+      throw new Error("intentional delayed failure");
+    }
+  });
+
+  assertDeepEqual(applied, ["delayed.before.failure"], "failure stage waits behind delayed stage barrier");
+  runtime.advanceCommandStageRunner(state, 0.11, item => {
+    applied.push(item.stageId);
+    if (item.stageId === "delayed.failure") {
+      throw new Error("intentional delayed failure");
+    }
+  });
+
+  assertEqual(state.diagnostics.failedCommandStageCount, 1, "failed delayed stage count is visible");
+  assertDeepEqual(state.diagnostics.failedCommandStageIds, ["delayed.failure"], "failed delayed stage id remains visible");
+  assertEqual(state.diagnostics.lastStageError, "intentional delayed failure", "last delayed stage error is retained");
+  assertEqual(
+    state.diagnostics.commandStageRecentJournalEntries.some(entry => entry.stageId === "delayed.failure" && entry.status === "failed"),
+    true,
+    "failed delayed stage appears in recent journal immediately after failure");
+
+  runtime.enqueueCommandStages(state, "batch.after.failure", [
+    ...Array.from({ length: 25 }, (_, index) => stage(`after.failure.${index}`))
+  ], item => applied.push(item.stageId));
+  runtime.advanceCommandStageRunner(state, 0, item => applied.push(item.stageId));
+  assertEqual(state.diagnostics.commandStageJournalCount, 20, "bounded journal trims old entries after later stages");
+  assertEqual(state.diagnostics.commandStageJournalDroppedCount > 0, true, "bounded journal reports dropped entries");
+  assertDeepEqual(state.diagnostics.failedCommandStageIds, ["delayed.failure"], "bounded journal trimming does not lose failure state");
+  assertions.push("failed delayed stage remains in diagnostics while bounded journal trims older entries");
 }
 
 function assertCommandJournal(runtime, assertions) {

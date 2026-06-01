@@ -77,9 +77,17 @@ export function clearMotions(state, objectId) {
 export function clearMotionsDetailed(state, objectId) {
     const result = createCommandResult(state, "motion-clear", "");
     if (!objectId) {
-        result.affectedObjectIds.push(...Array.from(state.motions.values()).map(motion => motion.objectId));
+        const affectedObjectIds = new Set(Array.from(state.motions.values()).map(motion => motion.objectId));
+        let cancelledCount = state.motions.size;
+        for (const [queuedObjectId, queue] of state.motionQueuesByObjectId || []) {
+            affectedObjectIds.add(queuedObjectId);
+            cancelledCount += queue.length;
+        }
+
+        result.affectedObjectIds.push(...affectedObjectIds);
         state.motions.clear();
         state.motionQueuesByObjectId?.clear();
+        state.diagnostics.cancelledMotionCount = (state.diagnostics.cancelledMotionCount || 0) + cancelledCount;
         syncMotionQueueDiagnostics(state);
         state.scheduleRender("motion-clear");
         return completeCommandResult(state, result);

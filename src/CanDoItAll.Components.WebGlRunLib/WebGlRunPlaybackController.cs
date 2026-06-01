@@ -1,8 +1,11 @@
+using CanDoItAll.Components.WebGlLib;
+
 namespace CanDoItAll.Components.WebGlRunLib;
 
 public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
 {
     private readonly IWebGlRunFrameSource frameSource;
+    private readonly WebGlSceneDocument? initialScene;
     private readonly WebGlRunTimeline? timeline;
     private readonly WebGlRunTimelineValidator timelineValidator;
     private readonly WebGlRunFrameResolver frameResolver;
@@ -14,6 +17,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
             new WebGlRunDocumentFrameSource(document),
             new WebGlRunTimelineValidator(),
             new WebGlRunFrameResolver(),
+            document.InitialScene,
             document.Timeline,
             document.RunId,
             ExtractRunSourceProvenance(document.Metadata))
@@ -24,17 +28,20 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         IWebGlRunFrameSource frameSource,
         WebGlRunTimelineValidator timelineValidator,
         WebGlRunFrameResolver? frameResolver = null,
+        WebGlSceneDocument? initialScene = null,
         WebGlRunTimeline? timeline = null,
         WebGlRunId? runId = null,
         IReadOnlyDictionary<string, string>? runSourceProvenance = null)
     {
         this.frameSource = frameSource;
+        this.initialScene = initialScene;
         this.timelineValidator = timelineValidator;
         this.frameResolver = frameResolver ?? new WebGlRunFrameResolver();
         this.timeline = timeline;
         this.runSourceProvenance = new Dictionary<string, string>(runSourceProvenance ?? new Dictionary<string, string>(), StringComparer.Ordinal);
         maxFrameIndex = timeline?.Frames.Count > 0 ? timeline.Frames.Max(static item => item.Index) : null;
         State.RunId = runId ?? new WebGlRunId(string.Empty);
+        State.InitialSceneId = initialScene?.Scene.SceneId ?? string.Empty;
     }
 
     public WebGlRunPlaybackState State { get; } = new();
@@ -76,12 +83,14 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         {
             State.IsPlaying = false;
             State.CurrentFrameIndex = 0;
+            State.InitialSceneLoaded = true;
             result.RequiresSceneReset = true;
         }
 
         var targetFrameIndex = ResolveTargetFrameIndex(command);
         result.TargetFrameIndex = targetFrameIndex;
         State.IsPlaying = string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
+                          string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Resume, StringComparison.OrdinalIgnoreCase) ||
                           State.IsPlaying;
 
         var frame = await frameSource.GetFrameAsync(State.RunId, targetFrameIndex, cancellationToken).ConfigureAwait(false);
@@ -105,8 +114,34 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         result.CurrentFrame = frame;
         result.FramesApplied = result.FramesToApply.Count;
         result.StagesQueued = result.FramesToApply.Sum(static item => item.Stages.Count);
+        UpdateRuntimeState(frame, result.StagesQueued);
         return result;
     }
+
+    public WebGlRunRuntimeSnapshot ExportRuntimeSnapshot()
+        => new()
+        {
+            RunId = State.RunId.Value,
+            InitialSceneId = State.InitialSceneId,
+            InitialObjectCount = initialScene?.Scene.Objects.Count ?? 0,
+            InitialLinkCount = initialScene?.Scene.Links.Count ?? 0,
+            CurrentFrameIndex = State.CurrentFrameIndex,
+            CurrentCommandBatchId = State.CurrentCommandBatchId,
+            CurrentStageId = State.CurrentStageId,
+            CurrentStageIds = [.. State.CurrentStageIds],
+            CurrentActionIds = [.. State.CurrentActionIds],
+            QueuedStageCount = State.QueuedStageCount,
+            IsPlaying = State.IsPlaying,
+            PlaybackSpeed = State.PlaybackSpeed,
+            InitialSceneLoaded = State.InitialSceneLoaded,
+            RunSourceProvenance = new Dictionary<string, string>(runSourceProvenance, StringComparer.Ordinal),
+            Diagnostics =
+            {
+                ["maxFrameIndex"] = maxFrameIndex?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "",
+                ["hasTimeline"] = (timeline is not null).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ["frameCount"] = (timeline?.Frames.Count ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture)
+            }
+        };
 
     public async ValueTask<WebGlRunPlaybackResult> PlayToEndAsync(
         IWebGlRunFrameApplier frameApplier,
@@ -186,6 +221,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         }
 
         if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Resume, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Step, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Next, StringComparison.OrdinalIgnoreCase))
         {
@@ -212,5 +248,37 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         return keys
             .Where(metadata.ContainsKey)
             .ToDictionary(static key => key, key => metadata[key], StringComparer.Ordinal);
+    }
+
+    private void UpdateRuntimeState(WebGlRunFrame frame, int queuedStageCount)
+    {
+        State.CurrentCommandBatchId = $"run-frame:{frame.Index.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
+        State.CurrentStageIds = [.. frame.Stages.Select(static stage => stage.StageId).Where(static id => !string.IsNullOrWhiteSpace(id))];
+        State.CurrentStageId = State.CurrentStageIds.FirstOrDefault() ?? string.Empty;
+        State.CurrentActionIds = [.. ResolveCurrentActionIds(frame).Distinct(StringComparer.Ordinal)];
+        State.QueuedStageCount = queuedStageCount;
+    }
+
+    private static IEnumerable<string> ResolveCurrentActionIds(WebGlRunFrame frame)
+    {
+        foreach (WebGlRunActionStage stage in frame.Stages)
+        {
+            foreach (string? value in new[] { stage.SequenceId, stage.ParentActionId, stage.Metadata.GetValueOrDefault("actionId") })
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    yield return value;
+                }
+            }
+
+            foreach (WebGlObjectMotionCommand motion in stage.Motions)
+            {
+                if (motion.Metadata.TryGetValue("actionId", out string? motionActionId) &&
+                    !string.IsNullOrWhiteSpace(motionActionId))
+                {
+                    yield return motionActionId;
+                }
+            }
+        }
     }
 }

@@ -1,8 +1,14 @@
 namespace CanDoItAll.Components.WebGlRunLib;
 
-public sealed class WebGlRunPlaybackState
+public sealed class WebGlRunRuntimeSnapshot
 {
-    public WebGlRunId RunId { get; set; } = new(string.Empty);
+    public string RunId { get; set; } = string.Empty;
+
+    public string InitialSceneId { get; set; } = string.Empty;
+
+    public int InitialObjectCount { get; set; }
+
+    public int InitialLinkCount { get; set; }
 
     public long CurrentFrameIndex { get; set; }
 
@@ -16,11 +22,13 @@ public sealed class WebGlRunPlaybackState
 
     public int QueuedStageCount { get; set; }
 
-    public bool InitialSceneLoaded { get; set; }
-
-    public string InitialSceneId { get; set; } = string.Empty;
-
     public bool IsPlaying { get; set; }
 
     public double PlaybackSpeed { get; set; } = 1.0;
+
+    public bool InitialSceneLoaded { get; set; }
+
+    public Dictionary<string, string> RunSourceProvenance { get; set; } = [];
+
+    public Dictionary<string, string> Diagnostics { get; set; } = [];
 }

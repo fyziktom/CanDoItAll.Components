@@ -1,0 +1,37 @@
+﻿Command label: SB04/source-assertions-and-hashes
+Working directory: 
+C:\repositories\CanDoItAll.Components
+Started: 
+2026-06-01T06:50:17.9046676-04:00
+Source assertions:
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:86: State.InitialSceneLoaded = true;
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:93: string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Resume, StringComparison.OrdinalIgnoreCase) ||
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:117: UpdateRuntimeState(frame, result.StagesQueued);
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:121: public WebGlRunRuntimeSnapshot ExportRuntimeSnapshot()
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:131: CurrentStageIds = [.. State.CurrentStageIds],
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:132: CurrentActionIds = [.. State.CurrentActionIds],
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:136: InitialSceneLoaded = State.InitialSceneLoaded,
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:224: string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Resume, StringComparison.OrdinalIgnoreCase) ||
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:253: private void UpdateRuntimeState(WebGlRunFrame frame, int queuedStageCount)
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:256: State.CurrentStageIds = [.. frame.Stages.Select(static stage => stage.StageId).Where(static id => !string.IsNullOrWhiteSpace(id))];
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:257: State.CurrentStageId = State.CurrentStageIds.FirstOrDefault() ?? string.Empty;
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:258: State.CurrentActionIds = [.. ResolveCurrentActionIds(frame).Distinct(StringComparer.Ordinal)];
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:262: private static IEnumerable<string> ResolveCurrentActionIds(WebGlRunFrame frame)
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:66: public async Task Controller_exports_executable_state_snapshot_for_generic_document()
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:83: var resumed = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Resume });
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:84: var applyResult = WebGlRunFrameApplyResult.FromFrame(resumed.CurrentFrame!);
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:85: var applier = new RecordingFrameApplier();
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:88: Assert.True(resumed.Success);
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:90: Assert.Equal(1, resumed.TargetFrameIndex);
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:91: Assert.Equal("run-frame:1", controller.State.CurrentCommandBatchId);
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:98: var snapshot = controller.ExportRuntimeSnapshot();
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:103: Assert.Equal("run-frame:1", snapshot.CurrentCommandBatchId);
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:245: private sealed class RecordingFrameApplier : IWebGlRunFrameApplier
+Hashes:
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackCommandKinds.cs | before=bad04c8cc74fb54cd5cc4bc56902f4f73bd6add34f34fdad7dd8d78156aec954 | after=420317f0614b90a73b73b832985ee6c03968ec101d9c4c0f3bfc4bb5111f4027
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunPlaybackState.cs | before=b80592b5adaaf66fdc89f399935460494fe7dbaef8e4fca79c9679f062293cf3 | after=ddba4e7a75253221561314a2539752fcf0cc73623f89b23ecf91f4d608f69d83
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunRuntimeSnapshot.cs | before=<new-file> | after=6f2f0752a189eb544513591891581d6956360900d9e8af7eac59eb36b62a01bc
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs | before=43b2a3d8d5612c5d8c729c48dc4342be560277e2c15f79211f7324e388b13660 | after=c3f794a4b0140b8e5988cead7cf2b79abb2203c1762779ca514cb867f268a0f4
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs | before=82f568bea79004be0feaccf1b243f90ad9c984ebc2effde25a2a14fc77421dac | after=4795cc64a8d81e6e3b7376bc1a4c980912fd022dba43932c5585ae5643beb511
+Exit code: 0
+Finished: 2026-06-01T06:50:18.8208367-04:00
