@@ -1,4 +1,7 @@
 import { clonePayload, round, resolveVector3 } from "./02-webgl-scene-core.js";
+import { commitSceneRevision, resolveSceneRevision } from "./34-webgl-scene-revisions.js";
+import { linkEndpointsExist, validatePatchForApply } from "./35-webgl-scene-patch-validation.js";
+import { classifyPatch, recordPatchClassificationDiagnostics } from "./36-webgl-scene-patch-classification.js";
 import { notifyStateChanged } from "./24-webgl-scene-notifications.js";
 import {
     addLinkGroup,
@@ -7,9 +10,10 @@ import {
     removeSceneObjectGroup,
     rebuildScene,
     replaceSceneObjectGroup,
+    syncSceneIndexes,
     updateObjectRuntimeTransform
 } from "./11-webgl-scene-graph.js";
-import { rebuildSymbolsForObject } from "./04-webgl-scene-symbols.js";
+import { rebuildSymbolsForObject, syncSymbolPositionsForObject } from "./04-webgl-scene-symbols.js";
 import { clearObjectMotionState } from "./29-webgl-scene-motion-queues.js";
 import {
     completeCommandResult,
@@ -29,19 +33,18 @@ export function applyPatchDetailed(state, patch) {
         return completeCommandResult(state, failPatch(state, result, "Patch is missing."));
     }
 
-    if (normalized.sceneId && normalized.sceneId !== state.sceneModel.sceneId) {
-        return completeCommandResult(state, failPatch(state, result, `Patch scene '${normalized.sceneId}' does not match '${state.sceneModel.sceneId}'.`));
+    const validation = validatePatchForApply(state, normalized);
+    for (const warning of validation.warnings) {
+        warnCommand(result, warning);
     }
 
-    if (normalized.baseRevision > 0 && normalized.baseRevision !== (state.sceneModel.uiState?.revision || 0)) {
-        const message = `Patch base revision ${normalized.baseRevision} does not match scene revision ${state.sceneModel.uiState?.revision || 0}.`;
-        if (normalized.strictBaseRevision) {
-            return completeCommandResult(state, failPatch(state, result, message));
-        }
-
-        warnCommand(result, message);
+    if (!validation.valid) {
+        result.errors.push(...validation.errors.slice(1));
+        return completeCommandResult(state, failPatch(state, result, validation.errors[0]));
     }
 
+    const classification = classifyPatch(normalized);
+    result.metadata.patchClassification = classification.kind;
     let changed = false;
     for (const objectId of normalized.removeObjectIds) {
         const removed = removeSceneObject(state, objectId, result);
@@ -87,7 +90,7 @@ export function applyPatchDetailed(state, patch) {
     }
 
     for (const link of normalized.addLinks) {
-        if (!validateLinkForAdd(state, link, normalized, result)) {
+        if (!linkEndpointsExist(state, link)) {
             continue;
         }
 
@@ -102,11 +105,17 @@ export function applyPatchDetailed(state, patch) {
         return completeCommandResult(state, result);
     }
 
-    state.sceneModel.uiState.revision = normalized.nextRevision > 0
-        ? normalized.nextRevision
-        : (state.sceneModel.uiState.revision || 0) + 1;
-    state.sceneModel.revision = state.sceneModel.uiState.revision;
-    rebuildScene(state);
+    commitSceneRevision(
+        state.sceneModel,
+        normalized.nextRevision > 0 ? normalized.nextRevision : resolveSceneRevision(state.sceneModel) + 1);
+    recordPatchClassificationDiagnostics(state, classification);
+    if (classification.shouldRebuildScene) {
+        state.diagnostics.sceneRebuildPatchCount = (state.diagnostics.sceneRebuildPatchCount || 0) + 1;
+        rebuildScene(state);
+    } else if (classification.shouldSyncIndexes) {
+        syncSceneIndexes(state, "patch-incremental-link");
+    }
+
     notifyStateChanged(state);
     state.scheduleRender("patch");
     return completeCommandResult(state, result);
@@ -200,6 +209,15 @@ function applyObjectPatch(state, patch, result) {
     } else if (visualChanged || sizeChanged) {
         state.diagnostics.replacedObjectGroupCount = (state.diagnostics.replacedObjectGroupCount || 0) + 1;
         replaceSceneObjectGroup(state, sceneObject);
+        if (transformChanged) {
+            updateObjectRuntimeTransform(state, patch.objectId, false);
+        }
+
+        if (patch.symbols !== undefined) {
+            rebuildSymbolsForObject(state, patch.objectId);
+        } else if (sizeChanged && !transformChanged) {
+            syncSymbolPositionsForObject(state, patch.objectId);
+        }
     } else {
         updateObjectRuntimeTransform(state, patch.objectId, patch.rotation === undefined && patch.scale === undefined);
     }
@@ -232,6 +250,10 @@ function removeSceneObject(state, objectId, result) {
         .filter(Boolean);
     state.sceneModel.objects = state.sceneModel.objects.filter(item => item.id !== objectId);
     state.sceneModel.links = state.sceneModel.links.filter(link => link.sourceObjectId !== objectId && link.targetObjectId !== objectId);
+    for (const layer of state.sceneModel.layers || []) {
+        layer.objectIds = (layer.objectIds || []).filter(id => id !== objectId);
+    }
+
     removeSceneObjectGroup(state, objectId);
     state.linkGroups.filter(group => group.userData.sourceObjectId === objectId || group.userData.targetObjectId === objectId)
         .map(group => group.userData.linkId)
@@ -271,28 +293,6 @@ function normalizeVector(value, fallback) {
 
 function failPatch(state, result, message) {
     return failCommand(state, result, message, "WebGL scene patch failed.");
-}
-
-function validateLinkForAdd(state, link, normalized, result) {
-    if (!link?.id) {
-        failPatch(state, result, "Added link id is missing.");
-        return false;
-    }
-
-    const sourceExists = state.sceneModel.objects.some(item => item.id === link.sourceObjectId);
-    const targetExists = state.sceneModel.objects.some(item => item.id === link.targetObjectId);
-    if (sourceExists && targetExists) {
-        return true;
-    }
-
-    const message = `Link '${link.id}' references missing endpoint(s): '${link.sourceObjectId}' -> '${link.targetObjectId}'.`;
-    if (normalized.missingLinkEndpointMode === "warn") {
-        warnCommand(result, message);
-        return false;
-    }
-
-    failPatch(state, result, message);
-    return false;
 }
 
 function cancelObjectMotions(state, objectId) {

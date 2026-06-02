@@ -1,4 +1,5 @@
 import * as THREE from "../../../vendor/three.module.min.js";
+import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
 
 export { THREE };
 
@@ -80,6 +81,11 @@ export function normalizeScene(scene) {
     normalized.camera = normalized.camera || {};
     normalized.uiState = normalized.uiState || {};
     normalized.uiState.activeAssetProfile = normalizeAssetProfile(normalized.uiState.activeAssetProfile);
+    normalized.revision = resolveSceneRevision(normalized);
+    if (!Number.isFinite(Number(normalized.uiState.revision)) || Number(normalized.uiState.revision) <= 0) {
+        normalized.uiState.revision = normalized.revision;
+    }
+
     normalized.interaction = normalized.interaction || {};
     normalized.objects = Array.isArray(normalized.objects) ? normalized.objects : [];
     normalized.links = Array.isArray(normalized.links) ? normalized.links : [];
@@ -266,6 +272,7 @@ export function buildDiagnosticsSnapshot(state) {
         peakFrameTimeMs: round(diagnostics.peakFrameTimeMs || 0, 2),
         idleSinceMs: diagnostics.idleSinceTimestamp ? round(performance.now() - diagnostics.idleSinceTimestamp, 0) : 0,
         largestLoadedAssetId: diagnostics.largestLoadedAssetId || "",
+        assetCacheMode: diagnostics.assetCacheMode || state.assetCache?.mode || "state-local",
         assetCacheEntryCount: diagnostics.assetCacheEntryCount || 0,
         assetCacheHitCount: diagnostics.assetCacheHitCount || 0,
         assetCacheMissCount: diagnostics.assetCacheMissCount || 0,
@@ -273,7 +280,7 @@ export function buildDiagnosticsSnapshot(state) {
         materialCloneCount: diagnostics.materialCloneCount || 0,
         disposedGeometryCount: diagnostics.disposedGeometryCount || 0,
         disposedMaterialCount: diagnostics.disposedMaterialCount || 0,
-        disposedTextureCount: diagnostics.disposedTextureCount || 0,
+        disposedTextureCount: diagnostics.disposedTextureCount || 0, retainedSharedTextureCount: diagnostics.retainedSharedTextureCount || 0,
         batchCommandCount: diagnostics.batchCommandCount || 0,
         batchStageCount: diagnostics.batchStageCount || 0,
         batchDurationMs: diagnostics.batchDurationMs || 0,
@@ -284,9 +291,19 @@ export function buildDiagnosticsSnapshot(state) {
         preservedOrderedDuplicateMotionCount: diagnostics.preservedOrderedDuplicateMotionCount || 0,
         interopCallsAvoided: diagnostics.interopCallsAvoided || 0,
         patchedObjectCount: diagnostics.patchedObjectCount || 0,
+        fullSceneRebuildCount: diagnostics.fullSceneRebuildCount || 0,
+        transformOnlyPatchCount: diagnostics.transformOnlyPatchCount || 0,
+        symbolOnlyPatchCount: diagnostics.symbolOnlyPatchCount || 0,
+        linkOnlyPatchCount: diagnostics.linkOnlyPatchCount || 0,
+        visualReplacePatchCount: diagnostics.visualReplacePatchCount || 0,
+        mixedIncrementalPatchCount: diagnostics.mixedIncrementalPatchCount || 0,
+        graphStructurePatchCount: diagnostics.graphStructurePatchCount || 0,
+        sceneRebuildPatchCount: diagnostics.sceneRebuildPatchCount || 0,
+        lastPatchClassification: diagnostics.lastPatchClassification || "",
         replacedObjectGroupCount: diagnostics.replacedObjectGroupCount || 0,
         symbolOnlyUpdateCount: diagnostics.symbolOnlyUpdateCount || 0,
         linkUpdateCount: diagnostics.linkUpdateCount || 0,
+        linkGeometryUpdateCount: diagnostics.linkGeometryUpdateCount || 0,
         linkGeometryRebuildCount: diagnostics.linkGeometryRebuildCount || 0,
         linksUpdatedLastFrame: diagnostics.linksUpdatedLastFrame || 0,
         linkSyncScanCount: diagnostics.linkSyncScanCount || 0,

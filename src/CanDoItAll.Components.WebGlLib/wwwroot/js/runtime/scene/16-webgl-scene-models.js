@@ -43,7 +43,7 @@ export function loadModelAsset(state, asset) {
 
 export function buildModelInstance(assetTemplate, sceneObject, asset, options = {}, diagnostics = null) {
     const model = assetTemplate.hasSkinnedMesh ? cloneSkeleton(assetTemplate.template) : assetTemplate.template.clone(true);
-    markInstanceResource(model, { ownsGeometry: false, ownsMaterial: false });
+    markInstanceResource(model, { ownsGeometry: false, ownsMaterial: false, ownsTexture: false });
     const size = resolveObjectSize(sceneObject);
     const importOptions = normalizeModelImportOptions(asset);
     const defaultScale = Math.max(0.01, resolveFiniteNumber(asset.defaultScale, 1));
@@ -121,7 +121,7 @@ function markModelInstance(instance, tintColor, supportsTint, diagnostics = null
         if (diagnostics) {
             diagnostics.materialCloneCount = (diagnostics.materialCloneCount || 0) + materials.filter(Boolean).length;
         }
-        markOwnedMaterial(child.material);
+        markOwnedMaterial(child.material, { ownsTexture: false });
         for (const material of Array.isArray(child.material) ? child.material : [child.material]) {
             material?.color?.lerp?.(normalizeColor(tintColor), 0.38);
             if (material) {

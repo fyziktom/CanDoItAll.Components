@@ -16,29 +16,51 @@ internal static class WebGlSceneDocumentValidator
             result.Errors.Add("Scene id is required.");
         }
 
-        ValidateForbiddenMetadata(document, result);
-        ValidateObjectIds(document.Scene, result);
-        ValidateLinks(document.Scene, result);
-        ValidateAssets(document.Scene, result);
-        ValidateVectors(document.Scene, result);
+        ValidateForbiddenDocumentMetadata(document, result);
+        ValidateScene(document.Scene, result);
         return result;
     }
 
-    private static void ValidateForbiddenMetadata(WebGlSceneDocument document, WebGlSceneDocumentValidationResult result)
+    internal static void ValidateScene(WebGlSceneModel scene, WebGlSceneDocumentValidationResult result)
+    {
+        ArgumentNullException.ThrowIfNull(scene);
+        ArgumentNullException.ThrowIfNull(result);
+        ValidateForbiddenSceneMetadata(scene, result);
+        ValidateObjectIds(scene, result);
+        ValidateLinks(scene, result);
+        ValidateLayers(scene, result);
+        ValidateAssets(scene, result);
+        ValidateVectors(scene, result);
+    }
+
+    private static void ValidateForbiddenDocumentMetadata(WebGlSceneDocument document, WebGlSceneDocumentValidationResult result)
     {
         foreach (var (scope, metadata) in WebGlSceneDocumentMetadataPolicy.EnumerateMetadataScopes(document))
         {
-            foreach (var key in metadata.Keys)
-            {
-                if (key.StartsWith("source.", StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
+            ValidateForbiddenMetadataScope(scope, metadata, result);
+        }
+    }
 
-                if (WebGlSceneDocumentMetadataPolicy.IsForbiddenMetadataKey(key))
-                {
-                    result.Errors.Add($"Run-layer or domain metadata key '{key}' does not belong in generic WebGL scene document scope '{scope}'.");
-                }
+    private static void ValidateForbiddenSceneMetadata(WebGlSceneModel scene, WebGlSceneDocumentValidationResult result)
+    {
+        foreach (var (scope, metadata) in WebGlSceneDocumentMetadataPolicy.EnumerateSceneMetadataScopes(scene))
+        {
+            ValidateForbiddenMetadataScope(scope, metadata, result);
+        }
+    }
+
+    private static void ValidateForbiddenMetadataScope(string scope, Dictionary<string, string> metadata, WebGlSceneDocumentValidationResult result)
+    {
+        foreach (var key in metadata.Keys)
+        {
+            if (key.StartsWith("source.", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (WebGlSceneDocumentMetadataPolicy.IsForbiddenMetadataKey(key))
+            {
+                result.Errors.Add($"Run-layer or domain metadata key '{key}' does not belong in generic WebGL scene document scope '{scope}'.");
             }
         }
     }
@@ -57,6 +79,46 @@ internal static class WebGlSceneDocumentValidator
             if (!ids.Add(sceneObject.Id))
             {
                 result.Errors.Add($"Duplicate scene object id '{sceneObject.Id}'.");
+            }
+        }
+    }
+
+    private static void ValidateLayers(WebGlSceneModel scene, WebGlSceneDocumentValidationResult result)
+    {
+        var objectIds = scene.Objects
+            .Select(static item => item.Id)
+            .Where(static id => !string.IsNullOrWhiteSpace(id))
+            .ToHashSet(StringComparer.Ordinal);
+        var layerIds = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var layer in scene.Layers)
+        {
+            if (string.IsNullOrWhiteSpace(layer.Id))
+            {
+                result.Errors.Add("Scene layer id is required.");
+            }
+            else if (!layerIds.Add(layer.Id))
+            {
+                result.Errors.Add($"Duplicate scene layer id '{layer.Id}'.");
+            }
+
+            var membershipIds = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var objectId in layer.ObjectIds)
+            {
+                if (string.IsNullOrWhiteSpace(objectId))
+                {
+                    result.Warnings.Add($"Scene layer '{layer.Id}' contains a blank object id.");
+                    continue;
+                }
+
+                if (!membershipIds.Add(objectId))
+                {
+                    result.Warnings.Add($"Scene layer '{layer.Id}' contains duplicate object id '{objectId}'.");
+                }
+
+                if (!objectIds.Contains(objectId))
+                {
+                    result.Warnings.Add($"Scene layer '{layer.Id}' contains stale object id '{objectId}'; scene objects are the canonical membership source.");
+                }
             }
         }
     }

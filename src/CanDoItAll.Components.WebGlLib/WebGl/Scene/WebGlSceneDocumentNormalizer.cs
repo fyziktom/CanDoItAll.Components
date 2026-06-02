@@ -12,6 +12,7 @@ internal static class WebGlSceneDocumentNormalizer
         var scene = Clone(document.Scene ?? new WebGlSceneModel());
         scene.AssetCatalog ??= new WebGlAssetCatalog();
         scene.UiState ??= new WebGlSceneUiState();
+        WebGlSceneRevisionPolicy.Normalize(scene);
         if (!options.IncludeUiState)
         {
             scene.UiState = new WebGlSceneUiState();

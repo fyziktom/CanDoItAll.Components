@@ -2,7 +2,7 @@
 
 ## Status
 
-Prepared / Not started
+Completed
 
 ## Objective
 
@@ -68,14 +68,18 @@ None planned. If current repo state makes a deliverable obsolete, record it in `
 
 ## Acceptance Checklist
 
-- [ ] All owned requirements are addressed.
-- [ ] Source references were reread against current repo state.
-- [ ] Negative proof exists for at least one realistic failure mode.
-- [ ] Positive proof demonstrates intended behavior.
-- [ ] Refactor gate completed and recorded.
-- [ ] Proof artifacts are stored under `proof/SB07/`.
-- [ ] Traceability and execution report are updated.
-- [ ] No scope leakage into downstream subbundles.
+- [x] All owned requirements are addressed.
+- [x] Source references were reread against current repo state.
+- [x] Negative proof exists for at least one realistic failure mode.
+- [x] Positive proof demonstrates intended behavior.
+- [x] Refactor gate completed and recorded.
+- [x] Proof artifacts are stored under `proof/SB07/`.
+- [x] Traceability and execution report are updated.
+- [x] No scope leakage into downstream subbundles.
+
+## Closure Notes
+
+Completed in `proof/SB07/manifest.md` and `proof/SB07/boundary-audit.md`. No WebGlLib production code needed to move; the command-stage runner is explicitly fenced as render-command transport, while run documents, timelines, action stages, playback, and domain mapping remain in WebGlRunLib or consuming packages.
 
 ## Proof Required
 

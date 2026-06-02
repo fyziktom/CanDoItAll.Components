@@ -58,6 +58,12 @@ To include runtime assets:
 
 `IncludeRuntimeAssets` remains the backwards-compatible shorthand for the workbench runtime. Use `IncludeSceneRuntimeAssets` when a page hosts `WebGlSceneView`.
 
+Minimal WebGlLib-only consumption is covered by `samples/CanDoItAll.Components.WebGlLibOnlyViewer`, which references this package and renders a primitive `WebGlSceneModel` without any `WebGlRunLib` dependency:
+
+```powershell
+dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj
+```
+
 ## Adding Assets
 
 Place GLB/GLTF files under `wwwroot/assets`, add logical ids to an app-owned `WebGlAssetCatalog`, and provide primitive fallbacks for model categories that may be missing. Run:
@@ -71,19 +77,31 @@ The runtime loads GLB/GLTF assets asynchronously and renders fallback primitives
 
 Use `WebGlModelImportOptions` on assets or variants to tune generic model import behavior: unit scale, fit mode, center mode, rotation/position offsets, double-sided material normalization, debug bounds, material visibility normalization, and tint disabling. Runtime diagnostics report empty scenes, mesh/material counts, zero or extreme bounds, invisible meshes, transparent materials, invalid transforms, and camera clipping risk.
 
+Asset cache entries are state-local by default. Cached GLB/GLTF templates own their geometry, material, and texture disposal when the scene state is disposed; cloned/tinted model instances own cloned material objects but retain shared template texture maps unless a texture was explicitly cloned and marked owned. Use `assetCacheMode`, `assetCacheEntryCount`, `assetCacheHitCount`, `assetCacheMissCount`, `disposedTemplateCount`, `disposedTextureCount`, and `retainedSharedTextureCount` to verify repeated import/profile/dispose behavior.
+
 ## Runtime Hardening
 
 `WebGlSceneView` now exposes export/import, patch, object transform, detailed patch results, and detailed motion methods. The JavaScript runtime supports drag-on-ground-plane for draggable objects, transform-only patches without full scene rebuilds, smooth render-layer motion, `auto`/`continuous`/`on-demand` render modes, idle render-loop sleeping, explicit resource ownership/disposal, model diagnostics, and create/runtime diagnostics.
 
 `WebGlSceneDocument` is the generic save/load contract for scene layouts. It preserves scene data, runtime options, saved timestamp, source, metadata, and a deterministic content hash without adding storage providers or run semantics.
 
+Use `WebGlSceneDocumentSerializer.Validate` for persisted documents and `WebGlSceneModelValidator` for live scenes. Scene objects are the canonical source for layer membership; layer `ObjectIds` are validated as view/grouping references and stale or duplicate layer entries are reported as warnings.
+
+`WebGlSceneModel.Revision` is the canonical scene content and patch revision. `WebGlScenePatch` reducers resolve legacy payloads from `UiState.Revision` only when the top-level revision is zero, and successful mutating patches mirror the committed revision back to `UiState.Revision` for runtime compatibility. Scene content hashing uses `Scene.Revision` and ignores UI-only revision, hover, and selection state; document hashing still covers included UI state.
+
+Patch diagnostics classify incremental updates as `transform-only`, `symbol-only`, `link-only`, `visual-replace`, `mixed-incremental`, `graph-structure`, or `scene-rebuild`. Use `fullSceneRebuildCount`, `transformOnlyPatchCount`, `symbolOnlyPatchCount`, `linkOnlyPatchCount`, `linkGeometryUpdateCount`, and `lastPatchClassification` to prove hot patch paths avoided full scene rebuilds.
+
 Run the scene runtime audit before widening JavaScript changes:
 
 ```powershell
+npm run webgllib:audit-scene-runtime-imports
 npm run webgllib:audit-scene-runtime
+npm run webgllib:test-resource-ownership
 ```
 
-`WebGlLib` remains a render substrate. Simulation clocks, run lifecycle, pathfinding, physics, persistence providers, economy rules, and domain semantics belong in a future `WebGlRunLib` or consuming domain package.
+`WebGlSceneCommandBatch` and its command stages are render-command transport for the scene runtime. They may batch patches, motions, waits, and render-idle barriers, but they must not define run documents, replay lifecycle, scenario lifecycle, domain events, persistence providers, or domain action semantics.
+
+`WebGlLib` remains a render substrate. Simulation clocks, run lifecycle, pathfinding, physics, persistence providers, economy rules, and domain semantics belong in `WebGlRunLib` or a consuming domain package.
 
 ## Related Docs
 

@@ -1,0 +1,71 @@
+﻿SB11 source assertions
+
+SimulationPreparationTests anchors:
+458:    public void EconomyPerformanceProof_CompilesMaterializesAndMapsLargeGenericSharedResourceScenario()
+485:            VisualMapping = BuildLargeGenericVisualMapping(),
+504:        string runFingerprint = BuildWebGlRunReplayFingerprint(runDocument);
+505:        string replayFingerprint = BuildWebGlRunReplayFingerprint(replayDocument);
+506:        int webGlStageCount = runDocument.Timeline.Frames.Sum(frame => frame.Stages.Count);
+519:        Assert.True(webGlStageCount > actorCount, $"Expected many WebGlRun stages but found {webGlStageCount}.");
+538:            webGlStageCount,
+542:            deterministicReplayMatched = string.Equals(runFingerprint, replayFingerprint, StringComparison.Ordinal),
+1002:    private static EconomyVisualMappingDefinition BuildLargeGenericVisualMapping()
+1039:    private static string BuildWebGlRunReplayFingerprint(WebGlRunDocument document)
+
+Scenario inventory anchors:
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:75:        Assert.Contains(firstPass, scenario => scenario.Manifest.ScenarioId == "simple.shared-well-community");
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:76:        Assert.Contains(firstPass, scenario => scenario.Manifest.ScenarioId == "simple.small-entrepreneur-community");
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:101:        SimpleSimulationScenario sharedWell = Assert.Single(firstPass, scenario => scenario.Manifest.ScenarioId == "simple.shared-well-community");
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:105:        SimpleSimulationScenario entrepreneurs = Assert.Single(firstPass, scenario => scenario.Manifest.ScenarioId == "simple.small-entrepreneur-community");
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:132:        EconomyVisualFrame sharedWell = mapper.Map(Assert.Single(scenarios, scenario => scenario.Manifest.ScenarioId == "simple.shared-well-community").Frames[2]);
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:137:        EconomyVisualFrame entrepreneurs = mapper.Map(Assert.Single(scenarios, scenario => scenario.Manifest.ScenarioId == "simple.small-entrepreneur-community").Frames[2]);
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:148:        foreach (SimulationScenarioDefinition definition in SimpleSimulationScenarioFactory.CreateDefaultDefinitions())
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:159:                "simple.shared-well-community" => SharedWellCommunityScenarioFactory.CreateScenario(roundTrip),
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:160:                "simple.small-entrepreneur-community" => SmallEntrepreneurCommunityScenarioFactory.CreateScenario(roundTrip),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:11:            ScenarioId = "simple.shared-well-community",
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:55:            new SimpleScenarioFactoryMaterializerHandler(new Dictionary<string, Func<SimulationScenarioDefinition, SimpleSimulationScenario>>(StringComparer.Ordinal)
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:57:                ["simple.shared-well-community"] = SharedWellCommunityScenarioFactory.CreateScenario,
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:58:                ["simple.small-entrepreneur-community"] = SmallEntrepreneurCommunityScenarioFactory.CreateScenario
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:60:            new SimpleStateTransitionMaterializerHandler()
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:71:public sealed class SimpleScenarioFactoryMaterializerHandler(IReadOnlyDictionary<string, Func<SimulationScenarioDefinition, SimpleSimulationScenario>> factories) : ISimpleScenarioDefinitionMaterializerHandler
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:80:public sealed class SimpleStateTransitionMaterializerHandler : ISimpleScenarioDefinitionMaterializerHandler
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleScenarioDefinitionMaterializer.cs:92:        => SimpleSimulationScenarioFactory.CreateDefaultDefinitions();
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationScenarioFactory.cs:12:    public static IReadOnlyList<SimulationScenarioDefinition> CreateDefaultDefinitions()
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:11:            ScenarioId = "simple.small-entrepreneur-community",
+
+Experiment fixture anchors:
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\farmer-land\experiment.json:3:  "experimentId": "experiment.farmer-land.anti-oligarchy.v1",
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\farmer-land\experiment.json:59:      "kind": "visual-mapping",
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\farmer-land\experiment.json:62:      "schemaVersion": "visual-mapping/v1",
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\farmer-land\experiment.json:82:      "visual-mapping": "sha256:3fca5acf55ac0a44ea39a9bd27d3f90ac28674133df790d212bf8a8133cbb6b7"
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\shared-well\experiment.json:3:  "experimentId": "experiment.shared-well.distance-trade-tax.v1",
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\shared-well\experiment.json:60:      "kind": "visual-mapping",
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\shared-well\experiment.json:63:      "schemaVersion": "visual-mapping/v1",
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\shared-well\experiment.json:83:      "visual-mapping": "sha256:e228aac08c9bda5894b3e5c945cde07ed6832c348b21509bbc6370b3b7f88b84"
+
+Large proof artifact counts:
+{
+  "scenarioId": "proof.shared-resource-large",
+  "deterministicInputHash": "6e35fba6bbfd77d6cb355f8d47be2904a43c5bdf3a16048706ac0117977c2a90",
+  "runDocumentId": "large-proof.proof.shared-resource-large",
+  "actorCount": 101,
+  "sharedResourceCount": 1,
+  "scheduledSteps": 50,
+  "frameCount": 51,
+  "scheduledEventCount": 5000,
+  "compiledEventCount": 15000,
+  "visualActionCount": 15000,
+  "webGlFrameCount": 51,
+  "webGlStageCount": 15000,
+  "webGlMotionCount": 10000,
+  "webGlPatchCount": 0,
+  "nodeObjectMappingCount": "303",
+  "deterministicReplayMatched": true,
+  "deterministicReplayFingerprintHash": "81425be792e8280a3c0ceb4d7cf44452bdc9d6beb8fe1a2b484dbc7d9dbf9d23",
+  "compileDurationMs": 3971.4226,
+  "materializationDurationMs": 15487.4702,
+  "visualMappingDurationMs": 1755.6489,
+  "webGlProjectionDurationMs": 9221.4501,
+  "firstEventKind": "actor.travel",
+  "lastEventKind": "actor.return-home"
+}

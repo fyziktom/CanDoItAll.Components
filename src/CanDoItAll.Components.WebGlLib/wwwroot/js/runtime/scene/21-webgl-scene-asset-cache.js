@@ -45,7 +45,7 @@ export function disposeAssetCache(state) {
         Promise.resolve(promise)
             .then(template => {
                 if (template?.template) {
-                    disposeSceneObjectTree(template.template);
+                    disposeSceneObjectTree(template.template, state.diagnostics);
                     cache.disposedTemplateCount += 1;
                     syncAssetCacheDiagnostics(state);
                 }
@@ -63,6 +63,7 @@ export function syncAssetCacheDiagnostics(state) {
     }
 
     const cache = ensureAssetCache(state);
+    state.diagnostics.assetCacheMode = cache.mode || "state-local";
     state.diagnostics.assetCacheEntryCount = cache.entries.size;
     state.diagnostics.assetCacheHitCount = cache.hitCount;
     state.diagnostics.assetCacheMissCount = cache.missCount;

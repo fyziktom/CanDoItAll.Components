@@ -2,7 +2,7 @@
 
 ## Status
 
-Prepared / Not started
+Completed at `2026-06-02T01:36:45Z`
 
 ## Objective
 
@@ -68,14 +68,21 @@ None planned. If current repo state makes a deliverable obsolete, record it in `
 
 ## Acceptance Checklist
 
-- [ ] All owned requirements are addressed.
-- [ ] Source references were reread against current repo state.
-- [ ] Negative proof exists for at least one realistic failure mode.
-- [ ] Positive proof demonstrates intended behavior.
-- [ ] Refactor gate completed and recorded.
-- [ ] Proof artifacts are stored under `proof/SB04/`.
-- [ ] Traceability and execution report are updated.
-- [ ] No scope leakage into downstream subbundles.
+- [x] All owned requirements are addressed.
+- [x] Source references were reread against current repo state.
+- [x] Negative proof exists for at least one realistic failure mode.
+- [x] Positive proof demonstrates intended behavior.
+- [x] Refactor gate completed and recorded.
+- [x] Proof artifacts are stored under `proof/SB04/`.
+- [x] Traceability and execution report are updated.
+- [x] No scope leakage into downstream subbundles.
+
+## Closure Notes
+
+- Added runtime patch classification and routed transform-only, symbol-only, and link-only changes through incremental update paths.
+- Added rebuild, classification, and link-geometry diagnostics in JS runtime snapshots, command results, C# interop DTOs, and proof snapshots.
+- Captured failing-first browser stress proof showing the pre-SB04 rebuild-equivalent behavior, then passing browser proof with 250 objects and 100 transform patches.
+- Completed refactor and boundary scan with no WebGlRunLib, Economy, ledger, market, production-line, Vernon, or Smith terms in touched WebGlLib production files.
 
 ## Proof Required
 

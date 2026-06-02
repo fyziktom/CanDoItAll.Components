@@ -2,7 +2,7 @@
 
 ## Status
 
-Prepared / Not started
+Completed
 
 ## Objective
 
@@ -70,14 +70,21 @@ None planned. If current repo state makes a deliverable obsolete, record it in `
 
 ## Acceptance Checklist
 
-- [ ] All owned requirements are addressed.
-- [ ] Source references were reread against current repo state.
-- [ ] Negative proof exists for at least one realistic failure mode.
-- [ ] Positive proof demonstrates intended behavior.
-- [ ] Refactor gate completed and recorded.
-- [ ] Proof artifacts are stored under `proof/SB13/`.
-- [ ] Traceability and execution report are updated.
-- [ ] No scope leakage into downstream subbundles.
+- [x] All owned requirements are addressed.
+- [x] Source references were reread against current repo state.
+- [x] Negative proof exists for at least one realistic failure mode.
+- [x] Positive proof demonstrates intended behavior.
+- [x] Refactor gate completed and recorded.
+- [x] Proof artifacts are stored under `proof/SB13/`.
+- [x] Traceability and execution report are updated.
+- [x] No scope leakage into downstream subbundles.
+
+## Closure Notes
+
+- Browser proof covers WebGlSandbox `/tycoon-village`, `/run-playback`, `/performance-proof`, and Economy Node `/economy/simulation-sandbox`.
+- `/performance-proof` exposed an oversized command-result callback payload; `20-webgl-scene-command-results.js` now compacts Blazor event callback results while preserving rich direct JS interop results.
+- Economy browser proof applies frame 1 through `WebGlRunBrowserApplyAdapter` with 3 stages, 2 motions, zero adapter errors/warnings, a nonblank pixel probe, snapshot capture, and analysis.
+- Focused Components/WebGlRunLib tests, resource ownership proof, boundary audits, command-batch parity audit, and Economy focused tests passed. Evidence is stored under `proof/SB13/`.
 
 ## Proof Required
 

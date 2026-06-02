@@ -1,0 +1,175 @@
+using System.Text.Json;
+using CanDoItAll.Components.WebGlLib;
+
+namespace CanDoItAll.Components.WebGlLib.Tests;
+
+public sealed class WebGlRuntimeDiagnosticsTests
+{
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
+    [Fact]
+    public void Runtime_diagnostics_round_trips_incremental_patch_counters()
+    {
+        const string json = """
+            {
+              "fullSceneRebuildCount": 2,
+              "transformOnlyPatchCount": 100,
+              "symbolOnlyPatchCount": 3,
+              "linkOnlyPatchCount": 4,
+              "visualReplacePatchCount": 5,
+              "mixedIncrementalPatchCount": 6,
+              "graphStructurePatchCount": 1,
+              "sceneRebuildPatchCount": 1,
+              "lastPatchClassification": "transform-only",
+              "linkGeometryUpdateCount": 199,
+              "linkGeometryRebuildCount": 199,
+              "linksUpdatedLastFrame": 3,
+              "linkSyncScanCount": 7,
+              "linkSyncIndexedHitCount": 6
+            }
+            """;
+
+        var diagnostics = JsonSerializer.Deserialize<WebGlRuntimeDiagnostics>(json, JsonOptions);
+
+        Assert.NotNull(diagnostics);
+        Assert.Equal(2, diagnostics.FullSceneRebuildCount);
+        Assert.Equal(100, diagnostics.TransformOnlyPatchCount);
+        Assert.Equal(3, diagnostics.SymbolOnlyPatchCount);
+        Assert.Equal(4, diagnostics.LinkOnlyPatchCount);
+        Assert.Equal(5, diagnostics.VisualReplacePatchCount);
+        Assert.Equal(6, diagnostics.MixedIncrementalPatchCount);
+        Assert.Equal(1, diagnostics.GraphStructurePatchCount);
+        Assert.Equal(1, diagnostics.SceneRebuildPatchCount);
+        Assert.Equal("transform-only", diagnostics.LastPatchClassification);
+        Assert.Equal(199, diagnostics.LinkGeometryUpdateCount);
+        Assert.Equal(199, diagnostics.LinkGeometryRebuildCount);
+        Assert.Equal(3, diagnostics.LinksUpdatedLastFrame);
+        Assert.Equal(7, diagnostics.LinkSyncScanCount);
+        Assert.Equal(6, diagnostics.LinkSyncIndexedHitCount);
+    }
+
+    [Fact]
+    public void Runtime_diagnostics_round_trips_asset_cache_ownership_counters()
+    {
+        const string json = """
+            {
+              "assetCacheMode": "state-local",
+              "assetCacheEntryCount": 1,
+              "assetCacheHitCount": 3,
+              "assetCacheMissCount": 1,
+              "disposedTemplateCount": 1,
+              "materialCloneCount": 2,
+              "disposedGeometryCount": 4,
+              "disposedMaterialCount": 5,
+              "disposedTextureCount": 3,
+              "retainedSharedTextureCount": 2
+            }
+            """;
+
+        var diagnostics = JsonSerializer.Deserialize<WebGlRuntimeDiagnostics>(json, JsonOptions);
+
+        Assert.NotNull(diagnostics);
+        Assert.Equal("state-local", diagnostics.AssetCacheMode);
+        Assert.Equal(1, diagnostics.AssetCacheEntryCount);
+        Assert.Equal(3, diagnostics.AssetCacheHitCount);
+        Assert.Equal(1, diagnostics.AssetCacheMissCount);
+        Assert.Equal(1, diagnostics.DisposedTemplateCount);
+        Assert.Equal(2, diagnostics.MaterialCloneCount);
+        Assert.Equal(4, diagnostics.DisposedGeometryCount);
+        Assert.Equal(5, diagnostics.DisposedMaterialCount);
+        Assert.Equal(3, diagnostics.DisposedTextureCount);
+        Assert.Equal(2, diagnostics.RetainedSharedTextureCount);
+    }
+
+    [Fact]
+    public void Runtime_diagnostics_deserializes_browser_resource_cache_capture_shape()
+    {
+        const string json = """
+            {
+              "loadedAssetCount": 1,
+              "missingAssetCount": 0,
+              "fallbackObjectCount": 0,
+              "modelInstanceCount": 2,
+              "activeAssetProfile": "model-high",
+              "largestLoadedAssetId": "asset.symbol.marker.default:asset.symbol.marker.default.model-low",
+              "assetCacheMode": "state-local",
+              "assetCacheEntryCount": 1,
+              "assetCacheHitCount": 4,
+              "assetCacheMissCount": 1,
+              "disposedTemplateCount": 1,
+              "disposedTextureCount": 2,
+              "retainedSharedTextureCount": 6,
+              "linksUpdatedLastFrame": 0,
+              "linkSyncScanCount": 0,
+              "linkSyncIndexedHitCount": 0,
+              "missingAssetIds": [],
+              "missingFallbackAssetIds": [],
+              "modelDiagnostics": [
+                {
+                  "assetId": "asset.symbol.marker.default",
+                  "variantId": "asset.symbol.marker.default.model-low",
+                  "uri": "http://127.0.0.1:5284/_content/CanDoItAll.Components.WebGlLib/assets/model/question_box.glb",
+                  "hasScene": true,
+                  "meshCount": 9,
+                  "visibleMeshCount": 9,
+                  "materialCount": 9,
+                  "warnings": [ "Model bounds are extreme; unit scale or axis conversion may be wrong." ],
+                  "errors": []
+                }
+              ]
+            }
+            """;
+
+        var diagnostics = JsonSerializer.Deserialize<WebGlRuntimeDiagnostics>(json, JsonOptions);
+
+        Assert.NotNull(diagnostics);
+        Assert.Equal(1, diagnostics.LoadedAssetCount);
+        Assert.Equal(0, diagnostics.MissingAssetCount);
+        Assert.Equal(0, diagnostics.FallbackObjectCount);
+        Assert.Equal(2, diagnostics.ModelInstanceCount);
+        Assert.Equal("model-high", diagnostics.ActiveAssetProfile);
+        Assert.Equal("state-local", diagnostics.AssetCacheMode);
+        Assert.Equal(4, diagnostics.AssetCacheHitCount);
+        Assert.Equal(1, diagnostics.AssetCacheMissCount);
+        Assert.Equal(1, diagnostics.DisposedTemplateCount);
+        Assert.Equal(2, diagnostics.DisposedTextureCount);
+        Assert.Equal(6, diagnostics.RetainedSharedTextureCount);
+        Assert.Equal(0, diagnostics.LinksUpdatedLastFrame);
+        Assert.Equal(0, diagnostics.LinkSyncScanCount);
+        Assert.Equal(0, diagnostics.LinkSyncIndexedHitCount);
+        Assert.Empty(diagnostics.MissingAssetIds);
+        Assert.Empty(diagnostics.MissingFallbackAssetIds);
+        Assert.Single(diagnostics.ModelDiagnostics);
+        Assert.Equal(9, diagnostics.ModelDiagnostics[0].MeshCount);
+    }
+
+    [Fact]
+    public void Proof_snapshot_round_trips_link_sync_and_asset_cache_counters()
+    {
+        const string json = """
+            {
+              "assetCacheMode": "state-local",
+              "retainedSharedTextureCount": 4,
+              "linkGeometryUpdateCount": 10,
+              "linkGeometryRebuildCount": 10,
+              "linksUpdatedLastFrame": 2,
+              "linkSyncScanCount": 8,
+              "linkSyncIndexedHitCount": 7
+            }
+            """;
+
+        var snapshot = JsonSerializer.Deserialize<WebGlSceneProofSnapshot>(json, JsonOptions);
+
+        Assert.NotNull(snapshot);
+        Assert.Equal("state-local", snapshot.AssetCacheMode);
+        Assert.Equal(4, snapshot.RetainedSharedTextureCount);
+        Assert.Equal(10, snapshot.LinkGeometryUpdateCount);
+        Assert.Equal(10, snapshot.LinkGeometryRebuildCount);
+        Assert.Equal(2, snapshot.LinksUpdatedLastFrame);
+        Assert.Equal(8, snapshot.LinkSyncScanCount);
+        Assert.Equal(7, snapshot.LinkSyncIndexedHitCount);
+    }
+}

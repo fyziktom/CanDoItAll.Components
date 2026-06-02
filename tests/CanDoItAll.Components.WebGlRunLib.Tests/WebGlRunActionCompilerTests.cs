@@ -250,6 +250,93 @@ public sealed class WebGlRunActionCompilerTests
         Assert.DoesNotContain(batch.Metadata, item => string.Equals(item.Key, "explicitNoOpMapping", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public void Batch_compiler_preserves_parallel_event_motion_and_scene_patch_contracts()
+    {
+        var plan = new WebGlRunActionPlan
+        {
+            ActionId = "generic.parity",
+            FrameRate = 1,
+            ObjectBindings =
+            [
+                new WebGlRunObjectBinding { ObjectId = "actor", Position = WebGlVector3.Zero },
+                new WebGlRunObjectBinding { ObjectId = "target", Position = new WebGlVector3(3, 0, 0) }
+            ],
+            Actions =
+            [
+                new()
+                {
+                    ActionId = "wait.event",
+                    ActionKind = WebGlRunActionKinds.Wait,
+                    StartsAtSeconds = 0,
+                    Metadata =
+                    {
+                        ["barrierPolicy"] = WebGlSceneStageBarrierPolicies.WaitForEvent,
+                        ["barrierEventId"] = "event.ready"
+                    }
+                },
+                new()
+                {
+                    ActionId = "move.actor",
+                    ActionKind = WebGlRunActionKinds.MoveToObject,
+                    SubjectObjectId = "actor",
+                    TargetObjectId = "target",
+                    StartsAtSeconds = 1,
+                    DurationSeconds = 0.5,
+                    CoalescingScope = WebGlRunCoalescingScopes.Frame
+                },
+                new()
+                {
+                    ActionId = "symbol.actor",
+                    ActionKind = WebGlRunActionKinds.ShowSymbol,
+                    SubjectObjectId = "actor",
+                    StartsAtSeconds = 1,
+                    CoalescingScope = WebGlRunCoalescingScopes.Frame,
+                    Parameters =
+                    {
+                        ["symbolKind"] = "generic-status"
+                    }
+                }
+            ]
+        };
+
+        WebGlSceneCommandBatch batch = new WebGlRunActionPlanBatchCompiler().Compile(plan);
+
+        Assert.Equal(["wait.event", "move.actor", "symbol.actor"], batch.Stages.Select(stage => stage.StageId).ToArray());
+        Assert.Equal(WebGlSceneStageBarrierPolicies.WaitForEvent, batch.Stages[0].BarrierPolicy);
+        Assert.Equal("event.ready", batch.Stages[0].BarrierEventId);
+        Assert.Equal(WebGlSceneBatchingPolicies.Parallel, batch.Stages[1].BatchingPolicy);
+        Assert.Equal(WebGlSceneBatchingPolicies.Parallel, batch.Stages[2].BatchingPolicy);
+        Assert.Equal(WebGlSceneStageBarrierPolicies.WaitForObjectMotions, batch.Stages[1].BarrierPolicy);
+        Assert.Equal(["actor"], batch.Stages[1].BarrierObjectIds.ToArray());
+        Assert.Single(batch.Stages[1].Motions);
+        Assert.Single(batch.Stages[2].Patches);
+
+        WebGlSceneCommandBatch directPatchBatch = new WebGlRunActionPlanBatchCompiler().Compile(new WebGlRunActionPlan
+        {
+            ActionId = "direct.patch",
+            Patches =
+            [
+                new WebGlScenePatch
+                {
+                    SceneId = "scene.patch",
+                    ObjectPatches =
+                    [
+                        new WebGlSceneObjectPatch
+                        {
+                            ObjectId = "actor",
+                            Color = "#22c55e"
+                        }
+                    ]
+                }
+            ]
+        });
+
+        Assert.Equal("run-plan:direct.patch", directPatchBatch.BatchId);
+        Assert.Single(directPatchBatch.Patches);
+        Assert.Equal("#22c55e", directPatchBatch.Patches[0].ObjectPatches[0].Color);
+    }
+
     private static WebGlRunAction Action(
         string id,
         string kind,

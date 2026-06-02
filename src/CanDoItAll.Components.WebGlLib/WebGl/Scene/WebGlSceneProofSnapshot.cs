@@ -80,13 +80,43 @@ public sealed class WebGlSceneProofSnapshot
 
     public double PeakFrameTimeMs { get; set; }
 
+    public int FullSceneRebuildCount { get; set; }
+
+    public int TransformOnlyPatchCount { get; set; }
+
+    public int SymbolOnlyPatchCount { get; set; }
+
+    public int LinkOnlyPatchCount { get; set; }
+
+    public int VisualReplacePatchCount { get; set; }
+
+    public int MixedIncrementalPatchCount { get; set; }
+
+    public int GraphStructurePatchCount { get; set; }
+
+    public int SceneRebuildPatchCount { get; set; }
+
+    public string LastPatchClassification { get; set; } = string.Empty;
+
     public int LinkUpdateCount { get; set; }
 
+    public int LinkGeometryUpdateCount { get; set; }
+
     public int LinkGeometryRebuildCount { get; set; }
+
+    public int LinksUpdatedLastFrame { get; set; }
+
+    public int LinkSyncScanCount { get; set; }
+
+    public int LinkSyncIndexedHitCount { get; set; }
 
     public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
 
     public string LargestLoadedAssetId { get; set; } = string.Empty;
+
+    public string AssetCacheMode { get; set; } = "state-local";
+
+    public int RetainedSharedTextureCount { get; set; }
 
     public List<string> SelectedObjectIds { get; set; } = [];
 

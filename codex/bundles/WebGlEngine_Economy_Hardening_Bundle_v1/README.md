@@ -1,7 +1,7 @@
 # CanDoItAll WebGL Engine + Economy Hardening Workflow Bundle
 
 Prepared date: 2026-06-01  
-Stage: prepared  
+Stage: completed
 Profile: initiative / cross-repo architecture hardening  
 Primary target repositories:
 
@@ -108,3 +108,33 @@ Bundle validation passed for stage=prepared, profile=initiative, subbundles=14
 ```
 
 Final preparation inspection is stored in `reviews/02-senior-qa-inspector-final-check.md`.
+
+## Execution progress
+
+SB01 is completed. Current repo refs, source hashes, baseline command transcripts, CodeAnalytics snapshots, and the SB01 refactor gate are stored under `proof/SB01/`. Components build/test and Economy build/WebGl+Simulation filtered tests pass; Economy warning context is preserved for downstream package and bridge phases.
+
+SB02 is completed. `resolveObjectPosition` is now imported by the scene graph runtime, `tools/webgllib/audit-scene-runtime-imports.cjs` is wired through npm and WebGlLib docs, and `/tycoon-village` browser proof covers create, real drag, transform-only patch, diagnostics, screenshot, and dispose. Evidence is stored under `proof/SB02/`.
+
+SB03 is completed. `WebGlSceneModel.Revision` is the canonical scene revision, C# and JS patches preflight structural failures before mutation, object removal cleans links/layers, and scene content hashing ignores UI-only revision while retaining canonical scene revision. Evidence is stored under `proof/SB03/`.
+
+SB04 is completed. Incremental patch classification now prevents transform-only, symbol-only, and link-only runtime patches from triggering full scene rebuilds, and browser stress proof covers 250 objects plus 100 transform patches with diagnostics deltas. Evidence is stored under `proof/SB04/`.
+
+SB05 is completed. Resource ownership now separates geometry, material, and texture disposal, cloned tinted GLB materials retain shared template textures, and state-local asset cache disposal releases cached template resources with browser proof over a textured GLB. Evidence is stored under `proof/SB05/`.
+
+SB06 is completed. Document and live scene validation now share generic scene checks, layer duplicate/stale membership is diagnosed against scene objects as the canonical source, JS diagnostics parity has no missing C# runtime fields, and public docs include WebGlRunLib in the package map. Evidence is stored under `proof/SB06/`.
+
+SB07 is completed. WebGlLib boundary proof now has a reusable static audit, adversarial forbidden-reference probe, WebGlLib-only viewer sample, updated dependency-direction docs, and a boundary audit report. Evidence is stored under `proof/SB07/`.
+
+SB08 is completed. WebGlRunLib now has documented generic run contracts, public document and action-plan validators, compile parity coverage for barriers/parallel/direct patches, and a reusable WebGlRunLib boundary audit. Evidence is stored under `proof/SB08/`.
+
+SB09 is completed. WebGlRunLib runtime integration now executes generic run frames through `WebGlRunDocumentRunner` and `WebGlRunBrowserApplyAdapter` into `WebGlSceneView` public command-batch APIs, and `/run-playback` browser proof shows a 24-stage/24-motion generic batch frame with `interopCallsAvoided=23`. Evidence is stored under `proof/SB09/`.
+
+SB10 is completed. Economy WebGlBridge now stamps and validates command-level source provenance for generated motions and scene patches, strict mapping tests cover default failure modes and explicit diagnostics, and project/package reference bridge builds pass using a local proof feed. Evidence is stored under `proof/SB10/`.
+
+SB11 is completed. Economy generic scenario proof now projects a large shared-resource scenario through visual frames into strict WebGlRun documents, validates 15,000 stages and 10,000 motions, records deterministic replay fingerprint proof, inventories the current scenario examples/experiment fixtures, and preserves an explicit browser-host gap instead of claiming unavailable UI playback. Evidence is stored under `proof/SB11/`.
+
+SB12 is completed. Components release packaging now produces WebGlLib/WebGlRunLib packages under `artifacts/packages`, Economy WebGlBridge builds in both explicit local project-reference mode and package-consumption mode, stale package-feed failure is captured with an isolated proof NuGet.config mitigation, and boundary audits still pass with no Economy references in Components. Evidence is stored under `proof/SB12/`.
+
+SB13 is completed. Browser proof now covers WebGlSandbox `/tycoon-village`, `/run-playback`, `/performance-proof`, and Economy Node `/economy/simulation-sandbox`; the performance proof exposed and fixed oversized Blazor command-result event callbacks by compacting callback payloads while preserving rich direct interop results. Focused Components, WebGlRunLib, resource ownership, boundary, command-batch parity, and Economy probe tests pass. Evidence is stored under `proof/SB13/`.
+
+SB14 is completed. Final requirement closure, senior QA, C# Blazor architecture, vanilla JS runtime and manager reviews are stored under `reviews/`; completed-stage validation passes and all normalized requirements are closed for the prepared bundle scope. Evidence is stored under `proof/SB14/`.

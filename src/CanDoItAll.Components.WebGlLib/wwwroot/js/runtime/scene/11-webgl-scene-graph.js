@@ -3,6 +3,7 @@ import {
     applyObjectTransform,
     createMaterial,
     resolveFiniteNumber,
+    resolveObjectPosition,
     resolveObjectSize
 } from "./02-webgl-scene-core.js";
 import { syncAssetVisual } from "./03-webgl-scene-assets.js";
@@ -55,6 +56,7 @@ export function syncDecorations(state) {
 }
 
 export function rebuildScene(state) {
+    state.diagnostics.fullSceneRebuildCount = (state.diagnostics.fullSceneRebuildCount || 0) + 1;
     clearDynamicScene(state);
     syncSceneIndexes(state, "scene-rebuild");
     state.objectLookup = new Map();

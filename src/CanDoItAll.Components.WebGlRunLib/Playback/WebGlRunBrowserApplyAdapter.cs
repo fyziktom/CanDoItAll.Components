@@ -184,6 +184,15 @@ public sealed class WebGlRunBrowserApplyAdapter(
         return new(StringComparer.Ordinal)
         {
             ["renderCount"] = diagnostics.RenderCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["batchCommandCount"] = diagnostics.BatchCommandCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["batchStageCount"] = diagnostics.BatchStageCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["batchDurationMs"] = diagnostics.BatchDurationMs.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["commandCountBeforeNormalization"] = diagnostics.CommandCountBeforeNormalization.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["commandCountAfterNormalization"] = diagnostics.CommandCountAfterNormalization.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["coalescedPatchCount"] = diagnostics.CoalescedPatchCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["droppedDuplicateMotionCount"] = diagnostics.DroppedDuplicateMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["preservedOrderedDuplicateMotionCount"] = diagnostics.PreservedOrderedDuplicateMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["interopCallsAvoided"] = diagnostics.InteropCallsAvoided.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["activeMotionCount"] = diagnostics.ActiveMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["queuedMotionCount"] = diagnostics.QueuedMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["queuedCommandStageCount"] = diagnostics.QueuedCommandStageCount.ToString(System.Globalization.CultureInfo.InvariantCulture),

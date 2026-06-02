@@ -10,8 +10,10 @@
                 <Actions>
                     <Button Text="Play" Icon="play_arrow" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Success" Variant="Variant.Outlined" Click="@PlayAsync" />
                     <Button Text="Pause" Icon="pause" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@PauseAsync" />
+                    <Button Text="Cancel" Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@CancelAsync" />
                     <Button Text="Step" Icon="skip_next" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@StepAsync" />
-                    <Button Text="Seek start" Icon="first_page" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@SeekStartAsync" />
+                    <Button Text="Batch frame" Icon="dynamic_feed" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@ApplyBatchProofFrameAsync" />
+                    <Button Text="Reset" Icon="restart_alt" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ResetAsync" />
                     <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofAsync" />
                 </Actions>
             </PageHeader>
@@ -35,11 +37,11 @@
                         <dl class="webgl-proof-grid">
                             <div>
                                 <dt>Frame</dt>
-                                <dd data-testid="webgl-run-frame">@PlaybackState.CurrentFrameIndex</dd>
+                                <dd data-testid="webgl-run-frame">@CurrentFrameIndex</dd>
                             </div>
                             <div>
                                 <dt>Playing</dt>
-                                <dd data-testid="webgl-run-playing">@PlaybackState.IsPlaying</dd>
+                                <dd data-testid="webgl-run-playing">@IsPlaying</dd>
                             </div>
                             <div>
                                 <dt>Renders</dt>
@@ -55,6 +57,39 @@
 
                     <section class="webgl-panel-section">
                         <div class="webgl-panel-heading">
+                            <span>Batch metrics</span>
+                            <StatusBadge Text="@CurrentBatchIdText" Tone="info" />
+                        </div>
+                        <dl class="webgl-proof-grid">
+                            <div>
+                                <dt>Commands</dt>
+                                <dd data-testid="webgl-run-batch-command-count">@BatchCommandCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Stages</dt>
+                                <dd data-testid="webgl-run-batch-stage-count">@BatchStageCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Before</dt>
+                                <dd data-testid="webgl-run-command-before">@CommandCountBeforeText</dd>
+                            </div>
+                            <div>
+                                <dt>After</dt>
+                                <dd data-testid="webgl-run-command-after">@CommandCountAfterText</dd>
+                            </div>
+                            <div>
+                                <dt>Avoided</dt>
+                                <dd data-testid="webgl-run-interop-avoided">@InteropCallsAvoidedText</dd>
+                            </div>
+                            <div>
+                                <dt>Queued</dt>
+                                <dd data-testid="webgl-run-queued-stages">@QueuedStageCountText</dd>
+                            </div>
+                        </dl>
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
                             <span>Timeline</span>
                             <StatusBadge Text="@($"{runDocument.Timeline.Frames.Count} frames")" Tone="info" />
                         </div>
@@ -62,13 +97,21 @@
                             @foreach (var frame in runDocument.Timeline.Frames)
                             {
                                 <button type="button"
-                                        class="@(PlaybackState.CurrentFrameIndex == frame.Index ? "webgl-object-list__item is-active" : "webgl-object-list__item")"
+                                        class="@(CurrentFrameIndex == frame.Index ? "webgl-object-list__item is-active" : "webgl-object-list__item")"
                                         @onclick="() => SeekAsync(frame.Index)">
                                     <span>Frame @frame.Index</span>
                                     <small>@frame.TimeSeconds.ToString("0.0")s</small>
                                 </button>
                             }
                         </div>
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Diagnostics JSON</span>
+                            <StatusBadge Text="@($"{BatchActorCount} actors")" Tone="success" />
+                        </div>
+                        <pre class="webgl-proof-json" data-testid="webgl-run-diagnostics-json">@DiagnosticsJson</pre>
                     </section>
                 </aside>
             </div>

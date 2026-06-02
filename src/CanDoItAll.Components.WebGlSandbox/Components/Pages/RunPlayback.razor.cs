@@ -1,13 +1,21 @@
+using System.Globalization;
+using System.Text.Json;
 using CanDoItAll.Components.BaseLib;
 using CanDoItAll.Components.WebGlLib;
 using CanDoItAll.Components.WebGlRunLib;
 using CanDoItAll.Components.WebGlSandbox;
-using Microsoft.AspNetCore.Components;
 
 namespace CanDoItAll.Components.WebGlSandbox.Components.Pages;
 
 public partial class RunPlayback
 {
+    private const int BatchActorCount = 24;
+    private const long BatchProofFrameIndex = 4;
+    private static readonly JsonSerializerOptions DiagnosticsJsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        WriteIndented = true
+    };
+
     private readonly WebGlRuntimeOptions runtimeOptions = new()
     {
         DeterministicMode = true,
@@ -17,96 +25,266 @@ public partial class RunPlayback
         ShowSymbols = true
     };
     private readonly WebGlRunDocument runDocument;
-    private readonly WebGlRunPlaybackController playbackController;
     private WebGlSceneModel scene = CreateScene();
     private WebGlSceneView? sceneView;
+    private WebGlRunDocumentRunner? documentRunner;
     private WebGlSceneProofSnapshot? latestSnapshot;
+    private WebGlRuntimeDiagnostics? latestRuntimeDiagnostics;
+    private WebGlRunBrowserApplyResult? latestApplyResult;
+    private WebGlRunRuntimeSnapshot? latestRunSnapshot;
+    private CancellationTokenSource? playbackCancellation;
+    private bool isPlaying;
     private string statusText = "Ready.";
 
     public RunPlayback()
     {
         runDocument = CreateRunDocument();
-        playbackController = new WebGlRunPlaybackController(runDocument);
     }
 
-    private WebGlRunPlaybackState PlaybackState => playbackController.State;
-    private string PlaybackStatus => PlaybackState.IsPlaying ? "playing" : "paused";
-    private string PlaybackTone => PlaybackState.IsPlaying ? "success" : "info";
+    private long CurrentFrameIndex => documentRunner?.State.CurrentFrameIndex ?? 0;
+    private bool IsPlaying => isPlaying;
+    private long MaxFrameIndex => runDocument.Timeline.Frames.Count == 0
+        ? 0
+        : runDocument.Timeline.Frames.Max(static frame => frame.Index);
+    private string PlaybackStatus => IsPlaying ? "playing" : "paused";
+    private string PlaybackTone => IsPlaying ? "success" : "info";
+    private string CurrentBatchIdText => FirstNonEmpty(
+        latestRuntimeDiagnostics?.CurrentCommandBatchId,
+        latestRunSnapshot?.CurrentCommandBatchId,
+        "none");
+    private string BatchCommandCountText => CountText(latestRuntimeDiagnostics?.BatchCommandCount);
+    private string BatchStageCountText => CountText(latestRuntimeDiagnostics?.BatchStageCount);
+    private string CommandCountBeforeText => CountText(latestRuntimeDiagnostics?.CommandCountBeforeNormalization);
+    private string CommandCountAfterText => CountText(latestRuntimeDiagnostics?.CommandCountAfterNormalization);
+    private string InteropCallsAvoidedText => CountText(latestRuntimeDiagnostics?.InteropCallsAvoided);
+    private string QueuedStageCountText => CountText(latestRuntimeDiagnostics?.QueuedCommandStageCount);
+    private string DiagnosticsJson => JsonSerializer.Serialize(new
+    {
+        runId = runDocument.RunId.Value,
+        currentFrameIndex = CurrentFrameIndex,
+        isPlaying = IsPlaying,
+        latestApply = latestApplyResult is null
+            ? null
+            : new
+            {
+                latestApplyResult.FrameIndex,
+                latestApplyResult.AppliedStageCount,
+                latestApplyResult.AppliedPatchCount,
+                latestApplyResult.AppliedMotionCount,
+                latestApplyResult.Success
+            },
+        batch = latestRuntimeDiagnostics is null
+            ? null
+            : new
+            {
+                latestRuntimeDiagnostics.CurrentCommandBatchId,
+                latestRuntimeDiagnostics.BatchCommandCount,
+                latestRuntimeDiagnostics.BatchStageCount,
+                latestRuntimeDiagnostics.CommandCountBeforeNormalization,
+                latestRuntimeDiagnostics.CommandCountAfterNormalization,
+                latestRuntimeDiagnostics.InteropCallsAvoided,
+                latestRuntimeDiagnostics.QueuedCommandStageCount,
+                latestRuntimeDiagnostics.CommandStageJournalCount
+            },
+        runSnapshot = latestRunSnapshot is null
+            ? null
+            : new
+            {
+                latestRunSnapshot.CurrentFrameIndex,
+                latestRunSnapshot.CurrentCommandBatchId,
+                latestRunSnapshot.CurrentStageIds,
+                latestRunSnapshot.ActiveMotionCount,
+                latestRunSnapshot.QueuedMotionCount,
+                latestRunSnapshot.Diagnostics
+            },
+        proofSnapshot = latestSnapshot is null
+            ? null
+            : new
+            {
+                latestSnapshot.RenderCount,
+                latestSnapshot.ObjectCount,
+                latestSnapshot.VisibleObjectCount,
+                latestSnapshot.ActiveMotionCount,
+                latestSnapshot.CurrentCommandBatchId,
+                latestSnapshot.CommandStageJournalCount
+            }
+    }, DiagnosticsJsonOptions);
 
     private async Task PlayAsync()
     {
-        if (PlaybackState.IsPlaying)
+        if (isPlaying || !await EnsureRunnerAsync().ConfigureAwait(false))
         {
             return;
         }
 
-        var playResult = await playbackController.PlayToEndAsync(new SceneFrameApplier(this));
-        if (!playResult.Success)
+        playbackCancellation?.Cancel();
+        playbackCancellation?.Dispose();
+        playbackCancellation = new CancellationTokenSource();
+        CancellationToken cancellationToken = playbackCancellation.Token;
+        isPlaying = true;
+        statusText = "Playing generic sequence.";
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+
+        try
         {
-            statusText = string.Join(" ", playResult.Errors);
+            while (isPlaying && !cancellationToken.IsCancellationRequested && CurrentFrameIndex < MaxFrameIndex)
+            {
+                WebGlRunExecutionResult result = await documentRunner!.StepForwardAsync(cancellationToken).ConfigureAwait(false);
+                await CompleteExecutionAsync(result, $"Played generic frame {CurrentFrameIndex}.").ConfigureAwait(false);
+                if (!result.Succeeded)
+                {
+                    break;
+                }
+
+                await Task.Delay(TimeSpan.FromMilliseconds(140), cancellationToken).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            statusText = "Playback canceled.";
+        }
+        finally
+        {
+            isPlaying = false;
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
         }
     }
 
-    private async Task PauseAsync()
+    private Task PauseAsync()
+        => StopPlaybackAsync("Paused.");
+
+    private Task CancelAsync()
+        => StopPlaybackAsync("Canceled.");
+
+    private async Task ResetAsync()
     {
-        await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Pause });
-        statusText = "Paused.";
+        await StopPlaybackAsync("Resetting.").ConfigureAwait(false);
+        scene = CreateScene();
+        documentRunner = null;
+        latestApplyResult = null;
+        latestRunSnapshot = null;
+        latestRuntimeDiagnostics = null;
+        latestSnapshot = null;
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+
+        if (await EnsureRunnerAsync(forceReload: true).ConfigureAwait(false))
+        {
+            statusText = "Reset generic run.";
+            await CaptureProofAsync().ConfigureAwait(false);
+        }
     }
 
     private async Task StepAsync()
     {
-        var result = await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Next });
-        await ApplyPlaybackResultAsync(result);
-    }
-
-    private Task SeekStartAsync() => SeekAsync(0);
-
-    private async Task SeekAsync(long frameIndex)
-    {
-        scene = CreateScene();
-        if (sceneView is not null)
+        await StopPlaybackAsync("Stepping.").ConfigureAwait(false);
+        if (!await EnsureRunnerAsync().ConfigureAwait(false))
         {
-            await sceneView.ImportSceneAsync(scene);
-        }
-
-        var result = await playbackController.ApplyDetailedAsync(new WebGlRunPlaybackCommand
-        {
-            Kind = WebGlRunPlaybackCommandKinds.Seek,
-            TargetFrameIndex = frameIndex
-        });
-        await ApplyPlaybackResultAsync(result);
-    }
-
-    private async Task ApplyPlaybackResultAsync(WebGlRunPlaybackResult result)
-    {
-        if (!result.Success)
-        {
-            statusText = string.Join(" ", result.Errors);
             return;
         }
 
-        foreach (var frame in result.FramesToApply)
-        {
-            await ApplyFrameAsync(WebGlRunFrameApplyResult.FromFrame(frame));
-        }
+        WebGlRunExecutionResult result = await documentRunner!.StepForwardAsync().ConfigureAwait(false);
+        await CompleteExecutionAsync(result, $"Applied generic frame {CurrentFrameIndex}.").ConfigureAwait(false);
     }
 
-    private async Task ApplyFrameAsync(WebGlRunFrameApplyResult frame)
+    private Task ApplyBatchProofFrameAsync()
+        => SeekAsync(BatchProofFrameIndex);
+
+    private async Task SeekAsync(long frameIndex)
+    {
+        await StopPlaybackAsync($"Seeking frame {frameIndex.ToString(CultureInfo.InvariantCulture)}.").ConfigureAwait(false);
+        if (!await EnsureRunnerAsync().ConfigureAwait(false))
+        {
+            return;
+        }
+
+        WebGlRunExecutionResult seek = await documentRunner!.SeekAsync(frameIndex).ConfigureAwait(false);
+        if (!seek.Succeeded)
+        {
+            await CompleteExecutionAsync(seek, string.Empty).ConfigureAwait(false);
+            return;
+        }
+
+        WebGlRunExecutionResult apply = await documentRunner.ApplyCurrentFrameAsync().ConfigureAwait(false);
+        await CompleteExecutionAsync(apply, $"Applied generic frame {CurrentFrameIndex}.").ConfigureAwait(false);
+    }
+
+    private async Task CaptureProofAsync()
+    {
+        if (sceneView is null)
+        {
+            latestSnapshot = null;
+            latestRuntimeDiagnostics = null;
+            return;
+        }
+
+        latestSnapshot = await sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
+        latestRuntimeDiagnostics = await sceneView.GetDiagnosticsAsync().ConfigureAwait(false);
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    private async Task<bool> EnsureRunnerAsync(bool forceReload = false)
+    {
+        if (sceneView is null)
+        {
+            statusText = "WebGL runtime is still initializing.";
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            return false;
+        }
+
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(runDocument);
+        if (!validation.IsValid)
+        {
+            statusText = string.Join(" ", validation.Errors);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            return false;
+        }
+
+        if (documentRunner is not null && !forceReload)
+        {
+            return true;
+        }
+
+        documentRunner = new WebGlRunDocumentRunner(new BrowserFrameApplier(this));
+        WebGlRunExecutionResult load = await documentRunner.LoadAsync(runDocument).ConfigureAwait(false);
+        await CompleteExecutionAsync(load, "Loaded generic run document.").ConfigureAwait(false);
+        return load.Succeeded;
+    }
+
+    private async Task CompleteExecutionAsync(WebGlRunExecutionResult result, string successMessage)
+    {
+        statusText = result.Succeeded
+            ? successMessage
+            : string.Join(" ", result.Errors);
+        await CaptureProofAsync().ConfigureAwait(false);
+    }
+
+    private async Task ApplyFrameThroughAdapterAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken)
     {
         if (sceneView is null)
         {
             return;
         }
 
-        await sceneView.ApplyCommandBatchAsync(frame.CommandBatch);
-
-        statusText = $"Applied generic frame {frame.FrameIndex}.";
-        await CaptureProofAsync();
-        await InvokeAsync(StateHasChanged);
+        var adapter = new WebGlRunBrowserApplyAdapter(
+            new WebGlSceneViewBrowserRuntime(sceneView),
+            runDocument.InitialScene);
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(frame, cancellationToken).ConfigureAwait(false);
+        latestApplyResult = result;
+        latestRunSnapshot = result.RuntimeSnapshot;
+        latestRuntimeDiagnostics = result.RuntimeDiagnostics;
+        latestSnapshot = await sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
+        statusText = result.Success
+            ? $"Applied generic frame {frame.FrameIndex.ToString(CultureInfo.InvariantCulture)} as one command batch."
+            : string.Join(" ", result.Errors);
     }
 
-    private async Task CaptureProofAsync()
-        => latestSnapshot = sceneView is null ? null : await sceneView.GetProofSnapshotAsync();
+    private async Task StopPlaybackAsync(string status)
+    {
+        isPlaying = false;
+        playbackCancellation?.Cancel();
+        statusText = status;
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
 
     private Task HandleMotionCompleted(WebGlSceneCommandResult result)
     {
@@ -137,7 +315,13 @@ public partial class RunPlayback
             ObjectBindings =
             [
                 new WebGlRunObjectBinding { ObjectId = "object.runner", Position = new WebGlVector3(-3, 0, 0), AnchorPosition = new WebGlVector3(-3, 0, 0) },
-                new WebGlRunObjectBinding { ObjectId = "object.goal", Position = new WebGlVector3(3, 0, 0), AnchorPosition = new WebGlVector3(3, 0, 0) }
+                new WebGlRunObjectBinding { ObjectId = "object.goal", Position = new WebGlVector3(3, 0, 0), AnchorPosition = new WebGlVector3(3, 0, 0) },
+                .. Enumerable.Range(0, BatchActorCount).Select(index => new WebGlRunObjectBinding
+                {
+                    ObjectId = BatchObjectId(index),
+                    Position = BatchStartPosition(index),
+                    AnchorPosition = BatchStartPosition(index)
+                })
             ],
             Actions =
             [
@@ -157,7 +341,15 @@ public partial class RunPlayback
                 Action("run.pose.restore", WebGlRunActionKinds.SetPose, 3, "object.runner", parameters: new()
                 {
                     ["poseKey"] = "neutral"
-                })
+                }),
+                .. Enumerable.Range(0, BatchActorCount).Select(index => Action(
+                    $"run.batch.move.{index}",
+                    WebGlRunActionKinds.MoveToPosition,
+                    BatchProofFrameIndex,
+                    BatchObjectId(index),
+                    parameters: PositionParameters(BatchTargetPosition(index)),
+                    durationSeconds: 0.5,
+                    coalescingScope: WebGlRunCoalescingScopes.Frame))
             ]
         };
 
@@ -167,7 +359,9 @@ public partial class RunPlayback
         double startsAtSeconds,
         string subjectObjectId,
         string targetObjectId = "",
-        Dictionary<string, string>? parameters = null)
+        Dictionary<string, string>? parameters = null,
+        double durationSeconds = 0.32,
+        string coalescingScope = WebGlRunCoalescingScopes.StageOnly)
         => new()
         {
             ActionId = id,
@@ -175,16 +369,40 @@ public partial class RunPlayback
             SubjectObjectId = subjectObjectId,
             TargetObjectId = targetObjectId,
             StartsAtSeconds = startsAtSeconds,
-            DurationSeconds = 0.32,
-            Parameters = parameters ?? []
+            DurationSeconds = durationSeconds,
+            Parameters = parameters ?? [],
+            CoalescingScope = coalescingScope
         };
 
-    private sealed class SceneFrameApplier(RunPlayback owner) : IWebGlRunFrameApplier
+    private sealed class BrowserFrameApplier(RunPlayback owner) : IWebGlRunFrameApplier, IWebGlRunInitialSceneApplier
     {
+        public async ValueTask ApplyInitialSceneAsync(WebGlSceneDocument sceneDocument, CancellationToken cancellationToken = default)
+        {
+            if (owner.sceneView is null)
+            {
+                return;
+            }
+
+            var runtime = new WebGlSceneViewBrowserRuntime(owner.sceneView);
+            WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(sceneDocument, cancellationToken).ConfigureAwait(false);
+            owner.latestRuntimeDiagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+            owner.latestSnapshot = await owner.sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
+            owner.latestRunSnapshot = new WebGlRunRuntimeSnapshot
+            {
+                RunId = owner.runDocument.RunId.Value,
+                InitialSceneId = sceneDocument.Scene.SceneId,
+                InitialObjectCount = sceneDocument.Scene.Objects.Count,
+                InitialLinkCount = sceneDocument.Scene.Links.Count,
+                InitialSceneLoaded = importResult?.Success == true,
+                RuntimeErrors = importResult is null ? [] : [.. importResult.Errors],
+                RuntimeWarnings = importResult is null ? [] : [.. importResult.Warnings]
+            };
+        }
+
         public async ValueTask ApplyAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await owner.ApplyFrameAsync(frame);
+            await owner.ApplyFrameThroughAdapterAsync(frame, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -239,7 +457,18 @@ public partial class RunPlayback
                     Position = new WebGlVector3(3, 0, 0),
                     Size = new WebGlVector3(0.8, 0.8, 0.8),
                     Color = "#22c55e"
-                }
+                },
+                .. Enumerable.Range(0, BatchActorCount).Select(index => new WebGlSceneObject
+                {
+                    Id = BatchObjectId(index),
+                    Kind = "marker",
+                    Family = "generic-batch",
+                    Title = $"Actor {index + 1}",
+                    AssetId = "asset.symbol.marker.default",
+                    Position = BatchStartPosition(index),
+                    Size = new WebGlVector3(0.42, 0.42, 0.42),
+                    Color = index % 2 == 0 ? "#a78bfa" : "#f59e0b"
+                })
             ],
             Links =
             [
@@ -257,4 +486,30 @@ public partial class RunPlayback
                 ["domain"] = "generic"
             }
         };
+
+    private static string BatchObjectId(int index)
+        => $"object.batch.{index}";
+
+    private static WebGlVector3 BatchStartPosition(int index)
+        => new(-5.2 + (index % 8) * 1.48, 0, -3.2 + (index / 8) * 0.62);
+
+    private static WebGlVector3 BatchTargetPosition(int index)
+        => new(-5.2 + (index % 8) * 1.48, 0, 2.2 - (index / 8) * 0.62);
+
+    private static Dictionary<string, string> PositionParameters(WebGlVector3 position)
+        => new(StringComparer.Ordinal)
+        {
+            ["x"] = ToInvariant(position.X),
+            ["y"] = ToInvariant(position.Y),
+            ["z"] = ToInvariant(position.Z)
+        };
+
+    private static string CountText(int? value)
+        => value.GetValueOrDefault().ToString(CultureInfo.InvariantCulture);
+
+    private static string ToInvariant(double value)
+        => value.ToString(CultureInfo.InvariantCulture);
+
+    private static string FirstNonEmpty(params string?[] values)
+        => values.FirstOrDefault(static value => !string.IsNullOrWhiteSpace(value)) ?? string.Empty;
 }

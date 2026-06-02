@@ -88,6 +88,8 @@ public sealed class WebGlRuntimeDiagnostics
 
     public string LargestLoadedAssetId { get; set; } = string.Empty;
 
+    public string AssetCacheMode { get; set; } = "state-local";
+
     public int AssetCacheEntryCount { get; set; }
 
     public int AssetCacheHitCount { get; set; }
@@ -103,6 +105,8 @@ public sealed class WebGlRuntimeDiagnostics
     public int DisposedMaterialCount { get; set; }
 
     public int DisposedTextureCount { get; set; }
+
+    public int RetainedSharedTextureCount { get; set; }
 
     public int BatchCommandCount { get; set; }
 
@@ -182,13 +186,39 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int PatchedObjectCount { get; set; }
 
+    public int FullSceneRebuildCount { get; set; }
+
+    public int TransformOnlyPatchCount { get; set; }
+
+    public int SymbolOnlyPatchCount { get; set; }
+
+    public int LinkOnlyPatchCount { get; set; }
+
+    public int VisualReplacePatchCount { get; set; }
+
+    public int MixedIncrementalPatchCount { get; set; }
+
+    public int GraphStructurePatchCount { get; set; }
+
+    public int SceneRebuildPatchCount { get; set; }
+
+    public string LastPatchClassification { get; set; } = string.Empty;
+
     public int ReplacedObjectGroupCount { get; set; }
 
     public int SymbolOnlyUpdateCount { get; set; }
 
     public int LinkUpdateCount { get; set; }
 
+    public int LinkGeometryUpdateCount { get; set; }
+
     public int LinkGeometryRebuildCount { get; set; }
+
+    public int LinksUpdatedLastFrame { get; set; }
+
+    public int LinkSyncScanCount { get; set; }
+
+    public int LinkSyncIndexedHitCount { get; set; }
 
     public string LastError { get; set; } = string.Empty;
 

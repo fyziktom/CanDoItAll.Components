@@ -6,6 +6,7 @@ import {
     normalizeScene,
     resolveActiveAssetProfile
 } from "./02-webgl-scene-core.js";
+import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
 import { buildAssetLookup } from "./03-webgl-scene-assets.js";
 import {
     handleClick,
@@ -132,6 +133,7 @@ export function exportImageData(state) {
 export function exportScene(state) {
     updateCameraModel(state);
     const exported = clonePayload(state.sceneModel);
+    exported.revision = resolveSceneRevision(state.sceneModel);
     exported.uiState = exported.uiState || {};
     exported.uiState.hoveredObjectId = state.hoveredObjectId || "";
     exported.uiState.selection = {
@@ -140,7 +142,7 @@ export function exportScene(state) {
         contextActionId: ""
     };
     exported.uiState.activeAssetProfile = resolveActiveAssetProfile(state);
-    exported.uiState.revision = exported.uiState.revision || state.sceneModel.uiState?.revision || 0;
+    exported.uiState.revision = exported.revision;
     return exported;
 }
 

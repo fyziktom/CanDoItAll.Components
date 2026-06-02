@@ -85,6 +85,52 @@ public sealed class WebGlRunBrowserApplyAdapterTests
     }
 
     [Fact]
+    public async Task Adapter_reports_large_frame_batch_diagnostics_without_per_object_apply_loop()
+    {
+        var runtime = new RecordingBrowserRuntime
+        {
+            Diagnostics = new()
+            {
+                CurrentCommandBatchId = "run-frame:9",
+                BatchCommandCount = 32,
+                BatchStageCount = 8,
+                CommandCountBeforeNormalization = 40,
+                CommandCountAfterNormalization = 32,
+                InteropCallsAvoided = 31
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime);
+        var frame = new WebGlRunFrameApplyResult
+        {
+            FrameIndex = 9,
+            CommandBatch = new()
+            {
+                BatchId = "run-frame:9",
+                Stages =
+                [
+                    .. Enumerable.Range(0, 8).Select(index => new WebGlSceneCommandBatchStage
+                    {
+                        StageId = $"stage.parallel.{index}",
+                        BatchingPolicy = WebGlSceneBatchingPolicies.Parallel,
+                        Motions = { Motion($"motion.actor.{index}", $"actor.{index}") }
+                    })
+                ]
+            }
+        };
+
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(frame);
+
+        Assert.True(result.Success);
+        Assert.Single(runtime.AppliedBatches);
+        Assert.Equal(8, runtime.AppliedBatches[0].Stages.Count);
+        Assert.Equal("32", result.RuntimeSnapshot.Diagnostics["batchCommandCount"]);
+        Assert.Equal("8", result.RuntimeSnapshot.Diagnostics["batchStageCount"]);
+        Assert.Equal("40", result.RuntimeSnapshot.Diagnostics["commandCountBeforeNormalization"]);
+        Assert.Equal("32", result.RuntimeSnapshot.Diagnostics["commandCountAfterNormalization"]);
+        Assert.Equal("31", result.RuntimeSnapshot.Diagnostics["interopCallsAvoided"]);
+    }
+
+    [Fact]
     public async Task Adapter_reports_runtime_failure_in_typed_result_and_snapshot()
     {
         var runtime = new RecordingBrowserRuntime

@@ -15,6 +15,7 @@ All packages are currently versioned together at `0.1.0`.
 | `CanDoItAll.Components.Mermaid` | Typed Mermaid diagram component and vendored Mermaid assets. |
 | `CanDoItAll.Components.OverlayLib` | Floating overlay and window components. |
 | `CanDoItAll.Components.WebGlLib` | WebGL workbench runtime plus generic scene, asset, symbol, interaction, and proof contracts. |
+| `CanDoItAll.Components.WebGlRunLib` | Generic run/playback/action/stage contracts layered over WebGlLib scene patches. |
 | `CanDoItAll.Components.Sandbox` | Component preview and regression host. |
 | `CanDoItAll.Components.WebGlSandbox` | Standalone WebGL proof host for generic scene demos such as the tycoon village. |
 
@@ -42,6 +43,8 @@ Useful routes:
 
 Domain-specific repositories should map their own data into `WebGlSceneModel` outside this repository. Keep `CanDoItAll.Components.WebGlLib` domain-neutral.
 
+WebGlLib can also be consumed without WebGlRunLib through the minimal Razor sample at `samples/CanDoItAll.Components.WebGlLibOnlyViewer`.
+
 Current WebGL hardening proof is large-screen only by design; small-screen layout tuning is out of scope for this bundle.
 
 ## Pack
@@ -49,6 +52,13 @@ Current WebGL hardening proof is large-screen only by design; small-screen layou
 ```powershell
 dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages
 ```
+
+This emits all shared component packages at the version in `Directory.Build.props`. The WebGL integration packages are:
+
+- `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0.nupkg`
+- `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0.nupkg`
+
+When validating package consumers against freshly packed `0.1.0` packages, prefer a proof/local NuGet.config that points at `artifacts\packages` before any older private feed, or use an isolated `NUGET_PACKAGES` cache. That prevents stale local packages from shadowing the current pack output.
 
 Copy packages into the main repo private feed:
 

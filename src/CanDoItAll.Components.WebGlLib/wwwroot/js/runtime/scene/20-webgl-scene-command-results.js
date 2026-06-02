@@ -1,3 +1,5 @@
+import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
+
 const defaultMaxCommandResults = 100;
 const defaultMaxFailedCommands = 50;
 const defaultMaxBatchChildResults = 25;
@@ -10,7 +12,7 @@ export function createCommandResult(state, commandKind, commandId = "") {
         succeeded: true,
         sceneId: state?.sceneModel?.sceneId || "",
         commandKind: commandKind || "command",
-        revision: state?.sceneModel?.uiState?.revision || 0,
+        revision: resolveSceneRevision(state?.sceneModel),
         errors: [],
         warnings: [],
         affectedObjectIds: [],
@@ -49,13 +51,22 @@ export function failCommand(state, result, message, runtimeErrorTitle = "WebGL s
 export function completeCommandResult(state, result) {
     result.success = result.errors.length === 0;
     result.succeeded = result.success;
-    result.revision = state?.sceneModel?.uiState?.revision || 0;
+    result.revision = resolveSceneRevision(state?.sceneModel);
     result.affectedObjectIds = unique(result.affectedObjectIds);
     result.affectedLinkIds = unique(result.affectedLinkIds);
     result.diagnostics = {
         renderCount: String(state?.diagnostics?.renderCount || 0),
         activeMotionCount: String(state?.motions?.size || 0),
-        failedCommandCount: String(state?.diagnostics?.failedCommandDetails?.length || 0)
+        failedCommandCount: String(state?.diagnostics?.failedCommandDetails?.length || 0),
+        assetCacheMode: state?.diagnostics?.assetCacheMode || state?.assetCache?.mode || "state-local",
+        retainedSharedTextureCount: String(state?.diagnostics?.retainedSharedTextureCount || 0),
+        disposedTextureCount: String(state?.diagnostics?.disposedTextureCount || 0),
+        fullSceneRebuildCount: String(state?.diagnostics?.fullSceneRebuildCount || 0),
+        transformOnlyPatchCount: String(state?.diagnostics?.transformOnlyPatchCount || 0),
+        symbolOnlyPatchCount: String(state?.diagnostics?.symbolOnlyPatchCount || 0),
+        linkOnlyPatchCount: String(state?.diagnostics?.linkOnlyPatchCount || 0),
+        linkGeometryUpdateCount: String(state?.diagnostics?.linkGeometryUpdateCount || 0),
+        lastPatchClassification: state?.diagnostics?.lastPatchClassification || ""
     };
     rememberCommandResult(state, result);
     notifyCommandResult(state, result);
@@ -153,8 +164,44 @@ function notifyCommandResult(state, result) {
 
     const methodName = result.success ? "OnCommandCompleted" : "OnCommandFailed";
     state.dotNetRef
-        .invokeMethodAsync(methodName, JSON.stringify(result))
+        .invokeMethodAsync(methodName, JSON.stringify(compactCommandResultForCallback(result)))
         .catch(error => console.warn(`WebGL scene ${methodName} callback failed.`, error));
+}
+
+function compactCommandResultForCallback(result) {
+    const totalAffectedObjectCount = result?.affectedObjectIds?.length || 0;
+    const totalAffectedLinkCount = result?.affectedLinkIds?.length || 0;
+    const affectedObjectIds = limitWithOverflow(
+        result?.affectedObjectIds || [],
+        defaultMaxBatchMessages,
+        totalAffectedObjectCount,
+        "affected object");
+    const affectedLinkIds = limitWithOverflow(
+        result?.affectedLinkIds || [],
+        defaultMaxBatchMessages,
+        totalAffectedLinkCount,
+        "affected link");
+
+    return {
+        commandId: result?.commandId || "",
+        success: result?.success !== false,
+        succeeded: result?.success !== false,
+        sceneId: result?.sceneId || "",
+        commandKind: result?.commandKind || "",
+        revision: Number(result?.revision) || 0,
+        errors: limitWithOverflow(result?.errors || [], defaultMaxBatchMessages, result?.errors?.length || 0, "error"),
+        warnings: limitWithOverflow(result?.warnings || [], defaultMaxBatchMessages, result?.warnings?.length || 0, "warning"),
+        affectedObjectIds,
+        affectedLinkIds,
+        diagnostics: result?.diagnostics || {},
+        metadata: {
+            ...(result?.metadata || {}),
+            totalAffectedObjectCount: String(totalAffectedObjectCount),
+            returnedAffectedObjectCount: String(affectedObjectIds.length),
+            totalAffectedLinkCount: String(totalAffectedLinkCount),
+            returnedAffectedLinkCount: String(affectedLinkIds.length)
+        }
+    };
 }
 
 function buildCommandId(state, commandKind) {

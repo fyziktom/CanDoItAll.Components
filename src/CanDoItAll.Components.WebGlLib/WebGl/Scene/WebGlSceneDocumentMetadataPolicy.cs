@@ -15,19 +15,27 @@ internal static class WebGlSceneDocumentMetadataPolicy
     public static IEnumerable<(string Scope, Dictionary<string, string> Metadata)> EnumerateMetadataScopes(WebGlSceneDocument document)
     {
         yield return ("document", document.Metadata);
-        yield return ("scene", document.Scene.Metadata);
-        yield return ("ui-state", document.Scene.UiState.Metadata);
-        foreach (var sceneObject in document.Scene.Objects)
+        foreach (var scope in EnumerateSceneMetadataScopes(document.Scene))
+        {
+            yield return scope;
+        }
+    }
+
+    public static IEnumerable<(string Scope, Dictionary<string, string> Metadata)> EnumerateSceneMetadataScopes(WebGlSceneModel scene)
+    {
+        yield return ("scene", scene.Metadata);
+        yield return ("ui-state", scene.UiState.Metadata);
+        foreach (var sceneObject in scene.Objects)
         {
             yield return ($"object:{sceneObject.Id}", sceneObject.Metadata);
         }
 
-        foreach (var link in document.Scene.Links)
+        foreach (var link in scene.Links)
         {
             yield return ($"link:{link.Id}", link.Metadata);
         }
 
-        foreach (var layer in document.Scene.Layers)
+        foreach (var layer in scene.Layers)
         {
             yield return ($"layer:{layer.Id}", layer.Metadata);
         }

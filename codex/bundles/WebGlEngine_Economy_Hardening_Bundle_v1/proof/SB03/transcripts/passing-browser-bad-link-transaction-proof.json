@@ -1,0 +1,139 @@
+{
+  "tool": "mcp__playwright.browser_run_code_unsafe",
+  "runUtc": "2026-06-02T00:39:19Z",
+  "route": "http://127.0.0.1:5281/tycoon-village",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "objectId": "agent.runner",
+  "negativePatch": {
+    "patch": {
+      "sceneId": "generic-tycoon-village",
+      "baseRevision": 0,
+      "objectPatches": [
+        {
+          "objectId": "agent.runner",
+          "position": {
+            "x": 1.7,
+            "y": 0,
+            "z": -1.1
+          }
+        }
+      ],
+      "addLinks": [
+        {
+          "id": "link.invalid.missing-endpoint",
+          "sourceObjectId": "agent.runner",
+          "targetObjectId": "missing.object"
+        }
+      ]
+    },
+    "result": {
+      "success": false,
+      "revision": 0,
+      "errors": [
+        "Link 'link.invalid.missing-endpoint' references missing endpoint(s): 'agent.runner' -> 'missing.object'."
+      ],
+      "affectedObjectIds": [],
+      "affectedLinkIds": []
+    },
+    "before": {
+      "revision": 0,
+      "uiRevision": 0,
+      "objectCount": 20,
+      "linkCount": 5,
+      "runnerPosition": {
+        "x": 1.2,
+        "y": 0,
+        "z": -1.6
+      }
+    },
+    "after": {
+      "revision": 0,
+      "uiRevision": 0,
+      "objectCount": 20,
+      "linkCount": 5,
+      "runnerPosition": {
+        "x": 1.2,
+        "y": 0,
+        "z": -1.6
+      }
+    },
+    "badHashUnchanged": true,
+    "badRunnerMoved": false,
+    "badRevisionChanged": false
+  },
+  "positivePatch": {
+    "patch": {
+      "sceneId": "generic-tycoon-village",
+      "baseRevision": 0,
+      "objectPatches": [
+        {
+          "objectId": "agent.runner",
+          "position": {
+            "x": 1.45,
+            "y": 0,
+            "z": -1.85
+          }
+        }
+      ],
+      "addLinks": [
+        {
+          "id": "link.runner.plaza.proof",
+          "sourceObjectId": "agent.runner",
+          "targetObjectId": "marker.plaza"
+        }
+      ]
+    },
+    "result": {
+      "success": true,
+      "revision": 1,
+      "errors": [],
+      "warnings": [],
+      "affectedObjectIds": [
+        "agent.runner"
+      ],
+      "affectedLinkIds": [
+        "link.runner.plaza.proof"
+      ]
+    },
+    "before": {
+      "revision": 0,
+      "uiRevision": 0,
+      "objectCount": 20,
+      "linkCount": 5,
+      "runnerPosition": {
+        "x": 1.2,
+        "y": 0,
+        "z": -1.6
+      }
+    },
+    "after": {
+      "revision": 1,
+      "uiRevision": 1,
+      "objectCount": 20,
+      "linkCount": 6,
+      "runnerPosition": {
+        "x": 1.45,
+        "y": 0,
+        "z": -1.85
+      }
+    },
+    "goodRunnerMoved": true,
+    "goodRevisionDelta": 1,
+    "goodUiRevisionDelta": 1,
+    "goodLinkAdded": 1
+  },
+  "diagnostics": {
+    "objectCount": 20,
+    "visibleObjectCount": 20,
+    "visibleLinkCount": 6,
+    "patchedObjectCount": 1,
+    "replacedObjectGroupCount": 0,
+    "lastError": "Link 'link.invalid.missing-endpoint' references missing endpoint(s): 'agent.runner' -> 'missing.object'."
+  },
+  "filteredConsoleMessages": [],
+  "pageErrors": [],
+  "screenshotPath": "C:/repositories/CanDoItAll.Components/codex/bundles/WebGlEngine_Economy_Hardening_Bundle_v1/proof/SB03/browser/tycoon-village-sb03-passing.png"
+}

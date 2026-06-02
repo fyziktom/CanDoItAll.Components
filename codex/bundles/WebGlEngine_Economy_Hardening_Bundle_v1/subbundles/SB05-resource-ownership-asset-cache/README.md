@@ -2,7 +2,7 @@
 
 ## Status
 
-Prepared / Not started
+Completed at `2026-06-02T02:26:23Z`
 
 ## Objective
 
@@ -68,14 +68,21 @@ None planned. If current repo state makes a deliverable obsolete, record it in `
 
 ## Acceptance Checklist
 
-- [ ] All owned requirements are addressed.
-- [ ] Source references were reread against current repo state.
-- [ ] Negative proof exists for at least one realistic failure mode.
-- [ ] Positive proof demonstrates intended behavior.
-- [ ] Refactor gate completed and recorded.
-- [ ] Proof artifacts are stored under `proof/SB05/`.
-- [ ] Traceability and execution report are updated.
-- [ ] No scope leakage into downstream subbundles.
+- [x] All owned requirements are addressed.
+- [x] Source references were reread against current repo state.
+- [x] Negative proof exists for at least one realistic failure mode.
+- [x] Positive proof demonstrates intended behavior.
+- [x] Refactor gate completed and recorded.
+- [x] Proof artifacts are stored under `proof/SB05/`.
+- [x] Traceability and execution report are updated.
+- [x] No scope leakage into downstream subbundles.
+
+## Closure Notes
+
+- Split resource ownership into geometry, material, and texture semantics so tinted material clones do not dispose shared template textures.
+- Made state-local asset cache disposal release cached template geometry/material/texture resources with diagnostics.
+- Added durable JS resource ownership proof, typed DTO coverage, and WebGlLib docs for cache/resource counters.
+- Captured browser proof with two textured `question_box.glb` instances, profile switching, intentional missing asset fallback, and final scene/cache disposal.
 
 ## Proof Required
 

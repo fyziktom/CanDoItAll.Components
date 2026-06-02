@@ -1,0 +1,119 @@
+- generic [ref=e117] [box=0,0,390,2318]:
+  - complementary [ref=e118] [box=0,0,390,244]:
+    - link "CanDoItAll WebGL Sandbox" [ref=e119] [cursor=pointer] [box=14,14,363,46]:
+      - /url: /
+      - generic [ref=e120] [box=14,14,363,17]: CanDoItAll
+      - generic [ref=e121] [box=14,34,363,25]: WebGL Sandbox
+    - navigation "WebGL sandbox routes" [ref=e122] [box=14,79,363,151]:
+      - link "Overview" [ref=e123] [cursor=pointer] [box=14,79,178,45]:
+        - /url: /
+      - link "Tycoon Village" [ref=e124] [cursor=pointer] [box=199,79,178,45]:
+        - /url: /tycoon-village
+      - link "Run Play" [ref=e125] [cursor=pointer] [box=14,132,178,45]:
+        - /url: /run-playback
+      - link "Model Lab" [ref=e126] [cursor=pointer] [box=199,132,178,45]:
+        - /url: /model-lab
+      - link "Asset Catalog" [ref=e127] [cursor=pointer] [box=14,185,178,45]:
+        - /url: /asset-catalog
+  - main [ref=e128] [box=0,244,390,2074]:
+    - status [ref=e234] [box=0,244,390,66]: This WebGL sandbox is optimized for desktop/large-screen use.
+    - generic [ref=e130] [box=14,324,363,1980]:
+      - generic [ref=e132] [box=14,324,363,202]:
+        - generic [ref=e134] [box=14,324,363,96]:
+          - paragraph [ref=e135] [box=14,324,363,16]: Generic run layer
+          - heading "Run Playback" [level=1] [ref=e136] [box=14,344,363,32]
+          - paragraph [ref=e137] [box=14,380,363,40]: Domain-neutral frame playback over WebGL scene patches.
+        - generic [ref=e138] [box=14,430,363,83]:
+          - button "Play" [ref=e139] [box=14,430,76,38]:
+            - generic [ref=e140] [box=26,439,20,20]: play_arrow
+            - generic [ref=e141] [box=54,441,23,16]: Play
+          - button "Pause" [ref=e142] [box=98,430,85,38]:
+            - generic [ref=e143] [box=111,439,20,20]: pause
+            - generic [ref=e144] [box=139,441,31,16]: Pause
+          - button "Cancel" [ref=e145] [box=191,430,89,38]:
+            - generic [ref=e146] [box=204,439,20,20]: cancel
+            - generic [ref=e147] [box=232,441,36,16]: Cancel
+          - button "Step" [ref=e148] [box=288,430,78,38]:
+            - generic [ref=e149] [box=301,439,20,20]: skip_next
+            - generic [ref=e150] [box=329,441,24,16]: Step
+          - button "Batch frame" [active] [ref=e151] [box=14,476,119,38]:
+            - generic [ref=e152] [box=26,485,20,20]: dynamic_feed
+            - generic [ref=e153] [box=54,487,66,16]: Batch frame
+          - button "Reset" [ref=e154] [box=141,476,83,38]:
+            - generic [ref=e155] [box=154,485,20,20]: restart_alt
+            - generic [ref=e156] [box=182,487,29,16]: Reset
+          - button "Snapshot" [ref=e157] [box=232,476,104,38]:
+            - generic [ref=e158] [box=245,485,20,20]: photo_camera
+            - generic [ref=e159] [box=273,487,51,16]: Snapshot
+      - generic [ref=e161] [box=14,540,363,1764]:
+        - generic "Generic WebGL run playback scene" [ref=e164] [box=14,540,363,512]:
+          - generic [box=114,986,250,53]:
+            - paragraph [box=125,996,228,16]: Runtime
+            - paragraph [box=125,1014,228,16]: 26 objects / 0 symbols / 0 loaded / 0 fallback
+        - complementary "Run playback inspector" [ref=e167] [box=14,859,363,1446]:
+          - generic [ref=e168] [box=14,859,363,346]:
+            - generic [ref=e169] [box=29,874,333,26]:
+              - generic [ref=e170] [box=29,877,75,20]: Playback
+              - generic [ref=e171] [box=293,874,69,26]: paused
+            - generic [ref=e172] [box=29,911,333,247]:
+              - generic [ref=e173] [box=29,911,333,56]:
+                - term [ref=e174] [box=38,919,314,16]: Frame
+                - definition [ref=e175] [box=38,938,314,20]: "4"
+              - generic [ref=e176] [box=29,974,333,56]:
+                - term [ref=e177] [box=38,983,314,16]: Playing
+                - definition [ref=e178] [box=38,1001,314,20]: "False"
+              - generic [ref=e179] [box=29,1038,333,56]:
+                - term [ref=e180] [box=38,1047,314,16]: Renders
+                - definition [ref=e232] [box=38,1065,314,20]: "56"
+              - generic [ref=e181] [box=29,1102,333,56]:
+                - term [ref=e182] [box=38,1110,314,16]: Motions
+                - definition [ref=e233] [box=38,1129,314,20]: "1"
+            - paragraph [ref=e183] [box=29,1169,333,21]: "Motion completed: run.batch.move.23."
+          - generic [ref=e184] [box=14,1218,363,442]:
+            - generic [ref=e185] [box=29,1233,333,26]:
+              - generic [ref=e186] [box=29,1236,114,20]: Batch metrics
+              - generic [ref=e187] [box=256,1233,106,26]: run-frame:4
+            - generic [ref=e188] [box=29,1270,333,374]:
+              - generic [ref=e189] [box=29,1270,333,56]:
+                - term [ref=e190] [box=38,1278,314,16]: Commands
+                - definition [ref=e191] [box=38,1297,314,20]: "24"
+              - generic [ref=e192] [box=29,1334,333,56]:
+                - term [ref=e193] [box=38,1342,314,16]: Stages
+                - definition [ref=e194] [box=38,1361,314,20]: "24"
+              - generic [ref=e195] [box=29,1397,333,56]:
+                - term [ref=e196] [box=38,1406,314,16]: Before
+                - definition [ref=e197] [box=38,1424,314,20]: "24"
+              - generic [ref=e198] [box=29,1461,333,56]:
+                - term [ref=e199] [box=38,1470,314,16]: After
+                - definition [ref=e200] [box=38,1488,314,20]: "24"
+              - generic [ref=e201] [box=29,1525,333,56]:
+                - term [ref=e202] [box=38,1533,314,16]: Avoided
+                - definition [ref=e203] [box=38,1552,314,20]: "23"
+              - generic [ref=e204] [box=29,1589,333,56]:
+                - term [ref=e205] [box=38,1597,314,16]: Queued
+                - definition [ref=e206] [box=38,1616,314,20]: "22"
+          - generic [ref=e207] [box=14,1672,363,296]:
+            - generic [ref=e208] [box=29,1688,333,26]:
+              - generic [ref=e209] [box=29,1691,67,20]: Timeline
+              - generic [ref=e210] [box=280,1688,81,26]: 5 frames
+            - generic [ref=e211] [box=29,1724,333,229]:
+              - button "Frame 0 0.0s" [ref=e212] [cursor=pointer] [box=29,1724,333,41]:
+                - generic [ref=e213] [box=38,1733,57,24]: Frame 0
+                - generic [ref=e214] [box=330,1735,22,19]: 0.0s
+              - button "Frame 1 1.0s" [ref=e215] [cursor=pointer] [box=29,1771,333,41]:
+                - generic [ref=e216] [box=38,1780,57,24]: Frame 1
+                - generic [ref=e217] [box=330,1782,22,19]: 1.0s
+              - button "Frame 2 2.0s" [ref=e218] [cursor=pointer] [box=29,1818,333,41]:
+                - generic [ref=e219] [box=38,1827,57,24]: Frame 2
+                - generic [ref=e220] [box=330,1829,22,19]: 2.0s
+              - button "Frame 3 3.0s" [ref=e221] [cursor=pointer] [box=29,1865,333,41]:
+                - generic [ref=e222] [box=38,1874,57,24]: Frame 3
+                - generic [ref=e223] [box=330,1876,22,19]: 3.0s
+              - button "Frame 4 4.0s" [ref=e224] [cursor=pointer] [box=29,1912,333,41]:
+                - generic [ref=e225] [box=38,1921,57,24]: Frame 4
+                - generic [ref=e226] [box=330,1923,22,19]: 4.0s
+          - generic [ref=e227] [box=14,1981,363,323]:
+            - generic [ref=e228] [box=29,1997,333,26]:
+              - generic [ref=e229] [box=29,2000,138,20]: Diagnostics JSON
+              - generic [ref=e230] [box=274,1997,88,26]: 24 actors
+            - generic [ref=e231] [box=29,2033,333,256]: "{ \"runId\": \"generic-run-demo\", \"currentFrameIndex\": 4, \"isPlaying\": false, \"latestApply\": { \"frameIndex\": 4, \"appliedStageCount\": 24, \"appliedPatchCount\": 0, \"appliedMotionCount\": 24, \"success\": true }, \"batch\": { \"currentCommandBatchId\": \"run-frame:4\", \"batchCommandCount\": 24, \"batchStageCount\": 24, \"commandCountBeforeNormalization\": 24, \"commandCountAfterNormalization\": 24, \"interopCallsAvoided\": 23, \"queuedCommandStageCount\": 22, \"commandStageJournalCount\": 5 }, \"runSnapshot\": { \"currentFrameIndex\": 4, \"currentCommandBatchId\": \"run-frame:4\", \"currentStageIds\": [ \"run.batch.move.0\", \"run.batch.move.1\", \"run.batch.move.2\", \"run.batch.move.3\", \"run.batch.move.4\", \"run.batch.move.5\", \"run.batch.move.6\", \"run.batch.move.7\", \"run.batch.move.8\", \"run.batch.move.9\", \"run.batch.move.10\", \"run.batch.move.11\", \"run.batch.move.12\", \"run.batch.move.13\", \"run.batch.move.14\", \"run.batch.move.15\", \"run.batch.move.16\", \"run.batch.move.17\", \"run.batch.move.18\", \"run.batch.move.19\", \"run.batch.move.20\", \"run.batch.move.21\", \"run.batch.move.22\", \"run.batch.move.23\" ], \"activeMotionCount\": 1, \"queuedMotionCount\": 0, \"diagnostics\": { \"renderCount\": \"28\", \"batchCommandCount\": \"24\", \"batchStageCount\": \"24\", \"batchDurationMs\": \"14\", \"commandCountBeforeNormalization\": \"24\", \"commandCountAfterNormalization\": \"24\", \"coalescedPatchCount\": \"0\", \"droppedDuplicateMotionCount\": \"0\", \"preservedOrderedDuplicateMotionCount\": \"0\", \"interopCallsAvoided\": \"23\", \"activeMotionCount\": \"1\", \"queuedMotionCount\": \"0\", \"queuedCommandStageCount\": \"23\", \"commandStageJournalCount\": \"2\", \"commandStageBarrierPolicy\": \"wait-for-object-motions\", \"lastError\": \"\", \"lastStageError\": \"\" } }, \"proofSnapshot\": { \"renderCount\": 56, \"objectCount\": 26, \"visibleObjectCount\": 26, \"activeMotionCount\": 1, \"currentCommandBatchId\": \"run-frame:4\", \"commandStageJournalCount\": 5 } }"

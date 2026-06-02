@@ -25,10 +25,22 @@ public sealed class WebGlScenePatchReducer
             }
 
             scene.Objects.RemoveAll(item => string.Equals(item.Id, objectId, StringComparison.Ordinal));
+            var removedLinkIds = scene.Links
+                .Where(item => string.Equals(item.SourceObjectId, objectId, StringComparison.Ordinal) ||
+                               string.Equals(item.TargetObjectId, objectId, StringComparison.Ordinal))
+                .Select(static item => item.Id)
+                .Where(static id => !string.IsNullOrWhiteSpace(id))
+                .ToArray();
             scene.Links.RemoveAll(item => string.Equals(item.SourceObjectId, objectId, StringComparison.Ordinal) ||
                                           string.Equals(item.TargetObjectId, objectId, StringComparison.Ordinal));
+            foreach (var layer in scene.Layers)
+            {
+                layer.ObjectIds.RemoveAll(id => string.Equals(id, objectId, StringComparison.Ordinal));
+            }
+
             objectsById.Remove(objectId);
             result.RemovedObjectIds.Add(objectId);
+            result.RemovedLinkIds.AddRange(removedLinkIds);
         }
 
         foreach (var sceneObject in patch.AddObjects.Where(static item => !string.IsNullOrWhiteSpace(item.Id)))
@@ -86,11 +98,15 @@ public sealed class WebGlScenePatchReducer
             result.AddedLinkIds.Add(link.Id);
         }
 
-        scene.UiState.Revision = patch.NextRevision > 0
-            ? patch.NextRevision
-            : scene.UiState.Revision + 1;
-        result.NextRevision = scene.UiState.Revision;
-        result.Revision = scene.UiState.Revision;
+        if (result.AffectedObjectIds.Count == 0 && result.AffectedLinkIds.Count == 0)
+        {
+            result.NextRevision = WebGlSceneRevisionPolicy.Resolve(scene);
+            return result;
+        }
+
+        WebGlSceneRevisionPolicy.Commit(scene, WebGlSceneRevisionPolicy.ResolveNext(scene, patch.NextRevision));
+        result.NextRevision = scene.Revision;
+        result.Revision = scene.Revision;
         result.SceneId = scene.SceneId;
         return result;
     }
@@ -100,7 +116,7 @@ public sealed class WebGlScenePatchReducer
         var result = new WebGlScenePatchResult
         {
             SceneId = scene.SceneId,
-            Revision = scene.UiState.Revision
+            Revision = WebGlSceneRevisionPolicy.Resolve(scene)
         };
         if (!string.IsNullOrWhiteSpace(patch.SceneId) &&
             !string.Equals(scene.SceneId, patch.SceneId, StringComparison.Ordinal))
@@ -108,9 +124,10 @@ public sealed class WebGlScenePatchReducer
             result.Errors.Add($"Patch scene id '{patch.SceneId}' does not match scene '{scene.SceneId}'.");
         }
 
-        if (patch.BaseRevision > 0 && patch.BaseRevision != scene.UiState.Revision)
+        var currentRevision = WebGlSceneRevisionPolicy.Resolve(scene);
+        if (patch.BaseRevision > 0 && patch.BaseRevision != currentRevision)
         {
-            var message = $"Patch base revision {patch.BaseRevision} does not match scene revision {scene.UiState.Revision}.";
+            var message = $"Patch base revision {patch.BaseRevision} does not match scene revision {currentRevision}.";
             if (IsStrictBaseRevision(patch))
             {
                 result.Errors.Add(message);
@@ -129,20 +146,26 @@ public sealed class WebGlScenePatchReducer
             }
         }
 
-        foreach (var objectPatch in patch.ObjectPatches)
-        {
-            if (string.IsNullOrWhiteSpace(objectPatch.ObjectId))
-            {
-                result.Errors.Add("Object patch id is required.");
-            }
-        }
-
         var availableObjectIds = scene.Objects
             .Select(static item => item.Id)
             .Where(static id => !string.IsNullOrWhiteSpace(id))
             .Except(patch.RemoveObjectIds.Where(static id => !string.IsNullOrWhiteSpace(id)), StringComparer.Ordinal)
             .Concat(patch.AddObjects.Select(static item => item.Id).Where(static id => !string.IsNullOrWhiteSpace(id)))
             .ToHashSet(StringComparer.Ordinal);
+        foreach (var objectPatch in patch.ObjectPatches)
+        {
+            if (string.IsNullOrWhiteSpace(objectPatch.ObjectId))
+            {
+                result.Errors.Add("Object patch id is required.");
+                continue;
+            }
+
+            if (!availableObjectIds.Contains(objectPatch.ObjectId))
+            {
+                result.Errors.Add($"Object patch target '{objectPatch.ObjectId}' was not found.");
+            }
+        }
+
         var missingLinkEndpointMode = ResolveMetadata(patch, "missingLinkEndpointMode");
         foreach (var link in patch.AddLinks)
         {

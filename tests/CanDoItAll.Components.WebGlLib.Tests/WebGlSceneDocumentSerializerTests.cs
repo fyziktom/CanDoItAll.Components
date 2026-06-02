@@ -108,6 +108,25 @@ public sealed class WebGlSceneDocumentSerializerTests
     }
 
     [Fact]
+    public void Scene_content_hash_uses_scene_revision_and_ignores_ui_revision()
+    {
+        var document = CreateHashDocument();
+        document.Scene.Revision = 4;
+        document.Scene.UiState.Revision = 20;
+        var first = WebGlSceneDocumentSerializer.Deserialize(WebGlSceneDocumentSerializer.Serialize(document));
+
+        document.Scene.UiState.Revision = 21;
+        var uiOnly = WebGlSceneDocumentSerializer.Deserialize(WebGlSceneDocumentSerializer.Serialize(document));
+
+        document.Scene.Revision = 5;
+        var sceneRevisionChanged = WebGlSceneDocumentSerializer.Deserialize(WebGlSceneDocumentSerializer.Serialize(document));
+
+        Assert.Equal(first.SceneContentHash, uiOnly.SceneContentHash);
+        Assert.NotEqual(first.DocumentHash, uiOnly.DocumentHash);
+        Assert.NotEqual(first.SceneContentHash, sceneRevisionChanged.SceneContentHash);
+    }
+
+    [Fact]
     public void Scene_content_hash_ignores_object_link_asset_and_layer_order()
     {
         var firstDocument = CreateHashDocument();
@@ -186,6 +205,42 @@ public sealed class WebGlSceneDocumentSerializerTests
 
         Assert.True(validation.IsValid);
         Assert.Contains(validation.Warnings, warning => warning.Contains("asset.missing", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Validate_warns_for_duplicate_and_stale_layer_membership()
+    {
+        var document = CreateHashDocument();
+        document.Scene.Layers.Add(new WebGlSceneLayer
+        {
+            Id = "layer.operators",
+            ObjectIds = ["object.a", "object.a", "object.missing"]
+        });
+
+        var validation = WebGlSceneDocumentSerializer.Validate(document);
+
+        Assert.True(validation.IsValid);
+        Assert.Contains(validation.Warnings, warning => warning.Contains("duplicate object id 'object.a'", StringComparison.Ordinal));
+        Assert.Contains(validation.Warnings, warning => warning.Contains("stale object id 'object.missing'", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Scene_model_validator_checks_live_scene_layers_and_metadata()
+    {
+        var scene = CreateHashDocument().Scene;
+        scene.Metadata["run.clock"] = "out-of-boundary";
+        scene.Layers.Add(new WebGlSceneLayer
+        {
+            Id = "layer.live",
+            ObjectIds = ["object.a", "object.a", "object.missing"]
+        });
+
+        var validation = new WebGlSceneModelValidator().Validate(scene);
+
+        Assert.False(validation.IsValid);
+        Assert.Contains(validation.Errors, error => error.Contains("Run-layer", StringComparison.Ordinal));
+        Assert.Contains(validation.Warnings, warning => warning.Contains("duplicate object id 'object.a'", StringComparison.Ordinal));
+        Assert.Contains(validation.Warnings, warning => warning.Contains("stale object id 'object.missing'", StringComparison.Ordinal));
     }
 
     private static WebGlSceneDocument CreateHashDocument()

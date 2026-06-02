@@ -1,0 +1,47 @@
+﻿SB12 source assertions
+
+Components package/version docs:
+README.md:56:This emits all shared component packages at the version in `Directory.Build.props`. The WebGL integration packages are:
+README.md:58:- `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0.nupkg`
+README.md:59:- `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0.nupkg`
+README.md:61:When validating package consumers against freshly packed `0.1.0` packages, prefer a proof/local NuGet.config that points at `artifacts\packages` before any older private feed, or use an isolated `NUGET_PACKAGES` cache. That prevents stale local packages from shadowing the current pack output.
+README.md:66:Copy-Item artifacts\packages\*.0.1.0.nupkg C:\repositories\CanDoItAll\ExternalPackages -Force
+docs\webgl\run-layer-boundary.md:32:The current shared package version is controlled by `Directory.Build.props`. The pack command emits `CanDoItAll.Components.WebGlLib.0.1.0.nupkg` and `CanDoItAll.Components.WebGlRunLib.0.1.0.nupkg` under `artifacts\packages`.
+docs\webgl\run-layer-boundary.md:47:Use a proof/local NuGet.config with `<clear />`, the fresh `artifacts\packages` folder, and nuget.org. This avoids stale private-feed `0.1.0` packages while preserving public dependency restore.
+
+Components solution and WebGlRunLib project:
+src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj:5:    <AssemblyName>CanDoItAll.Components.WebGlRunLib</AssemblyName>
+src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj:6:    <RootNamespace>CanDoItAll.Components.WebGlRunLib</RootNamespace>
+src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj:11:    <ProjectReference Include="..\CanDoItAll.Components.WebGlLib\CanDoItAll.Components.WebGlLib.csproj" />
+CanDoItAll.Components.slnx:11:    <Project Path="src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj" />
+CanDoItAll.Components.slnx:12:    <Project Path="src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj" />
+CanDoItAll.Components.slnx:15:    <Project Path="tests/CanDoItAll.Components.WebGlLib.Tests/CanDoItAll.Components.WebGlLib.Tests.csproj" />
+CanDoItAll.Components.slnx:16:    <Project Path="tests/CanDoItAll.Components.WebGlRunLib.Tests/CanDoItAll.Components.WebGlRunLib.Tests.csproj" />
+
+Economy bridge reference knobs and docs:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:6:    <ComponentsRepoRoot Condition="'$(ComponentsRepoRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\CanDoItAll.Components</ComponentsRepoRoot>
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:7:    <ComponentsWebGlRunLibProject>$(ComponentsRepoRoot)\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj</ComponentsWebGlRunLibProject>
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:8:    <UseComponentsWebGlRunLibPackage Condition="'$(UseComponentsWebGlRunLibPackage)' == ''">false</UseComponentsWebGlRunLibPackage>
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:9:    <ComponentsWebGlRunLibPackageVersion Condition="'$(ComponentsWebGlRunLibPackageVersion)' == ''">0.1.0</ComponentsWebGlRunLibPackageVersion>
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:10:    <ComponentsWebGlLibPackageVersion Condition="'$(ComponentsWebGlLibPackageVersion)' == ''">$(ComponentsWebGlRunLibPackageVersion)</ComponentsWebGlLibPackageVersion>
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:15:    <ProjectReference Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:16:    <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlLib" Version="$(ComponentsWebGlLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:17:    <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:19:  <Target Name="ValidateComponentsWebGlRunLibReference" BeforeTargets="ResolveReferences" Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and !Exists('$(ComponentsWebGlRunLibProject)')">
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:20:    <Error Text="CanDoItAll.Components.WebGlRunLib project reference was not found at '$(ComponentsWebGlRunLibProject)'. Set ComponentsRepoRoot to the local CanDoItAll.Components checkout or set UseComponentsWebGlRunLibPackage=true with ComponentsWebGlRunLibPackageVersion." />
+C:\repositories\CanDoItAll.Economy\README.md:74:dotnet build src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj --configuration Release /p:ComponentsRepoRoot=C:\repositories\CanDoItAll.Components
+C:\repositories\CanDoItAll.Economy\README.md:83:Then restore the bridge with `UseComponentsWebGlRunLibPackage=true` from a NuGet.config whose package sources are the fresh Components `artifacts\packages` feed plus nuget.org, and build without restoring again:
+C:\repositories\CanDoItAll.Economy\README.md:86:dotnet restore src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj --configfile C:\path\to\package-proof.NuGet.config /p:UseComponentsWebGlRunLibPackage=true /p:ComponentsWebGlRunLibPackageVersion=0.1.0 /p:ComponentsWebGlLibPackageVersion=0.1.0
+C:\repositories\CanDoItAll.Economy\README.md:87:dotnet build src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj --configuration Release --no-restore /p:UseComponentsWebGlRunLibPackage=true /p:ComponentsWebGlRunLibPackageVersion=0.1.0 /p:ComponentsWebGlLibPackageVersion=0.1.0
+C:\repositories\CanDoItAll.Economy\README.md:90:Set an isolated `NUGET_PACKAGES` directory during proof runs when validating the default `0.1.0` package version, so older private-feed packages cannot shadow the fresh pack output.
+
+Proof NuGet.config:
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <clear />
+    <add key="ComponentsProofFeed" value="C:\repositories\CanDoItAll.Components\artifacts\packages" />
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+  </packageSources>
+</configuration>
+

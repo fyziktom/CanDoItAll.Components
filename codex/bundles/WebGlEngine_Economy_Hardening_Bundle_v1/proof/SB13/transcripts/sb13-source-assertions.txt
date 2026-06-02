@@ -1,0 +1,28 @@
+﻿Components callback compaction and diagnostics source assertions:
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:1: import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:15: revision: resolveSceneRevision(state?.sceneModel),
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:54: result.revision = resolveSceneRevision(state?.sceneModel);
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:61: assetCacheMode: state?.diagnostics?.assetCacheMode || state?.assetCache?.mode || "state-local",
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:64: fullSceneRebuildCount: String(state?.diagnostics?.fullSceneRebuildCount || 0),
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:112: totalAffectedObjectCount: String(result?.affectedObjectIds?.length || 0),
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:167: .invokeMethodAsync(methodName, JSON.stringify(compactCommandResultForCallback(result)))
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:171: function compactCommandResultForCallback(result) {
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:172: const totalAffectedObjectCount = result?.affectedObjectIds?.length || 0;
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:177: totalAffectedObjectCount,
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\20-webgl-scene-command-results.js:199: totalAffectedObjectCount: String(totalAffectedObjectCount),
+
+Economy route and adapter source assertions:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\Components\Pages\SimulationSandbox.razor:1: @page "/economy/simulation-sandbox"
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:67: <WebGlSceneView @ref="SceneView"
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:71: RuntimeError="OnRuntimeErrorAsync"
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:72: CommandCompleted="OnCommandCompletedAsync"
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:94: <section class="cda-economy-simulation-sandbox__panel" data-testid="sandbox-browser-runtime">
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:152: private WebGlSceneView? SceneView;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:259: await ApplyCurrentFrameCoreAsync();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:278: await ApplyCurrentFrameCoreAsync();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:306: => ExecuteAsync(ApplyCurrentFrameCoreAsync);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:308: private async Task ApplyCurrentFrameCoreAsync()
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:320: var adapter = new WebGlRunBrowserApplyAdapter(
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:321: new WebGlSceneViewBrowserRuntime(SceneView),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:359: private Task OnRuntimeErrorAsync(WebGlRuntimeErrorEventArgs args)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:366: private Task OnCommandCompletedAsync(WebGlSceneCommandResult result)

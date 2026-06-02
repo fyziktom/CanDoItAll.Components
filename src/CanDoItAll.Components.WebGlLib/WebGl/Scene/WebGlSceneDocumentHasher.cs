@@ -18,6 +18,7 @@ internal static class WebGlSceneDocumentHasher
         normalized.Metadata = WebGlSceneDocumentMetadataPolicy.FilterSceneContentMetadata(normalized.Metadata);
         normalized.Scene.UiState.Selection = new WebGlSceneSelectionState();
         normalized.Scene.UiState.HoveredObjectId = string.Empty;
+        normalized.Scene.UiState.Revision = 0;
         normalized.Scene.UiState.Metadata = WebGlSceneDocumentMetadataPolicy.FilterSceneContentMetadata(normalized.Scene.UiState.Metadata);
         return ComputeHash(JsonSerializer.Serialize(normalized.Scene, WebGlSceneDocumentSerializer.JsonOptions));
     }
