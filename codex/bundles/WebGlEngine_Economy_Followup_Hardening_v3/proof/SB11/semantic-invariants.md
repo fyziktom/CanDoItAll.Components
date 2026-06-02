@@ -1,27 +1,24 @@
-# Semantic Invariants — SB11
+# Semantic Invariants - SB11
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Package proof uses a unique prerelease version and isolated package caches.
+- Package-mode consumers do not accidentally fall back to project references or stale feeds.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Stale-feed restore fails for `CanDoItAll.Components.WebGlLib` `0.1.0-sb11.20260602.1`.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Fresh-feed package-mode restore/build passes for WebGlLib-only sample, Economy WebGl bridge, and Economy.Components.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| SB11 local package feed | Components pack | Package consumers | Restore/build proof | Stale feed cannot resolve proof version |

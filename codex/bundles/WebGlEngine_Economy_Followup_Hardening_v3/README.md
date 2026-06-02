@@ -1,7 +1,7 @@
 # CanDoItAll WebGL Engine + Economy Follow-up Hardening Bundle v3
 
 Prepared date: 2026-06-02  
-Stage: prepared  
+Stage: completed  
 Profile: initiative / post-v2 implementation hardening  
 Target repositories:
 
@@ -114,4 +114,18 @@ Expected result:
 
 ```text
 Bundle validation passed for stage=prepared, profile=initiative, subbundles=12
+```
+
+## Completed-stage validation
+
+Run from the bundle root:
+
+```powershell
+python scripts/validate_bundle.py --stage completed --profile initiative
+```
+
+Expected result:
+
+```text
+Bundle validation passed for stage=completed, profile=initiative, subbundles=12
 ```

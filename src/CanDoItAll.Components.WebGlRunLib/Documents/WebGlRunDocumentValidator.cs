@@ -110,6 +110,7 @@ public sealed class WebGlRunDocumentValidator
         {
             if (allowSourceProvenance && WebGlRunGenericBoundaryPolicy.IsSourceProvenanceKey(item.Key))
             {
+                WebGlRunGenericBoundaryPolicy.ValidateSourceProvenance($"{scope}.{item.Key}", item.Key, item.Value, errors);
                 continue;
             }
 
@@ -164,8 +165,31 @@ public sealed class WebGlRunDocumentValidator
 
 internal static class WebGlRunGenericBoundaryPolicy
 {
+    private const int MaxSourceProvenanceValueLength = 256;
+
     public static bool IsSourceProvenanceKey(string key)
         => key.StartsWith("source.", StringComparison.OrdinalIgnoreCase);
+
+    public static void ValidateSourceProvenance(string scope, string key, string value, List<string> errors)
+    {
+        if (!AllowedSourceProvenanceKeys.Contains(key))
+        {
+            errors.Add($"{scope} uses unsupported source provenance key '{key}'. Use typed source ids or hashes instead of arbitrary domain metadata.");
+        }
+
+        foreach (string term in DisallowedSourcePolicyTerms)
+        {
+            if (key.Contains(term, StringComparison.OrdinalIgnoreCase))
+            {
+                errors.Add($"{scope} uses executable or behavioral source policy term '{term}'. Source metadata is traceability only.");
+            }
+        }
+
+        if (value.Length > MaxSourceProvenanceValueLength)
+        {
+            errors.Add($"{scope}.value exceeds the source provenance length limit of {MaxSourceProvenanceValueLength} characters.");
+        }
+    }
 
     public static readonly string[] ForbiddenDomainTerms =
     [
@@ -182,6 +206,36 @@ internal static class WebGlRunGenericBoundaryPolicy
         "seller",
         "price",
         "vernon"
+    ];
+
+    public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
+    {
+        "source.documentId",
+        "source.eventId",
+        "source.frameHash",
+        "source.hash",
+        "source.inputPackHash",
+        "source.path",
+        "source.runId",
+        "source.simulationFrameId",
+        "source.sourceId",
+        "source.sourceKind",
+        "source.stageId",
+        "source.visualActionId"
+    };
+
+    public static readonly string[] DisallowedSourcePolicyTerms =
+    [
+        "assetQualityProfile",
+        "barrierPolicy",
+        "batchingPolicy",
+        "behavior",
+        "command",
+        "permission",
+        "policy",
+        "renderMode",
+        "rule",
+        "script"
     ];
 
     public static readonly HashSet<string> AllowedSceneBarrierPolicies = new(StringComparer.Ordinal)

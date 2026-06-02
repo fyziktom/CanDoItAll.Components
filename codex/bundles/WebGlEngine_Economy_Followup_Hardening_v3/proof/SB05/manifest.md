@@ -1,36 +1,29 @@
-# Proof Manifest — SB05
+# Proof Manifest - SB05
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- Economy session persistence APIs and tests.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB05/transcripts/`._
+- `proof/SB05/transcripts/economy-sandbox-sync-over-async-scan.txt`
+- `proof/SB03/transcripts/economy-sandbox-focused-tests-release-after-restore.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+N/A.
 
 ## Source Assertions
 
-_To be filled during execution._
+- Snapshot persistence and validation use async APIs.
+- Sync export/import fail fast when async snapshot store work would be required.
+- Scan confirms no `GetAwaiter().GetResult` or `.AsTask().GetAwaiter` patterns in `CanDoItAll.Economy.SimulationSandbox`.
 
 ## Gate Decision
 
-Pending.
+Passed. Session persistence no longer closes over sync-over-async internals.

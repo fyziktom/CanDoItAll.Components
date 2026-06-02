@@ -1,5 +1,6 @@
 import * as THREE from "../../../vendor/three.module.min.js";
 import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
+import { buildRuntimeBudgetDiagnostics, evaluateRuntimeBudget, normalizeRuntimeBudget } from "./38-webgl-scene-runtime-budget.js";
 
 export { THREE };
 
@@ -8,17 +9,8 @@ export const projectionModes = Object.freeze({
     orthographic: "orthographic"
 });
 
-export const primitiveKinds = Object.freeze({
-    box: "box",
-    house: "house",
-    sphere: "sphere",
-    cylinder: "cylinder",
-    cone: "cone",
-    tree: "tree",
-    person: "person",
-    marker: "marker",
-    gear: "gear"
-});
+const primitiveKindNames = ["box", "house", "sphere", "cylinder", "cone", "tree", "person", "marker", "gear"];
+export const primitiveKinds = Object.freeze(Object.fromEntries(primitiveKindNames.map(kind => [kind, kind])));
 
 export function clonePayload(value) {
     if (typeof structuredClone === "function") {
@@ -107,7 +99,8 @@ export function normalizeOptions(options) {
         autoFitOnCreate: options?.autoFitOnCreate !== false,
         runtimeKey: resolveString(options?.runtimeKey, ""),
         maxCommandResultHistory: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandResultHistory, 100))),
-        maxCommandStageJournalEntries: Math.max(20, Math.min(1000, resolveFiniteNumber(options?.maxCommandStageJournalEntries, 200)))
+        maxCommandStageJournalEntries: Math.max(20, Math.min(1000, resolveFiniteNumber(options?.maxCommandStageJournalEntries, 200))),
+        runtimeBudget: normalizeRuntimeBudget(options?.runtimeBudget)
     };
 }
 
@@ -203,6 +196,7 @@ export function focusHost(state) {
 
 export function buildDiagnosticsSnapshot(state) {
     const diagnostics = state.diagnostics || {};
+    const budget = evaluateRuntimeBudget(state, diagnostics);
     return {
         createCount: diagnostics.createCount || 0,
         disposeCount: diagnostics.disposeCount || 0,
@@ -264,8 +258,9 @@ export function buildDiagnosticsSnapshot(state) {
         lastSceneIndexSyncReason: diagnostics.lastSceneIndexSyncReason || "",
         symbolCount: state.symbolGroups.size,
         deterministicMode: state.options.deterministicMode,
-        activeAssetProfile: resolveActiveAssetProfile(state),
+        activeAssetProfile: budget.degraded ? "primitive" : resolveActiveAssetProfile(state),
         renderMode: state.options.renderMode || "auto",
+        ...buildRuntimeBudgetDiagnostics(budget),
         lastFrameReason: diagnostics.lastFrameReason || "",
         frameTimeMs: round(diagnostics.frameTimeMs || 0, 2),
         averageFrameTimeMs: round(diagnostics.averageFrameTimeMs || 0, 2),

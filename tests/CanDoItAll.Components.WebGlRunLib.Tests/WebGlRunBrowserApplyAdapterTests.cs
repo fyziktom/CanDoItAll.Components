@@ -131,7 +131,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
     }
 
     [Fact]
-    public async Task Adapter_reset_treats_initial_scene_runtime_options_as_external()
+    public async Task Adapter_reset_imports_initial_scene_runtime_options()
     {
         var runtime = new RecordingBrowserRuntime();
         var initialScene = new WebGlSceneDocument
@@ -154,10 +154,10 @@ public sealed class WebGlRunBrowserApplyAdapterTests
 
         WebGlSceneDocument importedScene = Assert.Single(runtime.ImportedScenes);
         Assert.True(result.Success);
-        Assert.Equal(WebGlRenderModes.Auto, importedScene.RuntimeOptions.RenderMode);
-        Assert.Equal(string.Empty, importedScene.RuntimeOptions.RuntimeKey);
+        Assert.Equal(WebGlRenderModes.Continuous, importedScene.RuntimeOptions.RenderMode);
+        Assert.Equal("external-runtime", importedScene.RuntimeOptions.RuntimeKey);
         Assert.Equal(WebGlRenderModes.Continuous, initialScene.RuntimeOptions.RenderMode);
-        Assert.Contains(
+        Assert.DoesNotContain(
             result.Warnings,
             warning => warning.Contains("runtime options are external", StringComparison.OrdinalIgnoreCase));
     }
@@ -209,7 +209,56 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.False(result.Success);
         Assert.Contains(result.Errors, error => error.Contains("no initial scene", StringComparison.OrdinalIgnoreCase));
         Assert.Empty(runtime.ImportedScenes);
-        Assert.Single(runtime.AppliedBatches);
+        Assert.Empty(runtime.AppliedBatches);
+    }
+
+    [Fact]
+    public async Task Adapter_fails_reset_import_failure_without_applying_batch()
+    {
+        var runtime = new RecordingBrowserRuntime
+        {
+            ImportResult = new()
+            {
+                Success = false,
+                CommandId = "import.scene",
+                Errors = { "import failed" }
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime, new() { Scene = new() { SceneId = "scene.reset" } });
+
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(new WebGlRunFrameApplyResult
+        {
+            FrameIndex = 4,
+            RequiresSceneReset = true,
+            CommandBatch = new() { BatchId = "run-frame:4" }
+        });
+
+        Assert.False(result.Success);
+        Assert.Contains("import failed", result.Errors);
+        Assert.Single(runtime.ImportedScenes);
+        Assert.Empty(runtime.AppliedBatches);
+    }
+
+    [Fact]
+    public async Task Adapter_does_not_apply_frame_result_that_already_contains_errors()
+    {
+        var runtime = new RecordingBrowserRuntime();
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime);
+
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(new WebGlRunFrameApplyResult
+        {
+            FrameIndex = 5,
+            Errors = { "mixed direct and staged commands" },
+            CommandBatch = new()
+            {
+                BatchId = "run-frame:5",
+                Stages = { new() { StageId = "stage.should-not-apply" } }
+            }
+        });
+
+        Assert.False(result.Success);
+        Assert.Empty(runtime.ImportedScenes);
+        Assert.Empty(runtime.AppliedBatches);
     }
 
     [Fact]

@@ -1,27 +1,24 @@
-# Semantic Invariants — SB05
+# Semantic Invariants - SB05
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Snapshot persistence work is awaited asynchronously.
+- Sync APIs do not hide async snapshot-store operations.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Source scan confirms no `GetAwaiter().GetResult` or `.AsTask().GetAwaiter` remains in the sandbox package.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Async export/import tests pass with snapshot persistence and validation enabled.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Async session export/import | Session service | Runtime persistence | Save/load | Sync API fails fast when async store is required |

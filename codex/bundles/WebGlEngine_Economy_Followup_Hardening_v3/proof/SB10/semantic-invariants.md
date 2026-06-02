@@ -1,27 +1,24 @@
-# Semantic Invariants — SB10
+# Semantic Invariants - SB10
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Runtime resource pressure is surfaced as bounded diagnostics.
+- Asset/resource ownership behavior remains stable while budget diagnostics are added.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Resource ownership test covers retained shared textures, template ownership separation, duplicate disposal, and pending promise disposal.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+WebGlLib tests, scene runtime audit, import audit, and resource ownership proof pass.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Runtime budget diagnostics | JS runtime | C# diagnostics/UI/proof | Runtime snapshot | Resource ownership tests catch disposal regressions |

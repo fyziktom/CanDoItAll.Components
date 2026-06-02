@@ -1,36 +1,30 @@
-# Proof Manifest — SB08
+# Proof Manifest - SB08
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- WebGlRun document validator and validator tests.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB08/transcripts/`._
+- `proof/SB08/transcripts/components-webglrunlib-boundary-audit.txt`
+- `proof/SB08/transcripts/components-webgllib-boundary-audit.txt`
+- `proof/SB06/transcripts/components-webglrunlib-tests-release.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+N/A.
 
 ## Source Assertions
 
-_To be filled during execution._
+- `source.*` provenance is now key-bounded and value-length-bounded.
+- Policy/render/command semantics are rejected under `source.*`.
+- WebGlLib and WebGlRunLib boundary audits pass.
 
 ## Gate Decision
 
-Pending.
+Passed. Source provenance remains traceability-only and cannot smuggle domain or runtime policy.

@@ -1,27 +1,24 @@
-# Semantic Invariants — SB07
+# Semantic Invariants - SB07
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Scene document import preserves runtime options.
+- Browser reset/import uses the document-level runtime options, not only scene model state.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Tests assert reset import no longer drops continuous render mode or runtime key.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Runtime options import source scan and WebGlRunLib tests pass.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| `WebGlSceneDocument.RuntimeOptions` | WebGlLib/WebGlRunLib | Browser scene runtime | Import/reset | Stripped runtime options regression covered by test |

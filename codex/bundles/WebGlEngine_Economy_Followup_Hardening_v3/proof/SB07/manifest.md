@@ -1,36 +1,31 @@
-# Proof Manifest — SB07
+# Proof Manifest - SB07
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- `WebGlSceneView` scene document import APIs.
+- `WebGlRunBrowserApplyAdapter`.
+- Browser apply tests.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB07/transcripts/`._
+- `proof/SB07/transcripts/runtime-options-import-source-scan.txt`
+- `proof/SB06/transcripts/components-webglrunlib-tests-release.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+Covered by SB09.
 
 ## Source Assertions
 
-_To be filled during execution._
+- `ImportSceneDocumentAsync` and `ImportSceneDocumentDetailedAsync` pass `WebGlSceneDocument.RuntimeOptions`.
+- Browser reset import uses the full scene document instead of stripping runtime options.
+- Tests assert reset import preserves continuous render mode and runtime key.
 
 ## Gate Decision
 
-Pending.
+Passed. Scene document import now preserves runtime options across browser reset/import.

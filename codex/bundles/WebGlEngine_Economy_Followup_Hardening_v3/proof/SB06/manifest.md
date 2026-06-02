@@ -1,36 +1,30 @@
-# Proof Manifest — SB06
+# Proof Manifest - SB06
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- WebGlRun frame apply result and browser apply adapter.
+- WebGlRun tests.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB06/transcripts/`._
+- `proof/SB06/transcripts/components-webglrunlib-tests-release.txt`
+- `proof/SB08/transcripts/components-webglrunlib-boundary-audit.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+Browser behavior is covered by SB09.
 
 ## Source Assertions
 
-_To be filled during execution._
+- Mixed direct/staged frames produce an error result with an inert command batch and `blockedByPolicy` metadata.
+- Browser apply does not apply batches when frame validation already failed.
+- Reset failure or missing initial scene fails fast without applying the frame batch.
 
 ## Gate Decision
 
-Pending.
+Passed. Public frame apply APIs fail safely even if caller skips prior validation.

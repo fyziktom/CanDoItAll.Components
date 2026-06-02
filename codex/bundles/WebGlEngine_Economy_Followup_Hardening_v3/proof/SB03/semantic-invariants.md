@@ -1,27 +1,24 @@
-# Semantic Invariants — SB03
+# Semantic Invariants - SB03
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Runtime scenarios are manifest-backed packs with stable ids, versions, content hashes, and pack hashes.
+- Invalid or missing manifests remain visible as invalid catalog descriptors.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Focused tests cover missing-manifest invalid descriptors and path traversal rejection.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Both `shared-well` and `farmer-land` load through the runtime catalog and appear in browser proof.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Scenario manifest | Node scenario pack | Catalog, session service, UI | Startup/runtime | Missing manifest marked invalid |

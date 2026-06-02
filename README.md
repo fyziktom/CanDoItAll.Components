@@ -4,7 +4,8 @@ Shared CanDoItAll component libraries isolated from the main app solution.
 
 ## Packages
 
-All packages are currently versioned together at `0.1.0`.
+All packages are currently versioned together from `CanDoItAllPackageBaseVersion`, which defaults to `0.1.0`.
+For package-consumer proof runs, append a unique prerelease suffix with `CanDoItAllPackageProofSuffix`, for example `-sb11.20260602.1`.
 
 | Package | Role |
 | --- | --- |
@@ -50,15 +51,18 @@ Current WebGL hardening proof is large-screen only by design; small-screen layou
 ## Pack
 
 ```powershell
-dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages
+$proofSuffix = "-sb11.20260602.1"
+dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages /p:CanDoItAllPackageProofSuffix=$proofSuffix
 ```
 
-This emits all shared component packages at the version in `Directory.Build.props`. The WebGL integration packages are:
+This emits all shared component packages at the version in `Directory.Build.props`, plus any proof suffix supplied at pack time. The WebGL integration packages are:
 
 - `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0.nupkg`
 - `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0.nupkg`
+- proof example: `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0-sb11.20260602.1.nupkg`
+- proof example: `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0-sb11.20260602.1.nupkg`
 
-When validating package consumers against freshly packed packages, use a proof/local NuGet.config that points at the fresh package output before any older private feed and set an isolated `NUGET_PACKAGES` cache. If the package version is still `0.1.0`, the isolated cache is required proof hygiene; otherwise a global cache or private feed can shadow the package that was just packed. For repeatable CI-style proof, prefer passing a unique prerelease `PackageVersion` to `dotnet pack` and the matching consumer restore/build properties.
+When validating package consumers against freshly packed packages, use a proof/local NuGet.config that points at the fresh package output before any older private feed, set an isolated `NUGET_PACKAGES` cache, and pass the full proof version to consumer restore/build properties. A proof run must fail if the stale feed is used or if the consumer restores a project reference instead of the freshly packed package.
 
 Copy packages into the main repo private feed:
 

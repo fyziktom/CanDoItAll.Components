@@ -1,27 +1,24 @@
-# Semantic Invariants — SB04
+# Semantic Invariants - SB04
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Public session APIs support scenario ids instead of requiring caller-owned file paths.
+- Portable exports bind to scenario id plus pack hash.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Tests reject tampered pack hashes and bad snapshot/session state during import.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+`LoadScenario`, export, moved import, and catalog-backed import all pass in focused tests.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Session export v2 | Session service | Import service, UI workflows | Export/import | Pack hash mismatch rejected |

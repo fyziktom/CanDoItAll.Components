@@ -112,7 +112,7 @@ public sealed class WebGlRunValidatorTests
     }
 
     [Fact]
-    public void Run_document_validator_allows_source_provenance_metadata()
+    public void Run_document_validator_allows_bounded_source_identifier_and_hash_provenance()
     {
         var document = new WebGlRunDocument
         {
@@ -120,8 +120,8 @@ public sealed class WebGlRunValidatorTests
             InitialScene = SceneDocument(),
             Metadata =
             {
-                ["source.domain"] = "economy-market-run",
-                ["source.ledgerId"] = "ledger-alpha"
+                ["source.sourceId"] = "economy-market-run",
+                ["source.hash"] = "sha256:123"
             },
             Timeline =
             {
@@ -134,7 +134,7 @@ public sealed class WebGlRunValidatorTests
                         TimeSeconds = 0,
                         Metadata =
                         {
-                            ["source.frameKind"] = "market-tick"
+                            ["source.simulationFrameId"] = "market-tick"
                         },
                         Stages =
                         {
@@ -144,8 +144,8 @@ public sealed class WebGlRunValidatorTests
                                 StageIndex = 0,
                                 Metadata =
                                 {
-                                    ["source.eventKind"] = "market-clearing",
-                                    ["source.ledgerId"] = "ledger-alpha"
+                                    ["source.eventId"] = "market-clearing",
+                                    ["source.inputPackHash"] = "sha256:456"
                                 }
                             }
                         }
@@ -201,6 +201,30 @@ public sealed class WebGlRunValidatorTests
         WebGlRunFrameApplyResult result = WebGlRunFrameApplyResult.FromFrame(MixedFrame());
 
         Assert.Contains(result.Errors, error => error.Contains("cannot mix frame-level commands with staged commands", StringComparison.OrdinalIgnoreCase));
+        Assert.Empty(result.CommandBatch.Stages);
+        Assert.Empty(result.CommandBatch.Patches);
+        Assert.Empty(result.CommandBatch.Motions);
+        Assert.Equal("mixed-direct-and-staged-commands", result.CommandBatch.Metadata["blockedByPolicy"]);
+    }
+
+    [Fact]
+    public void Run_document_validator_rejects_executable_source_policy_metadata()
+    {
+        var document = new WebGlRunDocument
+        {
+            RunId = new WebGlRunId("run.source-policy"),
+            InitialScene = SceneDocument(),
+            Metadata =
+            {
+                ["source.batchingPolicy"] = WebGlSceneBatchingPolicies.Parallel
+            },
+            Timeline = { FrameRate = 1 }
+        };
+
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+
+        Assert.False(validation.IsValid);
+        Assert.Contains(validation.Errors, error => error.Contains("traceability only", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -240,7 +264,7 @@ public sealed class WebGlRunValidatorTests
     }
 
     [Fact]
-    public void Action_plan_validator_allows_source_provenance_metadata()
+    public void Action_plan_validator_allows_bounded_source_identifier_and_hash_provenance()
     {
         var plan = new WebGlRunActionPlan
         {
@@ -248,8 +272,8 @@ public sealed class WebGlRunValidatorTests
             ActionId = "plan.source-provenance",
             Metadata =
             {
-                ["source.domain"] = "economy-market-run",
-                ["source.ledgerId"] = "ledger-alpha"
+                ["source.sourceId"] = "economy-market-run",
+                ["source.hash"] = "sha256:123"
             },
             Actions =
             [
@@ -259,7 +283,7 @@ public sealed class WebGlRunValidatorTests
                     ActionKind = WebGlRunActionKinds.Wait,
                     Metadata =
                     {
-                        ["source.eventKind"] = "market-clearing"
+                        ["source.eventId"] = "market-clearing"
                     }
                 }
             ],
@@ -269,7 +293,7 @@ public sealed class WebGlRunValidatorTests
                 {
                     Metadata =
                     {
-                        ["source.patchKind"] = "ledger-adjustment"
+                        ["source.eventId"] = "ledger-adjustment"
                     }
                 }
             },
@@ -281,7 +305,7 @@ public sealed class WebGlRunValidatorTests
                     ObjectId = "actor",
                     Metadata =
                     {
-                        ["source.eventKind"] = "market-clearing"
+                        ["source.eventId"] = "market-clearing"
                     }
                 }
             }

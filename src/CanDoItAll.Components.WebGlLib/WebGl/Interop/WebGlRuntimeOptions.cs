@@ -24,5 +24,28 @@ public sealed class WebGlRuntimeOptions
 
     public int MaxCommandResultHistory { get; set; } = 100;
 
+    public WebGlRuntimeBudgetOptions RuntimeBudget { get; set; } = new();
+
     public string RuntimeKey { get; set; } = string.Empty;
+}
+
+public sealed class WebGlRuntimeBudgetOptions
+{
+    public string Profile { get; set; } = "standard";
+
+    public int MaxSceneObjects { get; set; } = 500;
+
+    public int MaxLoadedAssets { get; set; } = 128;
+
+    public int MaxAssetCacheEntries { get; set; } = 128;
+
+    public int MaxActiveMotions { get; set; } = 256;
+
+    public int MaxQueuedMotions { get; set; } = 512;
+
+    public int MaxQueuedCommandStages { get; set; } = 128;
+
+    public int MaxEstimatedTriangles { get; set; } = 250_000;
+
+    public bool DegradeWhenExceeded { get; set; } = true;
 }

@@ -1,36 +1,33 @@
-# Proof Manifest — SB10
+# Proof Manifest - SB10
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- WebGl runtime budget options/diagnostics.
+- New JS runtime budget module.
+- Runtime diagnostics tests.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB10/transcripts/`._
+- `proof/SB10/transcripts/components-webgllib-tests-release.txt`
+- `proof/SB10/transcripts/components-webgllib-scene-runtime-audit.txt`
+- `proof/SB10/transcripts/components-webgllib-scene-runtime-imports-audit.txt`
+- `proof/SB10/transcripts/components-webgllib-resource-ownership.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+SB09 browser proof confirms runtime surface still loads with one WebGL canvas.
 
 ## Source Assertions
 
-_To be filled during execution._
+- Runtime budgets normalize max scene objects, loaded assets, cache entries, motions, command stages, and estimated triangles.
+- Diagnostics expose budget profile, warnings, limits, and degraded rendering state.
+- Scene runtime audit passes the hard line-count threshold after extracting budget logic into module 38.
 
 ## Gate Decision
 
-Pending.
+Passed. Large-scene resource pressure now has diagnostic budget policy and preserved resource ownership checks.

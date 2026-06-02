@@ -1,27 +1,24 @@
-# Semantic Invariants — SB02
+# Semantic Invariants - SB02
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Economy sandbox services can be registered outside Node with one public extension.
+- Node consumes the same registration path as other hosts.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Source scan verifies the page no longer needs manual construction for production service wiring; BUnit uses DI registration.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Focused Economy sandbox tests and the Economy release build passed.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| `AddEconomySimulationSandbox` | Economy sandbox package | Node, tests, future hosts | Startup DI | Source scan includes catalog/session registrations |

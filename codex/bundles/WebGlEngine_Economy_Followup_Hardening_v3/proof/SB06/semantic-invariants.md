@@ -1,27 +1,24 @@
-# Semantic Invariants — SB06
+# Semantic Invariants - SB06
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Mixed direct and staged WebGlRun frames are blocked before runtime mutation.
+- Browser reset failure cannot fall through to batch application.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+WebGlRun tests cover mixed-frame API use, reset without initial scene, import failure, and pre-existing frame errors.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+WebGlRunLib release tests pass and boundary audit remains green.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Frame apply result | WebGlRunLib | Browser adapter | Playback | Error result has inert empty command batch |

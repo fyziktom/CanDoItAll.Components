@@ -1,27 +1,24 @@
-# Semantic Invariants — SB09
+# Semantic Invariants - SB09
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Operator UI exposes scenario identity, version, pack hash, validity, and runtime diagnostics.
+- Browser-visible controls operate against runtime session services.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Runtime fixture path scan found no `tests/` or fixture dependency in production UI/scenario routes; the only match is an external W3C URL in sample data.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Browser proof loads the sandbox, applies a frame, steps, backs up, switches to `farmer-land`, and records console with zero errors/warnings.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Sandbox browser diagnostics | Economy UI | Bundle proof | Runtime/browser | Console has 0 errors and 0 warnings |

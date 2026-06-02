@@ -1,36 +1,31 @@
-# Proof Manifest — SB03
+# Proof Manifest - SB03
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- Scenario manifest schema/descriptors.
+- `shared-well` and `farmer-land` runtime `scenario.manifest.json` files.
+- Scenario selector UI and component tests.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB03/transcripts/`._
+- `proof/SB03/transcripts/economy-sandbox-focused-tests-release-after-restore.txt`
+- `proof/SB09/transcripts/economy-runtime-fixture-path-scan.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+- `proof/SB09/browser/economy-sandbox-browser-proof.png`
+- `proof/SB09/browser/economy-sandbox-browser-diagnostics.json`
 
 ## Source Assertions
 
-_To be filled during execution._
+- Catalog descriptors expose manifest version, scenario version, content hash, pack hash, metadata, and validity.
+- Runtime UI lists both manifested scenarios and displays scenario version and pack hash.
 
 ## Gate Decision
 
-Pending.
+Passed. Scenario selection is manifest-backed and no runtime UI path depends on `tests/` fixtures.

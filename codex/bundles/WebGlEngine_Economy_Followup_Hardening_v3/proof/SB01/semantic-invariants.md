@@ -1,27 +1,24 @@
-# Semantic Invariants — SB01
+# Semantic Invariants - SB01
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Downstream gates start from current branch heads, not stale bundle assumptions.
+- Missing source-reference paths are recorded explicitly instead of silently ignored.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+`proof/SB01/transcripts/current-state-audit.txt` records the missing Economy v2 bundle path.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Prepared-stage validator passed and branch/head references were captured before edits.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Source-state audit | SB01 | SB02-SB12 | Pre-implementation baseline | Missing Economy v2 bundle path recorded |

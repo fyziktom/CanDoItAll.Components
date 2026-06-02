@@ -76,6 +76,22 @@ public sealed class WebGlRuntimeDiagnostics
 
     public string RenderMode { get; set; } = WebGlRenderModes.Auto;
 
+    public string RuntimeBudgetProfile { get; set; } = string.Empty;
+
+    public bool DegradedRenderingActive { get; set; }
+
+    public int RuntimeBudgetWarningCount { get; set; }
+
+    public List<string> RuntimeBudgetWarnings { get; set; } = [];
+
+    public int RuntimeBudgetMaxSceneObjects { get; set; }
+
+    public int RuntimeBudgetMaxLoadedAssets { get; set; }
+
+    public int RuntimeBudgetMaxActiveMotions { get; set; }
+
+    public int RuntimeBudgetMaxQueuedMotions { get; set; }
+
     public string LastFrameReason { get; set; } = string.Empty;
 
     public double FrameTimeMs { get; set; }

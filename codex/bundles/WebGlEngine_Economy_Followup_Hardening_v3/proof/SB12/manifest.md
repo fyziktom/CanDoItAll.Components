@@ -1,36 +1,31 @@
-# Proof Manifest — SB12
+# Proof Manifest - SB12
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- Cross-repo changed-file hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB12/transcripts/`._
+- `proof/SB12/transcripts/components-solution-build-release.txt`
+- `proof/SB12/transcripts/economy-solution-build-release.txt`
+- `proof/SB12/transcripts/changed-file-hashes.txt`
+- `proof/SB12/transcripts/bundle-completed-validator.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+- SB09 browser proof: `proof/SB09/browser/economy-sandbox-browser-proof.png`
+- SB09 diagnostics: `proof/SB09/browser/economy-sandbox-browser-diagnostics.json`
 
 ## Source Assertions
 
-_To be filled during execution._
+- Components release build passed with 0 warnings/errors.
+- Economy release solution build passed with known existing warnings and 0 errors.
+- Targeted C# tests, boundary audits, runtime audits, package proof, and browser proof all passed.
 
 ## Gate Decision
 
-Pending.
+Passed. Completed-stage validator is green and the bundle is closed.

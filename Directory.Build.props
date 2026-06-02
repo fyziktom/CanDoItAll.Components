@@ -4,8 +4,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <IsPackable>true</IsPackable>
-    <Version>0.1.0</Version>
-    <PackageVersion>0.1.0</PackageVersion>
+    <CanDoItAllPackageBaseVersion Condition="'$(CanDoItAllPackageBaseVersion)' == ''">0.1.0</CanDoItAllPackageBaseVersion>
+    <CanDoItAllPackageProofSuffix Condition="'$(CanDoItAllPackageProofSuffix)' == ''"></CanDoItAllPackageProofSuffix>
+    <Version>$(CanDoItAllPackageBaseVersion)$(CanDoItAllPackageProofSuffix)</Version>
+    <PackageVersion>$(Version)</PackageVersion>
     <Authors>CanDoItAll</Authors>
     <Company>CanDoItAll</Company>
     <PackageProjectUrl>https://github.com/fyziktom/CanDoItAll</PackageProjectUrl>

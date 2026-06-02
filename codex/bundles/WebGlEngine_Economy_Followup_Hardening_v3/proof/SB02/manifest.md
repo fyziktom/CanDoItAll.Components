@@ -1,36 +1,29 @@
-# Proof Manifest — SB02
+# Proof Manifest - SB02
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- Economy sandbox contracts, service registration extension, in-memory catalog, file-system catalog, Node registration.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB02/transcripts/`._
+- `proof/SB02/transcripts/service-registration-and-catalog-source-scan.txt`
+- `proof/SB03/transcripts/economy-sandbox-focused-tests-release-after-restore.txt`
+- `proof/SB12/transcripts/economy-solution-build-release.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+N/A for this subbundle. Browser proof is recorded under SB09.
 
 ## Source Assertions
 
-_To be filled during execution._
+- `AddEconomySimulationSandbox` registers workflow, backend selector, scenario catalog, persistence options, and scoped session service.
+- Node uses `UseFileSystemScenarioCatalog` with runtime scenario content instead of page-local construction.
 
 ## Gate Decision
 
-Pending.
+Passed. Non-Node consumers now have a reusable Economy sandbox registration path.

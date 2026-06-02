@@ -1,4 +1,3 @@
-using System.Text.Json;
 using CanDoItAll.Components.WebGlLib;
 
 namespace CanDoItAll.Components.WebGlRunLib;
@@ -33,9 +32,6 @@ public sealed class WebGlRunBrowserApplyAdapter(
 {
     private const int MaxSnapshotListItems = 100;
     private const int MaxSnapshotJournalEntries = 12;
-    private const string InitialSceneRuntimeOptionsExternalWarning =
-        "Initial scene runtime options are external to WebGlRun browser reset and were not applied.";
-
     public async ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
         WebGlRunFrameApplyResult frameApplyResult,
         CancellationToken cancellationToken = default)
@@ -47,6 +43,14 @@ public sealed class WebGlRunBrowserApplyAdapter(
         result.Warnings.AddRange(frameApplyResult.Warnings);
         result.Errors.AddRange(frameApplyResult.Errors);
 
+        if (result.Errors.Count > 0)
+        {
+            WebGlRuntimeDiagnostics? failureDiagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+            result.RuntimeSnapshot = BuildSnapshot(frameApplyResult, failureDiagnostics, result);
+            result.RuntimeDiagnostics = failureDiagnostics;
+            return result;
+        }
+
         WebGlSceneDocument? sceneToReset = frameApplyResult.InitialScene ?? initialScene;
         if (frameApplyResult.RequiresSceneReset)
         {
@@ -56,15 +60,22 @@ public sealed class WebGlRunBrowserApplyAdapter(
             }
             else
             {
-                if (HasNonDefaultRuntimeOptions(sceneToReset.RuntimeOptions))
-                {
-                    result.Warnings.Add(InitialSceneRuntimeOptionsExternalWarning);
-                }
-
-                WebGlSceneDocument resetDocument = CreateSceneResetDocument(sceneToReset);
-                WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(resetDocument, cancellationToken).ConfigureAwait(false);
+                WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(sceneToReset, cancellationToken).ConfigureAwait(false);
                 result.AppliedInitialScene = importResult?.Success == true;
                 AddCommandOutcome(result, importResult);
+            }
+
+            if (result.Errors.Count > 0 || !result.AppliedInitialScene)
+            {
+                if (result.Errors.Count == 0)
+                {
+                    result.Errors.Add("Frame requires a scene reset, but browser scene import did not report success.");
+                }
+
+                WebGlRuntimeDiagnostics? resetFailureDiagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+                result.RuntimeSnapshot = BuildSnapshot(frameApplyResult, resetFailureDiagnostics, result);
+                result.RuntimeDiagnostics = resetFailureDiagnostics;
+                return result;
             }
         }
 
@@ -133,31 +144,6 @@ public sealed class WebGlRunBrowserApplyAdapter(
                 : commandResult.Message);
         }
     }
-
-    private static WebGlSceneDocument CreateSceneResetDocument(WebGlSceneDocument source)
-        => new()
-        {
-            SchemaVersion = source.SchemaVersion,
-            DocumentId = source.DocumentId,
-            Scene = source.Scene,
-            RuntimeOptions = new WebGlRuntimeOptions(),
-            Diagnostics = new WebGlRuntimeDiagnostics(),
-            SavedAtUtc = source.SavedAtUtc,
-            Source = source.Source,
-            SceneContentHash = source.SceneContentHash,
-            DocumentHash = source.DocumentHash,
-            ContentHash = source.ContentHash,
-            Metadata = source.Metadata is null
-                ? []
-                : new Dictionary<string, string>(source.Metadata, StringComparer.Ordinal)
-        };
-
-    private static bool HasNonDefaultRuntimeOptions(WebGlRuntimeOptions? runtimeOptions)
-        => runtimeOptions is not null &&
-           !string.Equals(
-               JsonSerializer.Serialize(runtimeOptions),
-               JsonSerializer.Serialize(new WebGlRuntimeOptions()),
-               StringComparison.Ordinal);
 
     private static WebGlRunRuntimeSnapshot BuildSnapshot(
         WebGlRunFrameApplyResult frame,
@@ -300,7 +286,7 @@ public sealed class WebGlSceneViewBrowserRuntime(WebGlSceneView sceneView) : IWe
     {
         ArgumentNullException.ThrowIfNull(sceneDocument);
         cancellationToken.ThrowIfCancellationRequested();
-        return await sceneView.ImportSceneDetailedAsync(sceneDocument.Scene).ConfigureAwait(false);
+        return await sceneView.ImportSceneDocumentDetailedAsync(sceneDocument).ConfigureAwait(false);
     }
 
     public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(

@@ -22,6 +22,26 @@ public sealed class WebGlRunFrameApplyResult
     {
         ArgumentNullException.ThrowIfNull(frame);
         bool hasMixedCommands = WebGlRunFrameCommandPolicy.HasMixedDirectAndStagedCommands(frame);
+        if (hasMixedCommands)
+        {
+            return new()
+            {
+                FrameIndex = frame.Index,
+                TimeSeconds = frame.TimeSeconds,
+                CommandBatch = new()
+                {
+                    BatchId = $"run-frame:{frame.Index}",
+                    Metadata =
+                    {
+                        ["frameIndex"] = frame.Index.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        ["timeSeconds"] = frame.TimeSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        ["blockedByPolicy"] = "mixed-direct-and-staged-commands"
+                    }
+                },
+                Errors = [WebGlRunFrameCommandPolicy.CreateMixedDirectAndStagedCommandsError(frame.Index)]
+            };
+        }
+
         WebGlSceneCommandBatchNormalizationResult normalized = WebGlSceneCommandBatchNormalizer.Normalize(new WebGlSceneCommandBatch
         {
             BatchId = $"run-frame:{frame.Index}",
@@ -62,7 +82,6 @@ public sealed class WebGlRunFrameApplyResult
             FrameIndex = frame.Index,
             TimeSeconds = frame.TimeSeconds,
             CommandBatch = normalized.Batch,
-            Errors = hasMixedCommands ? [WebGlRunFrameCommandPolicy.CreateMixedDirectAndStagedCommandsError(frame.Index)] : [],
             Warnings = [.. normalized.Warnings]
         };
     }

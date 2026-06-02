@@ -199,6 +199,26 @@
     public Task<WebGlSceneCommandResult?> ImportSceneDetailedAsync(WebGlSceneModel sceneModel)
         => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.importSceneDetailed", host, sceneModel, Options).AsTask();
 
+    public Task<bool> ImportSceneDocumentAsync(WebGlSceneDocument sceneDocument)
+    {
+        ArgumentNullException.ThrowIfNull(sceneDocument);
+        return JsRuntime.InvokeAsync<bool>(
+            "CanDoItAll.webglScene.importScene",
+            host,
+            sceneDocument.Scene,
+            sceneDocument.RuntimeOptions ?? Options).AsTask();
+    }
+
+    public Task<WebGlSceneCommandResult?> ImportSceneDocumentDetailedAsync(WebGlSceneDocument sceneDocument)
+    {
+        ArgumentNullException.ThrowIfNull(sceneDocument);
+        return JsRuntime.InvokeAsync<WebGlSceneCommandResult?>(
+            "CanDoItAll.webglScene.importSceneDetailed",
+            host,
+            sceneDocument.Scene,
+            sceneDocument.RuntimeOptions ?? Options).AsTask();
+    }
+
     public Task<bool> ApplyPatchAsync(WebGlScenePatch patch)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.applyPatch", host, patch).AsTask();
 

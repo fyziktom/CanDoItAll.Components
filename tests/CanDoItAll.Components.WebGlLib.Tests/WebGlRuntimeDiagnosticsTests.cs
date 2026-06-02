@@ -91,6 +91,38 @@ public sealed class WebGlRuntimeDiagnosticsTests
     }
 
     [Fact]
+    public void Runtime_diagnostics_round_trips_runtime_budget_fields()
+    {
+        const string json = """
+            {
+              "runtimeBudgetProfile": "economy-large",
+              "degradedRenderingActive": true,
+              "runtimeBudgetWarningCount": 2,
+              "runtimeBudgetWarnings": [
+                "scene objects 750 exceeds budget 500",
+                "queued motions 900 exceeds budget 512"
+              ],
+              "runtimeBudgetMaxSceneObjects": 500,
+              "runtimeBudgetMaxLoadedAssets": 128,
+              "runtimeBudgetMaxActiveMotions": 256,
+              "runtimeBudgetMaxQueuedMotions": 512
+            }
+            """;
+
+        var diagnostics = JsonSerializer.Deserialize<WebGlRuntimeDiagnostics>(json, JsonOptions);
+
+        Assert.NotNull(diagnostics);
+        Assert.Equal("economy-large", diagnostics.RuntimeBudgetProfile);
+        Assert.True(diagnostics.DegradedRenderingActive);
+        Assert.Equal(2, diagnostics.RuntimeBudgetWarningCount);
+        Assert.Equal(2, diagnostics.RuntimeBudgetWarnings.Count);
+        Assert.Equal(500, diagnostics.RuntimeBudgetMaxSceneObjects);
+        Assert.Equal(128, diagnostics.RuntimeBudgetMaxLoadedAssets);
+        Assert.Equal(256, diagnostics.RuntimeBudgetMaxActiveMotions);
+        Assert.Equal(512, diagnostics.RuntimeBudgetMaxQueuedMotions);
+    }
+
+    [Fact]
     public void Runtime_diagnostics_deserializes_browser_resource_cache_capture_shape()
     {
         const string json = """

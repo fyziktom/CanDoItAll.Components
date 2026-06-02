@@ -1,36 +1,45 @@
-# Proof Manifest — SB11
+# Proof Manifest - SB11
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- Components package version props and package docs.
+- WebGlLib-only sample docs.
+- Economy package-consumer docs.
+- SB11 NuGet proof configs.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB11/transcripts/`._
+- `proof/SB11/transcripts/components-pack-sb11-proof-version.txt`
+- `proof/SB11/transcripts/nupkg-file-hashes.txt`
+- `proof/SB11/transcripts/nupkg-content-listing.txt`
+- `proof/SB11/transcripts/nupkg-content-hygiene-scan.txt`
+- `proof/SB11/transcripts/expected-fail-webgllib-only-stale-feed-restore.txt`
+- `proof/SB11/transcripts/passing-webgllib-only-fresh-feed-restore.txt`
+- `proof/SB11/transcripts/passing-webgllib-only-fresh-feed-build.txt`
+- `proof/SB11/transcripts/webgllib-only-sample-package-graph-scan.txt`
+- `proof/SB11/transcripts/passing-economy-webglbridge-fresh-feed-restore.txt`
+- `proof/SB11/transcripts/passing-economy-webglbridge-fresh-feed-build.txt`
+- `proof/SB11/transcripts/economy-webglbridge-package-graph-scan.txt`
+- `proof/SB11/transcripts/passing-economy-components-fresh-feed-restore.txt`
+- `proof/SB11/transcripts/passing-economy-components-fresh-feed-build.txt`
+- `proof/SB11/transcripts/economy-components-package-graph-scan.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+N/A.
 
 ## Source Assertions
 
-_To be filled during execution._
+- `CanDoItAllPackageProofSuffix` creates unique proof versions without changing the default base version.
+- Stale-feed restore fails for the SB11 prerelease.
+- Fresh-feed package-mode consumers build from isolated caches and graph scans show expected package references.
+- WebGlLib-only sample graph contains WebGlLib and does not contain WebGlRunLib.
 
 ## Gate Decision
 
-Pending.
+Passed. Package proof is isolated, unique-versioned, and consumer-verified.

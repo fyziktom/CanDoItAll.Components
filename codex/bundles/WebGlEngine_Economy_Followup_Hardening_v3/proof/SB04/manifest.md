@@ -1,36 +1,31 @@
-# Proof Manifest — SB04
+# Proof Manifest - SB04
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- Economy sandbox contracts and session service.
+- Scenario catalog implementations.
+- Session tests.
+- Hashes: `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB04/transcripts/`._
+- `proof/SB04/transcripts/pathless-session-api-source-scan.txt`
+- `proof/SB03/transcripts/economy-sandbox-focused-tests-release-after-restore.txt`
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+N/A. Browser proof for pathless scenario selection is under SB09.
 
 ## Source Assertions
 
-_To be filled during execution._
+- Public APIs include `LoadScenario`, `TryLoadScenario`, `ExportSessionAsync`, and `ImportSessionAsync`.
+- Session export includes scenario id/title/version/pack hash and import resolves catalog scenarios without relying on the original file path.
+- Pack-hash mismatch rejects import.
 
 ## Gate Decision
 
-Pending.
+Passed. Portable scenario references now survive moved exports while rejecting stale packs.

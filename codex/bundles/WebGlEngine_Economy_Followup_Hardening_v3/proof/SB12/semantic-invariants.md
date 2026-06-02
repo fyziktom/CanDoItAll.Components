@@ -1,27 +1,24 @@
-# Semantic Invariants — SB12
+# Semantic Invariants - SB12
 
 ## Status
 
-Prepared / not started.
+Completed.
 
 ## Invariants
 
-_To be completed during implementation._
-
-## Shallow-Pass Trap
-
-A shallow implementation may only satisfy fixture data, a happy-path BUnit render, or a validator call while leaving public runtime APIs unsafe. The implementation must prove the production path, not only structure.
+- Cross-repo closure requires implementation proof, tests/audits, package proof, browser proof, and final bundle validation.
+- Remaining warnings are recorded as existing wider-solution warnings, not new blocking errors.
 
 ## Adversarial Negative Proof
 
-_To be filled during execution._
+Package stale-feed failure, boundary audits, provenance negative tests, sync-over-async scan, and browser console review all passed.
 
 ## Semantic Positive Proof
 
-_To be filled during execution._
+Components and Economy release builds passed; all targeted tests/audits/browser/package checks passed.
 
 ## Production Behavior Artifact Matrix
 
 | Artifact | Producer | Consumer | Lifecycle | Negative proof |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| Final proof bundle | SB01-SB11 | SB12 validator and user | Closure | Completed-stage validator run |

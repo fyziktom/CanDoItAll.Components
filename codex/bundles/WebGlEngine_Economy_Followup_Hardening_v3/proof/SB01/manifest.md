@@ -1,36 +1,28 @@
-# Proof Manifest — SB01
+# Proof Manifest - SB01
 
 ## Status
 
-Prepared / not started.
-
-## Required Artifacts
-
-- Changed-file hashes after implementation.
-- Command transcripts with non-empty content.
-- Source assertions proving key production paths.
-- Anti-stub audit output.
-- Failing-first proof where behavior changes.
-- Passing proof.
-- Browser artifacts when applicable.
-- Downstream smoke proof when this is a critical foundation.
+Completed.
 
 ## Changed Files
 
-_To be filled during execution._
+- No production changes in SB01.
+- Changed-file hashes for the completed bundle are recorded in `proof/SB12/transcripts/changed-file-hashes.txt`.
 
 ## Command Transcripts
 
-_To be filled during execution. Store transcripts under `proof/SB01/transcripts/`._
+- `proof/SB01/transcripts/current-state-audit.txt`
+- Prepared validator: `python scripts\validate_bundle.py --stage prepared --profile initiative` passed before execution.
 
 ## Browser Artifacts
 
-_To be filled during execution when browser proof is required._
+N/A. SB01 was an audit phase.
 
 ## Source Assertions
 
-_To be filled during execution._
+- Components branch/head and Economy branch/head were captured before implementation.
+- Components v2 bundle exists locally; the exact Economy v2 bundle path named by the bundle does not exist locally and is recorded as a source-reference exception.
 
 ## Gate Decision
 
-Pending.
+Passed. SB01 established the source-state baseline and proof exception before downstream work.
