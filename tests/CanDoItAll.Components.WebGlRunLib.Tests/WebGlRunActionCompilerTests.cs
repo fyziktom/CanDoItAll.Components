@@ -35,11 +35,17 @@ public sealed class WebGlRunActionCompilerTests
         });
 
         Assert.Equal([0, 1, 2], timeline.Frames.Select(frame => frame.Index).ToArray());
-        Assert.Equal(new WebGlVector3(4, 0, 1), timeline.Frames[0].Motions[0].TargetPosition);
-        Assert.Equal("move-to-object", timeline.Frames[0].Motions[0].Metadata["actionKind"]);
-        Assert.Equal("active", timeline.Frames[1].ScenePatches[0].Patch.ObjectPatches[0].Metadata!["poseKey"]);
-        Assert.Equal("status", timeline.Frames[1].ScenePatches[1].Patch.ObjectPatches[0].Symbols![0].SemanticKind);
-        Assert.Equal(new WebGlVector3(0, 0, 0), timeline.Frames[2].Motions[0].TargetPosition);
+        Assert.All(timeline.Frames, frame =>
+        {
+            Assert.Empty(frame.ScenePatches);
+            Assert.Empty(frame.Motions);
+        });
+        Assert.Equal(new WebGlVector3(4, 0, 1), timeline.Frames[0].Stages.Single().Motions[0].TargetPosition);
+        Assert.Equal("move-to-object", timeline.Frames[0].Stages.Single().Motions[0].Metadata["actionKind"]);
+        WebGlRunFramePatch[] frameOnePatches = [.. timeline.Frames[1].Stages.SelectMany(static stage => stage.ScenePatches)];
+        Assert.Equal("active", frameOnePatches[0].Patch.ObjectPatches[0].Metadata!["poseKey"]);
+        Assert.Equal("status", frameOnePatches[1].Patch.ObjectPatches[0].Symbols![0].SemanticKind);
+        Assert.Equal(new WebGlVector3(0, 0, 0), timeline.Frames[2].Stages.Single().Motions[0].TargetPosition);
     }
 
     [Fact]

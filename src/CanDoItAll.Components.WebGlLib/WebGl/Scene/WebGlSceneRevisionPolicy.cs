@@ -29,6 +29,6 @@ public static class WebGlSceneRevisionPolicy
     public static void Normalize(WebGlSceneModel scene)
     {
         ArgumentNullException.ThrowIfNull(scene);
-        scene.Revision = Resolve(scene);
+        Commit(scene, Resolve(scene));
     }
 }

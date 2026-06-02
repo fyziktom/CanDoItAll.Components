@@ -6,7 +6,7 @@ Make scene revision normalization and browser reset runtime-option behavior expl
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02.
 
 ## Covered Inputs
 
@@ -63,12 +63,12 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB04 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB04 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
 
 ## Proof Required
 
@@ -78,6 +78,13 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 - Update source assertions in proof manifest.
 
 Critical subbundles must also create/update `proof/SB04/semantic-invariants.md` with shallow-pass trap, negative proof, positive proof, production assertions, and raw requirement closure.
+
+## Completion Notes
+
+- `WebGlSceneRevisionPolicy.Normalize` now uses the canonical `Commit` path so `Scene.Revision` and `UiState.Revision` are mirrored when UI state is included.
+- UI-excluded serialization keeps the canonical scene revision and resets UI state to defaults, avoiding ambiguous dual-source comparisons.
+- `WebGlRunBrowserApplyAdapter` treats document runtime options as external during scene reset, imports a scene-only reset document with default runtime options, and warns when non-default reset options were stripped.
+- Proof is recorded in `bundle://proof/SB04/manifest.md` and `bundle://proof/SB04/semantic-invariants.md`.
 
 ## Browser Validation Logging
 

@@ -61,6 +61,9 @@ public sealed class WebGlRuntimeDiagnosticsTests
               "assetCacheHitCount": 3,
               "assetCacheMissCount": 1,
               "disposedTemplateCount": 1,
+              "assetCachePendingDisposalCount": 0,
+              "assetCacheDisposedPromiseCount": 4,
+              "assetCacheDisposalErrorCount": 0,
               "materialCloneCount": 2,
               "disposedGeometryCount": 4,
               "disposedMaterialCount": 5,
@@ -77,6 +80,9 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.Equal(3, diagnostics.AssetCacheHitCount);
         Assert.Equal(1, diagnostics.AssetCacheMissCount);
         Assert.Equal(1, diagnostics.DisposedTemplateCount);
+        Assert.Equal(0, diagnostics.AssetCachePendingDisposalCount);
+        Assert.Equal(4, diagnostics.AssetCacheDisposedPromiseCount);
+        Assert.Equal(0, diagnostics.AssetCacheDisposalErrorCount);
         Assert.Equal(2, diagnostics.MaterialCloneCount);
         Assert.Equal(4, diagnostics.DisposedGeometryCount);
         Assert.Equal(5, diagnostics.DisposedMaterialCount);
@@ -100,6 +106,9 @@ public sealed class WebGlRuntimeDiagnosticsTests
               "assetCacheHitCount": 4,
               "assetCacheMissCount": 1,
               "disposedTemplateCount": 1,
+              "assetCachePendingDisposalCount": 0,
+              "assetCacheDisposedPromiseCount": 1,
+              "assetCacheDisposalErrorCount": 0,
               "disposedTextureCount": 2,
               "retainedSharedTextureCount": 6,
               "linksUpdatedLastFrame": 0,
@@ -135,6 +144,9 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.Equal(4, diagnostics.AssetCacheHitCount);
         Assert.Equal(1, diagnostics.AssetCacheMissCount);
         Assert.Equal(1, diagnostics.DisposedTemplateCount);
+        Assert.Equal(0, diagnostics.AssetCachePendingDisposalCount);
+        Assert.Equal(1, diagnostics.AssetCacheDisposedPromiseCount);
+        Assert.Equal(0, diagnostics.AssetCacheDisposalErrorCount);
         Assert.Equal(2, diagnostics.DisposedTextureCount);
         Assert.Equal(6, diagnostics.RetainedSharedTextureCount);
         Assert.Equal(0, diagnostics.LinksUpdatedLastFrame);
@@ -152,6 +164,14 @@ public sealed class WebGlRuntimeDiagnosticsTests
         const string json = """
             {
               "assetCacheMode": "state-local",
+              "assetCacheEntryCount": 0,
+              "assetCacheHitCount": 3,
+              "assetCacheMissCount": 1,
+              "disposedTemplateCount": 1,
+              "assetCachePendingDisposalCount": 0,
+              "assetCacheDisposedPromiseCount": 1,
+              "assetCacheDisposalErrorCount": 0,
+              "disposedTextureCount": 2,
               "retainedSharedTextureCount": 4,
               "linkGeometryUpdateCount": 10,
               "linkGeometryRebuildCount": 10,
@@ -165,6 +185,14 @@ public sealed class WebGlRuntimeDiagnosticsTests
 
         Assert.NotNull(snapshot);
         Assert.Equal("state-local", snapshot.AssetCacheMode);
+        Assert.Equal(0, snapshot.AssetCacheEntryCount);
+        Assert.Equal(3, snapshot.AssetCacheHitCount);
+        Assert.Equal(1, snapshot.AssetCacheMissCount);
+        Assert.Equal(1, snapshot.DisposedTemplateCount);
+        Assert.Equal(0, snapshot.AssetCachePendingDisposalCount);
+        Assert.Equal(1, snapshot.AssetCacheDisposedPromiseCount);
+        Assert.Equal(0, snapshot.AssetCacheDisposalErrorCount);
+        Assert.Equal(2, snapshot.DisposedTextureCount);
         Assert.Equal(4, snapshot.RetainedSharedTextureCount);
         Assert.Equal(10, snapshot.LinkGeometryUpdateCount);
         Assert.Equal(10, snapshot.LinkGeometryRebuildCount);

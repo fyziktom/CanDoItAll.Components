@@ -6,7 +6,7 @@ Refresh Economy documentation and package boundary docs to reflect the new simul
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02.
 
 ## Covered Inputs
 
@@ -62,12 +62,12 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB10 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB10 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
 
 ## Proof Required
 

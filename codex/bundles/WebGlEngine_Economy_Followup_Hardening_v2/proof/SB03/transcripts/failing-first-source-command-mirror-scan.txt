@@ -1,0 +1,10 @@
+﻿Command: git show HEAD:<file> and scan for old staged-command mirror assignments
+Pattern: frame\.(ScenePatches|Motions) = \[\.\. frame\.Stages
+--- repo://CanDoItAll.Components/src/CanDoItAll.Components.WebGlRunLib/WebGlRunActionCompiler.cs ---
+Line 53: frame.ScenePatches = [.. frame.Stages.SelectMany(static stage => stage.ScenePatches)];
+Line 54: frame.Motions = [.. frame.Stages.SelectMany(static stage => stage.Motions)];
+--- repo://CanDoItAll.Economy/src/CanDoItAll.Economy.Simulation.WebGlBridge/EconomyWebGlActionStageProjector.cs ---
+Line 56: frame.ScenePatches = [.. frame.Stages.SelectMany(static stage => stage.ScenePatches)];
+Line 57: frame.Motions = [.. frame.Stages.SelectMany(static stage => stage.Motions)];
+TotalHits=4
+EXIT_CODE=0

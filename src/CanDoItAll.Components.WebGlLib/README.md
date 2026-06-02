@@ -58,10 +58,11 @@ To include runtime assets:
 
 `IncludeRuntimeAssets` remains the backwards-compatible shorthand for the workbench runtime. Use `IncludeSceneRuntimeAssets` when a page hosts `WebGlSceneView`.
 
-Minimal WebGlLib-only consumption is covered by `samples/CanDoItAll.Components.WebGlLibOnlyViewer`, which references this package and renders a primitive `WebGlSceneModel` without any `WebGlRunLib` dependency:
+Minimal WebGlLib-only consumption is covered by `samples/CanDoItAll.Components.WebGlLibOnlyViewer`, which can reference this package and renders a primitive `WebGlSceneModel` without any `WebGlRunLib` dependency:
 
 ```powershell
 dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj
+dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj --no-restore /p:UseComponentsWebGlLibPackage=true /p:ComponentsWebGlLibPackageVersion=0.1.0
 ```
 
 ## Adding Assets
@@ -77,7 +78,9 @@ The runtime loads GLB/GLTF assets asynchronously and renders fallback primitives
 
 Use `WebGlModelImportOptions` on assets or variants to tune generic model import behavior: unit scale, fit mode, center mode, rotation/position offsets, double-sided material normalization, debug bounds, material visibility normalization, and tint disabling. Runtime diagnostics report empty scenes, mesh/material counts, zero or extreme bounds, invisible meshes, transparent materials, invalid transforms, and camera clipping risk.
 
-Asset cache entries are state-local by default. Cached GLB/GLTF templates own their geometry, material, and texture disposal when the scene state is disposed; cloned/tinted model instances own cloned material objects but retain shared template texture maps unless a texture was explicitly cloned and marked owned. Use `assetCacheMode`, `assetCacheEntryCount`, `assetCacheHitCount`, `assetCacheMissCount`, `disposedTemplateCount`, `disposedTextureCount`, and `retainedSharedTextureCount` to verify repeated import/profile/dispose behavior.
+Asset cache entries are state-local by default. Cached GLB/GLTF templates own their geometry, material, and texture disposal when the scene state is disposed; cloned/tinted model instances own cloned material objects but retain shared template texture maps unless a texture was explicitly cloned and marked owned. Use `assetCacheMode`, `assetCacheEntryCount`, `assetCacheHitCount`, `assetCacheMissCount`, `disposedTemplateCount`, `assetCachePendingDisposalCount`, `assetCacheDisposedPromiseCount`, `assetCacheDisposalErrorCount`, `disposedTextureCount`, and `retainedSharedTextureCount` to verify repeated import/profile/dispose behavior.
+
+If a future runtime introduces a global or shared asset cache, it must keep a clear owner/ref-count boundary per cached template and expose the same pending-disposal and settled-disposal diagnostics. Shared cache hits may retain templates beyond one scene state, but they must not allow disposed scene instances to attach late-loaded models or hide unresolved disposal promises from diagnostics.
 
 ## Runtime Hardening
 

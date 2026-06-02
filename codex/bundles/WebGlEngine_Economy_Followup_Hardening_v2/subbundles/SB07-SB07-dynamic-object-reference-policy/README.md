@@ -6,7 +6,7 @@ Decide whether Economy WebGL bridge v1 supports dynamic object creation or expli
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02.
 
 ## Covered Inputs
 
@@ -49,7 +49,7 @@ Conditional critical. Downstream subbundles rely on this phase to avoid validati
 
 ## Scope Exceptions
 
-No scope exceptions are allowed unless this README is updated with an explicit exception, proof path, and follow-up owner.
+No scope exceptions were taken. The selected policy is dynamic-supported: objects introduced by earlier patches/stages/frames are valid targets for later commands, while same-stage motion to a newly created object remains invalid.
 
 ## Do Not Do
 
@@ -61,12 +61,12 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB07 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB07 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
 
 ## Proof Required
 
@@ -78,7 +78,7 @@ Critical subbundles must also create/update `proof/SB07/semantic-invariants.md` 
 
 ## Browser Validation Logging
 
-N/A unless this subbundle changes browser-visible runtime or UI. If browser-visible behavior is touched, record route, viewport, actions, assertions, screenshot paths, console log, and result.
+N/A. SB07 changed validator behavior and tests only; no browser-visible runtime or UI behavior changed.
 
 ## Progression Gate
 

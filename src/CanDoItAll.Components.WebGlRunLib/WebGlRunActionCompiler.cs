@@ -48,12 +48,6 @@ public sealed class WebGlRunActionCompiler
             CompileAction(action, bindings, frame);
         }
 
-        foreach (WebGlRunFrame frame in frames.Values)
-        {
-            frame.ScenePatches = [.. frame.Stages.SelectMany(static stage => stage.ScenePatches)];
-            frame.Motions = [.. frame.Stages.SelectMany(static stage => stage.Motions)];
-        }
-
         return new WebGlRunTimeline
         {
             FrameRate = frameRate,

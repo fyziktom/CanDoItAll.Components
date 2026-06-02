@@ -6,7 +6,7 @@ Establish a fresh cross-repo baseline after Codex execution, inventory changed s
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02. Closure gate passed.
 
 ## Covered Inputs
 
@@ -66,12 +66,12 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB01 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB01 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for the discovered proof-hygiene gate failure.
+- [x] Passing proof exercises compiled tests and repo audit scripts, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
 
 ## Proof Required
 
@@ -88,6 +88,8 @@ N/A unless this subbundle changes browser-visible runtime or UI. If browser-visi
 ## Progression Gate
 
 SB01 may close only after proof manifest, semantic invariants when critical, command/browser transcripts, and source assertions agree. If any downstream prerequisite is affected, update `bundle://plan/01-phase-plan.md` and reopen impacted phases.
+
+Gate result: Pass. SB02 remains the next dependency because SB01 source assertions confirm the runtime fixture dependency still exists.
 
 ## Suggested Agent Prompt
 

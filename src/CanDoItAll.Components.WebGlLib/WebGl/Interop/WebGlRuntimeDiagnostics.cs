@@ -98,6 +98,12 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int DisposedTemplateCount { get; set; }
 
+    public int AssetCachePendingDisposalCount { get; set; }
+
+    public int AssetCacheDisposedPromiseCount { get; set; }
+
+    public int AssetCacheDisposalErrorCount { get; set; }
+
     public int MaterialCloneCount { get; set; }
 
     public int DisposedGeometryCount { get; set; }

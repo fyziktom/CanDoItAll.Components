@@ -6,7 +6,7 @@ Remove the Economy browser/Node sandbox runtime dependency on test fixture direc
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02. Gate passed.
 
 ## Covered Inputs
 
@@ -65,12 +65,21 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB02 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB02 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
+
+## Completion Notes
+
+- Added `IEconomySimulationScenarioCatalog` and `FileSystemEconomySimulationScenarioCatalog`.
+- Refactored `EconomySimulationSandboxPage` to receive the sandbox session service and scenario catalog through DI.
+- Added Node runtime sample content under `SimulationScenarios/EconomySimulationSandbox` and configured build/publish copy.
+- Registered the sandbox session service and runtime catalog in the Node service registration.
+- Added tests for fixture decoupling, catalog loading, sandbox service validation, traversal rejection, and component rendering with runtime catalog services.
+- Captured Node browser proof for `/economy/simulation-sandbox` at 1600x1000 with scenario load and `Apply frame`, screenshots, assertions, and zero console errors/warnings.
 
 ## Proof Required
 

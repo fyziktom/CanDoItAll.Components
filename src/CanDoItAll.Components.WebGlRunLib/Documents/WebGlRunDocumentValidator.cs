@@ -63,6 +63,11 @@ public sealed class WebGlRunDocumentValidator
             }
 
             ValidateDomainTerms($"frame:{frame.Index}.metadata", frame.Metadata, result.Errors);
+            if (WebGlRunFrameCommandPolicy.HasMixedDirectAndStagedCommands(frame))
+            {
+                result.Errors.Add(WebGlRunFrameCommandPolicy.CreateMixedDirectAndStagedCommandsError(frame.Index));
+            }
+
             var stageIds = new HashSet<string>(StringComparer.Ordinal);
             foreach (WebGlRunActionStage stage in frame.Stages)
             {
@@ -70,9 +75,13 @@ public sealed class WebGlRunDocumentValidator
                 {
                     result.Errors.Add($"Frame '{frame.Index}' contains a stage without a stage id.");
                 }
-                else if (!stageIds.Add(stage.StageId))
+                else
                 {
-                    result.Errors.Add($"Frame '{frame.Index}' contains duplicate stage id '{stage.StageId}'.");
+                    ValidateDomainValue($"stage:{stage.StageId}.id", stage.StageId, result.Errors);
+                    if (!stageIds.Add(stage.StageId))
+                    {
+                        result.Errors.Add($"Frame '{frame.Index}' contains duplicate stage id '{stage.StageId}'.");
+                    }
                 }
 
                 if (!double.IsFinite(stage.StartsAtSeconds) || stage.StartsAtSeconds < 0)
@@ -91,10 +100,19 @@ public sealed class WebGlRunDocumentValidator
         }
     }
 
-    internal static void ValidateDomainTerms(string scope, IReadOnlyDictionary<string, string> metadata, List<string> errors)
+    internal static void ValidateDomainTerms(
+        string scope,
+        IReadOnlyDictionary<string, string> metadata,
+        List<string> errors,
+        bool allowSourceProvenance = true)
     {
         foreach (KeyValuePair<string, string> item in metadata)
         {
+            if (allowSourceProvenance && WebGlRunGenericBoundaryPolicy.IsSourceProvenanceKey(item.Key))
+            {
+                continue;
+            }
+
             ValidateDomainValue($"{scope}.{item.Key}", item.Key, errors);
             ValidateDomainValue($"{scope}.{item.Key}.value", item.Value, errors);
         }
@@ -146,6 +164,9 @@ public sealed class WebGlRunDocumentValidator
 
 internal static class WebGlRunGenericBoundaryPolicy
 {
+    public static bool IsSourceProvenanceKey(string key)
+        => key.StartsWith("source.", StringComparison.OrdinalIgnoreCase);
+
     public static readonly string[] ForbiddenDomainTerms =
     [
         "economy",

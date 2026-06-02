@@ -80,6 +80,38 @@ public sealed class WebGlRunDocumentRunnerTests
         Assert.Equal(["stage.move"], runner.State.FailedStageIds.ToArray());
     }
 
+    [Fact]
+    public async Task Runner_reports_unresolved_direct_frame_motion_without_applying_frame()
+    {
+        var applier = new RecordingFrameApplier();
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateRunDocument();
+        document.Timeline.Frames.Clear();
+        document.Timeline.Frames.Add(new()
+        {
+            Index = 0,
+            TimeSeconds = 0,
+            Motions =
+            {
+                new()
+                {
+                    MotionId = "motion.dynamic.direct",
+                    ObjectId = "object.dynamic",
+                    TargetPosition = new WebGlVector3(2, 0, 0)
+                }
+            }
+        });
+
+        await runner.LoadAsync(document);
+        await runner.SeekAsync(0);
+        WebGlRunExecutionResult apply = await runner.ApplyCurrentFrameAsync();
+
+        Assert.False(apply.Succeeded);
+        Assert.Contains(apply.Errors, error => error.Contains("object.dynamic", StringComparison.Ordinal));
+        Assert.Equal("1", apply.Diagnostics["failedMotionCount"]);
+        Assert.Empty(applier.AppliedFrames);
+    }
+
     private static WebGlRunDocument CreateRunDocument()
         => new()
         {

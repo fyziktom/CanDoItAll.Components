@@ -6,7 +6,7 @@ Name, document, and test strict and permissive patch application modes across JS
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02.
 
 ## Covered Inputs
 
@@ -63,12 +63,12 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB05 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB05 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
 
 ## Proof Required
 
@@ -78,6 +78,14 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 - JS audit still passes.
 
 Critical subbundles must also create/update `proof/SB05/semantic-invariants.md` with shallow-pass trap, negative proof, positive proof, production assertions, and raw requirement closure.
+
+## Completion Notes
+
+- `WebGlScenePatchTransactionModes` now names strict and permissive invalid-link modes for C# callers.
+- C# reducer results and JS command results include `patchTransactionMode`, `missingLinkEndpointMode`, `patchClassification`, and `skippedLinkIds` when applicable.
+- Strict bad-link patches fail without mutating scene state; permissive invalid-link patches apply valid object/link operations and skip invalid added links with warnings.
+- `/tycoon-village` exposes strict/warning bad-link proof actions and data-testid result fields; browser proof is recorded in `bundle://proof/SB05/browser/assertions.md`.
+- Proof is recorded in `bundle://proof/SB05/manifest.md` and `bundle://proof/SB05/semantic-invariants.md`.
 
 ## Browser Validation Logging
 

@@ -43,7 +43,7 @@ Useful routes:
 
 Domain-specific repositories should map their own data into `WebGlSceneModel` outside this repository. Keep `CanDoItAll.Components.WebGlLib` domain-neutral.
 
-WebGlLib can also be consumed without WebGlRunLib through the minimal Razor sample at `samples/CanDoItAll.Components.WebGlLibOnlyViewer`.
+WebGlLib can also be consumed without WebGlRunLib through the minimal Razor sample at `samples/CanDoItAll.Components.WebGlLibOnlyViewer`. The sample supports project-reference mode by default and package mode with `UseComponentsWebGlLibPackage=true`.
 
 Current WebGL hardening proof is large-screen only by design; small-screen layout tuning is out of scope for this bundle.
 
@@ -58,7 +58,7 @@ This emits all shared component packages at the version in `Directory.Build.prop
 - `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0.nupkg`
 - `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0.nupkg`
 
-When validating package consumers against freshly packed `0.1.0` packages, prefer a proof/local NuGet.config that points at `artifacts\packages` before any older private feed, or use an isolated `NUGET_PACKAGES` cache. That prevents stale local packages from shadowing the current pack output.
+When validating package consumers against freshly packed packages, use a proof/local NuGet.config that points at the fresh package output before any older private feed and set an isolated `NUGET_PACKAGES` cache. If the package version is still `0.1.0`, the isolated cache is required proof hygiene; otherwise a global cache or private feed can shadow the package that was just packed. For repeatable CI-style proof, prefer passing a unique prerelease `PackageVersion` to `dotnet pack` and the matching consumer restore/build properties.
 
 Copy packages into the main repo private feed:
 

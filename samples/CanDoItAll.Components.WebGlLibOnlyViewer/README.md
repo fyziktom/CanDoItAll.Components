@@ -9,3 +9,13 @@ Build proof:
 ```powershell
 dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj
 ```
+
+Package-mode proof:
+
+```powershell
+$env:NUGET_PACKAGES = "C:\temp\candoitall-webgllib-only-packages"
+dotnet restore samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj --configfile C:\path\to\fresh-components.NuGet.config /p:UseComponentsWebGlLibPackage=true /p:ComponentsWebGlLibPackageVersion=0.1.0
+dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj --no-restore /p:UseComponentsWebGlLibPackage=true /p:ComponentsWebGlLibPackageVersion=0.1.0
+```
+
+Use a fresh local package source and an isolated `NUGET_PACKAGES` folder when proving package consumption. This prevents an older `0.1.0` package from a global cache or private feed from shadowing the package that was just packed.

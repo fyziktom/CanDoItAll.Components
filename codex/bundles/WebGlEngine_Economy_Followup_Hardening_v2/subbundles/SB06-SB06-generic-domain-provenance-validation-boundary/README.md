@@ -6,7 +6,7 @@ Clarify how generic WebGlRun validators treat domain provenance without allowing
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02.
 
 ## Covered Inputs
 
@@ -50,7 +50,7 @@ Critical foundation. Downstream subbundles rely on this phase to avoid validatin
 
 ## Scope Exceptions
 
-No scope exceptions are allowed unless this README is updated with an explicit exception, proof path, and follow-up owner.
+No scope exceptions were taken. The first Economy focused failing-first attempt timed out during restore/build; the primary failing-first proof is the focused Components validator transcript, and Economy passing proof is recorded after implementation.
 
 ## Do Not Do
 
@@ -62,12 +62,12 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB06 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB06 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
 
 ## Proof Required
 
@@ -79,7 +79,7 @@ Critical subbundles must also create/update `proof/SB06/semantic-invariants.md` 
 
 ## Browser Validation Logging
 
-N/A unless this subbundle changes browser-visible runtime or UI. If browser-visible behavior is touched, record route, viewport, actions, assertions, screenshot paths, console log, and result.
+N/A. SB06 changed validator and bridge provenance behavior only; no browser-visible runtime or UI behavior changed.
 
 ## Progression Gate
 

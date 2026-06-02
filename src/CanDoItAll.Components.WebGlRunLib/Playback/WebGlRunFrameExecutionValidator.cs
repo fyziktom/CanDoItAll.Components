@@ -23,7 +23,7 @@ internal static class WebGlRunFrameExecutionValidator
                 result.ExecutionDiagnostics.SourceStageIds.Add(sourceStageId);
             }
 
-            ValidateMotions(stage, idsAfterStage, result);
+            ValidateMotions(stage.StageId, stage.Motions, idsAfterStage, result);
             foreach (WebGlRunFramePatch stagePatch in stage.ScenePatches)
             {
                 ValidatePatch(stage, stagePatch, idsAfterStage, result);
@@ -31,6 +31,7 @@ internal static class WebGlRunFrameExecutionValidator
             }
         }
 
+        ValidateMotions("frame", frame.Motions, idsAfterStage, result);
         foreach (WebGlRunFramePatch patch in frame.ScenePatches)
         {
             ValidatePatch(null, patch, idsAfterStage, result);
@@ -79,18 +80,22 @@ internal static class WebGlRunFrameExecutionValidator
         return failedIds;
     }
 
-    private static void ValidateMotions(WebGlRunActionStage stage, HashSet<string> objectIds, WebGlRunExecutionResult result)
+    private static void ValidateMotions(
+        string stageId,
+        IEnumerable<WebGlObjectMotionCommand> motions,
+        HashSet<string> objectIds,
+        WebGlRunExecutionResult result)
     {
-        foreach (WebGlObjectMotionCommand motion in stage.Motions)
+        foreach (WebGlObjectMotionCommand motion in motions)
         {
             if (string.IsNullOrWhiteSpace(motion.ObjectId) || objectIds.Contains(motion.ObjectId))
             {
                 continue;
             }
 
-            result.Errors.Add($"Stage '{stage.StageId}' motion '{motion.MotionId}' targets unresolved object '{motion.ObjectId}'.");
+            result.Errors.Add($"Stage '{stageId}' motion '{motion.MotionId}' targets unresolved object '{motion.ObjectId}'.");
             result.ExecutionDiagnostics.UnresolvedObjectIds.Add(motion.ObjectId);
-            result.ExecutionDiagnostics.FailedMotionIds.Add(string.IsNullOrWhiteSpace(motion.MotionId) ? stage.StageId : motion.MotionId);
+            result.ExecutionDiagnostics.FailedMotionIds.Add(string.IsNullOrWhiteSpace(motion.MotionId) ? stageId : motion.MotionId);
         }
     }
 

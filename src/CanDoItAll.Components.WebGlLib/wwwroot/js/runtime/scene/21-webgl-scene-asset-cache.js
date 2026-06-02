@@ -6,7 +6,10 @@ export function createAssetCache() {
         entries: new Map(),
         hitCount: 0,
         missCount: 0,
-        disposedTemplateCount: 0
+        disposedTemplateCount: 0,
+        pendingDisposalCount: 0,
+        disposedPromiseCount: 0,
+        disposalErrorCount: 0
     };
 }
 
@@ -40,6 +43,8 @@ export function disposeAssetCache(state) {
     const cache = ensureAssetCache(state);
     const promises = Array.from(cache.entries.values());
     cache.entries.clear();
+    cache.pendingDisposalCount += promises.length;
+    syncAssetCacheDiagnostics(state);
 
     for (const promise of promises) {
         Promise.resolve(promise)
@@ -50,11 +55,18 @@ export function disposeAssetCache(state) {
                     syncAssetCacheDiagnostics(state);
                 }
             })
-            .catch(() => {
+            .catch(error => {
+                cache.disposalErrorCount += 1;
+                if (state?.diagnostics) {
+                    state.diagnostics.lastError = state.diagnostics.lastError || error?.message || String(error || "");
+                }
+            })
+            .finally(() => {
+                cache.pendingDisposalCount = Math.max(0, cache.pendingDisposalCount - 1);
+                cache.disposedPromiseCount += 1;
+                syncAssetCacheDiagnostics(state);
             });
     }
-
-    syncAssetCacheDiagnostics(state);
 }
 
 export function syncAssetCacheDiagnostics(state) {
@@ -68,6 +80,9 @@ export function syncAssetCacheDiagnostics(state) {
     state.diagnostics.assetCacheHitCount = cache.hitCount;
     state.diagnostics.assetCacheMissCount = cache.missCount;
     state.diagnostics.disposedTemplateCount = cache.disposedTemplateCount;
+    state.diagnostics.assetCachePendingDisposalCount = cache.pendingDisposalCount;
+    state.diagnostics.assetCacheDisposedPromiseCount = cache.disposedPromiseCount;
+    state.diagnostics.assetCacheDisposalErrorCount = cache.disposalErrorCount;
 }
 
 function ensureAssetCache(state) {

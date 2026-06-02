@@ -1,0 +1,118 @@
+- generic [ref=e117]:
+  - complementary [ref=e118]:
+    - link "CanDoItAll WebGL Sandbox" [ref=e119] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e120]: CanDoItAll
+      - generic [ref=e121]: WebGL Sandbox
+    - navigation "WebGL sandbox routes" [ref=e122]:
+      - link "Overview" [ref=e123] [cursor=pointer]:
+        - /url: /
+      - link "Tycoon Village" [ref=e124] [cursor=pointer]:
+        - /url: /tycoon-village
+      - link "Run Play" [ref=e125] [cursor=pointer]:
+        - /url: /run-playback
+      - link "Model Lab" [ref=e126] [cursor=pointer]:
+        - /url: /model-lab
+      - link "Asset Catalog" [ref=e127] [cursor=pointer]:
+        - /url: /asset-catalog
+  - main [ref=e128]:
+    - generic [ref=e130]:
+      - generic [ref=e132]:
+        - generic [ref=e134]:
+          - paragraph [ref=e135]: Generic run layer
+          - heading "Run Playback" [level=1] [ref=e136]
+          - paragraph [ref=e137]: Domain-neutral frame playback over WebGL scene patches.
+        - generic [ref=e138]:
+          - button "Play" [ref=e139]:
+            - generic [ref=e140]: play_arrow
+            - generic [ref=e141]: Play
+          - button "Pause" [ref=e142]:
+            - generic [ref=e143]: pause
+            - generic [ref=e144]: Pause
+          - button "Cancel" [ref=e145]:
+            - generic [ref=e146]: cancel
+            - generic [ref=e147]: Cancel
+          - button "Step" [ref=e148]:
+            - generic [ref=e149]: skip_next
+            - generic [ref=e150]: Step
+          - button "Batch frame" [active] [ref=e151]:
+            - generic [ref=e152]: dynamic_feed
+            - generic [ref=e153]: Batch frame
+          - button "Reset" [ref=e154]:
+            - generic [ref=e155]: restart_alt
+            - generic [ref=e156]: Reset
+          - button "Snapshot" [ref=e157]:
+            - generic [ref=e158]: photo_camera
+            - generic [ref=e159]: Snapshot
+      - generic [ref=e161]:
+        - generic "Generic WebGL run playback scene" [ref=e164]:
+          - generic:
+            - paragraph: Runtime
+            - paragraph: 26 objects / 0 symbols / 0 loaded / 0 fallback
+        - complementary "Run playback inspector" [ref=e167]:
+          - generic [ref=e168]:
+            - generic [ref=e169]:
+              - generic [ref=e170]: Playback
+              - generic [ref=e171]: paused
+            - generic [ref=e172]:
+              - generic [ref=e173]:
+                - term [ref=e174]: Frame
+                - definition [ref=e175]: "4"
+              - generic [ref=e176]:
+                - term [ref=e177]: Playing
+                - definition [ref=e178]: "False"
+              - generic [ref=e179]:
+                - term [ref=e180]: Renders
+                - definition [ref=e232]: "23"
+              - generic [ref=e181]:
+                - term [ref=e182]: Motions
+                - definition [ref=e233]: "1"
+            - paragraph [ref=e183]: "Motion completed: run.batch.move.23."
+          - generic [ref=e184]:
+            - generic [ref=e185]:
+              - generic [ref=e186]: Batch metrics
+              - generic [ref=e187]: run-frame:4
+            - generic [ref=e188]:
+              - generic [ref=e189]:
+                - term [ref=e190]: Commands
+                - definition [ref=e191]: "24"
+              - generic [ref=e192]:
+                - term [ref=e193]: Stages
+                - definition [ref=e194]: "24"
+              - generic [ref=e195]:
+                - term [ref=e196]: Before
+                - definition [ref=e197]: "24"
+              - generic [ref=e198]:
+                - term [ref=e199]: After
+                - definition [ref=e200]: "24"
+              - generic [ref=e201]:
+                - term [ref=e202]: Avoided
+                - definition [ref=e203]: "23"
+              - generic [ref=e204]:
+                - term [ref=e205]: Queued
+                - definition [ref=e206]: "23"
+          - generic [ref=e207]:
+            - generic [ref=e208]:
+              - generic [ref=e209]: Timeline
+              - generic [ref=e210]: 5 frames
+            - generic [ref=e211]:
+              - button "Frame 0 0.0s" [ref=e212] [cursor=pointer]:
+                - generic [ref=e213]: Frame 0
+                - generic [ref=e214]: 0.0s
+              - button "Frame 1 1.0s" [ref=e215] [cursor=pointer]:
+                - generic [ref=e216]: Frame 1
+                - generic [ref=e217]: 1.0s
+              - button "Frame 2 2.0s" [ref=e218] [cursor=pointer]:
+                - generic [ref=e219]: Frame 2
+                - generic [ref=e220]: 2.0s
+              - button "Frame 3 3.0s" [ref=e221] [cursor=pointer]:
+                - generic [ref=e222]: Frame 3
+                - generic [ref=e223]: 3.0s
+              - button "Frame 4 4.0s" [ref=e224] [cursor=pointer]:
+                - generic [ref=e225]: Frame 4
+                - generic [ref=e226]: 4.0s
+          - generic [ref=e227]:
+            - generic [ref=e228]:
+              - generic [ref=e229]: Diagnostics JSON
+              - generic [ref=e230]: 24 actors
+            - generic [ref=e231]: "{ \"runId\": \"generic-run-demo\", \"currentFrameIndex\": 4, \"isPlaying\": false, \"latestApply\": { \"frameIndex\": 4, \"appliedStageCount\": 24, \"appliedPatchCount\": 0, \"appliedMotionCount\": 24, \"success\": true }, \"batch\": { \"currentCommandBatchId\": \"run-frame:4\", \"batchCommandCount\": 24, \"batchStageCount\": 24, \"commandCountBeforeNormalization\": 24, \"commandCountAfterNormalization\": 24, \"interopCallsAvoided\": 23, \"queuedCommandStageCount\": 23, \"commandStageJournalCount\": 2 }, \"runSnapshot\": { \"currentFrameIndex\": 4, \"currentCommandBatchId\": \"run-frame:4\", \"currentStageIds\": [ \"run.batch.move.0\", \"run.batch.move.1\", \"run.batch.move.2\", \"run.batch.move.3\", \"run.batch.move.4\", \"run.batch.move.5\", \"run.batch.move.6\", \"run.batch.move.7\", \"run.batch.move.8\", \"run.batch.move.9\", \"run.batch.move.10\", \"run.batch.move.11\", \"run.batch.move.12\", \"run.batch.move.13\", \"run.batch.move.14\", \"run.batch.move.15\", \"run.batch.move.16\", \"run.batch.move.17\", \"run.batch.move.18\", \"run.batch.move.19\", \"run.batch.move.20\", \"run.batch.move.21\", \"run.batch.move.22\", \"run.batch.move.23\" ], \"activeMotionCount\": 1, \"queuedMotionCount\": 0, \"diagnostics\": { \"renderCount\": \"19\", \"batchCommandCount\": \"24\", \"batchStageCount\": \"24\", \"batchDurationMs\": \"8\", \"commandCountBeforeNormalization\": \"24\", \"commandCountAfterNormalization\": \"24\", \"coalescedPatchCount\": \"0\", \"droppedDuplicateMotionCount\": \"0\", \"preservedOrderedDuplicateMotionCount\": \"0\", \"interopCallsAvoided\": \"23\", \"activeMotionCount\": \"1\", \"queuedMotionCount\": \"0\", \"queuedCommandStageCount\": \"23\", \"commandStageJournalCount\": \"2\", \"commandStageBarrierPolicy\": \"wait-for-object-motions\", \"lastError\": \"\", \"lastStageError\": \"\" } }, \"proofSnapshot\": { \"renderCount\": 23, \"objectCount\": 26, \"visibleObjectCount\": 26, \"activeMotionCount\": 1, \"currentCommandBatchId\": \"run-frame:4\", \"commandStageJournalCount\": 2 } }"

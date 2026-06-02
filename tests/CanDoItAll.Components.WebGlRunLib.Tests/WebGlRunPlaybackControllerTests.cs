@@ -63,6 +63,19 @@ public sealed class WebGlRunPlaybackControllerTests
     }
 
     [Fact]
+    public void Deterministic_timeline_identity_includes_staged_commands()
+    {
+        var document = CreateExecutableRunDocument();
+        var clock = new WebGlRunPlaybackClock();
+        string identityBefore = clock.BuildDeterministicTimelineIdentity(document);
+
+        document.Timeline.Frames[1].Stages[0].Motions[0].TargetPosition = new WebGlVector3(9, 0, 0);
+        string identityAfter = clock.BuildDeterministicTimelineIdentity(document);
+
+        Assert.NotEqual(identityBefore, identityAfter);
+    }
+
+    [Fact]
     public async Task Controller_exports_executable_state_snapshot_for_generic_document()
     {
         var document = CreateExecutableRunDocument();

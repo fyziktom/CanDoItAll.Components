@@ -77,15 +77,16 @@ public sealed class WebGlScenePatchReducer
             result.RemovedLinkIds.Add(linkId);
         }
 
-        var missingLinkEndpointMode = ResolveMetadata(patch, "missingLinkEndpointMode");
+        var missingLinkEndpointMode = WebGlScenePatchPolicy.ResolveMissingLinkEndpointMode(result);
         foreach (var link in patch.AddLinks.Where(static item => !string.IsNullOrWhiteSpace(item.Id)))
         {
             if (!objectsById.ContainsKey(link.SourceObjectId) || !objectsById.ContainsKey(link.TargetObjectId))
             {
                 var message = $"Link '{link.Id}' references missing endpoint(s): '{link.SourceObjectId}' -> '{link.TargetObjectId}'.";
-                if (string.Equals(missingLinkEndpointMode, "warn", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(missingLinkEndpointMode, WebGlScenePatchPolicy.MissingLinkEndpointModeWarn, StringComparison.OrdinalIgnoreCase))
                 {
-                    result.Warnings.Add(message);
+                    WebGlScenePatchPolicy.AddWarning(result, message);
+                    WebGlScenePatchPolicy.AddSkippedLinkId(result, link.Id);
                     continue;
                 }
 
@@ -118,6 +119,9 @@ public sealed class WebGlScenePatchReducer
             SceneId = scene.SceneId,
             Revision = WebGlSceneRevisionPolicy.Resolve(scene)
         };
+        WebGlScenePatchPolicy.PopulateResultMetadata(result, patch);
+        var missingLinkEndpointMode = WebGlScenePatchPolicy.ResolveMissingLinkEndpointMode(result);
+
         if (!string.IsNullOrWhiteSpace(patch.SceneId) &&
             !string.Equals(scene.SceneId, patch.SceneId, StringComparison.Ordinal))
         {
@@ -128,7 +132,7 @@ public sealed class WebGlScenePatchReducer
         if (patch.BaseRevision > 0 && patch.BaseRevision != currentRevision)
         {
             var message = $"Patch base revision {patch.BaseRevision} does not match scene revision {currentRevision}.";
-            if (IsStrictBaseRevision(patch))
+            if (WebGlScenePatchPolicy.IsStrictBaseRevision(patch))
             {
                 result.Errors.Add(message);
             }
@@ -166,7 +170,6 @@ public sealed class WebGlScenePatchReducer
             }
         }
 
-        var missingLinkEndpointMode = ResolveMetadata(patch, "missingLinkEndpointMode");
         foreach (var link in patch.AddLinks)
         {
             if (string.IsNullOrWhiteSpace(link.Id))
@@ -181,9 +184,10 @@ public sealed class WebGlScenePatchReducer
             }
 
             var message = $"Link '{link.Id}' references missing endpoint(s): '{link.SourceObjectId}' -> '{link.TargetObjectId}'.";
-            if (string.Equals(missingLinkEndpointMode, "warn", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(missingLinkEndpointMode, WebGlScenePatchPolicy.MissingLinkEndpointModeWarn, StringComparison.OrdinalIgnoreCase))
             {
-                result.Warnings.Add(message);
+                WebGlScenePatchPolicy.AddWarning(result, message);
+                WebGlScenePatchPolicy.AddSkippedLinkId(result, link.Id);
             }
             else
             {
@@ -237,52 +241,4 @@ public sealed class WebGlScenePatchReducer
         }
     }
 
-    private static bool IsStrictBaseRevision(WebGlScenePatch patch)
-        => string.Equals(ResolveMetadata(patch, "strictBaseRevision"), "true", StringComparison.OrdinalIgnoreCase) ||
-           string.Equals(ResolveMetadata(patch, "baseRevisionMode"), "fail", StringComparison.OrdinalIgnoreCase);
-
-    private static string ResolveMetadata(WebGlScenePatch patch, string key)
-        => patch.Metadata.TryGetValue(key, out var value) ? value : string.Empty;
-}
-
-public sealed class WebGlScenePatchResult
-{
-    public string SceneId { get; set; } = string.Empty;
-
-    public string CommandKind { get; set; } = "patch";
-
-    public List<string> Errors { get; } = [];
-
-    public List<string> Warnings { get; } = [];
-
-    public List<string> PatchedObjectIds { get; } = [];
-
-    public List<string> AddedObjectIds { get; } = [];
-
-    public List<string> RemovedObjectIds { get; } = [];
-
-    public List<string> AddedLinkIds { get; } = [];
-
-    public List<string> RemovedLinkIds { get; } = [];
-
-    public int NextRevision { get; set; }
-
-    public int Revision { get; set; }
-
-    public List<string> AffectedObjectIds => PatchedObjectIds
-        .Concat(AddedObjectIds)
-        .Concat(RemovedObjectIds)
-        .Where(static id => !string.IsNullOrWhiteSpace(id))
-        .Distinct(StringComparer.Ordinal)
-        .ToList();
-
-    public List<string> AffectedLinkIds => AddedLinkIds
-        .Concat(RemovedLinkIds)
-        .Where(static id => !string.IsNullOrWhiteSpace(id))
-        .Distinct(StringComparer.Ordinal)
-        .ToList();
-
-    public bool Success => IsValid;
-
-    public bool IsValid => Errors.Count == 0;
 }

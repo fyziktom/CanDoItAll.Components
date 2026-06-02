@@ -6,6 +6,15 @@ import {
     markSharedTemplateResource
 } from "../../src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/17-webgl-scene-resources.js";
 
+function createDeferred() {
+    const deferred = {};
+    deferred.promise = new Promise((resolve, reject) => {
+        deferred.resolve = resolve;
+        deferred.reject = reject;
+    });
+    return deferred;
+}
+
 function disposable(label, counters) {
     return {
         label,
@@ -44,6 +53,23 @@ function child(material, geometry) {
     return { userData: {}, material, geometry };
 }
 
+function createAssetCache(entries) {
+    return {
+        mode: "state-local",
+        entries,
+        hitCount: 0,
+        missCount: entries.size,
+        disposedTemplateCount: 0,
+        pendingDisposalCount: 0,
+        disposedPromiseCount: 0,
+        disposalErrorCount: 0
+    };
+}
+
+async function flushPromises() {
+    await new Promise(resolve => setTimeout(resolve, 0));
+}
+
 async function verifyTemplateCacheDisposal() {
     const counters = {};
     const texture = disposable("templateTexture", counters);
@@ -53,17 +79,12 @@ async function verifyTemplateCacheDisposal() {
     markSharedTemplateResource(template);
     const state = {
         diagnostics: {},
-        assetCache: {
-            mode: "state-local",
-            entries: new Map([["template", Promise.resolve({ template })]]),
-            hitCount: 2,
-            missCount: 1,
-            disposedTemplateCount: 0
-        }
+        assetCache: createAssetCache(new Map([["template", Promise.resolve({ template })]]))
     };
+    state.assetCache.hitCount = 2;
 
     disposeAssetCache(state);
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await flushPromises();
     return {
         name: "template-cache-disposal",
         counters,
@@ -75,7 +96,50 @@ async function verifyTemplateCacheDisposal() {
             state.diagnostics.disposedGeometryCount === 1 &&
             state.diagnostics.disposedMaterialCount === 1 &&
             state.diagnostics.disposedTextureCount === 1 &&
+            state.diagnostics.assetCachePendingDisposalCount === 0 &&
+            state.diagnostics.assetCacheDisposedPromiseCount === 1 &&
+            state.diagnostics.assetCacheDisposalErrorCount === 0 &&
             state.diagnostics.assetCacheMode === "state-local"
+    };
+}
+
+async function verifyPendingTemplatePromiseDisposalDiagnostics() {
+    const counters = {};
+    const texture = disposable("pendingTemplateTexture", counters);
+    const material = createMaterial("pendingTemplateMaterial", texture, counters);
+    const geometry = disposable("pendingTemplateGeometry", counters);
+    const template = treeWithChildren([child(material, geometry)]);
+    markSharedTemplateResource(template);
+    const pendingTemplate = createDeferred();
+    const state = {
+        diagnostics: {},
+        assetCache: createAssetCache(new Map([["pending-template", pendingTemplate.promise]]))
+    };
+
+    disposeAssetCache(state);
+    const scheduled = {
+        entryCount: state.diagnostics.assetCacheEntryCount,
+        pendingDisposalCount: state.diagnostics.assetCachePendingDisposalCount,
+        disposedTemplateCount: state.diagnostics.disposedTemplateCount || 0
+    };
+    pendingTemplate.resolve({ template });
+    await flushPromises();
+
+    return {
+        name: "pending-template-promise-disposal-diagnostics",
+        scheduled,
+        counters,
+        diagnostics: state.diagnostics,
+        pass: scheduled.entryCount === 0 &&
+            scheduled.pendingDisposalCount === 1 &&
+            scheduled.disposedTemplateCount === 0 &&
+            counters.pendingTemplateGeometry === 1 &&
+            counters.pendingTemplateMaterial === 1 &&
+            counters.pendingTemplateTexture === 1 &&
+            state.diagnostics.assetCachePendingDisposalCount === 0 &&
+            state.diagnostics.assetCacheDisposedPromiseCount === 1 &&
+            state.diagnostics.assetCacheDisposalErrorCount === 0 &&
+            state.diagnostics.disposedTemplateCount === 1
     };
 }
 
@@ -98,6 +162,42 @@ function verifyTintedInstanceRetainsSharedTexture() {
             diagnostics.disposedMaterialCount === 1 &&
             (diagnostics.disposedTextureCount || 0) === 0 &&
             diagnostics.retainedSharedTextureCount === 1
+    };
+}
+
+function verifyTintedInstanceTemplateOwnershipSeparation() {
+    const counters = {};
+    const sharedTexture = disposable("templateSharedTexture", counters);
+    const templateMaterial = createMaterial("templateMaterial", sharedTexture, counters);
+    const clonedMaterial = createMaterial("ownedInstanceMaterial", sharedTexture, counters);
+    const templateGeometry = disposable("templateGeometry", counters);
+    const template = treeWithChildren([child(templateMaterial, templateGeometry)]);
+    const instance = treeWithChildren([child(clonedMaterial, null)]);
+    markSharedTemplateResource(template);
+    markInstanceResource(instance, { ownsGeometry: false, ownsMaterial: false, ownsTexture: false });
+    markOwnedMaterial(clonedMaterial, { ownsTexture: false });
+    const instanceDiagnostics = {};
+    const templateDiagnostics = {};
+
+    disposeSceneObjectTree(instance, instanceDiagnostics);
+    const textureRetainedAfterInstanceDispose = (counters.templateSharedTexture || 0) === 0;
+    disposeSceneObjectTree(template, templateDiagnostics);
+
+    return {
+        name: "tinted-instance-template-ownership-separation",
+        counters,
+        instanceDiagnostics,
+        templateDiagnostics,
+        pass: counters.ownedInstanceMaterial === 1 &&
+            counters.templateMaterial === 1 &&
+            counters.templateGeometry === 1 &&
+            counters.templateSharedTexture === 1 &&
+            textureRetainedAfterInstanceDispose &&
+            instanceDiagnostics.disposedMaterialCount === 1 &&
+            (instanceDiagnostics.disposedTextureCount || 0) === 0 &&
+            instanceDiagnostics.retainedSharedTextureCount === 1 &&
+            templateDiagnostics.disposedMaterialCount === 1 &&
+            templateDiagnostics.disposedTextureCount === 1
     };
 }
 
@@ -129,7 +229,9 @@ function verifyDuplicateResourceDisposalIsDeduped() {
 
 const results = [
     verifyTintedInstanceRetainsSharedTexture(),
+    verifyTintedInstanceTemplateOwnershipSeparation(),
     verifyDuplicateResourceDisposalIsDeduped(),
+    await verifyPendingTemplatePromiseDisposalDiagnostics(),
     await verifyTemplateCacheDisposal()
 ];
 const summary = {

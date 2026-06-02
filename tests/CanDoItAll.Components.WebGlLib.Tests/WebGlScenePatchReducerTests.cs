@@ -168,6 +168,95 @@ public sealed class WebGlScenePatchReducerTests
     }
 
     [Fact]
+    public void Apply_strict_invalid_link_is_all_or_none_and_reports_transaction_metadata()
+    {
+        var scene = CreatePatchTransactionScene();
+        var originalPosition = scene.Objects.Single(item => item.Id == "object.a").Position;
+        var patch = new WebGlScenePatch
+        {
+            SceneId = "scene",
+            Metadata = { ["patchTransactionMode"] = "strict" },
+            ObjectPatches =
+            [
+                new WebGlSceneObjectPatch
+                {
+                    ObjectId = "object.a",
+                    Position = new WebGlVector3(3, 0, 0)
+                }
+            ],
+            AddLinks =
+            [
+                new WebGlSceneLink
+                {
+                    Id = "link.bad",
+                    SourceObjectId = "object.a",
+                    TargetObjectId = "object.missing"
+                }
+            ]
+        };
+
+        var result = new WebGlScenePatchReducer().Apply(scene, patch);
+
+        Assert.False(result.Success);
+        Assert.Equal(originalPosition, scene.Objects.Single(item => item.Id == "object.a").Position);
+        Assert.Empty(result.AffectedObjectIds);
+        Assert.Empty(result.AffectedLinkIds);
+        var metadata = ReadMetadata(result);
+        Assert.Equal("strict", metadata["patchTransactionMode"]);
+        Assert.Equal("fail", metadata["missingLinkEndpointMode"]);
+        Assert.Equal("mixed-incremental", metadata["patchClassification"]);
+    }
+
+    [Fact]
+    public void Apply_permissive_invalid_link_skips_bad_link_and_reports_affected_and_skipped_ids()
+    {
+        var scene = CreatePatchTransactionScene();
+        var patch = new WebGlScenePatch
+        {
+            SceneId = "scene",
+            Metadata = { ["patchTransactionMode"] = "permissive-invalid-links" },
+            ObjectPatches =
+            [
+                new WebGlSceneObjectPatch
+                {
+                    ObjectId = "object.a",
+                    Position = new WebGlVector3(2, 0, 0)
+                }
+            ],
+            AddLinks =
+            [
+                new WebGlSceneLink
+                {
+                    Id = "link.good",
+                    SourceObjectId = "object.a",
+                    TargetObjectId = "object.b"
+                },
+                new WebGlSceneLink
+                {
+                    Id = "link.bad",
+                    SourceObjectId = "object.a",
+                    TargetObjectId = "object.missing"
+                }
+            ]
+        };
+
+        var result = new WebGlScenePatchReducer().Apply(scene, patch);
+
+        Assert.True(result.Success);
+        Assert.Equal(new WebGlVector3(2, 0, 0), scene.Objects.Single(item => item.Id == "object.a").Position);
+        Assert.Contains(scene.Links, link => link.Id == "link.good");
+        Assert.DoesNotContain(scene.Links, link => link.Id == "link.bad");
+        Assert.Equal(["object.a"], result.AffectedObjectIds);
+        Assert.Equal(["link.good"], result.AffectedLinkIds);
+        Assert.Contains(result.Warnings, warning => warning.Contains("link.bad", StringComparison.Ordinal));
+        var metadata = ReadMetadata(result);
+        Assert.Equal("permissive-invalid-links", metadata["patchTransactionMode"]);
+        Assert.Equal("warn", metadata["missingLinkEndpointMode"]);
+        Assert.Equal("link.bad", metadata["skippedLinkIds"]);
+        Assert.Equal("mixed-incremental", metadata["patchClassification"]);
+    }
+
+    [Fact]
     public void Apply_deduplicates_affected_ids_and_increments_revision_once()
     {
         var scene = new WebGlSceneModel
@@ -277,5 +366,26 @@ public sealed class WebGlScenePatchReducerTests
         Assert.Equal(["object.b"], scene.Layers.Single().ObjectIds);
         Assert.Equal(["object.a"], result.RemovedObjectIds);
         Assert.Equal(["link.ab"], result.RemovedLinkIds);
+    }
+
+    private static WebGlSceneModel CreatePatchTransactionScene()
+        => new()
+        {
+            SceneId = "scene",
+            Revision = 4,
+            UiState = { Revision = 4 },
+            Objects =
+            [
+                new WebGlSceneObject { Id = "object.a", Position = WebGlVector3.Zero },
+                new WebGlSceneObject { Id = "object.b", Position = new WebGlVector3(1, 0, 0) }
+            ]
+        };
+
+    private static IReadOnlyDictionary<string, string> ReadMetadata(WebGlScenePatchResult result)
+    {
+        var metadataProperty = typeof(WebGlScenePatchResult).GetProperty("Metadata");
+        Assert.NotNull(metadataProperty);
+        var value = metadataProperty!.GetValue(result);
+        return Assert.IsAssignableFrom<IReadOnlyDictionary<string, string>>(value);
     }
 }

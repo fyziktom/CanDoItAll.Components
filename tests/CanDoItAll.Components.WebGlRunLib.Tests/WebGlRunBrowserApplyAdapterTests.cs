@@ -131,6 +131,38 @@ public sealed class WebGlRunBrowserApplyAdapterTests
     }
 
     [Fact]
+    public async Task Adapter_reset_treats_initial_scene_runtime_options_as_external()
+    {
+        var runtime = new RecordingBrowserRuntime();
+        var initialScene = new WebGlSceneDocument
+        {
+            Scene = new WebGlSceneModel { SceneId = "scene.runtime-options" },
+            RuntimeOptions = new()
+            {
+                RenderMode = WebGlRenderModes.Continuous,
+                RuntimeKey = "external-runtime"
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime, initialScene);
+
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(new WebGlRunFrameApplyResult
+        {
+            FrameIndex = 1,
+            RequiresSceneReset = true,
+            CommandBatch = new() { BatchId = "run-frame:1" }
+        });
+
+        WebGlSceneDocument importedScene = Assert.Single(runtime.ImportedScenes);
+        Assert.True(result.Success);
+        Assert.Equal(WebGlRenderModes.Auto, importedScene.RuntimeOptions.RenderMode);
+        Assert.Equal(string.Empty, importedScene.RuntimeOptions.RuntimeKey);
+        Assert.Equal(WebGlRenderModes.Continuous, initialScene.RuntimeOptions.RenderMode);
+        Assert.Contains(
+            result.Warnings,
+            warning => warning.Contains("runtime options are external", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task Adapter_reports_runtime_failure_in_typed_result_and_snapshot()
     {
         var runtime = new RecordingBrowserRuntime

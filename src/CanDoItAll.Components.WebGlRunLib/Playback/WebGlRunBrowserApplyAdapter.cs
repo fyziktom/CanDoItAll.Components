@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CanDoItAll.Components.WebGlLib;
 
 namespace CanDoItAll.Components.WebGlRunLib;
@@ -32,6 +33,8 @@ public sealed class WebGlRunBrowserApplyAdapter(
 {
     private const int MaxSnapshotListItems = 100;
     private const int MaxSnapshotJournalEntries = 12;
+    private const string InitialSceneRuntimeOptionsExternalWarning =
+        "Initial scene runtime options are external to WebGlRun browser reset and were not applied.";
 
     public async ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
         WebGlRunFrameApplyResult frameApplyResult,
@@ -53,7 +56,13 @@ public sealed class WebGlRunBrowserApplyAdapter(
             }
             else
             {
-                WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(sceneToReset, cancellationToken).ConfigureAwait(false);
+                if (HasNonDefaultRuntimeOptions(sceneToReset.RuntimeOptions))
+                {
+                    result.Warnings.Add(InitialSceneRuntimeOptionsExternalWarning);
+                }
+
+                WebGlSceneDocument resetDocument = CreateSceneResetDocument(sceneToReset);
+                WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(resetDocument, cancellationToken).ConfigureAwait(false);
                 result.AppliedInitialScene = importResult?.Success == true;
                 AddCommandOutcome(result, importResult);
             }
@@ -124,6 +133,31 @@ public sealed class WebGlRunBrowserApplyAdapter(
                 : commandResult.Message);
         }
     }
+
+    private static WebGlSceneDocument CreateSceneResetDocument(WebGlSceneDocument source)
+        => new()
+        {
+            SchemaVersion = source.SchemaVersion,
+            DocumentId = source.DocumentId,
+            Scene = source.Scene,
+            RuntimeOptions = new WebGlRuntimeOptions(),
+            Diagnostics = new WebGlRuntimeDiagnostics(),
+            SavedAtUtc = source.SavedAtUtc,
+            Source = source.Source,
+            SceneContentHash = source.SceneContentHash,
+            DocumentHash = source.DocumentHash,
+            ContentHash = source.ContentHash,
+            Metadata = source.Metadata is null
+                ? []
+                : new Dictionary<string, string>(source.Metadata, StringComparer.Ordinal)
+        };
+
+    private static bool HasNonDefaultRuntimeOptions(WebGlRuntimeOptions? runtimeOptions)
+        => runtimeOptions is not null &&
+           !string.Equals(
+               JsonSerializer.Serialize(runtimeOptions),
+               JsonSerializer.Serialize(new WebGlRuntimeOptions()),
+               StringComparison.Ordinal);
 
     private static WebGlRunRuntimeSnapshot BuildSnapshot(
         WebGlRunFrameApplyResult frame,

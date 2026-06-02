@@ -6,7 +6,7 @@ Prove light WebGlLib-only consumption and WebGlRunLib package consumption throug
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02.
 
 ## Covered Inputs
 
@@ -54,7 +54,7 @@ Critical foundation. Downstream subbundles rely on this phase to avoid validatin
 
 ## Scope Exceptions
 
-No scope exceptions are allowed unless this README is updated with an explicit exception, proof path, and follow-up owner.
+Browser proof exception: SB09 is package-consumption proof for a Razor class library sample and package-mode consumers, not a browser-hosted route. Package proof paths are recorded in `bundle://proof/SB09/manifest.md`; SB11 remains the follow-up owner for browser UI and Node route proof.
 
 ## Do Not Do
 
@@ -66,12 +66,12 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB09 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB09 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
 
 ## Proof Required
 
@@ -84,7 +84,7 @@ Critical subbundles must also create/update `proof/SB09/semantic-invariants.md` 
 
 ## Browser Validation Logging
 
-Browser proof required. Record route, viewport, Playwright/browser actions, runtime diagnostics JSON, screenshot paths, console log, assertion list, and result.
+Browser proof is explicitly excepted for SB09 because this phase validates package consumption rather than a browser-hosted route. SB11 owns browser route, viewport, console, screenshot, diagnostics, and assertion proof.
 
 ## Progression Gate
 

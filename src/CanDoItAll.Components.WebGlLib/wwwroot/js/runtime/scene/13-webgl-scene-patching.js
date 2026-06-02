@@ -2,6 +2,11 @@ import { clonePayload, round, resolveVector3 } from "./02-webgl-scene-core.js";
 import { commitSceneRevision, resolveSceneRevision } from "./34-webgl-scene-revisions.js";
 import { linkEndpointsExist, validatePatchForApply } from "./35-webgl-scene-patch-validation.js";
 import { classifyPatch, recordPatchClassificationDiagnostics } from "./36-webgl-scene-patch-classification.js";
+import {
+    recordPatchResultMetadata,
+    recordSkippedLinkId,
+    resolvePatchTransactionPolicy
+} from "./37-webgl-scene-patch-policy.js";
 import { notifyStateChanged } from "./24-webgl-scene-notifications.js";
 import {
     addLinkGroup,
@@ -33,6 +38,8 @@ export function applyPatchDetailed(state, patch) {
         return completeCommandResult(state, failPatch(state, result, "Patch is missing."));
     }
 
+    const classification = classifyPatch(normalized);
+    recordPatchResultMetadata(result, normalized, classification);
     const validation = validatePatchForApply(state, normalized);
     for (const warning of validation.warnings) {
         warnCommand(result, warning);
@@ -43,8 +50,6 @@ export function applyPatchDetailed(state, patch) {
         return completeCommandResult(state, failPatch(state, result, validation.errors[0]));
     }
 
-    const classification = classifyPatch(normalized);
-    result.metadata.patchClassification = classification.kind;
     let changed = false;
     for (const objectId of normalized.removeObjectIds) {
         const removed = removeSceneObject(state, objectId, result);
@@ -91,6 +96,7 @@ export function applyPatchDetailed(state, patch) {
 
     for (const link of normalized.addLinks) {
         if (!linkEndpointsExist(state, link)) {
+            recordSkippedLinkId(result, link?.id || "");
             continue;
         }
 
@@ -268,12 +274,13 @@ function normalizePatch(patch) {
         return null;
     }
 
+    const transactionPolicy = resolvePatchTransactionPolicy(patch);
     return {
         sceneId: patch.sceneId || "",
         baseRevision: Number(patch.baseRevision) || 0,
         nextRevision: Number(patch.nextRevision) || 0,
         strictBaseRevision: normalizeBoolean(patch.metadata?.strictBaseRevision) || patch.metadata?.baseRevisionMode === "fail",
-        missingLinkEndpointMode: String(patch.metadata?.missingLinkEndpointMode || "fail").toLowerCase(),
+        ...transactionPolicy,
         objectPatches: Array.isArray(patch.objectPatches) ? patch.objectPatches : [],
         addObjects: Array.isArray(patch.addObjects) ? patch.addObjects : [],
         removeObjectIds: Array.isArray(patch.removeObjectIds) ? patch.removeObjectIds : [],

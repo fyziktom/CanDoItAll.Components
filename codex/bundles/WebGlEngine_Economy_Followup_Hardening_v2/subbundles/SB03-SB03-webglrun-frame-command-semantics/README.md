@@ -6,7 +6,7 @@ Prevent silent command loss when a run frame contains both direct frame-level co
 
 ## Status
 
-Prepared. Not implemented.
+Completed 2026-06-02. Gate passed.
 
 ## Covered Inputs
 
@@ -63,12 +63,21 @@ No scope exceptions are allowed unless this README is updated with an explicit e
 
 ## Acceptance Checklist
 
-- [ ] Objective for SB03 is implemented or explicitly blocked with a concrete reason.
-- [ ] Changed files are listed with hashes in the proof manifest.
-- [ ] Failing-first proof exists for critical behavior changes.
-- [ ] Passing proof exercises production code paths, not only fixtures/stubs.
-- [ ] Boundary and anti-stub scans are recorded.
-- [ ] Downstream reopen triggers are updated if reality differs from this plan.
+- [x] Objective for SB03 is implemented or explicitly blocked with a concrete reason.
+- [x] Changed files are listed with hashes in the proof manifest.
+- [x] Failing-first proof exists for critical behavior changes.
+- [x] Passing proof exercises production code paths, not only fixtures/stubs.
+- [x] Boundary and anti-stub scans are recorded.
+- [x] Downstream reopen triggers are updated if reality differs from this plan.
+
+## Completion Notes
+
+- Chose Option A from `architecture/03-run-frame-command-semantics.md`: mixed direct frame-level commands and staged commands are invalid.
+- Added `WebGlRunFrameCommandPolicy` and wired it into `WebGlRunDocumentValidator` and `WebGlRunFrameApplyResult.FromFrame`.
+- Removed staged-command mirroring from `WebGlRunActionCompiler` and `EconomyWebGlActionStageProjector`.
+- Updated timeline identity hashing to include staged command payloads.
+- Added failing-first and passing tests for mixed rejection, direct-only/staged-only validity, staged-only compiler output, staged identity, and Economy bridge compliance.
+- Captured `/run-playback` browser proof showing `Batch frame` applies frame 4 with 24 commands and 24 stages and no console errors/warnings.
 
 ## Proof Required
 

@@ -21,6 +21,7 @@ public sealed class WebGlRunFrameApplyResult
     public static WebGlRunFrameApplyResult FromFrame(WebGlRunFrame frame)
     {
         ArgumentNullException.ThrowIfNull(frame);
+        bool hasMixedCommands = WebGlRunFrameCommandPolicy.HasMixedDirectAndStagedCommands(frame);
         WebGlSceneCommandBatchNormalizationResult normalized = WebGlSceneCommandBatchNormalizer.Normalize(new WebGlSceneCommandBatch
         {
             BatchId = $"run-frame:{frame.Index}",
@@ -61,6 +62,7 @@ public sealed class WebGlRunFrameApplyResult
             FrameIndex = frame.Index,
             TimeSeconds = frame.TimeSeconds,
             CommandBatch = normalized.Batch,
+            Errors = hasMixedCommands ? [WebGlRunFrameCommandPolicy.CreateMixedDirectAndStagedCommandsError(frame.Index)] : [],
             Warnings = [.. normalized.Warnings]
         };
     }

@@ -116,6 +116,28 @@ public sealed class WebGlSceneProofSnapshot
 
     public string AssetCacheMode { get; set; } = "state-local";
 
+    public int AssetCacheEntryCount { get; set; }
+
+    public int AssetCacheHitCount { get; set; }
+
+    public int AssetCacheMissCount { get; set; }
+
+    public int DisposedTemplateCount { get; set; }
+
+    public int AssetCachePendingDisposalCount { get; set; }
+
+    public int AssetCacheDisposedPromiseCount { get; set; }
+
+    public int AssetCacheDisposalErrorCount { get; set; }
+
+    public int MaterialCloneCount { get; set; }
+
+    public int DisposedGeometryCount { get; set; }
+
+    public int DisposedMaterialCount { get; set; }
+
+    public int DisposedTextureCount { get; set; }
+
     public int RetainedSharedTextureCount { get; set; }
 
     public List<string> SelectedObjectIds { get; set; } = [];

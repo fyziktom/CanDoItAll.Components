@@ -21,6 +21,7 @@ public partial class TycoonVillage
     private WebGlSceneModel? exportedScene;
     private WebGlSceneObject? selectedObject;
     private WebGlSceneProofSnapshot? latestSnapshot;
+    private WebGlSceneCommandResult? latestPatchResult;
     private string selectedAssetProfile = WebGlAssetQualityProfiles.Primitive;
     private string hoveredObjectId = string.Empty;
     private string runtimeStatusText = "initializing";
@@ -175,6 +176,73 @@ public partial class TycoonVillage
             ]
         });
         latestSnapshot = await sceneView.GetProofSnapshotAsync();
+    }
+
+    private Task ApplyBadLinkStrictPatchAsync()
+        => ApplyBadLinkPatchAsync(permissiveInvalidLinks: false);
+
+    private Task ApplyBadLinkWarningPatchAsync()
+        => ApplyBadLinkPatchAsync(permissiveInvalidLinks: true);
+
+    private async Task ApplyBadLinkPatchAsync(bool permissiveInvalidLinks)
+    {
+        if (sceneView is null)
+        {
+            return;
+        }
+
+        latestPatchResult = await sceneView.ApplyPatchDetailedAsync(CreateBadLinkPatch(permissiveInvalidLinks));
+        latestSnapshot = await sceneView.GetProofSnapshotAsync();
+        string mode = latestPatchResult?.Metadata.GetValueOrDefault("patchTransactionMode", "unknown") ?? "unknown";
+        lastMoveStatus = latestPatchResult?.Success == true
+            ? $"{mode} patch applied for agent.helper."
+            : $"{mode} patch failed for agent.helper.";
+    }
+
+    private WebGlScenePatch CreateBadLinkPatch(bool permissiveInvalidLinks)
+    {
+        string mode = permissiveInvalidLinks
+            ? WebGlScenePatchTransactionModes.PermissiveInvalidLinks
+            : WebGlScenePatchTransactionModes.Strict;
+        var patch = new WebGlScenePatch
+        {
+            SceneId = scene.SceneId,
+            Metadata =
+            {
+                ["commandId"] = permissiveInvalidLinks ? "proof.bad-link.warn" : "proof.bad-link.strict",
+                ["patchTransactionMode"] = mode
+            },
+            ObjectPatches =
+            [
+                new()
+                {
+                    ObjectId = "agent.helper",
+                    Position = permissiveInvalidLinks
+                        ? new WebGlVector3(-7.1, 0, 1.2)
+                        : new WebGlVector3(-2.2, 0, 2.2)
+                }
+            ],
+            AddLinks =
+            [
+                new()
+                {
+                    Id = permissiveInvalidLinks ? "proof.bad-link.warn" : "proof.bad-link.strict",
+                    SourceObjectId = "agent.helper",
+                    TargetObjectId = "object.missing"
+                }
+            ]
+        };
+        if (permissiveInvalidLinks)
+        {
+            patch.AddLinks.Insert(0, new WebGlSceneLink
+            {
+                Id = "proof.good-link.warn",
+                SourceObjectId = "agent.helper",
+                TargetObjectId = "marker.plaza"
+            });
+        }
+
+        return patch;
     }
 
     private async Task CaptureProofSnapshotAsync()

@@ -108,7 +108,7 @@ public sealed class WebGlSceneDocumentSerializerTests
     }
 
     [Fact]
-    public void Scene_content_hash_uses_scene_revision_and_ignores_ui_revision()
+    public void Scene_hashes_use_scene_revision_and_normalize_ui_revision_mirror()
     {
         var document = CreateHashDocument();
         document.Scene.Revision = 4;
@@ -122,8 +122,38 @@ public sealed class WebGlSceneDocumentSerializerTests
         var sceneRevisionChanged = WebGlSceneDocumentSerializer.Deserialize(WebGlSceneDocumentSerializer.Serialize(document));
 
         Assert.Equal(first.SceneContentHash, uiOnly.SceneContentHash);
-        Assert.NotEqual(first.DocumentHash, uiOnly.DocumentHash);
+        Assert.Equal(first.DocumentHash, uiOnly.DocumentHash);
         Assert.NotEqual(first.SceneContentHash, sceneRevisionChanged.SceneContentHash);
+    }
+
+    [Fact]
+    public void Normalize_mirrors_canonical_scene_revision_to_ui_state()
+    {
+        var document = CreateHashDocument();
+        document.Scene.Revision = 7;
+        document.Scene.UiState.Revision = 2;
+
+        var normalized = WebGlSceneDocumentSerializer.Normalize(document);
+
+        Assert.Equal(7, normalized.Scene.Revision);
+        Assert.Equal(7, normalized.Scene.UiState.Revision);
+    }
+
+    [Fact]
+    public void Serialize_without_ui_state_keeps_canonical_scene_revision_without_ui_mirror_conflict()
+    {
+        var document = CreateHashDocument();
+        document.Scene.Revision = 7;
+        document.Scene.UiState.Revision = 2;
+
+        var serialized = WebGlSceneDocumentSerializer.Serialize(document, new WebGlSceneDocumentSerializerOptions
+        {
+            IncludeUiState = false
+        });
+        var roundTripped = WebGlSceneDocumentSerializer.Deserialize(serialized);
+
+        Assert.Equal(7, roundTripped.Scene.Revision);
+        Assert.Equal(0, roundTripped.Scene.UiState.Revision);
     }
 
     [Fact]

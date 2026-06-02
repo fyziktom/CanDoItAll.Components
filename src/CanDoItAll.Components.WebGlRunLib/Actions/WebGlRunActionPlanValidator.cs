@@ -61,7 +61,11 @@ public sealed class WebGlRunActionPlanValidator
         WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.kind", action.ActionKind, result.Errors);
         WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.id", action.ActionId, result.Errors);
         WebGlRunDocumentValidator.ValidateDomainTerms($"action:{action.ActionId}.metadata", action.Metadata, result.Errors);
-        WebGlRunDocumentValidator.ValidateDomainTerms($"action:{action.ActionId}.parameters", action.Parameters, result.Errors);
+        WebGlRunDocumentValidator.ValidateDomainTerms(
+            $"action:{action.ActionId}.parameters",
+            action.Parameters,
+            result.Errors,
+            allowSourceProvenance: false);
         if (!double.IsFinite(action.StartsAtSeconds) || action.StartsAtSeconds < 0)
         {
             result.Errors.Add($"Action '{action.ActionId}' start time must be finite and non-negative.");
