@@ -2,6 +2,7 @@
 
 Priority: P2
 Related findings: F12
+Status: Completed
 
 ## Objective
 
@@ -34,3 +35,14 @@ Docs include a concrete pause bug troubleshooting checklist and host integration
 - Run boundary audits.
 - Run browser proof for playback/UI changes.
 - Ensure no blank transcripts.
+
+## Completion summary
+
+Gate result: Passed. Components docs now include a host integration recipe, Pause bug troubleshooting checklist, replay-mode guidance, package-mode proof rules, and proof-hygiene requirements. Economy docs now own scenario-pack manifest hashing, pathless catalog/source loading, deterministic replay behavior, and package-mode boundary notes.
+
+- `bundle://proof/SB11/manifest.md`
+- `bundle://proof/SB11/semantic-invariants.md`
+- `bundle://proof/SB11/transcripts/source-assertion-docs-coverage-scan.txt`
+- `bundle://proof/SB11/transcripts/docs-link-check.txt`
+- `bundle://proof/SB11/transcripts/anti-stub-docs-scan.txt`
+- `bundle://proof/SB11/transcripts/components-domain-neutral-host-doc-scan.txt`

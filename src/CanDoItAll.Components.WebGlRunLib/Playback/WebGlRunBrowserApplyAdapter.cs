@@ -123,6 +123,7 @@ public sealed class WebGlRunBrowserApplyAdapter(
         {
             TargetFrameIndex = playbackResult.TargetFrameIndex,
             RequestedCommand = playbackResult.RequestedCommand,
+            TransactionPolicy = WebGlRunBrowserPlaybackTransactionPolicies.StopOnFirstFailure,
             RequiresSceneReset = playbackResult.RequiresSceneReset
         };
         result.Errors.AddRange(playbackResult.Errors);
@@ -130,6 +131,7 @@ public sealed class WebGlRunBrowserApplyAdapter(
         if (result.Errors.Count > 0)
         {
             result.FailureReason = WebGlRunBrowserApplyFailureReasons.PreApplyValidationFailed;
+            result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, null, result);
             return result;
         }
 
@@ -137,6 +139,7 @@ public sealed class WebGlRunBrowserApplyAdapter(
         {
             result.FailureReason = WebGlRunBrowserApplyFailureReasons.PreApplyValidationFailed;
             result.Errors.Add("Playback result does not contain frames to apply.");
+            result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, null, result);
             return result;
         }
 
@@ -147,10 +150,24 @@ public sealed class WebGlRunBrowserApplyAdapter(
             {
                 result.FailureReason = WebGlRunBrowserApplyFailureReasons.ResetFailed;
                 result.Errors.Add("Playback result requires a scene reset, but no initial scene was supplied.");
+                result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, null, result);
                 return result;
             }
 
-            WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(sceneToReset, cancellationToken).ConfigureAwait(false);
+            WebGlSceneCommandResult? importResult;
+            try
+            {
+                importResult = await runtime.ImportSceneAsync(sceneToReset, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return await CompletePlaybackCancellationAsync(
+                    result,
+                    playbackResult,
+                    "scene reset canceled",
+                    null).ConfigureAwait(false);
+            }
+
             result.AppliedInitialScene = importResult?.Success == true;
             AddPlaybackCommandOutcome(result, importResult);
             if (result.Errors.Count > 0 || !result.AppliedInitialScene)
@@ -161,14 +178,38 @@ public sealed class WebGlRunBrowserApplyAdapter(
                     result.Errors.Add("Playback result requires a scene reset, but browser scene import did not report success.");
                 }
 
+                WebGlRuntimeDiagnostics? resetFailureDiagnostics = await TryGetDiagnosticsAfterFailureAsync().ConfigureAwait(false);
+                result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, resetFailureDiagnostics, result);
                 return result;
             }
         }
 
         foreach (WebGlRunFrame frame in playbackResult.FramesToApply)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return await CompletePlaybackCancellationAsync(
+                    result,
+                    playbackResult,
+                    "cancellation requested before frame apply",
+                    frame.Index).ConfigureAwait(false);
+            }
+
             WebGlRunFrameApplyResult frameApplyResult = WebGlRunFrameApplyResult.FromFrame(frame);
-            WebGlRunBrowserApplyResult frameResult = await ApplyAsync(frameApplyResult, cancellationToken).ConfigureAwait(false);
+            WebGlRunBrowserApplyResult frameResult;
+            try
+            {
+                frameResult = await ApplyAsync(frameApplyResult, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return await CompletePlaybackCancellationAsync(
+                    result,
+                    playbackResult,
+                    "frame apply canceled",
+                    frame.Index).ConfigureAwait(false);
+            }
+
             result.FrameResults.Add(frameResult);
             result.Warnings.AddRange(frameResult.Warnings);
             if (!frameResult.Success)
@@ -178,11 +219,56 @@ public sealed class WebGlRunBrowserApplyAdapter(
                     ? WebGlRunBrowserApplyFailureReasons.BatchFailed
                     : frameResult.FailureReason;
                 result.Errors.AddRange(frameResult.Errors);
+                result.FailureSnapshot = frameResult.RuntimeSnapshot;
+                AnnotatePlaybackFailureSnapshot(result.FailureSnapshot, playbackResult, result);
                 return result;
+            }
+
+            result.LastAppliedFrameIndex = frameResult.FrameIndex;
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return await CompletePlaybackCancellationAsync(
+                    result,
+                    playbackResult,
+                    "frame apply canceled",
+                    frameResult.FrameIndex,
+                    frameResult.RuntimeSnapshot).ConfigureAwait(false);
             }
         }
 
         return result;
+    }
+
+    private async ValueTask<WebGlRunBrowserPlaybackApplyResult> CompletePlaybackCancellationAsync(
+        WebGlRunBrowserPlaybackApplyResult result,
+        WebGlRunPlaybackResult playbackResult,
+        string cancellationReason,
+        long? canceledFrameIndex,
+        WebGlRunRuntimeSnapshot? failureSnapshot = null)
+    {
+        result.Canceled = true;
+        result.FailedFrameIndex = canceledFrameIndex;
+        result.FailureReason = WebGlRunBrowserApplyFailureReasons.CancellationRequested;
+        result.CancellationReason = cancellationReason;
+        result.Errors.Add($"Playback apply was canceled: {cancellationReason}.");
+        result.FailureSnapshot = failureSnapshot ?? BuildPlaybackFailureSnapshot(
+            playbackResult,
+            await TryGetDiagnosticsAfterFailureAsync().ConfigureAwait(false),
+            result);
+        AnnotatePlaybackFailureSnapshot(result.FailureSnapshot, playbackResult, result);
+        return result;
+    }
+
+    private async ValueTask<WebGlRuntimeDiagnostics?> TryGetDiagnosticsAfterFailureAsync()
+    {
+        try
+        {
+            return await runtime.GetDiagnosticsAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private static WebGlRunBrowserApplyResult CreateResult(WebGlRunFrameApplyResult frame)
@@ -195,6 +281,67 @@ public sealed class WebGlRunBrowserApplyAdapter(
             AppliedPatchCount = batch.Patches.Count + batch.Stages.Sum(static stage => stage.Patches.Count),
             AppliedMotionCount = batch.Motions.Count + batch.Stages.Sum(static stage => stage.Motions.Count)
         };
+    }
+
+    private static WebGlRunRuntimeSnapshot BuildPlaybackFailureSnapshot(
+        WebGlRunPlaybackResult playbackResult,
+        WebGlRuntimeDiagnostics? diagnostics,
+        WebGlRunBrowserPlaybackApplyResult result)
+    {
+        var snapshot = new WebGlRunRuntimeSnapshot
+        {
+            CurrentFrameIndex = result.FailedFrameIndex ?? result.LastAppliedFrameIndex ?? playbackResult.TargetFrameIndex,
+            CurrentCommandBatchId = diagnostics?.CurrentCommandBatchId ?? string.Empty,
+            CurrentStageId = diagnostics?.CurrentCommandStageId ?? string.Empty,
+            ActiveStageIds = TakeFirst(diagnostics?.CompletedCommandStageIds),
+            QueuedStageIds = TakeFirst(diagnostics?.CommandStageQueueSnapshot.Select(static item => item.StageId)),
+            QueuedStageCount = diagnostics?.QueuedCommandStageCount ?? 0,
+            ActiveMotionCount = diagnostics?.ActiveMotionCount ?? 0,
+            ActiveMotionIds = TakeFirst(diagnostics?.ActiveMotionIds),
+            QueuedMotionCount = diagnostics?.QueuedMotionCount ?? 0,
+            QueuedMotionIds = TakeFirst(diagnostics?.QueuedMotionIds),
+            MotionQueueSnapshot = TakeFirst(diagnostics?.MotionQueueSnapshot),
+            CommandJournalTail = TakeTail(diagnostics?.CommandStageRecentJournalEntries, MaxSnapshotJournalEntries),
+            CommandJournalDroppedCount = diagnostics?.CommandStageJournalDroppedCount ?? 0,
+            RuntimeErrors = TakeFirst(result.Errors),
+            RuntimeWarnings = TakeFirst(result.Warnings),
+            Diagnostics = BuildDiagnostics(diagnostics)
+        };
+
+        if (diagnostics is not null)
+        {
+            snapshot.StageBarrier = new()
+            {
+                Policy = diagnostics.CommandStageBarrierPolicy,
+                Target = diagnostics.CommandStageBarrierTarget,
+                Blockers = TakeFirst(diagnostics.CommandStageBarrierBlockers),
+                EventId = diagnostics.CommandStageBarrierEventId,
+                ObjectIds = TakeFirst(diagnostics.CommandStageBarrierObjectIds),
+                WaitSeconds = diagnostics.CommandStageWaitSeconds,
+                ElapsedSeconds = diagnostics.CommandStageBarrierElapsedSeconds,
+                TimeoutSeconds = diagnostics.CommandStageBarrierTimeoutSeconds,
+                TimedOut = diagnostics.CommandStageBarrierTimedOut
+            };
+            AddIfNotEmpty(snapshot.RuntimeWarnings, diagnostics.LastStageBarrierWarning);
+            AddIfNotEmpty(snapshot.RuntimeErrors, diagnostics.LastError);
+            AddIfNotEmpty(snapshot.RuntimeErrors, diagnostics.LastStageError);
+        }
+
+        AnnotatePlaybackFailureSnapshot(snapshot, playbackResult, result);
+        return snapshot;
+    }
+
+    private static void AnnotatePlaybackFailureSnapshot(
+        WebGlRunRuntimeSnapshot snapshot,
+        WebGlRunPlaybackResult playbackResult,
+        WebGlRunBrowserPlaybackApplyResult result)
+    {
+        snapshot.Diagnostics["targetFrameIndex"] = playbackResult.TargetFrameIndex.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        snapshot.Diagnostics["lastAppliedFrameIndex"] = result.LastAppliedFrameIndex?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "";
+        snapshot.Diagnostics["failedFrameIndex"] = result.FailedFrameIndex?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "";
+        snapshot.Diagnostics["transactionPolicy"] = result.TransactionPolicy;
+        snapshot.Diagnostics["failureReason"] = result.FailureReason;
+        snapshot.Diagnostics["cancellationReason"] = result.CancellationReason;
     }
 
     private static void AddCommandOutcome(WebGlRunBrowserApplyResult result, WebGlSceneCommandResult? commandResult)

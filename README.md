@@ -48,6 +48,8 @@ WebGlLib can also be consumed without WebGlRunLib through the minimal Razor samp
 
 Current WebGL hardening proof is large-screen only by design; small-screen layout tuning is out of scope for this bundle.
 
+Playback host integration, Pause troubleshooting, deterministic replay modes, and package-mode proof rules are documented in `docs/webgl/playback-hosting-and-troubleshooting.md`.
+
 ## Pack
 
 ```powershell

@@ -23,4 +23,16 @@ public sealed class WebGlRunPlaybackState
     public bool IsPlaying { get; set; }
 
     public double PlaybackSpeed { get; set; } = 1.0;
+
+    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+
+    public string LastPlaybackCommandKind { get; set; } = string.Empty;
+
+    public string LastPlaybackStopReason { get; set; } = string.Empty;
+
+    public int PlaybackPauseCount { get; set; }
+
+    public int PlaybackCancelCount { get; set; }
+
+    public int PlaybackStopCount { get; set; }
 }

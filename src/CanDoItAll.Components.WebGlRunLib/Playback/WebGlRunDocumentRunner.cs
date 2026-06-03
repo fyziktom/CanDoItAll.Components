@@ -104,7 +104,15 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
 
         if (playback.RequiresSceneReset)
         {
-            await ApplySceneResetAsync(result, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await ApplySceneResetAsync(result, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return CompleteCanceledOperation(result, "scene reset canceled", State.PendingStageIds);
+            }
+
             if (!result.Succeeded)
             {
                 return result;
@@ -113,6 +121,11 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
 
         foreach (WebGlRunFrame frame in playback.FramesToApply)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return CompleteCanceledOperation(result, "frame apply canceled", OrderedStageIds(frame));
+            }
+
             WebGlRunExecutionResult validation = WebGlRunFrameExecutionValidator.ValidateFrame(frame, knownObjectIds);
             WebGlRunExecutionResultDiagnostics.Merge(result, validation);
             if (!validation.Succeeded)
@@ -144,12 +157,21 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
                     await frameApplier.ApplyAsync(frameResult, cancellationToken).ConfigureAwait(false);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                return CompleteCanceledOperation(result, "frame apply canceled", OrderedStageIds(frame));
+            }
             catch (Exception error) when (error is not OperationCanceledException)
             {
                 result.Errors.Add($"Frame '{frame.Index}' could not be applied: {error.Message}");
                 State.FailedStageIds.AddRange(OrderedStageIds(frame));
                 SyncStateDiagnostics(result);
                 return result;
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return CompleteCanceledOperation(result, "frame apply canceled", OrderedStageIds(frame));
             }
 
             WebGlRunFrameExecutionValidator.ApplyFrameObjectState(frame, knownObjectIds);
@@ -161,6 +183,14 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
 
         State.PendingStageIds.Clear();
         pendingPlaybackResult = null;
+        State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Idle;
+        State.LastPlaybackCommandKind = result.Operation;
+        State.LastPlaybackStopReason = string.Empty;
+        result.PlaybackLifecycleState = State.PlaybackLifecycleState;
+        result.PlaybackLifecycleReason = State.LastPlaybackStopReason;
+        result.Diagnostics["playbackLifecycleState"] = State.PlaybackLifecycleState;
+        result.Diagnostics["lastPlaybackCommandKind"] = State.LastPlaybackCommandKind;
+        result.Diagnostics["lastPlaybackStopReason"] = State.LastPlaybackStopReason;
         SyncStateDiagnostics(result);
         return result;
     }
@@ -169,6 +199,47 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         => StepAsync(WebGlRunPlaybackCommandKinds.Step, "step-forward", cancellationToken);
     public ValueTask<WebGlRunExecutionResult> StepBackwardAsync(CancellationToken cancellationToken = default)
         => StepAsync(WebGlRunPlaybackCommandKinds.Previous, "step-backward", cancellationToken);
+
+    public ValueTask<WebGlRunExecutionResult> PauseAsync(string reason = "paused", CancellationToken cancellationToken = default)
+        => ApplyLifecycleControlAsync(WebGlRunPlaybackCommandKinds.Pause, "pause", WebGlRunPlaybackLifecycleStates.Paused, reason, cancellationToken);
+
+    public ValueTask<WebGlRunExecutionResult> CancelAsync(string reason = "canceled", CancellationToken cancellationToken = default)
+        => ApplyLifecycleControlAsync(WebGlRunPlaybackCommandKinds.Cancel, "cancel", WebGlRunPlaybackLifecycleStates.Canceled, reason, cancellationToken);
+
+    public ValueTask<WebGlRunExecutionResult> StopAsync(string reason = "stopped", CancellationToken cancellationToken = default)
+        => ApplyLifecycleControlAsync(WebGlRunPlaybackCommandKinds.Stop, "stop", WebGlRunPlaybackLifecycleStates.Stopped, reason, cancellationToken);
+
+    private async ValueTask<WebGlRunExecutionResult> ApplyLifecycleControlAsync(
+        string commandKind,
+        string operation,
+        string lifecycleState,
+        string reason,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!EnsureLoaded(out WebGlRunExecutionResult result, operation))
+        {
+            return result;
+        }
+
+        IReadOnlyList<string> affectedStageIds = [.. State.ActiveStageIds
+            .Concat(State.PendingStageIds)
+            .Distinct(StringComparer.Ordinal)];
+        WebGlRunPlaybackResult playback = await controller!.ApplyDetailedAsync(
+            new WebGlRunPlaybackCommand { Kind = commandKind, Reason = reason },
+            cancellationToken).ConfigureAwait(false);
+        MergePlaybackResult(result, playback);
+        if (result.Succeeded)
+        {
+            pendingPlaybackResult = null;
+            CompleteLifecycleTransition(result, lifecycleState, reason, affectedStageIds);
+        }
+
+        AddSnapshotDiagnostics(result);
+        SyncStateDiagnostics(result);
+        return result;
+    }
+
     private async ValueTask<WebGlRunExecutionResult> StepAsync(
         string commandKind,
         string operation,
@@ -209,6 +280,13 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         State.CompletedStageIds.Clear();
         State.FailedStageIds.Clear();
         State.SkippedStageIds.Clear();
+        State.CanceledStageIds.Clear();
+        State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Idle;
+        State.LastPlaybackCommandKind = string.Empty;
+        State.LastPlaybackStopReason = string.Empty;
+        State.PlaybackPauseCount = 0;
+        State.PlaybackCancelCount = 0;
+        State.PlaybackStopCount = 0;
         State.Diagnostics.Clear();
         State.ExecutionDiagnostics = new();
         knownObjectIds.Clear();
@@ -249,6 +327,70 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         }
     }
 
+    private WebGlRunExecutionResult CompleteCanceledOperation(
+        WebGlRunExecutionResult result,
+        string reason,
+        IEnumerable<string> canceledStageIds)
+    {
+        result.Warnings.Add($"Operation '{result.Operation}' was canceled.");
+        pendingPlaybackResult = null;
+        CompleteLifecycleTransition(result, WebGlRunPlaybackLifecycleStates.Canceled, reason, canceledStageIds);
+        SyncStateDiagnostics(result);
+        return result;
+    }
+
+    private void CompleteLifecycleTransition(
+        WebGlRunExecutionResult result,
+        string lifecycleState,
+        string reason,
+        IEnumerable<string> affectedStageIds)
+    {
+        string normalizedReason = string.IsNullOrWhiteSpace(reason)
+            ? lifecycleState
+            : reason;
+        IReadOnlyList<string> stageIds = [.. affectedStageIds
+            .Where(static id => !string.IsNullOrWhiteSpace(id))
+            .Distinct(StringComparer.Ordinal)];
+
+        result.PlaybackLifecycleState = lifecycleState;
+        result.PlaybackLifecycleReason = normalizedReason;
+        result.Paused = string.Equals(lifecycleState, WebGlRunPlaybackLifecycleStates.Paused, StringComparison.Ordinal);
+        result.Canceled = string.Equals(lifecycleState, WebGlRunPlaybackLifecycleStates.Canceled, StringComparison.Ordinal);
+        result.Stopped = string.Equals(lifecycleState, WebGlRunPlaybackLifecycleStates.Stopped, StringComparison.Ordinal);
+
+        State.PlaybackLifecycleState = lifecycleState;
+        State.LastPlaybackCommandKind = result.Operation;
+        State.LastPlaybackStopReason = normalizedReason;
+        State.ActiveStageIds.Clear();
+        State.PendingStageIds.Clear();
+        State.CurrentCommandBatchId = string.Empty;
+
+        if (result.Paused)
+        {
+            State.PlaybackPauseCount++;
+        }
+        else if (result.Canceled)
+        {
+            State.PlaybackCancelCount++;
+            result.CanceledStageIds.AddRange(stageIds);
+            State.CanceledStageIds = [.. State.CanceledStageIds
+                .Concat(stageIds)
+                .Distinct(StringComparer.Ordinal)];
+        }
+        else if (result.Stopped)
+        {
+            State.PlaybackStopCount++;
+        }
+
+        result.Diagnostics["playbackLifecycleState"] = State.PlaybackLifecycleState;
+        result.Diagnostics["lastPlaybackCommandKind"] = State.LastPlaybackCommandKind;
+        result.Diagnostics["lastPlaybackStopReason"] = State.LastPlaybackStopReason;
+        result.Diagnostics["playbackPauseCount"] = State.PlaybackPauseCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["playbackCancelCount"] = State.PlaybackCancelCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["playbackStopCount"] = State.PlaybackStopCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["canceledStageIds"] = string.Join(",", State.CanceledStageIds);
+    }
+
     private void UpdateStateFromPlayback(WebGlRunPlaybackResult playback)
     {
         if (playback.CurrentFrame is not null)
@@ -263,9 +405,13 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
             .Where(static id => !string.IsNullOrWhiteSpace(id))
             .ToList();
         State.CurrentCommandBatchId = playback.State.CurrentCommandBatchId;
+        State.LastPlaybackCommandKind = playback.RequestedCommand;
         State.Diagnostics["runId"] = State.RunId;
         State.Diagnostics["currentFrameIndex"] = State.CurrentFrameIndex.ToString(System.Globalization.CultureInfo.InvariantCulture);
         State.Diagnostics["pendingStageCount"] = State.PendingStageIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        State.Diagnostics["playbackLifecycleState"] = State.PlaybackLifecycleState;
+        State.Diagnostics["lastPlaybackCommandKind"] = State.LastPlaybackCommandKind;
+        State.Diagnostics["lastPlaybackStopReason"] = State.LastPlaybackStopReason;
     }
 
     private void SyncStateDiagnostics(WebGlRunExecutionResult result)
@@ -276,6 +422,14 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         State.Diagnostics["completedStageCount"] = State.CompletedStageIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
         State.Diagnostics["failedStageCount"] = State.FailedStageIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
         State.Diagnostics["pendingStageCount"] = State.PendingStageIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        State.Diagnostics["canceledStageCount"] = State.CanceledStageIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        State.Diagnostics["playbackLifecycleState"] = State.PlaybackLifecycleState;
+        State.Diagnostics["lastPlaybackCommandKind"] = State.LastPlaybackCommandKind;
+        State.Diagnostics["lastPlaybackStopReason"] = State.LastPlaybackStopReason;
+        State.Diagnostics["playbackPauseCount"] = State.PlaybackPauseCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        State.Diagnostics["playbackCancelCount"] = State.PlaybackCancelCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        State.Diagnostics["playbackStopCount"] = State.PlaybackStopCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        State.Diagnostics["canceledStageIds"] = string.Join(",", State.CanceledStageIds);
         foreach (KeyValuePair<string, string> item in result.Diagnostics)
         {
             State.Diagnostics[item.Key] = item.Value;
@@ -295,6 +449,12 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         result.Diagnostics["initialObjectCount"] = snapshot.InitialObjectCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         result.Diagnostics["queuedStageCount"] = snapshot.QueuedStageCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         result.Diagnostics["currentStageIds"] = string.Join(",", snapshot.CurrentStageIds);
+        result.Diagnostics["playbackLifecycleState"] = snapshot.PlaybackLifecycleState;
+        result.Diagnostics["lastPlaybackCommandKind"] = snapshot.LastPlaybackCommandKind;
+        result.Diagnostics["lastPlaybackStopReason"] = snapshot.LastPlaybackStopReason;
+        result.Diagnostics["playbackPauseCount"] = snapshot.PlaybackPauseCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["playbackCancelCount"] = snapshot.PlaybackCancelCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["playbackStopCount"] = snapshot.PlaybackStopCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
     private bool EnsureLoaded(out WebGlRunExecutionResult result, string operation)
@@ -319,10 +479,15 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         {
             Operation = operation,
             CurrentFrameIndex = State.CurrentFrameIndex,
+            PlaybackLifecycleState = State.PlaybackLifecycleState,
+            PlaybackLifecycleReason = State.LastPlaybackStopReason,
             Diagnostics =
             {
                 ["runId"] = State.RunId,
-                ["currentFrameIndex"] = State.CurrentFrameIndex.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                ["currentFrameIndex"] = State.CurrentFrameIndex.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ["playbackLifecycleState"] = State.PlaybackLifecycleState,
+                ["lastPlaybackCommandKind"] = State.LastPlaybackCommandKind,
+                ["lastPlaybackStopReason"] = State.LastPlaybackStopReason
             }
         };
 
@@ -334,6 +499,10 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         target.Diagnostics["playbackCommand"] = playback.RequestedCommand;
         target.Diagnostics["framesAppliedByController"] = playback.FramesApplied.ToString(System.Globalization.CultureInfo.InvariantCulture);
         target.Diagnostics["stagesQueued"] = playback.StagesQueued.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        target.PlaybackLifecycleState = playback.PlaybackLifecycleState;
+        target.PlaybackLifecycleReason = playback.PlaybackLifecycleReason;
+        target.Diagnostics["playbackLifecycleState"] = playback.PlaybackLifecycleState;
+        target.Diagnostics["lastPlaybackStopReason"] = playback.PlaybackLifecycleReason;
     }
 
 }

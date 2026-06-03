@@ -60,6 +60,32 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
         Assert.Single(jsRuntime.Invocations, static invocation => invocation.Identifier == "CanDoItAll.webglScene.update");
     }
 
+    [Fact]
+    public async Task Runtime_stop_methods_call_public_scene_facade()
+    {
+        var jsRuntime = new RecordingJsRuntime();
+        var view = new TestableWebGlSceneView(jsRuntime);
+
+        await view.RenderWithParametersAsync(Scene("scene.stop", "object.stop", revision: 1), new WebGlRuntimeOptions(), firstRender: true);
+        WebGlSceneCommandResult? stop = await view.StopRuntimeActivityAsync("pause");
+        WebGlSceneCommandResult? cancelStages = await view.CancelCommandStagesAsync("cancel");
+
+        Assert.NotNull(stop);
+        Assert.True(stop.Success);
+        Assert.Equal("runtime-stop", stop.CommandKind);
+        Assert.NotNull(cancelStages);
+        Assert.True(cancelStages.Success);
+        Assert.Equal("command-stage-cancel", cancelStages.CommandKind);
+        Assert.Contains(jsRuntime.Invocations, static invocation => invocation.Identifier == "CanDoItAll.webglScene.stopRuntimeActivity");
+        Assert.Contains(jsRuntime.Invocations, static invocation => invocation.Identifier == "CanDoItAll.webglScene.cancelCommandStages");
+        Assert.Contains(jsRuntime.Invocations, invocation =>
+            invocation.Identifier == "CanDoItAll.webglScene.stopRuntimeActivity" &&
+            invocation.Arguments.Length > 1 &&
+            invocation.Arguments[1] is string reason &&
+            reason == "pause");
+    }
+
+
     private static WebGlSceneModel Scene(string sceneId, string objectId, int revision)
         => new()
         {
@@ -139,6 +165,18 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
                     SceneId = ExtractSceneId(args)
                 },
                 "CanDoItAll.webglScene.importScene" => true,
+                "CanDoItAll.webglScene.stopRuntimeActivity" => new WebGlSceneCommandResult
+                {
+                    Success = true,
+                    CommandKind = "runtime-stop",
+                    CommandId = ExtractReason(args)
+                },
+                "CanDoItAll.webglScene.cancelCommandStages" => new WebGlSceneCommandResult
+                {
+                    Success = true,
+                    CommandKind = "command-stage-cancel",
+                    CommandId = ExtractReason(args)
+                },
                 _ => throw new InvalidOperationException($"Unexpected JS invocation '{identifier}'.")
             };
 
@@ -147,6 +185,9 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
 
         private static string ExtractSceneId(object?[]? args)
             => args is { Length: > 1 } && args[1] is WebGlSceneModel scene ? scene.SceneId : string.Empty;
+
+        private static string ExtractReason(object?[]? args)
+            => args is { Length: > 1 } && args[1] is string reason ? reason : string.Empty;
     }
 
     private sealed record Invocation(string Identifier, object?[] Arguments);

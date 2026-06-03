@@ -40,6 +40,14 @@ Runtime options are external to the WebGlRun browser reset path. `WebGlRunBrowse
 
 Runtime options should be applied through the scene view/runtime setup owned by the host application. Reset imports must not silently change render mode, device-pixel-ratio limits, diagnostic panel visibility, or other runtime configuration carried in a stored scene document.
 
+## Playback Host Lifecycle
+
+Hosts that own Play, Pause, Cancel, Stop, Reset, or route-change behavior must treat playback cancellation as a C# and browser-runtime operation. Invalidating a host loop or setting a UI flag is not enough if queued command stages or active motions are already running in the browser.
+
+Use `WebGlRunDocumentRunner` for deterministic load, seek, step, pause, cancel, stop, and current-frame execution. Use `WebGlRunBrowserApplyAdapter.ApplyPlaybackAsync` for multi-frame browser replay, and call `WebGlSceneView.StopRuntimeActivityAsync(reason)` on Pause, Cancel, Stop, Reset, Dispose, and route changes so active motions and queued stages are cleared through the public WebGlLib boundary.
+
+The host checklist and package-proof recipe live in `docs/webgl/playback-hosting-and-troubleshooting.md`.
+
 ## Patch Transaction Modes
 
 Scene patches use strict all-or-none transaction behavior by default. A strict patch that fails scene id, strict base revision, object target, added-object id, or added-link endpoint validation must return an error result without mutating the scene.

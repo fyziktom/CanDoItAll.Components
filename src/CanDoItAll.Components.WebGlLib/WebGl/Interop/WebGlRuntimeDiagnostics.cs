@@ -194,6 +194,16 @@ public sealed class WebGlRuntimeDiagnostics
 
     public string LastStageCancelReason { get; set; } = string.Empty;
 
+    public int RuntimeStopCount { get; set; }
+
+    public string LastRuntimeStopReason { get; set; } = string.Empty;
+
+    public int ClearedMotionCount { get; set; }
+
+    public int LastRuntimeStopClearedMotionCount { get; set; }
+
+    public int LastRuntimeStopCancelledCommandStageCount { get; set; }
+
     public int CommandCountBeforeNormalization { get; set; }
 
     public int CommandCountAfterNormalization { get; set; }

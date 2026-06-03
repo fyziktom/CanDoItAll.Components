@@ -1,0 +1,45 @@
+﻿SB11 source assertion scan - docs coverage
+Captured: 2026-06-03T12:32:32-04:00
+
+Command: rg required SB11 terms in changed docs
+--- Components docs ---
+src\CanDoItAll.Components.WebGlRunLib\README.md:53:Use `WebGlRunBrowserApplyAdapter.ApplyAsync(WebGlRunFrameApplyResult)` only for a direct single-frame apply. The legacy `ApplyAsync(WebGlRunPlaybackResult)` overload remains for compatibility with single-frame playback results, but it fails closed when `FramesToApply` contains multiple frames. Use `ApplyPlaybackAsync(WebGlRunPlaybackResult)` for multi-frame playback; it resets the scene once when required, applies each frame in the playback result order, returns per-frame results, and stops on the first failed frame.
+src\CanDoItAll.Components.WebGlRunLib\README.md:55:Host Pause, Cancel, Stop, Reset, Dispose, and route-change handlers must cancel the host loop and call `WebGlSceneView.StopRuntimeActivityAsync(reason)` through `WebGlSceneViewBrowserRuntime`/`WebGlSceneView`. A C# paused flag is not enough proof if `queuedCommandStageCount`, `activeMotionCount`, or `queuedMotionCount` continue changing in browser diagnostics.
+docs\webgl\run-layer-boundary.md:47:Use `WebGlRunDocumentRunner` for deterministic load, seek, step, pause, cancel, stop, and current-frame execution. Use `WebGlRunBrowserApplyAdapter.ApplyPlaybackAsync` for multi-frame browser replay, and call `WebGlSceneView.StopRuntimeActivityAsync(reason)` on Pause, Cancel, Stop, Reset, Dispose, and route changes so active motions and queued stages are cleared through the public WebGlLib boundary.
+docs\webgl\playback-hosting-and-troubleshooting.md:5:## Host Integration Recipe
+docs\webgl\playback-hosting-and-troubleshooting.md:12:6. On Pause, Cancel, Stop, Reset, and Dispose, cancel host-side work first, then call `WebGlSceneView.StopRuntimeActivityAsync(reason)`.
+docs\webgl\playback-hosting-and-troubleshooting.md:13:7. Use `ApplyPlaybackAsync(WebGlRunPlaybackResult, cancellationToken)` for multi-frame browser replay. Use `ApplyAsync(WebGlRunFrameApplyResult)` only for a direct single-frame apply.
+docs\webgl\playback-hosting-and-troubleshooting.md:25:WebGlRunBrowserPlaybackApplyResult browser = await adapter.ApplyPlaybackAsync(playback, cancellationToken);
+docs\webgl\playback-hosting-and-troubleshooting.md:29:await sceneView.StopRuntimeActivityAsync("user pause");
+docs\webgl\playback-hosting-and-troubleshooting.md:32:## Pause Bug Troubleshooting Checklist
+docs\webgl\playback-hosting-and-troubleshooting.md:37:- Confirm Pause, Cancel, Stop, Reset, Dispose, and route changes call `StopRuntimeActivityAsync(reason)`.
+docs\webgl\playback-hosting-and-troubleshooting.md:38:- Confirm `queuedCommandStageCount`, `activeMotionCount`, and `queuedMotionCount` are `0` after the pause deadline.
+docs\webgl\playback-hosting-and-troubleshooting.md:39:- Confirm `runtimeStopCount` increments and `lastRuntimeStopReason` matches the host action, such as `Paused.` or `user pause`.
+docs\webgl\playback-hosting-and-troubleshooting.md:61:## Package-Mode Proof Rules
+docs\webgl\playback-hosting-and-troubleshooting.md:84:Completed bundle proof must not use blank transcripts or screenshot-only browser evidence.
+ComponentsExitCode: 0
+
+--- Economy docs ---
+docs\SCENARIOS_AND_SIMULATION.md:69:## Scenario pack manifests
+docs\SCENARIOS_AND_SIMULATION.md:71:Node-hosted simulation sandbox scenarios live under the host runtime content root and are loaded through `IEconomySimulationScenarioCatalog`. Browser and UI flows should select scenarios by catalog descriptor or scenario source, not by test fixture path.
+docs\SCENARIOS_AND_SIMULATION.md:73:Each runtime scenario directory must include `scenario.manifest.json`. The manifest should declare:
+docs\SCENARIOS_AND_SIMULATION.md:77:- a strict `packHash` using `sha256:<64 lowercase hex characters>`;
+docs\SCENARIOS_AND_SIMULATION.md:78:- `fileHashes` entries for every required file, also using strict SHA-256 content hashes.
+docs\SCENARIOS_AND_SIMULATION.md:85:2. Recompute experiment input hashes and the manifest `fileHashes`.
+docs\SCENARIOS_AND_SIMULATION.md:86:3. Recompute the manifest `packHash`.
+docs\SCENARIOS_AND_SIMULATION.md:87:4. Verify `IEconomySimulationScenarioCatalog.ListScenarios()` marks the descriptor valid.
+docs\SCENARIOS_AND_SIMULATION.md:90:## WebGL replay behavior
+docs\SCENARIOS_AND_SIMULATION.md:95:- `incremental`: apply only the next contiguous forward frame when the browser has a known stable frame.
+docs\SCENARIOS_AND_SIMULATION.md:97:Manual Apply, scenario load, First/Last, backward Step, non-contiguous seek, and failed apply recovery should use full replay. A forward Step may use incremental replay only when the last stable browser frame is exactly the previous frame. Runtime diagnostics should record replay mode, requested frame indexes, target frame index, reset usage, last stable frame index, applied frame count, applied stage count, applied motion count, and failure or cancellation reason.
+README.md:104:Then restore the bridge with `UseComponentsWebGlRunLibPackage=true` from a NuGet.config whose package sources are the fresh Components `artifacts\packages` feed plus nuget.org, and build without restoring again:
+README.md:107:dotnet restore src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj --configfile C:\path\to\package-proof.NuGet.config /p:UseComponentsWebGlRunLibPackage=true /p:ComponentsWebGlRunLibPackageVersion=$proofVersion /p:ComponentsWebGlLibPackageVersion=$proofVersion
+README.md:108:dotnet build src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj --configuration Release --no-restore /p:UseComponentsWebGlRunLibPackage=true /p:ComponentsWebGlRunLibPackageVersion=$proofVersion /p:ComponentsWebGlLibPackageVersion=$proofVersion
+README.md:114:dotnet restore src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj --configfile C:\path\to\package-proof.NuGet.config /p:UseComponentsWebGlPackages=true /p:UseComponentsWebGlRunLibPackage=true /p:CanDoItAllComponentsPackageVersion=$proofVersion /p:ComponentsWebGlRunLibPackageVersion=$proofVersion /p:ComponentsWebGlLibPackageVersion=$proofVersion
+README.md:115:dotnet build src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj --configuration Release --no-restore /p:UseComponentsWebGlPackages=true /p:UseComponentsWebGlRunLibPackage=true /p:CanDoItAllComponentsPackageVersion=$proofVersion /p:ComponentsWebGlRunLibPackageVersion=$proofVersion /p:ComponentsWebGlLibPackageVersion=$proofVersion
+docs\simulation\architecture-boundaries.md:62:| `IEconomySimulationScenarioCatalog`, `IEconomySimulationBackendRegistry`, `IEconomySimulationBackendSelector`, `IEconomyVisualizationPipeline`, `IEconomyWebGlProjectionPipeline`, `IEconomySnapshotPipeline` | `SimulationSandbox` | Compose app-owned scenario catalogs, backend selection, visualization, WebGL projection, and snapshot handling for hosts. |
+docs\simulation\architecture-boundaries.md:67:- Static graph restore for the broader `CanDoItAll.Economy.Components` package-mode proof should pass both `UseComponentsWebGlPackages=true` and `UseComponentsWebGlRunLibPackage=true`.
+docs\simulation\architecture-boundaries.md:68:- Node-hosted scenarios belong under the Node runtime content root and are exposed through `IEconomySimulationScenarioCatalog`; browser code must not depend on test-only paths.
+docs\simulation\architecture-boundaries.md:70:- Runtime scenario manifests must lock every manifest-required file through `fileHashes` and lock the complete required-file set through `packHash`; experiment input pack hashes alone are not sufficient for catalog trust.
+docs\simulation\architecture-boundaries.md:72:- Browser replay should use full reset replay for manual/seek/load/back/recovery paths and reserve incremental replay for contiguous forward steps from a known stable browser frame.
+EconomyExitCode: 0
+ExitCode: 0

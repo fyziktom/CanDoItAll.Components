@@ -2,6 +2,8 @@
 
 Priority: P0
 Related findings: F01,F02,F04
+Status: Completed
+Completed: 2026-06-03
 
 ## Objective
 
@@ -19,6 +21,8 @@ Refactor Play/Pause/Cancel into a short-returning component command model with b
 
 Browser proof: click Play, wait for motion, click Pause, scene stops within bounded time and no further frame/stage/motion progress occurs.
 
+Gate result: Passed. `proof/SB03/browser/runplayback-pause-assertions.json` records Pause returning in 150 ms, frame remaining at 1 after the deadline, queued command stages clearing from 1 to 0, runtime stop reason `Paused.`, and no stage/motion progress after Pause.
+
 ## Required proof artifacts
 
 - `proof/SB03/manifest.md`
@@ -29,8 +33,8 @@ Browser proof: click Play, wait for motion, click Pause, scene stops within boun
 
 ## QA checklist
 
-- Build Components and/or Economy as relevant.
-- Run focused tests for changed area.
-- Run boundary audits.
-- Run browser proof for playback/UI changes.
-- Ensure no blank transcripts.
+- Build Components and/or Economy as relevant. Completed: `proof/SB03/transcripts/components-build-after-runplayback-pause.txt`.
+- Run focused tests for changed area. Completed: `proof/SB03/transcripts/webglrunlib-focused-tests.txt`.
+- Run boundary audits. Completed: source contract scan `proof/SB03/transcripts/source-assertion-runplayback-pause-scan.txt`.
+- Run browser proof for playback/UI changes. Completed: `proof/SB03/transcripts/runplayback-pause-playwright.txt`, `proof/SB03/browser/runplayback-pause-assertions.json`, and `proof/SB03/browser/runplayback-pause-after.png`.
+- Ensure no blank transcripts. Completed: `proof/SB03/transcripts/proof-hygiene-inventory.txt`.

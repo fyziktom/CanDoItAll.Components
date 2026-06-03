@@ -2,6 +2,8 @@
 
 Priority: P1
 Related findings: F06
+Status: Completed
+Completed: 2026-06-03
 
 ## Objective
 
@@ -19,6 +21,8 @@ Split Economy apply into forward incremental mode and full deterministic replay 
 
 Forward Step applies only necessary delta frames; Seek/Back uses full replay with reset. Browser proof covers both.
 
+Gate result: Passed. The Economy sandbox now uses a stable-browser-frame replay planner: manual/seek/back/non-contiguous paths use full deterministic replay with reset, while contiguous forward Step after a stable browser frame applies only the delta frame without reset. Browser proof validates full apply through frame 0, incremental Step through frame 1, and full Last seek through frames 0,1,2.
+
 ## Required proof artifacts
 
 - `proof/SB06/manifest.md`
@@ -29,8 +33,8 @@ Forward Step applies only necessary delta frames; Seek/Back uses full replay wit
 
 ## QA checklist
 
-- Build Components and/or Economy as relevant.
-- Run focused tests for changed area.
-- Run boundary audits.
-- Run browser proof for playback/UI changes.
-- Ensure no blank transcripts.
+- Build Components and/or Economy as relevant. Completed: `proof/SB06/transcripts/economy-build-after-replay-strategy.txt`.
+- Run focused tests for changed area. Completed: `proof/SB06/transcripts/economy-component-focused-tests.txt`.
+- Run boundary audits. Completed: `proof/SB06/transcripts/source-assertion-economy-replay-scan.txt`, `proof/SB06/transcripts/components-domain-boundary-scan.txt`, and `proof/SB06/transcripts/anti-stub-economy-replay-scan.txt`.
+- Run browser proof for playback/UI changes. Completed: `proof/SB06/browser/economy-replay-mode-assertions.json`, `proof/SB06/browser/economy-replay-mode-after.png`, and `proof/SB06/transcripts/economy-replay-mode-playwright.txt`.
+- Ensure no blank transcripts. Completed: `proof/SB06/transcripts/proof-hygiene-inventory.txt`.

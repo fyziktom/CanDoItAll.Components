@@ -1,7 +1,7 @@
 # CanDoItAll WebGL Engine + Economy Follow-up Hardening Bundle v5
 
 Prepared date: 2026-06-03
-Stage: prepared
+Stage: completed
 Profile: initiative / post-v4 implementation hardening review
 Target repositories:
 
@@ -14,7 +14,7 @@ Codex implemented the previous follow-up bundle and pushed both repositories. Th
 
 ## Current review verdict
 
-The solution is directionally correct, but the current playback lifecycle is not yet robust enough for large simulations. The highest-risk issue is that C# playback cancellation and browser/JS runtime cancellation are not the same thing. Stopping a Blazor loop does not automatically cancel already queued command stages or active WebGL motions.
+Completed. The playback lifecycle now treats C# cancellation and browser/JS runtime cancellation as one host contract. Final SB12 proof shows `/run-playback` Pause clears queued runtime work, records runtime stop diagnostics, keeps C# state paused, preserves stable frame/stage/motion counters after the pause deadline, and passes package-mode and performance-budget release-readiness checks.
 
 ## Main weaknesses to fix
 
@@ -85,3 +85,36 @@ Expected:
 ```text
 Bundle validation passed for stage=prepared, profile=initiative, subbundles=12
 ```
+
+## Completed-stage validation
+
+Run from the bundle root:
+
+```powershell
+python scripts/validate_bundle.py --stage completed --profile initiative
+```
+
+Expected:
+
+```text
+Bundle validation passed for stage=completed, profile=initiative, subbundles=12
+```
+
+## Execution status
+
+Last updated: 2026-06-03
+
+| Subbundle | Status | Gate note |
+| --- | --- | --- |
+| SB01 | Completed | Failing-first pause proof and proof-hygiene inventory captured. |
+| SB02 | Completed | Public runtime stop and stage-cancel API added and proven. |
+| SB03 | Completed | RunPlayback Pause now cancels C# playback and stops WebGL runtime work; browser proof passed. |
+| SB04 | Completed | WebGlRun runner Pause/Cancel/Stop lifecycle contracts added and proven. |
+| SB05 | Completed | Multi-frame ApplyPlayback transaction failure/cancellation reporting added and proven. |
+| SB06 | Completed | Economy sandbox replay strategy proven: contiguous forward Step applies one delta frame without reset; manual/seek use full reset replay. |
+| SB07 | Completed | Runtime scenario catalog/source flows are pathless; legacy experiment paths remain compatibility-only. |
+| SB08 | Completed | Scenario manifests now verify deterministic pack hashes and every required file hash; tampered required companions invalidate catalog descriptors. |
+| SB09 | Completed | Generic WebGlRun performance budget harness emits JSON metrics and fails xUnit on threshold regressions. |
+| SB10 | Completed | Bundle validator now rejects blank completed transcripts, screenshot-only browser proof, missing critical failing-first evidence, stale package/feed markers, and missing source-assertion scans. |
+| SB11 | Completed | Docs now cover playback host integration, Pause troubleshooting, package-mode proof, scenario-pack hashes, and deterministic replay. |
+| SB12 | Completed | Final cross-repo red-team closure passed: builds/tests/audits/package proof/browser pause proof/performance budget/proof hygiene all recorded; no open P0/P1 issue remains. |

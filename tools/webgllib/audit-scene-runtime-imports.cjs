@@ -98,7 +98,7 @@ function loadSceneModules(root) {
 function analyzeModule(filePath, source) {
   const imports = parseImports(filePath, source);
   const exports = parseExports(source);
-  const strippedSource = stripCommentsAndStrings(source);
+  const strippedSource = stripImportStatements(stripCommentsAndStrings(source));
   const localNames = collectLocalNames(imports, exports, strippedSource);
   return {
     filePath,
@@ -308,6 +308,10 @@ function stripCommentsAndStrings(source) {
   return source.replace(/\/\*[\s\S]*?\*\/|\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\[\s\S]|[^`\\])*`/g, match => " ".repeat(match.length));
 }
 
+function stripImportStatements(source) {
+  return source.replace(/^\s*import\s+[\s\S]*?;\s*$/gm, match => " ".repeat(match.length));
+}
+
 function findIdentifierReference(source, name) {
   const pattern = new RegExp(`\\b${escapeRegExp(name)}\\b`, "g");
   for (const match of source.matchAll(pattern)) {
@@ -316,10 +320,56 @@ function findIdentifierReference(source, name) {
       continue;
     }
 
+    if (isObjectMethodKey(source, match.index, name.length)) {
+      continue;
+    }
+
     return match.index;
   }
 
   return -1;
+}
+
+function isObjectMethodKey(source, index, length) {
+  const previous = previousNonWhitespace(source, index);
+  if (previous !== "," && previous !== "{") {
+    return false;
+  }
+
+  let cursor = nextNonWhitespaceIndex(source, index + length);
+  if (source[cursor] !== "(") {
+    return false;
+  }
+
+  let depth = 0;
+  for (; cursor < source.length; cursor += 1) {
+    if (source[cursor] === "(") {
+      depth += 1;
+      continue;
+    }
+
+    if (source[cursor] !== ")") {
+      continue;
+    }
+
+    depth -= 1;
+    if (depth === 0) {
+      const next = nextNonWhitespaceIndex(source, cursor + 1);
+      return source[next] === "{";
+    }
+  }
+
+  return false;
+}
+
+function nextNonWhitespaceIndex(source, index) {
+  for (let i = index; i < source.length; i += 1) {
+    if (!/\s/.test(source[i])) {
+      return i;
+    }
+  }
+
+  return source.length;
 }
 
 function previousNonWhitespace(source, index) {

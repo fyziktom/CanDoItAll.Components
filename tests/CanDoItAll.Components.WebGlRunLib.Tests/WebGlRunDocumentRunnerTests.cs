@@ -172,6 +172,71 @@ public sealed class WebGlRunDocumentRunnerTests
         Assert.Contains("stage.move", runner.State.FailedStageIds);
     }
 
+    [Fact]
+    public async Task Runner_lifecycle_controls_clear_pending_state_and_record_diagnostics()
+    {
+        var runner = new WebGlRunDocumentRunner(new RecordingFrameApplier());
+        WebGlRunDocument document = CreateRunDocument();
+
+        await runner.LoadAsync(document);
+        await runner.SeekAsync(1);
+        Assert.NotEmpty(runner.State.PendingStageIds);
+
+        WebGlRunExecutionResult pause = await runner.PauseAsync("user pause");
+
+        Assert.True(pause.Paused);
+        Assert.Equal(WebGlRunPlaybackLifecycleStates.Paused, runner.State.PlaybackLifecycleState);
+        Assert.Equal("user pause", runner.State.LastPlaybackStopReason);
+        Assert.Equal(1, runner.State.PlaybackPauseCount);
+        Assert.Empty(runner.State.ActiveStageIds);
+        Assert.Empty(runner.State.PendingStageIds);
+        Assert.Equal("1", pause.Diagnostics["playbackPauseCount"]);
+
+        await runner.SeekAsync(1);
+        WebGlRunExecutionResult cancel = await runner.CancelAsync("user cancel");
+
+        Assert.True(cancel.Canceled);
+        Assert.Equal(WebGlRunPlaybackLifecycleStates.Canceled, runner.State.PlaybackLifecycleState);
+        Assert.Equal("user cancel", runner.State.LastPlaybackStopReason);
+        Assert.Equal(1, runner.State.PlaybackCancelCount);
+        Assert.Equal(["stage.move", "stage.pose", "stage.return"], cancel.CanceledStageIds.ToArray());
+        Assert.Empty(runner.State.PendingStageIds);
+        Assert.Equal("1", cancel.Diagnostics["playbackCancelCount"]);
+
+        await runner.SeekAsync(1);
+        WebGlRunExecutionResult stop = await runner.StopAsync("host stop");
+
+        Assert.True(stop.Stopped);
+        Assert.Equal(WebGlRunPlaybackLifecycleStates.Stopped, runner.State.PlaybackLifecycleState);
+        Assert.Equal("host stop", runner.State.LastPlaybackStopReason);
+        Assert.Equal(1, runner.State.PlaybackStopCount);
+        Assert.Empty(runner.State.PendingStageIds);
+        Assert.Equal("1", stop.Diagnostics["playbackStopCount"]);
+    }
+
+    [Fact]
+    public async Task Runner_cancellation_during_frame_apply_does_not_mark_canceled_frame_completed()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var applier = new CancelingFrameApplier(cancellation.Cancel);
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateRunDocument();
+
+        await runner.LoadAsync(document);
+        await runner.SeekAsync(1);
+        WebGlRunExecutionResult apply = await runner.ApplyCurrentFrameAsync(cancellation.Token);
+
+        Assert.True(apply.Succeeded);
+        Assert.True(apply.Canceled);
+        Assert.Empty(apply.AppliedStageIds);
+        Assert.Empty(runner.State.CompletedStageIds);
+        Assert.Equal(["stage.move", "stage.pose", "stage.return"], apply.CanceledStageIds.ToArray());
+        Assert.Equal(WebGlRunPlaybackLifecycleStates.Canceled, runner.State.PlaybackLifecycleState);
+        Assert.Equal("frame apply canceled", runner.State.LastPlaybackStopReason);
+        Assert.Equal("1", apply.Diagnostics["playbackCancelCount"]);
+        Assert.Single(applier.AppliedFrames);
+    }
+
     private static WebGlRunDocument CreateRunDocument()
         => new()
         {
@@ -411,6 +476,18 @@ public sealed class WebGlRunDocumentRunnerTests
         public ValueTask ApplyAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken = default)
         {
             AppliedFrames.Add(frame);
+            return ValueTask.CompletedTask;
+        }
+    }
+
+    private sealed class CancelingFrameApplier(Action cancel) : IWebGlRunFrameApplier
+    {
+        public List<WebGlRunFrameApplyResult> AppliedFrames { get; } = [];
+
+        public ValueTask ApplyAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken = default)
+        {
+            AppliedFrames.Add(frame);
+            cancel();
             return ValueTask.CompletedTask;
         }
     }

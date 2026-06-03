@@ -15,6 +15,12 @@ public interface IWebGlRunDocumentRunner
     ValueTask<WebGlRunExecutionResult> StepForwardAsync(CancellationToken cancellationToken = default);
 
     ValueTask<WebGlRunExecutionResult> StepBackwardAsync(CancellationToken cancellationToken = default);
+
+    ValueTask<WebGlRunExecutionResult> PauseAsync(string reason = "paused", CancellationToken cancellationToken = default);
+
+    ValueTask<WebGlRunExecutionResult> CancelAsync(string reason = "canceled", CancellationToken cancellationToken = default);
+
+    ValueTask<WebGlRunExecutionResult> StopAsync(string reason = "stopped", CancellationToken cancellationToken = default);
 }
 
 public interface IWebGlRunInitialSceneApplier
@@ -44,6 +50,20 @@ public sealed class WebGlRunExecutionState
 
     public List<string> SkippedStageIds { get; set; } = [];
 
+    public List<string> CanceledStageIds { get; set; } = [];
+
+    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+
+    public string LastPlaybackCommandKind { get; set; } = string.Empty;
+
+    public string LastPlaybackStopReason { get; set; } = string.Empty;
+
+    public int PlaybackPauseCount { get; set; }
+
+    public int PlaybackCancelCount { get; set; }
+
+    public int PlaybackStopCount { get; set; }
+
     public WebGlRunExecutionDiagnostics ExecutionDiagnostics { get; set; } = new();
 
     public Dictionary<string, string> Diagnostics { get; set; } = [];
@@ -59,7 +79,19 @@ public sealed class WebGlRunExecutionResult
 
     public bool AppliedInitialScene { get; set; }
 
+    public bool Paused { get; set; }
+
+    public bool Canceled { get; set; }
+
+    public bool Stopped { get; set; }
+
+    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+
+    public string PlaybackLifecycleReason { get; set; } = string.Empty;
+
     public List<string> AppliedStageIds { get; set; } = [];
+
+    public List<string> CanceledStageIds { get; set; } = [];
 
     public List<string> Errors { get; set; } = [];
 

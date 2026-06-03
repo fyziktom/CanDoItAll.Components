@@ -72,6 +72,16 @@ public sealed class WebGlSceneProofSnapshot
 
     public List<WebGlSceneCommandStageJournalEntry> CommandStageRecentJournalEntries { get; set; } = [];
 
+    public int RuntimeStopCount { get; set; }
+
+    public string LastRuntimeStopReason { get; set; } = string.Empty;
+
+    public int ClearedMotionCount { get; set; }
+
+    public int LastRuntimeStopClearedMotionCount { get; set; }
+
+    public int LastRuntimeStopCancelledCommandStageCount { get; set; }
+
     public int RenderCount { get; set; }
 
     public bool IsRenderLoopActive { get; set; }

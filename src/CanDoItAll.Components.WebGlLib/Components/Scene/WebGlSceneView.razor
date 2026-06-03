@@ -289,6 +289,12 @@
     public Task<WebGlSceneCommandResult?> EnqueueMotionDetailedAsync(WebGlObjectMotionCommand command)
         => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.enqueueMotionDetailed", host, command).AsTask();
 
+    public Task<WebGlSceneCommandResult?> CancelCommandStagesAsync(string reason = "cancelled")
+        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.cancelCommandStages", host, reason).AsTask();
+
+    public Task<WebGlSceneCommandResult?> StopRuntimeActivityAsync(string reason = "runtime-stop")
+        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.stopRuntimeActivity", host, reason).AsTask();
+
     public Task<bool> ClearMotionsAsync(string? objectId = null)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.clearMotions", host, objectId).AsTask();
 

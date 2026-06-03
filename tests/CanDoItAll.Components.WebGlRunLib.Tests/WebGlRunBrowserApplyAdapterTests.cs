@@ -344,10 +344,68 @@ public sealed class WebGlRunBrowserApplyAdapterTests
 
         Assert.False(result.Success);
         Assert.Equal(2, result.FailedFrameIndex);
+        Assert.Equal(1, result.LastAppliedFrameIndex);
+        Assert.Equal(3, result.TargetFrameIndex);
         Assert.Equal(WebGlRunBrowserApplyFailureReasons.BatchFailed, result.FailureReason);
+        Assert.Equal(WebGlRunBrowserPlaybackTransactionPolicies.StopOnFirstFailure, result.TransactionPolicy);
+        Assert.NotNull(result.FailureSnapshot);
+        Assert.Equal("3", result.FailureSnapshot.Diagnostics["targetFrameIndex"]);
+        Assert.Equal("1", result.FailureSnapshot.Diagnostics["lastAppliedFrameIndex"]);
+        Assert.Equal("2", result.FailureSnapshot.Diagnostics["failedFrameIndex"]);
         Assert.Equal(2, runtime.AppliedBatches.Count);
         Assert.Equal([1, 2], result.FrameResults.Select(frame => frame.FrameIndex).ToArray());
         Assert.Contains("frame two failed", result.Errors);
+    }
+
+    [Fact]
+    public async Task Adapter_apply_playback_reports_cancellation_and_does_not_apply_later_frames()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var runtime = new RecordingBrowserRuntime
+        {
+            OnApplyBatch = batch =>
+            {
+                if (string.Equals(batch.BatchId, "run-frame:2", StringComparison.Ordinal))
+                {
+                    cancellation.Cancel();
+                }
+            },
+            Diagnostics = new()
+            {
+                CurrentCommandBatchId = "run-frame:2",
+                CurrentCommandStageId = "stage.second",
+                QueuedCommandStageCount = 0
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime);
+        var playback = new WebGlRunPlaybackResult
+        {
+            RequestedCommand = WebGlRunPlaybackCommandKinds.Seek,
+            TargetFrameIndex = 3,
+            FramesToApply =
+            {
+                Frame(1, "stage.first"),
+                Frame(2, "stage.second"),
+                Frame(3, "stage.third")
+            }
+        };
+
+        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback, cancellation.Token);
+
+        Assert.False(result.Success);
+        Assert.True(result.Canceled);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.CancellationRequested, result.FailureReason);
+        Assert.Equal("frame apply canceled", result.CancellationReason);
+        Assert.Equal(2, result.LastAppliedFrameIndex);
+        Assert.Equal(2, result.FailedFrameIndex);
+        Assert.Equal(3, result.TargetFrameIndex);
+        Assert.NotNull(result.FailureSnapshot);
+        Assert.Equal("3", result.FailureSnapshot.Diagnostics["targetFrameIndex"]);
+        Assert.Equal("2", result.FailureSnapshot.Diagnostics["lastAppliedFrameIndex"]);
+        Assert.Equal("frame apply canceled", result.FailureSnapshot.Diagnostics["cancellationReason"]);
+        Assert.Equal(2, runtime.AppliedBatches.Count);
+        Assert.Equal([1, 2], result.FrameResults.Select(frame => frame.FrameIndex).ToArray());
+        Assert.Equal(["stage.first", "stage.second"], runtime.AppliedBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
     }
 
     [Fact]
@@ -424,6 +482,8 @@ public sealed class WebGlRunBrowserApplyAdapterTests
 
         public WebGlRuntimeDiagnostics Diagnostics { get; set; } = new();
 
+        public Action<WebGlSceneCommandBatch>? OnApplyBatch { get; set; }
+
         public ValueTask<WebGlSceneCommandResult?> ImportSceneAsync(
             WebGlSceneDocument sceneDocument,
             CancellationToken cancellationToken = default)
@@ -437,6 +497,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
             CancellationToken cancellationToken = default)
         {
             AppliedBatches.Add(batch);
+            OnApplyBatch?.Invoke(batch);
             return ValueTask.FromResult<WebGlSceneCommandBatchResult?>(BatchResults.Count > 0 ? BatchResults.Dequeue() : BatchResult);
         }
 

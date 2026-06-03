@@ -2,6 +2,8 @@
 
 Priority: P1
 Related findings: F11
+Status: Completed
+Completed: 2026-06-03
 
 ## Objective
 
@@ -19,6 +21,8 @@ Add optional runner Pause/Cancel/Stop semantics and diagnostics so hosts do not 
 
 Runner state reflects canceled/paused/stopped operation and does not mark canceled frames completed.
 
+Gate result: Passed. Focused tests prove explicit Pause/Cancel/Stop state, diagnostics, counters, active/pending-stage clearing, and cancellation during frame apply leaves `CompletedStageIds` empty.
+
 ## Required proof artifacts
 
 - `proof/SB04/manifest.md`
@@ -29,8 +33,8 @@ Runner state reflects canceled/paused/stopped operation and does not mark cancel
 
 ## QA checklist
 
-- Build Components and/or Economy as relevant.
-- Run focused tests for changed area.
-- Run boundary audits.
-- Run browser proof for playback/UI changes.
-- Ensure no blank transcripts.
+- Build Components and/or Economy as relevant. Completed: `proof/SB04/transcripts/components-build-after-runner-lifecycle.txt`.
+- Run focused tests for changed area. Completed: `proof/SB04/transcripts/webglrunlib-focused-tests.txt`.
+- Run boundary audits. Completed: `proof/SB04/transcripts/source-assertion-runner-lifecycle-scan.txt` and `proof/SB04/transcripts/domain-neutrality-scan.txt`.
+- Run browser proof for playback/UI changes. Not required; SB04 changes runner contracts only and adds no new UI/browser runtime surface.
+- Ensure no blank transcripts. Completed: `proof/SB04/transcripts/proof-hygiene-inventory.txt`.

@@ -189,6 +189,29 @@ public sealed class WebGlRuntimeDiagnosticsTests
     }
 
     [Fact]
+    public void Runtime_diagnostics_round_trips_runtime_stop_fields()
+    {
+        const string json = """
+            {
+              "runtimeStopCount": 2,
+              "lastRuntimeStopReason": "pause",
+              "clearedMotionCount": 5,
+              "lastRuntimeStopClearedMotionCount": 0,
+              "lastRuntimeStopCancelledCommandStageCount": 0
+            }
+            """;
+
+        var diagnostics = JsonSerializer.Deserialize<WebGlRuntimeDiagnostics>(json, JsonOptions);
+
+        Assert.NotNull(diagnostics);
+        Assert.Equal(2, diagnostics.RuntimeStopCount);
+        Assert.Equal("pause", diagnostics.LastRuntimeStopReason);
+        Assert.Equal(5, diagnostics.ClearedMotionCount);
+        Assert.Equal(0, diagnostics.LastRuntimeStopClearedMotionCount);
+        Assert.Equal(0, diagnostics.LastRuntimeStopCancelledCommandStageCount);
+    }
+
+    [Fact]
     public void Runtime_diagnostics_deserializes_browser_resource_cache_capture_shape()
     {
         const string json = """

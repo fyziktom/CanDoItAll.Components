@@ -22,6 +22,10 @@ public sealed class WebGlRunPlaybackResult
 
     public bool RequiresSceneReset { get; set; }
 
+    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+
+    public string PlaybackLifecycleReason { get; set; } = string.Empty;
+
     public WebGlRunPlaybackState State { get; set; } = new();
 
     public Dictionary<string, string> RunSourceProvenance { get; set; } = [];

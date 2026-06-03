@@ -52,6 +52,10 @@ Use `WebGlRunDocumentRunner` when a host owns seek, step, first, last, or reset 
 
 Use `WebGlRunBrowserApplyAdapter.ApplyAsync(WebGlRunFrameApplyResult)` only for a direct single-frame apply. The legacy `ApplyAsync(WebGlRunPlaybackResult)` overload remains for compatibility with single-frame playback results, but it fails closed when `FramesToApply` contains multiple frames. Use `ApplyPlaybackAsync(WebGlRunPlaybackResult)` for multi-frame playback; it resets the scene once when required, applies each frame in the playback result order, returns per-frame results, and stops on the first failed frame.
 
+Host Pause, Cancel, Stop, Reset, Dispose, and route-change handlers must cancel the host loop and call `WebGlSceneView.StopRuntimeActivityAsync(reason)` through `WebGlSceneViewBrowserRuntime`/`WebGlSceneView`. A C# paused flag is not enough proof if `queuedCommandStageCount`, `activeMotionCount`, or `queuedMotionCount` continue changing in browser diagnostics.
+
+Use the host checklist in `docs/webgl/playback-hosting-and-troubleshooting.md` when integrating playback controls or debugging a scene that keeps moving after Pause.
+
 The WebGlSandbox route `/run-playback` hosts a generic non-domain run document, deterministic controls, reset/cancel behavior, a large batch proof frame, and diagnostics JSON for command batching.
 
 ## Validators

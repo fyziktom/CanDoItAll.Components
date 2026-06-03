@@ -114,4 +114,5 @@ npm run webgllib:test-resource-ownership
 
 - Repository overview: `README.md` at this repo root
 - Run-layer boundary: `docs/webgl/run-layer-boundary.md`
+- Playback hosting and troubleshooting: `docs/webgl/playback-hosting-and-troubleshooting.md`
 - Main repo shared component docs: `C:\repositories\CanDoItAll\docs\ui-shared-components\README.md`

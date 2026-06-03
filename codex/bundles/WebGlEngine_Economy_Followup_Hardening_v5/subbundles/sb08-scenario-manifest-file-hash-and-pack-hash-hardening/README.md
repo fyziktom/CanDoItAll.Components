@@ -34,3 +34,20 @@ Changing any scenario file causes catalog validation failure unless manifest is 
 - Run boundary audits.
 - Run browser proof for playback/UI changes.
 - Ensure no blank transcripts.
+
+## Execution result
+
+Status: Completed
+
+- Added `packHash` and `fileHashes` to `EconomySimulationScenarioManifest`.
+- Hardened `FileSystemEconomySimulationScenarioCatalog` to validate manifest pack hashes, safe file-hash keys, strict SHA-256 values, required-file coverage, and content equality.
+- Updated shipped `shared-well` and `farmer-land` scenario manifests with deterministic pack hashes and per-required-file hashes.
+- Added a failing-first then passing test for a tampered manifest-required companion file outside the experiment-input hash set.
+- Captured browser proof that the runtime sandbox still loads `shared-well` as valid with the hardened manifest.
+
+Primary proof:
+
+- `bundle://proof/SB08/manifest.md`
+- `bundle://proof/SB08/semantic-invariants.md`
+- `bundle://proof/SB08/transcripts/economy-scenario-manifest-focused-tests.txt`
+- `bundle://proof/SB08/browser/simulation-sandbox-manifest-hash-assertions.json`

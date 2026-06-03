@@ -62,6 +62,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
             State = State,
             RunSourceProvenance = new Dictionary<string, string>(runSourceProvenance, StringComparer.Ordinal)
         };
+        State.LastPlaybackCommandKind = command.Kind;
         if (timeline is not null)
         {
             var validation = timelineValidator.Validate(timeline);
@@ -72,9 +73,12 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
             }
         }
 
-        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Pause, StringComparison.OrdinalIgnoreCase))
+        if (IsLifecycleControlCommand(command.Kind))
         {
-            State.IsPlaying = false;
+            ApplyLifecycleControl(command);
+            result.TargetFrameIndex = State.CurrentFrameIndex;
+            result.PlaybackLifecycleState = State.PlaybackLifecycleState;
+            result.PlaybackLifecycleReason = State.LastPlaybackStopReason;
             result.CurrentFrame = timeline?.Frames.FirstOrDefault(frame => frame.Index == State.CurrentFrameIndex);
             return result;
         }
@@ -82,6 +86,8 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Reset, StringComparison.OrdinalIgnoreCase))
         {
             State.IsPlaying = false;
+            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Idle;
+            State.LastPlaybackStopReason = string.Empty;
             State.CurrentFrameIndex = 0;
             State.InitialSceneLoaded = true;
             result.RequiresSceneReset = true;
@@ -92,6 +98,10 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         State.IsPlaying = string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
                           string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Resume, StringComparison.OrdinalIgnoreCase) ||
                           State.IsPlaying;
+        if (State.IsPlaying)
+        {
+            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Playing;
+        }
 
         var frame = await frameSource.GetFrameAsync(State.RunId, targetFrameIndex, cancellationToken).ConfigureAwait(false);
         if (frame is null)
@@ -114,6 +124,8 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         result.CurrentFrame = frame;
         result.FramesApplied = result.FramesToApply.Count;
         result.StagesQueued = result.FramesToApply.Sum(static item => item.Stages.Count);
+        result.PlaybackLifecycleState = State.PlaybackLifecycleState;
+        result.PlaybackLifecycleReason = State.LastPlaybackStopReason;
         UpdateRuntimeState(frame, result.StagesQueued);
         return result;
     }
@@ -133,13 +145,22 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
             QueuedStageCount = State.QueuedStageCount,
             IsPlaying = State.IsPlaying,
             PlaybackSpeed = State.PlaybackSpeed,
+            PlaybackLifecycleState = State.PlaybackLifecycleState,
+            LastPlaybackCommandKind = State.LastPlaybackCommandKind,
+            LastPlaybackStopReason = State.LastPlaybackStopReason,
+            PlaybackPauseCount = State.PlaybackPauseCount,
+            PlaybackCancelCount = State.PlaybackCancelCount,
+            PlaybackStopCount = State.PlaybackStopCount,
             InitialSceneLoaded = State.InitialSceneLoaded,
             RunSourceProvenance = new Dictionary<string, string>(runSourceProvenance, StringComparer.Ordinal),
             Diagnostics =
             {
                 ["maxFrameIndex"] = maxFrameIndex?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "",
                 ["hasTimeline"] = (timeline is not null).ToString(System.Globalization.CultureInfo.InvariantCulture),
-                ["frameCount"] = (timeline?.Frames.Count ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture)
+                ["frameCount"] = (timeline?.Frames.Count ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ["playbackLifecycleState"] = State.PlaybackLifecycleState,
+                ["lastPlaybackCommandKind"] = State.LastPlaybackCommandKind,
+                ["lastPlaybackStopReason"] = State.LastPlaybackStopReason
             }
         };
 
@@ -248,6 +269,38 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         return keys
             .Where(metadata.ContainsKey)
             .ToDictionary(static key => key, key => metadata[key], StringComparer.Ordinal);
+    }
+
+    private static bool IsLifecycleControlCommand(string commandKind)
+        => string.Equals(commandKind, WebGlRunPlaybackCommandKinds.Pause, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(commandKind, WebGlRunPlaybackCommandKinds.Cancel, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(commandKind, WebGlRunPlaybackCommandKinds.Stop, StringComparison.OrdinalIgnoreCase);
+
+    private void ApplyLifecycleControl(WebGlRunPlaybackCommand command)
+    {
+        State.IsPlaying = false;
+        State.CurrentStageId = string.Empty;
+        State.CurrentStageIds.Clear();
+        State.CurrentActionIds.Clear();
+        State.QueuedStageCount = 0;
+        State.LastPlaybackStopReason = command.Reason;
+
+        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Cancel, StringComparison.OrdinalIgnoreCase))
+        {
+            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Canceled;
+            State.PlaybackCancelCount++;
+            return;
+        }
+
+        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Stop, StringComparison.OrdinalIgnoreCase))
+        {
+            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Stopped;
+            State.PlaybackStopCount++;
+            return;
+        }
+
+        State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Paused;
+        State.PlaybackPauseCount++;
     }
 
     private void UpdateRuntimeState(WebGlRunFrame frame, int queuedStageCount)

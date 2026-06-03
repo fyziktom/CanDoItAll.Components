@@ -33,6 +33,8 @@ public partial class RunPlayback
     private WebGlRunBrowserApplyResult? latestApplyResult;
     private WebGlRunRuntimeSnapshot? latestRunSnapshot;
     private CancellationTokenSource? playbackCancellation;
+    private Task? playbackTask;
+    private long playbackGeneration;
     private bool isPlaying;
     private string statusText = "Ready.";
 
@@ -120,16 +122,27 @@ public partial class RunPlayback
         playbackCancellation?.Cancel();
         playbackCancellation?.Dispose();
         playbackCancellation = new CancellationTokenSource();
-        CancellationToken cancellationToken = playbackCancellation.Token;
+        CancellationTokenSource cancellationSource = playbackCancellation;
+        long generation = ++playbackGeneration;
         isPlaying = true;
         statusText = "Playing generic sequence.";
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+        playbackTask = InvokeAsync(() => PlayLoopAsync(generation, cancellationSource));
+    }
 
+    private async Task PlayLoopAsync(long generation, CancellationTokenSource cancellationSource)
+    {
+        CancellationToken cancellationToken = cancellationSource.Token;
         try
         {
-            while (isPlaying && !cancellationToken.IsCancellationRequested && CurrentFrameIndex < MaxFrameIndex)
+            while (IsActivePlayback(generation, cancellationToken) && CurrentFrameIndex < MaxFrameIndex)
             {
                 WebGlRunExecutionResult result = await documentRunner!.StepForwardAsync(cancellationToken).ConfigureAwait(false);
+                if (!IsActivePlayback(generation, cancellationToken))
+                {
+                    break;
+                }
+
                 await CompleteExecutionAsync(result, $"Played generic frame {CurrentFrameIndex}.").ConfigureAwait(false);
                 if (!result.Succeeded)
                 {
@@ -141,12 +154,32 @@ public partial class RunPlayback
         }
         catch (OperationCanceledException)
         {
-            statusText = "Playback canceled.";
+            if (playbackGeneration == generation)
+            {
+                statusText = "Playback canceled.";
+            }
+        }
+        catch (Exception ex)
+        {
+            if (playbackGeneration == generation)
+            {
+                statusText = ex.Message;
+            }
         }
         finally
         {
-            isPlaying = false;
-            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            if (playbackGeneration == generation)
+            {
+                isPlaying = false;
+                if (ReferenceEquals(playbackCancellation, cancellationSource))
+                {
+                    playbackCancellation = null;
+                }
+
+                await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            }
+
+            cancellationSource.Dispose();
         }
     }
 
@@ -269,6 +302,11 @@ public partial class RunPlayback
             new WebGlSceneViewBrowserRuntime(sceneView),
             runDocument.InitialScene);
         WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(frame, cancellationToken).ConfigureAwait(false);
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
         latestApplyResult = result;
         latestRunSnapshot = result.RuntimeSnapshot;
         latestRuntimeDiagnostics = result.RuntimeDiagnostics;
@@ -280,16 +318,48 @@ public partial class RunPlayback
 
     private async Task StopPlaybackAsync(string status)
     {
+        playbackGeneration++;
         isPlaying = false;
         playbackCancellation?.Cancel();
         statusText = status;
+        if (sceneView is not null)
+        {
+            WebGlSceneCommandResult? stopResult = await sceneView.StopRuntimeActivityAsync(status).ConfigureAwait(false);
+            if (stopResult?.Success == false)
+            {
+                statusText = string.Join(" ", stopResult.Errors);
+            }
+
+            await CaptureProofAsync().ConfigureAwait(false);
+        }
+
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
     }
 
     private Task HandleMotionCompleted(WebGlSceneCommandResult result)
     {
+        if (!isPlaying)
+        {
+            return Task.CompletedTask;
+        }
+
         statusText = $"Motion completed: {result.CommandId}.";
         return InvokeAsync(StateHasChanged);
+    }
+
+    private bool IsActivePlayback(long generation, CancellationToken cancellationToken)
+        => playbackGeneration == generation &&
+           isPlaying &&
+           !cancellationToken.IsCancellationRequested;
+
+    public void Dispose()
+    {
+        playbackGeneration++;
+        isPlaying = false;
+        playbackCancellation?.Cancel();
+        playbackCancellation?.Dispose();
+        playbackCancellation = null;
+        playbackTask = null;
     }
 
     private static WebGlRunDocument CreateRunDocument()

@@ -2,6 +2,7 @@
 
 Priority: P1
 Related findings: F09
+Status: Completed
 
 ## Objective
 
@@ -34,3 +35,14 @@ Bundle cannot close with zero-byte/blank transcripts or browser screenshots with
 - Run boundary audits.
 - Run browser proof for playback/UI changes.
 - Ensure no blank transcripts.
+
+## Completion summary
+
+Gate result: Passed. `scripts/validate_bundle.py` now rejects completed proof with blank transcripts, screenshot-only browser proof, invalid/missing browser assertion JSON, missing P0/P1 failing-first evidence, stale package/feed markers, or missing source-assertion transcripts while still allowing unfinished future subbundles during prepared-stage validation.
+
+- `bundle://proof/SB10/manifest.md`
+- `bundle://proof/SB10/semantic-invariants.md`
+- `bundle://proof/SB10/transcripts/failing-first-proof-validator-gap.txt`
+- `bundle://proof/SB10/transcripts/proof-validator-unit-tests.txt`
+- `bundle://proof/SB10/transcripts/bundle-validator-after-hardening-pre-docs.txt`
+- `bundle://proof/SB10/transcripts/source-assertion-proof-validator-scan.txt`
