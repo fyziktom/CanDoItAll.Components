@@ -1,7 +1,0 @@
-Allowed forbidden-term occurrences outside production generic paths
-tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionPlannerTests.cs:142:        var validator = new WebGlRunDocumentProvenanceValidator(["water", "well", "tax"]);
-tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunActionPlannerTests.cs:169:                ["water.well.tax"] = "leaks domain vocabulary"
-tools\webgllib\audit-sharedwell-performance.cjs:186:  console.log(`Shared Well WebGlLib performance audit passed. Wrote ${path.relative(repoRoot, reportPath)}.`);
-tools\webgllib\audit-scene-runtime.cjs:91:  const forbiddenDomainWords = /\b(economy|ledger|account|water|well|entrepreneur|citizen)\b/i;
-
-Classification: remaining test occurrence is the intentional provenance-validator negative test that proves forbidden vocabulary is rejected; tool occurrences are legacy audit tooling, not production runtime code. Production generic paths are clean per domain-leakage-scan.txt.

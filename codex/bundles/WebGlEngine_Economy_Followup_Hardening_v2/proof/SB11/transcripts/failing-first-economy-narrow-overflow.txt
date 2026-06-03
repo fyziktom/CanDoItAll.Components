@@ -1,9 +1,0 @@
-﻿Failing-first Economy narrow viewport browser observation before responsive CSS patch:
-- Route: http://127.0.0.1:5392/economy/simulation-sandbox
-- Viewport: 390x900
-- Assertion noHorizontalOverflowNarrow: false
-- documentElement.scrollWidth: 1280; documentElement.clientWidth: 390
-- sandbox root box: x=-545 width=1280
-- scene box: x=-529 width=850.40625
-- source cause observed in src/CanDoItAll.Economy.Components/wwwroot/css/economy-components.css: .cda-economy-simulation-sandbox min-width: 1280px and desktop grid columns were active at narrow width.
-- Fix: added max-width: 800px responsive rules to remove root min-width, stack layout, wrap controls, shrink scene, and use single-column panel rows.

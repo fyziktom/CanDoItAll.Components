@@ -1,8 +1,0 @@
-﻿Command: rg -n "BarrierPolicy|wait-for-object-motions|QueuePolicy|Unsupported WebGL run action kind" WebGlRun compiler/batch sources
-Repository: CanDoItAll.Components
-ExitCode: 0
-Expectation: run-plan stages lack barrier policy propagation before SB05; unsupported action validation exists only outside batch compiler.
---- output ---
-.\src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:76:            errors.Add($"Unsupported WebGL run action kind '{action.ActionKind}' for action '{action.ActionId}'.");
-.\src\CanDoItAll.Components.WebGlRunLib\Planning\WebGlRunActionPlanner.cs:89:                plan.Errors.Add($"Unsupported WebGL run action kind '{kind}' for action '{action.ActionId}'.");
-
