@@ -48,6 +48,10 @@ WebGlRunDocument -> WebGlRunDocumentRunner -> WebGlRunFrameApplyResult -> WebGlR
 
 `WebGlSceneView` remains the WebGlLib boundary. The run layer calls its public import, batch, diagnostics, and proof-snapshot APIs; WebGlLib does not reference WebGlRunLib.
 
+Use `WebGlRunDocumentRunner` when a host owns seek, step, first, last, or reset semantics. The runner applies the required replay sequence and stops before browser calls when validation or frame conversion fails.
+
+Use `WebGlRunBrowserApplyAdapter.ApplyAsync(WebGlRunFrameApplyResult)` only for a direct single-frame apply. The legacy `ApplyAsync(WebGlRunPlaybackResult)` overload remains for compatibility with single-frame playback results, but it fails closed when `FramesToApply` contains multiple frames. Use `ApplyPlaybackAsync(WebGlRunPlaybackResult)` for multi-frame playback; it resets the scene once when required, applies each frame in the playback result order, returns per-frame results, and stops on the first failed frame.
+
 The WebGlSandbox route `/run-playback` hosts a generic non-domain run document, deterministic controls, reset/cancel behavior, a large batch proof frame, and diagnostics JSON for command batching.
 
 ## Validators

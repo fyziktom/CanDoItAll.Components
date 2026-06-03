@@ -127,6 +127,31 @@ public sealed class WebGlRunPlaybackControllerTests
         Assert.Equal("stage.bootstrap", controller.ExportRuntimeSnapshot().CurrentStageId);
     }
 
+    [Fact]
+    public async Task Controller_and_frame_apply_result_use_shared_stage_ordering_policy()
+    {
+        WebGlRunDocument document = CreateExecutableRunDocument();
+        WebGlRunFrame frame = document.Timeline.Frames[1];
+        frame.Stages[0].StartsAtSeconds = 1;
+        frame.Stages[1].StartsAtSeconds = 0;
+        frame.Stages.Reverse();
+        string[] expectedStageIds = [.. WebGlRunStageOrderingPolicy.OrderStages(frame).Select(static stage => stage.StageId)];
+
+        var controller = new WebGlRunPlaybackController(document);
+        WebGlRunPlaybackResult playback = await controller.ApplyDetailedAsync(new()
+        {
+            Kind = WebGlRunPlaybackCommandKinds.Seek,
+            TargetFrameIndex = 1
+        });
+        WebGlRunFrameApplyResult applyResult = WebGlRunFrameApplyResult.FromFrame(frame);
+
+        Assert.True(playback.Success);
+        Assert.Equal(["stage.symbol", "stage.move"], expectedStageIds);
+        Assert.Equal(expectedStageIds, controller.State.CurrentStageIds.ToArray());
+        Assert.Equal(expectedStageIds, applyResult.CommandBatch.Stages.Select(static stage => stage.StageId).ToArray());
+        Assert.Equal(["action.symbol", "action.move"], controller.State.CurrentActionIds.ToArray());
+    }
+
     private static WebGlRunDocument CreateRunDocument()
         => new()
         {

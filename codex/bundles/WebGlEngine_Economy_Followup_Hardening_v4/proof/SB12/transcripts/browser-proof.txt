@@ -1,0 +1,89 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260603071158
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_Hardening_v4'
+$log = Join-Path $bundle 'proof\SB12\transcripts\browser-proof.txt'
+$ErrorActionPreference = 'Continue'
+Start-Transcript -Path $log -Force
+Write-Output 'SB12 browser proof artifact audit'
+$sb04DiagnosticsPath = Join-Path $bundle 'proof\SB04\browser\runtime-diagnostics.json'
+$sb04ConsolePath = Join-Path $bundle 'proof\SB04\browser\console-review.json'
+$sb10ScreenshotPath = Join-Path $bundle 'proof\SB10\browser\run-playback-after-import-step-rerender.png'
+$sb11DiagnosticsPath = Join-Path $bundle 'proof\SB11\browser\performance-proof-diagnostics.json'
+$sb11ScreenshotPath = Join-Path $bundle 'proof\SB11\browser\performance-proof-browser.png'
+Write-Output "Assert file exists/non-empty: $sb04DiagnosticsPath"
+$sb04Items = Get-Content -LiteralPath $sb04DiagnosticsPath -Raw | ConvertFrom-Json
+Write-Output "SB04 operation count: $($sb04Items.Count)"
+$step = $sb04Items | Where-Object { $_.operation -eq 'Step' } | Select-Object -First 1
+$last = $sb04Items | Where-Object { $_.operation -eq 'Last' } | Select-Object -First 1
+$first = $sb04Items | Where-Object { $_.operation -eq 'First' } | Select-Object -First 1
+Write-Output "SB04 Step appliedFrameIndexes: $($step.browserRuntime.appliedFrameIndexes); runnerState: $($step.browserRuntime.runnerState); runtimeErrorCount: $($step.browserRuntime.runtimeErrorCount)"
+Write-Output "SB04 Last appliedFrameIndexes: $($last.browserRuntime.appliedFrameIndexes); runnerState: $($last.browserRuntime.runnerState); runtimeErrorCount: $($last.browserRuntime.runtimeErrorCount)"
+Write-Output "SB04 First appliedFrameIndexes: $($first.browserRuntime.appliedFrameIndexes); runnerState: $($first.browserRuntime.runnerState); runtimeErrorCount: $($first.browserRuntime.runtimeErrorCount)"
+Write-Output "SB04 console review bytes: $((Get-Item -LiteralPath $sb04ConsolePath).Length)"
+Write-Output "SB10 screenshot bytes: $((Get-Item -LiteralPath $sb10ScreenshotPath).Length)"
+$sb11 = Get-Content -LiteralPath $sb11DiagnosticsPath -Raw | ConvertFrom-Json
+Write-Output "SB11 URL: $($sb11.url)"
+Write-Output "SB11 viewport: $($sb11.viewport.innerWidth)x$($sb11.viewport.innerHeight)"
+Write-Output "SB11 status: $($sb11.status)"
+Write-Output "SB11 objectCount: $($sb11.runtimeDiagnostics.objectCount); activeMotionCount: $($sb11.runtimeDiagnostics.activeMotionCount); stageCount: $($sb11.commandBatch.stageCount); batchDurationMs: $($sb11.commandBatch.batchDurationMs)"
+Write-Output "SB11 budget profile: $($sb11.budgetAssertions.profile); objectWithinBudget: $($sb11.budgetAssertions.objectCountWithinBudget); activeMotionWithinBudget: $($sb11.budgetAssertions.activeMotionCountWithinBudget); stageWithinBudget: $($sb11.budgetAssertions.stageCountWithinBudget)"
+Write-Output "SB11 screenshot bytes: $((Get-Item -LiteralPath $sb11ScreenshotPath).Length)"
+$assertions = @(
+    ($sb04Items.Count -ge 6),
+    ($step.browserRuntime.appliedFrameIndexes -eq '0,1'),
+    ($step.browserRuntime.runtimeErrorCount -eq '0'),
+    ($last.browserRuntime.appliedFrameIndexes -eq '0,1,2'),
+    ($last.browserRuntime.runtimeErrorCount -eq '0'),
+    ((Get-Item -LiteralPath $sb04ConsolePath).Length -gt 0),
+    ((Get-Item -LiteralPath $sb10ScreenshotPath).Length -gt 0),
+    ($sb11.hostFound -eq $true),
+    ($sb11.metricsPanelVisible -eq $true),
+    ($sb11.viewport.innerWidth -eq 1280),
+    ($sb11.viewport.innerHeight -eq 800),
+    ($sb11.runtimeDiagnostics.objectCount -eq 100),
+    ($sb11.budgetAssertions.objectCountWithinBudget -eq $true),
+    ($sb11.budgetAssertions.activeMotionCountWithinBudget -eq $true),
+    ($sb11.budgetAssertions.stageCountWithinBudget -eq $true),
+    ((Get-Item -LiteralPath $sb11ScreenshotPath).Length -gt 0)
+)
+$failed = @($assertions | Where-Object { $_ -ne $true }).Count
+Write-Output "Browser artifact assertion failures: $failed"
+Stop-Transcript
+if ($failed -ne 0) { exit 1 }
+exit 0
+Process ID: 8832
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_Hardening_v4\proof\SB12\transcripts\browser-proof.txt
+SB12 browser proof artifact audit
+Assert file exists/non-empty: C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_Hardening_v4\proof\SB04\browser\runtime-diagnostics.json
+SB04 operation count: 6
+SB04 Step appliedFrameIndexes: 0,1; runnerState: explicit-replay-applied; runtimeErrorCount: 0
+SB04 Last appliedFrameIndexes: 0,1,2; runnerState: explicit-replay-applied; runtimeErrorCount: 0
+SB04 First appliedFrameIndexes: 0; runnerState: explicit-replay-applied; runtimeErrorCount: 0
+SB04 console review bytes: 2
+SB10 screenshot bytes: 35677
+SB11 URL: http://127.0.0.1:5268/performance-proof
+SB11 viewport: 1280x800
+SB11 status: Applied 202 commands across 1 stage(s).
+SB11 objectCount: 100; activeMotionCount: 0; stageCount: 1; batchDurationMs: 254
+SB11 budget profile: scene-100; objectWithinBudget: True; activeMotionWithinBudget: True; stageWithinBudget: True
+SB11 screenshot bytes: 80637
+Browser artifact assertion failures: 0
+**********************
+Windows PowerShell transcript end
+End time: 20260603071159
+**********************

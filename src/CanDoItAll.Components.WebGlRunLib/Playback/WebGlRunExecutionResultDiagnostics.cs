@@ -20,7 +20,7 @@ internal static class WebGlRunExecutionResultDiagnostics
             result.Diagnostics["sourceFrameId"] = sourceFrameId;
         }
 
-        var sourceStageIds = frame.Stages
+        var sourceStageIds = WebGlRunStageOrderingPolicy.OrderStages(frame)
             .Select(static stage => stage.Metadata.GetValueOrDefault("sourceStageId"))
             .Where(static value => !string.IsNullOrWhiteSpace(value))
             .ToArray();
@@ -43,5 +43,21 @@ internal static class WebGlRunExecutionResultDiagnostics
         result.Diagnostics["failedPatchCount"] = result.ExecutionDiagnostics.FailedPatchCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         result.Diagnostics["failedLinkCount"] = result.ExecutionDiagnostics.FailedLinkCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         result.Diagnostics["unresolvedObjectIds"] = string.Join(",", result.ExecutionDiagnostics.UnresolvedObjectIds);
+    }
+
+    public static void Merge(WebGlRunExecutionResult target, WebGlRunExecutionResult source)
+    {
+        target.Errors.AddRange(source.Errors);
+        target.Warnings.AddRange(source.Warnings);
+        target.ExecutionDiagnostics.UnresolvedObjectIds.AddRange(source.ExecutionDiagnostics.UnresolvedObjectIds);
+        target.ExecutionDiagnostics.FailedMotionIds.AddRange(source.ExecutionDiagnostics.FailedMotionIds);
+        target.ExecutionDiagnostics.FailedPatchIds.AddRange(source.ExecutionDiagnostics.FailedPatchIds);
+        target.ExecutionDiagnostics.FailedLinkIds.AddRange(source.ExecutionDiagnostics.FailedLinkIds);
+        target.ExecutionDiagnostics.SourceFrameIds.AddRange(source.ExecutionDiagnostics.SourceFrameIds);
+        target.ExecutionDiagnostics.SourceStageIds.AddRange(source.ExecutionDiagnostics.SourceStageIds);
+        foreach (KeyValuePair<string, string> item in source.Diagnostics)
+        {
+            target.Diagnostics[item.Key] = item.Value;
+        }
     }
 }

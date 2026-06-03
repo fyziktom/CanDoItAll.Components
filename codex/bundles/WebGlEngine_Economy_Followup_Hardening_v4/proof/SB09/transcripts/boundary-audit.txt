@@ -1,0 +1,18 @@
+SB09 boundary audit transcript
+
+Command:
+rg -n "CanDoItAll\.Economy|Economy" src\CanDoItAll.Components.WebGlRunLib -g "*.cs"
+
+Result:
+Exit code 1.
+No matches in Components WebGlRunLib source.
+
+Command:
+rg -n "CanDoItAll\.Economy|Economy" src\CanDoItAll.Components.WebGlRunLib docs\webgl\run-layer-boundary.md -g "*.cs" -g "*.md"
+
+Result:
+Exit code 0.
+Matches are documentation-only references in docs\webgl\run-layer-boundary.md describing the external Economy bridge integration and the forbidden dependency direction.
+
+Semantic assertion:
+The new public WebGlRunStageOrderingPolicy lives in the generic Components WebGlRunLib package and contains no Economy/domain vocabulary. Economy consumes the generic policy through its existing project reference; Components does not reference Economy.

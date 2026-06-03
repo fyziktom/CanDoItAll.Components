@@ -1,0 +1,31 @@
+SB10 passing test transcript
+
+Command:
+dotnet test tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj --no-restore --filter FullyQualifiedName~WebGlSceneViewExternalImportLifecycleTests
+
+Result:
+Exit code 0.
+Passed: 1, Failed: 0, Skipped: 0, Total: 1.
+
+Semantic assertion:
+The focused lifecycle test now proves successful document import updates the component-local imported scene key and prevents the replaced stale scene id from issuing a JS update. A genuinely new scene id still issues one JS update.
+
+Command:
+dotnet test tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj --no-restore
+
+Result:
+Exit code 0.
+Passed: 50, Failed: 0, Skipped: 0, Total: 50.
+
+Semantic assertion:
+The full WebGlLib test suite remains green after the import lifecycle change.
+
+Command:
+dotnet test tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj --no-restore --filter FullyQualifiedName~WebGlRunBrowserApplyAdapterTests
+
+Result:
+Exit code 0.
+Passed: 11, Failed: 0, Skipped: 0, Total: 11.
+
+Semantic assertion:
+The run-layer browser adapter still passes its focused tests against the WebGlSceneView import boundary and document-import runtime options path.

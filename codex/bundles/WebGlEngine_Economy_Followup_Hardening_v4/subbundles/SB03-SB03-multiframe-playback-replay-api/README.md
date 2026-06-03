@@ -1,5 +1,7 @@
 # SB03 Multi-frame playback and replay API
 
+Status: Completed.
+
 ## Objective
 
 Implement the next hardening step for the WebGL/Economy engine foundation.
@@ -42,3 +44,11 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Closure result
+
+- Changed files: WebGlRun browser adapter source, WebGlRunLib README, browser adapter tests, SB03 proof artifacts, execution-report rows.
+- Test/build/audit commands: failing-first legacy overload test, passing explicit multi-frame adapter tests, full WebGlRunLib tests, source assertions, boundary audit, anti-stub audit.
+- Proof artifact paths: `bundle://proof/SB03/manifest.md`, `bundle://proof/SB03/semantic-invariants.md`, `bundle://proof/SB03/transcripts/`.
+- Open risks: SB04 must consume deterministic replay in the Economy UI.
+- Public API changed: added `ApplyPlaybackAsync(WebGlRunPlaybackResult)` and `WebGlRunBrowserPlaybackApplyResult`; legacy playback overload remains for single-frame compatibility and now fails closed for multi-frame inputs.

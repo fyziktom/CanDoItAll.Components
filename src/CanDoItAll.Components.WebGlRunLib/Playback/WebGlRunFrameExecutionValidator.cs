@@ -15,7 +15,7 @@ internal static class WebGlRunFrameExecutionValidator
             result.Diagnostics["sourceFrameId"] = sourceFrameId;
         }
 
-        foreach (WebGlRunActionStage stage in frame.Stages)
+        foreach (WebGlRunActionStage stage in WebGlRunStageOrderingPolicy.OrderStages(frame))
         {
             if (stage.Metadata.TryGetValue("sourceStageId", out string? sourceStageId) &&
                 !string.IsNullOrWhiteSpace(sourceStageId))
@@ -49,7 +49,7 @@ internal static class WebGlRunFrameExecutionValidator
 
     public static void ApplyFrameObjectState(WebGlRunFrame frame, HashSet<string> knownObjectIds)
     {
-        foreach (WebGlRunActionStage stage in frame.Stages)
+        foreach (WebGlRunActionStage stage in WebGlRunStageOrderingPolicy.OrderStages(frame))
         {
             foreach (WebGlRunFramePatch patch in stage.ScenePatches)
             {
@@ -66,7 +66,7 @@ internal static class WebGlRunFrameExecutionValidator
     public static IReadOnlyList<string> ResolveFailedStageIds(WebGlRunFrame frame, WebGlRunExecutionDiagnostics diagnostics)
     {
         var failedIds = new List<string>();
-        foreach (WebGlRunActionStage stage in frame.Stages)
+        foreach (WebGlRunActionStage stage in WebGlRunStageOrderingPolicy.OrderStages(frame))
         {
             bool stageFailed = stage.Motions.Any(motion => diagnostics.FailedMotionIds.Contains(motion.MotionId, StringComparer.Ordinal)) ||
                                stage.ScenePatches.Any(patch => diagnostics.FailedPatchIds.Contains(patch.Id, StringComparer.Ordinal)) ||

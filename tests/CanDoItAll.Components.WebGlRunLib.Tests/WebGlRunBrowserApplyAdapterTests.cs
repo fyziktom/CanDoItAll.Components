@@ -188,6 +188,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         });
 
         Assert.False(result.Success);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.BatchFailed, result.FailureReason);
         Assert.Contains("runtime rejected stage", result.Errors);
         Assert.Contains("stage failed", result.RuntimeSnapshot.RuntimeErrors);
         Assert.Single(runtime.AppliedBatches);
@@ -207,6 +208,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         });
 
         Assert.False(result.Success);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.ResetFailed, result.FailureReason);
         Assert.Contains(result.Errors, error => error.Contains("no initial scene", StringComparison.OrdinalIgnoreCase));
         Assert.Empty(runtime.ImportedScenes);
         Assert.Empty(runtime.AppliedBatches);
@@ -234,6 +236,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         });
 
         Assert.False(result.Success);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.ResetFailed, result.FailureReason);
         Assert.Contains("import failed", result.Errors);
         Assert.Single(runtime.ImportedScenes);
         Assert.Empty(runtime.AppliedBatches);
@@ -257,8 +260,94 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         });
 
         Assert.False(result.Success);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.PreApplyValidationFailed, result.FailureReason);
         Assert.Empty(runtime.ImportedScenes);
         Assert.Empty(runtime.AppliedBatches);
+    }
+
+    [Fact]
+    public async Task Adapter_rejects_legacy_playback_apply_for_multiframe_results()
+    {
+        var runtime = new RecordingBrowserRuntime();
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime, new() { Scene = new() { SceneId = "scene.initial" } });
+        var playback = new WebGlRunPlaybackResult
+        {
+            TargetFrameIndex = 2,
+            RequiresSceneReset = true,
+            FramesToApply =
+            {
+                Frame(1, "stage.first"),
+                Frame(2, "stage.second")
+            }
+        };
+
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(playback);
+
+        Assert.False(result.Success);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.MultiFramePlaybackRequiresExplicitApply, result.FailureReason);
+        Assert.Empty(runtime.ImportedScenes);
+        Assert.Empty(runtime.AppliedBatches);
+    }
+
+    [Fact]
+    public async Task Adapter_apply_playback_applies_reset_once_and_frames_in_order()
+    {
+        var runtime = new RecordingBrowserRuntime();
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime, new() { Scene = new() { SceneId = "scene.initial" } });
+        var playback = new WebGlRunPlaybackResult
+        {
+            RequestedCommand = WebGlRunPlaybackCommandKinds.Seek,
+            TargetFrameIndex = 2,
+            RequiresSceneReset = true,
+            FramesToApply =
+            {
+                Frame(1, "stage.first"),
+                Frame(2, "stage.second")
+            }
+        };
+
+        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback);
+
+        Assert.True(result.Success);
+        Assert.True(result.AppliedInitialScene);
+        Assert.Single(runtime.ImportedScenes);
+        Assert.Equal(2, runtime.AppliedBatches.Count);
+        Assert.Equal([1, 2], result.FrameResults.Select(frame => frame.FrameIndex).ToArray());
+        Assert.Equal(["stage.first", "stage.second"], runtime.AppliedBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
+    }
+
+    [Fact]
+    public async Task Adapter_apply_playback_stops_on_first_failed_frame()
+    {
+        var runtime = new RecordingBrowserRuntime();
+        runtime.BatchResults.Enqueue(new() { Success = true });
+        runtime.BatchResults.Enqueue(new()
+        {
+            Success = false,
+            CommandId = "run-frame:2",
+            Errors = { "frame two failed" }
+        });
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime);
+        var playback = new WebGlRunPlaybackResult
+        {
+            RequestedCommand = WebGlRunPlaybackCommandKinds.Seek,
+            TargetFrameIndex = 3,
+            FramesToApply =
+            {
+                Frame(1, "stage.first"),
+                Frame(2, "stage.second"),
+                Frame(3, "stage.third")
+            }
+        };
+
+        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback);
+
+        Assert.False(result.Success);
+        Assert.Equal(2, result.FailedFrameIndex);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.BatchFailed, result.FailureReason);
+        Assert.Equal(2, runtime.AppliedBatches.Count);
+        Assert.Equal([1, 2], result.FrameResults.Select(frame => frame.FrameIndex).ToArray());
+        Assert.Contains("frame two failed", result.Errors);
     }
 
     [Fact]
@@ -306,6 +395,21 @@ public sealed class WebGlRunBrowserApplyAdapterTests
             DurationSeconds = 1
         };
 
+    private static WebGlRunFrame Frame(long index, string stageId)
+        => new()
+        {
+            Index = index,
+            TimeSeconds = index,
+            Stages =
+            {
+                new()
+                {
+                    StageId = stageId,
+                    Motions = { Motion($"motion.{stageId}", "actor") }
+                }
+            }
+        };
+
     private sealed class RecordingBrowserRuntime : IWebGlRunBrowserRuntime
     {
         public List<WebGlSceneDocument> ImportedScenes { get; } = [];
@@ -315,6 +419,8 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         public WebGlSceneCommandResult ImportResult { get; set; } = new() { Success = true };
 
         public WebGlSceneCommandBatchResult BatchResult { get; set; } = new() { Success = true };
+
+        public Queue<WebGlSceneCommandBatchResult> BatchResults { get; } = [];
 
         public WebGlRuntimeDiagnostics Diagnostics { get; set; } = new();
 
@@ -331,7 +437,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
             CancellationToken cancellationToken = default)
         {
             AppliedBatches.Add(batch);
-            return ValueTask.FromResult<WebGlSceneCommandBatchResult?>(BatchResult);
+            return ValueTask.FromResult<WebGlSceneCommandBatchResult?>(BatchResults.Count > 0 ? BatchResults.Dequeue() : BatchResult);
         }
 
         public ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)

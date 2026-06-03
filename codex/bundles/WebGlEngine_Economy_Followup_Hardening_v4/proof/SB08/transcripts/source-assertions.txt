@@ -1,0 +1,12 @@
+﻿SB08 source assertions
+
+Command: rg -n 'MaxSourceProvenanceKeyLength|MaxSourceProvenanceValueLength|source\.(visualActionId|eventId|simulationFrameId|inputPackHash|kind|domain|traceId|sequence|parentId)' src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs
+Result: found MaxSourceProvenanceKeyLength = 96, MaxSourceProvenanceValueLength = 512, and the v2 allowlist keys source.visualActionId, source.eventId, source.simulationFrameId, source.inputPackHash, source.kind, source.domain, source.traceId, source.sequence, and source.parentId.
+
+Command: rg -n 'source\.(experimentId|runId|frameHash|bridge|scenarioId)' src/CanDoItAll.Economy.Simulation.WebGlBridge -g '*.cs'
+Result: no matches, exit code 1 as expected. The bridge no longer emits those old run-layer source keys.
+
+Command: rg -n 'missing-command-source-(visual-action-id|event-id|simulation-frame-id|input-pack-hash)' src/CanDoItAll.Economy.Simulation.WebGlBridge/EconomyWebGlRunValidator.cs
+Result: found all four required command provenance diagnostic codes in EconomyWebGlRunValidator.
+
+Semantic assertion: Components has the v2 provenance allowlist and limits; Economy bridge source no longer emits old run-layer source keys; Economy validator still requires every command to cite visualActionId, eventId, simulationFrameId, and inputPackHash.

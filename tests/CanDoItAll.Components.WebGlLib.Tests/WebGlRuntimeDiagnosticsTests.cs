@@ -123,6 +123,72 @@ public sealed class WebGlRuntimeDiagnosticsTests
     }
 
     [Fact]
+    public void Runtime_budget_profiles_define_100_500_and_1000_plus_scene_budgets()
+    {
+        WebGlRuntimeBudgetOptions scene100 = WebGlRuntimeBudgetProfiles.Scene100();
+        WebGlRuntimeBudgetOptions scene500 = WebGlRuntimeBudgetProfiles.Scene500();
+        WebGlRuntimeBudgetOptions scene1000Plus = WebGlRuntimeBudgetProfiles.Scene1000Plus();
+
+        Assert.Equal("scene-100", scene100.Profile);
+        Assert.Equal(100, scene100.MaxSceneObjects);
+        Assert.Equal(128, scene100.MaxActiveMotions);
+        Assert.Equal(256, scene100.MaxQueuedMotions);
+        Assert.Equal(64, scene100.MaxQueuedCommandStages);
+        Assert.Equal(100_000, scene100.MaxEstimatedTriangles);
+
+        Assert.Equal("scene-500", scene500.Profile);
+        Assert.Equal(500, scene500.MaxSceneObjects);
+        Assert.Equal(500, scene500.MaxActiveMotions);
+        Assert.Equal(1_000, scene500.MaxQueuedMotions);
+        Assert.Equal(128, scene500.MaxQueuedCommandStages);
+        Assert.Equal(250_000, scene500.MaxEstimatedTriangles);
+
+        Assert.Equal("scene-1000-plus", scene1000Plus.Profile);
+        Assert.Equal(1_200, scene1000Plus.MaxSceneObjects);
+        Assert.Equal(1_000, scene1000Plus.MaxActiveMotions);
+        Assert.Equal(2_000, scene1000Plus.MaxQueuedMotions);
+        Assert.Equal(256, scene1000Plus.MaxQueuedCommandStages);
+        Assert.Equal(500_000, scene1000Plus.MaxEstimatedTriangles);
+    }
+
+    [Fact]
+    public void Runtime_diagnostics_round_trips_large_scene_performance_budget_counters()
+    {
+        const string json = """
+            {
+              "batchDurationMs": 37,
+              "fullSceneRebuildCount": 1,
+              "transformOnlyPatchCount": 1000,
+              "assetCacheEntryCount": 24,
+              "disposedTemplateCount": 6,
+              "assetCachePendingDisposalCount": 0,
+              "assetCacheDisposedPromiseCount": 6,
+              "queuedMotionCount": 750,
+              "maxMotionQueueLength": 12,
+              "queuedCommandStageCount": 15,
+              "runtimeBudgetProfile": "scene-1000-plus",
+              "runtimeBudgetWarningCount": 0
+            }
+            """;
+
+        var diagnostics = JsonSerializer.Deserialize<WebGlRuntimeDiagnostics>(json, JsonOptions);
+
+        Assert.NotNull(diagnostics);
+        Assert.Equal(37, diagnostics.BatchDurationMs);
+        Assert.Equal(1, diagnostics.FullSceneRebuildCount);
+        Assert.Equal(1000, diagnostics.TransformOnlyPatchCount);
+        Assert.Equal(24, diagnostics.AssetCacheEntryCount);
+        Assert.Equal(6, diagnostics.DisposedTemplateCount);
+        Assert.Equal(0, diagnostics.AssetCachePendingDisposalCount);
+        Assert.Equal(6, diagnostics.AssetCacheDisposedPromiseCount);
+        Assert.Equal(750, diagnostics.QueuedMotionCount);
+        Assert.Equal(12, diagnostics.MaxMotionQueueLength);
+        Assert.Equal(15, diagnostics.QueuedCommandStageCount);
+        Assert.Equal("scene-1000-plus", diagnostics.RuntimeBudgetProfile);
+        Assert.Equal(0, diagnostics.RuntimeBudgetWarningCount);
+    }
+
+    [Fact]
     public void Runtime_diagnostics_deserializes_browser_resource_cache_capture_shape()
     {
         const string json = """

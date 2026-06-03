@@ -42,3 +42,20 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution record
+
+Status: completed.
+
+Changed files are recorded in `../../proof/SB07/changed-file-hashes.md`.
+
+Proof artifacts:
+- `../../proof/SB07/transcripts/failing-first.txt`
+- `../../proof/SB07/transcripts/passing-focused-tests.txt`
+- `../../proof/SB07/transcripts/passing-tests.txt`
+- `../../proof/SB07/transcripts/source-assertions.txt`
+- `../../proof/SB07/transcripts/boundary-audit.txt`
+
+Public API change: `IEconomySimulationSandboxSessionService` now exposes async load, scenario-load, project, and snapshot methods alongside existing export/import async methods. `EconomySimulationSandboxSessionExport` now includes portable source and snapshot-reference metadata while retaining legacy path fields.
+
+Open risks: sync wrappers remain available for simple hosts and tests, but snapshot persistence with a configured async store still requires `ExportSessionAsync`/`ImportSessionAsync`.

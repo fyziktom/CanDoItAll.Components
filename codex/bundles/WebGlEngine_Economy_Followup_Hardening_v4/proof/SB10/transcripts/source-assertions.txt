@@ -1,0 +1,27 @@
+SB10 source assertion transcript
+
+Command:
+rg -n "externalImportSceneKey|MarkExternalImportApplied|ShouldKeepExternalImport|ClearExternalImportLifecycle|ImportScene(Document)?(Detailed)?Async" src\CanDoItAll.Components.WebGlLib\Components\Scene\WebGlSceneView.razor tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs src\CanDoItAll.Components.WebGlLib\README.md
+
+Result:
+Exit code 0.
+Relevant hits:
+- `WebGlSceneView.razor` declares `externalImportSceneKey`, `externalImportReplacedParameterKey`, and `externalImportReplacedSceneId`.
+- `OnParametersSet` calls `ShouldKeepExternalImport` before accepting parameter payloads.
+- Successful `ImportSceneAsync`, `ImportSceneDetailedAsync`, `ImportSceneDocumentAsync`, and `ImportSceneDocumentDetailedAsync` calls invoke `MarkExternalImportApplied`.
+- Successful parameter-driven update calls `ClearExternalImportLifecycle`.
+- `README.md` documents that external import updates browser runtime and component-local lifecycle state, not parent-owned parameter state.
+- `WebGlSceneViewExternalImportLifecycleTests` verifies stale replaced parameters do not call JS update, while a new scene id can still update.
+
+Command:
+rg -n "ImportSceneDocumentDetailedAsync|WebGlSceneViewBrowserRuntime|ImportSceneAsync\(" src\CanDoItAll.Components.WebGlRunLib tests\CanDoItAll.Components.WebGlRunLib.Tests -g "*.cs"
+
+Result:
+Exit code 0.
+Relevant hits:
+- `WebGlSceneViewBrowserRuntime.ImportSceneAsync` calls `sceneView.ImportSceneDocumentDetailedAsync(sceneDocument)`.
+- `WebGlRunBrowserApplyAdapter` imports scene-reset documents through `IWebGlRunBrowserRuntime.ImportSceneAsync`.
+- `WebGlRunBrowserApplyAdapterTests` keep fake-runtime coverage for scene document import paths.
+
+Semantic assertion:
+All public WebGlSceneView external import methods now update component lifecycle bookkeeping on successful import. The run-layer browser runtime continues to reach the document-detailed import method, so browser replay/reset imports benefit from the same lifecycle hardening.

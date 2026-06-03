@@ -112,16 +112,19 @@ public sealed class WebGlRunValidatorTests
     }
 
     [Fact]
-    public void Run_document_validator_allows_bounded_source_identifier_and_hash_provenance()
+    public void Run_document_validator_allows_typed_source_provenance_with_opaque_values()
     {
+        string maxLengthOpaqueValue = new('x', 512);
         var document = new WebGlRunDocument
         {
             RunId = new WebGlRunId("run.source-provenance"),
             InitialScene = SceneDocument(),
             Metadata =
             {
-                ["source.sourceId"] = "economy-market-run",
-                ["source.hash"] = "sha256:123"
+                ["source.kind"] = "economy-market-run",
+                ["source.domain"] = "economy",
+                ["source.traceId"] = maxLengthOpaqueValue,
+                ["source.inputPackHash"] = "sha256:123"
             },
             Timeline =
             {
@@ -134,7 +137,8 @@ public sealed class WebGlRunValidatorTests
                         TimeSeconds = 0,
                         Metadata =
                         {
-                            ["source.simulationFrameId"] = "market-tick"
+                            ["source.simulationFrameId"] = "market-tick",
+                            ["source.sequence"] = "0"
                         },
                         Stages =
                         {
@@ -144,8 +148,10 @@ public sealed class WebGlRunValidatorTests
                                 StageIndex = 0,
                                 Metadata =
                                 {
+                                    ["source.visualActionId"] = "action.market-clearing",
                                     ["source.eventId"] = "market-clearing",
-                                    ["source.inputPackHash"] = "sha256:456"
+                                    ["source.inputPackHash"] = "sha256:456",
+                                    ["source.parentId"] = "market-tick"
                                 }
                             }
                         }
@@ -157,6 +163,32 @@ public sealed class WebGlRunValidatorTests
         WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
 
         Assert.True(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
+    }
+
+    [Fact]
+    public void Run_document_validator_rejects_malformed_source_provenance_keys_and_oversized_values()
+    {
+        var document = new WebGlRunDocument
+        {
+            RunId = new WebGlRunId("run.source-provenance-invalid"),
+            InitialScene = SceneDocument(),
+            Metadata =
+            {
+                ["source.sourceId"] = "legacy-id",
+                ["source.hash"] = "sha256:legacy",
+                [$"source.{new string('x', 100)}"] = "oversized-key",
+                ["source.traceId"] = new string('x', 513)
+            },
+            Timeline = { FrameRate = 1 }
+        };
+
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+
+        Assert.False(validation.IsValid);
+        Assert.Contains(validation.Errors, error => error.Contains("source.sourceId", StringComparison.Ordinal));
+        Assert.Contains(validation.Errors, error => error.Contains("source.hash", StringComparison.Ordinal));
+        Assert.Contains(validation.Errors, error => error.Contains("96 characters", StringComparison.Ordinal));
+        Assert.Contains(validation.Errors, error => error.Contains("512 characters", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -264,16 +296,19 @@ public sealed class WebGlRunValidatorTests
     }
 
     [Fact]
-    public void Action_plan_validator_allows_bounded_source_identifier_and_hash_provenance()
+    public void Action_plan_validator_allows_typed_source_provenance_with_opaque_values()
     {
+        string maxLengthOpaqueValue = new('x', 512);
         var plan = new WebGlRunActionPlan
         {
             FrameRate = 1,
             ActionId = "plan.source-provenance",
             Metadata =
             {
-                ["source.sourceId"] = "economy-market-run",
-                ["source.hash"] = "sha256:123"
+                ["source.kind"] = "economy-market-run",
+                ["source.domain"] = "economy",
+                ["source.traceId"] = maxLengthOpaqueValue,
+                ["source.inputPackHash"] = "sha256:123"
             },
             Actions =
             [
@@ -283,7 +318,10 @@ public sealed class WebGlRunValidatorTests
                     ActionKind = WebGlRunActionKinds.Wait,
                     Metadata =
                     {
-                        ["source.eventId"] = "market-clearing"
+                        ["source.visualActionId"] = "action.market-clearing",
+                        ["source.eventId"] = "market-clearing",
+                        ["source.simulationFrameId"] = "market-tick",
+                        ["source.inputPackHash"] = "sha256:123"
                     }
                 }
             ],
@@ -293,7 +331,10 @@ public sealed class WebGlRunValidatorTests
                 {
                     Metadata =
                     {
-                        ["source.eventId"] = "ledger-adjustment"
+                        ["source.visualActionId"] = "action.ledger-adjustment",
+                        ["source.eventId"] = "ledger-adjustment",
+                        ["source.simulationFrameId"] = "ledger-tick",
+                        ["source.inputPackHash"] = "sha256:123"
                     }
                 }
             },
@@ -305,7 +346,10 @@ public sealed class WebGlRunValidatorTests
                     ObjectId = "actor",
                     Metadata =
                     {
-                        ["source.eventId"] = "market-clearing"
+                        ["source.visualActionId"] = "action.market-clearing",
+                        ["source.eventId"] = "market-clearing",
+                        ["source.simulationFrameId"] = "market-tick",
+                        ["source.inputPackHash"] = "sha256:123"
                     }
                 }
             }

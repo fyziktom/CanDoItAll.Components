@@ -41,3 +41,36 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution status
+
+Status: Completed
+
+## Implementation notes
+
+- Replaced the sandbox page's single-frame browser apply path with an explicit deterministic replay builder.
+- Removed the mutable `BrowserSceneWasReset` field so reset state is derived from `WebGlRunBrowserPlaybackApplyResult`.
+- Added UI diagnostics for `appliedFrameIndexes`, `requiresSceneReset`, `runnerState`, and `failureReason`.
+- Added a component test proving Last replays every frame from the initial scene through the target delta frame.
+
+## Refactor gate result
+
+- Changed files:
+  - `C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor`
+  - `C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomySimulationSandboxComponentTests.cs`
+- Commands:
+  - `dotnet test C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\CanDoItAll.Economy.Tests.csproj --filter "FullyQualifiedName~EconomySimulationSandboxPage_LastReplaysAllDeltaFramesFromInitialScene"` failed before the page refactor and passed after it.
+  - `dotnet test C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\CanDoItAll.Economy.Tests.csproj --filter "FullyQualifiedName~EconomySimulationSandboxComponentTests"` passed 2/2 tests.
+  - Browser route proof exercised `/economy/simulation-sandbox` controls: Step, Last, First, Apply frame, Snapshot.
+- Proof artifact paths:
+  - `proof/SB04/transcripts/failing-first.txt`
+  - `proof/SB04/transcripts/passing-component-test.txt`
+  - `proof/SB04/transcripts/component-class-tests.txt`
+  - `proof/SB04/transcripts/source-assertions.txt`
+  - `proof/SB04/transcripts/boundary-audit.txt`
+  - `proof/SB04/changed-file-hashes.md`
+  - `proof/SB04/browser/runtime-diagnostics.json`
+  - `proof/SB04/browser/console-review.json`
+  - `proof/SB04/browser/browser-proof-summary.md`
+- Open risks: The deterministic UI path intentionally replays from initial scene on every apply for correctness. If future large timelines make this too expensive, the next optimization must prove frame absoluteness or add checkpointed replay.
+- Public API change: None.

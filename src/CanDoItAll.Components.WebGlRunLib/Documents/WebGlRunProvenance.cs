@@ -58,8 +58,8 @@ public sealed class WebGlRunDocumentProvenanceValidator
     {
         ArgumentNullException.ThrowIfNull(source);
         var result = new WebGlRunDocumentProvenanceValidationResult();
-        CheckValue("source.sourceKind", source.SourceKind, result);
-        CheckValue("source.sourceId", source.SourceId, result);
+        CheckValue("source.kind", source.SourceKind, result);
+        CheckValue("source.traceId", source.SourceId, result);
         CheckMetadata("source.metadata", source.Metadata, result);
 
         foreach (InputDocumentRef input in source.Inputs)

@@ -1,7 +1,7 @@
 # CanDoItAll WebGL Engine + Economy Follow-up Hardening Bundle v4
 
 Prepared date: 2026-06-02
-Stage: prepared
+Stage: completed
 Profile: initiative / post-v3 hardening and refactoring
 Target repositories:
 
@@ -104,3 +104,13 @@ Expected result:
 ```text
 Bundle validation passed for stage=prepared, profile=initiative, subbundles=12
 ```
+
+## Completed-stage validation
+
+Final closure completed on 2026-06-03.
+
+- Final execution report: `reviews/01-execution-report.md`.
+- Final proof: `proof/SB12/manifest.md`, `proof/SB12/semantic-invariants.md`, and `proof/SB12/transcripts/`.
+- Completed-stage validator: `python scripts/validate_bundle.py --stage completed --profile initiative`.
+- Proof integrity validator: `python scripts/audit_proof_integrity.py --bundle-root .`.
+- Result: all subbundles completed; final validators passed; remaining known warnings are documented in the execution report.

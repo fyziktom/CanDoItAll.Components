@@ -253,7 +253,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
     private void UpdateRuntimeState(WebGlRunFrame frame, int queuedStageCount)
     {
         State.CurrentCommandBatchId = $"run-frame:{frame.Index.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
-        State.CurrentStageIds = [.. frame.Stages.Select(static stage => stage.StageId).Where(static id => !string.IsNullOrWhiteSpace(id))];
+        State.CurrentStageIds = [.. WebGlRunStageOrderingPolicy.OrderStages(frame).Select(static stage => stage.StageId).Where(static id => !string.IsNullOrWhiteSpace(id))];
         State.CurrentStageId = State.CurrentStageIds.FirstOrDefault() ?? string.Empty;
         State.CurrentActionIds = [.. ResolveCurrentActionIds(frame).Distinct(StringComparer.Ordinal)];
         State.QueuedStageCount = queuedStageCount;
@@ -261,7 +261,7 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
 
     private static IEnumerable<string> ResolveCurrentActionIds(WebGlRunFrame frame)
     {
-        foreach (WebGlRunActionStage stage in frame.Stages)
+        foreach (WebGlRunActionStage stage in WebGlRunStageOrderingPolicy.OrderStages(frame))
         {
             foreach (string? value in new[] { stage.SequenceId, stage.ParentActionId, stage.Metadata.GetValueOrDefault("actionId") })
             {

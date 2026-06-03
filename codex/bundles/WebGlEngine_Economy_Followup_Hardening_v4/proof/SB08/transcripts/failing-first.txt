@@ -1,0 +1,10 @@
+﻿SB08 failing-first transcript
+
+Command: dotnet test tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj --filter FullyQualifiedName~WebGlRunValidatorTests
+Result: failed before implementation. The new v2 provenance tests failed because source.kind, source.domain, source.traceId, source.sequence, and source.parentId were unsupported, and a 512-character opaque source value still exceeded the old 256-character cap. The malformed-key test also showed legacy source.sourceId/source.hash were not yet rejected.
+Observed excerpt: Failed: 3, Passed: 8, Total: 11 - CanDoItAll.Components.WebGlRunLib.Tests.dll (net10.0).
+
+Command attempted for Economy bridge red proof: dotnet test tests\CanDoItAll.Economy.Tests\CanDoItAll.Economy.Tests.csproj --filter FullyQualifiedName~EconomyWebGlBridgeTests.ProjectorCreatesInitialSceneObjectsLinksAndTraceableCommandStages|FullyQualifiedName~EconomyWebGlBridgeStrictMappingTests.ValidatorRejectsEveryStrictExecutionGap
+Result: timed out during restore/build, so the red proof is taken from the Components generic validator test slice above.
+
+Semantic assertion: the pre-implementation generic validator did not implement provenance policy v2: it allowed old source identifiers/hashes, rejected new allowlisted keys, and enforced the old value-size limit.

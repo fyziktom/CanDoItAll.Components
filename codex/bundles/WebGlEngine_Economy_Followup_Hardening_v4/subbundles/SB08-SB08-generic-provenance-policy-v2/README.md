@@ -42,3 +42,12 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution status
+
+Status: completed.
+
+- Changed files: see `../../proof/SB08/changed-file-hashes.md`.
+- Test/build/audit commands: see `../../proof/SB08/transcripts/`.
+- Public API changed: provenance policy was tightened through generic validation contracts; Economy-specific interpretation remains in the Economy bridge/validators.
+- Open risks: no SB08 blocker.

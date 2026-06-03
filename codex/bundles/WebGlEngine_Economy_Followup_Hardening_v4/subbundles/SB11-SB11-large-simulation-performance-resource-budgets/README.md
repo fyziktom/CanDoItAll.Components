@@ -41,3 +41,14 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution status
+
+Status: completed.
+
+- Changed files: see `../../proof/SB11/changed-file-hashes.md`.
+- Test/build/audit commands: see `../../proof/SB11/transcripts/`.
+- Browser proof: `../../proof/SB11/browser/performance-proof-diagnostics.json` and `../../proof/SB11/browser/performance-proof-browser.png`.
+- Public API changed: additive `WebGlRuntimeBudgetProfiles` helper with `Scene100()`, `Scene500()`, and `Scene1000Plus()`.
+- Migration: large-scene callers should bump `WebGlSceneModel.Revision` or `WebGlSceneUiState.Revision` for content changes and set `WebGlRuntimeOptions.RuntimeKey` for runtime option changes.
+- Open risks: no SB11 blocker. High-GLB proof used the practical model diagnostics path; primitive browser stress covered live rendering and diagnostics.

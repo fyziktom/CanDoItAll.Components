@@ -41,3 +41,13 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution status
+
+Status: completed.
+
+- Changed files: see `../../proof/SB10/changed-file-hashes.md`.
+- Test/build/audit commands: see `../../proof/SB10/transcripts/`.
+- Browser proof: `../../proof/SB10/browser/run-playback-after-import-step-rerender.png`.
+- Public API changed: no breaking API change; external imports now mark component lifecycle state consistently.
+- Open risks: no SB10 blocker.

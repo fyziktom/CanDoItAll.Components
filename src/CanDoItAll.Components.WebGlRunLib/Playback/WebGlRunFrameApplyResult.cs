@@ -49,11 +49,7 @@ public sealed class WebGlRunFrameApplyResult
             BatchingPolicy = frame.Metadata.GetValueOrDefault("batchingPolicy", WebGlSceneBatchingPolicies.PreserveOrder),
             Stages =
             [
-                .. frame.Stages
-                    .OrderBy(static stage => stage.StartsAtSeconds)
-                    .ThenBy(static stage => stage.StageIndex < 0 ? int.MaxValue : stage.StageIndex)
-                    .ThenBy(static stage => stage.OrderIndex < 0 ? int.MaxValue : stage.OrderIndex)
-                    .ThenBy(static stage => stage.StageId, StringComparer.Ordinal)
+                .. WebGlRunStageOrderingPolicy.OrderStages(frame)
                     .Select(stage => new WebGlSceneCommandBatchStage
                     {
                         StageId = stage.StageId,

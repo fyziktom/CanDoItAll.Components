@@ -14,15 +14,15 @@ Scene documents are intentionally storage-neutral. They may preserve a generic s
 
 ## Domain Provenance Boundary
 
-`source.*` metadata is the only generic provenance escape hatch. Consumers may use those metadata keys to preserve upstream ids, hashes, event ids, scenario ids, or bridge names, even when the values come from a domain package. WebGlRunLib stores and reports that provenance but does not interpret it.
+`source.*` metadata is the only generic provenance escape hatch, but it is allowlisted rather than open-ended. WebGlRunLib accepts `source.visualActionId`, `source.eventId`, `source.simulationFrameId`, `source.inputPackHash`, `source.kind`, `source.domain`, `source.traceId`, `source.sequence`, and `source.parentId`. Keys are capped at 96 characters and values at 512 characters. Values are opaque strings: WebGlRunLib stores and reports them, but it does not interpret domain content.
 
 Domain provenance is different from domain semantic leakage. Generic contract fields must stay domain-neutral: run ids, action kinds, action ids, stage ids, barrier policies, action parameters, non-source metadata, and public API names must not encode domain-specific semantics. `WebGlRunDocumentValidator` and `WebGlRunActionPlanValidator` therefore reject obvious domain terms in those generic fields while allowing `source.*` metadata values to pass through unchanged.
 
-Domain bridge packages should move source references into `source.*` metadata before handing a run document to the generic validator stack. Plain metadata such as `bridge`, `eventKind`, or `scenarioId` is generic only when its value is domain-neutral; domain-specific values belong under `source.bridge`, `source.eventKind`, `source.scenarioId`, or another `source.*` provenance key.
+Domain bridge packages should map source references onto the allowlisted keys before handing a run document to the generic validator stack. For example, an upstream scenario id can be represented as `source.parentId`, a bridge-local trace as `source.traceId`, and an input-pack hash as `source.inputPackHash`. Plain metadata such as `bridge`, `eventKind`, or `scenarioId` is generic only when its value is domain-neutral; domain-specific values belong in the bridge package or under one of the allowed provenance keys.
 
 ## Dynamic Object References
 
-WebGlRun playback may reference objects introduced by earlier scene patches. Validators should evaluate object ids against an evolving scene object set: start from the initial scene, apply object additions/removals from accepted patches in frame and stage order, then validate later motions, object patches, and links against the updated set.
+WebGlRun playback may reference objects introduced by earlier scene patches. Validators should evaluate object ids against an evolving scene object set: start from the initial scene, apply object additions/removals from accepted patches in frame order and `WebGlRunStageOrderingPolicy` order, then validate later motions, object patches, and links against the updated set. The shared stage policy orders by `StartsAtSeconds`, effective `StageIndex`, effective `OrderIndex`, and `StageId`, where negative indexes sort last.
 
 Within a single command stage, motions are validated before patch-created objects become known. This keeps stage batching deterministic: a stage may add an object and link it inside the same patch, but a motion to that new object belongs in a later stage or frame. Domain bridge validators should follow the same policy so dynamic scenarios fail early with structured diagnostics instead of relying on browser runtime failures.
 

@@ -165,7 +165,8 @@ public sealed class WebGlRunDocumentValidator
 
 internal static class WebGlRunGenericBoundaryPolicy
 {
-    private const int MaxSourceProvenanceValueLength = 256;
+    private const int MaxSourceProvenanceKeyLength = 96;
+    private const int MaxSourceProvenanceValueLength = 512;
 
     public static bool IsSourceProvenanceKey(string key)
         => key.StartsWith("source.", StringComparison.OrdinalIgnoreCase);
@@ -174,7 +175,12 @@ internal static class WebGlRunGenericBoundaryPolicy
     {
         if (!AllowedSourceProvenanceKeys.Contains(key))
         {
-            errors.Add($"{scope} uses unsupported source provenance key '{key}'. Use typed source ids or hashes instead of arbitrary domain metadata.");
+            errors.Add($"{scope} uses unsupported source provenance key '{key}'. Use the generic source provenance allowlist instead of arbitrary domain metadata.");
+        }
+
+        if (key.Length > MaxSourceProvenanceKeyLength)
+        {
+            errors.Add($"{scope} exceeds the source provenance key length limit of {MaxSourceProvenanceKeyLength} characters.");
         }
 
         foreach (string term in DisallowedSourcePolicyTerms)
@@ -210,17 +216,14 @@ internal static class WebGlRunGenericBoundaryPolicy
 
     public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
     {
-        "source.documentId",
         "source.eventId",
-        "source.frameHash",
-        "source.hash",
+        "source.domain",
         "source.inputPackHash",
-        "source.path",
-        "source.runId",
+        "source.kind",
+        "source.parentId",
+        "source.sequence",
         "source.simulationFrameId",
-        "source.sourceId",
-        "source.sourceKind",
-        "source.stageId",
+        "source.traceId",
         "source.visualActionId"
     };
 

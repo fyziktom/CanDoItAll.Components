@@ -20,3 +20,5 @@ dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Compone
 ```
 
 Use a fresh local package source, a unique proof version, and an isolated `NUGET_PACKAGES` folder when proving package consumption. This prevents an older package from a global cache or private feed from shadowing the package that was just packed.
+
+Restore again without `UseComponentsWebGlLibPackage=true` before switching back to the project-reference build. Static web asset restore metadata is mode-specific, so reusing package-mode assets with a project-reference build can make the same WebGlLib assets appear twice.

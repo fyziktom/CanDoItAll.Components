@@ -41,3 +41,12 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution status
+
+Status: completed.
+
+- Changed files: see `../../proof/SB09/changed-file-hashes.md`.
+- Test/build/audit commands: see `../../proof/SB09/transcripts/`.
+- Public API changed: additive `WebGlRunStageOrderingPolicy` shared ordering helper.
+- Open risks: no SB09 blocker.

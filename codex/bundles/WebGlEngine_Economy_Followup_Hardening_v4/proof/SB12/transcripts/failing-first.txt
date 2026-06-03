@@ -1,0 +1,75 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260603065335
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_Hardening_v4'
+$log = Join-Path $bundle 'proof\SB12\transcripts\boundary-audits.txt'
+$ErrorActionPreference = 'Continue'
+Start-Transcript -Path $log -Force
+Write-Output 'SB12 final boundary audits'
+Write-Output 'Command: npm run webgllib:audit-boundary'
+npm run webgllib:audit-boundary
+$exit1 = $LASTEXITCODE
+Write-Output "ExitCode webgllib:audit-boundary: $exit1"
+Write-Output 'Command: npm run webglrunlib:audit-boundary'
+npm run webglrunlib:audit-boundary
+$exit2 = $LASTEXITCODE
+Write-Output "ExitCode webglrunlib:audit-boundary: $exit2"
+Write-Output 'Command: npm run webgllib:audit-scene-runtime'
+npm run webgllib:audit-scene-runtime
+$exit3 = $LASTEXITCODE
+Write-Output "ExitCode webgllib:audit-scene-runtime: $exit3"
+Write-Output 'Command: npm run webgllib:audit-command-batch-parity'
+npm run webgllib:audit-command-batch-parity
+$exit4 = $LASTEXITCODE
+Write-Output "ExitCode webgllib:audit-command-batch-parity: $exit4"
+Write-Output 'Command: npm run webgllib:audit-motion-queue'
+npm run webgllib:audit-motion-queue
+$exit5 = $LASTEXITCODE
+Write-Output "ExitCode webgllib:audit-motion-queue: $exit5"
+Write-Output 'Command: npm run webgllib:audit-stage-runner'
+npm run webgllib:audit-stage-runner
+$exit6 = $LASTEXITCODE
+Write-Output "ExitCode webgllib:audit-stage-runner: $exit6"
+Stop-Transcript
+if (($exit1, $exit2, $exit3, $exit4, $exit5, $exit6) -contains 1) { exit 1 }
+if (($exit1, $exit2, $exit3, $exit4, $exit5, $exit6) -contains $null) { exit 1 }
+exit 0
+Process ID: 18724
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_Hardening_v4\proof\SB12\transcripts\boundary-audits.txt
+SB12 final boundary audits
+Command: npm run webgllib:audit-boundary
+
+ExitCode webgllib:audit-boundary: 0
+Command: npm run webglrunlib:audit-boundary
+
+ExitCode webglrunlib:audit-boundary: 0
+Command: npm run webgllib:audit-scene-runtime
+
+ExitCode webgllib:audit-scene-runtime: 1
+Command: npm run webgllib:audit-command-batch-parity
+
+ExitCode webgllib:audit-command-batch-parity: 0
+Command: npm run webgllib:audit-motion-queue
+
+ExitCode webgllib:audit-motion-queue: 0
+Command: npm run webgllib:audit-stage-runner
+
+ExitCode webgllib:audit-stage-runner: 0
+**********************
+Windows PowerShell transcript end
+End time: 20260603065410
+**********************

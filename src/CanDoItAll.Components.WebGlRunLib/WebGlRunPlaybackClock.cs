@@ -29,10 +29,7 @@ public sealed class WebGlRunPlaybackClock
                     frame.TimeSeconds,
                     directPatches = frame.ScenePatches.OrderBy(static patch => patch.Id, StringComparer.Ordinal).Select(CreatePatchIdentity),
                     directMotions = frame.Motions.OrderBy(static motion => motion.MotionId, StringComparer.Ordinal).Select(CreateMotionIdentity),
-                    stages = frame.Stages
-                        .OrderBy(static stage => stage.StageIndex < 0 ? int.MaxValue : stage.StageIndex)
-                        .ThenBy(static stage => stage.OrderIndex < 0 ? int.MaxValue : stage.OrderIndex)
-                        .ThenBy(static stage => stage.StageId, StringComparer.Ordinal)
+                    stages = WebGlRunStageOrderingPolicy.OrderStages(frame)
                         .Select(static stage => new
                         {
                             stage.StageId,

@@ -42,3 +42,20 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution record
+
+Status: completed.
+
+Changed files are recorded in `../../proof/SB06/changed-file-hashes.md`.
+
+Proof artifacts:
+- `../../proof/SB06/transcripts/failing-first.txt`
+- `../../proof/SB06/transcripts/passing-tests.txt`
+- `../../proof/SB06/transcripts/node-packaging-proof.txt`
+- `../../proof/SB06/transcripts/source-assertions.txt`
+- `../../proof/SB06/transcripts/boundary-audit.txt`
+
+Public API change: `EconomySimulationScenarioManifest` now includes `requiredFiles`, `maxFileCount`, and `maxFileBytes`. Existing runtime scenario manifests were updated to declare the full pack contract.
+
+Open risks: portable import/export behavior remains deferred to SB07. The manifest format remains versioned as `economy-simulation-scenario-pack/v1`; consumers that generate packs should populate the new fields before using the filesystem catalog.

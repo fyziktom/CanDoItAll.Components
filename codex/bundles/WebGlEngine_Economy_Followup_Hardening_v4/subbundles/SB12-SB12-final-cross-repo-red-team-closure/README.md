@@ -43,3 +43,13 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Execution status
+
+Status: completed.
+
+- Changed files: see `../../proof/SB12/changed-file-hashes.md`.
+- Test/build/audit commands: see `../../proof/SB12/transcripts/`.
+- Browser proof: aggregated SB04/SB10/SB11 artifacts audited in `../../proof/SB12/transcripts/browser-proof.txt`.
+- Public API changed: no breaking API change. SB12 split WebGlRunLib browser adapter contracts/results/runtime helper into focused files while preserving type names and namespace.
+- Open risks: no SB12 blocker. Existing repository warnings are documented in `../../reviews/01-execution-report.md`.

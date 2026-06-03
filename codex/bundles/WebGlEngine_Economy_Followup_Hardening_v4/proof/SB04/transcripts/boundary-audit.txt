@@ -1,0 +1,12 @@
+﻿SB04 boundary audit
+
+Changed production code is limited to CanDoItAll.Economy.Components/Components/SimulationSandbox/EconomySimulationSandboxPage.razor.
+No Components generic packages were modified in SB04.
+The Economy page consumes generic WebGlRunLib playback APIs (WebGlRunPlaybackResult and WebGlRunBrowserApplyAdapter.ApplyPlaybackAsync) without adding Economy semantics to WebGlLib or WebGlRunLib.
+
+Command: git -C C:\repositories\CanDoItAll.Economy diff --name-only
+src/CanDoItAll.Economy.Components/Components/SimulationSandbox/EconomySimulationSandboxPage.razor
+tests/CanDoItAll.Economy.Tests/EconomySimulationSandboxComponentTests.cs
+
+Command: git -C C:\repositories\CanDoItAll.Components diff --name-only codex/bundles/WebGlEngine_Economy_Followup_Hardening_v4/proof/SB04
+

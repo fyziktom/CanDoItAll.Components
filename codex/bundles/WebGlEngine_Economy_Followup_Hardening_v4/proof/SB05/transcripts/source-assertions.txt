@@ -1,0 +1,36 @@
+﻿SB05 source assertions
+
+== Source contract API and implementations ==
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:14:    EconomySimulationScenarioSource GetScenarioSource(string scenarioId);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:23:public sealed class EconomySimulationScenarioSource(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:39:    public static EconomySimulationScenarioSource FromPath(string experimentJsonPath)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:125:    EconomySimulationSandboxProjection Project(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:134:    EconomySimulationSandboxSession Load(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:136:    EconomySandboxOperationResult<EconomySimulationSandboxSession> TryLoad(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxServiceCollectionExtensions.cs:35:    public static IServiceCollection AddEconomySimulationSandboxSessionService(this IServiceCollection services)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxServiceCollectionExtensions.cs:42:    public static IServiceCollection AddEconomySimulationScenarioCatalog(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxServiceCollectionExtensions.cs:52:    public static IServiceCollection AddFileSystemEconomySimulationScenarioCatalog(
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxServiceCollectionExtensions.cs:97:            services.AddEconomySimulationScenarioCatalog(options.ScenarioCatalog);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxServiceCollectionExtensions.cs:101:            services.AddFileSystemEconomySimulationScenarioCatalog(options.ScenarioCatalogRootDirectory);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxServiceCollectionExtensions.cs:108:        return services.AddEconomySimulationSandboxSessionService();
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:26:        return Load(EconomySimulationScenarioSource.FromPath(experimentJsonPath), options);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:34:    public EconomySimulationSandboxSession Load(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:55:        EconomySimulationScenarioSource source,
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:64:        return Load(catalog.GetScenarioSource(scenarioId), options);
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:79:                return Project(session, scenarioCatalog.GetScenarioSource(session.ScenarioId));
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:91:        EconomySimulationScenarioSource source)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:20:    public EconomySimulationSandboxProjection Project(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null)
+src/CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:120:    private static string MaterializeSource(EconomySimulationScenarioSource source, string targetDirectory)
+src/CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:45:    public EconomySimulationScenarioSource GetScenarioSource(string scenarioId)
+src/CanDoItAll.Economy.SimulationSandbox\InMemoryEconomySimulationScenarioCatalog.cs:63:    public EconomySimulationScenarioSource GetScenarioSource(string scenarioId)
+src/CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:276:            EconomySimulationScenarioSource source = ScenarioCatalog.GetScenarioSource(scenario.ScenarioId);
+
+== Runtime page source-based load call ==
+276:            EconomySimulationScenarioSource source = ScenarioCatalog.GetScenarioSource(scenario.ScenarioId);
+277:            EconomySandboxOperationResult<EconomySimulationSandboxSession> loaded = SessionService.TryLoad(
+
+== Runtime page legacy scenario-load calls (expected no matches) ==
+No matches.
+
+== Runtime source local fixture dependency scan (expected no matches) ==
+No matches.

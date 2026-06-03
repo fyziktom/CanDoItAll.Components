@@ -112,6 +112,66 @@ public sealed class WebGlRunDocumentRunnerTests
         Assert.Empty(applier.AppliedFrames);
     }
 
+    [Fact]
+    public async Task Runner_validates_dynamic_object_lifecycle_in_playback_order_not_input_order()
+    {
+        var applier = new RecordingFrameApplier();
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateDynamicObjectRunDocument(motionInSameStage: false);
+        WebGlRunFrame frame = document.Timeline.Frames.Single();
+        frame.Stages.Reverse();
+
+        WebGlRunExecutionResult load = await runner.LoadAsync(document);
+        WebGlRunExecutionResult apply = await runner.ApplyCurrentFrameAsync();
+
+        Assert.True(load.Succeeded);
+        Assert.True(apply.Succeeded, string.Join(Environment.NewLine, apply.Errors));
+        Assert.Equal(["stage.add-object", "stage.move-dynamic"], apply.AppliedStageIds.ToArray());
+        Assert.Equal("source.stage.add-object,source.stage.move-dynamic", apply.Diagnostics["sourceStageIds"]);
+        WebGlRunFrameApplyResult appliedFrame = Assert.Single(applier.AppliedFrames);
+        Assert.Equal(["stage.add-object", "stage.move-dynamic"], appliedFrame.CommandBatch.Stages.Select(static stage => stage.StageId).ToArray());
+    }
+
+    [Fact]
+    public async Task Runner_rejects_same_stage_motion_to_object_created_by_that_stage()
+    {
+        var applier = new RecordingFrameApplier();
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateDynamicObjectRunDocument(motionInSameStage: true);
+
+        WebGlRunExecutionResult load = await runner.LoadAsync(document);
+        WebGlRunExecutionResult apply = await runner.ApplyCurrentFrameAsync();
+
+        Assert.True(load.Succeeded);
+        Assert.False(apply.Succeeded);
+        Assert.Contains(apply.Errors, error => error.Contains("stage.add-and-move", StringComparison.Ordinal) && error.Contains("object.dynamic", StringComparison.Ordinal));
+        Assert.Empty(applier.AppliedFrames);
+    }
+
+    [Fact]
+    public async Task Runner_does_not_apply_when_frame_conversion_fails_after_execution_validation()
+    {
+        var applier = new RecordingFrameApplier();
+        var runner = new WebGlRunDocumentRunner(applier);
+        WebGlRunDocument document = CreateRunDocument();
+        WebGlRunFrame frame = document.Timeline.Frames[1];
+        frame.Motions.Add(new()
+        {
+            MotionId = "motion.direct.actor",
+            ObjectId = "actor",
+            TargetPosition = new WebGlVector3(2, 0, 0)
+        });
+
+        await runner.LoadAsync(document);
+        await runner.SeekAsync(1);
+        WebGlRunExecutionResult apply = await runner.ApplyCurrentFrameAsync();
+
+        Assert.False(apply.Succeeded);
+        Assert.Contains(apply.Errors, error => error.Contains("cannot mix frame-level commands with staged commands", StringComparison.OrdinalIgnoreCase));
+        Assert.Empty(applier.AppliedFrames);
+        Assert.Contains("stage.move", runner.State.FailedStageIds);
+    }
+
     private static WebGlRunDocument CreateRunDocument()
         => new()
         {
@@ -254,6 +314,94 @@ public sealed class WebGlRunDocumentRunnerTests
                     }
                 }
             }
+        };
+
+    private static WebGlRunDocument CreateDynamicObjectRunDocument(bool motionInSameStage)
+    {
+        var addStage = new WebGlRunActionStage
+        {
+            StageId = motionInSameStage ? "stage.add-and-move" : "stage.add-object",
+            StageIndex = 0,
+            Metadata = { ["sourceStageId"] = motionInSameStage ? "source.stage.add-and-move" : "source.stage.add-object" },
+            ScenePatches =
+            {
+                new()
+                {
+                    Id = "patch.add-object",
+                    Patch = new WebGlScenePatch
+                    {
+                        SceneId = "scene.dynamic",
+                        AddObjects =
+                        {
+                            new WebGlSceneObject
+                            {
+                                Id = "object.dynamic",
+                                Kind = "target",
+                                Position = new WebGlVector3(2, 0, 0)
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        if (motionInSameStage)
+        {
+            addStage.Motions.Add(DynamicObjectMotion("motion.dynamic.same-stage"));
+        }
+
+        var frame = new WebGlRunFrame
+        {
+            Index = 0,
+            TimeSeconds = 0,
+            Metadata = { ["sourceFrameId"] = "source.frame.dynamic" },
+            Stages =
+            {
+                addStage
+            }
+        };
+        if (!motionInSameStage)
+        {
+            frame.Stages.Add(new()
+            {
+                StageId = "stage.move-dynamic",
+                StageIndex = 1,
+                Metadata = { ["sourceStageId"] = "source.stage.move-dynamic" },
+                Motions =
+                {
+                    DynamicObjectMotion("motion.dynamic.after-add")
+                }
+            });
+        }
+
+        return new()
+        {
+            RunId = new("run.dynamic-object"),
+            InitialScene = new WebGlSceneDocument
+            {
+                Scene = new WebGlSceneModel
+                {
+                    SceneId = "scene.dynamic",
+                    Objects =
+                    {
+                        new WebGlSceneObject { Id = "actor", Kind = "actor", Position = WebGlVector3.Zero }
+                    }
+                }
+            },
+            Timeline =
+            {
+                FrameRate = 1,
+                Frames = { frame }
+            }
+        };
+    }
+
+    private static WebGlObjectMotionCommand DynamicObjectMotion(string motionId)
+        => new()
+        {
+            MotionId = motionId,
+            ObjectId = "object.dynamic",
+            TargetPosition = new WebGlVector3(4, 0, 0),
+            DurationSeconds = 0.25
         };
 
     private sealed class RecordingFrameApplier : IWebGlRunFrameApplier

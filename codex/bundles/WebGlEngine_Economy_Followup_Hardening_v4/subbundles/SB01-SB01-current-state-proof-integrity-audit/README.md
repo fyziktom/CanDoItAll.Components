@@ -1,5 +1,7 @@
 # SB01 Current-state and proof integrity audit
 
+Status: Completed.
+
 ## Objective
 
 Implement the next hardening step for the WebGL/Economy engine foundation.
@@ -42,3 +44,11 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Closure result
+
+- Changed files: `bundle://scripts/audit_proof_integrity.py`, `bundle://proof/SB01/manifest.md`, `bundle://proof/SB01/semantic-invariants.md`, SB01 proof artifacts, and execution-report rows.
+- Test/build/audit commands: proof hygiene failing-first and passing runs captured in `bundle://proof/SB01/transcripts/`.
+- Proof artifact paths: `bundle://proof/SB01/current-state-inventory.md`, `bundle://proof/SB01/source-baseline-hashes.md`, `bundle://proof/SB01/changed-file-hashes.md`.
+- Open risks: later subbundles must still replace the source-backed weaknesses; SB01 only audits and baselines them.
+- Public API changed: no.

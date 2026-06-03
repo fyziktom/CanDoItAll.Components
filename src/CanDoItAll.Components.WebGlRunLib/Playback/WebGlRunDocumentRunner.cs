@@ -114,21 +114,28 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         foreach (WebGlRunFrame frame in playback.FramesToApply)
         {
             WebGlRunExecutionResult validation = WebGlRunFrameExecutionValidator.ValidateFrame(frame, knownObjectIds);
-            MergeExecutionResult(result, validation);
+            WebGlRunExecutionResultDiagnostics.Merge(result, validation);
             if (!validation.Succeeded)
             {
                 State.FailedStageIds.AddRange(validation.ExecutionDiagnostics.FailedMotionIds.Count > 0 ||
                                               validation.ExecutionDiagnostics.FailedPatchIds.Count > 0 ||
                                               validation.ExecutionDiagnostics.FailedLinkIds.Count > 0
                     ? WebGlRunFrameExecutionValidator.ResolveFailedStageIds(frame, validation.ExecutionDiagnostics)
-                    : frame.Stages.Select(static stage => stage.StageId).Where(static id => !string.IsNullOrWhiteSpace(id)));
+                    : OrderedStageIds(frame));
                 SyncStateDiagnostics(result);
                 return result;
             }
 
             WebGlRunFrameApplyResult frameResult = WebGlRunFrameApplyResult.FromFrame(frame);
+            result.Errors.AddRange(frameResult.Errors);
             result.Warnings.AddRange(frameResult.Warnings);
             WebGlRunExecutionResultDiagnostics.CopyFrameApplyDiagnostics(frame, frameResult, result);
+            if (frameResult.Errors.Count > 0)
+            {
+                State.FailedStageIds.AddRange(OrderedStageIds(frame));
+                SyncStateDiagnostics(result);
+                return result;
+            }
 
             try
             {
@@ -140,16 +147,13 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
             catch (Exception error) when (error is not OperationCanceledException)
             {
                 result.Errors.Add($"Frame '{frame.Index}' could not be applied: {error.Message}");
-                State.FailedStageIds.AddRange(frame.Stages.Select(static stage => stage.StageId).Where(static id => !string.IsNullOrWhiteSpace(id)));
+                State.FailedStageIds.AddRange(OrderedStageIds(frame));
                 SyncStateDiagnostics(result);
                 return result;
             }
 
             WebGlRunFrameExecutionValidator.ApplyFrameObjectState(frame, knownObjectIds);
-            IReadOnlyList<string> appliedStageIds = frame.Stages
-                .Select(static stage => stage.StageId)
-                .Where(static id => !string.IsNullOrWhiteSpace(id))
-                .ToArray();
+            IReadOnlyList<string> appliedStageIds = OrderedStageIds(frame);
             result.AppliedStageIds.AddRange(appliedStageIds);
             State.CompletedStageIds.AddRange(appliedStageIds);
             State.CurrentFrameIndex = frame.Index;
@@ -250,14 +254,11 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         if (playback.CurrentFrame is not null)
         {
             State.CurrentFrameIndex = playback.CurrentFrame.Index;
-            State.ActiveStageIds = playback.CurrentFrame.Stages
-                .Select(static stage => stage.StageId)
-                .Where(static id => !string.IsNullOrWhiteSpace(id))
-                .ToList();
+            State.ActiveStageIds = OrderedStageIds(playback.CurrentFrame).ToList();
         }
 
         State.PendingStageIds = playback.FramesToApply
-            .SelectMany(static frame => frame.Stages)
+            .SelectMany(static frame => WebGlRunStageOrderingPolicy.OrderStages(frame))
             .Select(static stage => stage.StageId)
             .Where(static id => !string.IsNullOrWhiteSpace(id))
             .ToList();
@@ -308,6 +309,11 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         return false;
     }
 
+    private static IReadOnlyList<string> OrderedStageIds(WebGlRunFrame frame)
+        => [.. WebGlRunStageOrderingPolicy.OrderStages(frame)
+            .Select(static stage => stage.StageId)
+            .Where(static id => !string.IsNullOrWhiteSpace(id))];
+
     private WebGlRunExecutionResult CreateResult(string operation)
         => new()
         {
@@ -330,19 +336,4 @@ public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier =
         target.Diagnostics["stagesQueued"] = playback.StagesQueued.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
-    private static void MergeExecutionResult(WebGlRunExecutionResult target, WebGlRunExecutionResult source)
-    {
-        target.Errors.AddRange(source.Errors);
-        target.Warnings.AddRange(source.Warnings);
-        target.ExecutionDiagnostics.UnresolvedObjectIds.AddRange(source.ExecutionDiagnostics.UnresolvedObjectIds);
-        target.ExecutionDiagnostics.FailedMotionIds.AddRange(source.ExecutionDiagnostics.FailedMotionIds);
-        target.ExecutionDiagnostics.FailedPatchIds.AddRange(source.ExecutionDiagnostics.FailedPatchIds);
-        target.ExecutionDiagnostics.FailedLinkIds.AddRange(source.ExecutionDiagnostics.FailedLinkIds);
-        target.ExecutionDiagnostics.SourceFrameIds.AddRange(source.ExecutionDiagnostics.SourceFrameIds);
-        target.ExecutionDiagnostics.SourceStageIds.AddRange(source.ExecutionDiagnostics.SourceStageIds);
-        foreach (KeyValuePair<string, string> item in source.Diagnostics)
-        {
-            target.Diagnostics[item.Key] = item.Value;
-        }
-    }
 }

@@ -12,7 +12,9 @@ public partial class PerformanceProof
         ShowSymbols = true,
         AutoFitOnCreate = true,
         RenderMode = WebGlRenderModes.Auto,
-        AssetQualityProfile = WebGlAssetQualityProfiles.Primitive
+        AssetQualityProfile = WebGlAssetQualityProfiles.Primitive,
+        RuntimeKey = "performance-proof-100-v1",
+        RuntimeBudget = WebGlRuntimeBudgetProfiles.Scene100()
     };
 
     private WebGlSceneModel scene = CreateScene();

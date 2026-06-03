@@ -2,30 +2,6 @@ using CanDoItAll.Components.WebGlLib;
 
 namespace CanDoItAll.Components.WebGlRunLib;
 
-public interface IWebGlRunBrowserApplyAdapter
-{
-    ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
-        WebGlRunFrameApplyResult frameApplyResult,
-        CancellationToken cancellationToken = default);
-
-    ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
-        WebGlRunPlaybackResult playbackResult,
-        CancellationToken cancellationToken = default);
-}
-
-public interface IWebGlRunBrowserRuntime
-{
-    ValueTask<WebGlSceneCommandResult?> ImportSceneAsync(
-        WebGlSceneDocument sceneDocument,
-        CancellationToken cancellationToken = default);
-
-    ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(
-        WebGlSceneCommandBatch batch,
-        CancellationToken cancellationToken = default);
-
-    ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default);
-}
-
 public sealed class WebGlRunBrowserApplyAdapter(
     IWebGlRunBrowserRuntime runtime,
     WebGlSceneDocument? initialScene = null) : IWebGlRunBrowserApplyAdapter
@@ -45,6 +21,7 @@ public sealed class WebGlRunBrowserApplyAdapter(
 
         if (result.Errors.Count > 0)
         {
+            result.FailureReason = WebGlRunBrowserApplyFailureReasons.PreApplyValidationFailed;
             WebGlRuntimeDiagnostics? failureDiagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
             result.RuntimeSnapshot = BuildSnapshot(frameApplyResult, failureDiagnostics, result);
             result.RuntimeDiagnostics = failureDiagnostics;
@@ -67,6 +44,7 @@ public sealed class WebGlRunBrowserApplyAdapter(
 
             if (result.Errors.Count > 0 || !result.AppliedInitialScene)
             {
+                result.FailureReason = WebGlRunBrowserApplyFailureReasons.ResetFailed;
                 if (result.Errors.Count == 0)
                 {
                     result.Errors.Add("Frame requires a scene reset, but browser scene import did not report success.");
@@ -82,6 +60,10 @@ public sealed class WebGlRunBrowserApplyAdapter(
         WebGlSceneCommandBatchResult? batchResult = await runtime.ApplyCommandBatchAsync(frameApplyResult.CommandBatch, cancellationToken).ConfigureAwait(false);
         result.CommandBatchResult = batchResult;
         AddCommandOutcome(result, batchResult);
+        if (result.Errors.Count > 0)
+        {
+            result.FailureReason = WebGlRunBrowserApplyFailureReasons.BatchFailed;
+        }
 
         WebGlRuntimeDiagnostics? diagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
         result.RuntimeSnapshot = BuildSnapshot(frameApplyResult, diagnostics, result);
@@ -94,6 +76,20 @@ public sealed class WebGlRunBrowserApplyAdapter(
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(playbackResult);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (playbackResult.FramesToApply.Count > 1)
+        {
+            return new WebGlRunBrowserApplyResult
+            {
+                FrameIndex = playbackResult.TargetFrameIndex,
+                FailureReason = WebGlRunBrowserApplyFailureReasons.MultiFramePlaybackRequiresExplicitApply,
+                Errors =
+                {
+                    "Playback result contains multiple frames to apply. Use ApplyPlaybackAsync to apply reset and frames explicitly."
+                }
+            };
+        }
 
         WebGlRunFrameApplyResult? frame = playbackResult.CurrentFrame is not null
             ? WebGlRunFrameApplyResult.FromFrame(playbackResult.CurrentFrame)
@@ -116,6 +112,79 @@ public sealed class WebGlRunBrowserApplyAdapter(
         return await ApplyAsync(frame, cancellationToken).ConfigureAwait(false);
     }
 
+    public async ValueTask<WebGlRunBrowserPlaybackApplyResult> ApplyPlaybackAsync(
+        WebGlRunPlaybackResult playbackResult,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(playbackResult);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var result = new WebGlRunBrowserPlaybackApplyResult
+        {
+            TargetFrameIndex = playbackResult.TargetFrameIndex,
+            RequestedCommand = playbackResult.RequestedCommand,
+            RequiresSceneReset = playbackResult.RequiresSceneReset
+        };
+        result.Errors.AddRange(playbackResult.Errors);
+        result.Warnings.AddRange(playbackResult.Warnings);
+        if (result.Errors.Count > 0)
+        {
+            result.FailureReason = WebGlRunBrowserApplyFailureReasons.PreApplyValidationFailed;
+            return result;
+        }
+
+        if (playbackResult.FramesToApply.Count == 0)
+        {
+            result.FailureReason = WebGlRunBrowserApplyFailureReasons.PreApplyValidationFailed;
+            result.Errors.Add("Playback result does not contain frames to apply.");
+            return result;
+        }
+
+        if (playbackResult.RequiresSceneReset)
+        {
+            WebGlSceneDocument? sceneToReset = initialScene;
+            if (sceneToReset is null)
+            {
+                result.FailureReason = WebGlRunBrowserApplyFailureReasons.ResetFailed;
+                result.Errors.Add("Playback result requires a scene reset, but no initial scene was supplied.");
+                return result;
+            }
+
+            WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(sceneToReset, cancellationToken).ConfigureAwait(false);
+            result.AppliedInitialScene = importResult?.Success == true;
+            AddPlaybackCommandOutcome(result, importResult);
+            if (result.Errors.Count > 0 || !result.AppliedInitialScene)
+            {
+                result.FailureReason = WebGlRunBrowserApplyFailureReasons.ResetFailed;
+                if (result.Errors.Count == 0)
+                {
+                    result.Errors.Add("Playback result requires a scene reset, but browser scene import did not report success.");
+                }
+
+                return result;
+            }
+        }
+
+        foreach (WebGlRunFrame frame in playbackResult.FramesToApply)
+        {
+            WebGlRunFrameApplyResult frameApplyResult = WebGlRunFrameApplyResult.FromFrame(frame);
+            WebGlRunBrowserApplyResult frameResult = await ApplyAsync(frameApplyResult, cancellationToken).ConfigureAwait(false);
+            result.FrameResults.Add(frameResult);
+            result.Warnings.AddRange(frameResult.Warnings);
+            if (!frameResult.Success)
+            {
+                result.FailedFrameIndex = frameResult.FrameIndex;
+                result.FailureReason = string.IsNullOrWhiteSpace(frameResult.FailureReason)
+                    ? WebGlRunBrowserApplyFailureReasons.BatchFailed
+                    : frameResult.FailureReason;
+                result.Errors.AddRange(frameResult.Errors);
+                return result;
+            }
+        }
+
+        return result;
+    }
+
     private static WebGlRunBrowserApplyResult CreateResult(WebGlRunFrameApplyResult frame)
     {
         WebGlSceneCommandBatch batch = frame.CommandBatch;
@@ -129,6 +198,23 @@ public sealed class WebGlRunBrowserApplyAdapter(
     }
 
     private static void AddCommandOutcome(WebGlRunBrowserApplyResult result, WebGlSceneCommandResult? commandResult)
+    {
+        if (commandResult is null)
+        {
+            return;
+        }
+
+        result.Warnings.AddRange(commandResult.Warnings);
+        result.Errors.AddRange(commandResult.Errors);
+        if (!commandResult.Success && commandResult.Errors.Count == 0)
+        {
+            result.Errors.Add(string.IsNullOrWhiteSpace(commandResult.Message)
+                ? $"Runtime command '{commandResult.CommandId}' failed."
+                : commandResult.Message);
+        }
+    }
+
+    private static void AddPlaybackCommandOutcome(WebGlRunBrowserPlaybackApplyResult result, WebGlSceneCommandResult? commandResult)
     {
         if (commandResult is null)
         {
@@ -251,56 +337,4 @@ public sealed class WebGlRunBrowserApplyAdapter(
 
     private static string FirstNonEmpty(params string?[] values)
         => values.FirstOrDefault(static value => !string.IsNullOrWhiteSpace(value)) ?? string.Empty;
-}
-
-public sealed class WebGlRunBrowserApplyResult
-{
-    public bool Success => Errors.Count == 0;
-
-    public long FrameIndex { get; set; }
-
-    public bool AppliedInitialScene { get; set; }
-
-    public int AppliedStageCount { get; set; }
-
-    public int AppliedPatchCount { get; set; }
-
-    public int AppliedMotionCount { get; set; }
-
-    public WebGlRunRuntimeSnapshot RuntimeSnapshot { get; set; } = new();
-
-    public WebGlRuntimeDiagnostics? RuntimeDiagnostics { get; set; }
-
-    public WebGlSceneCommandBatchResult? CommandBatchResult { get; set; }
-
-    public List<string> Errors { get; set; } = [];
-
-    public List<string> Warnings { get; set; } = [];
-}
-
-public sealed class WebGlSceneViewBrowserRuntime(WebGlSceneView sceneView) : IWebGlRunBrowserRuntime
-{
-    public async ValueTask<WebGlSceneCommandResult?> ImportSceneAsync(
-        WebGlSceneDocument sceneDocument,
-        CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(sceneDocument);
-        cancellationToken.ThrowIfCancellationRequested();
-        return await sceneView.ImportSceneDocumentDetailedAsync(sceneDocument).ConfigureAwait(false);
-    }
-
-    public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(
-        WebGlSceneCommandBatch batch,
-        CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(batch);
-        cancellationToken.ThrowIfCancellationRequested();
-        return await sceneView.ApplyCommandBatchAsync(batch).ConfigureAwait(false);
-    }
-
-    public async ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        return await sceneView.GetDiagnosticsAsync().ConfigureAwait(false);
-    }
 }

@@ -1,0 +1,15 @@
+SB10 failing-first transcript
+
+Command:
+dotnet test tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj --no-restore --filter FullyQualifiedName~WebGlSceneViewExternalImportLifecycleTests.Document_import_protects_runtime_scene_from_stale_parameter_update
+
+Result:
+Exit code 1.
+Failed: 1, Passed: 0, Skipped: 0, Total: 1.
+
+Observed failure:
+Assert.Empty() Failure: Collection was not empty
+Collection: [Invocation { Identifier = CanDoItAll.webglScene.update, Arguments = System.Object[] }]
+
+Semantic assertion:
+Before SB10 implementation, `ImportSceneDocumentDetailedAsync` changed the JavaScript runtime scene without updating component-side lifecycle keys. A later stale parent parameter update with the replaced scene id caused `OnAfterRenderAsync` to call `CanDoItAll.webglScene.update`, overwriting the runtime-imported scene.

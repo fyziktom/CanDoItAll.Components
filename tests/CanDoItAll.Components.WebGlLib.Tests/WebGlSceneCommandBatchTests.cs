@@ -1,4 +1,5 @@
 using CanDoItAll.Components.WebGlLib;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace CanDoItAll.Components.WebGlLib.Tests;
@@ -60,7 +61,9 @@ public sealed class WebGlSceneCommandBatchTests
             ]
         };
 
+        Stopwatch stopwatch = Stopwatch.StartNew();
         WebGlSceneCommandBatchNormalizationResult result = WebGlSceneCommandBatchNormalizer.Normalize(batch);
+        stopwatch.Stop();
 
         Assert.Equal(2000, result.Metrics.BatchCommandCount);
         Assert.Equal(2000, result.Metrics.CommandCountBeforeNormalization);
@@ -70,6 +73,7 @@ public sealed class WebGlSceneCommandBatchTests
         Assert.Equal(1000, result.Batch.Motions.Count);
         Assert.Equal(1, result.Metrics.EstimatedHostInteropCallCount);
         Assert.Equal(1999, result.Metrics.InteropCallsAvoided);
+        Assert.True(stopwatch.ElapsedMilliseconds <= 2_000, $"Expected 1000 patch plus 1000 motion normalization to stay within a 2000 ms CPU budget, but it took {stopwatch.ElapsedMilliseconds} ms.");
     }
 
     [Fact]

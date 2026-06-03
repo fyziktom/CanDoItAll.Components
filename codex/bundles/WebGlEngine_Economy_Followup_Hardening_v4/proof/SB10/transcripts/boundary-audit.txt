@@ -1,0 +1,11 @@
+SB10 boundary audit transcript
+
+Command:
+rg -n "CanDoItAll\.Economy|Economy" src\CanDoItAll.Components.WebGlLib src\CanDoItAll.Components.WebGlRunLib -g "*.cs" -g "*.razor"
+
+Result:
+Exit code 1.
+No matches in Components WebGlLib or WebGlRunLib source.
+
+Semantic assertion:
+SB10 changes stay inside the generic WebGlLib scene component and generic tests/docs. They do not introduce Economy semantics or package references into Components.

@@ -1,0 +1,66 @@
+﻿SB06 source assertions
+
+== Manifest contract fields ==
+105:    public const int DefaultMaxFileCount = 32;
+106:    public const long DefaultMaxFileBytes = 1_048_576;
+120:    public List<string> RequiredFiles { get; set; } = [];
+122:    public int MaxFileCount { get; set; } = DefaultMaxFileCount;
+124:    public long MaxFileBytes { get; set; } = DefaultMaxFileBytes;
+
+== File-system catalog security validation ==
+12:    private static readonly string[] RequiredScenarioPackFiles =
+86:        string? resolvedExperimentPath = TryResolveInsideScenario(scenarioDirectory, experimentFile);
+89:            validationErrors.Add($"Scenario manifest experimentFile '{experimentFile}' must be a safe relative path.");
+116:            ValidateScenarioPackManifest(scenarioDirectory, manifest, experimentFile, validationErrors);
+161:    private static void ValidateScenarioPackManifest(
+167:        int maxFileCount = manifest.MaxFileCount > 0
+170:        long maxFileBytes = manifest.MaxFileBytes > 0
+178:        if (packFiles.Count > maxFileCount)
+180:            validationErrors.Add($"Scenario manifest maxFileCount '{maxFileCount}' is lower than pack file count '{packFiles.Count}'.");
+186:            if (new FileInfo(path).Length > maxFileBytes)
+188:                validationErrors.Add($"Scenario pack file '{packFile}' exceeds manifest maxFileBytes '{maxFileBytes}'.");
+194:            validationErrors.Add("Scenario manifest requiredFiles must list all required pack files.");
+202:            if (TryResolveInsideScenario(scenarioDirectory, normalizedFile) is not { } requiredPath)
+204:                validationErrors.Add($"Scenario manifest requiredFiles entry '{requiredFile}' must be a safe relative path.");
+210:                validationErrors.Add($"Scenario manifest requiredFiles contains duplicate file '{normalizedFile}'.");
+221:            validationErrors.Add($"Scenario manifest requiredFiles must include experiment file '{experimentFile}'.");
+224:        foreach (string requiredScenarioFile in RequiredScenarioPackFiles)
+228:                validationErrors.Add($"Scenario manifest requiredFiles must include '{requiredScenarioFile}'.");
+249:                    StrictHashValidation = true,
+251:                    VerifyDocumentContentHashes = true,
+252:                    VerifyPackHash = true
+288:        if (TryResolveInsideScenario(scenarioDirectory, relativePath) is not { } path)
+290:            throw new ArgumentException("Companion file path must be a safe relative path.", nameof(relativePath));
+296:    private static string? TryResolveInsideScenario(string scenarioDirectory, string relativePath)
+
+== Runtime scenario manifests declare required files and limits ==
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\scenario.manifest.json:8:  "requiredFiles": [
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\scenario.manifest.json:10:    "scenario.definition.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\scenario.manifest.json:14:    "visual.mapping.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\scenario.manifest.json:15:    "expected.invariants.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\scenario.manifest.json:18:  "maxFileCount": 16,
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\scenario.manifest.json:19:  "maxFileBytes": 1048576,
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\scenario.manifest.json:8:  "requiredFiles": [
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\scenario.manifest.json:10:    "scenario.definition.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\scenario.manifest.json:14:    "visual.mapping.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\scenario.manifest.json:15:    "expected.invariants.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\scenario.manifest.json:18:  "maxFileCount": 16,
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\scenario.manifest.json:19:  "maxFileBytes": 1048576,
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\experiment.json:25:      "path": "scenario.definition.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\experiment.json:60:      "path": "visual.mapping.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\farmer-land\experiment.json:67:      "path": "expected.invariants.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\experiment.json:26:      "path": "scenario.definition.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\experiment.json:61:      "path": "visual.mapping.json",
+src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox\shared-well\experiment.json:68:      "path": "expected.invariants.json",
+
+== Node content packaging declaration ==
+20:    <None Update="SimulationScenarios\EconomySimulationSandbox\**\*.*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+
+== SB06 tests cover traversal, missing files, invalid manifest, limits, hash determinism, and output packaging ==
+128:    public void FileSystemScenarioCatalogRejectsManifestTraversalExperimentFile()
+161:    public void FileSystemScenarioCatalogRequiresManifestRequiredFilesList()
+191:    public void FileSystemScenarioCatalogReportsMissingRequiredPackFile()
+222:    public void FileSystemScenarioCatalogRejectsPackFilesOverManifestLimit()
+253:    public void FileSystemScenarioCatalogRejectsPackFileCountOverManifestLimit()
+285:    public void FileSystemScenarioCatalogComputesPackHashDeterministicallyAcrossCopyOrder()
+319:    public void NodeRuntimeScenarioPacksAreCopiedToBuildOutputWithStableHashes()

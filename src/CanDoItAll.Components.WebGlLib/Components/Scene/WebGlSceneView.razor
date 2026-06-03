@@ -18,11 +18,15 @@
     {
         PropertyNameCaseInsensitive = true
     };
+    private const int CompactSceneLifecycleObjectThreshold = 100;
 
     private ElementReference host;
     private DotNetObjectReference<WebGlSceneView>? objectReference;
     private string? pendingSceneKey;
     private string? appliedSceneKey;
+    private string? externalImportSceneKey;
+    private string? externalImportReplacedParameterKey;
+    private string? externalImportReplacedSceneId;
 
     [Parameter, EditorRequired]
     public WebGlSceneModel Scene { get; set; } = default!;
@@ -62,7 +66,19 @@
 
     protected override void OnParametersSet()
     {
-        pendingSceneKey = SerializePayload(Scene, Options);
+        string parameterSceneKey = CreateSceneLifecycleKey(Scene, Options);
+        if (ShouldKeepExternalImport(parameterSceneKey, Scene.SceneId))
+        {
+            pendingSceneKey = externalImportSceneKey;
+            return;
+        }
+
+        if (!string.Equals(parameterSceneKey, externalImportSceneKey, StringComparison.Ordinal))
+        {
+            ClearExternalImportLifecycle();
+        }
+
+        pendingSceneKey = parameterSceneKey;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -104,6 +120,7 @@
             if (updated)
             {
                 appliedSceneKey = pendingSceneKey;
+                ClearExternalImportLifecycle();
             }
         }
         catch (JSException ex)
@@ -193,30 +210,62 @@
     public Task<WebGlSceneModel?> ExportSceneAsync()
         => JsRuntime.InvokeAsync<WebGlSceneModel?>("CanDoItAll.webglScene.exportScene", host).AsTask();
 
-    public Task<bool> ImportSceneAsync(WebGlSceneModel sceneModel)
-        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.importScene", host, sceneModel, Options).AsTask();
+    public async Task<bool> ImportSceneAsync(WebGlSceneModel sceneModel)
+    {
+        ArgumentNullException.ThrowIfNull(sceneModel);
+        bool imported = await JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.importScene", host, sceneModel, Options);
+        if (imported)
+        {
+            MarkExternalImportApplied(sceneModel, Options);
+        }
 
-    public Task<WebGlSceneCommandResult?> ImportSceneDetailedAsync(WebGlSceneModel sceneModel)
-        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.importSceneDetailed", host, sceneModel, Options).AsTask();
+        return imported;
+    }
 
-    public Task<bool> ImportSceneDocumentAsync(WebGlSceneDocument sceneDocument)
+    public async Task<WebGlSceneCommandResult?> ImportSceneDetailedAsync(WebGlSceneModel sceneModel)
+    {
+        ArgumentNullException.ThrowIfNull(sceneModel);
+        WebGlSceneCommandResult? result = await JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.importSceneDetailed", host, sceneModel, Options);
+        if (result?.Success == true)
+        {
+            MarkExternalImportApplied(sceneModel, Options);
+        }
+
+        return result;
+    }
+
+    public async Task<bool> ImportSceneDocumentAsync(WebGlSceneDocument sceneDocument)
     {
         ArgumentNullException.ThrowIfNull(sceneDocument);
-        return JsRuntime.InvokeAsync<bool>(
+        WebGlRuntimeOptions importOptions = sceneDocument.RuntimeOptions ?? Options;
+        bool imported = await JsRuntime.InvokeAsync<bool>(
             "CanDoItAll.webglScene.importScene",
             host,
             sceneDocument.Scene,
-            sceneDocument.RuntimeOptions ?? Options).AsTask();
+            importOptions);
+        if (imported)
+        {
+            MarkExternalImportApplied(sceneDocument.Scene, importOptions);
+        }
+
+        return imported;
     }
 
-    public Task<WebGlSceneCommandResult?> ImportSceneDocumentDetailedAsync(WebGlSceneDocument sceneDocument)
+    public async Task<WebGlSceneCommandResult?> ImportSceneDocumentDetailedAsync(WebGlSceneDocument sceneDocument)
     {
         ArgumentNullException.ThrowIfNull(sceneDocument);
-        return JsRuntime.InvokeAsync<WebGlSceneCommandResult?>(
+        WebGlRuntimeOptions importOptions = sceneDocument.RuntimeOptions ?? Options;
+        WebGlSceneCommandResult? result = await JsRuntime.InvokeAsync<WebGlSceneCommandResult?>(
             "CanDoItAll.webglScene.importSceneDetailed",
             host,
             sceneDocument.Scene,
-            sceneDocument.RuntimeOptions ?? Options).AsTask();
+            importOptions);
+        if (result?.Success == true)
+        {
+            MarkExternalImportApplied(sceneDocument.Scene, importOptions);
+        }
+
+        return result;
     }
 
     public Task<bool> ApplyPatchAsync(WebGlScenePatch patch)
@@ -279,4 +328,71 @@
 
     private static T? Deserialize<T>(string json)
         => System.Text.Json.JsonSerializer.Deserialize<T>(json, SerializerOptions);
+
+    private bool ShouldKeepExternalImport(string parameterSceneKey, string parameterSceneId)
+    {
+        if (string.IsNullOrWhiteSpace(externalImportSceneKey))
+        {
+            return false;
+        }
+
+        if (string.Equals(parameterSceneKey, externalImportSceneKey, StringComparison.Ordinal))
+        {
+            ClearExternalImportLifecycle();
+            return false;
+        }
+
+        return string.Equals(parameterSceneKey, externalImportReplacedParameterKey, StringComparison.Ordinal) ||
+               (!string.IsNullOrWhiteSpace(parameterSceneId) &&
+                string.Equals(parameterSceneId, externalImportReplacedSceneId, StringComparison.Ordinal));
+    }
+
+    private void MarkExternalImportApplied(WebGlSceneModel sceneModel, WebGlRuntimeOptions options)
+    {
+        externalImportReplacedParameterKey = pendingSceneKey ?? CreateSceneLifecycleKey(Scene, Options);
+        externalImportReplacedSceneId = Scene.SceneId;
+        externalImportSceneKey = CreateSceneLifecycleKey(sceneModel, options);
+        Scene = sceneModel;
+        Options = options;
+        pendingSceneKey = externalImportSceneKey;
+        appliedSceneKey = externalImportSceneKey;
+    }
+
+    private void ClearExternalImportLifecycle()
+    {
+        externalImportSceneKey = null;
+        externalImportReplacedParameterKey = null;
+        externalImportReplacedSceneId = null;
+    }
+
+    private static string CreateSceneLifecycleKey(WebGlSceneModel scene, WebGlRuntimeOptions options)
+    {
+        if (ShouldUseCompactSceneLifecycleKey(scene))
+        {
+            return System.Text.Json.JsonSerializer.Serialize(new
+            {
+                keyKind = "compact",
+                sceneId = scene.SceneId,
+                sceneRevision = scene.Revision,
+                uiRevision = scene.UiState?.Revision ?? 0,
+                objectCount = scene.Objects.Count,
+                linkCount = scene.Links.Count,
+                layerCount = scene.Layers.Count,
+                assetCatalogId = scene.AssetCatalog?.CatalogId ?? string.Empty,
+                assetCatalogVersion = scene.AssetCatalog?.Version ?? string.Empty,
+                runtime = CreateRuntimeLifecycleKey(options)
+            }, SerializerOptions);
+        }
+
+        return SerializePayload(scene, options);
+    }
+
+    private static bool ShouldUseCompactSceneLifecycleKey(WebGlSceneModel scene)
+        => scene.Objects.Count >= CompactSceneLifecycleObjectThreshold ||
+           scene.Links.Count >= CompactSceneLifecycleObjectThreshold;
+
+    private static string CreateRuntimeLifecycleKey(WebGlRuntimeOptions options)
+        => !string.IsNullOrWhiteSpace(options.RuntimeKey)
+            ? options.RuntimeKey
+            : System.Text.Json.JsonSerializer.Serialize(options, SerializerOptions);
 }

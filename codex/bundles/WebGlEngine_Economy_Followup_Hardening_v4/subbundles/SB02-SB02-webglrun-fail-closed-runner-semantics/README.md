@@ -1,5 +1,7 @@
 # SB02 WebGlRun fail-closed runner semantics
 
+Status: Completed.
+
 ## Objective
 
 Implement the next hardening step for the WebGL/Economy engine foundation.
@@ -41,3 +43,11 @@ Before moving to the next subbundle, record:
 - proof artifact paths;
 - open risks;
 - whether public API changed and how users migrate.
+
+## Closure result
+
+- Changed files: WebGlRun runner/browser adapter source, focused tests, SB02 proof artifacts, execution-report rows.
+- Test/build/audit commands: failing-first runner test, focused runner/adapter tests, full WebGlRunLib tests, source assertions, boundary audit, anti-stub audit.
+- Proof artifact paths: `bundle://proof/SB02/manifest.md`, `bundle://proof/SB02/semantic-invariants.md`, `bundle://proof/SB02/transcripts/`.
+- Open risks: SB03 must still replace the playback-result helper that applies only one frame.
+- Public API changed: `WebGlRunBrowserApplyResult.FailureReason` and `WebGlRunBrowserApplyFailureReasons` were added; existing callers remain compatible.
