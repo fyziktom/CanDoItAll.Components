@@ -1,12 +1,12 @@
-# Semantic invariants for SB05
+# Semantic Invariants for SB05
 
-To be filled during execution.
+## Invariant SB05-store-resolution-is-policy-driven
 
-Minimum required fields:
+Source: scheduled events, normalized events, and SimpleAccounts mutation context.
 
-- invariant id
-- source file or scenario
-- expected behavior
-- failing-first result
-- passing result
-- reason this proof prevents simulator-noise contamination
+Expected behavior: strict mode rejects ambiguous store matches unless the event carries an explicit resolution policy such as exact store id or shared pool.
+
+Passing result: `StoreResolution_StrictModeFailsAmbiguityAndExactPolicyPasses` and the shared-pool golden oracle passed.
+
+Why this prevents simulator-noise contamination: resource flows cannot be attributed to an arbitrary matching store when the scenario model is under-specified.
+

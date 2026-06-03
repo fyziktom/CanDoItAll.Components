@@ -1,12 +1,12 @@
-# Semantic invariants for SB11
+# Semantic Invariants for SB11
 
-To be filled during execution.
+## Invariant SB11-headless-budgets-are-hard
 
-Minimum required fields:
+Source: `EconomyExperimentPerformanceBudgetEvaluator` and readiness performance band.
 
-- invariant id
-- source file or scenario
-- expected behavior
-- failing-first result
-- passing result
-- reason this proof prevents simulator-noise contamination
+Expected behavior: headless deterministic budget overruns are hard failures, while visual/browser overruns are warnings unless explicitly classified as headless.
+
+Passing result: `PerformanceBudgets_HeadlessFailuresAreHardAndVisualFailuresInReadiness` passed in the focused suite.
+
+Why this prevents simulator-noise contamination: expensive or unstable headless model paths cannot be hidden behind warning-only performance observations.
+

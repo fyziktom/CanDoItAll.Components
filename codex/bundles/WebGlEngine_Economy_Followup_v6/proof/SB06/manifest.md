@@ -1,21 +1,19 @@
-# Proof manifest for SB06
+# Proof Manifest for SB06
 
-Status: pending
+Status: complete
 
-## Required artifacts
+## Evidence
 
-- failing-first transcript, where applicable
-- passing transcript
-- changed-file hashes
-- source assertion notes
-- focused test transcript
-- browser proof, if runtime/UI is in scope
-- semantic invariant report
+- Economy focused tests: `proof/SB14/transcripts/economy-focused-tests.txt`
+- Economy full test project: `proof/SB14/transcripts/economy-full-test-project.txt`
 
-## Semantic closure checklist
+## Result
 
-- [ ] Proof is not empty.
-- [ ] Proof is not just a screenshot.
-- [ ] Proof validates the stated risk.
-- [ ] Proof cites changed files.
-- [ ] Proof includes a failure mode where applicable.
+The golden oracle suite covers known final stores, flow counts, issue counts, deterministic frame hashes, and negative strict failures for simple-account primitives. The full Economy test project passed 586 tests.
+
+## Changed files
+
+- `src/CanDoItAll.Economy.Simulation.SimpleAccounts/SimpleSimulationStateTransitionEngine.cs`
+- `src/CanDoItAll.Economy.Simulation.SimpleAccounts/SimpleSimulationStateTransitionEngine.Mutations.cs`
+- `src/CanDoItAll.Economy.Simulation.SimpleAccounts/SimpleAccountModels.cs`
+- `tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs`

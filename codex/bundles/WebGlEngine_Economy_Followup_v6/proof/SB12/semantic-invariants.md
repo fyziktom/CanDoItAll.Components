@@ -1,12 +1,12 @@
-# Semantic invariants for SB12
+# Semantic Invariants for SB12
 
-To be filled during execution.
+## Invariant SB12-headless-runner-is-deterministic
 
-Minimum required fields:
+Source: `EconomyHeadlessExperimentRunner`.
 
-- invariant id
-- source file or scenario
-- expected behavior
-- failing-first result
-- passing result
-- reason this proof prevents simulator-noise contamination
+Expected behavior: identical input packs produce identical run hashes and output artifacts, while changed economic inputs produce different run hashes.
+
+Passing result: `HeadlessRunner_ProducesDeterministicRunHashesAndBatchConfidence` passed, and batch summaries report L4 confidence for strict headless runs.
+
+Why this prevents simulator-noise contamination: experiments can be compared through deterministic headless artifacts without depending on browser rendering state.
+

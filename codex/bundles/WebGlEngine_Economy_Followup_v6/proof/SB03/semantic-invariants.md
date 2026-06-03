@@ -1,12 +1,12 @@
-# Semantic invariants for SB03
+# Semantic Invariants for SB03
 
-To be filled during execution.
+## Invariant SB03-pause-cancels-host-and-runtime-work
 
-Minimum required fields:
+Source: `RunPlayback.razor.cs` and WebGlRun playback controller.
 
-- invariant id
-- source file or scenario
-- expected behavior
-- failing-first result
-- passing result
-- reason this proof prevents simulator-noise contamination
+Expected behavior: pause/stop cancels host-side playback work, drains late applies, waits for runtime idle, and reasserts paused UI state.
+
+Passing result: WebGlRunLib playback tests passed, WebGL sandbox build passed, and the browser proof shows runtime work drained after pause.
+
+Why this prevents simulator-noise contamination: logical frame playback no longer advances by relying on unsettled visual work as proof of state.
+

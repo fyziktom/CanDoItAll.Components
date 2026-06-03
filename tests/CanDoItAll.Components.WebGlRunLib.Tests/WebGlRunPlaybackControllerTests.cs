@@ -46,6 +46,45 @@ public sealed class WebGlRunPlaybackControllerTests
         Assert.Equal("sha256:visual", result.RunSourceProvenance["visualMappingHash"]);
         Assert.Equal(1, controller.State.CurrentFrameIndex);
         Assert.Equal([0, 1], result.FramesToApply.Select(frame => frame.Index).ToArray());
+        Assert.Equal(WebGlRunBrowserReplayModes.AbsoluteReplay, result.ReplayMode);
+    }
+
+    [Fact]
+    public async Task Step_forward_uses_incremental_replay_without_replaying_entire_timeline()
+    {
+        var controller = new WebGlRunPlaybackController(CreateRunDocument());
+
+        var first = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Step });
+        var second = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Step });
+
+        Assert.True(first.Success);
+        Assert.True(second.Success);
+        Assert.Equal(WebGlRunBrowserReplayModes.Incremental, second.ReplayMode);
+        WebGlRunFrame frame = Assert.Single(second.FramesToApply);
+        Assert.Equal(3, frame.Index);
+    }
+
+    [Fact]
+    public async Task Seek_backward_uses_snapshot_anchor_replay_when_anchor_exists_before_target()
+    {
+        var document = CreateRunDocument();
+        document.Timeline.Frames.Add(new WebGlRunFrame
+        {
+            Index = 2,
+            TimeSeconds = 2,
+            Metadata = { ["snapshotAnchor"] = "true" },
+            Stages = { new WebGlRunActionStage { StageId = "stage.anchor" } }
+        });
+        var controller = new WebGlRunPlaybackController(document);
+        await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 3 });
+
+        var result = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 2 });
+
+        Assert.True(result.Success);
+        Assert.True(result.RequiresSceneReset);
+        Assert.Equal(WebGlRunBrowserReplayModes.SnapshotAnchorReplay, result.ReplayMode);
+        WebGlRunFrame frame = Assert.Single(result.FramesToApply);
+        Assert.Equal(2, frame.Index);
     }
 
     [Fact]

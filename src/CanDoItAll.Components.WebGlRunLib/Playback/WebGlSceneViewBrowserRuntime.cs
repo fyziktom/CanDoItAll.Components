@@ -27,4 +27,16 @@ public sealed class WebGlSceneViewBrowserRuntime(WebGlSceneView sceneView) : IWe
         cancellationToken.ThrowIfCancellationRequested();
         return await sceneView.GetDiagnosticsAsync().ConfigureAwait(false);
     }
+
+    public async ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
+        WebGlRunRuntimeIdleWaitOptions options,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        cancellationToken.ThrowIfCancellationRequested();
+        return await sceneView.WaitForRuntimeIdleAsync(
+            options.TimeoutMs,
+            options.PollIntervalMs,
+            options.Reason).ConfigureAwait(false);
+    }
 }

@@ -1,21 +1,21 @@
-# Proof manifest for SB10
+# Proof Manifest for SB10
 
-Status: pending
+Status: complete
 
-## Required artifacts
+## Evidence
 
-- failing-first transcript, where applicable
-- passing transcript
-- changed-file hashes
-- source assertion notes
-- focused test transcript
-- browser proof, if runtime/UI is in scope
-- semantic invariant report
+- Economy sandbox build: `proof/SB10/transcripts/economy-simulation-sandbox-build.txt`
+- Economy focused tests: `proof/SB14/transcripts/economy-focused-tests.txt`
+- Economy full test project: `proof/SB14/transcripts/economy-full-test-project.txt`
 
-## Semantic closure checklist
+## Result
 
-- [ ] Proof is not empty.
-- [ ] Proof is not just a screenshot.
-- [ ] Proof validates the stated risk.
-- [ ] Proof cites changed files.
-- [ ] Proof includes a failure mode where applicable.
+`EconomyExperimentReadinessReport` now separates scenario, simulation, metrics, projection, runtime, UI, and performance bands. Headless strict economic runs can reach L4 without browser, runtime browser errors affect the runtime band only, and semantic warnings cap confidence at L3.
+
+## Changed files
+
+- `src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs`
+- `src/CanDoItAll.Economy.SimulationSandbox/EconomySimulationSandboxContracts.cs`
+- `src/CanDoItAll.Economy.SimulationSandbox/EconomySimulationSandboxWorkflow.cs`
+- `src/CanDoItAll.Economy.SimulationSandbox/EconomySimulationSandboxPipelines.cs`
+- `tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs`

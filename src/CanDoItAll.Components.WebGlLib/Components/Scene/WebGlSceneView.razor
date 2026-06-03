@@ -292,8 +292,52 @@
     public Task<WebGlSceneCommandResult?> CancelCommandStagesAsync(string reason = "cancelled")
         => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.cancelCommandStages", host, reason).AsTask();
 
-    public Task<WebGlSceneCommandResult?> StopRuntimeActivityAsync(string reason = "runtime-stop")
-        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.stopRuntimeActivity", host, reason).AsTask();
+    public async Task<WebGlSceneCommandResult?> StopRuntimeActivityAsync(
+        string reason = "runtime-stop",
+        bool waitForIdle = false,
+        int timeoutMs = 2_000,
+        int pollIntervalMs = 16)
+    {
+        WebGlSceneCommandResult? result = await JsRuntime.InvokeAsync<WebGlSceneCommandResult?>(
+            "CanDoItAll.webglScene.stopRuntimeActivity",
+            host,
+            reason);
+        if (!waitForIdle)
+        {
+            return result;
+        }
+
+        WebGlRuntimeIdleResult? idleResult = await WaitForRuntimeIdleAsync(timeoutMs, pollIntervalMs, reason).ConfigureAwait(false);
+        if (result is null || idleResult is null)
+        {
+            return result;
+        }
+
+        result.Metadata["runtimeIdle"] = idleResult.Idle.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Metadata["runtimeIdleTimedOut"] = idleResult.TimedOut.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Metadata["runtimeIdleElapsedMs"] = idleResult.ElapsedMs.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        if (idleResult.Blockers.Count > 0)
+        {
+            result.Metadata["runtimeIdleBlockers"] = string.Join(",", idleResult.Blockers);
+            result.Warnings.Add($"Runtime did not settle before timeout. Blockers: {string.Join(", ", idleResult.Blockers)}.");
+        }
+
+        return result;
+    }
+
+    public Task<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
+        int timeoutMs = 2_000,
+        int pollIntervalMs = 16,
+        string reason = "runtime-idle")
+        => JsRuntime.InvokeAsync<WebGlRuntimeIdleResult?>(
+            "CanDoItAll.webglScene.waitForRuntimeIdle",
+            host,
+            new
+            {
+                timeoutMs,
+                pollIntervalMs,
+                reason
+            }).AsTask();
 
     public Task<bool> ClearMotionsAsync(string? objectId = null)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.clearMotions", host, objectId).AsTask();

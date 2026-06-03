@@ -113,10 +113,21 @@ public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
         if (timeline is not null && targetFrameIndex < State.CurrentFrameIndex)
         {
             result.RequiresSceneReset = true;
-            result.FramesToApply.AddRange(frameResolver.ResolveReplayFrames(timeline, targetFrameIndex));
+            IReadOnlyList<WebGlRunFrame> anchoredFrames = frameResolver.ResolveSnapshotAnchorReplayFrames(timeline, targetFrameIndex);
+            if (anchoredFrames.Count > 0)
+            {
+                result.ReplayMode = WebGlRunBrowserReplayModes.SnapshotAnchorReplay;
+                result.FramesToApply.AddRange(anchoredFrames);
+            }
+            else
+            {
+                result.ReplayMode = WebGlRunBrowserReplayModes.AbsoluteReplay;
+                result.FramesToApply.AddRange(frameResolver.ResolveReplayFrames(timeline, targetFrameIndex));
+            }
         }
         else
         {
+            result.ReplayMode = WebGlRunBrowserReplayModes.Incremental;
             result.FramesToApply.Add(frame);
         }
 

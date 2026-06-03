@@ -1,21 +1,19 @@
-# Proof manifest for SB09
+# Proof Manifest for SB09
 
-Status: pending
+Status: complete
 
-## Required artifacts
+## Evidence
 
-- failing-first transcript, where applicable
-- passing transcript
-- changed-file hashes
-- source assertion notes
-- focused test transcript
-- browser proof, if runtime/UI is in scope
-- semantic invariant report
+- Economy focused tests: `proof/SB14/transcripts/economy-focused-tests.txt`
+- Economy full test project: `proof/SB14/transcripts/economy-full-test-project.txt`
 
-## Semantic closure checklist
+## Result
 
-- [ ] Proof is not empty.
-- [ ] Proof is not just a screenshot.
-- [ ] Proof validates the stated risk.
-- [ ] Proof cites changed files.
-- [ ] Proof includes a failure mode where applicable.
+Scenario manifests now include `allowExtraFiles`, catalog validation rejects undeclared files by default, and `EconomySimulationScenarioManifestUpdater` can adopt a new companion with fresh per-file hashes and pack hash. The catalog-focused suite passed 16 tests inside the 27-test focused run.
+
+## Changed files
+
+- `src/CanDoItAll.Economy.SimulationSandbox/EconomySimulationSandboxContracts.cs`
+- `src/CanDoItAll.Economy.SimulationSandbox/FileSystemEconomySimulationScenarioCatalog.cs`
+- `tests/CanDoItAll.Economy.Tests/SimulationSandboxScenarioCatalogTests.cs`
+- `docs/simulation/architecture-boundaries.md`

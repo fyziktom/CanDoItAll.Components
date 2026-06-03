@@ -28,4 +28,8 @@ public interface IWebGlRunBrowserRuntime
         CancellationToken cancellationToken = default);
 
     ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default);
+
+    ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
+        WebGlRunRuntimeIdleWaitOptions options,
+        CancellationToken cancellationToken = default);
 }

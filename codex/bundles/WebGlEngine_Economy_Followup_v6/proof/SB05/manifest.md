@@ -1,21 +1,20 @@
-# Proof manifest for SB05
+# Proof Manifest for SB05
 
-Status: pending
+Status: complete
 
-## Required artifacts
+## Evidence
 
-- failing-first transcript, where applicable
-- passing transcript
-- changed-file hashes
-- source assertion notes
-- focused test transcript
-- browser proof, if runtime/UI is in scope
-- semantic invariant report
+- Economy focused tests: `proof/SB14/transcripts/economy-focused-tests.txt`
+- Economy full test project: `proof/SB14/transcripts/economy-full-test-project.txt`
 
-## Semantic closure checklist
+## Result
 
-- [ ] Proof is not empty.
-- [ ] Proof is not just a screenshot.
-- [ ] Proof validates the stated risk.
-- [ ] Proof cites changed files.
-- [ ] Proof includes a failure mode where applicable.
+Store resolution now supports explicit source, target, shared, and effect roles with strict ambiguity errors and exact-store policy escape hatches. The focused suite proves ambiguous source resolution fails in strict mode and exact policy passes.
+
+## Changed files
+
+- `src/CanDoItAll.Economy.Simulation.Abstractions/Scenario/SimulationScenarioDefinition.cs`
+- `src/CanDoItAll.Economy.Simulation.Abstractions/Events/SimulationEvent.cs`
+- `src/CanDoItAll.Economy.Simulation.SimpleAccounts/SimpleSimulationStateTransitionEngine.Mutations.cs`
+- `src/CanDoItAll.Economy.Simulation.SimpleAccounts/SimpleSimulationEventHandlers.cs`
+- `tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs`

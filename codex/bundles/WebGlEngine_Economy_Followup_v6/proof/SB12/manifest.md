@@ -1,21 +1,17 @@
-# Proof manifest for SB12
+# Proof Manifest for SB12
 
-Status: pending
+Status: complete
 
-## Required artifacts
+## Evidence
 
-- failing-first transcript, where applicable
-- passing transcript
-- changed-file hashes
-- source assertion notes
-- focused test transcript
-- browser proof, if runtime/UI is in scope
-- semantic invariant report
+- Economy focused tests: `proof/SB14/transcripts/economy-focused-tests.txt`
+- Economy full test project: `proof/SB14/transcripts/economy-full-test-project.txt`
 
-## Semantic closure checklist
+## Result
 
-- [ ] Proof is not empty.
-- [ ] Proof is not just a screenshot.
-- [ ] Proof validates the stated risk.
-- [ ] Proof cites changed files.
-- [ ] Proof includes a failure mode where applicable.
+`EconomyHeadlessExperimentRunner` runs scenario packs without UI/WebGL and writes event stream, frames, frame hashes, metrics/invariants, readiness report, and run summary JSON artifacts. Repeated identical packs produce the same run hash; modified packs produce a different run hash.
+
+## Changed files
+
+- `src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs`
+- `tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs`

@@ -4,13 +4,22 @@ namespace CanDoItAll.Components.WebGlRunLib;
 
 public sealed class WebGlRunBrowserApplyAdapter(
     IWebGlRunBrowserRuntime runtime,
-    WebGlSceneDocument? initialScene = null) : IWebGlRunBrowserApplyAdapter
+    WebGlSceneDocument? initialScene = null,
+    WebGlRunBrowserPlaybackApplyOptions? applyOptions = null) : IWebGlRunBrowserApplyAdapter
 {
     private const int MaxSnapshotListItems = 100;
     private const int MaxSnapshotJournalEntries = 12;
-    public async ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
+    private readonly WebGlRunBrowserPlaybackApplyOptions options = applyOptions ?? new();
+
+    public ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
         WebGlRunFrameApplyResult frameApplyResult,
         CancellationToken cancellationToken = default)
+        => ApplyFrameAsync(frameApplyResult, cancellationToken, waitForConfiguredIdle: true);
+
+    private async ValueTask<WebGlRunBrowserApplyResult> ApplyFrameAsync(
+        WebGlRunFrameApplyResult frameApplyResult,
+        CancellationToken cancellationToken,
+        bool waitForConfiguredIdle)
     {
         ArgumentNullException.ThrowIfNull(frameApplyResult);
         cancellationToken.ThrowIfCancellationRequested();
@@ -68,6 +77,22 @@ public sealed class WebGlRunBrowserApplyAdapter(
         WebGlRuntimeDiagnostics? diagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
         result.RuntimeSnapshot = BuildSnapshot(frameApplyResult, diagnostics, result);
         result.RuntimeDiagnostics = diagnostics;
+        if (waitForConfiguredIdle && ShouldWaitForSingleFrameApply())
+        {
+            WebGlRuntimeIdleResult? idleResult = await WaitForRuntimeIdleAsync($"single-frame:{frameApplyResult.FrameIndex}", cancellationToken).ConfigureAwait(false);
+            result.RuntimeIdleResult = idleResult;
+            if (idleResult?.Success != true)
+            {
+                result.FailureReason = WebGlRunBrowserApplyFailureReasons.RuntimeIdleTimeout;
+                result.Errors.Add(idleResult is null
+                    ? "Runtime idle wait returned no result."
+                    : $"Runtime did not become idle within {idleResult.TimeoutMs} ms. Blockers: {string.Join(", ", idleResult.Blockers)}.");
+                WebGlRuntimeDiagnostics? idleDiagnostics = idleResult?.Diagnostics ?? await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+                result.RuntimeSnapshot = BuildSnapshot(frameApplyResult, idleDiagnostics, result);
+                result.RuntimeDiagnostics = idleDiagnostics;
+            }
+        }
+
         return result;
     }
 
@@ -126,6 +151,8 @@ public sealed class WebGlRunBrowserApplyAdapter(
             TransactionPolicy = WebGlRunBrowserPlaybackTransactionPolicies.StopOnFirstFailure,
             RequiresSceneReset = playbackResult.RequiresSceneReset
         };
+        result.ReplayMode = playbackResult.ReplayMode;
+        result.RuntimeIdleWaitPolicy = options.RuntimeIdleWaitPolicy;
         result.Errors.AddRange(playbackResult.Errors);
         result.Warnings.AddRange(playbackResult.Warnings);
         if (result.Errors.Count > 0)
@@ -199,7 +226,7 @@ public sealed class WebGlRunBrowserApplyAdapter(
             WebGlRunBrowserApplyResult frameResult;
             try
             {
-                frameResult = await ApplyAsync(frameApplyResult, cancellationToken).ConfigureAwait(false);
+                frameResult = await ApplyFrameAsync(frameApplyResult, cancellationToken, waitForConfiguredIdle: false).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -225,6 +252,15 @@ public sealed class WebGlRunBrowserApplyAdapter(
             }
 
             result.LastAppliedFrameIndex = frameResult.FrameIndex;
+            if (ShouldWaitAfterEachFrame())
+            {
+                WebGlRuntimeIdleResult? idleResult = await WaitForRuntimeIdleAsync($"frame:{frameResult.FrameIndex}", cancellationToken).ConfigureAwait(false);
+                if (!RecordIdleResult(result, frameResult, idleResult, playbackResult))
+                {
+                    return result;
+                }
+            }
+
             if (cancellationToken.IsCancellationRequested)
             {
                 return await CompletePlaybackCancellationAsync(
@@ -236,7 +272,72 @@ public sealed class WebGlRunBrowserApplyAdapter(
             }
         }
 
+        if (ShouldWaitAfterPlayback())
+        {
+            WebGlRuntimeIdleResult? idleResult = await WaitForRuntimeIdleAsync("playback-complete", cancellationToken).ConfigureAwait(false);
+            if (!RecordIdleResult(result, null, idleResult, playbackResult))
+            {
+                return result;
+            }
+        }
+
         return result;
+    }
+
+    private bool ShouldWaitAfterEachFrame()
+        => string.Equals(options.RuntimeIdleWaitPolicy, WebGlRunRuntimeIdleWaitPolicies.AfterEachFrame, StringComparison.Ordinal);
+
+    private bool ShouldWaitAfterPlayback()
+        => string.Equals(options.RuntimeIdleWaitPolicy, WebGlRunRuntimeIdleWaitPolicies.AfterPlayback, StringComparison.Ordinal);
+
+    private bool ShouldWaitForSingleFrameApply()
+        => !string.Equals(options.RuntimeIdleWaitPolicy, WebGlRunRuntimeIdleWaitPolicies.None, StringComparison.Ordinal);
+
+    private async ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(string reasonSuffix, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var waitOptions = new WebGlRunRuntimeIdleWaitOptions
+        {
+            TimeoutMs = options.RuntimeIdle.TimeoutMs,
+            PollIntervalMs = options.RuntimeIdle.PollIntervalMs,
+            Reason = $"{options.RuntimeIdle.Reason}:{reasonSuffix}"
+        };
+        return await runtime.WaitForRuntimeIdleAsync(waitOptions, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static bool RecordIdleResult(
+        WebGlRunBrowserPlaybackApplyResult playbackApplyResult,
+        WebGlRunBrowserApplyResult? frameResult,
+        WebGlRuntimeIdleResult? idleResult,
+        WebGlRunPlaybackResult playbackResult)
+    {
+        if (idleResult is null)
+        {
+            playbackApplyResult.FailureReason = WebGlRunBrowserApplyFailureReasons.RuntimeIdleTimeout;
+            playbackApplyResult.Errors.Add("Runtime idle wait returned no result.");
+            playbackApplyResult.FailedFrameIndex = frameResult?.FrameIndex;
+            playbackApplyResult.FailureSnapshot = frameResult?.RuntimeSnapshot ?? BuildPlaybackFailureSnapshot(playbackResult, null, playbackApplyResult);
+            AnnotatePlaybackFailureSnapshot(playbackApplyResult.FailureSnapshot, playbackResult, playbackApplyResult);
+            return false;
+        }
+
+        playbackApplyResult.RuntimeIdleResults.Add(idleResult);
+        if (frameResult is not null)
+        {
+            frameResult.RuntimeIdleResult = idleResult;
+        }
+
+        if (idleResult.Success)
+        {
+            return true;
+        }
+
+        playbackApplyResult.FailureReason = WebGlRunBrowserApplyFailureReasons.RuntimeIdleTimeout;
+        playbackApplyResult.Errors.Add($"Runtime did not become idle within {idleResult.TimeoutMs} ms. Blockers: {string.Join(", ", idleResult.Blockers)}.");
+        playbackApplyResult.FailedFrameIndex = frameResult?.FrameIndex;
+        playbackApplyResult.FailureSnapshot = frameResult?.RuntimeSnapshot ?? BuildPlaybackFailureSnapshot(playbackResult, idleResult.Diagnostics, playbackApplyResult);
+        AnnotatePlaybackFailureSnapshot(playbackApplyResult.FailureSnapshot, playbackResult, playbackApplyResult);
+        return false;
     }
 
     private async ValueTask<WebGlRunBrowserPlaybackApplyResult> CompletePlaybackCancellationAsync(
@@ -451,6 +552,8 @@ public sealed class WebGlRunBrowserApplyAdapter(
             ["queuedCommandStageCount"] = diagnostics.QueuedCommandStageCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["commandStageJournalCount"] = diagnostics.CommandStageJournalCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["commandStageBarrierPolicy"] = diagnostics.CommandStageBarrierPolicy,
+            ["isRenderLoopActive"] = diagnostics.IsRenderLoopActive.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["assetCachePendingDisposalCount"] = diagnostics.AssetCachePendingDisposalCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["lastError"] = diagnostics.LastError,
             ["lastStageError"] = diagnostics.LastStageError
         };

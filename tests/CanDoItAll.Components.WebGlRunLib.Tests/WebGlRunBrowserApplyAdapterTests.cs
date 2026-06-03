@@ -317,6 +317,92 @@ public sealed class WebGlRunBrowserApplyAdapterTests
     }
 
     [Fact]
+    public async Task Adapter_apply_playback_waits_for_idle_after_each_frame_when_policy_requires_it()
+    {
+        var runtime = new RecordingBrowserRuntime
+        {
+            IdleResult = new()
+            {
+                Success = true,
+                Idle = true,
+                Reason = "test",
+                Diagnostics = new()
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(
+            runtime,
+            new() { Scene = new() { SceneId = "scene.initial" } },
+            new()
+            {
+                RuntimeIdleWaitPolicy = WebGlRunRuntimeIdleWaitPolicies.AfterEachFrame,
+                RuntimeIdle = new() { TimeoutMs = 123, PollIntervalMs = 7, Reason = "SB02-runtime-idle" }
+            });
+        var playback = new WebGlRunPlaybackResult
+        {
+            RequestedCommand = WebGlRunPlaybackCommandKinds.Seek,
+            TargetFrameIndex = 2,
+            RequiresSceneReset = true,
+            ReplayMode = WebGlRunBrowserReplayModes.AbsoluteReplay,
+            FramesToApply =
+            {
+                Frame(1, "stage.first"),
+                Frame(2, "stage.second")
+            }
+        };
+
+        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback);
+
+        Assert.True(result.Success);
+        Assert.Equal(WebGlRunRuntimeIdleWaitPolicies.AfterEachFrame, result.RuntimeIdleWaitPolicy);
+        Assert.Equal(WebGlRunBrowserReplayModes.AbsoluteReplay, result.ReplayMode);
+        Assert.Equal(2, runtime.IdleWaits.Count);
+        Assert.All(runtime.IdleWaits, wait => Assert.Equal(123, wait.TimeoutMs));
+        Assert.All(result.FrameResults, frame => Assert.NotNull(frame.RuntimeIdleResult));
+    }
+
+    [Fact]
+    public async Task Adapter_apply_playback_fails_when_runtime_idle_times_out()
+    {
+        var runtime = new RecordingBrowserRuntime
+        {
+            IdleResult = new()
+            {
+                Success = false,
+                Idle = false,
+                TimedOut = true,
+                TimeoutMs = 10,
+                Blockers = { "command-stage:barrier" },
+                Diagnostics = new()
+                {
+                    CommandStageBarrierPolicy = WebGlSceneStageBarrierPolicies.WaitForEvent,
+                    CommandStageBarrierBlockers = { "event:manual" }
+                }
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(
+            runtime,
+            applyOptions: new()
+            {
+                RuntimeIdleWaitPolicy = WebGlRunRuntimeIdleWaitPolicies.AfterPlayback,
+                RuntimeIdle = new() { TimeoutMs = 10, PollIntervalMs = 1, Reason = "SB02-timeout" }
+            });
+        var playback = new WebGlRunPlaybackResult
+        {
+            TargetFrameIndex = 1,
+            FramesToApply = { Frame(1, "stage.blocked") }
+        };
+
+        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback);
+
+        Assert.False(result.Success);
+        Assert.Equal(WebGlRunBrowserApplyFailureReasons.RuntimeIdleTimeout, result.FailureReason);
+        Assert.Single(runtime.IdleWaits);
+        Assert.Contains("command-stage:barrier", result.Errors.Single());
+        Assert.NotNull(result.FailureSnapshot);
+        Assert.Equal(WebGlSceneStageBarrierPolicies.WaitForEvent, result.FailureSnapshot.StageBarrier.Policy);
+    }
+
+    [Fact]
     public async Task Adapter_apply_playback_stops_on_first_failed_frame()
     {
         var runtime = new RecordingBrowserRuntime();
@@ -482,6 +568,10 @@ public sealed class WebGlRunBrowserApplyAdapterTests
 
         public WebGlRuntimeDiagnostics Diagnostics { get; set; } = new();
 
+        public WebGlRuntimeIdleResult IdleResult { get; set; } = new() { Success = true, Idle = true };
+
+        public List<WebGlRunRuntimeIdleWaitOptions> IdleWaits { get; } = [];
+
         public Action<WebGlSceneCommandBatch>? OnApplyBatch { get; set; }
 
         public ValueTask<WebGlSceneCommandResult?> ImportSceneAsync(
@@ -503,5 +593,13 @@ public sealed class WebGlRunBrowserApplyAdapterTests
 
         public ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult<WebGlRuntimeDiagnostics?>(Diagnostics);
+
+        public ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
+            WebGlRunRuntimeIdleWaitOptions options,
+            CancellationToken cancellationToken = default)
+        {
+            IdleWaits.Add(options);
+            return ValueTask.FromResult<WebGlRuntimeIdleResult?>(IdleResult);
+        }
     }
 }

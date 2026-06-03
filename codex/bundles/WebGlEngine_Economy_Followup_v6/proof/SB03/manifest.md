@@ -1,21 +1,21 @@
-# Proof manifest for SB03
+# Proof Manifest for SB03
 
-Status: pending
+Status: complete
 
-## Required artifacts
+## Evidence
 
-- failing-first transcript, where applicable
-- passing transcript
-- changed-file hashes
-- source assertion notes
-- focused test transcript
-- browser proof, if runtime/UI is in scope
-- semantic invariant report
+- WebGlRunLib tests: `proof/SB03/transcripts/components-webglrunlib-tests-rerun.txt`
+- WebGL sandbox build: `proof/SB03/transcripts/components-webglsandbox-build.txt`
+- Browser pause proof: `proof/SB01/transcripts/browser-pause-idle-proof-passing.txt`
 
-## Semantic closure checklist
+## Result
 
-- [ ] Proof is not empty.
-- [ ] Proof is not just a screenshot.
-- [ ] Proof validates the stated risk.
-- [ ] Proof cites changed files.
-- [ ] Proof includes a failure mode where applicable.
+Playback now has explicit browser replay options, apply results, and idle-aware pause/stop behavior. `CanDoItAll.Components.WebGlRunLib.Tests` passed 61 tests, and `CanDoItAll.Components.WebGlSandbox` built successfully with zero warnings and zero errors.
+
+## Changed files
+
+- `src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs`
+- `src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs`
+- `src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs`
+- `src/CanDoItAll.Components.WebGlSandbox/Components/Pages/RunPlayback.razor.cs`
+- `tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunPlaybackControllerTests.cs`

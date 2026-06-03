@@ -22,6 +22,8 @@ public sealed class WebGlRunBrowserApplyResult
 
     public WebGlRuntimeDiagnostics? RuntimeDiagnostics { get; set; }
 
+    public WebGlRuntimeIdleResult? RuntimeIdleResult { get; set; }
+
     public WebGlSceneCommandBatchResult? CommandBatchResult { get; set; }
 
     public List<string> Errors { get; set; } = [];
@@ -43,6 +45,10 @@ public sealed class WebGlRunBrowserPlaybackApplyResult
 
     public bool RequiresSceneReset { get; set; }
 
+    public string ReplayMode { get; set; } = WebGlRunBrowserReplayModes.Incremental;
+
+    public string RuntimeIdleWaitPolicy { get; set; } = WebGlRunRuntimeIdleWaitPolicies.None;
+
     public bool AppliedInitialScene { get; set; }
 
     public long? LastAppliedFrameIndex { get; set; }
@@ -56,6 +62,8 @@ public sealed class WebGlRunBrowserPlaybackApplyResult
     public string CancellationReason { get; set; } = string.Empty;
 
     public WebGlRunRuntimeSnapshot? FailureSnapshot { get; set; }
+
+    public List<WebGlRuntimeIdleResult> RuntimeIdleResults { get; set; } = [];
 
     public List<WebGlRunBrowserApplyResult> FrameResults { get; set; } = [];
 
@@ -75,6 +83,8 @@ public static class WebGlRunBrowserApplyFailureReasons
     public const string MultiFramePlaybackRequiresExplicitApply = nameof(MultiFramePlaybackRequiresExplicitApply);
 
     public const string CancellationRequested = nameof(CancellationRequested);
+
+    public const string RuntimeIdleTimeout = nameof(RuntimeIdleTimeout);
 }
 
 public static class WebGlRunBrowserPlaybackTransactionPolicies

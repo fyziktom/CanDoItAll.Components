@@ -1,12 +1,12 @@
-# Semantic invariants for SB06
+# Semantic Invariants for SB06
 
-To be filled during execution.
+## Invariant SB06-oracles-bind-economic-outcomes
 
-Minimum required fields:
+Source: SimpleAccounts transition engine and deterministic hash helpers.
 
-- invariant id
-- source file or scenario
-- expected behavior
-- failing-first result
-- passing result
-- reason this proof prevents simulator-noise contamination
+Expected behavior: known-answer cases produce expected final store quantities, flow counts, issue counts, metric values, and stable frame hashes; negative cases fail for expected strict reasons.
+
+Passing result: `GoldenOracleSuite_ProvesKnownFinalStoresFlowsIssuesMetricsAndHashes` and `GoldenOracleSuite_NegativeScenariosFailForExpectedReasons` passed.
+
+Why this prevents simulator-noise contamination: model primitives now have executable expected outcomes rather than relying on visual inspection.
+

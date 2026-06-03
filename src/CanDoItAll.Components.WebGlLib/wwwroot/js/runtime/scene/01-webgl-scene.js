@@ -9,6 +9,7 @@ import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetaile
 import { cancelMotion, cancelMotionDetailed } from "./31-webgl-scene-motion-cancellation.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
 import { cancelCommandStages as cancelRuntimeCommandStages, stopRuntimeActivity as stopRuntimeActivityCore } from "./39-webgl-scene-runtime-stop.js";
+import { waitForRuntimeIdle as waitForRuntimeIdleCore } from "./40-webgl-scene-runtime-idle.js";
 const root = window.CanDoItAll = window.CanDoItAll || {};
 root.webglScene = {
     create(host, dotNetRef, scene, options) {
@@ -135,6 +136,7 @@ root.webglScene = {
     },
     cancelCommandStages(host, reason) { const state = resolveState(host); return state ? cancelRuntimeCommandStages(state, reason) : null; },
     stopRuntimeActivity(host, reason) { const state = resolveState(host); return state ? stopRuntimeActivityCore(state, reason) : null; },
+    waitForRuntimeIdle(host, options) { const state = resolveState(host); return state ? waitForRuntimeIdleCore(state, options) : null; },
     setObjectTransform(host, objectId, transform) {
         const state = resolveState(host);
         return state ? setObjectTransform(state, objectId, transform) : false;

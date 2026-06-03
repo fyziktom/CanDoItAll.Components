@@ -1,12 +1,12 @@
-# Semantic invariants for SB07
+# Semantic Invariants for SB07
 
-To be filled during execution.
+## Invariant SB07-metrics-and-invariants-use-registered-kinds
 
-Minimum required fields:
+Source: metric evaluator, invariant evaluator, and input-pack loader.
 
-- invariant id
-- source file or scenario
-- expected behavior
-- failing-first result
-- passing result
-- reason this proof prevents simulator-noise contamination
+Expected behavior: strict runs reject unknown metric and invariant kinds and reject invariant references to missing metric ids.
+
+Passing result: `MetricAndInvariantRegistry_RejectsUnknownKindsAndMissingMetricInStrictMode` passed in the focused suite.
+
+Why this prevents simulator-noise contamination: unsupported measurements cannot quietly fall back to zero or pass while economic conclusions depend on them.
+

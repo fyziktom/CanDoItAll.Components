@@ -11,6 +11,7 @@ public partial class RunPlayback
 {
     private const int BatchActorCount = 24;
     private const long BatchProofFrameIndex = 4;
+    private static readonly TimeSpan LatePlaybackApplyDrainDelay = TimeSpan.FromMilliseconds(750);
     private static readonly JsonSerializerOptions DiagnosticsJsonOptions = new(JsonSerializerDefaults.Web)
     {
         WriteIndented = true
@@ -30,11 +31,13 @@ public partial class RunPlayback
     private WebGlRunDocumentRunner? documentRunner;
     private WebGlSceneProofSnapshot? latestSnapshot;
     private WebGlRuntimeDiagnostics? latestRuntimeDiagnostics;
+    private WebGlRuntimeIdleResult? latestRuntimeIdleResult;
     private WebGlRunBrowserApplyResult? latestApplyResult;
     private WebGlRunRuntimeSnapshot? latestRunSnapshot;
     private CancellationTokenSource? playbackCancellation;
     private Task? playbackTask;
     private long playbackGeneration;
+    private bool playbackStopRequested = true;
     private bool isPlaying;
     private string statusText = "Ready.";
 
@@ -44,7 +47,7 @@ public partial class RunPlayback
     }
 
     private long CurrentFrameIndex => documentRunner?.State.CurrentFrameIndex ?? 0;
-    private bool IsPlaying => isPlaying;
+    private bool IsPlaying => isPlaying && !playbackStopRequested;
     private long MaxFrameIndex => runDocument.Timeline.Frames.Count == 0
         ? 0
         : runDocument.Timeline.Frames.Max(static frame => frame.Index);
@@ -88,6 +91,15 @@ public partial class RunPlayback
                 latestRuntimeDiagnostics.QueuedCommandStageCount,
                 latestRuntimeDiagnostics.CommandStageJournalCount
             },
+        idle = latestRuntimeIdleResult is null
+            ? null
+            : new
+            {
+                latestRuntimeIdleResult.Idle,
+                latestRuntimeIdleResult.TimedOut,
+                latestRuntimeIdleResult.ElapsedMs,
+                latestRuntimeIdleResult.Blockers
+            },
         runSnapshot = latestRunSnapshot is null
             ? null
             : new
@@ -124,6 +136,7 @@ public partial class RunPlayback
         playbackCancellation = new CancellationTokenSource();
         CancellationTokenSource cancellationSource = playbackCancellation;
         long generation = ++playbackGeneration;
+        playbackStopRequested = false;
         isPlaying = true;
         statusText = "Playing generic sequence.";
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
@@ -197,6 +210,7 @@ public partial class RunPlayback
         latestApplyResult = null;
         latestRunSnapshot = null;
         latestRuntimeDiagnostics = null;
+        latestRuntimeIdleResult = null;
         latestSnapshot = null;
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
 
@@ -300,16 +314,29 @@ public partial class RunPlayback
 
         var adapter = new WebGlRunBrowserApplyAdapter(
             new WebGlSceneViewBrowserRuntime(sceneView),
-            runDocument.InitialScene);
+            runDocument.InitialScene,
+            new WebGlRunBrowserPlaybackApplyOptions
+            {
+                RuntimeIdleWaitPolicy = WebGlRunRuntimeIdleWaitPolicies.AfterPlayback,
+                RuntimeIdle = new WebGlRunRuntimeIdleWaitOptions
+                {
+                    TimeoutMs = 2_000,
+                    PollIntervalMs = 16,
+                    Reason = "run-playback"
+                }
+            });
         WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(frame, cancellationToken).ConfigureAwait(false);
         if (cancellationToken.IsCancellationRequested)
         {
+            await sceneView.StopRuntimeActivityAsync("playback-apply-canceled", waitForIdle: true).ConfigureAwait(false);
+            latestRuntimeIdleResult = await sceneView.WaitForRuntimeIdleAsync(reason: "playback-apply-canceled").ConfigureAwait(false);
             return;
         }
 
         latestApplyResult = result;
         latestRunSnapshot = result.RuntimeSnapshot;
         latestRuntimeDiagnostics = result.RuntimeDiagnostics;
+        latestRuntimeIdleResult = result.RuntimeIdleResult;
         latestSnapshot = await sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
         statusText = result.Success
             ? $"Applied generic frame {frame.FrameIndex.ToString(CultureInfo.InvariantCulture)} as one command batch."
@@ -319,20 +346,59 @@ public partial class RunPlayback
     private async Task StopPlaybackAsync(string status)
     {
         playbackGeneration++;
+        playbackStopRequested = true;
         isPlaying = false;
+        Task? taskToStop = playbackTask;
         playbackCancellation?.Cancel();
         statusText = status;
+        if (taskToStop is not null && !taskToStop.IsCompleted)
+        {
+            try
+            {
+                await taskToStop.WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (TimeoutException)
+            {
+                statusText = $"{status} Playback task did not settle before runtime stop.";
+            }
+        }
+
+        if (taskToStop?.IsCompleted == true)
+        {
+            playbackTask = null;
+            playbackCancellation = null;
+        }
+
+        isPlaying = false;
         if (sceneView is not null)
         {
-            WebGlSceneCommandResult? stopResult = await sceneView.StopRuntimeActivityAsync(status).ConfigureAwait(false);
+            WebGlSceneCommandResult? stopResult = await sceneView.StopRuntimeActivityAsync(status, waitForIdle: true).ConfigureAwait(false);
             if (stopResult?.Success == false)
             {
                 statusText = string.Join(" ", stopResult.Errors);
             }
 
             await CaptureProofAsync().ConfigureAwait(false);
+            latestRuntimeIdleResult = await sceneView.WaitForRuntimeIdleAsync(reason: "run-playback-stop").ConfigureAwait(false);
+            await Task.Delay(LatePlaybackApplyDrainDelay).ConfigureAwait(false);
+            WebGlSceneCommandResult? drainResult = await sceneView.StopRuntimeActivityAsync($"{status} Late apply drain.", waitForIdle: true).ConfigureAwait(false);
+            if (drainResult?.Success == false)
+            {
+                statusText = string.Join(" ", drainResult.Errors);
+            }
+
+            await CaptureProofAsync().ConfigureAwait(false);
+            latestRuntimeIdleResult = await sceneView.WaitForRuntimeIdleAsync(reason: "run-playback-stop-drain").ConfigureAwait(false);
         }
 
+        playbackStopRequested = true;
+        isPlaying = false;
+        statusText = statusText.Contains("Playback task did not settle", StringComparison.Ordinal)
+            ? statusText
+            : status;
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
     }
 
@@ -355,6 +421,7 @@ public partial class RunPlayback
     public void Dispose()
     {
         playbackGeneration++;
+        playbackStopRequested = true;
         isPlaying = false;
         playbackCancellation?.Cancel();
         playbackCancellation?.Dispose();
@@ -456,6 +523,9 @@ public partial class RunPlayback
             var runtime = new WebGlSceneViewBrowserRuntime(owner.sceneView);
             WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(sceneDocument, cancellationToken).ConfigureAwait(false);
             owner.latestRuntimeDiagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+            owner.latestRuntimeIdleResult = await runtime.WaitForRuntimeIdleAsync(
+                new WebGlRunRuntimeIdleWaitOptions { Reason = "run-playback-initial-scene" },
+                cancellationToken).ConfigureAwait(false);
             owner.latestSnapshot = await owner.sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
             owner.latestRunSnapshot = new WebGlRunRuntimeSnapshot
             {

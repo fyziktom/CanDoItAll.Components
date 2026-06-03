@@ -212,6 +212,49 @@ public sealed class WebGlRuntimeDiagnosticsTests
     }
 
     [Fact]
+    public void Runtime_idle_result_round_trips_blockers_and_diagnostics()
+    {
+        const string json = """
+            {
+              "success": false,
+              "idle": false,
+              "timedOut": true,
+              "reason": "SB02-runtime-idle",
+              "timeoutMs": 25,
+              "pollIntervalMs": 5,
+              "elapsedMs": 26,
+              "blockers": [
+                "motion:active:1",
+                "command-stage:barrier",
+                "render-loop:scheduled"
+              ],
+              "diagnostics": {
+                "activeMotionCount": 1,
+                "queuedMotionCount": 0,
+                "queuedCommandStageCount": 0,
+                "isRenderLoopActive": true,
+                "assetCachePendingDisposalCount": 0
+              }
+            }
+            """;
+
+        var result = JsonSerializer.Deserialize<WebGlRuntimeIdleResult>(json, JsonOptions);
+
+        Assert.NotNull(result);
+        Assert.False(result.Success);
+        Assert.False(result.Idle);
+        Assert.True(result.TimedOut);
+        Assert.Equal("SB02-runtime-idle", result.Reason);
+        Assert.Equal(25, result.TimeoutMs);
+        Assert.Equal(5, result.PollIntervalMs);
+        Assert.Equal(26, result.ElapsedMs);
+        Assert.Contains("command-stage:barrier", result.Blockers);
+        Assert.NotNull(result.Diagnostics);
+        Assert.Equal(1, result.Diagnostics.ActiveMotionCount);
+        Assert.True(result.Diagnostics.IsRenderLoopActive);
+    }
+
+    [Fact]
     public void Runtime_diagnostics_deserializes_browser_resource_cache_capture_shape()
     {
         const string json = """

@@ -1,12 +1,12 @@
-# Semantic invariants for SB09
+# Semantic Invariants for SB09
 
-To be filled during execution.
+## Invariant SB09-scenario-packs-are-closed-by-default
 
-Minimum required fields:
+Source: filesystem scenario catalog and scenario manifest updater.
 
-- invariant id
-- source file or scenario
-- expected behavior
-- failing-first result
-- passing result
-- reason this proof prevents simulator-noise contamination
+Expected behavior: every runtime pack file must either be declared in `requiredFiles` and hashed or the manifest must explicitly opt into extra files for exploratory work.
+
+Passing result: `FileSystemScenarioCatalogRejectsUndeclaredExtraPackFileWhenPolicyDisallows` and `ScenarioManifestUpdaterAdoptsCompanionFileWithFreshHashes` passed.
+
+Why this prevents simulator-noise contamination: hidden files cannot change runtime scenario context without being surfaced by catalog validation.
+

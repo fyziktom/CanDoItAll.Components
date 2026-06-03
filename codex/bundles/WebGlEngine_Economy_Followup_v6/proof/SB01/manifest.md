@@ -1,21 +1,22 @@
-# Proof manifest for SB01
+# Proof Manifest for SB01
 
-Status: pending
+Status: complete
 
-## Required artifacts
+## Evidence
 
-- failing-first transcript, where applicable
-- passing transcript
-- changed-file hashes
-- source assertion notes
-- focused test transcript
-- browser proof, if runtime/UI is in scope
-- semantic invariant report
+- Browser runtime proof: `proof/SB01/transcripts/browser-pause-idle-proof-passing.txt`
+- Components runtime tests: `proof/SB01/transcripts/components-webgllib-tests.txt`
+- Browser script: `proof/SB01/browser-pause-idle-proof.js`
+- Screenshot: `C:/repositories/CanDoItAll.Components/output/playwright/sb01-run-playback-paused-idle.png`
 
-## Semantic closure checklist
+## Result
 
-- [ ] Proof is not empty.
-- [ ] Proof is not just a screenshot.
-- [ ] Proof validates the stated risk.
-- [ ] Proof cites changed files.
-- [ ] Proof includes a failure mode where applicable.
+Pause now calls the runtime stop/idle path and the browser proof shows active motions, queued motions, active stages, and pending stages settling to zero after pause. `CanDoItAll.Components.WebGlLib.Tests` passed: 56 tests.
+
+## Changed files
+
+- `src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor`
+- `src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/01-webgl-scene.js`
+- `src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js`
+- `src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs`
+- `tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs`

@@ -22,6 +22,8 @@ public sealed class WebGlRunPlaybackResult
 
     public bool RequiresSceneReset { get; set; }
 
+    public string ReplayMode { get; set; } = WebGlRunBrowserReplayModes.Incremental;
+
     public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
 
     public string PlaybackLifecycleReason { get; set; } = string.Empty;
