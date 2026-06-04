@@ -6,9 +6,11 @@ import {
 } from "./02-webgl-scene-core.js";
 import { updateObjectRuntimeTransform } from "./11-webgl-scene-graph.js";
 import {
+    commandLifecycleStates,
     completeCommandResult,
     createCommandResult,
-    failCommand
+    failCommand,
+    setCommandLifecycle
 } from "./20-webgl-scene-command-results.js";
 import { notifyStateChanged } from "./24-webgl-scene-notifications.js";
 import {
@@ -56,6 +58,7 @@ export function enqueueMotionDetailed(state, command) {
         result.metadata.motionQueueMode = normalized.queuePolicy;
         result.metadata.queuePolicy = normalized.queuePolicy;
         result.metadata.motionQueueDepth = String(getObjectQueue(state, normalized.objectId).length);
+        setCommandLifecycle(result, commandLifecycleStates.scheduled, false);
         state.scheduleRender("motion-queued");
         return completeCommandResult(state, result);
     }
@@ -66,6 +69,7 @@ export function enqueueMotionDetailed(state, command) {
     result.commandId = normalized.motionId;
     result.affectedObjectIds.push(normalized.objectId);
     result.metadata.queuePolicy = normalized.queuePolicy;
+    setCommandLifecycle(result, commandLifecycleStates.active, false);
     state.scheduleRender("motion-enqueued");
     return completeCommandResult(state, result);
 }
@@ -179,6 +183,7 @@ function normalizeCommand(state, command, result) {
     return {
         motionId: command.motionId || nextMotionId(state, objectId),
         objectId,
+        runtimeStopGeneration: state.runtimeStopGeneration || 0,
         startPosition,
         targetPosition,
         startRotation,
@@ -267,8 +272,19 @@ function failMotion(state, result, message) {
 }
 
 function notifyMotionCompleted(state, motion) {
+    const motionGeneration = Number(motion?.runtimeStopGeneration) || 0;
+    const currentGeneration = Number(state?.runtimeStopGeneration) || 0;
+    if (motionGeneration !== currentGeneration) {
+        if (state?.diagnostics) {
+            state.diagnostics.ignoredStaleMotionCompletedCount = (state.diagnostics.ignoredStaleMotionCompletedCount || 0) + 1;
+        }
+
+        return;
+    }
+
     const result = createCommandResult(state, "motion-completed", motion.motionId);
     result.affectedObjectIds.push(motion.objectId);
+    result.metadata.runtimeStopGeneration = String(currentGeneration);
     state.dotNetRef?.invokeMethodAsync("OnMotionCompleted", JSON.stringify(completeCommandResult(state, result)))
         .catch(error => console.warn("WebGL scene motion completion callback failed.", error));
 }

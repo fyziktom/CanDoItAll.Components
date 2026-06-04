@@ -27,6 +27,24 @@ Convert readiness reporting from advisory text into machine-readable, hard-gated
 - `proof/SB04/transcripts/readiness-v2-tests.txt`
 - `proof/SB04/artifacts/readiness-v2-sample.json`
 
+## Execution status
+
+Completed.
+
+Implemented in Economy:
+- `EconomyExperimentReadinessReport` schema v2.
+- Explicit readiness statuses and top-level `researchReady`.
+- Oracle and browser-observer validity bands.
+- Hard-gate results with pass/fail/warning counts.
+- Warning budget and allowlist rollups with unique warning counts.
+
+Proof captured:
+- Failing-first compile/test proof: `proof/SB04/transcripts/readiness-v2-tests-failing-first.txt`.
+- Focused v2 test proof: `proof/SB04/transcripts/readiness-v2-tests.txt`.
+- Broader trust-hardening regression proof: `proof/SB04/transcripts/readiness-v2-hardening-tests.txt`.
+- Real runner sample export proof: `proof/SB04/transcripts/readiness-v2-sample-export.txt`.
+- Machine-readable sample: `proof/SB04/artifacts/readiness-v2-sample.json`.
+
 ## Gate
 
 Readiness report must be useful for deciding whether an experiment can support claims.

@@ -3,7 +3,7 @@ import { selectObjects } from "./05-webgl-scene-interaction.js";
 import { focusObject, fitView, resetCamera } from "./06-webgl-scene-camera.js";
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
 import { applyPatch, applyPatchDetailed, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
-import { applyCommandBatch } from "./26-webgl-scene-command-batch.js";
+import { applyCommandBatch, applyCommandBatchAndWait } from "./26-webgl-scene-command-batch.js";
 import { requestCommandStageManualStep, signalCommandStageEvent } from "./30-webgl-scene-stage-runner.js";
 import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
 import { cancelMotion, cancelMotionDetailed } from "./31-webgl-scene-motion-cancellation.js";
@@ -118,22 +118,14 @@ root.webglScene = {
         const state = resolveState(host);
         return state ? applyPatch(state, patch) : false;
     },
-    applyPatchDetailed(host, patch) {
-        const state = resolveState(host);
-        return state ? applyPatchDetailed(state, patch) : null;
-    },
-    applyCommandBatch(host, batch) {
-        const state = resolveState(host);
-        return state ? applyCommandBatch(state, batch) : null;
-    },
+    applyPatchDetailed(host, patch) { const state = resolveState(host); return state ? applyPatchDetailed(state, patch) : null; },
+    applyCommandBatch(host, batch) { const state = resolveState(host); return state ? applyCommandBatch(state, batch) : null; },
+    applyCommandBatchAndWait(host, batch, options) { const state = resolveState(host); return state ? applyCommandBatchAndWait(state, batch, options) : null; },
     signalCommandStageEvent(host, eventId) {
         const state = resolveState(host);
         return state ? signalCommandStageEvent(state, eventId) : false;
     },
-    requestCommandStageManualStep(host) {
-        const state = resolveState(host);
-        return state ? requestCommandStageManualStep(state) : false;
-    },
+    requestCommandStageManualStep(host) { const state = resolveState(host); return state ? requestCommandStageManualStep(state) : false; },
     cancelCommandStages(host, reason) { const state = resolveState(host); return state ? cancelRuntimeCommandStages(state, reason) : null; },
     stopRuntimeActivity(host, reason) { const state = resolveState(host); return state ? stopRuntimeActivityCore(state, reason) : null; },
     waitForRuntimeIdle(host, options) { const state = resolveState(host); return state ? waitForRuntimeIdleCore(state, options) : null; },

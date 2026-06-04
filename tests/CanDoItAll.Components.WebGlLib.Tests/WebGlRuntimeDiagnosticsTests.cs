@@ -152,6 +152,26 @@ public sealed class WebGlRuntimeDiagnosticsTests
     }
 
     [Fact]
+    public void Runtime_budget_profiles_define_small_medium_large_and_stress_profiles()
+    {
+        WebGlRuntimeBudgetOptions small = WebGlRuntimeBudgetProfiles.Small();
+        WebGlRuntimeBudgetOptions medium = WebGlRuntimeBudgetProfiles.Medium();
+        WebGlRuntimeBudgetOptions large = WebGlRuntimeBudgetProfiles.Large();
+        WebGlRuntimeBudgetOptions stress = WebGlRuntimeBudgetProfiles.Stress();
+
+        Assert.Equal("small", small.Profile);
+        Assert.Equal("medium", medium.Profile);
+        Assert.Equal("large", large.Profile);
+        Assert.Equal("stress", stress.Profile);
+
+        Assert.True(small.MaxSceneObjects < medium.MaxSceneObjects);
+        Assert.True(medium.MaxSceneObjects < large.MaxSceneObjects);
+        Assert.True(large.MaxSceneObjects < stress.MaxSceneObjects);
+        Assert.True(stress.MaxQueuedCommandStages >= 512);
+        Assert.True(stress.MaxEstimatedTriangles >= 1_000_000);
+    }
+
+    [Fact]
     public void Runtime_diagnostics_round_trips_large_scene_performance_budget_counters()
     {
         const string json = """
@@ -195,9 +215,15 @@ public sealed class WebGlRuntimeDiagnosticsTests
             {
               "runtimeStopCount": 2,
               "lastRuntimeStopReason": "pause",
+              "runtimeStopGeneration": 3,
               "clearedMotionCount": 5,
               "lastRuntimeStopClearedMotionCount": 0,
-              "lastRuntimeStopCancelledCommandStageCount": 0
+              "lastRuntimeStopCancelledCommandStageCount": 0,
+              "lastRuntimeStopIdle": true,
+              "lastRuntimeStopTimedOut": false,
+              "lastRuntimeStopIdleElapsedMs": 17,
+              "lastRuntimeStopBlockers": [],
+              "ignoredStaleMotionCompletedCount": 4
             }
             """;
 
@@ -206,9 +232,15 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.NotNull(diagnostics);
         Assert.Equal(2, diagnostics.RuntimeStopCount);
         Assert.Equal("pause", diagnostics.LastRuntimeStopReason);
+        Assert.Equal(3, diagnostics.RuntimeStopGeneration);
         Assert.Equal(5, diagnostics.ClearedMotionCount);
         Assert.Equal(0, diagnostics.LastRuntimeStopClearedMotionCount);
         Assert.Equal(0, diagnostics.LastRuntimeStopCancelledCommandStageCount);
+        Assert.True(diagnostics.LastRuntimeStopIdle);
+        Assert.False(diagnostics.LastRuntimeStopTimedOut);
+        Assert.Equal(17, diagnostics.LastRuntimeStopIdleElapsedMs);
+        Assert.Empty(diagnostics.LastRuntimeStopBlockers);
+        Assert.Equal(4, diagnostics.IgnoredStaleMotionCompletedCount);
     }
 
     [Fact]

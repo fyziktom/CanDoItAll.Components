@@ -2,7 +2,7 @@
 
 Prepared date: 2026-06-03
 
-Stage: prepared
+Stage: completed
 
 Profile: initiative / cross-repo post-v6 hardening and experiment-readiness review
 
@@ -17,29 +17,30 @@ Codex implemented the previous v6 follow-up bundle and pushed both repositories.
 
 This bundle focuses on removing simulator/runtime noise from economic experiments. The core objective is to ensure that when a scenario fails, succeeds, produces inequality, depletion, cooperation collapse, or governance overhead, the result is attributable to the economic model and scenario assumptions rather than a hidden bug, fallback, warning, projection issue, visual runtime state, implicit store resolution, or metric/invariant misconfiguration.
 
-## Current verdict
+## Final verdict
 
-The stack is ready for:
+The stack is conditionally research-ready for:
 
 - exploratory scenario development;
 - headless smoke runs;
 - fixture/projection debugging;
 - visual UI proof;
 - WebGL runtime and playback hardening;
-- early comparison of scenario shapes.
+- early comparison of scenario shapes;
+- gated headless economic investigation when strict policy, oracle coverage, reproducibility, design, performance, and observer gates pass.
 
-The stack is not yet ready for strong economic conclusions without additional gates. The next hardening pass must introduce strict research-mode behavior, golden oracles, deterministic replay evidence, explicit runtime-idle proof, metric/invariant registries, versioned behavior expansion profiles, scenario-source portability, and experiment artifact reproducibility.
+The stack is not ready for strong economic conclusions from ungated exploratory/demo runs, browser-only playback, missing-oracle artifacts, broken scenario hashes, or over-budget/non-comparable runs. Final closure proof is captured in `proof/SB15/final-red-team-report.md`, `proof/SB15/transcripts/final-cross-repo-tests.txt`, and `proof/SB15/artifacts/final-readiness-summary.json`.
 
-## Highest priority findings
+## Closure of original findings
 
-1. `Pause` is implemented more correctly now, but it needs browser-level settled-state proof. `StopRuntimeActivityAsync` must guarantee that command stages and motions are stopped, diagnostics are synchronized, and no stale completion callback mutates UI after pause/cancel.
-2. `applyCommandBatch` accepts/schedules staged work; accepting a batch is not the same as all stages/motions being completed. A `WaitForRuntimeIdle` contract is required for reliable proof.
-3. Economy readiness reports answer important questions, but they explicitly classify browser playback as not fully exercised and list browser actions still missing.
-4. The real-scenario runner is still path-first in its public API; catalog/source-based runs should become the primary research API.
-5. Strict simulation mode exists only partially. Unknown event kinds, ambiguous store resolution, insufficient stock, unknown metrics, unknown invariant kinds, unresolved visual mappings, and warnings must be elevated or categorized as hard gates in research mode.
-6. Current metric/invariant evaluation can silently fall back to defaults. This is a direct risk for false-positive experiment conclusions.
-7. Behavior expansion is currently implicit. Economic research needs versioned behavior-expansion profiles with explicit provenance in every output artifact.
-8. Performance probes exist but some thresholds are warning-only. Research runs need hard budgets and clear "not publishable" states when budgets are exceeded.
+1. Browser pause/idle proof is captured in `proof/SB15/browser/pause-idle-proof.json`; active runtime work pauses to idle, diagnostics agree, and late-drain state remains paused.
+2. Command batches now distinguish scheduled, settled, failed, and canceled lifecycle states; idle proof is captured in SB03, SB13, SB14, and SB15 browser artifacts.
+3. Economy readiness reports keep browser playback observer/runtime evidence separate from headless/oracle economic truth.
+4. Headless investigation is catalog/source-first, with manifests and CLI artifacts captured under SB10/SB11 proof.
+5. Research strictness, unknown events, ambiguous store resolution, insufficient stock, unknown metrics, unknown invariants, warnings, and performance overages are elevated or categorized through explicit gates.
+6. Metrics and invariants are registry-backed with strict validation and provenance metadata.
+7. Behavior expansion profiles are versioned, hashable, and included in run provenance.
+8. Performance budgets are named, readiness-affecting, and produce `not-comparable` classifications for headless overages.
 
 ## Execution rules
 
@@ -98,4 +99,18 @@ Expected:
 
 ```text
 Bundle validation passed for stage=prepared, profile=initiative, subbundles=15
+```
+
+## Completed-stage validation
+
+Run from this bundle root:
+
+```powershell
+python scripts/validate_bundle.py --stage completed --profile initiative
+```
+
+Expected:
+
+```text
+Bundle validation passed for stage=completed, profile=initiative, subbundles=15
 ```

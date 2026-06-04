@@ -38,3 +38,12 @@ Performance noise must be classified before interpreting economics.
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Closure
+
+Status: completed
+
+- Components now exposes generic `Small()`, `Medium()`, `Large()`, and `Stress()` runtime budget profiles while preserving existing scene-count profiles and keeping Components free of Economy-domain semantics.
+- Economy now evaluates named performance profiles across materialization, projection, metric evaluation, snapshot build, serialization, browser load, and batch settle timing.
+- Headless budget failures are readiness-affecting comparability failures through a separate `performance-budget` gate; they do not appear as scenario, simulation, or metric economic-model failures.
+- Large-run proof, browser idle/settled timing, source assertions, anti-stub audit, changed-file hashes, and bundle validator output are recorded under `proof/SB14/`.

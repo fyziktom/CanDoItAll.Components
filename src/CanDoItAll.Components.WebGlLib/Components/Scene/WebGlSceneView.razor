@@ -277,6 +277,22 @@
     public Task<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(WebGlSceneCommandBatch batch)
         => JsRuntime.InvokeAsync<WebGlSceneCommandBatchResult?>("CanDoItAll.webglScene.applyCommandBatch", host, batch).AsTask();
 
+    public Task<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+        WebGlSceneCommandBatch batch,
+        int timeoutMs = 2_000,
+        int pollIntervalMs = 16,
+        string reason = "command-batch-settled")
+        => JsRuntime.InvokeAsync<WebGlSceneCommandBatchResult?>(
+            "CanDoItAll.webglScene.applyCommandBatchAndWait",
+            host,
+            batch,
+            new
+            {
+                timeoutMs,
+                pollIntervalMs,
+                reason
+            }).AsTask();
+
     public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.setObjectTransform", host, objectId, transform).AsTask();
 
@@ -316,10 +332,29 @@
         result.Metadata["runtimeIdle"] = idleResult.Idle.ToString(System.Globalization.CultureInfo.InvariantCulture);
         result.Metadata["runtimeIdleTimedOut"] = idleResult.TimedOut.ToString(System.Globalization.CultureInfo.InvariantCulture);
         result.Metadata["runtimeIdleElapsedMs"] = idleResult.ElapsedMs.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["runtimeIdle"] = idleResult.Idle.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["runtimeIdleTimedOut"] = idleResult.TimedOut.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        result.Diagnostics["runtimeIdleElapsedMs"] = idleResult.ElapsedMs.ToString(System.Globalization.CultureInfo.InvariantCulture);
         if (idleResult.Blockers.Count > 0)
         {
             result.Metadata["runtimeIdleBlockers"] = string.Join(",", idleResult.Blockers);
+            result.Diagnostics["runtimeIdleBlockers"] = string.Join(",", idleResult.Blockers);
             result.Warnings.Add($"Runtime did not settle before timeout. Blockers: {string.Join(", ", idleResult.Blockers)}.");
+        }
+
+        if (idleResult.Diagnostics is not null)
+        {
+            result.Diagnostics["activeMotionCount"] = idleResult.Diagnostics.ActiveMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            result.Diagnostics["queuedMotionCount"] = idleResult.Diagnostics.QueuedMotionCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            result.Diagnostics["queuedCommandStageCount"] = idleResult.Diagnostics.QueuedCommandStageCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            result.Diagnostics["currentCommandBatchId"] = idleResult.Diagnostics.CurrentCommandBatchId;
+            result.Diagnostics["currentCommandStageId"] = idleResult.Diagnostics.CurrentCommandStageId;
+            result.Diagnostics["commandStageBarrierPolicy"] = idleResult.Diagnostics.CommandStageBarrierPolicy;
+            result.Diagnostics["commandStageBarrierBlockers"] = string.Join(",", idleResult.Diagnostics.CommandStageBarrierBlockers);
+            result.Diagnostics["runtimeStopGeneration"] = idleResult.Diagnostics.RuntimeStopGeneration.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            result.Diagnostics["lastRuntimeStopIdle"] = idleResult.Diagnostics.LastRuntimeStopIdle.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            result.Diagnostics["lastRuntimeStopTimedOut"] = idleResult.Diagnostics.LastRuntimeStopTimedOut.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            result.Diagnostics["lastRuntimeStopIdleElapsedMs"] = idleResult.Diagnostics.LastRuntimeStopIdleElapsedMs.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
 
         return result;

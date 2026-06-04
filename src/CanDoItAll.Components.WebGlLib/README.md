@@ -88,7 +88,7 @@ If a future runtime introduces a global or shared asset cache, it must keep a cl
 
 External scene imports through `ImportSceneAsync`, `ImportSceneDetailedAsync`, `ImportSceneDocumentAsync`, and `ImportSceneDocumentDetailedAsync` update the browser runtime scene immediately and update `WebGlSceneView`'s component-local lifecycle key to the imported scene/options. They do not mutate parent-owned parameter state outside the component. If the parent re-renders with the exact scene key or scene id that the import replaced, the component treats those parameters as stale and preserves the imported runtime scene; a genuinely new parameter scene id or a parameter payload matching the imported scene can take over on the next render.
 
-For scenes with at least 100 objects or 100 links, `WebGlSceneView` uses a compact parameter lifecycle key instead of serializing the full scene payload on every render. The compact key is based on scene id, scene/UI revisions, object/link/layer counts, asset catalog id/version, and the runtime key/options. Large-scene callers should increment `WebGlSceneModel.Revision` or `WebGlSceneUiState.Revision` for content changes and set `WebGlRuntimeOptions.RuntimeKey` when runtime configuration changes. `WebGlRuntimeBudgetProfiles.Scene100()`, `Scene500()`, and `Scene1000Plus()` provide generic starting budgets for primitive and staged-motion replay scenarios.
+For scenes with at least 100 objects or 100 links, `WebGlSceneView` uses a compact parameter lifecycle key instead of serializing the full scene payload on every render. The compact key is based on scene id, scene/UI revisions, object/link/layer counts, asset catalog id/version, and the runtime key/options. Large-scene callers should increment `WebGlSceneModel.Revision` or `WebGlSceneUiState.Revision` for content changes and set `WebGlRuntimeOptions.RuntimeKey` when runtime configuration changes. `WebGlRuntimeBudgetProfiles.Small()`, `Medium()`, `Large()`, and `Stress()` provide named generic profiles; `Scene100()`, `Scene500()`, and `Scene1000Plus()` remain available for object-count-oriented budget selection.
 
 `WebGlSceneDocument` is the generic save/load contract for scene layouts. It preserves scene data, runtime options, saved timestamp, source, metadata, and a deterministic content hash without adding storage providers or run semantics.
 
@@ -107,6 +107,8 @@ npm run webgllib:test-resource-ownership
 ```
 
 `WebGlSceneCommandBatch` and its command stages are render-command transport for the scene runtime. They may batch patches, motions, waits, and render-idle barriers, but they must not define run documents, replay lifecycle, scenario lifecycle, domain events, persistence providers, or domain action semantics.
+
+`ApplyCommandBatchAsync` returns after commands are accepted by the browser runtime, so staged motions or barriers may still be scheduled. Its command result exposes `LifecycleState` and `Settled` so callers can distinguish `scheduled` work from a fully `settled` batch. Proof paths that need deterministic settled-state evidence should use `ApplyCommandBatchAndWaitAsync` or call `WaitForRuntimeIdleAsync` after normal apply and assert no runtime idle blockers remain.
 
 `WebGlLib` remains a render substrate. Simulation clocks, run lifecycle, pathfinding, physics, persistence providers, economy rules, and domain semantics belong in `WebGlRunLib` or a consuming domain package.
 

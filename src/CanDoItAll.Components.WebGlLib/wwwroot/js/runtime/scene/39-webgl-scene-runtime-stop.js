@@ -29,6 +29,7 @@ export function cancelCommandStages(state, reason = "cancelled") {
 export function stopRuntimeActivity(state, reason = "runtime-stop") {
     const normalizedReason = normalizeReason(reason);
     const result = createCommandResult(state, "runtime-stop", normalizedReason);
+    state.runtimeStopGeneration = (state.runtimeStopGeneration || 0) + 1;
     const activeMotionCountBefore = state.motions?.size || 0;
     const queuedMotionCountBefore = countQueuedMotions(state);
     const clearedMotionCount = activeMotionCountBefore + queuedMotionCountBefore;
@@ -51,7 +52,12 @@ export function stopRuntimeActivity(state, reason = "runtime-stop") {
     }
 
     state.diagnostics.runtimeStopCount = (state.diagnostics.runtimeStopCount || 0) + 1;
+    state.diagnostics.runtimeStopGeneration = state.runtimeStopGeneration || 0;
     state.diagnostics.lastRuntimeStopReason = normalizedReason;
+    state.diagnostics.lastRuntimeStopIdle = false;
+    state.diagnostics.lastRuntimeStopTimedOut = false;
+    state.diagnostics.lastRuntimeStopIdleElapsedMs = 0;
+    state.diagnostics.lastRuntimeStopBlockers = [];
     state.diagnostics.clearedMotionCount = (state.diagnostics.clearedMotionCount || 0) + clearedMotionCount;
     state.diagnostics.lastRuntimeStopClearedMotionCount = clearedMotionCount;
     state.diagnostics.lastRuntimeStopCancelledCommandStageCount = stageWorkBefore;
@@ -69,6 +75,7 @@ export function stopRuntimeActivity(state, reason = "runtime-stop") {
         queuedMotionCountAfter: String(state.diagnostics.queuedMotionCount || 0),
         queuedCommandStageCountAfter: String(state.diagnostics.queuedCommandStageCount || 0),
         runtimeStopCount: String(state.diagnostics.runtimeStopCount || 0),
+        runtimeStopGeneration: String(state.diagnostics.runtimeStopGeneration || 0),
         commandStageCancelledCount: String(state.diagnostics.commandStageCancelledCount || 0)
     };
     state.scheduleRender("runtime-stop");

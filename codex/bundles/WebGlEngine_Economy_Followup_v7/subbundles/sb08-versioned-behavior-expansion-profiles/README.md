@@ -38,3 +38,12 @@ Forced refactor review after SB08.
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Closure notes
+
+Status: completed
+
+- Added versioned, hashable behavior expansion profile descriptors.
+- Propagated profile id/version/hash through event streams, derived events, scenario manifests, frames, deltas, readiness reports, and headless run artifacts.
+- Scenario definition and manifest hashes now include the resolved expansion profile descriptor.
+- Required proof is captured in `proof/SB08/transcripts/behavior-profile-tests.txt` and `proof/SB08/artifacts/expanded-event-provenance.json`.

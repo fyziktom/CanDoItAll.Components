@@ -38,3 +38,11 @@ Headless runner becomes the research source of truth.
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Closure notes
+
+- Added catalog-first headless APIs: `RunScenario(IEconomySimulationScenarioCatalog, ...)`, `Run(EconomySimulationScenarioSource, ...)`, and `RunBatch(IEconomySimulationScenarioCatalog, ...)`.
+- Retained legacy `experimentJsonPath` runner compatibility with explicit `scenarioSourceKind: legacy-path`.
+- Added CLI `economy scenario run` support for `--catalog --scenario`, `--catalog --all`, and legacy `--experiment` modes with readiness status output.
+- Added `warnings.json` and `headless-run-manifest.json` output alongside event streams, frames, frame hashes, metrics/invariants, readiness report, and run summary.
+- Required proof is captured in `proof/SB10/transcripts/headless-runner-tests.txt` and `proof/SB10/artifacts/headless-run-manifest.json`.

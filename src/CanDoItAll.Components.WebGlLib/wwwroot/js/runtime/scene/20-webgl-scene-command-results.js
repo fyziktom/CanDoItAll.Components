@@ -5,13 +5,24 @@ const defaultMaxFailedCommands = 50;
 const defaultMaxBatchChildResults = 25;
 const defaultMaxBatchMessages = 25;
 
+export const commandLifecycleStates = Object.freeze({
+    accepted: "accepted",
+    scheduled: "scheduled",
+    active: "active",
+    settled: "settled",
+    cancelled: "cancelled",
+    failed: "failed"
+});
+
 export function createCommandResult(state, commandKind, commandId = "") {
-    return {
+    const result = {
         commandId: commandId || buildCommandId(state, commandKind),
         success: true,
         succeeded: true,
         sceneId: state?.sceneModel?.sceneId || "",
         commandKind: commandKind || "command",
+        lifecycleState: commandLifecycleStates.accepted,
+        settled: false,
         revision: resolveSceneRevision(state?.sceneModel),
         errors: [],
         warnings: [],
@@ -20,6 +31,8 @@ export function createCommandResult(state, commandKind, commandId = "") {
         diagnostics: {},
         metadata: {}
     };
+    syncLifecycleMetadata(result);
+    return result;
 }
 
 export function warnCommand(result, message) {
@@ -37,6 +50,7 @@ export function failCommand(state, result, message, runtimeErrorTitle = "WebGL s
 
     result.success = false;
     result.succeeded = false;
+    setCommandLifecycle(result, commandLifecycleStates.failed, false);
     rememberFailedCommand(state, result);
     if (state?.diagnostics) {
         state.diagnostics.lastError = message || runtimeErrorTitle;
@@ -48,15 +62,45 @@ export function failCommand(state, result, message, runtimeErrorTitle = "WebGL s
     return result;
 }
 
+export function setCommandLifecycle(result, lifecycleState, settled = lifecycleState === commandLifecycleStates.settled) {
+    if (!result) {
+        return result;
+    }
+
+    result.lifecycleState = normalizeLifecycleState(lifecycleState);
+    result.settled = settled === true;
+    syncLifecycleMetadata(result);
+    syncLifecycleDiagnostics(result);
+    return result;
+}
+
 export function completeCommandResult(state, result) {
+    const existingDiagnostics = result.diagnostics || {};
     result.success = result.errors.length === 0;
     result.succeeded = result.success;
+    if (!result.success) {
+        setCommandLifecycle(result, commandLifecycleStates.failed, false);
+    } else if (!result.lifecycleState || result.lifecycleState === commandLifecycleStates.accepted) {
+        setCommandLifecycle(result, commandLifecycleStates.settled, true);
+    } else {
+        syncLifecycleMetadata(result);
+    }
+
     result.revision = resolveSceneRevision(state?.sceneModel);
     result.affectedObjectIds = unique(result.affectedObjectIds);
     result.affectedLinkIds = unique(result.affectedLinkIds);
     result.diagnostics = {
+        ...existingDiagnostics,
         renderCount: String(state?.diagnostics?.renderCount || 0),
         activeMotionCount: String(state?.motions?.size || 0),
+        queuedMotionCount: String(countQueuedMotions(state)),
+        queuedCommandStageCount: String(state?.diagnostics?.queuedCommandStageCount || 0),
+        currentCommandBatchId: state?.diagnostics?.currentCommandBatchId || "",
+        currentCommandStageId: state?.diagnostics?.currentCommandStageId || "",
+        commandStageBarrierPolicy: state?.diagnostics?.commandStageBarrierPolicy || "",
+        commandStageBarrierBlockers: (state?.diagnostics?.commandStageBarrierBlockers || []).join(","),
+        lifecycleState: result.lifecycleState || "",
+        settled: String(result.settled === true),
         failedCommandCount: String(state?.diagnostics?.failedCommandDetails?.length || 0),
         assetCacheMode: state?.diagnostics?.assetCacheMode || state?.assetCache?.mode || "state-local",
         retainedSharedTextureCount: String(state?.diagnostics?.retainedSharedTextureCount || 0),
@@ -68,6 +112,7 @@ export function completeCommandResult(state, result) {
         linkGeometryUpdateCount: String(state?.diagnostics?.linkGeometryUpdateCount || 0),
         lastPatchClassification: state?.diagnostics?.lastPatchClassification || ""
     };
+    syncLifecycleDiagnostics(result);
     rememberCommandResult(state, result);
     notifyCommandResult(state, result);
     return result;
@@ -99,6 +144,8 @@ function compactChildCommandResult(result) {
         commandId: result?.commandId || "",
         success: result?.success !== false,
         succeeded: result?.success !== false,
+        lifecycleState: result?.lifecycleState || commandLifecycleStates.settled,
+        settled: result?.settled === true,
         sceneId: result?.sceneId || "",
         commandKind: result?.commandKind || "",
         revision: Number(result?.revision) || 0,
@@ -186,6 +233,8 @@ function compactCommandResultForCallback(result) {
         commandId: result?.commandId || "",
         success: result?.success !== false,
         succeeded: result?.success !== false,
+        lifecycleState: result?.lifecycleState || commandLifecycleStates.settled,
+        settled: result?.settled === true,
         sceneId: result?.sceneId || "",
         commandKind: result?.commandKind || "",
         revision: Number(result?.revision) || 0,
@@ -202,6 +251,38 @@ function compactCommandResultForCallback(result) {
             returnedAffectedLinkCount: String(affectedLinkIds.length)
         }
     };
+}
+
+function syncLifecycleMetadata(result) {
+    result.metadata = result.metadata || {};
+    result.lifecycleState = normalizeLifecycleState(result.lifecycleState);
+    result.metadata.lifecycleState = result.lifecycleState;
+    result.metadata.settled = String(result.settled === true);
+}
+
+function syncLifecycleDiagnostics(result) {
+    if (!result?.diagnostics) {
+        return;
+    }
+
+    result.diagnostics.lifecycleState = result.lifecycleState || commandLifecycleStates.accepted;
+    result.diagnostics.settled = String(result.settled === true);
+}
+
+function normalizeLifecycleState(value) {
+    const text = String(value || "").trim().toLowerCase();
+    return Object.values(commandLifecycleStates).includes(text)
+        ? text
+        : commandLifecycleStates.accepted;
+}
+
+function countQueuedMotions(state) {
+    let count = 0;
+    for (const queue of state?.motionQueuesByObjectId?.values?.() || []) {
+        count += queue?.length || 0;
+    }
+
+    return count;
 }
 
 function buildCommandId(state, commandKind) {

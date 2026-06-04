@@ -38,3 +38,11 @@ Artifacts must be sufficient for later audit without rerunning UI.
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Closure notes
+
+- Added typed `economy-headless-run/v2` manifests with repo commits, package versions, scenario/catalog pack hashes, behavior profile hash, policy id, seed, frame hash chain, metric hashes, artifact hashes, artifact citations, artifact set hash, and deterministic manifest hash.
+- Added schema-versioned headless artifacts for event stream, frames, frame hashes, metrics/invariants, warnings, and run summary.
+- Added artifact-set validation and readiness integration so missing required artifacts mark readiness failed with `artifact-set-incomplete`.
+- Added manifest diff tooling that categorizes scenario, model-output, policy, metric, artifact, repository, and package changes.
+- Required proof is captured in `proof/SB11/transcripts/reproducibility-manifest-tests.txt` and `proof/SB11/artifacts/manifest-diff-sample.json`.

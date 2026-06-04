@@ -1,5 +1,15 @@
 namespace CanDoItAll.Components.WebGlLib;
 
+public static class WebGlSceneCommandLifecycleStates
+{
+    public const string Accepted = "accepted";
+    public const string Scheduled = "scheduled";
+    public const string Active = "active";
+    public const string Settled = "settled";
+    public const string Cancelled = "cancelled";
+    public const string Failed = "failed";
+}
+
 public class WebGlSceneCommandResult
 {
     public string CommandId { get; set; } = string.Empty;
@@ -15,6 +25,10 @@ public class WebGlSceneCommandResult
     public string SceneId { get; set; } = string.Empty;
 
     public string CommandKind { get; set; } = string.Empty;
+
+    public string LifecycleState { get; set; } = WebGlSceneCommandLifecycleStates.Accepted;
+
+    public bool Settled { get; set; }
 
     public int Revision { get; set; }
 

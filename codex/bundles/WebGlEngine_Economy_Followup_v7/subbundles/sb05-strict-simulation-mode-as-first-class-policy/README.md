@@ -26,6 +26,23 @@ Make simulator-noise conditions fail explicitly in research mode.
 - `proof/SB05/transcripts/research-strict-mode-tests.txt`
 - `proof/SB05/artifacts/strict-mode-failure-examples.json`
 
+## Execution status
+
+Completed.
+
+Implemented in Economy:
+- `SimulationExperimentPolicy.ResearchStrict` and `SimulationExperimentPolicy.ExploratoryDemo`.
+- Policy threading through input loading, load results, SimpleAccounts backend materialization, headless runner options, readiness metadata, warning budget, and `researchReady`.
+- Research strict fail-on switches for unknown handlers, insufficient stock, missing references, ambiguous stores, unknown metric kinds, and unknown invariant kinds.
+- Demo/permissive mode remains available but is marked `exploratory` and `researchReady: false`.
+
+Proof captured:
+- Failing-first compile/test proof: `proof/SB05/transcripts/research-strict-mode-tests-failing-first.txt`.
+- Focused policy test proof: `proof/SB05/transcripts/research-strict-mode-tests.txt`.
+- Broader trust-hardening regression proof: `proof/SB05/transcripts/research-strict-hardening-tests.txt`.
+- Failure-example export proof: `proof/SB05/transcripts/strict-mode-failure-examples-export.txt`.
+- Machine-readable failure examples: `proof/SB05/artifacts/strict-mode-failure-examples.json`.
+
 ## Gate
 
 Strict mode must be the default for readiness reports used in research claims.

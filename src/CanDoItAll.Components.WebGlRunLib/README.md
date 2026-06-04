@@ -37,6 +37,7 @@ Direct package references:
 - `WebGlRunActionCompiler` and `WebGlRunActionPlanBatchCompiler` compile run actions into WebGlLib timelines and `WebGlSceneCommandBatch` payloads.
 - `WebGlRunPlaybackController` and `WebGlRunDocumentRunner` provide deterministic seek, step, pause, resume, reset, and current-frame application contracts.
 - `WebGlRunBrowserApplyAdapter` and `WebGlSceneViewBrowserRuntime` apply a frame through `WebGlSceneView.ApplyCommandBatchAsync`, capture runtime diagnostics, and export a typed `WebGlRunRuntimeSnapshot`.
+- `WebGlRunObserverProof` compares an expected source `WebGlRunDocument` with a browser-loaded document hash and runtime/UI observation snapshot.
 
 ## Browser Playback
 
@@ -57,6 +58,19 @@ Host Pause, Cancel, Stop, Reset, Dispose, and route-change handlers must cancel 
 Use the host checklist in `docs/webgl/playback-hosting-and-troubleshooting.md` when integrating playback controls or debugging a scene that keeps moving after Pause.
 
 The WebGlSandbox route `/run-playback` hosts a generic non-domain run document, deterministic controls, reset/cancel behavior, a large batch proof frame, and diagnostics JSON for command batching.
+
+## Observer Proof
+
+`WebGlRunObserverProof.Compare(expectedDocument, browserLoadedDocument, observerSnapshot)` is the generic browser-observer boundary check. It computes deterministic document hashes from the run id, initial scene content hash, timeline identity, and generic metadata, then combines that comparison with browser runtime/UI diagnostics.
+
+Observer proof can validate a visual claim only when:
+
+- the expected and browser-loaded document hashes match
+- browser runtime proof was exercised
+- UI proof was exercised
+- no runtime or UI errors were reported
+
+If the browser document hash differs, the report adds `browser-document-hash-mismatch`. If runtime or UI proof fails, the report status is `observer-failed`. Consumers should keep their domain state, simulation state, or headless artifacts as their own source of truth and treat the observer proof as visual evidence only.
 
 ## Validators
 

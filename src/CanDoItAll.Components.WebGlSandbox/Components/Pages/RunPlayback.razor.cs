@@ -66,6 +66,10 @@ public partial class RunPlayback
     private string DiagnosticsJson => JsonSerializer.Serialize(new
     {
         runId = runDocument.RunId.Value,
+        observer = WebGlRunObserverProof.Compare(
+            runDocument,
+            runDocument,
+            BuildObserverSnapshot()),
         currentFrameIndex = CurrentFrameIndex,
         isPlaying = IsPlaying,
         latestApply = latestApplyResult is null
@@ -123,6 +127,21 @@ public partial class RunPlayback
                 latestSnapshot.CommandStageJournalCount
             }
     }, DiagnosticsJsonOptions);
+
+    private WebGlRunObserverSnapshot BuildObserverSnapshot()
+        => new()
+        {
+            BrowserRuntimeExercised = latestRuntimeDiagnostics is not null,
+            UiExercised = latestSnapshot is not null,
+            RuntimeErrors = latestRunSnapshot is null ? [] : [.. latestRunSnapshot.RuntimeErrors],
+            RuntimeWarnings = latestRunSnapshot is null ? [] : [.. latestRunSnapshot.RuntimeWarnings],
+            Metadata =
+            {
+                ["route"] = "run-playback",
+                ["runtimeDiagnosticsCaptured"] = (latestRuntimeDiagnostics is not null).ToString(CultureInfo.InvariantCulture),
+                ["proofSnapshotCaptured"] = (latestSnapshot is not null).ToString(CultureInfo.InvariantCulture)
+            }
+        };
 
     private async Task PlayAsync()
     {
@@ -351,6 +370,7 @@ public partial class RunPlayback
         Task? taskToStop = playbackTask;
         playbackCancellation?.Cancel();
         statusText = status;
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
         if (taskToStop is not null && !taskToStop.IsCompleted)
         {
             try

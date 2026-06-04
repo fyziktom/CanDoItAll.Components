@@ -38,3 +38,13 @@ No readiness report may pass if metrics/invariants use fallback behavior.
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Closure notes
+
+Status: completed
+
+- Added descriptor-backed Economy metric and invariant registries.
+- Strict/research metric validation now rejects unknown kinds and missing required metric metadata.
+- Strict/research invariant validation now rejects unknown kinds and missing required invariant metadata.
+- Metric evaluator output now includes deterministic precision rounding and provenance metadata.
+- Required proof is captured in `proof/SB07/transcripts/metric-invariant-registry-tests.txt` and `proof/SB07/artifacts/metric-oracle-results.json`.

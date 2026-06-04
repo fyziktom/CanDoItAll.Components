@@ -38,3 +38,13 @@ Forced refactor review before continuing to economic readiness work.
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Execution status
+
+Completed.
+
+- Added typed command lifecycle fields in C# and synchronized lifecycle metadata/diagnostics in the WebGL JS command result path.
+- Added `applyCommandBatchAndWait` plus `WebGlSceneView.ApplyCommandBatchAndWaitAsync` for proof routes that must wait until runtime idle.
+- Normal `applyCommandBatch` now reports `scheduled` when staged motions/barriers leave idle blockers and `settled` only when no blockers remain.
+- Browser proof captured a staged batch returning `scheduled` followed by a settled proof batch returning `settled` with no idle blockers.
+- Forced refactor gate completed in `proof/SB03/refactor-gate-review.md`; runtime audit hard-threshold failures were resolved by scoped line-budget trimming.

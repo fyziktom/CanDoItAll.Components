@@ -196,6 +196,8 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int RuntimeStopCount { get; set; }
 
+    public int RuntimeStopGeneration { get; set; }
+
     public string LastRuntimeStopReason { get; set; } = string.Empty;
 
     public int ClearedMotionCount { get; set; }
@@ -203,6 +205,16 @@ public sealed class WebGlRuntimeDiagnostics
     public int LastRuntimeStopClearedMotionCount { get; set; }
 
     public int LastRuntimeStopCancelledCommandStageCount { get; set; }
+
+    public bool LastRuntimeStopIdle { get; set; }
+
+    public bool LastRuntimeStopTimedOut { get; set; }
+
+    public int LastRuntimeStopIdleElapsedMs { get; set; }
+
+    public List<string> LastRuntimeStopBlockers { get; set; } = [];
+
+    public int IgnoredStaleMotionCompletedCount { get; set; }
 
     public int CommandCountBeforeNormalization { get; set; }
 

@@ -39,3 +39,12 @@ Bundle complete only when research-readiness claims are honest and evidence-back
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Closure
+
+Status: completed
+
+- Focused Components and Economy final tests passed: 58 WebGlLib tests, 62 WebGlRunLib tests, and 32 Economy hardening/probe/CLI tests.
+- Red-team failure modes are classified correctly: unknown event, ambiguous store, unknown metric, browser non-idle, and broken scenario hash all block economic conclusions through the proper simulation, registry, runtime/observer, or comparability path.
+- Browser proof was refreshed under SB15 for pause/idle and performance budgets; active runtime work paused to idle, late-drain state remained paused, and browser load/batch settle stayed within budget.
+- Final readiness is conditionally research-ready only under strict gates; ungated demo/exploratory runs and over-budget/non-comparable runs are not economic evidence.

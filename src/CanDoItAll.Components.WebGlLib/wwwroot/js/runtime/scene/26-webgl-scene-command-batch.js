@@ -1,9 +1,17 @@
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
 import { applyPatchDetailed } from "./13-webgl-scene-patching.js";
 import { enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
-import { compactBatchResultForInterop, completeCommandResult, createCommandResult, warnCommand } from "./20-webgl-scene-command-results.js";
+import {
+    commandLifecycleStates,
+    compactBatchResultForInterop,
+    completeCommandResult,
+    createCommandResult,
+    setCommandLifecycle,
+    warnCommand
+} from "./20-webgl-scene-command-results.js";
 import { normalizeCommandBatch, normalizeCommandBatchForAudit } from "./28-webgl-scene-command-batch-normalizer.js";
 import { advanceCommandStageRunner, enqueueCommandStages, hasPendingCommandStageRunnerWork, syncStageDiagnostics } from "./30-webgl-scene-stage-runner.js";
+import { collectRuntimeIdleBlockers, waitForRuntimeIdle } from "./40-webgl-scene-runtime-idle.js";
 
 export { normalizeCommandBatchForAudit };
 
@@ -46,8 +54,32 @@ export function applyCommandBatch(state, batch) {
         preservedOrderedDuplicateMotionCount: String(normalized.metrics.preservedOrderedDuplicateMotionCount),
         interopCallsAvoided: String(normalized.metrics.interopCallsAvoided)
     };
+    syncCommandBatchLifecycle(state, result);
     compactBatchResultForInterop(state, result);
     return completeCommandResult(state, result);
+}
+
+export async function applyCommandBatchAndWait(state, batch, options = {}) {
+    const result = applyCommandBatch(state, batch);
+    if (!result) {
+        return null;
+    }
+
+    const timeoutMs = Number(options?.timeoutMs) > 0 ? Number(options.timeoutMs) : 2000;
+    const pollIntervalMs = Number(options?.pollIntervalMs) > 0 ? Number(options.pollIntervalMs) : 16;
+    const reason = String(options?.reason || `command-batch:${result.commandId || "settled"}`).trim();
+    const idleResult = await waitForRuntimeIdle(state, { timeoutMs, pollIntervalMs, reason });
+    annotateCommandBatchIdleResult(result, idleResult);
+    if (result.success && idleResult?.idle === true) {
+        setCommandLifecycle(result, commandLifecycleStates.settled, true);
+    } else if (result.success) {
+        setCommandLifecycle(result, commandLifecycleStates.scheduled, false);
+        warnCommand(result, `Command batch did not settle before timeout. Blockers: ${(idleResult?.blockers || []).join(", ")}.`);
+    } else {
+        setCommandLifecycle(result, commandLifecycleStates.failed, false);
+    }
+
+    return result;
 }
 
 export function advanceCommandBatchStages(state, deltaSeconds) {
@@ -106,4 +138,41 @@ function syncBatchDiagnostics(state, metrics) {
     state.diagnostics.preservedOrderedDuplicateMotionCount = metrics.preservedOrderedDuplicateMotionCount;
     state.diagnostics.interopCallsAvoided = metrics.interopCallsAvoided;
     syncStageDiagnostics(state);
+}
+
+function syncCommandBatchLifecycle(state, result) {
+    if (result.errors.length > 0) {
+        setCommandLifecycle(result, commandLifecycleStates.failed, false);
+        return;
+    }
+
+    const blockers = collectRuntimeIdleBlockers(state);
+    result.metadata.runtimeIdleBlockers = blockers.join(",");
+    result.metadata.runtimeIdle = String(blockers.length === 0);
+    result.diagnostics.runtimeIdleBlockers = blockers.join(",");
+    result.diagnostics.runtimeIdle = String(blockers.length === 0);
+    setCommandLifecycle(
+        result,
+        blockers.length === 0 ? commandLifecycleStates.settled : commandLifecycleStates.scheduled,
+        blockers.length === 0);
+}
+
+function annotateCommandBatchIdleResult(result, idleResult) {
+    result.metadata.runtimeIdle = String(idleResult?.idle === true);
+    result.metadata.runtimeIdleTimedOut = String(idleResult?.timedOut === true);
+    result.metadata.runtimeIdleElapsedMs = String(idleResult?.elapsedMs || 0);
+    result.metadata.runtimeIdleBlockers = (idleResult?.blockers || []).join(",");
+    result.diagnostics.runtimeIdle = result.metadata.runtimeIdle;
+    result.diagnostics.runtimeIdleTimedOut = result.metadata.runtimeIdleTimedOut;
+    result.diagnostics.runtimeIdleElapsedMs = result.metadata.runtimeIdleElapsedMs;
+    result.diagnostics.runtimeIdleBlockers = result.metadata.runtimeIdleBlockers;
+    if (idleResult?.diagnostics) {
+        result.diagnostics.activeMotionCount = String(idleResult.diagnostics.activeMotionCount || 0);
+        result.diagnostics.queuedMotionCount = String(idleResult.diagnostics.queuedMotionCount || 0);
+        result.diagnostics.queuedCommandStageCount = String(idleResult.diagnostics.queuedCommandStageCount || 0);
+        result.diagnostics.currentCommandBatchId = idleResult.diagnostics.currentCommandBatchId || "";
+        result.diagnostics.currentCommandStageId = idleResult.diagnostics.currentCommandStageId || "";
+        result.diagnostics.commandStageBarrierPolicy = idleResult.diagnostics.commandStageBarrierPolicy || "";
+        result.diagnostics.commandStageBarrierBlockers = (idleResult.diagnostics.commandStageBarrierBlockers || []).join(",");
+    }
 }

@@ -27,6 +27,23 @@ Remove hidden first-match/fallback store selection from research-mode economic b
 - `proof/SB06/transcripts/store-resolution-policy-tests.txt`
 - `proof/SB06/artifacts/flow-resolution-sample.json`
 
+## Execution status
+
+Completed.
+
+Implemented in Economy:
+- Store-resolution metadata recording for resolved source/target/shared/effect roles.
+- Flow metadata propagation for `storeResolution.<role>.*`.
+- Strict/research zero-accepted transfer diagnostics after full rejection.
+- Accepted and rejected flow provenance that preserves policy, store id, reason, and candidate count.
+
+Proof captured:
+- Failing-first metadata/diagnostic proof: `proof/SB06/transcripts/store-resolution-policy-tests-failing-first.txt`.
+- Focused store-resolution policy test proof: `proof/SB06/transcripts/store-resolution-policy-tests.txt`.
+- Broader trust-hardening regression proof: `proof/SB06/transcripts/store-resolution-hardening-tests.txt`.
+- Flow sample export proof: `proof/SB06/transcripts/flow-resolution-sample-export.txt`.
+- Machine-readable accepted/rejected flow sample: `proof/SB06/artifacts/flow-resolution-sample.json`.
+
 ## Gate
 
 No economic result can depend on incidental StoreId ordering.

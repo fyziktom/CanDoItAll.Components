@@ -2,6 +2,40 @@ namespace CanDoItAll.Components.WebGlLib;
 
 public static class WebGlRuntimeBudgetProfiles
 {
+    public static WebGlRuntimeBudgetOptions Small()
+    {
+        WebGlRuntimeBudgetOptions profile = Scene100();
+        profile.Profile = "small";
+        return profile;
+    }
+
+    public static WebGlRuntimeBudgetOptions Medium()
+    {
+        WebGlRuntimeBudgetOptions profile = Scene500();
+        profile.Profile = "medium";
+        return profile;
+    }
+
+    public static WebGlRuntimeBudgetOptions Large()
+    {
+        WebGlRuntimeBudgetOptions profile = Scene1000Plus();
+        profile.Profile = "large";
+        return profile;
+    }
+
+    public static WebGlRuntimeBudgetOptions Stress()
+        => new()
+        {
+            Profile = "stress",
+            MaxSceneObjects = 2_500,
+            MaxLoadedAssets = 256,
+            MaxAssetCacheEntries = 256,
+            MaxActiveMotions = 2_000,
+            MaxQueuedMotions = 4_000,
+            MaxQueuedCommandStages = 512,
+            MaxEstimatedTriangles = 1_000_000
+        };
+
     public static WebGlRuntimeBudgetOptions Scene100()
         => new()
         {

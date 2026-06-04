@@ -4,10 +4,7 @@ import { buildRuntimeBudgetDiagnostics, evaluateRuntimeBudget, normalizeRuntimeB
 
 export { THREE };
 
-export const projectionModes = Object.freeze({
-    perspective: "perspective",
-    orthographic: "orthographic"
-});
+export const projectionModes = Object.freeze({ perspective: "perspective", orthographic: "orthographic" });
 
 const primitiveKindNames = ["box", "house", "sphere", "cylinder", "cone", "tree", "person", "marker", "gear"];
 export const primitiveKinds = Object.freeze(Object.fromEntries(primitiveKindNames.map(kind => [kind, kind])));
@@ -41,11 +38,7 @@ export function resolveString(value, fallback = "") {
 }
 
 export function resolveVector3(value, fallback = { x: 0, y: 0, z: 0 }) {
-    return {
-        x: resolveFiniteNumber(value?.x ?? value?.X, fallback.x || 0),
-        y: resolveFiniteNumber(value?.y ?? value?.Y, fallback.y || 0),
-        z: resolveFiniteNumber(value?.z ?? value?.Z, fallback.z || 0)
-    };
+    return { x: resolveFiniteNumber(value?.x ?? value?.X, fallback.x || 0), y: resolveFiniteNumber(value?.y ?? value?.Y, fallback.y || 0), z: resolveFiniteNumber(value?.z ?? value?.Z, fallback.z || 0) };
 }
 
 export function toThreeVector(value, fallback) {
@@ -144,20 +137,12 @@ export function resolveObjectPosition(sceneObject) {
 
 export function resolveObjectSize(sceneObject) {
     const size = resolveVector3(sceneObject?.size, { x: 1, y: 1, z: 1 });
-    return {
-        x: Math.max(0.05, size.x),
-        y: Math.max(0.05, size.y),
-        z: Math.max(0.05, size.z)
-    };
+    return { x: Math.max(0.05, size.x), y: Math.max(0.05, size.y), z: Math.max(0.05, size.z) };
 }
 
 export function resolveObjectScale(sceneObject) {
     const scale = resolveVector3(sceneObject?.scale, { x: 1, y: 1, z: 1 });
-    return {
-        x: Math.max(0.01, scale.x),
-        y: Math.max(0.01, scale.y),
-        z: Math.max(0.01, scale.z)
-    };
+    return { x: Math.max(0.01, scale.x), y: Math.max(0.01, scale.y), z: Math.max(0.01, scale.z) };
 }
 
 export function resolveObjectRotation(sceneObject) {
@@ -243,10 +228,16 @@ export function buildDiagnosticsSnapshot(state) {
         commandStageRecentJournalEntries: diagnostics.commandStageRecentJournalEntries || [],
         lastStageCancelReason: diagnostics.lastStageCancelReason || "",
         runtimeStopCount: diagnostics.runtimeStopCount || 0,
+        runtimeStopGeneration: diagnostics.runtimeStopGeneration || 0,
         lastRuntimeStopReason: diagnostics.lastRuntimeStopReason || "",
         clearedMotionCount: diagnostics.clearedMotionCount || 0,
         lastRuntimeStopClearedMotionCount: diagnostics.lastRuntimeStopClearedMotionCount || 0,
         lastRuntimeStopCancelledCommandStageCount: diagnostics.lastRuntimeStopCancelledCommandStageCount || 0,
+        lastRuntimeStopIdle: !!diagnostics.lastRuntimeStopIdle,
+        lastRuntimeStopTimedOut: !!diagnostics.lastRuntimeStopTimedOut,
+        lastRuntimeStopIdleElapsedMs: diagnostics.lastRuntimeStopIdleElapsedMs || 0,
+        lastRuntimeStopBlockers: diagnostics.lastRuntimeStopBlockers || [],
+        ignoredStaleMotionCompletedCount: diagnostics.ignoredStaleMotionCompletedCount || 0,
         animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
         isRenderLoopActive: !!diagnostics.isRenderLoopActive,
         renderSchedulerMode: diagnostics.renderSchedulerMode || state.options.renderMode || "auto",

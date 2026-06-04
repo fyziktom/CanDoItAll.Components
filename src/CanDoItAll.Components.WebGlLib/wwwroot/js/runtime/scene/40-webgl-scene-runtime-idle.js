@@ -1,4 +1,5 @@
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
+import { hasAutomaticStageBarrierWork } from "./32-webgl-scene-stage-barriers.js";
 
 export function isRuntimeIdle(state) {
     const blockers = collectRuntimeIdleBlockers(state);
@@ -22,6 +23,11 @@ export async function waitForRuntimeIdle(state, options = {}) {
     }
 
     const elapsedMs = Math.round(performance.now() - startedAt);
+    syncLastRuntimeStopIdleDiagnostics(state, lastState, elapsedMs);
+    lastState = {
+        ...lastState,
+        diagnostics: buildDiagnosticsSnapshot(state)
+    };
     return {
         success: lastState.idle,
         idle: lastState.idle,
@@ -45,6 +51,8 @@ export function collectRuntimeIdleBlockers(state) {
     const queuedMotionCount = countQueuedMotions(state);
     const queuedStageCount = state.commandStageRunner?.queue?.length || 0;
     const hasActiveBarrier = !!state.commandStageRunner?.activeBarrier;
+    const hasCurrentStage = !!state.commandStageRunner?.currentStageId;
+    const hasAutomaticStageWork = hasAutomaticStageBarrierWork(state, state.commandStageRunner);
 
     addCountBlocker(blockers, "motion:active", state.motions?.size || 0);
     addCountBlocker(blockers, "motion:queued", queuedMotionCount);
@@ -53,8 +61,12 @@ export function collectRuntimeIdleBlockers(state) {
         blockers.push("command-stage:barrier");
     }
 
-    if (state.commandStageRunner && !state.commandStageRunner.cancelled && state.commandStageRunner.currentStageId) {
+    if (state.commandStageRunner && !state.commandStageRunner.cancelled && hasCurrentStage) {
         blockers.push("command-stage:active");
+    }
+
+    if (hasAutomaticStageWork && queuedStageCount === 0 && !hasActiveBarrier && !hasCurrentStage) {
+        blockers.push("command-stage:automatic-work");
     }
 
     addCountBlocker(blockers, "asset-cache:pending-disposal", state.diagnostics?.assetCachePendingDisposalCount || 0);
@@ -104,4 +116,15 @@ function normalizeReason(value, fallback) {
 
 function delay(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+function syncLastRuntimeStopIdleDiagnostics(state, idleState, elapsedMs) {
+    if (!state?.diagnostics || (state.diagnostics.runtimeStopCount || 0) <= 0) {
+        return;
+    }
+
+    state.diagnostics.lastRuntimeStopIdle = idleState.idle === true;
+    state.diagnostics.lastRuntimeStopTimedOut = idleState.idle !== true;
+    state.diagnostics.lastRuntimeStopIdleElapsedMs = elapsedMs;
+    state.diagnostics.lastRuntimeStopBlockers = [...(idleState.blockers || [])];
 }

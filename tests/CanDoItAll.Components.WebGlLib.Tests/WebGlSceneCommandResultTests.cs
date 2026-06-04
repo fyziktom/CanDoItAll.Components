@@ -74,4 +74,35 @@ public sealed class WebGlSceneCommandResultTests
         Assert.Contains(result.Errors, error => error.Contains("not found", StringComparison.Ordinal));
         Assert.Equal("1", result.Diagnostics["failedCommandCount"]);
     }
+
+    [Fact]
+    public void Command_result_round_trips_lifecycle_state_from_javascript_shape()
+    {
+        const string json = """
+            {
+              "commandId": "run-frame:4",
+              "success": true,
+              "succeeded": true,
+              "settled": false,
+              "lifecycleState": "scheduled",
+              "sceneId": "scene",
+              "commandKind": "command-batch",
+              "revision": 2,
+              "errors": [],
+              "warnings": [],
+              "affectedObjectIds": [],
+              "affectedLinkIds": [],
+              "diagnostics": { "activeMotionCount": "24" },
+              "metadata": { "lifecycleState": "scheduled", "settled": "false" }
+            }
+            """;
+
+        var result = JsonSerializer.Deserialize<WebGlSceneCommandResult>(json, JsonOptions);
+
+        Assert.NotNull(result);
+        Assert.True(result.Success);
+        Assert.False(result.Settled);
+        Assert.Equal(WebGlSceneCommandLifecycleStates.Scheduled, result.LifecycleState);
+        Assert.Equal("scheduled", result.Metadata["lifecycleState"]);
+    }
 }

@@ -38,3 +38,13 @@ No scenario classification above exploratory without oracle coverage or explicit
 - Keep Economy economic semantics outside Components.
 - Do not close this subbundle with screenshots only.
 - Update traceability and proof manifest before moving on.
+
+## Closure notes
+
+Status: completed
+
+- Added golden oracle coverage for single transfer, insufficient stock, capacity rejection, shared resource depletion, trade plus fee, relationship update, and rule violation/enforcement.
+- Added production handling for `rule.enforcement.apply` so enforcement events produce deterministic frame issues.
+- Added deterministic frame hash-chain comparison across repeated materialization and an artifact-backed broken-transfer oracle diff.
+- Added readiness `oracleCoverageLabel` gating: valid oracle proof labels reports `golden-oracle`; explicit `no-oracle` is required for no-oracle headless classification above exploratory.
+- Required proof is captured in `proof/SB09/transcripts/golden-oracle-tests.txt` and `proof/SB09/artifacts/oracle-diff-sample.json`.
