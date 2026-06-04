@@ -1,6 +1,6 @@
 # Proof manifest for SB01
 
-Status: pending
+Status: complete
 
 Required artifacts:
 - `proof/SB01/current-state.md`

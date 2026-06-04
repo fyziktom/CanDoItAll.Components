@@ -1,6 +1,6 @@
 # Proof manifest for SB07
 
-Status: pending
+Status: complete
 
 Required artifacts:
 - `proof/SB07/design-factor-tests.txt`

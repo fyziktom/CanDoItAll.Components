@@ -78,7 +78,9 @@ export function stopRuntimeActivity(state, reason = "runtime-stop") {
         runtimeStopGeneration: String(state.diagnostics.runtimeStopGeneration || 0),
         commandStageCancelledCount: String(state.diagnostics.commandStageCancelledCount || 0)
     };
-    state.scheduleRender("runtime-stop");
+    state.renderRequested = false;
+    state.renderReason = "";
+    state.renderScheduler?.cancel?.();
     return completeCommandResult(state, result);
 }
 

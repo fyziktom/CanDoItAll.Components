@@ -6,6 +6,7 @@ import {
     compactBatchResultForInterop,
     completeCommandResult,
     createCommandResult,
+    failCommand,
     setCommandLifecycle,
     warnCommand
 } from "./20-webgl-scene-command-results.js";
@@ -68,10 +69,19 @@ export async function applyCommandBatchAndWait(state, batch, options = {}) {
     const timeoutMs = Number(options?.timeoutMs) > 0 ? Number(options.timeoutMs) : 2000;
     const pollIntervalMs = Number(options?.pollIntervalMs) > 0 ? Number(options.pollIntervalMs) : 16;
     const reason = String(options?.reason || `command-batch:${result.commandId || "settled"}`).trim();
+    const requireRuntimeIdle = options?.requireRuntimeIdle !== false && options?.hardFailOnIdleTimeout !== false;
     const idleResult = await waitForRuntimeIdle(state, { timeoutMs, pollIntervalMs, reason });
     annotateCommandBatchIdleResult(result, idleResult);
+    result.metadata.runtimeIdleRequired = String(requireRuntimeIdle);
+    result.diagnostics.runtimeIdleRequired = String(requireRuntimeIdle);
     if (result.success && idleResult?.idle === true) {
         setCommandLifecycle(result, commandLifecycleStates.settled, true);
+    } else if (result.success && requireRuntimeIdle) {
+        failCommand(
+            state,
+            result,
+            `Runtime idle proof failed for command batch '${result.commandId}'. Blockers: ${(idleResult?.blockers || []).join(", ")}.`,
+            "WebGL scene command batch did not settle.");
     } else if (result.success) {
         setCommandLifecycle(result, commandLifecycleStates.scheduled, false);
         warnCommand(result, `Command batch did not settle before timeout. Blockers: ${(idleResult?.blockers || []).join(", ")}.`);

@@ -10,8 +10,16 @@ public sealed class WebGlRunObserverSnapshot
 {
     public bool BrowserRuntimeExercised { get; set; }
     public bool UiExercised { get; set; }
+    public string Route { get; set; } = string.Empty;
+    public string Viewport { get; set; } = string.Empty;
+    public string ScreenshotPath { get; set; } = string.Empty;
+    public WebGlRuntimeDiagnostics? RuntimeDiagnostics { get; set; }
+    public WebGlRuntimeIdleResult? RuntimeIdleResult { get; set; }
+    public List<string> CompletedStageIds { get; set; } = [];
+    public Dictionary<string, WebGlVector3> FinalObjectPositions { get; set; } = [];
     public List<string> RuntimeErrors { get; set; } = [];
     public List<string> RuntimeWarnings { get; set; } = [];
+    public List<string> ConsoleErrors { get; set; } = [];
     public List<string> UiErrors { get; set; } = [];
     public List<string> UiWarnings { get; set; } = [];
     public Dictionary<string, string> Metadata { get; set; } = [];
@@ -27,6 +35,14 @@ public sealed class WebGlRunObserverProofReport
     public bool UiValid { get; set; }
     public bool ObserverProofValid { get; set; }
     public string ClaimStatus { get; set; } = "observer-not-run";
+    public string Route { get; set; } = string.Empty;
+    public string Viewport { get; set; } = string.Empty;
+    public string ScreenshotPath { get; set; } = string.Empty;
+    public bool RuntimeIdle { get; set; }
+    public List<string> RuntimeIdleBlockers { get; set; } = [];
+    public List<string> CompletedStageIds { get; set; } = [];
+    public Dictionary<string, WebGlVector3> ExpectedFinalObjectPositions { get; set; } = [];
+    public Dictionary<string, WebGlVector3> BrowserFinalObjectPositions { get; set; } = [];
     public List<string> Errors { get; set; } = [];
     public List<string> Warnings { get; set; } = [];
     public Dictionary<string, string> Metadata { get; set; } = [];
@@ -59,6 +75,14 @@ public static class WebGlRunObserverProof
             DocumentHashesMatch = string.Equals(expectedHash, browserHash, StringComparison.Ordinal),
             BrowserRuntimeValid = observer.BrowserRuntimeExercised && observer.RuntimeErrors.Count == 0,
             UiValid = observer.UiExercised && observer.UiErrors.Count == 0,
+            Route = observer.Route,
+            Viewport = observer.Viewport,
+            ScreenshotPath = observer.ScreenshotPath,
+            RuntimeIdle = observer.RuntimeIdleResult?.Idle == true,
+            RuntimeIdleBlockers = [.. observer.RuntimeIdleResult?.Blockers ?? []],
+            CompletedStageIds = [.. observer.CompletedStageIds.Distinct(StringComparer.Ordinal).OrderBy(static id => id, StringComparer.Ordinal)],
+            ExpectedFinalObjectPositions = BuildExpectedFinalObjectPositions(expectedDocument),
+            BrowserFinalObjectPositions = new(observer.FinalObjectPositions, StringComparer.Ordinal),
             Metadata = new(observer.Metadata, StringComparer.Ordinal)
         };
 
@@ -78,9 +102,36 @@ public static class WebGlRunObserverProof
         }
 
         AddDiagnostics(report.Errors, "browser-runtime-error", observer.RuntimeErrors);
+        AddDiagnostics(report.Errors, "browser-console-error", observer.ConsoleErrors);
         AddDiagnostics(report.Errors, "ui-error", observer.UiErrors);
         AddDiagnostics(report.Warnings, "browser-runtime-warning", observer.RuntimeWarnings);
         AddDiagnostics(report.Warnings, "ui-warning", observer.UiWarnings);
+
+        if (observer.RuntimeIdleResult is null)
+        {
+            report.Errors.Add("runtime-idle-proof-missing");
+        }
+        else if (!observer.RuntimeIdleResult.Idle)
+        {
+            report.Errors.Add($"runtime-idle-failed:{string.Join(",", observer.RuntimeIdleResult.Blockers)}");
+        }
+
+        foreach (string expectedStageId in ExpectedCompletedStageIds(expectedDocument))
+        {
+            if (!report.CompletedStageIds.Contains(expectedStageId, StringComparer.Ordinal))
+            {
+                report.Errors.Add($"completed-stage-missing:{expectedStageId}");
+            }
+        }
+
+        foreach (KeyValuePair<string, WebGlVector3> expectedPosition in report.ExpectedFinalObjectPositions)
+        {
+            if (!report.BrowserFinalObjectPositions.TryGetValue(expectedPosition.Key, out WebGlVector3 browserPosition) ||
+                !SameVector(expectedPosition.Value, browserPosition))
+            {
+                report.Errors.Add($"final-object-position-mismatch:{expectedPosition.Key}");
+            }
+        }
 
         report.ObserverProofValid = report.Errors.Count == 0;
         report.ClaimStatus = !observer.BrowserRuntimeExercised || !observer.UiExercised
@@ -90,6 +141,9 @@ public static class WebGlRunObserverProof
                 : "observer-failed";
         report.Metadata["browserRuntimeExercised"] = observer.BrowserRuntimeExercised.ToString(System.Globalization.CultureInfo.InvariantCulture);
         report.Metadata["uiExercised"] = observer.UiExercised.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        report.Metadata["runtimeIdle"] = report.RuntimeIdle.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        report.Metadata["completedStageCount"] = report.CompletedStageIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        report.Metadata["finalObjectPositionCount"] = report.BrowserFinalObjectPositions.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
         report.Metadata["warningCount"] = report.Warnings.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
         return report;
     }
@@ -116,6 +170,47 @@ public static class WebGlRunObserverProof
             target.Add($"{prefix}:{value}");
         }
     }
+
+    private static List<string> ExpectedCompletedStageIds(WebGlRunDocument document)
+        => [.. document.Timeline.Frames
+            .SelectMany(static frame => frame.Stages)
+            .Select(static stage => stage.StageId)
+            .Where(static stageId => !string.IsNullOrWhiteSpace(stageId))
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(static stageId => stageId, StringComparer.Ordinal)];
+
+    private static Dictionary<string, WebGlVector3> BuildExpectedFinalObjectPositions(WebGlRunDocument document)
+    {
+        var positions = new Dictionary<string, WebGlVector3>(StringComparer.Ordinal);
+        foreach (WebGlSceneObject sceneObject in document.InitialScene.Scene.Objects)
+        {
+            if (!string.IsNullOrWhiteSpace(sceneObject.Id))
+            {
+                positions[sceneObject.Id] = sceneObject.Position;
+            }
+        }
+
+        foreach (WebGlObjectMotionCommand motion in document.Timeline.Frames
+                     .OrderBy(static frame => frame.Index)
+                     .SelectMany(static frame => frame.Stages.OrderBy(static stage => stage.StageIndex))
+                     .SelectMany(static stage => stage.Motions))
+        {
+            if (!string.IsNullOrWhiteSpace(motion.ObjectId))
+            {
+                positions[motion.ObjectId] = motion.TargetPosition;
+            }
+        }
+
+        return positions;
+    }
+
+    private static bool SameVector(WebGlVector3 expected, WebGlVector3 actual)
+        => IsNear(expected.X, actual.X) &&
+           IsNear(expected.Y, actual.Y) &&
+           IsNear(expected.Z, actual.Z);
+
+    private static bool IsNear(double expected, double actual)
+        => Math.Abs(expected - actual) <= 0.001;
 
     private static string Sha256(object value)
     {

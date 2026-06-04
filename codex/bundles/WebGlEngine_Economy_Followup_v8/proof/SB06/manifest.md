@@ -1,6 +1,6 @@
 # Proof manifest for SB06
 
-Status: pending
+Status: complete
 
 Required artifacts:
 - `proof/SB06/diagnostic-classifier-tests.txt`

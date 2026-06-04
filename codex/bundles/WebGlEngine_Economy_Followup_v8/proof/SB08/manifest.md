@@ -1,6 +1,6 @@
 # Proof manifest for SB08
 
-Status: pending
+Status: complete
 
 Required artifacts:
 - `proof/SB08/golden-oracle-fixtures.txt`

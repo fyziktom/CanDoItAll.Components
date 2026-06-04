@@ -5,6 +5,7 @@ export function getProofSnapshot(state) {
         sceneId: state.sceneModel.sceneId || "",
         objectCount: state.sceneModel.objects?.length || 0,
         linkCount: state.sceneModel.links?.length || 0,
+        objectPositions: buildObjectPositions(state),
         visibleObjectCount: state.diagnostics.visibilityCounts?.visibleObjectCount || 0,
         hiddenObjectCount: state.diagnostics.visibilityCounts?.hiddenObjectCount || 0,
         visibleLinkCount: state.diagnostics.visibilityCounts?.visibleLinkCount || 0,
@@ -135,4 +136,25 @@ export function getProofSnapshot(state) {
             modelDiagnosticsCount: String(state.diagnostics.modelDiagnostics?.size || 0)
         }
     };
+}
+
+function buildObjectPositions(state) {
+    const positions = {};
+    for (const [objectId, position] of state.objectPositions || []) {
+        if (!objectId || !position) {
+            continue;
+        }
+
+        positions[objectId] = {
+            x: roundNumber(position.x),
+            y: roundNumber(position.y),
+            z: roundNumber(position.z)
+        };
+    }
+
+    return positions;
+}
+
+function roundNumber(value) {
+    return Math.round((Number(value) || 0) * 1000) / 1000;
 }

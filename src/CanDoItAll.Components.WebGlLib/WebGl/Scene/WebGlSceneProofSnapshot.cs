@@ -8,6 +8,8 @@ public sealed class WebGlSceneProofSnapshot
 
     public int LinkCount { get; set; }
 
+    public Dictionary<string, WebGlVector3> ObjectPositions { get; set; } = [];
+
     public int VisibleObjectCount { get; set; }
 
     public int HiddenObjectCount { get; set; }

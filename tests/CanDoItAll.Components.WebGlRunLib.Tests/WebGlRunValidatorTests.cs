@@ -397,16 +397,18 @@ public sealed class WebGlRunValidatorTests
         WebGlRunObserverProofReport valid = WebGlRunObserverProof.Compare(
             expected,
             browserLoaded,
-            new()
-            {
-                BrowserRuntimeExercised = true,
-                UiExercised = true
-            });
+            ValidObserverSnapshot());
 
         Assert.Equal("webgl-run-observer-proof/v1", valid.SchemaVersion);
         Assert.True(valid.ObserverProofValid, string.Join(Environment.NewLine, valid.Errors));
         Assert.True(valid.DocumentHashesMatch);
         Assert.Equal("observer-valid", valid.ClaimStatus);
+        Assert.Equal("run-playback", valid.Route);
+        Assert.Equal("1920x1080", valid.Viewport);
+        Assert.True(valid.RuntimeIdle);
+        Assert.Equal(["stage.visual"], valid.CompletedStageIds);
+        Assert.Equal(new WebGlVector3(1, 0, 0), valid.ExpectedFinalObjectPositions["actor"]);
+        Assert.Equal(new WebGlVector3(1, 0, 0), valid.BrowserFinalObjectPositions["actor"]);
         Assert.Equal(expectedHashBefore, valid.ExpectedDocumentHash);
         Assert.Equal(expectedHashBefore, WebGlRunObserverProof.ComputeDocumentHash(expected));
 
@@ -414,31 +416,37 @@ public sealed class WebGlRunValidatorTests
         WebGlRunObserverProofReport mismatch = WebGlRunObserverProof.Compare(
             expected,
             browserLoaded,
+            ValidObserverSnapshot(finalPosition: new WebGlVector3(9, 0, 0)));
+
+        Assert.False(mismatch.ObserverProofValid);
+        Assert.False(mismatch.DocumentHashesMatch);
+        Assert.Equal("observer-failed", mismatch.ClaimStatus);
+        Assert.Contains("browser-document-hash-mismatch", mismatch.Errors);
+        Assert.Contains("final-object-position-mismatch:actor", mismatch.Errors);
+
+        WebGlRunObserverProofReport runtimeFailure = WebGlRunObserverProof.Compare(
+            expected,
+            ObserverDocument(),
+            ValidObserverSnapshot(runtimeError: "webgl context failed"));
+
+        Assert.False(runtimeFailure.ObserverProofValid);
+        Assert.True(runtimeFailure.DocumentHashesMatch);
+        Assert.Equal("observer-failed", runtimeFailure.ClaimStatus);
+        Assert.Contains("browser-runtime-error:webgl context failed", runtimeFailure.Errors);
+
+        WebGlRunObserverProofReport shallowBooleanOnly = WebGlRunObserverProof.Compare(
+            expected,
+            ObserverDocument(),
             new()
             {
                 BrowserRuntimeExercised = true,
                 UiExercised = true
             });
 
-        Assert.False(mismatch.ObserverProofValid);
-        Assert.False(mismatch.DocumentHashesMatch);
-        Assert.Equal("observer-failed", mismatch.ClaimStatus);
-        Assert.Contains("browser-document-hash-mismatch", mismatch.Errors);
-
-        WebGlRunObserverProofReport runtimeFailure = WebGlRunObserverProof.Compare(
-            expected,
-            ObserverDocument(),
-            new()
-            {
-                BrowserRuntimeExercised = true,
-                UiExercised = true,
-                RuntimeErrors = { "webgl context failed" }
-            });
-
-        Assert.False(runtimeFailure.ObserverProofValid);
-        Assert.True(runtimeFailure.DocumentHashesMatch);
-        Assert.Equal("observer-failed", runtimeFailure.ClaimStatus);
-        Assert.Contains("browser-runtime-error:webgl context failed", runtimeFailure.Errors);
+        Assert.False(shallowBooleanOnly.ObserverProofValid);
+        Assert.Contains("runtime-idle-proof-missing", shallowBooleanOnly.Errors);
+        Assert.Contains("completed-stage-missing:stage.visual", shallowBooleanOnly.Errors);
+        Assert.Contains("final-object-position-mismatch:actor", shallowBooleanOnly.Errors);
     }
 
     private static WebGlSceneDocument SceneDocument()
@@ -520,6 +528,39 @@ public sealed class WebGlRunValidatorTests
                 }
             }
         };
+
+    private static WebGlRunObserverSnapshot ValidObserverSnapshot(
+        WebGlVector3? finalPosition = null,
+        string runtimeError = "")
+    {
+        var snapshot = new WebGlRunObserverSnapshot
+        {
+            BrowserRuntimeExercised = true,
+            UiExercised = true,
+            Route = "run-playback",
+            Viewport = "1920x1080",
+            ScreenshotPath = "bundle://proof/SB04/screenshot.png",
+            RuntimeIdleResult = new()
+            {
+                Success = true,
+                Idle = true,
+                TimedOut = false,
+                Reason = "observer-proof",
+                Diagnostics = new()
+            },
+            CompletedStageIds = ["stage.visual"],
+            FinalObjectPositions =
+            {
+                ["actor"] = finalPosition ?? new WebGlVector3(1, 0, 0)
+            }
+        };
+        if (!string.IsNullOrWhiteSpace(runtimeError))
+        {
+            snapshot.RuntimeErrors.Add(runtimeError);
+        }
+
+        return snapshot;
+    }
 
     private static WebGlObjectMotionCommand Motion(string id, WebGlVector3 targetPosition)
         => new()

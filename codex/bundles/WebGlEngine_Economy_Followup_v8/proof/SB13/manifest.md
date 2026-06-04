@@ -1,6 +1,6 @@
 # Proof manifest for SB13
 
-Status: pending
+Status: complete
 
 Required artifacts:
 - `proof/SB13/headless-manifest-tests.txt`

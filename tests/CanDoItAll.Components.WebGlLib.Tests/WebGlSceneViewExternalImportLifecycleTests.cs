@@ -85,6 +85,61 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
             reason == "pause");
     }
 
+    [Fact]
+    public async Task Runtime_stop_wait_for_idle_fails_closed_when_idle_proof_times_out()
+    {
+        var jsRuntime = new RecordingJsRuntime
+        {
+            IdleResult = new()
+            {
+                Success = false,
+                Idle = false,
+                TimedOut = true,
+                Reason = "pause",
+                TimeoutMs = 25,
+                PollIntervalMs = 5,
+                ElapsedMs = 26,
+                Blockers = ["motion:active:1", "command-stage:queued:1"],
+                Diagnostics = new() { ActiveMotionCount = 1, QueuedCommandStageCount = 1 }
+            }
+        };
+        var view = new TestableWebGlSceneView(jsRuntime);
+
+        await view.RenderWithParametersAsync(Scene("scene.stop", "object.stop", revision: 1), new WebGlRuntimeOptions(), firstRender: true);
+        WebGlSceneCommandResult? stop = await view.StopRuntimeActivityAsync("pause", waitForIdle: true, timeoutMs: 25, pollIntervalMs: 5);
+
+        Assert.NotNull(stop);
+        Assert.False(stop.Success);
+        Assert.False(stop.Succeeded);
+        Assert.Equal(WebGlSceneCommandLifecycleStates.Failed, stop.LifecycleState);
+        Assert.Equal("False", stop.Metadata["runtimeIdle"]);
+        Assert.Equal("True", stop.Metadata["runtimeIdleRequired"]);
+        Assert.Contains("Runtime idle proof failed", stop.Errors.Single());
+        Assert.Contains(jsRuntime.Invocations, static invocation => invocation.Identifier == "CanDoItAll.webglScene.waitForRuntimeIdle");
+    }
+
+    [Fact]
+    public async Task Apply_command_batch_and_wait_sends_hard_idle_proof_option_by_default()
+    {
+        var jsRuntime = new RecordingJsRuntime();
+        var view = new TestableWebGlSceneView(jsRuntime);
+
+        await view.RenderWithParametersAsync(Scene("scene.batch", "object.batch", revision: 1), new WebGlRuntimeOptions(), firstRender: true);
+        WebGlSceneCommandBatchResult? result = await view.ApplyCommandBatchAndWaitAsync(
+            new WebGlSceneCommandBatch { BatchId = "batch.proof" },
+            timeoutMs: 25,
+            pollIntervalMs: 5,
+            reason: "SB03-runtime-idle");
+
+        Assert.NotNull(result);
+        Invocation invocation = Assert.Single(jsRuntime.Invocations, static item => item.Identifier == "CanDoItAll.webglScene.applyCommandBatchAndWait");
+        Assert.Equal("batch.proof", Assert.IsType<WebGlSceneCommandBatch>(invocation.Arguments[1]).BatchId);
+        object options = invocation.Arguments[2]!;
+        Assert.True(GetProperty<bool>(options, "requireRuntimeIdle"));
+        Assert.True(GetProperty<bool>(options, "hardFailOnIdleTimeout"));
+        Assert.Equal("SB03-runtime-idle", GetProperty<string>(options, "reason"));
+    }
+
 
     private static WebGlSceneModel Scene(string sceneId, string objectId, int revision)
         => new()
@@ -147,6 +202,14 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
     private sealed class RecordingJsRuntime : IJSRuntime
     {
         public List<Invocation> Invocations { get; } = [];
+        public WebGlRuntimeIdleResult IdleResult { get; set; } = new()
+        {
+            Success = true,
+            Idle = true,
+            TimedOut = false,
+            Reason = "runtime-idle",
+            Diagnostics = new()
+        };
 
         public ValueTask<TValue> InvokeAsync<TValue>(string identifier, object?[]? args)
             => InvokeAsync<TValue>(identifier, CancellationToken.None, args);
@@ -171,6 +234,15 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
                     CommandKind = "runtime-stop",
                     CommandId = ExtractReason(args)
                 },
+                "CanDoItAll.webglScene.waitForRuntimeIdle" => IdleResult,
+                "CanDoItAll.webglScene.applyCommandBatchAndWait" => new WebGlSceneCommandBatchResult
+                {
+                    Success = true,
+                    CommandKind = "command-batch",
+                    CommandId = args is { Length: > 1 } && args[1] is WebGlSceneCommandBatch batch ? batch.BatchId : string.Empty,
+                    Settled = true,
+                    LifecycleState = WebGlSceneCommandLifecycleStates.Settled
+                },
                 "CanDoItAll.webglScene.cancelCommandStages" => new WebGlSceneCommandResult
                 {
                     Success = true,
@@ -188,6 +260,13 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
 
         private static string ExtractReason(object?[]? args)
             => args is { Length: > 1 } && args[1] is string reason ? reason : string.Empty;
+    }
+
+    private static T GetProperty<T>(object instance, string propertyName)
+    {
+        PropertyInfo? property = instance.GetType().GetProperty(propertyName);
+        Assert.NotNull(property);
+        return Assert.IsType<T>(property.GetValue(instance));
     }
 
     private sealed record Invocation(string Identifier, object?[] Arguments);

@@ -281,7 +281,8 @@
         WebGlSceneCommandBatch batch,
         int timeoutMs = 2_000,
         int pollIntervalMs = 16,
-        string reason = "command-batch-settled")
+        string reason = "command-batch-settled",
+        bool requireRuntimeIdle = true)
         => JsRuntime.InvokeAsync<WebGlSceneCommandBatchResult?>(
             "CanDoItAll.webglScene.applyCommandBatchAndWait",
             host,
@@ -290,7 +291,9 @@
             {
                 timeoutMs,
                 pollIntervalMs,
-                reason
+                reason,
+                requireRuntimeIdle,
+                hardFailOnIdleTimeout = requireRuntimeIdle
             }).AsTask();
 
     public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
@@ -312,7 +315,8 @@
         string reason = "runtime-stop",
         bool waitForIdle = false,
         int timeoutMs = 2_000,
-        int pollIntervalMs = 16)
+        int pollIntervalMs = 16,
+        bool requireIdle = true)
     {
         WebGlSceneCommandResult? result = await JsRuntime.InvokeAsync<WebGlSceneCommandResult?>(
             "CanDoItAll.webglScene.stopRuntimeActivity",
@@ -355,6 +359,17 @@
             result.Diagnostics["lastRuntimeStopIdle"] = idleResult.Diagnostics.LastRuntimeStopIdle.ToString(System.Globalization.CultureInfo.InvariantCulture);
             result.Diagnostics["lastRuntimeStopTimedOut"] = idleResult.Diagnostics.LastRuntimeStopTimedOut.ToString(System.Globalization.CultureInfo.InvariantCulture);
             result.Diagnostics["lastRuntimeStopIdleElapsedMs"] = idleResult.Diagnostics.LastRuntimeStopIdleElapsedMs.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        if (requireIdle && idleResult.Idle != true)
+        {
+            result.Success = false;
+            result.Succeeded = false;
+            result.Settled = false;
+            result.LifecycleState = WebGlSceneCommandLifecycleStates.Failed;
+            result.Errors.Add($"Runtime idle proof failed for '{reason}'. Blockers: {string.Join(", ", idleResult.Blockers)}.");
+            result.Metadata["runtimeIdleRequired"] = true.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            result.Diagnostics["runtimeIdleRequired"] = true.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
 
         return result;

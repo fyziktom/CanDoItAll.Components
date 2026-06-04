@@ -1,6 +1,6 @@
 # Proof manifest for SB02
 
-Status: pending
+Status: complete
 
 Required artifacts:
 - `proof/SB02/browser-pause-proof.json`

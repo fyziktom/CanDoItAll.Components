@@ -1,7 +1,7 @@
 # CanDoItAll WebGL Engine + Economy Follow-up Hardening Bundle v8
 
 Prepared date: 2026-06-04  
-Stage: prepared  
+Stage: completed / closure validated  
 Profile: initiative / post-v7 research-grade experiment hardening  
 Target repositories:
 
@@ -93,6 +93,10 @@ Expected result:
 ```text
 Bundle validation passed for stage=prepared, profile=initiative, subbundles=16
 ```
+
+## Execution validation
+
+Execution artifacts now live under `proof/SB01` through `proof/SB16`, and the execution report is `reviews/01-execution-report.md`. Final closure passed `python scripts/validate_bundle.py --stage completed --profile initiative`.
 
 ## Completion definition
 

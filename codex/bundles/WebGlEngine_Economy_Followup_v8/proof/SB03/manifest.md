@@ -1,6 +1,6 @@
 # Proof manifest for SB03
 
-Status: pending
+Status: complete
 
 Required artifacts:
 - `proof/SB03/runtime-idle-tests.txt`

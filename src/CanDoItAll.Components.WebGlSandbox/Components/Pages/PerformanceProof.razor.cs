@@ -273,7 +273,7 @@ public partial class PerformanceProof
             MotionId = $"motion.{id}.{offset:0.00}",
             ObjectId = id,
             TargetPosition = new WebGlVector3((column - 4.5) * 0.9 + offset, 0, (row - 4.5) * 0.9 - offset),
-            DurationSeconds = 4,
+            DurationSeconds = 0.4,
             Easing = WebGlMotionEasings.EaseInOut,
             QueueMode = WebGlMotionQueueModes.Replace,
             Metadata =

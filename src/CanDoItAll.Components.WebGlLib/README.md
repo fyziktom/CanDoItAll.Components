@@ -84,7 +84,7 @@ If a future runtime introduces a global or shared asset cache, it must keep a cl
 
 ## Runtime Hardening
 
-`WebGlSceneView` now exposes export/import, patch, object transform, detailed patch results, and detailed motion methods. The JavaScript runtime supports drag-on-ground-plane for draggable objects, transform-only patches without full scene rebuilds, smooth render-layer motion, `auto`/`continuous`/`on-demand` render modes, idle render-loop sleeping, explicit resource ownership/disposal, model diagnostics, and create/runtime diagnostics.
+`WebGlSceneView` now exposes export/import, patch, object transform, detailed patch results, detailed motion methods, and proof snapshots that include browser-observed object positions. The JavaScript runtime supports drag-on-ground-plane for draggable objects, transform-only patches without full scene rebuilds, smooth render-layer motion, `auto`/`continuous`/`on-demand` render modes, idle render-loop sleeping, explicit resource ownership/disposal, model diagnostics, and create/runtime diagnostics.
 
 External scene imports through `ImportSceneAsync`, `ImportSceneDetailedAsync`, `ImportSceneDocumentAsync`, and `ImportSceneDocumentDetailedAsync` update the browser runtime scene immediately and update `WebGlSceneView`'s component-local lifecycle key to the imported scene/options. They do not mutate parent-owned parameter state outside the component. If the parent re-renders with the exact scene key or scene id that the import replaced, the component treats those parameters as stale and preserves the imported runtime scene; a genuinely new parameter scene id or a parameter payload matching the imported scene can take over on the next render.
 
