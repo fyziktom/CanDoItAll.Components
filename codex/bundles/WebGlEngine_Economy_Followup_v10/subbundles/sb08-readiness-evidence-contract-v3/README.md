@@ -1,5 +1,7 @@
 # SB08 — Readiness evidence contract v3
 
+Completed. See `proof/SB08/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Make readiness bands artifact-derived: browser/UI/oracle flags computed from evidence bundle, not caller-provided booleans.
 

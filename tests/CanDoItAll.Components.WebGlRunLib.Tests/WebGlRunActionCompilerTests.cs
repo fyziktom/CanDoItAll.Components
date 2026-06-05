@@ -257,6 +257,33 @@ public sealed class WebGlRunActionCompilerTests
     }
 
     [Fact]
+    public void Batch_compiler_accepts_generic_directed_flow_visual_as_driver_mapped_noop()
+    {
+        var plan = new WebGlRunActionPlan
+        {
+            ActionId = "generic.flow.plan",
+            Actions =
+            [
+                new()
+                {
+                    ActionId = "generic.flow.action",
+                    ActionKind = WebGlRunActionKinds.DirectedFlowVisual,
+                    SubjectObjectId = "actor",
+                    DurationSeconds = 0.2
+                }
+            ]
+        };
+
+        WebGlSceneCommandBatch batch = new WebGlRunActionPlanBatchCompiler().Compile(plan);
+
+        Assert.True(plan.IsValid, string.Join(Environment.NewLine, plan.Errors));
+        WebGlSceneCommandBatchStage stage = Assert.Single(batch.Stages);
+        Assert.Equal("generic.flow.action", stage.StageId);
+        Assert.Equal(0.2, stage.WaitSeconds);
+        Assert.Equal(WebGlRunActionKinds.DirectedFlowVisual, stage.Metadata["explicitNoOpMapping"]);
+    }
+
+    [Fact]
     public void Batch_compiler_preserves_parallel_event_motion_and_scene_patch_contracts()
     {
         var plan = new WebGlRunActionPlan
@@ -341,6 +368,99 @@ public sealed class WebGlRunActionCompilerTests
         Assert.Equal("run-plan:direct.patch", directPatchBatch.BatchId);
         Assert.Single(directPatchBatch.Patches);
         Assert.Equal("#22c55e", directPatchBatch.Patches[0].ObjectPatches[0].Color);
+    }
+
+    [Fact]
+    public void Generic_visualization_canary_uses_only_motion_pose_symbol_and_patch_primitives()
+    {
+        var plan = new WebGlRunActionPlan
+        {
+            ActionId = "calibration.canary",
+            FrameRate = 1,
+            ObjectBindings =
+            [
+                new WebGlRunObjectBinding { ObjectId = "cursor", Position = WebGlVector3.Zero },
+                new WebGlRunObjectBinding { ObjectId = "marker", Position = new WebGlVector3(2, 0, 0) }
+            ],
+            Actions =
+            [
+                Action("move.cursor.to-marker", WebGlRunActionKinds.MoveToObject, 0, "cursor", "marker"),
+                Action("pose.cursor.align", WebGlRunActionKinds.ChangePose, 1, "cursor", parameters: new() { ["poseKey"] = "aligned" }),
+                Action("symbol.cursor.ready", WebGlRunActionKinds.ShowSymbol, 2, "cursor", parameters: new() { ["symbolKind"] = "ready" })
+            ]
+        };
+
+        WebGlRunTimeline timeline = new WebGlRunActionCompiler().Compile(plan);
+        timeline.Frames.Add(new WebGlRunFrame
+        {
+            Index = 3,
+            TimeSeconds = 3,
+            ScenePatches =
+            [
+                new WebGlRunFramePatch
+                {
+                    Id = "patch.cursor.tint",
+                    Patch = new WebGlScenePatch
+                    {
+                        SceneId = "scene.calibration-canary",
+                        ObjectPatches =
+                        [
+                            new WebGlSceneObjectPatch
+                            {
+                                ObjectId = "cursor",
+                                Color = "#38bdf8",
+                                Metadata = new Dictionary<string, string>(StringComparer.Ordinal)
+                                {
+                                    ["state"] = "selected"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        });
+        var document = new WebGlRunDocument
+        {
+            RunId = new WebGlRunId("generic-calibration-canary"),
+            Timeline = timeline,
+            Metadata =
+            {
+                ["canaryPurpose"] = "generic-visualization-lifecycle"
+            }
+        };
+
+        Assert.True(plan.IsValid, string.Join(Environment.NewLine, plan.Errors));
+        Assert.Equal(
+            [WebGlRunActionKinds.MoveToObject, WebGlRunActionKinds.ChangePose, WebGlRunActionKinds.ShowSymbol],
+            plan.Actions.Select(static action => action.ActionKind).ToArray());
+        Assert.Equal([0, 1, 2, 3], document.Timeline.Frames.Select(static frame => frame.Index).ToArray());
+
+        WebGlSceneCommandBatch[] batches =
+        [
+            .. document.Timeline.Frames
+                .OrderBy(static frame => frame.Index)
+                .Select(static frame => WebGlRunFrameApplyResult.FromFrame(frame).CommandBatch)
+        ];
+
+        Assert.Single(batches[0].Stages.Single().Motions);
+        Assert.Equal("aligned", batches[1].Stages.Single().Patches.Single().ObjectPatches.Single().Metadata!["poseKey"]);
+        Assert.Equal("ready", batches[2].Stages.Single().Patches.Single().ObjectPatches.Single().Symbols!.Single().SemanticKind);
+        Assert.Empty(batches[3].Stages);
+        Assert.Single(batches[3].Patches);
+        Assert.Equal("#38bdf8", batches[3].Patches.Single().ObjectPatches.Single().Color);
+
+        string[] emittedActionKinds =
+        [
+            .. batches
+                .SelectMany(static batch => batch.Stages)
+                .Select(static stage => stage.Metadata.GetValueOrDefault("actionKind", string.Empty))
+                .Where(static actionKind => actionKind.Length > 0)
+        ];
+        Assert.Equal(
+            [WebGlRunActionKinds.MoveToObject, WebGlRunActionKinds.ChangePose, WebGlRunActionKinds.ShowSymbol],
+            emittedActionKinds);
+        string unexpectedNoOpMetadataKey = "explicit" + "NoOpMapping";
+        Assert.DoesNotContain(batches.SelectMany(static batch => batch.Stages), stage => stage.Metadata.ContainsKey(unexpectedNoOpMetadataKey));
     }
 
     private static WebGlRunAction Action(

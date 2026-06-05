@@ -1,5 +1,7 @@
 # SB17 — Docs/operator workflow: how to run credible experiments
 
+Completed. See `proof/SB17/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Update docs with exact workflow: exploratory, headless-valid, oracle-valid, browser-observer-valid, research-ready.
 

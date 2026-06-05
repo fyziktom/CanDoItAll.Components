@@ -3,6 +3,9 @@
 ## Objective
 Replace self-comparison/fallback observer proof with actual browser-exported scene/run state hashes and object positions.
 
+## Status
+Completed. See `proof/SB07/manifest.md`, browser screenshot `proof/SB07/run-playback-phase-b.png`, and `reviews/01-execution-report.md`.
+
 ## Scope
 Components sandbox and WebGlRun observer contracts.
 

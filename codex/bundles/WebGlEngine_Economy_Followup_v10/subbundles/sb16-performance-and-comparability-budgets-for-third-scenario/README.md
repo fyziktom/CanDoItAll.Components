@@ -1,5 +1,7 @@
 # SB16 — Performance and comparability budgets for third scenario
 
+Completed. See `proof/SB16/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Add headless and observer budgets for multi-goods-elite; classify not-comparable vs economic failure.
 

@@ -1,5 +1,7 @@
 # SB09 — multi-goods-elite scenario canary hardening
 
+Completed. See `proof/SB09/manifest.md`, `proof/SB09/multi-goods-elite-oracle-source-summary.json`, and `reviews/01-execution-report.md`.
+
 ## Objective
 Promote third scenario into canary suite for exchange, multi-good holdings, capital claims, fee shocks, and concentration.
 

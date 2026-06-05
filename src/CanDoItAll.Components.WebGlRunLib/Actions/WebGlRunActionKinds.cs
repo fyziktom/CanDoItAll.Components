@@ -16,7 +16,7 @@ public static class WebGlRunActionKinds
     public const string UpdateSymbol = "update-symbol";
     public const string SetLayerVisibility = "set-layer-visibility";
     public const string PulseLink = "pulse-link";
-    public const string ResourceTransferVisual = "resource-transfer-visual";
+    public const string DirectedFlowVisual = "directed-flow-visual";
     public const string Wait = "wait";
     public const string ApplyScenePatch = "apply-scene-patch";
 }

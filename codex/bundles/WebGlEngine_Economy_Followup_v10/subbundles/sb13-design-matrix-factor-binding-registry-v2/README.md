@@ -1,5 +1,7 @@
 # SB13 — Design matrix factor binding registry v2
 
+Completed. See `proof/SB13/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Extend factor materialization to capacity, policy parameter, event enable/disable, fee rate, investment size, return rate, relationship shock.
 

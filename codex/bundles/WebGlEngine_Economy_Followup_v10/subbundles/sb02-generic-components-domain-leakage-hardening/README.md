@@ -3,6 +3,9 @@
 ## Objective
 Remove economy-shaped action vocabulary from WebGlRunLib public API or mark as deprecated and move to driver-owned extension.
 
+## Status
+Completed. See `proof/SB02/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Scope
 Components only; Economy bridge adapts.
 

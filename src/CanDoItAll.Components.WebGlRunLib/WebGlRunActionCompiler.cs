@@ -121,7 +121,7 @@ public sealed class WebGlRunActionCompiler
             case WebGlRunActionKinds.ApplyScenePatch:
             case WebGlRunActionKinds.ApplyPatch:
             case WebGlRunActionKinds.PulseLink:
-            case WebGlRunActionKinds.ResourceTransferVisual:
+            case WebGlRunActionKinds.DirectedFlowVisual:
             case WebGlRunActionKinds.SetLayerVisibility:
             case WebGlRunActionKinds.Wait:
                 stage.WaitSeconds = Math.Max(0, action.DurationSeconds);

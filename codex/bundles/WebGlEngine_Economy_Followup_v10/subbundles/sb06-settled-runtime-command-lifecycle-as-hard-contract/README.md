@@ -3,6 +3,9 @@
 ## Objective
 Ensure applyCommandBatchAndWait and WebGlRunBrowserApplyAdapter distinguish scheduled/settled/cancelled/failed states.
 
+## Status
+Completed. See `proof/SB06/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Scope
 Components WebGlLib/WebGlRunLib.
 

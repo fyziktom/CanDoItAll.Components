@@ -5,6 +5,19 @@ on:
   pull_request:
 
 jobs:
+  bundle-proof-integrity:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate WebGlEngine bundle proof integrity
+        shell: pwsh
+        run: python codex/bundles/WebGlEngine_Economy_Followup_v10/scripts/validate_bundle.py --stage prepared
+
   generic-src-domain-leakage:
     runs-on: windows-latest
     steps:

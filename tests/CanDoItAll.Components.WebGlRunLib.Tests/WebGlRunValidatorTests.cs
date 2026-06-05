@@ -489,6 +489,26 @@ public sealed class WebGlRunValidatorTests
         Assert.Contains("final-object-position-mismatch:actor", shallowBooleanOnly.Errors);
     }
 
+    [Fact]
+    public void Observer_proof_rejects_missing_browser_exported_positions_even_when_other_evidence_passes()
+    {
+        WebGlRunDocument expected = ObserverDocument();
+        WebGlRunObserverSnapshot browserExportMissingPositions = ValidObserverSnapshot();
+        browserExportMissingPositions.FinalObjectPositions.Clear();
+
+        WebGlRunObserverProofReport report = WebGlRunObserverProof.Compare(
+            expected,
+            ObserverDocument(),
+            browserExportMissingPositions);
+
+        Assert.False(report.ObserverProofValid);
+        Assert.True(report.DocumentHashesMatch);
+        Assert.True(report.RuntimeIdle);
+        Assert.Equal(["stage.visual"], report.CompletedStageIds);
+        Assert.Empty(report.BrowserFinalObjectPositions);
+        Assert.Contains("final-object-position-mismatch:actor", report.Errors);
+    }
+
     private static WebGlSceneDocument SceneDocument()
         => new()
         {

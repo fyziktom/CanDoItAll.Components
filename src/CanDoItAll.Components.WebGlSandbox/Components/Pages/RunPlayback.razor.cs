@@ -182,7 +182,7 @@ public partial class RunPlayback
                 : [.. documentRunner.State.CompletedStageIds],
             FinalObjectPositions = latestSnapshot?.ObjectPositions.Count > 0
                 ? new(latestSnapshot.ObjectPositions, StringComparer.Ordinal)
-                : BuildExpectedFinalObjectPositions(),
+                : [],
             RuntimeErrors = latestRunSnapshot is null ? [] : [.. latestRunSnapshot.RuntimeErrors],
             RuntimeWarnings = latestRunSnapshot is null ? [] : [.. latestRunSnapshot.RuntimeWarnings],
             Metadata =
@@ -193,7 +193,8 @@ public partial class RunPlayback
                 ["browserProofSnapshotHash"] = browserProofSnapshotHash,
                 ["runtimeStopGeneration"] = latestRuntimeStopGeneration.ToString(CultureInfo.InvariantCulture),
                 ["runtimeDiagnosticsCaptured"] = (latestRuntimeDiagnostics is not null).ToString(CultureInfo.InvariantCulture),
-                ["proofSnapshotCaptured"] = (latestSnapshot is not null).ToString(CultureInfo.InvariantCulture)
+                ["proofSnapshotCaptured"] = (latestSnapshot is not null).ToString(CultureInfo.InvariantCulture),
+                ["browserObjectPositionsCaptured"] = (latestSnapshot?.ObjectPositions.Count > 0).ToString(CultureInfo.InvariantCulture)
             }
         };
 
@@ -216,31 +217,6 @@ public partial class RunPlayback
             browserProofSnapshotHash,
             browserLoadedInitialSceneId = browserLoadedInitialSceneDocument?.Scene.SceneId ?? string.Empty
         };
-    }
-
-    private Dictionary<string, WebGlVector3> BuildExpectedFinalObjectPositions()
-    {
-        var positions = new Dictionary<string, WebGlVector3>(StringComparer.Ordinal);
-        foreach (WebGlSceneObject sceneObject in runDocument.InitialScene.Scene.Objects)
-        {
-            if (!string.IsNullOrWhiteSpace(sceneObject.Id))
-            {
-                positions[sceneObject.Id] = sceneObject.Position;
-            }
-        }
-
-        foreach (WebGlObjectMotionCommand motion in runDocument.Timeline.Frames
-                     .OrderBy(static frame => frame.Index)
-                     .SelectMany(static frame => frame.Stages.OrderBy(static stage => stage.StageIndex))
-                     .SelectMany(static stage => stage.Motions))
-        {
-            if (!string.IsNullOrWhiteSpace(motion.ObjectId))
-            {
-                positions[motion.ObjectId] = motion.TargetPosition;
-            }
-        }
-
-        return positions;
     }
 
     private async Task PlayAsync()

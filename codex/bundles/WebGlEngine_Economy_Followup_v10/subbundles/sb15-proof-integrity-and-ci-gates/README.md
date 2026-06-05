@@ -1,5 +1,7 @@
 # SB15 — Proof integrity and CI gates
 
+Completed. See `proof/SB15/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Harden proof validator and CI workflows so empty transcripts, stale screenshots, and skipped scans fail the bundle.
 

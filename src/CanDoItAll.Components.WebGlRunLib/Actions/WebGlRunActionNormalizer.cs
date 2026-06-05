@@ -134,7 +134,7 @@ public sealed class WebGlRunActionNormalizer
             or WebGlRunActionKinds.ShowSymbol
             or WebGlRunActionKinds.UpdateSymbol
             or WebGlRunActionKinds.HideSymbol
-            or WebGlRunActionKinds.ResourceTransferVisual
+            or WebGlRunActionKinds.DirectedFlowVisual
             or WebGlRunActionKinds.PulseLink;
 
     private static bool IsSupportedActionKind(string actionKind)
@@ -152,7 +152,7 @@ public sealed class WebGlRunActionNormalizer
             or WebGlRunActionKinds.ApplyScenePatch
             or WebGlRunActionKinds.ApplyPatch
             or WebGlRunActionKinds.PulseLink
-            or WebGlRunActionKinds.ResourceTransferVisual
+            or WebGlRunActionKinds.DirectedFlowVisual
             or WebGlRunActionKinds.SetLayerVisibility
             or WebGlRunActionKinds.Wait;
 

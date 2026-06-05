@@ -1,5 +1,7 @@
 # SB18 — Final cross-repo red-team closure
 
+Completed. See `proof/SB18/manifest.md`, `reviews/01-execution-report.md`, and `reviews/02-final-red-team.md`.
+
 ## Objective
 Independent QA pass over genericity, scenario trust, proof evidence, browser idle, and package boundaries.
 

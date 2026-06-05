@@ -3,6 +3,9 @@
 ## Objective
 Introduce a formal domain-driver pattern so necessary domain vocabulary lives outside generic Components packages.
 
+## Status
+Completed. See `proof/SB03/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Scope
 Components generic abstractions + Economy driver implementation.
 

@@ -3,6 +3,9 @@
 ## Objective
 Harden pause UX: immediate stop before C# drain, stale callback suppression, first-observable-stop assertion.
 
+## Status
+Completed. See `proof/SB05/manifest.md`, `proof/SB07/playwright-runtime-state-assertions.txt`, and `reviews/01-execution-report.md`.
+
 ## Scope
 Components RunPlayback + JS runtime tests.
 

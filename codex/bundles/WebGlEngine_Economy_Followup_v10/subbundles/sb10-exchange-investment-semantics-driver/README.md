@@ -1,5 +1,7 @@
 # SB10 — Exchange/investment semantics driver
 
+Completed. See `proof/SB10/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Add generic economic simulation driver semantics for contribution, claim issue, return payment, obligations, and concentration measurement without hardcoding elite-specific behavior.
 

@@ -1,5 +1,7 @@
 # SB14 — Generic visualization canary for non-economy domains
 
+Completed. See `proof/SB14/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Add a non-economy sample/run document to Components to prove generic action lifecycle is not economy-shaped.
 

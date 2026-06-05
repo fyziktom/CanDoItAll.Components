@@ -3,6 +3,9 @@
 ## Objective
 Move ResourceTransferVisual handling from generic action kinds to Economy driver mapping or generic DirectedValueFlow action.
 
+## Status
+Completed. See `proof/SB04/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Scope
 Economy WebGlBridge plus compatibility shim.
 

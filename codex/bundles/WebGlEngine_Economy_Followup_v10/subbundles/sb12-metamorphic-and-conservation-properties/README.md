@@ -1,5 +1,7 @@
 # SB12 — Metamorphic and conservation properties
 
+Completed. See `proof/SB12/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Add property tests for conservation, monotonic fee effects, investment size effects, concentration bounds, and no hidden negative stores.
 

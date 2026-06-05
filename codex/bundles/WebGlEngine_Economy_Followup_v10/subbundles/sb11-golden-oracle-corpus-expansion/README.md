@@ -1,5 +1,7 @@
 # SB11 — Golden oracle corpus expansion
 
+Completed. See `proof/SB11/manifest.md` and `reviews/01-execution-report.md`.
+
 ## Objective
 Externalize oracle cases and add multi-goods-elite oracle expectations including final stores, flows, claims, issues, metrics, frame hash chain.
 
