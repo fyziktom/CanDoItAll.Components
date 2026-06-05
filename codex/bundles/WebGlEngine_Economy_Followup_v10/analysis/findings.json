@@ -1,0 +1,83 @@
+[
+  {
+    "id": "F01",
+    "severity": "High",
+    "area": "Components genericity",
+    "title": "Generic WebGlRunLib still contains domain-shaped action kind ResourceTransferVisual",
+    "evidence": "src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs exposes ResourceTransferVisual in generic action kinds.",
+    "risk": "Generic run layer remains subtly shaped by economy examples; production-line or unrelated visual domains may inherit economy-specific vocabulary.",
+    "fix": "Replace with generic ValueFlowVisual/LinkFlowVisual/DirectedFlowVisual or move the domain action behind a domain driver in Economy bridge."
+  },
+  {
+    "id": "F02",
+    "severity": "Medium",
+    "area": "Components boundary audit",
+    "title": "Forbidden domain terms moved to configurable boundary options, but enforcement must be CI-backed",
+    "evidence": "WebGlRunGenericBoundaryOptions accepts forbidden terms and EconomyWebGlMappingBoundary supplies economy-specific list.",
+    "risk": "Good architectural move, but future domain-specific terms can re-enter generic packages unless scan is stable and blocks PRs.",
+    "fix": "Add CI/domain-leakage scan that checks WebGlLib/WebGlRunLib source, tests, public constants, samples, and package metadata; domain lists live in driver packages."
+  },
+  {
+    "id": "F03",
+    "severity": "Medium",
+    "area": "Pause/runtime",
+    "title": "Pause ordering is improved through stop coordinator, but must be proven by first-stop observable UX gate",
+    "evidence": "StopCoordinator performs immediate runtime stop before cancel/drain/final stop; RunPlayback uses StopAsync.",
+    "risk": "User-observed pause bug can regress if browser proof only checks final idle, not immediate visible stop latency and stale callback suppression.",
+    "fix": "Add Playwright proof that captures state immediately after Pause and after drain, asserts no active motions/stages, stable frame, no stale UI rewrite."
+  },
+  {
+    "id": "F04",
+    "severity": "High",
+    "area": "Browser observer proof",
+    "title": "Observer proof must use actual browser-exported run/scene state, not self-comparison or derived fallback positions",
+    "evidence": "RunPlayback builds observer snapshot from latest diagnostics/proof snapshot, with fallback expected final positions if ObjectPositions are absent.",
+    "risk": "Browser proof can pass even if browser state is incomplete or not exactly equal to the headless run document.",
+    "fix": "Require runtime-exported scene/document hash and object positions from browser; no fallback positions in proof; mismatch = observer failure only."
+  },
+  {
+    "id": "F05",
+    "severity": "High",
+    "area": "Economic research confidence",
+    "title": "Readiness flags must be artifact-derived, not caller asserted",
+    "evidence": "Readiness options still expose BrowserRuntimeExercised, UIExercised, OracleProofExercised booleans.",
+    "risk": "A caller could mark evidence as exercised without supplying verifiable artifacts, inflating confidence/research-ready status.",
+    "fix": "Introduce EvidenceBundle inputs with hashes/citations; booleans become computed outputs only."
+  },
+  {
+    "id": "F06",
+    "severity": "Medium",
+    "area": "Third scenario",
+    "title": "multi-goods-elite exists but should be hardened as a genericity canary, not only a demo fixture",
+    "evidence": "Runtime catalog contains multi-goods-elite with grain/tools/credit/equity-share, trade, contribution, claim, fee, obligation events.",
+    "risk": "Scenario may exercise added event kinds but still hide gaps in exchange clearing, investment return, claim accounting, elite concentration metrics, and visualization genericity.",
+    "fix": "Promote it to canary suite with external oracle, metamorphic checks, factor matrix, scenario docs, and generic visual flow driver."
+  },
+  {
+    "id": "F07",
+    "severity": "Medium",
+    "area": "Domain drivers",
+    "title": "Economy bridge contains mapping logic but generic extension/driver boundary is not explicit enough",
+    "evidence": "EconomyWebGlBridge maps EconomyVisualActionKind to WebGlRunActionKinds and supplies boundary terms.",
+    "risk": "Future domains may copy economy mapping instead of implementing clean drivers, causing generic layer drift.",
+    "fix": "Define a formal visual/run domain driver pattern: driver-owned action vocabulary, mapping, validation, boundary terms, oracle tests."
+  },
+  {
+    "id": "F08",
+    "severity": "Medium",
+    "area": "Experiment design",
+    "title": "Design matrix factor materialization improved but needs factor binding coverage for third scenario",
+    "evidence": "Harness materializes effective source and supports seed, event magnitude, store quantity, scenario metadata, behavior profile.",
+    "risk": "Elite/exchange experiments need factor bindings for capacities, policy parameters, event inclusion, returns, fees, and relationship strength.",
+    "fix": "Add binding registry and no-effect hard fail for every factor type used by multi-goods-elite."
+  },
+  {
+    "id": "F09",
+    "severity": "Medium",
+    "area": "Proof hygiene",
+    "title": "Historic proof transcripts include zero-length artifacts; v10 must enforce non-empty meaningful proof",
+    "evidence": "Earlier bundle proofs had empty transcript files in compare output.",
+    "risk": "Bundle can appear completed even when critical commands did not run or output was lost.",
+    "fix": "Proof validator must fail zero-byte transcripts except explicitly allowlisted binary screenshots and intentional placeholder files."
+  }
+]
