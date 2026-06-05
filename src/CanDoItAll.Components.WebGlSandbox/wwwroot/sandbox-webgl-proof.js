@@ -46,12 +46,13 @@
             this.immediateStopHookInstalled = true;
             document.addEventListener("pointerdown", event => {
                 const button = event.target?.closest?.("button");
-                const label = normalizeButtonLabel(button?.textContent);
-                if (!button || !["pause", "cancel", "reset", "step"].includes(label)) {
+                const action = resolveImmediateStopAction(button);
+                if (!button || !action) {
                     return;
                 }
 
-                this.stopBrowserRuntimeImmediately(`run-playback-${label}-pointerdown`);
+                const result = this.stopBrowserRuntimeImmediately(`run-playback-${action}-pointerdown`);
+                this.syncRuntimeStopGeneration(result);
             }, true);
         },
         stopBrowserRuntimeImmediately(reason) {
@@ -61,10 +62,31 @@
             }
 
             return root.webglScene.stopRuntimeActivity(host, reason);
+        },
+        syncRuntimeStopGeneration(result) {
+            const generation = Number(result?.metadata?.runtimeStopGeneration || result?.diagnostics?.runtimeStopGeneration || 0);
+            if (!Number.isFinite(generation) || generation <= 0 || !this.reference) {
+                return;
+            }
+
+            this.invoke("ProofSyncRuntimeStopGenerationAsync", generation).catch(() => {
+            });
         }
     };
 
+    function resolveImmediateStopAction(button) {
+        const text = normalizeButtonLabel(button?.getAttribute?.("aria-label") || button?.title || button?.textContent);
+        if (!text) {
+            return "";
+        }
+
+        return ["pause", "cancel", "reset", "step"].find(action =>
+            text === action ||
+            text.endsWith(action) ||
+            text.includes(action)) || "";
+    }
+
     function normalizeButtonLabel(text) {
-        return String(text || "").trim().toLowerCase();
+        return String(text || "").trim().toLowerCase().replace(/\s+/g, "");
     }
 })();

@@ -373,6 +373,13 @@ public partial class RunPlayback
         => PauseAsync();
 
     [JSInvokable]
+    public Task ProofSyncRuntimeStopGenerationAsync(long generation)
+    {
+        latestRuntimeStopGeneration = Math.Max(latestRuntimeStopGeneration, generation);
+        return InvokeAsync(StateHasChanged);
+    }
+
+    [JSInvokable]
     public Task ProofSnapshotAsync()
         => CaptureProofAsync();
 

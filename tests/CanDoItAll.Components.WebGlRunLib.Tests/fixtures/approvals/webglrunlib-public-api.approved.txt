@@ -1,0 +1,688 @@
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:5: public sealed class WebGlRunAction
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:7: public string ActionId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:9: public string SequenceId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:11: public string ParentActionId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:13: public int StageIndex { get; set; } = -1;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:15: public string StageGroupId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:17: public string CoalescingScope { get; set; } = WebGlRunCoalescingScopes.StageOnly;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:19: public int OrderIndex { get; set; } = -1;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:21: public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:23: public string Kind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:25: public string ActionKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:27: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:29: public string SubjectObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:31: public WebGlRunActionTarget Target { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:33: public string TargetObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:35: public string PoseKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:37: public string SymbolKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:39: public double StartsAtSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:41: public double DurationSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:43: public string Easing { get; set; } = WebGlMotionEasings.Linear;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:45: public List<WebGlRunAction> Steps { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:47: public Dictionary<string, string> Parameters { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:49: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:51: public string ResolvedKind => !string.IsNullOrWhiteSpace(Kind) ? Kind : ActionKind;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:53: public string ResolvedObjectId => !string.IsNullOrWhiteSpace(ObjectId) ? ObjectId : SubjectObjectId;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:55: public string ResolvedTargetObjectId => !string.IsNullOrWhiteSpace(Target.ObjectId) ? Target.ObjectId : TargetObjectId;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:58: public static class WebGlRunStageExecutionPolicies
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:60: public const string PreserveOrder = "preserve-order";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:61: public const string Parallel = "parallel";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAction.cs:62: public const string CoalesceWithinStage = "coalesce-within-stage";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:3: public static class WebGlRunActionKinds
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:5: public const string Sequence = "sequence";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:6: public const string Parallel = "parallel";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:7: public const string ApplyPatch = "apply-patch";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:8: public const string MoveToObject = "move-to-object";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:9: public const string MoveToPosition = "move-to-position";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:10: public const string ReturnToAnchor = "return-to-anchor";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:11: public const string SetAsset = "set-asset";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:12: public const string SetPose = "set-pose";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:13: public const string ChangePose = "change-pose";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:14: public const string ShowSymbol = "show-symbol";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:15: public const string HideSymbol = "hide-symbol";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:16: public const string UpdateSymbol = "update-symbol";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:17: public const string SetLayerVisibility = "set-layer-visibility";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:18: public const string PulseLink = "pulse-link";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:19: public const string DirectedFlowVisual = "directed-flow-visual";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:20: public const string Wait = "wait";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:21: public const string ApplyScenePatch = "apply-scene-patch";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs:23: public static readonly IReadOnlySet<string> All = new HashSet<string>(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionNormalizer.cs:3: public sealed class WebGlRunActionNormalizationResult
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionNormalizer.cs:5: public WebGlRunAction Action { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionNormalizer.cs:7: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionNormalizer.cs:9: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionNormalizer.cs:11: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionNormalizer.cs:14: public sealed class WebGlRunActionNormalizer
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionNormalizer.cs:16: public WebGlRunActionNormalizationResult Normalize(WebGlRunAction action)
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:5: public sealed class WebGlRunActionStep
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:7: public string StepId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:9: public WebGlRunAction Action { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:11: public double DelaySeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:13: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:16: public sealed class WebGlRunActionPlan
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:18: public int FrameRate { get; set; } = 1;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:20: public string ActionId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:22: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:24: public List<WebGlRunAction> Actions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:26: public List<WebGlRunObjectBinding> ObjectBindings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:28: public List<WebGlScenePatch> Patches { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:30: public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:32: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:34: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:36: public List<string> DroppedStepIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:38: public Dictionary<string, string> TargetResolutionDiagnostics { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:40: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:42: public int GeneratedPatchCount => Patches.Count;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:44: public int GeneratedMotionCount => Motions.Count;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:47: public sealed class WebGlRunObjectBinding
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:49: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:50: public WebGlVector3? Position { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:51: public WebGlVector3? AnchorPosition { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:52: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:55: public sealed class WebGlRunActionMapping
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:57: public string EventKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:58: public string ActionKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlan.cs:59: public Dictionary<string, string> Parameters { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:5: public sealed class WebGlRunActionPlanValidationResult
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:7: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:9: public List<string> Warnings { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:11: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:14: public sealed class WebGlRunActionPlanValidator
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:19: public WebGlRunActionPlanValidator()
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:24: public WebGlRunActionPlanValidator(WebGlRunGenericBoundaryOptions? boundaryOptions)
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionPlanValidator.cs:29: public WebGlRunActionPlanValidationResult Validate(WebGlRunActionPlan plan)
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionTarget.cs:5: public sealed class WebGlRunActionTarget
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionTarget.cs:7: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionTarget.cs:9: public string AnchorKey { get; set; } = WebGlRunAnchorKeys.Center;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionTarget.cs:11: public string FallbackAnchorKey { get; set; } = WebGlRunAnchorKeys.Center;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionTarget.cs:13: public WebGlVector3 Offset { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionTarget.cs:15: public WebGlVector3? Position { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionTarget.cs:17: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:3: public static class WebGlRunAnchorKeys
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:5: public const string Center = "center";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:6: public const string Base = "base";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:7: public const string Top = "top";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:8: public const string Front = "front";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:9: public const string Back = "back";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:10: public const string Left = "left";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:11: public const string Right = "right";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:12: public const string Home = "home";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:13: public const string Work = "work";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:14: public const string Use = "use";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:15: public const string Admin = "admin";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunAnchorKeys.cs:16: public const string Trade = "trade";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:3: public sealed class WebGlRunEvent
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:5: public string EventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:6: public string EventKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:7: public string SubjectObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:8: public string TargetObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:9: public double StartsAtSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:10: public double DurationSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunEvent.cs:11: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:3: public static class WebGlRunCoalescingScopes
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:5: public const string None = "none";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:6: public const string StageOnly = "stage-only";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:7: public const string Frame = "frame";
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:10: public sealed class WebGlRunActionStagePolicy
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:12: public string StageGroupId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:13: public string CoalescingScope { get; set; } = WebGlRunCoalescingScopes.StageOnly;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:14: public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:15: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:18: public sealed class WebGlRunActionStageBoundary
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:20: public string BoundaryId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:21: public int StageIndex { get; set; } = -1;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:22: public string StageGroupId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:23: public string CoalescingScope { get; set; } = WebGlRunCoalescingScopes.StageOnly;
+src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunStageContracts.cs:24: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlActionBinding.cs:3: public sealed class WebGlActionBinding
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlActionBinding.cs:5: public string ActionKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlActionBinding.cs:7: public string PoseKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlActionBinding.cs:9: public string SymbolKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlActionBinding.cs:11: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:5: public sealed class WebGlPoseDefinition
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:7: public string PoseKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:9: public string AssetVariantId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:11: public string AssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:13: public WebGlVector3? Rotation { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:15: public WebGlVector3? Scale { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:17: public WebGlVector3 Offset { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:19: public string SymbolKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:21: public bool IsNoOpFallback { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlPoseDefinition.cs:23: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:5: public sealed class WebGlSymbolDefinition
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:7: public string SymbolKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:9: public string SemanticKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:11: public string SymbolAssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:13: public string Color { get; set; } = "#facc15";
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:15: public string EffectKey { get; set; } = WebGlSymbolEffects.Pulse;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:17: public string Tooltip { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:19: public bool IsNoOpFallback { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlSymbolDefinition.cs:21: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:3: public sealed class WebGlVisualStateCatalog
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:5: public List<WebGlPoseDefinition> Poses { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:7: public List<WebGlSymbolDefinition> Symbols { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:9: public List<WebGlActionBinding> ActionBindings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:12: public sealed class WebGlVisualStateCatalogValidationResult
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:14: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:16: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:18: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:21: public sealed class WebGlVisualStateCatalogValidator
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:23: public WebGlVisualStateCatalogValidationResult Validate(WebGlVisualStateCatalog catalog, CanDoItAll.Components.WebGlLib.WebGlAssetCatalog? assetCatalog = null)
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:104: public static class WebGlVisualStateCatalogFallbacks
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:106: public static WebGlPoseDefinition NoOpPose { get; } = new()
+src/CanDoItAll.Components.WebGlRunLib/Catalogs/WebGlVisualStateCatalog.cs:116: public static WebGlSymbolDefinition NoOpSymbol { get; } = new()
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocument.cs:5: public sealed class WebGlRunDocument
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocument.cs:7: public string SchemaVersion { get; set; } = "webgl-run-document/v1";
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocument.cs:9: public WebGlRunId RunId { get; set; } = new(string.Empty);
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocument.cs:11: public WebGlSceneDocument InitialScene { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocument.cs:13: public WebGlRunTimeline Timeline { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocument.cs:15: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:5: public sealed class WebGlRunDocumentValidationResult
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:7: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:9: public List<string> Warnings { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:11: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:14: public sealed class WebGlRunGenericBoundaryOptions
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:16: public static WebGlRunGenericBoundaryOptions None { get; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:18: public IEnumerable<string> ForbiddenDomainTerms { get; init; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:21: public sealed class WebGlRunDocumentValidator
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:23: public const string CurrentSchemaVersion = "webgl-run-document/v1";
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:28: public WebGlRunDocumentValidator()
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:33: public WebGlRunDocumentValidator(WebGlRunGenericBoundaryOptions? boundaryOptions)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:38: public WebGlRunDocumentValidationResult Validate(WebGlRunDocument document)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:302: public static bool IsSourceProvenanceKey(string key)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:305: public static bool IsDriverManifestKey(string key)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:308: public static void ValidateSourceProvenance(
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:365: public static void ValidateDriverManifestMetadata(string scope, string key, string value, List<string> errors)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:386: public static string[] GetForbiddenDomainTerms(WebGlRunGenericBoundaryOptions? options)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:392: public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:416: public static readonly HashSet<string> HashBackedSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:422: public static readonly HashSet<string> OpaqueSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:437: public static readonly HashSet<string> DriverManifestMetadataKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:445: public static readonly string[] DisallowedSourcePolicyTerms =
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:459: public static readonly HashSet<string> AllowedSceneBarrierPolicies = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:5: public sealed class WebGlRunFrame
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:7: public long Index { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:9: public double TimeSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:11: public List<WebGlRunActionStage> Stages { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:13: public List<WebGlRunFramePatch> ScenePatches { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:15: public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:17: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:20: public sealed class WebGlRunActionStage
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:22: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:24: public string SequenceId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:26: public string ParentActionId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:28: public int StageIndex { get; set; } = -1;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:30: public string StageGroupId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:32: public string CoalescingScope { get; set; } = WebGlRunCoalescingScopes.StageOnly;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:34: public int OrderIndex { get; set; } = -1;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:36: public string ExecutionPolicy { get; set; } = WebGlRunStageExecutionPolicies.PreserveOrder;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:38: public double StartsAtSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:40: public double WaitSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:42: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:44: public List<string> BarrierObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:46: public string BarrierEventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:48: public List<WebGlRunFramePatch> ScenePatches { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:50: public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:52: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:55: public sealed class WebGlRunFramePatch
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:57: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:59: public WebGlScenePatch Patch { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrameCommandPolicy.cs:5: public static bool HasMixedDirectAndStagedCommands(WebGlRunFrame frame)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrameCommandPolicy.cs:8: public static string CreateMixedDirectAndStagedCommandsError(long frameIndex)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:9: public sealed class WebGlRunObserverSnapshot
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:11: public bool BrowserRuntimeExercised { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:12: public bool UiExercised { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:13: public string Route { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:14: public string Viewport { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:15: public string ScreenshotPath { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:16: public WebGlRuntimeDiagnostics? RuntimeDiagnostics { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:17: public WebGlRuntimeIdleResult? RuntimeIdleResult { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:18: public List<string> CompletedStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:19: public Dictionary<string, WebGlVector3> FinalObjectPositions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:20: public List<string> RuntimeErrors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:21: public List<string> RuntimeWarnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:22: public List<string> ConsoleErrors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:23: public List<string> UiErrors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:24: public List<string> UiWarnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:25: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:28: public sealed class WebGlRunObserverProofReport
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:30: public string SchemaVersion { get; set; } = WebGlRunObserverProof.CurrentSchemaVersion;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:31: public string ExpectedDocumentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:32: public string BrowserLoadedDocumentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:33: public string ExpectedSceneContentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:34: public string BrowserLoadedSceneContentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:35: public string ExpectedDriverHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:36: public string BrowserLoadedDriverHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:37: public bool DocumentHashesMatch { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:38: public bool SceneContentHashesMatch { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:39: public bool DriverHashesMatch { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:40: public bool BrowserRuntimeValid { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:41: public bool UiValid { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:42: public bool ObserverProofValid { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:43: public string ClaimStatus { get; set; } = "observer-not-run";
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:44: public string Route { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:45: public string Viewport { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:46: public string ScreenshotPath { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:47: public bool RuntimeIdle { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:48: public List<string> RuntimeIdleBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:49: public List<string> CompletedStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:50: public Dictionary<string, WebGlVector3> ExpectedFinalObjectPositions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:51: public Dictionary<string, WebGlVector3> BrowserFinalObjectPositions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:52: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:53: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:54: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:57: public static class WebGlRunObserverProof
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:59: public const string CurrentSchemaVersion = "webgl-run-observer-proof/v1";
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:66: public static WebGlRunObserverProofReport Compare(
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:189: public static string ComputeDocumentHash(WebGlRunDocument document)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:3: public sealed class InputDocumentRef
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:5: public string Kind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:6: public string Path { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:7: public string SchemaVersion { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:8: public string ContentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:9: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:12: public sealed class InputHashRef
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:14: public string Kind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:15: public string ContentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:16: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:19: public sealed class RunSourceRef
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:21: public string SourceKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:22: public string SourceId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:23: public List<InputDocumentRef> Inputs { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:24: public List<InputHashRef> Hashes { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:25: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:28: public sealed class WebGlRunDocumentProvenanceValidationResult
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:30: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:31: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:34: public sealed class WebGlRunDocumentProvenanceValidator
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:38: public WebGlRunDocumentProvenanceValidator()
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:43: public WebGlRunDocumentProvenanceValidator(IEnumerable<string> disallowedTerms)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:49: public WebGlRunDocumentProvenanceValidationResult Validate(WebGlRunDocument document)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunProvenance.cs:57: public WebGlRunDocumentProvenanceValidationResult Validate(RunSourceRef source)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunStageOrderingPolicy.cs:3: public static class WebGlRunStageOrderingPolicy
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunStageOrderingPolicy.cs:5: public static IReadOnlyList<WebGlRunActionStage> OrderStages(WebGlRunFrame frame)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunStageOrderingPolicy.cs:11: public static IReadOnlyList<WebGlRunActionStage> OrderStages(IEnumerable<WebGlRunActionStage> stages)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunTimeline.cs:3: public sealed class WebGlRunTimeline
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunTimeline.cs:5: public int FrameRate { get; set; } = 30;
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunTimeline.cs:7: public List<WebGlRunFrame> Frames { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:8: public interface IWebGlRunDomainMappingDriver
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:26: public sealed class WebGlRunPassThroughDomainMappingDriver : IWebGlRunDomainMappingDriver
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:28: public static WebGlRunPassThroughDomainMappingDriver Instance { get; } = new();
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:30: public string DriverId => "generic-pass-through";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:31: public string DriverVersion => "1.0.0";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:32: public string DisplayName => "Generic pass-through";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:33: public WebGlRunGenericBoundaryOptions BoundaryOptions => WebGlRunGenericBoundaryOptions.None;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:34: public IReadOnlyCollection<string> DriverActionKinds => [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:36: public string MapToGenericActionKind(string driverActionKind)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:40: public sealed class WebGlRunDomainMappingDriverManifest
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:42: public const string CurrentSchemaVersion = "webgl-run-domain-driver-manifest/v1";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:44: public string SchemaVersion { get; set; } = CurrentSchemaVersion;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:45: public string DriverId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:46: public string DriverVersion { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:47: public string DisplayName { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:48: public string DriverHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:49: public Dictionary<string, string> ActionKindMappings { get; set; } = new(StringComparer.Ordinal);
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:50: public List<string> ForbiddenDomainTerms { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:51: public List<string> AllowedSourceProvenanceKeys { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:53: public static WebGlRunDomainMappingDriverManifest FromDriver(IWebGlRunDomainMappingDriver driver)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:75: public static string ComputeDriverHash(IWebGlRunDomainMappingDriver driver)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:78: public static string ComputeManifestHash(WebGlRunDomainMappingDriverManifest manifest)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:109: public sealed class WebGlRunDomainMappingDriverValidationResult
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:111: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:112: public List<string> Warnings { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:113: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:116: public static class WebGlRunDomainMappingDriverMetadataScrubber
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:118: public static Dictionary<string, string> Scrub(
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:159: public static class WebGlRunDomainMappingDriverValidator
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:161: public static WebGlRunDomainMappingDriverValidationResult Validate(IWebGlRunDomainMappingDriver driver)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:3: public static class WebGlRunDriverMetadataKeys
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:5: public const string DriverId = "driver.id";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:6: public const string DriverVersion = "driver.version";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:7: public const string DriverHash = "driver.hash";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:8: public const string DriverManifestHash = "driver.manifestHash";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:9: public const string SourceTraceMapHash = "source.traceMapHash";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:11: public static void Stamp(
+src/CanDoItAll.Components.WebGlRunLib/Identity/WebGlRunId.cs:3: public readonly record struct WebGlRunId(string Value);
+src/CanDoItAll.Components.WebGlRunLib/InMemoryWebGlRunFrameStore.cs:3: public sealed class InMemoryWebGlRunFrameStore(WebGlRunTimeline timeline) : IWebGlRunFrameStore
+src/CanDoItAll.Components.WebGlRunLib/InMemoryWebGlRunFrameStore.cs:7: public ValueTask<WebGlRunFrame?> GetFrameAsync(WebGlRunId runId, long frameIndex, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/InMemoryWebGlRunFrameStore.cs:13: public ValueTask<IReadOnlyList<WebGlRunFrame>> ListFramesAsync(WebGlRunId runId, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Planning/IWebGlRunActionPlanner.cs:3: public interface IWebGlRunActionPlanner
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanBatchBuilder.cs:5: public sealed class WebGlRunActionPlanBatchBuilder
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanBatchBuilder.cs:9: public WebGlSceneCommandBatch Build(WebGlRunActionPlan plan)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanBatchCompiler.cs:5: public sealed class WebGlRunActionPlanBatchCompiler
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanBatchCompiler.cs:9: public WebGlSceneCommandBatch Compile(WebGlRunActionPlan plan)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanner.cs:6: public sealed class WebGlRunActionPlanner : IWebGlRunActionPlanner
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanner.cs:11: public WebGlRunActionPlan Plan(WebGlRunAction action, WebGlRunPlanningContext context)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanningDiagnostics.cs:3: public sealed class WebGlRunActionPlanningDiagnostics
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanningDiagnostics.cs:5: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanningDiagnostics.cs:7: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunActionPlanningDiagnostics.cs:9: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunPlanningContext.cs:5: public sealed class WebGlRunPlanningContext
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunPlanningContext.cs:9: public WebGlSceneModel Scene { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunPlanningContext.cs:11: public WebGlVisualStateCatalog VisualStates { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunPlanningContext.cs:13: public Dictionary<string, WebGlVector3> ObjectPositions { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunPlanningContext.cs:15: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunPlanningContext.cs:17: public IReadOnlyDictionary<string, WebGlSceneObject> ObjectIndex
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunStageBarrierPolicy.cs:7: public static void Apply(WebGlRunAction action, WebGlRunActionStage stage, string fallbackPolicy, params string[] objectIds)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunStageIdPolicy.cs:3: public sealed class WebGlRunStageIdPolicy
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunStageIdPolicy.cs:5: public string Resolve(WebGlRunAction action)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:6: public sealed class WebGlRunTargetResolver
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:8: public WebGlRunActionPlanningDiagnostics Diagnostics { get; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:10: public WebGlVector3? Resolve(WebGlRunActionTarget target, WebGlRunPlanningContext context)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:13: public WebGlRunTargetResolution ResolveTarget(WebGlRunActionTarget target, WebGlRunPlanningContext context)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:44: public WebGlVector3 ResolveAnchor(WebGlSceneObject sceneObject, string anchorKey, WebGlVector3 offset)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:47: public WebGlVector3 ResolveAnchor(WebGlSceneObject sceneObject, string anchorKey, WebGlVector3 offset, string fallbackAnchorKey)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:158: public sealed class WebGlRunTargetResolution
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:160: public bool Succeeded { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:162: public WebGlVector3? Position { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:164: public string TargetObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:166: public string AnchorKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:168: public string AnchorKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:170: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:172: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunTargetResolver.cs:174: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunVisualStateResolver.cs:3: public sealed class WebGlRunVisualStateResolver
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunVisualStateResolver.cs:5: public WebGlPoseDefinition? ResolvePose(WebGlRunAction action, WebGlRunPlanningContext context)
+src/CanDoItAll.Components.WebGlRunLib/Planning/WebGlRunVisualStateResolver.cs:11: public WebGlSymbolDefinition? ResolveSymbol(WebGlRunAction action, WebGlRunPlanningContext context)
+src/CanDoItAll.Components.WebGlRunLib/Playback/IWebGlRunFrameStore.cs:5: public interface IWebGlRunFrameSource
+src/CanDoItAll.Components.WebGlRunLib/Playback/IWebGlRunFrameStore.cs:10: public interface IWebGlRunFrameStore : IWebGlRunFrameSource
+src/CanDoItAll.Components.WebGlRunLib/Playback/IWebGlRunFrameStore.cs:15: public interface IWebGlRunFrameApplier
+src/CanDoItAll.Components.WebGlRunLib/Playback/IWebGlRunFrameStore.cs:20: public interface IWebGlRunSceneProjector<in TFrame>
+src/CanDoItAll.Components.WebGlRunLib/Playback/IWebGlRunFrameStore.cs:25: public interface IWebGlRunSnapshotStore
+src/CanDoItAll.Components.WebGlRunLib/Playback/IWebGlRunPlaybackController.cs:3: public interface IWebGlRunPlaybackController
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:5: public sealed class WebGlRunBrowserApplyAdapter(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:14: public ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:106: public async ValueTask<WebGlRunBrowserApplyResult> ApplyAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:147: public async ValueTask<WebGlRunBrowserPlaybackApplyResult> ApplyPlaybackAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:5: public sealed class WebGlRunBrowserApplyResult
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:7: public bool Success => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:9: public string FailureReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:11: public long FrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:13: public bool AppliedInitialScene { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:15: public int AppliedStageCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:17: public int AppliedPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:19: public int AppliedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:21: public WebGlRunRuntimeSnapshot RuntimeSnapshot { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:23: public WebGlRuntimeDiagnostics? RuntimeDiagnostics { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:25: public WebGlRuntimeIdleResult? RuntimeIdleResult { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:27: public WebGlSceneCommandBatchResult? CommandBatchResult { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:29: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:31: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:34: public sealed class WebGlRunBrowserPlaybackApplyResult
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:36: public bool Success => Errors.Count == 0 &&
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:40: public string RequestedCommand { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:42: public long TargetFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:44: public string TransactionPolicy { get; set; } = WebGlRunBrowserPlaybackTransactionPolicies.StopOnFirstFailure;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:46: public bool RequiresSceneReset { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:48: public string ReplayMode { get; set; } = WebGlRunBrowserReplayModes.Incremental;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:50: public string RuntimeIdleWaitPolicy { get; set; } = WebGlRunRuntimeIdleWaitPolicies.None;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:52: public bool AppliedInitialScene { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:54: public long? LastAppliedFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:56: public long? FailedFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:58: public string FailureReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:60: public bool Canceled { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:62: public string CancellationReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:64: public WebGlRunRuntimeSnapshot? FailureSnapshot { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:66: public List<WebGlRuntimeIdleResult> RuntimeIdleResults { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:68: public List<WebGlRunBrowserApplyResult> FrameResults { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:70: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:72: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:75: public static class WebGlRunBrowserApplyFailureReasons
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:77: public const string PreApplyValidationFailed = nameof(PreApplyValidationFailed);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:79: public const string ResetFailed = nameof(ResetFailed);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:81: public const string BatchFailed = nameof(BatchFailed);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:83: public const string MultiFramePlaybackRequiresExplicitApply = nameof(MultiFramePlaybackRequiresExplicitApply);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:85: public const string CancellationRequested = nameof(CancellationRequested);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:87: public const string RuntimeIdleTimeout = nameof(RuntimeIdleTimeout);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:90: public static class WebGlRunBrowserPlaybackTransactionPolicies
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:92: public const string StopOnFirstFailure = nameof(StopOnFirstFailure);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:3: public sealed class WebGlRunBrowserPlaybackApplyOptions
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:5: public string RuntimeIdleWaitPolicy { get; set; } = WebGlRunRuntimeIdleWaitPolicies.None;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:7: public WebGlRunRuntimeIdleWaitOptions RuntimeIdle { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:10: public sealed class WebGlRunRuntimeIdleWaitOptions
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:12: public int TimeoutMs { get; set; } = 2_000;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:14: public int PollIntervalMs { get; set; } = 16;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:16: public string Reason { get; set; } = "playback-apply";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:19: public static class WebGlRunRuntimeIdleWaitPolicies
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:21: public const string None = nameof(None);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:23: public const string AfterEachFrame = nameof(AfterEachFrame);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:25: public const string AfterPlayback = nameof(AfterPlayback);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:28: public static class WebGlRunBrowserReplayModes
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:30: public const string Incremental = nameof(Incremental);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:32: public const string AbsoluteReplay = nameof(AbsoluteReplay);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:34: public const string SnapshotAnchorReplay = nameof(SnapshotAnchorReplay);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserRuntimeContracts.cs:5: public interface IWebGlRunBrowserApplyAdapter
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserRuntimeContracts.cs:20: public interface IWebGlRunBrowserRuntime
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:5: public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier = null) : IWebGlRunDocumentRunner
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:12: public WebGlRunExecutionState State { get; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:14: public async ValueTask<WebGlRunExecutionResult> LoadAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:56: public async ValueTask<WebGlRunExecutionResult> SeekAsync(long frameIndex, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:82: public async ValueTask<WebGlRunExecutionResult> ApplyCurrentFrameAsync(CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:198: public ValueTask<WebGlRunExecutionResult> StepForwardAsync(CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:200: public ValueTask<WebGlRunExecutionResult> StepBackwardAsync(CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:203: public ValueTask<WebGlRunExecutionResult> PauseAsync(string reason = "paused", CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:206: public ValueTask<WebGlRunExecutionResult> CancelAsync(string reason = "canceled", CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:209: public ValueTask<WebGlRunExecutionResult> StopAsync(string reason = "stopped", CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:5: public interface IWebGlRunDocumentRunner
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:26: public interface IWebGlRunInitialSceneApplier
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:31: public sealed class WebGlRunExecutionState
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:33: public WebGlRunDocument Document { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:35: public string RunId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:37: public long CurrentFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:39: public bool InitialSceneLoaded { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:41: public string CurrentCommandBatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:43: public List<string> ActiveStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:45: public List<string> PendingStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:47: public List<string> CompletedStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:49: public List<string> FailedStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:51: public List<string> SkippedStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:53: public List<string> CanceledStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:55: public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:57: public string LastPlaybackCommandKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:59: public string LastPlaybackStopReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:61: public int PlaybackPauseCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:63: public int PlaybackCancelCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:65: public int PlaybackStopCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:67: public WebGlRunExecutionDiagnostics ExecutionDiagnostics { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:69: public Dictionary<string, string> Diagnostics { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:72: public sealed class WebGlRunExecutionResult
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:74: public bool Succeeded => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:76: public string Operation { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:78: public long CurrentFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:80: public bool AppliedInitialScene { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:82: public bool Paused { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:84: public bool Canceled { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:86: public bool Stopped { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:88: public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:90: public string PlaybackLifecycleReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:92: public List<string> AppliedStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:94: public List<string> CanceledStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:96: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:98: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:100: public WebGlRunExecutionDiagnostics ExecutionDiagnostics { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:102: public Dictionary<string, string> Diagnostics { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:105: public sealed class WebGlRunExecutionDiagnostics
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:107: public List<string> UnresolvedObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:109: public List<string> FailedMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:111: public List<string> FailedPatchIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:113: public List<string> FailedLinkIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:115: public List<string> SourceFrameIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:117: public List<string> SourceStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:119: public int FailedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:121: public int FailedPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionContracts.cs:123: public int FailedLinkCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionResultDiagnostics.cs:5: public static void CopyFrameApplyDiagnostics(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionResultDiagnostics.cs:33: public static void SyncDiagnosticCounts(WebGlRunExecutionResult result)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunExecutionResultDiagnostics.cs:48: public static void Merge(WebGlRunExecutionResult target, WebGlRunExecutionResult source)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:5: public sealed class WebGlRunFrameApplyResult
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:7: public long FrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:9: public double TimeSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:11: public bool RequiresSceneReset { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:13: public WebGlSceneDocument? InitialScene { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:15: public WebGlSceneCommandBatch CommandBatch { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:17: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:19: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameApplyResult.cs:21: public static WebGlRunFrameApplyResult FromFrame(WebGlRunFrame frame)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameExecutionValidator.cs:7: public static WebGlRunExecutionResult ValidateFrame(WebGlRunFrame frame, HashSet<string> knownObjectIds)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameExecutionValidator.cs:50: public static void ApplyFrameObjectState(WebGlRunFrame frame, HashSet<string> knownObjectIds)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunFrameExecutionValidator.cs:66: public static IReadOnlyList<string> ResolveFailedStageIds(WebGlRunFrame frame, WebGlRunExecutionDiagnostics diagnostics)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackCommand.cs:3: public sealed class WebGlRunPlaybackCommand
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackCommand.cs:5: public string Kind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackCommand.cs:7: public long? TargetFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackCommand.cs:9: public string Reason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackLifecycleStates.cs:3: public static class WebGlRunPlaybackLifecycleStates
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackLifecycleStates.cs:5: public const string Idle = "idle";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackLifecycleStates.cs:6: public const string Playing = "playing";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackLifecycleStates.cs:7: public const string Paused = "paused";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackLifecycleStates.cs:8: public const string Canceled = "canceled";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackLifecycleStates.cs:9: public const string Stopped = "stopped";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackOptions.cs:3: public sealed class WebGlRunPlaybackOptions
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackOptions.cs:5: public bool StopAtTimelineEnd { get; set; } = true;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackOptions.cs:7: public Func<TimeSpan, CancellationToken, ValueTask>? DelayAsync { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:3: public sealed class WebGlRunPlaybackState
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:5: public WebGlRunId RunId { get; set; } = new(string.Empty);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:7: public long CurrentFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:9: public string CurrentCommandBatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:11: public string CurrentStageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:13: public List<string> CurrentStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:15: public List<string> CurrentActionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:17: public int QueuedStageCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:19: public bool InitialSceneLoaded { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:21: public string InitialSceneId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:23: public bool IsPlaying { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:25: public double PlaybackSpeed { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:27: public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:29: public string LastPlaybackCommandKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:31: public string LastPlaybackStopReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:33: public int PlaybackPauseCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:35: public int PlaybackCancelCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackState.cs:37: public int PlaybackStopCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:5: public sealed class WebGlRunPlaybackStopRequest
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:7: public string Reason { get; init; } = "playback-stop";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:9: public Func<string, bool, ValueTask<WebGlSceneCommandResult?>> StopRuntimeAsync { get; init; } =
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:12: public Action CancelPlayback { get; init; } = static () => { };
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:14: public Task? PlaybackTask { get; init; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:16: public TimeSpan PlaybackDrainTimeout { get; init; } = TimeSpan.FromSeconds(2);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:18: public TimeSpan LateApplyDrainDelay { get; init; } = TimeSpan.Zero;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:21: public sealed class WebGlRunPlaybackStopResult
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:23: public WebGlSceneCommandResult? ImmediateStopResult { get; init; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:25: public WebGlSceneCommandResult? FinalStopResult { get; init; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:27: public WebGlSceneCommandResult? LateDrainStopResult { get; init; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:29: public bool PlaybackTaskTimedOut { get; init; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:31: public bool PlaybackTaskCanceled { get; init; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:33: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:35: public bool Success =>
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:43: public sealed class WebGlRunPlaybackStopCoordinator
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunPlaybackStopCoordinator.cs:45: public async ValueTask<WebGlRunPlaybackStopResult> StopAsync(WebGlRunPlaybackStopRequest request)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:5: public sealed class WebGlRunRuntimeSnapshot
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:7: public string RunId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:9: public string InitialSceneId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:11: public int InitialObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:13: public int InitialLinkCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:15: public long CurrentFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:17: public string CurrentCommandBatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:19: public string CurrentStageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:21: public List<string> CurrentStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:23: public List<string> CurrentActionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:25: public List<string> ActiveStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:27: public List<string> QueuedStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:29: public int QueuedStageCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:31: public int ActiveMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:33: public List<string> ActiveMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:35: public int QueuedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:37: public List<string> QueuedMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:39: public List<WebGlRuntimeMotionQueueSnapshot> MotionQueueSnapshot { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:41: public List<WebGlRuntimeCommandStageJournalEntry> CommandJournalTail { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:43: public int CommandJournalDroppedCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:45: public WebGlRunStageBarrierSnapshot StageBarrier { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:47: public List<string> RuntimeErrors { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:49: public List<string> RuntimeWarnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:51: public bool IsPlaying { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:53: public double PlaybackSpeed { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:55: public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:57: public string LastPlaybackCommandKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:59: public string LastPlaybackStopReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:61: public int PlaybackPauseCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:63: public int PlaybackCancelCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:65: public int PlaybackStopCount { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:67: public bool InitialSceneLoaded { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:69: public Dictionary<string, string> RunSourceProvenance { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:71: public Dictionary<string, string> Diagnostics { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:74: public sealed class WebGlRunStageBarrierSnapshot
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:76: public string Policy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:78: public string Target { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:80: public List<string> Blockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:82: public string EventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:84: public List<string> ObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:86: public double WaitSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:88: public double ElapsedSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:90: public double TimeoutSeconds { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeSnapshot.cs:92: public bool TimedOut { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeStopGenerationPolicy.cs:6: public static class WebGlRunRuntimeStopGenerationPolicy
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeStopGenerationPolicy.cs:8: public static bool TryRead(WebGlSceneCommandResult? result, out long generation)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunRuntimeStopGenerationPolicy.cs:15: public static bool IsStale(WebGlSceneCommandResult? result, long currentGeneration)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunSceneViewFrameApplier.cs:5: public sealed class WebGlRunSceneViewFrameApplier(WebGlSceneView sceneView, WebGlRunDocument document) :
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunSceneViewFrameApplier.cs:9: public async ValueTask ApplyInitialSceneAsync(WebGlSceneDocument sceneDocument, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunSceneViewFrameApplier.cs:16: public async ValueTask ApplyAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunSceneViewFrameApplier.cs:23: public async ValueTask ApplyAsync(WebGlRunPlaybackResult result, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:5: public sealed class WebGlSceneViewBrowserRuntime(WebGlSceneView sceneView) : IWebGlRunBrowserRuntime
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:7: public async ValueTask<WebGlSceneCommandResult?> ImportSceneAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:16: public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:25: public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:42: public async ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:48: public async ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunActionCompiler.cs:5: public sealed class WebGlRunActionCompiler
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunActionCompiler.cs:9: public WebGlRunTimeline Compile(WebGlRunActionPlan plan)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunDocumentFrameSource.cs:3: public sealed class WebGlRunDocumentFrameSource(WebGlRunDocument document) : IWebGlRunFrameSource
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunDocumentFrameSource.cs:7: public WebGlRunDocument Document { get; } = document ?? throw new ArgumentNullException(nameof(document));
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunDocumentFrameSource.cs:9: public ValueTask<WebGlRunFrame?> GetFrameAsync(WebGlRunId runId, long frameIndex, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs:3: public sealed class WebGlRunFrameResolver
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs:5: public WebGlRunFrame? ResolveFrame(WebGlRunTimeline timeline, long frameIndex)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs:8: public WebGlRunFrame? ResolveNextFrame(WebGlRunTimeline timeline, long currentFrameIndex)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs:12: public WebGlRunFrame? ResolvePreviousFrame(WebGlRunTimeline timeline, long currentFrameIndex)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs:16: public IReadOnlyList<WebGlRunFrame> ResolveReplayFrames(WebGlRunTimeline timeline, long targetFrameIndex)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs:21: public IReadOnlyList<WebGlRunFrame> ResolveSnapshotAnchorReplayFrames(WebGlRunTimeline timeline, long targetFrameIndex)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunFrameResolver.cs:37: public static IReadOnlyList<WebGlRunFrame> OrderFrames(IEnumerable<WebGlRunFrame> frames)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackClock.cs:8: public sealed class WebGlRunPlaybackClock
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackClock.cs:10: public TimeSpan ResolveFrameDelay(WebGlRunTimeline timeline, double playbackSpeed)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackClock.cs:18: public string BuildDeterministicTimelineIdentity(WebGlRunDocument document)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:3: public static class WebGlRunPlaybackCommandKinds
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:5: public const string Play = "play";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:6: public const string Resume = "resume";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:7: public const string Pause = "pause";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:8: public const string Cancel = "cancel";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:9: public const string Stop = "stop";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:10: public const string Step = "step";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:11: public const string Seek = "seek";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:12: public const string Reset = "reset";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:13: public const string Next = "next";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackCommandKinds.cs:14: public const string Previous = "previous";
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:5: public sealed class WebGlRunPlaybackController : IWebGlRunPlaybackController
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:15: public WebGlRunPlaybackController(WebGlRunDocument document)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:27: public WebGlRunPlaybackController(
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:47: public WebGlRunPlaybackState State { get; } = new();
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:49: public async ValueTask<WebGlRunFrame?> ApplyAsync(WebGlRunPlaybackCommand command, CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:52: public async ValueTask<WebGlRunPlaybackResult> ApplyDetailedAsync(
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:144: public WebGlRunRuntimeSnapshot ExportRuntimeSnapshot()
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackController.cs:178: public async ValueTask<WebGlRunPlaybackResult> PlayToEndAsync(
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:3: public sealed class WebGlRunPlaybackResult
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:5: public bool Success => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:7: public string RequestedCommand { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:9: public long TargetFrameIndex { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:11: public int FramesApplied { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:13: public int StagesQueued { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:15: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:17: public List<string> Warnings { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:19: public WebGlRunFrame? CurrentFrame { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:21: public List<WebGlRunFrame> FramesToApply { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:23: public bool RequiresSceneReset { get; set; }
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:25: public string ReplayMode { get; set; } = WebGlRunBrowserReplayModes.Incremental;
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:27: public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:29: public string PlaybackLifecycleReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:31: public WebGlRunPlaybackState State { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunPlaybackResult.cs:33: public Dictionary<string, string> RunSourceProvenance { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunTimelineValidator.cs:3: public sealed class WebGlRunTimelineValidator
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunTimelineValidator.cs:5: public WebGlRunTimelineValidationResult Validate(WebGlRunTimeline timeline)
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunTimelineValidator.cs:40: public sealed class WebGlRunTimelineValidationResult
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunTimelineValidator.cs:42: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/WebGlRunTimelineValidator.cs:44: public bool Success => Errors.Count == 0;

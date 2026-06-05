@@ -42,6 +42,12 @@
         "reason": "The active v12 bundle intentionally discusses the audited domain terms as proof and requirements, not shipped behavior.",
         "owner": "webglrunlib-boundary",
         "expires": "2026-12-31"
+      },
+      {
+        "glob": "codex/bundles/WebGlEngine_Economy_Followup_v13/**",
+        "reason": "The active v13 freeze bundle intentionally discusses the audited domain terms as proof and requirements, not shipped behavior.",
+        "owner": "webglrunlib-boundary",
+        "expires": "2026-12-31"
       }
     ],
     "lines": [
@@ -60,12 +66,206 @@
         "reason": "Generic tooling uses machine-readable to describe output format."
       },
       {
-        "pattern": "WebGlEngine_Economy_Followup_v1[12]|WebGl_Economy_|webgl-economy|webgl-engine-economy",
+        "pattern": "WebGlEngine_Economy_Followup_v1[123]|WebGl_Economy_|webgl-economy|webgl-engine-economy",
         "reason": "Artifact and bundle directory names preserve historical proof lineage."
       }
     ]
   },
   "profiles": {
+    "generic-source-hard-gate": {
+      "projectReferenceRules": [
+        {
+          "project": "src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj",
+          "allowedProjectFileNames": [
+            "CanDoItAll.Components.WebGlLib.csproj"
+          ],
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Economy"
+          ]
+        },
+        {
+          "project": "src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj",
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Components.WebGlRunLib",
+            "CanDoItAll.Economy"
+          ]
+        }
+      ],
+      "scopes": [
+        {
+          "name": "generic-webglrunlib-source-hard-gate",
+          "roots": [
+            "src/CanDoItAll.Components.WebGlRunLib"
+          ],
+          "extensions": [
+            ".cs",
+            ".csproj",
+            ".props",
+            ".targets"
+          ]
+        },
+        {
+          "name": "generic-webgllib-source-hard-gate",
+          "roots": [
+            "src/CanDoItAll.Components.WebGlLib"
+          ],
+          "extensions": [
+            ".cs",
+            ".razor",
+            ".js",
+            ".css",
+            ".json",
+            ".csproj",
+            ".props",
+            ".targets"
+          ]
+        }
+      ]
+    },
+    "generic-public-api-hard-gate": {
+      "scopes": [
+        {
+          "name": "generic-public-api-approval-snapshots",
+          "roots": [
+            "tests/CanDoItAll.Components.WebGlLib.Tests/fixtures/approvals",
+            "tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/approvals"
+          ],
+          "extensions": [
+            ".txt"
+          ]
+        },
+        {
+          "name": "generic-public-api-freeze-tests",
+          "roots": [
+            "tests/CanDoItAll.Components.WebGlLib.Tests/WebGlLibFreezeApprovalTests.cs",
+            "tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunFreezeApprovalTests.cs"
+          ],
+          "extensions": [
+            ".cs"
+          ]
+        }
+      ]
+    },
+    "package-content-hard-gate": {
+      "projectReferenceRules": [
+        {
+          "project": "samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj",
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Components.WebGlRunLib",
+            "CanDoItAll.Economy"
+          ]
+        },
+        {
+          "project": "samples/CanDoItAll.Components.WebGlRunLibGenericSample/CanDoItAll.Components.WebGlRunLibGenericSample.csproj",
+          "allowedProjectFileNames": [
+            "CanDoItAll.Components.WebGlRunLib.csproj"
+          ],
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Economy"
+          ]
+        },
+        {
+          "project": "src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj",
+          "allowedProjectFileNames": [
+            "CanDoItAll.Components.WebGlLib.csproj"
+          ],
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Economy"
+          ]
+        },
+        {
+          "project": "src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj",
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Components.WebGlRunLib",
+            "CanDoItAll.Economy"
+          ]
+        }
+      ],
+      "scopes": [
+        {
+          "name": "generic-package-project-files",
+          "roots": [
+            "src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj",
+            "src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj",
+            "samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj",
+            "samples/CanDoItAll.Components.WebGlRunLibGenericSample/CanDoItAll.Components.WebGlRunLibGenericSample.csproj"
+          ],
+          "extensions": [
+            ".csproj"
+          ]
+        },
+        {
+          "name": "generic-runtime-package-assets",
+          "roots": [
+            "src/CanDoItAll.Components.WebGlLib/wwwroot",
+            "src/CanDoItAll.Components.WebGlRunLib"
+          ],
+          "extensions": [
+            ".js",
+            ".css",
+            ".json",
+            ".razor",
+            ".csproj"
+          ]
+        }
+      ]
+    },
+    "docs-and-bundle-soft-audit": {
+      "scopes": [
+        {
+          "name": "generic-webgl-docs",
+          "roots": [
+            "docs/webgl"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "docs/webgl/economy-simulation-boundary-plan.md",
+                "reason": "Historical boundary plan intentionally names Economy while documenting separation."
+              },
+              {
+                "glob": "docs/webgl/run-layer-boundary.md",
+                "reason": "Boundary documentation intentionally names consuming domain packages while proving Components remains dependency-neutral."
+              }
+            ]
+          }
+        },
+        {
+          "name": "audit-tools-and-workflows",
+          "roots": [
+            "tools/webgllib",
+            ".github/workflows"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "tools/webgllib/audit-command-batch-parity.cjs",
+                "reason": "Legacy proof artifact directory name includes the previous domain bundle."
+              },
+              {
+                "glob": "tools/webgllib/audit-sharedwell-performance.cjs",
+                "reason": "Legacy proof artifact directory and output label include the previous scenario name."
+              },
+              {
+                "glob": "tools/webgllib/audit-scene-runtime.cjs",
+                "reason": "Legacy proof artifact directory and branch-instruction bundle paths include prior domain bundle names."
+              },
+              {
+                "glob": "tools/webgllib/audit-scene-runtime-imports.cjs",
+                "reason": "Legacy proof artifact directory includes the previous domain bundle."
+              }
+            ]
+          }
+        },
+        {
+          "name": "active-bundle-artifacts",
+          "roots": [
+            "codex/bundles/WebGlEngine_Economy_Followup_v12",
+            "codex/bundles/WebGlEngine_Economy_Followup_v13"
+          ]
+        }
+      ]
+    },
     "webglrunlib": {
       "projectReferenceRules": [
         {

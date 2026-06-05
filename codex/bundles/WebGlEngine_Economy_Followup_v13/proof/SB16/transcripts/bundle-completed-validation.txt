@@ -1,0 +1,35 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260605182327
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_v13'
+$log = Join-Path $bundle 'proof\SB16\transcripts\bundle-completed-validation.txt'
+Start-Transcript -Path $log -Force | Out-Null
+Write-Host 'COMMAND: python validate_bundle.py --stage completed'
+python codex\bundles\WebGlEngine_Economy_Followup_v13\scripts\validate_bundle.py --stage completed
+$validatorExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $validatorExit"
+Stop-Transcript | Out-Null
+if ($validatorExit -ne 0) { exit 1 }
+Get-Item $log | Select-Object FullName,Length
+Process ID: 15268
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+COMMAND: python validate_bundle.py --stage completed
+
+EXIT CODE: 0
+**********************
+Windows PowerShell transcript end
+End time: 20260605182329
+**********************

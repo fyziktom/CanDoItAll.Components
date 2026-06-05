@@ -72,6 +72,12 @@ Observer proof can validate a visual claim only when:
 
 If the browser document hash differs, the report adds `browser-document-hash-mismatch`. If runtime or UI proof fails, the report status is `observer-failed`. Consumers should keep their domain state, simulation state, or headless artifacts as their own source of truth and treat the observer proof as visual evidence only.
 
+## Domain Driver Versioning
+
+`IWebGlRunDomainMappingDriver.DriverVersion` is a compatibility contract for a driver-owned action vocabulary and metadata scrubber policy. Patch releases may add validation warnings or metadata cleanup that preserves existing mappings. Minor releases may add driver action kinds when every new mapping resolves to an approved `WebGlRunActionKinds` value. Major releases are required for changed meanings, removed driver actions, changed source-provenance policy, or a different manifest schema.
+
+`WebGlRunDomainMappingDriverManifest.CurrentSchemaVersion` and `DriverHash` are the freeze gate for runtime and evidence consumers. A host should record both values with generated run documents and reject cached evidence when either value changes unexpectedly. Generic Components code must not infer domain semantics from driver ids, display names, or driver action names; it may only validate that the manifest maps into the approved generic action vocabulary.
+
 ## Validators
 
 Use `WebGlRunDocumentValidator` for run documents and `WebGlRunActionPlanValidator` for action plans before compilation or playback. The validators check schema, run id, timeline consistency, frame/stage shape, action structure, barrier policy, and obvious domain-term leakage.

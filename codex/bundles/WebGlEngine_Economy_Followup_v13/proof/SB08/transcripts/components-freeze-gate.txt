@@ -1,0 +1,85 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260605181647
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_v13'
+$log = Join-Path $bundle 'proof\SB08\transcripts\components-freeze-gate.txt'
+Start-Transcript -Path $log -Force | Out-Null
+Write-Host 'COMMAND: dotnet test WebGlLib approval freeze tests'
+dotnet test tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj --no-restore --filter "FullyQualifiedName~WebGlLibFreezeApprovalTests" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$webgllibExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $webgllibExit"
+Write-Host 'COMMAND: dotnet test WebGlRunLib approval freeze tests'
+dotnet test tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj --no-restore --filter "FullyQualifiedName~WebGlRunFreezeApprovalTests" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$webglrunExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $webglrunExit"
+Write-Host 'COMMAND: domain boundary hard gates'
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile generic-source-hard-gate
+$sourceExit = $LASTEXITCODE
+Write-Host "EXIT CODE generic-source-hard-gate: $sourceExit"
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile generic-public-api-hard-gate
+$apiExit = $LASTEXITCODE
+Write-Host "EXIT CODE generic-public-api-hard-gate: $apiExit"
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile package-content-hard-gate
+$packageExit = $LASTEXITCODE
+Write-Host "EXIT CODE package-content-hard-gate: $packageExit"
+Write-Host 'COMMAND: sample builds'
+dotnet build samples\CanDoItAll.Components.WebGlLibOnlyViewer\CanDoItAll.Components.WebGlLibOnlyViewer.csproj --no-restore -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$viewerExit = $LASTEXITCODE
+Write-Host "EXIT CODE WebGlLibOnlyViewer: $viewerExit"
+dotnet build samples\CanDoItAll.Components.WebGlRunLibGenericSample\CanDoItAll.Components.WebGlRunLibGenericSample.csproj --no-restore -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$sampleExit = $LASTEXITCODE
+Write-Host "EXIT CODE WebGlRunLibGenericSample: $sampleExit"
+Write-Host 'COMMAND: verify SB06/SB07 browser proof artifacts'
+$sb06 = Get-Content (Join-Path $bundle 'proof\SB06\browser\runtime-idle-pause-assertions.json') -Raw | ConvertFrom-Json
+$sb07 = Get-Content (Join-Path $bundle 'proof\SB07\browser-observer-assertions.json') -Raw | ConvertFrom-Json
+$sb06Ok = $sb06.settledWithin500ms -and $sb06.browserRuntimeStopGenerationAdvanced -and $sb06.uiRuntimeStopGenerationSynced -and (($sb06.after500.motionStageBlockers | Measure-Object).Count -eq 0) -and (($sb06.disallowedConsole | Measure-Object).Count -eq 0)
+$sb07Ok = $sb07.assertions.playbackCompleted -and $sb07.assertions.documentHashesMatch -and $sb07.assertions.sceneContentHashesMatch -and $sb07.assertions.driverHashesMatch -and $sb07.assertions.observerProofValid -and $sb07.assertions.finalPositionsObserved -and (($sb07.assertions.disallowedConsole | Measure-Object).Count -eq 0)
+Write-Host "SB06_OK=$sb06Ok"
+Write-Host "SB07_OK=$sb07Ok"
+$browserExit = if ($sb06Ok -and $sb07Ok) { 0 } else { 1 }
+Write-Host "EXIT CODE browser artifact verification: $browserExit"
+Stop-Transcript | Out-Null
+$exits = @($webgllibExit,$webglrunExit,$sourceExit,$apiExit,$packageExit,$viewerExit,$sampleExit,$browserExit)
+if ($exits | Where-Object { $_ -ne 0 }) { exit 1 }
+Get-Item $log | Select-Object FullName,Length
+Process ID: 33200
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+COMMAND: dotnet test WebGlLib approval freeze tests
+
+EXIT CODE: 0
+COMMAND: dotnet test WebGlRunLib approval freeze tests
+
+EXIT CODE: 0
+COMMAND: domain boundary hard gates
+
+EXIT CODE generic-source-hard-gate: 0
+
+EXIT CODE generic-public-api-hard-gate: 0
+
+EXIT CODE package-content-hard-gate: 0
+COMMAND: sample builds
+
+EXIT CODE WebGlLibOnlyViewer: 0
+
+EXIT CODE WebGlRunLibGenericSample: 0
+COMMAND: verify SB06/SB07 browser proof artifacts
+SB06_OK=True
+SB07_OK=True
+EXIT CODE browser artifact verification: 0
+**********************
+Windows PowerShell transcript end
+End time: 20260605181814
+**********************

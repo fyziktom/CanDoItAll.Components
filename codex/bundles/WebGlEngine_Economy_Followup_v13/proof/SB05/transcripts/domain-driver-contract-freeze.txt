@@ -1,0 +1,49 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260605173450
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_v13'
+$log = Join-Path $bundle 'proof\SB05\transcripts\domain-driver-contract-freeze.txt'
+Start-Transcript -Path $log -Force | Out-Null
+Write-Host 'COMMAND: dotnet test WebGlRun freeze approval and domain driver contract probes'
+dotnet test tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj --no-restore --filter "FullyQualifiedName~WebGlRunFreezeApprovalTests" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$freezeExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $freezeExit"
+Write-Host 'COMMAND: dotnet test fake non-domain driver validation proof'
+dotnet test tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj --no-restore --filter "FullyQualifiedName~Domain_mapping_driver_manifest_hash_validation_and_scrubber_support_non_economy_driver" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$fakeExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $fakeExit"
+Write-Host 'COMMAND: dotnet test Economy driver mapping proof'
+dotnet test C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\CanDoItAll.Economy.Tests.csproj --no-build --filter "FullyQualifiedName~EconomyDriverMapsDomainOwnedFlowActionToGenericDirectedFlow" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$economyDriverExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $economyDriverExit"
+Stop-Transcript | Out-Null
+if (($freezeExit -ne 0) -or ($fakeExit -ne 0) -or ($economyDriverExit -ne 0)) { exit 1 }
+Get-Item $log | Select-Object FullName,Length
+Process ID: 28796
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+COMMAND: dotnet test WebGlRun freeze approval and domain driver contract probes
+
+EXIT CODE: 0
+COMMAND: dotnet test fake non-domain driver validation proof
+
+EXIT CODE: 0
+COMMAND: dotnet test Economy driver mapping proof
+
+EXIT CODE: 0
+**********************
+Windows PowerShell transcript end
+End time: 20260605173557
+**********************

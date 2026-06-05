@@ -1,0 +1,1126 @@
+src/CanDoItAll.Components.WebGlLib/ComponentNamespaceMarker.cs:3: public static class ComponentNamespaceMarker
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/IWebGlAssetCatalogProvider.cs:3: public interface IWebGlAssetCatalogProvider
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/InMemoryWebGlAssetCatalogProvider.cs:3: public sealed class InMemoryWebGlAssetCatalogProvider(WebGlAssetCatalog catalog) : IWebGlAssetCatalogProvider
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/InMemoryWebGlAssetCatalogProvider.cs:7: public ValueTask<WebGlAssetCatalog> GetCatalogAsync(CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetAnimation.cs:3: public sealed class WebGlAssetAnimation
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetAnimation.cs:5: public string ClipName { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetAnimation.cs:7: public string SemanticKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetAnimation.cs:9: public bool Loop { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetAnimation.cs:11: public double Speed { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetAnimation.cs:13: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalog.cs:3: public sealed class WebGlAssetCatalog
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalog.cs:5: public string CatalogId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalog.cs:7: public string Version { get; set; } = "1.0";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalog.cs:9: public string DefaultFallbackAssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalog.cs:11: public List<WebGlAssetDefinition> Assets { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalog.cs:13: public List<WebGlModelImportRecipe> ModelImportRecipes { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalog.cs:15: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalogValidator.cs:3: public sealed class WebGlAssetCatalogValidator
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalogValidator.cs:5: public WebGlAssetCatalogValidationResult Validate(WebGlAssetCatalog? catalog)
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalogValidator.cs:85: public sealed class WebGlAssetCatalogValidationResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalogValidator.cs:87: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalogValidator.cs:89: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetCatalogValidator.cs:91: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:3: public sealed class WebGlAssetDefinition
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:5: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:7: public string Kind { get; set; } = WebGlAssetKinds.Model;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:9: public string Format { get; set; } = WebGlAssetFormats.Glb;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:11: public string Uri { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:13: public string FallbackAssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:15: public string PrimitiveKind { get; set; } = WebGlPrimitiveKinds.Box;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:17: public string QualityTier { get; set; } = WebGlAssetQualityTiers.Unknown;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:19: public string PreferredVariantId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:21: public WebGlAssetPerformanceHint PerformanceHint { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:23: public string DisplayName { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:25: public string ThumbnailUri { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:27: public string Color { get; set; } = "#ffffff";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:29: public double DefaultScale { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:31: public string ImportRecipeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:33: public WebGlModelImportOptions ImportOptions { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:35: public bool SupportsTint { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:37: public bool SupportsBillboard { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:39: public WebGlVector3 BoundsHint { get; set; } = new(1, 1, 1);
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:41: public double LodDistanceHint { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:43: public List<WebGlAssetVariant> Variants { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:45: public List<WebGlAssetAnimation> Animations { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:47: public List<WebGlAssetMaterialOverride> MaterialOverrides { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:49: public List<string> Tags { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:51: public string License { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:53: public string Source { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:55: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:58: public static class WebGlAssetKinds
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:60: public const string Model = "model";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:61: public const string Primitive = "primitive";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:62: public const string Symbol = "symbol";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:63: public const string Material = "material";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:66: public static class WebGlAssetFormats
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:68: public const string Glb = "glb";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:69: public const string Gltf = "gltf";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:70: public const string Primitive = "primitive";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:73: public static class WebGlPrimitiveKinds
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:75: public const string Box = "box";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:76: public const string House = "house";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:77: public const string Sphere = "sphere";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:78: public const string Cylinder = "cylinder";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:79: public const string Cone = "cone";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:80: public const string Tree = "tree";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:81: public const string Person = "person";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:82: public const string Marker = "marker";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetDefinition.cs:83: public const string Gear = "gear";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetMaterialOverride.cs:3: public sealed class WebGlAssetMaterialOverride
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetMaterialOverride.cs:5: public string MaterialName { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetMaterialOverride.cs:7: public string Color { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetMaterialOverride.cs:9: public double Opacity { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetMaterialOverride.cs:11: public bool IsEmissive { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetMaterialOverride.cs:13: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:3: public sealed class WebGlAssetPerformanceHint
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:5: public int TriangleCountHint { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:7: public int VertexCountHint { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:9: public long ByteSizeHint { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:11: public string QualityTier { get; set; } = WebGlAssetQualityTiers.Unknown;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:13: public int RecommendedMaxInstanceCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:15: public bool PreferInstancing { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:17: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:20: public static class WebGlAssetQualityTiers
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:22: public const string Unknown = "unknown";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:23: public const string Primitive = "primitive";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:24: public const string ModelLow = "model-low";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:25: public const string ModelMedium = "model-medium";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:26: public const string ModelHigh = "model-high";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:29: public static class WebGlAssetQualityProfiles
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:31: public const string Primitive = WebGlAssetQualityTiers.Primitive;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:32: public const string MixedGlb = WebGlAssetQualityTiers.ModelLow;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetPerformanceHint.cs:33: public const string HighDetailGlb = WebGlAssetQualityTiers.ModelHigh;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:3: public sealed class WebGlAssetVariant
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:5: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:7: public string DisplayName { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:9: public string Uri { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:11: public string QualityTier { get; set; } = WebGlAssetQualityTiers.Unknown;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:13: public string Format { get; set; } = WebGlAssetFormats.Glb;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:15: public string PrimitiveKind { get; set; } = WebGlPrimitiveKinds.Box;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:17: public string FallbackAssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:19: public WebGlAssetPerformanceHint PerformanceHint { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:21: public string Color { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:23: public WebGlVector3 Scale { get; set; } = WebGlVector3.One;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:25: public string ImportRecipeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:27: public WebGlModelImportOptions ImportOptions { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariant.cs:29: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:3: public sealed class WebGlAssetVariantResolver
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:7: public WebGlResolvedAssetVariant Resolve(
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:28: public static string NormalizeProfile(string? profile)
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:106: public sealed class WebGlResolvedAssetVariant
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:108: public string AssetId { get; init; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:110: public string VariantId { get; init; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:112: public string Uri { get; init; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:114: public string Format { get; init; } = WebGlAssetFormats.Primitive;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:116: public string PrimitiveKind { get; init; } = WebGlPrimitiveKinds.Box;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:118: public string FallbackAssetId { get; init; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:120: public string QualityTier { get; init; } = WebGlAssetQualityTiers.Unknown;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:122: public string Color { get; init; } = "#ffffff";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:124: public WebGlVector3 Scale { get; init; } = WebGlVector3.One;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:126: public WebGlAssetPerformanceHint PerformanceHint { get; init; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:128: public string RequestedProfile { get; init; } = WebGlAssetQualityProfiles.Primitive;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:130: public bool UsesVariant => !string.IsNullOrWhiteSpace(VariantId);
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:132: public static WebGlResolvedAssetVariant FromBaseAsset(WebGlAssetDefinition asset, string requestedProfile)
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlAssetVariantResolver.cs:148: public static WebGlResolvedAssetVariant FromVariant(
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:3: public sealed class WebGlModelDiagnostics
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:5: public string AssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:7: public string VariantId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:9: public string Uri { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:11: public bool HasScene { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:13: public int MeshCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:15: public int VisibleMeshCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:17: public int MaterialCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:19: public int TransparentMaterialCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:21: public WebGlVector3 Min { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:23: public WebGlVector3 Max { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:25: public WebGlVector3 Size { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:27: public WebGlVector3 Center { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:29: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:31: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelDiagnostics.cs:33: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:3: public sealed class WebGlModelImportOptions
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:5: public double UnitScale { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:7: public string FitMode { get; set; } = WebGlModelFitModes.FitBounds;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:9: public string CenterMode { get; set; } = WebGlModelCenterModes.CenterBottom;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:11: public double FixedScale { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:13: public WebGlVector3 RotationOffset { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:15: public WebGlVector3 PositionOffset { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:17: public bool ForceDoubleSidedMaterial { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:19: public bool NormalizeMaterialVisibility { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:21: public bool DebugBounds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:23: public bool DisableTint { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:25: public string CameraPresetHint { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:27: public List<string> KnownIssueNotes { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:30: public static class WebGlModelFitModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:32: public const string FitBounds = "fit-bounds";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:33: public const string OriginalScale = "original-scale";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:34: public const string FixedScale = "fixed-scale";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:37: public static class WebGlModelCenterModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:39: public const string CenterBottom = "center-bottom";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:40: public const string CenterBounds = "center-bounds";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:41: public const string PreserveOrigin = "preserve-origin";
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:44: public sealed class WebGlModelImportRecipe
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:46: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:48: public string DisplayName { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:50: public WebGlModelImportOptions Options { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:52: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:55: public sealed class WebGlModelImportRecipeResolver
+src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:57: public WebGlModelImportOptions Resolve(WebGlAssetCatalog catalog, WebGlAssetDefinition asset, WebGlAssetVariant? variant = null)
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:3: public sealed class WebGlCameraCommand
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:5: public string CommandId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:7: public string Action { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:9: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:11: public WebGlSceneCamera Camera { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlHoverState.cs:3: public sealed class WebGlHoverState
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlHoverState.cs:5: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlHoverState.cs:7: public WebGlVector3 WorldPosition { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlHoverState.cs:9: public double ScreenX { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlHoverState.cs:11: public double ScreenY { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlHoverState.cs:13: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:3: public sealed class WebGlInteractionOptions
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:5: public string SelectionMode { get; set; } = WebGlSelectionModes.Single;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:7: public bool AllowHover { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:9: public bool AllowClickSelection { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:11: public bool AllowMultiSelect { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:13: public bool AllowDragOnGroundPlane { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:15: public bool AllowCameraPan { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:17: public bool AllowCameraZoom { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:19: public bool AllowCameraOrbit { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:21: public bool FitViewOnCreate { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:23: public bool FocusOnDoubleClick { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:25: public string DragAxisLock { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:27: public double DragSnapGridSize { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:29: public WebGlDragBounds? DragBounds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:32: public sealed class WebGlDragBounds
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:34: public double MinX { get; set; } = double.NegativeInfinity;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:36: public double MaxX { get; set; } = double.PositiveInfinity;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:38: public double MinZ { get; set; } = double.NegativeInfinity;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlInteractionOptions.cs:40: public double MaxZ { get; set; } = double.PositiveInfinity;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:3: public sealed class WebGlObjectMotionCommand
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:5: public string MotionId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:7: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:9: public WebGlVector3 TargetPosition { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:11: public WebGlVector3? TargetRotation { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:13: public WebGlVector3? TargetScale { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:15: public double SpeedUnitsPerSecond { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:17: public double DurationSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:19: public string Easing { get; set; } = WebGlMotionEasings.Linear;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:21: public bool SnapAtEnd { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:23: public bool ReplaceExistingForObject { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:25: public string QueueMode { get; set; } = WebGlMotionQueueModes.Replace;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:27: public string QueuePolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:29: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:32: public static class WebGlMotionEasings
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:34: public const string Linear = "linear";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:35: public const string EaseIn = "ease-in";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:36: public const string EaseOut = "ease-out";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:37: public const string EaseInOut = "ease-in-out";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:40: public static class WebGlMotionQueueModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:42: public const string Replace = "replace";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:43: public const string Append = "append";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:44: public const string CancelAndReplace = "cancel-and-replace";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMotionCommand.cs:45: public const string RejectIfActive = "reject-if-active";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMovedEventArgs.cs:3: public sealed record WebGlSceneObjectPositionChange(
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlObjectMovedEventArgs.cs:7: public sealed record WebGlObjectMovedEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommand.cs:3: public sealed class WebGlSceneCommand
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommand.cs:5: public string CommandId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommand.cs:7: public string CommandType { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommand.cs:9: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommand.cs:11: public WebGlVector3 Position { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommand.cs:13: public Dictionary<string, string> Parameters { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:3: public enum BatchOrderingMode
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:10: public static class WebGlSceneBatchingPolicies
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:12: public const string PreserveOrder = "preserve-order";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:13: public const string Parallel = "parallel";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:14: public const string CoalesceWithinStage = "coalesce-within-stage";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:17: public static class WebGlSceneStageBarrierPolicies
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:19: public const string None = "none";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:20: public const string WaitSeconds = "wait-seconds";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:21: public const string TimeDelay = WaitSeconds;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:22: public const string WaitForActiveMotions = "wait-for-active-motions";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:23: public const string WaitForObjectMotions = "wait-for-object-motions";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:24: public const string WaitForRenderIdle = "wait-for-render-idle";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:25: public const string WaitForEvent = "wait-for-event";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:26: public const string ManualStep = WaitForEvent;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:29: public sealed class WebGlSceneCommandBatch
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:31: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:33: public BatchOrderingMode OrderingMode { get; set; } = BatchOrderingMode.CoalesceIndependent;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:35: public string BatchingPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:37: public List<WebGlSceneCommandBatchStage> Stages { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:39: public List<WebGlScenePatch> Patches { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:41: public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:43: public bool AllowDuplicateMotionsPerObject { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:45: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:48: public sealed class WebGlSceneCommandBatchStage
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:50: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:52: public BatchOrderingMode OrderingMode { get; set; } = BatchOrderingMode.CoalesceIndependent;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:54: public string BatchingPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:56: public List<WebGlScenePatch> Patches { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:58: public List<WebGlObjectMotionCommand> Motions { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:60: public bool AllowDuplicateMotionsPerObject { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:62: public double WaitSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:64: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:66: public List<string> BarrierObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:68: public string BarrierEventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:70: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:73: public sealed class WebGlSceneCommandBatchResult : WebGlSceneCommandResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:75: public List<WebGlSceneCommandResult> CommandResults { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:77: public WebGlSceneProofSnapshot? ProofSnapshot { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:79: public WebGlSceneCommandBatchMetrics Metrics { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:82: public sealed class WebGlSceneCommandBatchMetrics
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:84: public int BatchCommandCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:86: public int CommandCountBeforeNormalization { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:88: public int CommandCountAfterNormalization { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:90: public int StageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:92: public int BatchDurationMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:94: public int CoalescedPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:96: public int DroppedDuplicateMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:98: public int PreservedOrderedDuplicateMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:100: public int EstimatedHostInteropCallCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:102: public int InteropCallsAvoided { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:105: public sealed class WebGlSceneCommandBatchNormalizationResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:107: public WebGlSceneCommandBatch Batch { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:109: public WebGlSceneCommandBatchMetrics Metrics { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:111: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:114: public static class WebGlSceneCommandBatchNormalizer
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandBatch.cs:116: public static WebGlSceneCommandBatchNormalizationResult Normalize(WebGlSceneCommandBatch batch)
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:3: public static class WebGlSceneCommandLifecycleStates
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:5: public const string Accepted = "accepted";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:6: public const string Scheduled = "scheduled";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:7: public const string Active = "active";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:8: public const string Settled = "settled";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:9: public const string Cancelled = "cancelled";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:10: public const string Failed = "failed";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:13: public class WebGlSceneCommandResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:15: public string CommandId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:17: public bool Success { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:19: public bool Succeeded
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:25: public string SceneId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:27: public string CommandKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:29: public string LifecycleState { get; set; } = WebGlSceneCommandLifecycleStates.Accepted;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:31: public bool Settled { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:33: public int Revision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:35: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:37: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:39: public List<string> AffectedObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:41: public List<string> AffectedLinkIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:43: public Dictionary<string, string> Diagnostics { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:45: public string Message { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:47: public WebGlSceneProofSnapshot Snapshot { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneCommandResult.cs:49: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneHoverChangedEventArgs.cs:3: public sealed record WebGlSceneHoverChangedEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSceneSelectionChangedEventArgs.cs:3: public sealed record WebGlSceneSelectionChangedEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSelectionMode.cs:3: public static class WebGlSelectionModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSelectionMode.cs:5: public const string None = "none";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSelectionMode.cs:6: public const string Single = "single";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlSelectionMode.cs:7: public const string Multiple = "multiple";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRenderModes.cs:3: public static class WebGlRenderModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRenderModes.cs:5: public const string Auto = "auto";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRenderModes.cs:6: public const string Continuous = "continuous";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRenderModes.cs:7: public const string OnDemand = "on-demand";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBridge.cs:3: public sealed class WebGlRuntimeBridge
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBridge.cs:5: public string Namespace { get; set; } = "CanDoItAll.webglScene";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBridge.cs:7: public WebGlRuntimeOptions Options { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBridge.cs:9: public WebGlRuntimeDiagnostics Diagnostics { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:3: public static class WebGlRuntimeBudgetProfiles
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:5: public static WebGlRuntimeBudgetOptions Small()
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:12: public static WebGlRuntimeBudgetOptions Medium()
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:19: public static WebGlRuntimeBudgetOptions Large()
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:26: public static WebGlRuntimeBudgetOptions Stress()
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:39: public static WebGlRuntimeBudgetOptions Scene100()
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:52: public static WebGlRuntimeBudgetOptions Scene500()
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeBudgetProfiles.cs:65: public static WebGlRuntimeBudgetOptions Scene1000Plus()
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:3: public sealed class WebGlRuntimeDiagnostics
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:5: public int CreateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:7: public int DisposeCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:9: public int UpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:11: public int RenderCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:13: public int LoadedAssetCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:15: public int MissingAssetCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:17: public int FallbackObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:19: public int ModelInstanceCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:21: public int PrimitiveInstanceCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:23: public int ActiveMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:25: public int QueuedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:27: public List<string> ActiveMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:29: public List<string> QueuedMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:31: public List<WebGlRuntimeMotionQueueSnapshot> MotionQueueSnapshot { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:33: public int MaxMotionQueueLength { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:35: public int CancelledMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:37: public int MotionAcceptedCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:39: public int MotionCompletedCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:41: public int MotionFailedCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:43: public int AnimatedSymbolCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:45: public bool IsRenderLoopActive { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:47: public string RenderSchedulerMode { get; set; } = WebGlRenderModes.Auto;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:49: public string LastScheduledReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:51: public double LastDeltaSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:53: public int EstimatedTriangleCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:55: public int EstimatedVertexCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:57: public int ObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:59: public int VisibleObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:61: public int HiddenObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:63: public int VisibleLinkCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:65: public int HiddenLinkCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:67: public int SceneIndexSyncCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:69: public string LastSceneIndexSyncReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:71: public int SymbolCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:73: public bool DeterministicMode { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:75: public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:77: public string RenderMode { get; set; } = WebGlRenderModes.Auto;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:79: public string RuntimeBudgetProfile { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:81: public bool DegradedRenderingActive { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:83: public int RuntimeBudgetWarningCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:85: public List<string> RuntimeBudgetWarnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:87: public int RuntimeBudgetMaxSceneObjects { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:89: public int RuntimeBudgetMaxLoadedAssets { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:91: public int RuntimeBudgetMaxActiveMotions { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:93: public int RuntimeBudgetMaxQueuedMotions { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:95: public string LastFrameReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:97: public double FrameTimeMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:99: public double AverageFrameTimeMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:101: public double PeakFrameTimeMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:103: public double IdleSinceMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:105: public string LargestLoadedAssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:107: public string AssetCacheMode { get; set; } = "state-local";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:109: public int AssetCacheEntryCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:111: public int AssetCacheHitCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:113: public int AssetCacheMissCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:115: public int DisposedTemplateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:117: public int AssetCachePendingDisposalCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:119: public int AssetCacheDisposedPromiseCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:121: public int AssetCacheDisposalErrorCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:123: public int MaterialCloneCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:125: public int DisposedGeometryCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:127: public int DisposedMaterialCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:129: public int DisposedTextureCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:131: public int RetainedSharedTextureCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:133: public int BatchCommandCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:135: public int BatchStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:137: public int BatchDurationMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:139: public string CurrentCommandBatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:141: public string CurrentCommandStageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:143: public int CompletedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:145: public int FailedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:147: public int QueuedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:149: public int SkippedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:151: public int CommandStageCancelledCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:153: public double CommandStageWaitSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:155: public string CommandStageBarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:157: public string CommandStageBarrierTarget { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:159: public List<string> CommandStageBarrierBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:161: public string CommandStageBarrierEventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:163: public List<string> CommandStageBarrierObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:165: public double CommandStageBarrierElapsedSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:167: public double CommandStageBarrierTimeoutSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:169: public bool CommandStageBarrierTimedOut { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:171: public string LastStageBarrierWarning { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:173: public List<string> CompletedCommandStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:175: public List<string> FailedCommandStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:177: public List<string> SkippedCommandStageIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:179: public string LastStageError { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:181: public List<WebGlRuntimeCommandStageResult> CommandStageResultLog { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:183: public List<WebGlRuntimeCommandStageQueueItem> CommandStageQueueSnapshot { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:185: public int CommandStageJournalCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:187: public int CommandStageJournalDroppedCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:189: public Dictionary<string, int> CommandStageJournalCounters { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:191: public List<string> CommandStageRecentResultIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:193: public List<WebGlRuntimeCommandStageJournalEntry> CommandStageRecentJournalEntries { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:195: public string LastStageCancelReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:197: public int RuntimeStopCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:199: public int RuntimeStopGeneration { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:201: public string LastRuntimeStopReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:203: public int ClearedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:205: public int LastRuntimeStopClearedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:207: public int LastRuntimeStopCancelledCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:209: public bool LastRuntimeStopIdle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:211: public bool LastRuntimeStopTimedOut { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:213: public int LastRuntimeStopIdleElapsedMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:215: public List<string> LastRuntimeStopBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:217: public int IgnoredStaleMotionCompletedCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:219: public bool SemanticIdle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:221: public bool VisualIdle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:223: public bool FinalRenderDrained { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:225: public int CommandCountBeforeNormalization { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:227: public int CommandCountAfterNormalization { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:229: public int CoalescedPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:231: public int DroppedDuplicateMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:233: public int PreservedOrderedDuplicateMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:235: public int InteropCallsAvoided { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:237: public int PatchedObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:239: public int FullSceneRebuildCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:241: public int TransformOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:243: public int SymbolOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:245: public int LinkOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:247: public int VisualReplacePatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:249: public int MixedIncrementalPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:251: public int GraphStructurePatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:253: public int SceneRebuildPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:255: public string LastPatchClassification { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:257: public int ReplacedObjectGroupCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:259: public int SymbolOnlyUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:261: public int LinkUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:263: public int LinkGeometryUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:265: public int LinkGeometryRebuildCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:267: public int LinksUpdatedLastFrame { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:269: public int LinkSyncScanCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:271: public int LinkSyncIndexedHitCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:273: public string LastError { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:275: public List<string> MissingAssetIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:277: public List<string> FailedAssetUris { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:279: public List<string> MissingFallbackAssetIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:281: public List<string> FailedPatchCommands { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:283: public List<WebGlSceneCommandResult> FailedCommandDetails { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:285: public List<WebGlModelDiagnostics> ModelDiagnostics { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:288: public sealed class WebGlRuntimeMotionQueueSnapshot
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:290: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:292: public List<string> QueuedMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:295: public sealed class WebGlRuntimeCommandStageQueueItem
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:297: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:299: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:301: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:303: public double WaitSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:305: public string BarrierEventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:308: public sealed class WebGlRuntimeCommandStageResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:310: public string ResultId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:312: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:314: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:316: public string Status { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:318: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:320: public string Error { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:323: public sealed class WebGlRuntimeCommandStageJournalEntry
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:325: public int Sequence { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:327: public long TimestampMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:329: public string EventKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:331: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:333: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:335: public string ResultId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:337: public string Status { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:339: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:341: public string Message { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeErrorEventArgs.cs:3: public sealed record WebGlRuntimeErrorEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:3: public sealed class WebGlRuntimeIdleResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:5: public bool Success { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:7: public bool Idle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:9: public bool TimedOut { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:11: public string Reason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:13: public int TimeoutMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:15: public int PollIntervalMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:17: public int ElapsedMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:19: public List<string> Blockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:21: public bool SemanticIdle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:23: public bool VisualIdle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:25: public bool FinalRenderDrained { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:27: public List<string> SemanticBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:29: public List<string> VisualBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:31: public WebGlRuntimeDiagnostics? Diagnostics { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:3: public sealed class WebGlRuntimeOptions
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:5: public bool DeterministicMode { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:7: public bool PreserveDrawingBuffer { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:9: public bool EnableAntialiasing { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:11: public double MaximumDevicePixelRatio { get; set; } = 2;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:13: public string RenderMode { get; set; } = WebGlRenderModes.Auto;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:15: public string AssetQualityProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:17: public bool ShowDiagnosticsPanel { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:19: public bool ShowLabels { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:21: public bool ShowSymbols { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:23: public bool AutoFitOnCreate { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:25: public int MaxCommandResultHistory { get; set; } = 100;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:27: public WebGlRuntimeBudgetOptions RuntimeBudget { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:29: public string RuntimeKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:32: public sealed class WebGlRuntimeBudgetOptions
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:34: public string Profile { get; set; } = "standard";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:36: public int MaxSceneObjects { get; set; } = 500;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:38: public int MaxLoadedAssets { get; set; } = 128;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:40: public int MaxAssetCacheEntries { get; set; } = 128;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:42: public int MaxActiveMotions { get; set; } = 256;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:44: public int MaxQueuedMotions { get; set; } = 512;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:46: public int MaxQueuedCommandStages { get; set; } = 128;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:48: public int MaxEstimatedTriangles { get; set; } = 250_000;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:50: public bool DegradeWhenExceeded { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeReadyEventArgs.cs:3: public sealed record WebGlRuntimeReadyEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:3: public sealed class WebGlScenePatch
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:5: public string SceneId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:7: public int BaseRevision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:9: public int NextRevision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:11: public List<WebGlSceneObjectPatch> ObjectPatches { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:13: public List<WebGlSceneObject> AddObjects { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:15: public List<string> RemoveObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:17: public List<WebGlSceneLink> AddLinks { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:19: public List<string> RemoveLinkIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:21: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:24: public static class WebGlScenePatchTransactionModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:26: public const string Strict = "strict";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:28: public const string PermissiveInvalidLinks = "permissive-invalid-links";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:31: public sealed class WebGlSceneObjectPatch
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:33: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:35: public WebGlVector3? Position { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:37: public WebGlVector3? Rotation { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:39: public WebGlVector3? Scale { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:41: public WebGlVector3? Size { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:43: public string? AssetId { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:45: public string? Color { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:47: public List<WebGlStatusSymbol>? Symbols { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:49: public Dictionary<string, string>? Metadata { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:5: public const string MetadataPatchTransactionMode = "patchTransactionMode";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:6: public const string MetadataMissingLinkEndpointMode = "missingLinkEndpointMode";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:7: public const string MetadataPatchClassification = "patchClassification";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:8: public const string MetadataSkippedLinkIds = "skippedLinkIds";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:9: public const string MissingLinkEndpointModeFail = "fail";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:10: public const string MissingLinkEndpointModeWarn = "warn";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:12: public static void PopulateResultMetadata(WebGlScenePatchResult result, WebGlScenePatch patch)
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:20: public static bool IsStrictBaseRevision(WebGlScenePatch patch)
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:24: public static string ResolveMissingLinkEndpointMode(WebGlScenePatchResult result)
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:29: public static void AddWarning(WebGlScenePatchResult result, string message)
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchPolicy.cs:38: public static void AddSkippedLinkId(WebGlScenePatchResult result, string linkId)
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchReducer.cs:3: public sealed class WebGlScenePatchReducer
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchReducer.cs:5: public WebGlScenePatchResult Apply(WebGlSceneModel scene, WebGlScenePatch patch)
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchReducer.cs:115: public WebGlScenePatchResult Validate(WebGlSceneModel scene, WebGlScenePatch patch)
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:3: public sealed class WebGlScenePatchResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:5: public string SceneId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:7: public string CommandKind { get; set; } = "patch";
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:9: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:11: public List<string> Warnings { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:13: public List<string> PatchedObjectIds { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:15: public List<string> AddedObjectIds { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:17: public List<string> RemovedObjectIds { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:19: public List<string> AddedLinkIds { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:21: public List<string> RemovedLinkIds { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:23: public Dictionary<string, string> Metadata { get; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:25: public int NextRevision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:27: public int Revision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:29: public List<string> AffectedObjectIds => PatchedObjectIds
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:36: public List<string> AffectedLinkIds => AddedLinkIds
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:42: public bool Success => IsValid;
+src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatchResult.cs:44: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:3: public sealed class WebGlSceneCamera
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:5: public string ProjectionMode { get; set; } = WebGlSceneProjectionModes.Perspective;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:7: public string ViewMode { get; set; } = WebGlSceneViewModes.Isometric;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:9: public WebGlVector3 Target { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:11: public double Distance { get; set; } = 32;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:13: public double Zoom { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:15: public double Azimuth { get; set; } = -0.78;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:17: public double Polar { get; set; } = 1.02;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:19: public double FieldOfView { get; set; } = 48;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:22: public static class WebGlSceneProjectionModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:24: public const string Perspective = "perspective";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:25: public const string Orthographic = "orthographic";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:28: public static class WebGlSceneViewModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:30: public const string Isometric = "isometric";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:31: public const string Perspective = "perspective";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:32: public const string Top = "top";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneCamera.cs:33: public const string Front = "front";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:3: public sealed class WebGlSceneDocument
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:5: public string SchemaVersion { get; set; } = WebGlSceneDocumentSerializer.CurrentSchemaVersion;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:7: public string DocumentId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:9: public WebGlSceneModel Scene { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:11: public WebGlRuntimeOptions RuntimeOptions { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:13: public WebGlRuntimeDiagnostics Diagnostics { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:15: public DateTimeOffset SavedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:17: public string Source { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:19: public string SceneContentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:21: public string DocumentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:23: public string ContentHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:25: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:28: public interface IWebGlSceneDocumentMigrator
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:33: public sealed class WebGlSceneDocumentSerializerOptions
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:35: public bool IncludeUiState { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:37: public bool IncludeRuntimeOptions { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:39: public bool IncludeDiagnostics { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:42: public sealed class WebGlSceneDocumentMigrationResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:44: public WebGlSceneDocument Document { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:46: public bool Changed { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:48: public List<string> AppliedMigrations { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocument.cs:50: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentHasher.cs:9: public static string ComputeSceneContentHash(WebGlSceneDocument document)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentHasher.cs:26: public static string ComputeHash(string value)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentMetadataPolicy.cs:5: public static Dictionary<string, string> Sort(Dictionary<string, string>? values)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentMetadataPolicy.cs:11: public static Dictionary<string, string> FilterSceneContentMetadata(Dictionary<string, string>? metadata)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentMetadataPolicy.cs:15: public static IEnumerable<(string Scope, Dictionary<string, string> Metadata)> EnumerateMetadataScopes(WebGlSceneDocument document)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentMetadataPolicy.cs:24: public static IEnumerable<(string Scope, Dictionary<string, string> Metadata)> EnumerateSceneMetadataScopes(WebGlSceneModel scene)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentMetadataPolicy.cs:44: public static bool IsForbiddenMetadataKey(string key)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentNormalizer.cs:7: public static WebGlSceneDocument Normalize(WebGlSceneDocument document, WebGlSceneDocumentSerializerOptions? options = null)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSerializer.cs:6: public static class WebGlSceneDocumentSerializer
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSerializer.cs:8: public const string CurrentSchemaVersion = "webgl-scene-document/v1";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSerializer.cs:16: public static string Serialize(WebGlSceneDocument document, WebGlSceneDocumentSerializerOptions? options = null)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSerializer.cs:29: public static WebGlSceneDocument Deserialize(string json)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSerializer.cs:40: public static WebGlSceneDocumentValidationResult Validate(WebGlSceneDocument document)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSerializer.cs:43: public static WebGlSceneDocument Normalize(WebGlSceneDocument document, WebGlSceneDocumentSerializerOptions? options = null)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSerializer.cs:46: public static string ComputeSceneContentHash(WebGlSceneDocument document)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentSortExtensions.cs:5: public static void AssetsByIdSort(this WebGlSceneModel scene)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentValidationResult.cs:3: public sealed class WebGlSceneDocumentValidationResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentValidationResult.cs:5: public List<string> Errors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentValidationResult.cs:7: public List<string> Warnings { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentValidationResult.cs:9: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneDocumentValidator.cs:5: public static WebGlSceneDocumentValidationResult Validate(WebGlSceneDocument document)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:3: public sealed class WebGlSceneEnvironment
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:5: public string BackgroundColor { get; set; } = "#0f172a";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:7: public string GroundColor { get; set; } = "#1f2937";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:9: public string GridColor { get; set; } = "#64748b";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:11: public double GroundSize { get; set; } = 36;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:13: public double GridDivisions { get; set; } = 24;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:15: public double AmbientLightIntensity { get; set; } = 0.6;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:17: public double DirectionalLightIntensity { get; set; } = 1.2;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:19: public bool FogEnabled { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:21: public string FogColor { get; set; } = "#0f172a";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:23: public double FogNear { get; set; } = 80;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneEnvironment.cs:25: public double FogFar { get; set; } = 180;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:3: public sealed class WebGlSceneLayer
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:5: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:7: public string Title { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:9: public string Kind { get; set; } = "layer";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:11: public bool IsVisible { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:13: public int SortOrder { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:15: public List<string> ObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLayer.cs:17: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:3: public sealed class WebGlSceneLink
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:5: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:7: public string SourceObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:9: public string TargetObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:11: public string Kind { get; set; } = "link";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:13: public string Label { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:15: public string Color { get; set; } = "#94a3b8";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:17: public double Width { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:19: public double Opacity { get; set; } = 0.75;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:21: public bool IsDirectional { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneLink.cs:23: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:3: public sealed class WebGlSceneModel
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:5: public string SceneId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:7: public string Title { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:9: public string Description { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:11: public int Revision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:13: public WebGlAssetCatalog AssetCatalog { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:15: public WebGlSceneEnvironment Environment { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:17: public WebGlSceneCamera Camera { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:19: public WebGlSceneUiState UiState { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:21: public WebGlInteractionOptions Interaction { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:23: public List<WebGlSceneLayer> Layers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:25: public List<WebGlSceneObject> Objects { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:27: public List<WebGlSceneLink> Links { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:29: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:32: public sealed class WebGlSceneUiState
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:34: public WebGlSceneSelectionState Selection { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:36: public string HoveredObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:38: public bool ShowGrid { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:40: public bool ShowGround { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:42: public bool ShowLabels { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:44: public bool ShowSymbols { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:46: public bool DeterministicMode { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:48: public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:50: public int Revision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModel.cs:52: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModelValidator.cs:3: public sealed class WebGlSceneModelValidator
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneModelValidator.cs:5: public WebGlSceneDocumentValidationResult Validate(WebGlSceneModel scene)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:3: public sealed class WebGlSceneObject
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:5: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:7: public string Kind { get; set; } = "object";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:9: public string Family { get; set; } = "generic";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:11: public string Title { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:13: public string Subtitle { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:15: public string Description { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:17: public string AssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:19: public WebGlVector3 Position { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:21: public WebGlVector3 Rotation { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:23: public WebGlVector3 Scale { get; set; } = WebGlVector3.One;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:25: public WebGlVector3 Size { get; set; } = new(1, 1, 1);
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:27: public string Tone { get; set; } = "neutral";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:29: public string Color { get; set; } = "#ffffff";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:31: public bool IsSelectable { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:33: public bool IsDraggable { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:35: public List<WebGlStatusSymbol> Symbols { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:37: public List<WebGlSceneObjectAnchor> Anchors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:39: public List<string> Tags { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:41: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:44: public sealed class WebGlSceneObjectAnchor
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:46: public string Key { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:48: public WebGlVector3 Offset { get; set; } = WebGlVector3.Zero;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:50: public WebGlVector3? Position { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneObject.cs:52: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:3: public sealed class WebGlSceneProofSnapshot
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:5: public string SceneId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:7: public int ObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:9: public int LinkCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:11: public Dictionary<string, WebGlVector3> ObjectPositions { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:13: public int VisibleObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:15: public int HiddenObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:17: public int VisibleLinkCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:19: public int HiddenLinkCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:21: public int SymbolCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:23: public int LoadedAssetCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:25: public int MissingAssetCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:27: public int FallbackObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:29: public int ModelInstanceCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:31: public int PrimitiveInstanceCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:33: public int EstimatedTriangleCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:35: public int EstimatedVertexCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:37: public int ActiveMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:39: public int QueuedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:41: public List<string> ActiveMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:43: public List<string> QueuedMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:45: public string CurrentCommandBatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:47: public string CurrentCommandStageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:49: public int CompletedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:51: public int FailedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:53: public int SkippedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:55: public int QueuedCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:57: public string CommandStageBarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:59: public double CommandStageWaitSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:61: public string CommandStageBarrierTarget { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:63: public List<string> CommandStageBarrierBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:65: public string CommandStageBarrierEventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:67: public int CommandStageJournalCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:69: public int CommandStageJournalDroppedCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:71: public WebGlSceneCommandStageJournalCounters CommandStageJournalCounters { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:73: public List<string> CommandStageRecentResultIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:75: public List<WebGlSceneCommandStageJournalEntry> CommandStageRecentJournalEntries { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:77: public int RuntimeStopCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:79: public string LastRuntimeStopReason { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:81: public int ClearedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:83: public int LastRuntimeStopClearedMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:85: public int LastRuntimeStopCancelledCommandStageCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:87: public int RenderCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:89: public bool IsRenderLoopActive { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:91: public double AverageFrameTimeMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:93: public double PeakFrameTimeMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:95: public int FullSceneRebuildCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:97: public int TransformOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:99: public int SymbolOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:101: public int LinkOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:103: public int VisualReplacePatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:105: public int MixedIncrementalPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:107: public int GraphStructurePatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:109: public int SceneRebuildPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:111: public string LastPatchClassification { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:113: public int LinkUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:115: public int LinkGeometryUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:117: public int LinkGeometryRebuildCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:119: public int LinksUpdatedLastFrame { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:121: public int LinkSyncScanCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:123: public int LinkSyncIndexedHitCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:125: public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:127: public string LargestLoadedAssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:129: public string AssetCacheMode { get; set; } = "state-local";
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:131: public int AssetCacheEntryCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:133: public int AssetCacheHitCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:135: public int AssetCacheMissCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:137: public int DisposedTemplateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:139: public int AssetCachePendingDisposalCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:141: public int AssetCacheDisposedPromiseCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:143: public int AssetCacheDisposalErrorCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:145: public int MaterialCloneCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:147: public int DisposedGeometryCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:149: public int DisposedMaterialCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:151: public int DisposedTextureCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:153: public int RetainedSharedTextureCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:155: public List<string> SelectedObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:157: public string HoveredObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:159: public int ViewportWidth { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:161: public int ViewportHeight { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:163: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:166: public sealed class WebGlSceneCommandStageJournalCounters
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:168: public int Started { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:170: public int Applied { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:172: public int Completed { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:174: public int Warnings { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:176: public int Failures { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:179: public sealed class WebGlSceneCommandStageJournalEntry
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:181: public int Sequence { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:183: public int TimestampMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:185: public string EventKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:187: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:189: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:191: public string ResultId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:193: public string Status { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:195: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneProofSnapshot.cs:197: public string Message { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneRevisionPolicy.cs:3: public static class WebGlSceneRevisionPolicy
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneRevisionPolicy.cs:5: public static int Resolve(WebGlSceneModel? scene)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneRevisionPolicy.cs:17: public static int ResolveNext(WebGlSceneModel scene, int requestedRevision)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneRevisionPolicy.cs:20: public static void Commit(WebGlSceneModel scene, int revision)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneRevisionPolicy.cs:29: public static void Normalize(WebGlSceneModel scene)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneSelectionState.cs:3: public sealed partial class WebGlSceneSelectionState
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneSelectionState.cs:5: public List<string> SelectedObjectIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneSelectionState.cs:7: public string PrimaryObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlSceneSelectionState.cs:9: public string ContextActionId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlVector3.cs:3: public readonly record struct WebGlVector3(double X, double Y, double Z)
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlVector3.cs:5: public static WebGlVector3 Zero { get; } = new(0, 0, 0);
+src/CanDoItAll.Components.WebGlLib/WebGl/Scene/WebGlVector3.cs:7: public static WebGlVector3 One { get; } = new(1, 1, 1);
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/DefaultWebGlSymbolPolicy.cs:3: public sealed class DefaultWebGlSymbolPolicy : IWebGlSymbolPolicy
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/DefaultWebGlSymbolPolicy.cs:8: public DefaultWebGlSymbolPolicy()
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/DefaultWebGlSymbolPolicy.cs:13: public DefaultWebGlSymbolPolicy(WebGlSymbolIntensityPolicy intensityPolicy, WebGlSymbolPalette palette)
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/DefaultWebGlSymbolPolicy.cs:19: public WebGlStatusSymbol Normalize(WebGlStatusSymbol symbol)
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/IWebGlSymbolPolicy.cs:3: public interface IWebGlSymbolPolicy
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:3: public sealed class WebGlStatusSymbol
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:5: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:7: public string SymbolAssetId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:9: public string SemanticKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:11: public double Intensity { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:13: public string Color { get; set; } = "#ffffff";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:15: public double Scale { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:17: public double HeightOffset { get; set; } = 1.2;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:19: public string Anchor { get; set; } = WebGlSymbolAnchors.Top;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:21: public bool BillboardToCamera { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:23: public string EffectKey { get; set; } = WebGlSymbolEffects.None;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:25: public string Tooltip { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:27: public int SortOrder { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:29: public bool IsVisible { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlStatusSymbol.cs:31: public Dictionary<string, string> Metadata { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolAnchor.cs:3: public static class WebGlSymbolAnchors
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolAnchor.cs:5: public const string Top = "top";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolAnchor.cs:6: public const string Center = "center";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolAnchor.cs:7: public const string Front = "front";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolAnchor.cs:8: public const string Back = "back";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolAnchor.cs:9: public const string Left = "left";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolAnchor.cs:10: public const string Right = "right";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:3: public static class WebGlSymbolEffects
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:5: public const string None = "none";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:6: public const string Pulse = "pulse";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:7: public const string Blink = "blink";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:8: public const string Float = "float";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:9: public const string Spin = "spin";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:10: public const string Glow = "glow";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:11: public const string Shake = "shake";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolEffect.cs:12: public const string ScaleByIntensity = "scale-by-intensity";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:3: public sealed class WebGlSymbolIntensityPolicy
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:5: public double MinimumScale { get; set; } = 0.75;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:7: public double MaximumScale { get; set; } = 1.65;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:9: public double MinimumOpacity { get; set; } = 0.45;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:11: public double MaximumOpacity { get; set; } = 1.0;
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:13: public string LowColor { get; set; } = "#38bdf8";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:15: public string MediumColor { get; set; } = "#facc15";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolIntensityPolicy.cs:17: public string HighColor { get; set; } = "#f97316";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:3: public sealed class WebGlSymbolPalette
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:5: public string Neutral { get; set; } = "#e2e8f0";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:7: public string Info { get; set; } = "#38bdf8";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:9: public string Ready { get; set; } = "#22c55e";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:11: public string Busy { get; set; } = "#f97316";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:13: public string Warning { get; set; } = "#facc15";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:15: public string Alert { get; set; } = "#ef4444";
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:17: public Dictionary<string, string> CustomColors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Symbols/WebGlSymbolPalette.cs:19: public string Resolve(string semanticKind)
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchEvents.cs:3: public sealed record WebGlSelectionChangedEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchEvents.cs:7: public sealed record WebGlNodePositionChange(
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchEvents.cs:13: public sealed record WebGlNodeMovedEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchEvents.cs:16: public sealed record WebGlConnectionChangeRequest(
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchEvents.cs:28: public sealed record WebGlDeleteRequest(
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:5: public static class WebGlWorkbenchProjectionModes
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:7: public const string Orthographic = "orthographic";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:8: public const string Perspective = "perspective";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:11: public static class WebGlWorkbenchCameraViewModes
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:13: public const string Perspective = "perspective";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:14: public const string XY = "xy";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:15: public const string XZ = "xz";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:16: public const string YZ = "yz";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:18: public static string Normalize(string? value, string? projectionMode = null)
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:32: public static string ResolveProjectionMode(string? viewMode)
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:40: public static class WebGlWorkbenchViewPresets
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:42: public const string Overview = "overview";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:43: public const string Roles = "roles";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:44: public const string Dependencies = "dependencies";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:45: public const string Branching = "branching";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:46: public const string Focus = "focus";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:49: public static class WebGlWorkbenchLayoutModes
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:51: public const string CenterLane = "center-lane";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:52: public const string AlternatingArc = "alternating-arc";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:53: public const string LayeredOrbit = "layered-orbit";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:54: public const string CriticalPathSpine = "critical-path-spine";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:55: public const string FanoutCorridor = "fanout-corridor";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:56: public const string RadialBurst = "radial-burst";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:58: public static string Normalize(string? value)
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:72: public static class WebGlWorkbenchConnectionActions
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:74: public const string Connect = "connect";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:75: public const string Disconnect = "disconnect";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:76: public const string ReconnectTarget = "reconnect-target";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:79: public static class WebGlWorkbenchAnchorRoles
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:81: public const string Input = "input";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:82: public const string Output = "output";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:85: public static class WebGlWorkbenchToolModes
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:87: public const string Select = "select";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:88: public const string Delete = "delete";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:89: public const string Connect = "connect";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:90: public const string Reconnect = "reconnect";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:92: public static string Normalize(string? value)
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:104: public static class WebGlWorkbenchNodeInfoModes
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:106: public const string Detailed = "detailed";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:107: public const string Miniature = "miniature";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:108: public const string Hidden = "hidden";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:110: public static string Normalize(string? value)
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:121: public sealed class WebGlWorkbenchSurface
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:123: public string SurfaceId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:125: public string SceneKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:127: public string Title { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:129: public string Subtitle { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:131: public List<WebGlWorkbenchNode> Nodes { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:133: public List<WebGlWorkbenchEdge> Edges { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:135: public WebGlWorkbenchUiState UiState { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:137: public WebGlWorkbenchChrome Chrome { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:140: public sealed class WebGlWorkbenchNode
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:142: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:144: public string Kind { get; set; } = "node";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:146: public string Family { get; set; } = "item";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:148: public string Title { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:150: public string Subtitle { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:152: public string Description { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:154: public string Status { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:156: public string AccentColor { get; set; } = "#2563eb";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:158: public string FillColor { get; set; } = "#ffffff";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:160: public string BorderColor { get; set; } = "#cbd5e1";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:162: public double X { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:164: public double Y { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:166: public double Z { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:168: public double Width { get; set; } = 220;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:170: public double Height { get; set; } = 128;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:172: public double Depth { get; set; } = 28;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:174: public bool IsReadOnly { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:176: public bool IsSelected { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:178: public List<string> Tags { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:180: public List<WebGlWorkbenchAnchor> Anchors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:183: public sealed class WebGlWorkbenchAnchor
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:185: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:187: public string NodeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:189: public string PortId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:191: public string Label { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:193: public string Role { get; set; } = WebGlWorkbenchAnchorRoles.Input;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:195: public string Side { get; set; } = "left";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:197: public string CategoryKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:199: public string AccentColor { get; set; } = "#2563eb";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:201: public bool IsRequired { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:203: public int Order { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:205: public int TotalOnSide { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:208: public sealed class WebGlWorkbenchEdge
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:210: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:212: public string SourceNodeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:214: public string SourceAnchorId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:216: public string SourcePortId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:218: public string TargetNodeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:220: public string TargetAnchorId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:222: public string TargetPortId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:224: public string Kind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:226: public string CategoryKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:228: public string Label { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:230: public string AccentColor { get; set; } = "#2563eb";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:232: public double DepthOffset { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:234: public double Emphasis { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:236: public double Opacity { get; set; } = 0.82d;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:238: public bool IsPrimaryPath { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:240: public bool IsUserAuthored { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:243: public sealed class WebGlWorkbenchChrome
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:245: public string HintText { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:247: public string EmptyStateTitle { get; set; } = "No scene geometry";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:249: public string EmptyStateDescription { get; set; } = "Load one of the representative template packs to review the concept stage.";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:251: public List<WebGlWorkbenchChromeToolbarAction> ToolbarActions { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:254: public sealed class WebGlWorkbenchChromeToolbarAction
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:256: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:258: public string Label { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:260: public string Glyph { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:262: public string VisualLabel { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:264: public string Tone { get; set; } = "neutral";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:266: public bool IconOnly { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:268: public double Width { get; set; } = 44;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:270: public bool IsVisible { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:272: public bool IsActive { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchSurface.cs:274: public bool IsToggled { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:5: public sealed class WebGlWorkbenchUiState
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:12: public const string CurrentVersion = "webgl-workbench.v1";
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:14: public string Version { get; set; } = CurrentVersion;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:16: public List<string> SelectedNodeIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:18: public string ActiveViewPreset { get; set; } = WebGlWorkbenchViewPresets.Overview;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:20: public string LayoutMode { get; set; } = WebGlWorkbenchLayoutModes.CenterLane;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:22: public string ToolMode { get; set; } = WebGlWorkbenchToolModes.Select;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:24: public string NodeInfoMode { get; set; } = WebGlWorkbenchNodeInfoModes.Detailed;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:26: public double NodeSpacingFactor { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:28: public bool DeterministicMode { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:30: public bool ShowDiagnostics { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:32: public bool ShowGrid { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:34: public bool ShowAnchors { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:36: public bool ShowEdgeLabels { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:38: public bool TransparentGround { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:40: public bool IsStageMaximized { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:42: public long CameraRevision { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:44: public WebGlWorkbenchCameraState Camera { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:46: public static WebGlWorkbenchUiState Parse(string? json)
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:71: public string ToJson()
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:145: public sealed class WebGlWorkbenchCameraState
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:147: public string ProjectionMode { get; set; } = WebGlWorkbenchProjectionModes.Orthographic;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:149: public string ViewMode { get; set; } = WebGlWorkbenchCameraViewModes.XY;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:151: public double Zoom { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:153: public double TargetX { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:155: public double TargetY { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:157: public double TargetZ { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:159: public double Distance { get; set; } = 1180;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:161: public double Azimuth { get; set; } = -0.72d;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:163: public double Polar { get; set; } = 1.08d;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:166: public sealed class WebGlWorkbenchDiagnostics
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:168: public int CreateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:170: public int UpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:172: public int RenderCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:174: public int DragCommitCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:176: public int ConnectionCommitCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:178: public int ExportCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:180: public int NodeCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:182: public int EdgeCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:184: public bool DeterministicMode { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:186: public string ProjectionMode { get; set; } = WebGlWorkbenchProjectionModes.Orthographic;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:188: public string ViewMode { get; set; } = WebGlWorkbenchCameraViewModes.XY;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:191: public sealed class WebGlAutomationSnapshot
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:193: public string SurfaceId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:195: public string SceneKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:197: public string ProjectionMode { get; set; } = WebGlWorkbenchProjectionModes.Orthographic;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:199: public string ViewMode { get; set; } = WebGlWorkbenchCameraViewModes.XY;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:201: public string ActiveViewPreset { get; set; } = WebGlWorkbenchViewPresets.Overview;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:203: public string LayoutMode { get; set; } = WebGlWorkbenchLayoutModes.CenterLane;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:205: public string ToolMode { get; set; } = WebGlWorkbenchToolModes.Select;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:207: public string NodeInfoMode { get; set; } = WebGlWorkbenchNodeInfoModes.Detailed;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:209: public double NodeSpacingFactor { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:211: public bool DeterministicMode { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:213: public bool ShowGrid { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:215: public bool ShowAnchors { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:217: public bool ShowEdgeLabels { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:219: public bool TransparentGround { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:221: public bool IsStageMaximized { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:223: public int ViewportWidth { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:225: public int ViewportHeight { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:227: public List<WebGlAutomationNodeSnapshot> Nodes { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:229: public List<WebGlAutomationEdgeSnapshot> Edges { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:231: public List<WebGlAutomationAnchorSnapshot> Anchors { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:234: public sealed class WebGlAutomationNodeSnapshot
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:236: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:238: public string Kind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:240: public string Family { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:242: public string Title { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:244: public string Subtitle { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:246: public double X { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:248: public double Y { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:250: public double Z { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:252: public double Left { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:254: public double Top { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:256: public double Width { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:258: public double Height { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:260: public double SceneWidth { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:262: public double SceneHeight { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:264: public double SceneDepth { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:266: public bool Selected { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:269: public sealed class WebGlAutomationEdgeSnapshot
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:271: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:273: public string SourceNodeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:275: public string SourceAnchorId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:277: public string SourcePortId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:279: public string TargetNodeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:281: public string TargetAnchorId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:283: public string TargetPortId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:285: public string Kind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:287: public string CategoryKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:289: public bool IsPrimaryPath { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:291: public double Emphasis { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:293: public double Opacity { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:295: public double X { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:297: public double Y { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:300: public sealed class WebGlAutomationAnchorSnapshot
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:302: public string Id { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:304: public string NodeId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:306: public string PortId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:308: public string Role { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:310: public string Side { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:312: public double X { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/WebGlWorkbenchUiState.cs:314: public double Y { get; set; }

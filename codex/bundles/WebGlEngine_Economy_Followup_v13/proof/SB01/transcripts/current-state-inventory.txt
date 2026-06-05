@@ -1,0 +1,244 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260605171436
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_v13'
+$log = Join-Path $bundle 'proof\SB01\transcripts\current-state-inventory.txt'
+Start-Transcript -Path $log -Force | Out-Null
+Write-Host 'COMMAND: Get-Date -Format o'
+Get-Date -Format o
+Write-Host 'COMMAND: Components git baseline'
+git -C C:\repositories\CanDoItAll.Components rev-parse HEAD
+git -C C:\repositories\CanDoItAll.Components branch --show-current
+git -C C:\repositories\CanDoItAll.Components status --short
+Write-Host 'COMMAND: Economy git baseline'
+git -C C:\repositories\CanDoItAll.Economy rev-parse HEAD
+git -C C:\repositories\CanDoItAll.Economy branch --show-current
+git -C C:\repositories\CanDoItAll.Economy status --short
+Write-Host 'COMMAND: Components changed files in v13 worktree'
+git -C C:\repositories\CanDoItAll.Components diff --name-only HEAD --
+git -C C:\repositories\CanDoItAll.Components ls-files --others --exclude-standard
+Write-Host 'COMMAND: Economy changed files in v13 worktree'
+git -C C:\repositories\CanDoItAll.Economy diff --name-only HEAD --
+git -C C:\repositories\CanDoItAll.Economy ls-files --others --exclude-standard
+Write-Host 'COMMAND: Components project graph files'
+rg --files -g "*.csproj" C:\repositories\CanDoItAll.Components
+Write-Host 'COMMAND: Components project references/package references'
+Get-ChildItem C:\repositories\CanDoItAll.Components -Recurse -Filter *.csproj | Select-String -Pattern '<ProjectReference|<PackageReference' | ForEach-Object { "{0}:{1}: {2}" -f $_.Path, $_.LineNumber, $_.Line.Trim() }
+Write-Host 'COMMAND: Economy project graph files'
+rg --files -g "*.csproj" C:\repositories\CanDoItAll.Economy
+Write-Host 'COMMAND: Economy simulation package references'
+Get-ChildItem C:\repositories\CanDoItAll.Economy\src -Recurse -Filter *.csproj | Select-String -Pattern '<ProjectReference|<PackageReference' | ForEach-Object { "{0}:{1}: {2}" -f $_.Path, $_.LineNumber, $_.Line.Trim() }
+Write-Host 'COMMAND: WebGlLib public type inventory'
+rg -n "public (sealed |partial |abstract |static )?(class|record|struct|interface|enum|delegate)" C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib
+Write-Host 'COMMAND: WebGlRunLib public type inventory'
+rg -n "public (sealed |partial |abstract |static )?(class|record|struct|interface|enum|delegate)" C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib
+Stop-Transcript | Out-Null
+Get-Item $log | Select-Object FullName,Length
+Process ID: 15120
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+COMMAND: Get-Date -Format o
+2026-06-05T17:14:36.5399542-04:00
+COMMAND: Components git baseline
+
+
+
+COMMAND: Economy git baseline
+
+
+
+COMMAND: Components changed files in v13 worktree
+
+
+COMMAND: Economy changed files in v13 worktree
+
+
+COMMAND: Components project graph files
+
+COMMAND: Components project references/package references
+C:\repositories\CanDoItAll.Components\samples\CanDoItAll.Components.WebGlLibOnlyViewer\CanDoItAll.Components.WebGlLibOnlyViewer.csproj:18: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Components\samples\CanDoItAll.Components.WebGlLibOnlyViewer\CanDoItAll.Components.WebGlLibOnlyViewer.csproj:22: <ProjectReference Condition="'$(UseComponentsWebGlLibPackage)' != 'true' and Exists('$(ComponentsWebGlLibProject)')" Include="$(ComponentsWebGlLibProject)" />
+C:\repositories\CanDoItAll.Components\samples\CanDoItAll.Components.WebGlLibOnlyViewer\CanDoItAll.Components.WebGlLibOnlyViewer.csproj:23: <PackageReference Condition="'$(UseComponentsWebGlLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlLib" Version="$(ComponentsWebGlLibPackageVersion)" />
+C:\repositories\CanDoItAll.Components\samples\CanDoItAll.Components.WebGlRunLibGenericSample\CanDoItAll.Components.WebGlRunLibGenericSample.csproj:14: <ProjectReference Include="..\..\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj:10: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj:14: <ProjectReference Include="..\CanDoItAll.Components.Common\CanDoItAll.Components.Common.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj:15: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj:19: <ProjectReference Include="..\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj:20: <ProjectReference Include="..\CanDoItAll.Components.Common\CanDoItAll.Components.Common.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj:21: <ProjectReference Include="..\CanDoItAll.Components.OverlayLib\CanDoItAll.Components.OverlayLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Charts\CanDoItAll.Components.Charts.csproj:12: <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Charts\CanDoItAll.Components.Charts.csproj:13: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Mermaid\CanDoItAll.Components.Mermaid.csproj:12: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.OverlayLib\CanDoItAll.Components.OverlayLib.csproj:15: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.OverlayLib\CanDoItAll.Components.OverlayLib.csproj:19: <ProjectReference Include="..\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Sandbox\CanDoItAll.Components.Sandbox.csproj:10: <ProjectReference Include="..\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Sandbox\CanDoItAll.Components.Sandbox.csproj:11: <ProjectReference Include="..\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Sandbox\CanDoItAll.Components.Sandbox.csproj:12: <ProjectReference Include="..\CanDoItAll.Components.Charts\CanDoItAll.Components.Charts.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Sandbox\CanDoItAll.Components.Sandbox.csproj:13: <ProjectReference Include="..\CanDoItAll.Components.Common\CanDoItAll.Components.Common.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.Sandbox\CanDoItAll.Components.Sandbox.csproj:14: <ProjectReference Include="..\CanDoItAll.Components.Mermaid\CanDoItAll.Components.Mermaid.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\CanDoItAll.Components.WebGlLib.csproj:15: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlLib\CanDoItAll.Components.WebGlLib.csproj:19: <ProjectReference Include="..\CanDoItAll.Components.OverlayLib\CanDoItAll.Components.OverlayLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj:11: <ProjectReference Include="..\CanDoItAll.Components.WebGlLib\CanDoItAll.Components.WebGlLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlSandbox\CanDoItAll.Components.WebGlSandbox.csproj:10: <ProjectReference Include="..\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlSandbox\CanDoItAll.Components.WebGlSandbox.csproj:11: <ProjectReference Include="..\CanDoItAll.Components.OverlayLib\CanDoItAll.Components.OverlayLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlSandbox\CanDoItAll.Components.WebGlSandbox.csproj:12: <ProjectReference Include="..\CanDoItAll.Components.WebGlLib\CanDoItAll.Components.WebGlLib.csproj" />
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlSandbox\CanDoItAll.Components.WebGlSandbox.csproj:13: <ProjectReference Include="..\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj:11: <PackageReference Include="coverlet.collector" Version="6.0.4" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj:12: <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj:13: <PackageReference Include="xunit" Version="2.9.3" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj:14: <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlLib.Tests\CanDoItAll.Components.WebGlLib.Tests.csproj:22: <ProjectReference Include="..\..\src\CanDoItAll.Components.WebGlLib\CanDoItAll.Components.WebGlLib.csproj" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj:11: <PackageReference Include="coverlet.collector" Version="6.0.4" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj:12: <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj:13: <PackageReference Include="xunit" Version="2.9.3" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj:14: <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+C:\repositories\CanDoItAll.Components\tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj:22: <ProjectReference Include="..\..\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj" />
+COMMAND: Economy project graph files
+
+COMMAND: Economy simulation package references
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj:8: <PackageReference Include="ncalc" Version="1.3.8" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.Cryptography\CanDoItAll.Economy.Cryptography.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj:12: <ProjectReference Include="..\..\..\CanDoItAll.IPFS\src\CanDoItAll.IPFS.Client\CanDoItAll.IPFS.Client.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj:13: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:12: <ProjectReference Include="..\CanDoItAll.Economy.Cryptography\CanDoItAll.Economy.Cryptography.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:13: <ProjectReference Include="..\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:14: <ProjectReference Include="..\CanDoItAll.Economy.Persistence.PostgreSql\CanDoItAll.Economy.Persistence.PostgreSql.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:15: <ProjectReference Include="..\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:16: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:17: <ProjectReference Include="..\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:18: <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:19: <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:20: <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cli\CanDoItAll.Economy.Cli.csproj:21: <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:15: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:16: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:20: <ProjectReference Include="..\CanDoItAll.Economy.Accounts\CanDoItAll.Economy.Accounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:21: <ProjectReference Include="..\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:22: <ProjectReference Include="..\CanDoItAll.Economy.Cryptography\CanDoItAll.Economy.Cryptography.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:23: <ProjectReference Include="..\CanDoItAll.Economy.Investments\CanDoItAll.Economy.Investments.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:24: <ProjectReference Include="..\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:25: <ProjectReference Include="..\CanDoItAll.Economy.Markets\CanDoItAll.Economy.Markets.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:26: <ProjectReference Include="..\CanDoItAll.Economy.Memory\CanDoItAll.Economy.Memory.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:27: <ProjectReference Include="..\CanDoItAll.Economy.Memory.Sandbox\CanDoItAll.Economy.Memory.Sandbox.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:28: <ProjectReference Include="..\CanDoItAll.Economy.Sandbox\CanDoItAll.Economy.Sandbox.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:29: <ProjectReference Include="..\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:30: <ProjectReference Include="..\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj" AdditionalProperties="UseComponentsWebGlRunLibPackage=$(UseComponentsWebGlPackages);ComponentsWebGlRunLibPackageVersion=$(ComponentsWebGlRunLibPackageVersion);ComponentsWebGlLibPackageVersion=$(ComponentsWebGlLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:31: <ProjectReference Include="..\CanDoItAll.Economy.Storage.InMemory\CanDoItAll.Economy.Storage.InMemory.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:32: <ProjectReference Condition="'$(UseComponentsWebGlPackages)' != 'true' and Exists('$(ComponentsWebGlLibProject)')" Include="$(ComponentsWebGlLibProject)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:33: <ProjectReference Condition="'$(UseComponentsWebGlPackages)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:34: <PackageReference Include="CanDoItAll.Components.BaseLib" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:35: <PackageReference Include="CanDoItAll.Components.Charts" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:36: <PackageReference Include="CanDoItAll.Components.Mermaid" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:37: <PackageReference Condition="'$(UseComponentsWebGlPackages)' == 'true'" Include="CanDoItAll.Components.WebGlLib" Version="$(ComponentsWebGlLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj:38: <PackageReference Condition="'$(UseComponentsWebGlPackages)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Cryptography\CanDoItAll.Economy.Cryptography.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Investments\CanDoItAll.Economy.Investments.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Accounts\CanDoItAll.Economy.Accounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Investments\CanDoItAll.Economy.Investments.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Markets\CanDoItAll.Economy.Markets.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Investments.Persistence.EFCore\CanDoItAll.Economy.Investments.Persistence.EFCore.csproj:9: <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Investments.Persistence.EFCore\CanDoItAll.Economy.Investments.Persistence.EFCore.csproj:10: <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Investments.Persistence.EFCore\CanDoItAll.Economy.Investments.Persistence.EFCore.csproj:11: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Investments.Persistence.EFCore\CanDoItAll.Economy.Investments.Persistence.EFCore.csproj:15: <ProjectReference Include="..\CanDoItAll.Economy.Investments\CanDoItAll.Economy.Investments.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Cryptography\CanDoItAll.Economy.Cryptography.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Markets\CanDoItAll.Economy.Markets.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Accounts\CanDoItAll.Economy.Accounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory\CanDoItAll.Economy.Memory.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Accounts\CanDoItAll.Economy.Accounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory\CanDoItAll.Economy.Memory.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Markets\CanDoItAll.Economy.Markets.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory.Regulation\CanDoItAll.Economy.Memory.Regulation.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Memory\CanDoItAll.Economy.Memory.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory.Sandbox\CanDoItAll.Economy.Memory.Sandbox.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Investments\CanDoItAll.Economy.Investments.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory.Sandbox\CanDoItAll.Economy.Memory.Sandbox.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Memory\CanDoItAll.Economy.Memory.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory.Sandbox\CanDoItAll.Economy.Memory.Sandbox.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.Memory.Regulation\CanDoItAll.Economy.Memory.Regulation.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory.Sandbox\CanDoItAll.Economy.Memory.Sandbox.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Sandbox\CanDoItAll.Economy.Sandbox.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Memory.Sandbox\CanDoItAll.Economy.Memory.Sandbox.csproj:12: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:12: <ProjectReference Include="..\CanDoItAll.Economy.Cryptography\CanDoItAll.Economy.Cryptography.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:13: <ProjectReference Include="..\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:14: <ProjectReference Include="..\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:15: <ProjectReference Include="..\CanDoItAll.Economy.Persistence.PostgreSql\CanDoItAll.Economy.Persistence.PostgreSql.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:16: <ProjectReference Include="..\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:17: <ProjectReference Include="..\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:23: <PackageReference Include="CanDoItAll.Components.BaseLib" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:24: <PackageReference Include="CanDoItAll.Components.Charts" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:25: <PackageReference Include="CanDoItAll.Components.Mermaid" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:26: <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:27: <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:28: <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Node\CanDoItAll.Economy.Node.csproj:29: <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.8.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Accounts\CanDoItAll.Economy.Accounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.Markets\CanDoItAll.Economy.Markets.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Sandbox\CanDoItAll.Economy.Sandbox.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj:12: <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj:13: <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj:14: <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.PostgreSql\CanDoItAll.Economy.Persistence.PostgreSql.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Persistence.EFCore\CanDoItAll.Economy.Persistence.EFCore.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.PostgreSql\CanDoItAll.Economy.Persistence.PostgreSql.csproj:9: <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.4">
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.PostgreSql\CanDoItAll.Economy.Persistence.PostgreSql.csproj:13: <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.PostgreSql\CanDoItAll.Economy.Persistence.PostgreSql.csproj:14: <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Persistence.PostgreSql\CanDoItAll.Economy.Persistence.PostgreSql.csproj:15: <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Sandbox\CanDoItAll.Economy.Sandbox.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Accounts\CanDoItAll.Economy.Accounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Sandbox\CanDoItAll.Economy.Sandbox.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Markets\CanDoItAll.Economy.Markets.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Sandbox\CanDoItAll.Economy.Sandbox.csproj:10: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.Cryptography\CanDoItAll.Economy.Cryptography.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj:11: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Ledger\CanDoItAll.Economy.Simulation.Ledger.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Ledger\CanDoItAll.Economy.Simulation.Ledger.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Ledger\CanDoItAll.Economy.Ledger.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Ledger\CanDoItAll.Economy.Simulation.Ledger.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Ledger\CanDoItAll.Economy.Simulation.Ledger.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\CanDoItAll.Economy.Simulation.SimpleAccounts.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:13: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:14: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:15: <ProjectReference Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:16: <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlLib" Version="$(ComponentsWebGlLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj:17: <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:8: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Abstractions\CanDoItAll.Economy.Simulation.Abstractions.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.SimpleAccounts\CanDoItAll.Economy.Simulation.SimpleAccounts.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.Visualization\CanDoItAll.Economy.Simulation.Visualization.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.SimulationSandbox\CanDoItAll.Economy.SimulationSandbox.csproj:12: <ProjectReference Include="..\CanDoItAll.Economy.Simulation.WebGlBridge\CanDoItAll.Economy.Simulation.WebGlBridge.csproj" AdditionalProperties="UseComponentsWebGlRunLibPackage=$(UseComponentsWebGlRunLibPackage);ComponentsWebGlRunLibPackageVersion=$(ComponentsWebGlRunLibPackageVersion);ComponentsWebGlLibPackageVersion=$(ComponentsWebGlLibPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator\CanDoItAll.Economy.Simulator.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.BusinessObjects\CanDoItAll.Economy.BusinessObjects.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator\CanDoItAll.Economy.Simulator.csproj:10: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator\CanDoItAll.Economy.Simulator.csproj:11: <ProjectReference Include="..\CanDoItAll.Economy.Sdk\CanDoItAll.Economy.Sdk.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator\CanDoItAll.Economy.Simulator.csproj:13: <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Components\CanDoItAll.Economy.Simulator.Components.csproj:9: <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Components\CanDoItAll.Economy.Simulator.Components.csproj:10: <PackageReference Include="CanDoItAll.Components.BaseLib" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Components\CanDoItAll.Economy.Simulator.Components.csproj:11: <PackageReference Include="CanDoItAll.Components.Charts" Version="$(CanDoItAllComponentsPackageVersion)" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Components\CanDoItAll.Economy.Simulator.Components.csproj:12: <ProjectReference Include="..\CanDoItAll.Economy.Components\CanDoItAll.Economy.Components.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Components\CanDoItAll.Economy.Simulator.Components.csproj:13: <ProjectReference Include="..\CanDoItAll.Economy.Simulator\CanDoItAll.Economy.Simulator.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Persistence.EFCore\CanDoItAll.Economy.Simulator.Persistence.EFCore.csproj:9: <ProjectReference Include="..\CanDoItAll.Economy.Simulator\CanDoItAll.Economy.Simulator.csproj" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Persistence.EFCore\CanDoItAll.Economy.Simulator.Persistence.EFCore.csproj:10: <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Persistence.EFCore\CanDoItAll.Economy.Simulator.Persistence.EFCore.csproj:11: <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Persistence.EFCore\CanDoItAll.Economy.Simulator.Persistence.EFCore.csproj:12: <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.4" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Persistence.EFCore\CanDoItAll.Economy.Simulator.Persistence.EFCore.csproj:13: <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Persistence.EFCore\CanDoItAll.Economy.Simulator.Persistence.EFCore.csproj:14: <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulator.Persistence.EFCore\CanDoItAll.Economy.Simulator.Persistence.EFCore.csproj:15: <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Storage.InMemory\CanDoItAll.Economy.Storage.InMemory.csproj:8: <ProjectReference Include="..\CanDoItAll.Economy.Core\CanDoItAll.Economy.Core.csproj" />
+COMMAND: WebGlLib public type inventory
+
+COMMAND: WebGlRunLib public type inventory
+
+**********************
+Windows PowerShell transcript end
+End time: 20260605171503
+**********************

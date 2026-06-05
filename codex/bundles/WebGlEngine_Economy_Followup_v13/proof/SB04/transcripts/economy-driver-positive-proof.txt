@@ -1,0 +1,49 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260605172958
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_v13'
+$log = Join-Path $bundle 'proof\SB04\transcripts\economy-driver-positive-proof.txt'
+Start-Transcript -Path $log -Force | Out-Null
+Write-Host 'COMMAND: dotnet test Economy driver-owned action mapping proof'
+dotnet test tests\CanDoItAll.Economy.Tests\CanDoItAll.Economy.Tests.csproj --no-build --filter "FullyQualifiedName~EconomyDriverMapsDomainOwnedFlowActionToGenericDirectedFlow" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$driverExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $driverExit"
+Write-Host 'COMMAND: dotnet test Economy domain ids scrub to generic executable ids proof'
+dotnet test tests\CanDoItAll.Economy.Tests\CanDoItAll.Economy.Tests.csproj --no-build --filter "FullyQualifiedName~ProjectorMapsDomainActionIdsToGenericExecutableStageIds" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$projectorExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $projectorExit"
+Write-Host 'COMMAND: rg Economy bridge driver-owned terms'
+rg -n "market|water|ledger|claim|investor|exchange" src\CanDoItAll.Economy.Simulation.WebGlBridge tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs
+$rgExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $rgExit"
+Stop-Transcript | Out-Null
+if (($driverExit -ne 0) -or ($projectorExit -ne 0) -or ($rgExit -ne 0)) { exit 1 }
+Get-Item $log | Select-Object FullName,Length
+Process ID: 35408
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+COMMAND: dotnet test Economy driver-owned action mapping proof
+
+EXIT CODE: 0
+COMMAND: dotnet test Economy domain ids scrub to generic executable ids proof
+
+EXIT CODE: 0
+COMMAND: rg Economy bridge driver-owned terms
+
+EXIT CODE: 0
+**********************
+Windows PowerShell transcript end
+End time: 20260605173025
+**********************
