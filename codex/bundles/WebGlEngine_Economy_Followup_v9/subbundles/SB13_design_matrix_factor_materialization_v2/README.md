@@ -9,6 +9,8 @@ Extend factor materialization beyond current narrow bindings and prove factors a
 Repository scope: **Economy**  
 Priority: **P1**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Add safe JSON-pointer/patch factor binding or typed bindings for fees, capacities, event schedules, investment rates and policy thresholds.
@@ -20,6 +22,14 @@ Priority: **P1**
 
 - factor-effect-report.json
 - design matrix summary with distinct hashes
+
+## Executed proof
+
+- `proof/SB13/factor-effect-report.json` records two materialized factor cells, two distinct effective scenario hashes, two distinct configuration hashes, six applied effects per run, and rejected `design-factor-no-effect:unchangedPointer`.
+- `proof/SB13/design-matrix-summary.json` contains `effectiveScenarioHash`, `originalScenarioHash`, `appliedEffects`, and `metadata.distinctEffectiveScenarioHashCount = 2`.
+- `proof/SB13/transcripts/design-harness-focused-tests.txt` passes 2/2 focused design-harness tests.
+- `proof/SB13/transcripts/source-assertions.txt` verifies the safe JSON pointer binding plus typed capacity, schedule, investment-rate, and policy parameter bindings.
+- `proof/SB13/transcripts/anti-stub-audit.txt` finds no stub/placeholder/not-implemented markers in the touched source/test files.
 
 
 ## Hard gates

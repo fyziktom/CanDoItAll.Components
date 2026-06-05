@@ -22,6 +22,23 @@ public sealed class WebGlSceneViewBrowserRuntime(WebGlSceneView sceneView) : IWe
         return await sceneView.ApplyCommandBatchAsync(batch).ConfigureAwait(false);
     }
 
+    public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+        WebGlSceneCommandBatch batch,
+        WebGlRunRuntimeIdleWaitOptions options,
+        bool requireRuntimeIdle = true,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(batch);
+        ArgumentNullException.ThrowIfNull(options);
+        cancellationToken.ThrowIfCancellationRequested();
+        return await sceneView.ApplyCommandBatchAndWaitAsync(
+            batch,
+            options.TimeoutMs,
+            options.PollIntervalMs,
+            options.Reason,
+            requireRuntimeIdle).ConfigureAwait(false);
+    }
+
     public async ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();

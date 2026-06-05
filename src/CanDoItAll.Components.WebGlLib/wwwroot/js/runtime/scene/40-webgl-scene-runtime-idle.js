@@ -1,11 +1,15 @@
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
-import { hasAutomaticStageBarrierWork } from "./32-webgl-scene-stage-barriers.js";
+import {
+    buildRuntimeIdleState,
+    shouldTreatFinalScheduledRenderAsDrained,
+    syncRuntimeIdleDiagnostics
+} from "./41-webgl-scene-runtime-idle-state.js";
 
 export function isRuntimeIdle(state) {
-    const blockers = collectRuntimeIdleBlockers(state);
+    const idleState = buildRuntimeIdleState(state);
+    syncRuntimeIdleDiagnostics(state, idleState);
     return {
-        idle: blockers.length === 0,
-        blockers,
+        ...idleState,
         diagnostics: buildDiagnosticsSnapshot(state)
     };
 }
@@ -15,13 +19,29 @@ export async function waitForRuntimeIdle(state, options = {}) {
     const pollIntervalMs = clampPositive(options.pollIntervalMs, 16, 1000);
     const reason = normalizeReason(options.reason, "runtime-idle");
     const startedAt = performance.now();
-    let lastState = isRuntimeIdle(state);
+    let consecutiveSemanticIdleProbes = 0;
+    let lastState = null;
 
-    while (!lastState.idle && performance.now() - startedAt < timeoutMs) {
-        await delay(pollIntervalMs);
+    while (performance.now() - startedAt < timeoutMs) {
         lastState = isRuntimeIdle(state);
+        consecutiveSemanticIdleProbes = lastState.semanticIdle
+            ? consecutiveSemanticIdleProbes + 1
+            : 0;
+
+        if (lastState.idle) {
+            break;
+        }
+
+        if (shouldTreatFinalScheduledRenderAsDrained(lastState, consecutiveSemanticIdleProbes)) {
+            markFinalRenderDrained(state);
+            lastState = isRuntimeIdle(state);
+            break;
+        }
+
+        await delay(pollIntervalMs);
     }
 
+    lastState ??= isRuntimeIdle(state);
     const elapsedMs = Math.round(performance.now() - startedAt);
     syncLastRuntimeStopIdleDiagnostics(state, lastState, elapsedMs);
     lastState = {
@@ -37,67 +57,17 @@ export async function waitForRuntimeIdle(state, options = {}) {
         pollIntervalMs,
         elapsedMs,
         blockers: lastState.blockers,
+        semanticIdle: lastState.semanticIdle,
+        visualIdle: lastState.visualIdle,
+        finalRenderDrained: lastState.finalRenderDrained,
+        semanticBlockers: lastState.semanticBlockers,
+        visualBlockers: lastState.visualBlockers,
         diagnostics: lastState.diagnostics
     };
 }
 
 export function collectRuntimeIdleBlockers(state) {
-    const blockers = [];
-    if (!state) {
-        blockers.push("runtime:not-created");
-        return blockers;
-    }
-
-    const queuedMotionCount = countQueuedMotions(state);
-    const queuedStageCount = state.commandStageRunner?.queue?.length || 0;
-    const hasActiveBarrier = !!state.commandStageRunner?.activeBarrier;
-    const hasCurrentStage = !!state.commandStageRunner?.currentStageId;
-    const hasAutomaticStageWork = hasAutomaticStageBarrierWork(state, state.commandStageRunner);
-
-    addCountBlocker(blockers, "motion:active", state.motions?.size || 0);
-    addCountBlocker(blockers, "motion:queued", queuedMotionCount);
-    addCountBlocker(blockers, "command-stage:queued", queuedStageCount);
-    if (hasActiveBarrier) {
-        blockers.push("command-stage:barrier");
-    }
-
-    if (state.commandStageRunner && !state.commandStageRunner.cancelled && hasCurrentStage) {
-        blockers.push("command-stage:active");
-    }
-
-    if (hasAutomaticStageWork && queuedStageCount === 0 && !hasActiveBarrier && !hasCurrentStage) {
-        blockers.push("command-stage:automatic-work");
-    }
-
-    addCountBlocker(blockers, "asset-cache:pending-disposal", state.diagnostics?.assetCachePendingDisposalCount || 0);
-    if (state.isRenderingFrame) {
-        blockers.push("render-loop:frame-active");
-    }
-
-    if (state.animationHandle || state.diagnostics?.isRenderLoopActive) {
-        blockers.push("render-loop:scheduled");
-    }
-
-    if (state.options?.renderMode === "continuous") {
-        blockers.push("render-loop:continuous-mode");
-    }
-
-    return blockers;
-}
-
-function addCountBlocker(blockers, name, count) {
-    if (count > 0) {
-        blockers.push(`${name}:${count}`);
-    }
-}
-
-function countQueuedMotions(state) {
-    let count = 0;
-    for (const queue of state.motionQueuesByObjectId?.values?.() || []) {
-        count += queue?.length || 0;
-    }
-
-    return count;
+    return buildRuntimeIdleState(state).blockers;
 }
 
 function clampPositive(value, fallback, max) {
@@ -118,6 +88,12 @@ function delay(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
+function markFinalRenderDrained(state) {
+    if (state?.diagnostics) {
+        state.diagnostics.finalRenderDrained = true;
+    }
+}
+
 function syncLastRuntimeStopIdleDiagnostics(state, idleState, elapsedMs) {
     if (!state?.diagnostics || (state.diagnostics.runtimeStopCount || 0) <= 0) {
         return;
@@ -127,4 +103,5 @@ function syncLastRuntimeStopIdleDiagnostics(state, idleState, elapsedMs) {
     state.diagnostics.lastRuntimeStopTimedOut = idleState.idle !== true;
     state.diagnostics.lastRuntimeStopIdleElapsedMs = elapsedMs;
     state.diagnostics.lastRuntimeStopBlockers = [...(idleState.blockers || [])];
+    syncRuntimeIdleDiagnostics(state, idleState);
 }

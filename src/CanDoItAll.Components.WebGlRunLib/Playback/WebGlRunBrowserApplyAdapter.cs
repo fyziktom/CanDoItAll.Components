@@ -66,7 +66,14 @@ public sealed class WebGlRunBrowserApplyAdapter(
             }
         }
 
-        WebGlSceneCommandBatchResult? batchResult = await runtime.ApplyCommandBatchAsync(frameApplyResult.CommandBatch, cancellationToken).ConfigureAwait(false);
+        bool appliedWithRuntimeIdleWait = ShouldUseApplyCommandBatchAndWait();
+        WebGlSceneCommandBatchResult? batchResult = appliedWithRuntimeIdleWait
+            ? await runtime.ApplyCommandBatchAndWaitAsync(
+                frameApplyResult.CommandBatch,
+                BuildRuntimeIdleWaitOptions($"command-batch:{frameApplyResult.FrameIndex}"),
+                requireRuntimeIdle: true,
+                cancellationToken: cancellationToken).ConfigureAwait(false)
+            : await runtime.ApplyCommandBatchAsync(frameApplyResult.CommandBatch, cancellationToken).ConfigureAwait(false);
         result.CommandBatchResult = batchResult;
         AddCommandOutcome(result, batchResult);
         if (result.Errors.Count > 0)
@@ -77,7 +84,7 @@ public sealed class WebGlRunBrowserApplyAdapter(
         WebGlRuntimeDiagnostics? diagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
         result.RuntimeSnapshot = BuildSnapshot(frameApplyResult, diagnostics, result);
         result.RuntimeDiagnostics = diagnostics;
-        if (waitForConfiguredIdle && ShouldWaitForSingleFrameApply())
+        if (!appliedWithRuntimeIdleWait && waitForConfiguredIdle && ShouldWaitForSingleFrameApply())
         {
             WebGlRuntimeIdleResult? idleResult = await WaitForRuntimeIdleAsync($"single-frame:{frameApplyResult.FrameIndex}", cancellationToken).ConfigureAwait(false);
             result.RuntimeIdleResult = idleResult;
@@ -293,17 +300,23 @@ public sealed class WebGlRunBrowserApplyAdapter(
     private bool ShouldWaitForSingleFrameApply()
         => !string.Equals(options.RuntimeIdleWaitPolicy, WebGlRunRuntimeIdleWaitPolicies.None, StringComparison.Ordinal);
 
+    private bool ShouldUseApplyCommandBatchAndWait()
+        => string.Equals(options.RuntimeIdleWaitPolicy, WebGlRunRuntimeIdleWaitPolicies.None, StringComparison.Ordinal);
+
     private async ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(string reasonSuffix, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var waitOptions = new WebGlRunRuntimeIdleWaitOptions
+        WebGlRunRuntimeIdleWaitOptions waitOptions = BuildRuntimeIdleWaitOptions(reasonSuffix);
+        return await runtime.WaitForRuntimeIdleAsync(waitOptions, cancellationToken).ConfigureAwait(false);
+    }
+
+    private WebGlRunRuntimeIdleWaitOptions BuildRuntimeIdleWaitOptions(string reasonSuffix)
+        => new()
         {
             TimeoutMs = options.RuntimeIdle.TimeoutMs,
             PollIntervalMs = options.RuntimeIdle.PollIntervalMs,
             Reason = $"{options.RuntimeIdle.Reason}:{reasonSuffix}"
         };
-        return await runtime.WaitForRuntimeIdleAsync(waitOptions, cancellationToken).ConfigureAwait(false);
-    }
 
     private static bool RecordIdleResult(
         WebGlRunBrowserPlaybackApplyResult playbackApplyResult,
@@ -525,7 +538,41 @@ public sealed class WebGlRunBrowserApplyAdapter(
             AddIfNotEmpty(snapshot.RuntimeErrors, diagnostics.LastStageError);
         }
 
+        AnnotateCommandResultSnapshot(snapshot, result.CommandBatchResult);
         return snapshot;
+    }
+
+    private static void AnnotateCommandResultSnapshot(
+        WebGlRunRuntimeSnapshot snapshot,
+        WebGlSceneCommandResult? commandResult)
+    {
+        if (commandResult is null)
+        {
+            return;
+        }
+
+        snapshot.Diagnostics["commandLifecycleState"] = commandResult.LifecycleState;
+        snapshot.Diagnostics["commandSettled"] = commandResult.Settled.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        CopyCommandDiagnostic(commandResult, snapshot.Diagnostics, "runtimeIdle");
+        CopyCommandDiagnostic(commandResult, snapshot.Diagnostics, "runtimeIdleTimedOut");
+        CopyCommandDiagnostic(commandResult, snapshot.Diagnostics, "runtimeIdleElapsedMs");
+        CopyCommandDiagnostic(commandResult, snapshot.Diagnostics, "runtimeIdleBlockers");
+        CopyCommandDiagnostic(commandResult, snapshot.Diagnostics, "runtimeIdleRequired");
+    }
+
+    private static void CopyCommandDiagnostic(
+        WebGlSceneCommandResult commandResult,
+        Dictionary<string, string> diagnostics,
+        string key)
+    {
+        if (commandResult.Diagnostics.TryGetValue(key, out string? diagnosticValue))
+        {
+            diagnostics[key] = diagnosticValue;
+        }
+        else if (commandResult.Metadata.TryGetValue(key, out string? metadataValue))
+        {
+            diagnostics[key] = metadataValue;
+        }
     }
 
     private static Dictionary<string, string> BuildDiagnostics(WebGlRuntimeDiagnostics? diagnostics)

@@ -9,6 +9,8 @@ Move/duplicate golden oracle scenarios into external JSON corpus with stable exp
 Repository scope: **Economy**  
 Priority: **P1**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Create golden oracle pack files for current cases.
@@ -21,6 +23,14 @@ Priority: **P1**
 - oracle-corpus/*.json
 - oracle-report.json
 - negative diff proof
+
+## Executed proof
+
+- `proof/SB09/oracle-corpus/economic-oracles.json` preserves the external corpus used by the GoldenOracleSuite.
+- `proof/SB09/oracle-report.json` records the passing corpus report for 7 oracle cases.
+- `proof/SB09/negative-diff-proof.json` records the broken expected-value diff at `metrics.resourceTotal`.
+- `proof/SB09/oracle-corpus-tests.txt` passes 3/3 GoldenOracleSuite tests.
+- `proof/SB09/simulationsandbox-build.txt` builds `CanDoItAll.Economy.SimulationSandbox` with 0 warnings and 0 errors.
 
 
 ## Hard gates

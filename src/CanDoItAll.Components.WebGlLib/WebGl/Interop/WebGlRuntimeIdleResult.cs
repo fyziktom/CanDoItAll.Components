@@ -18,5 +18,15 @@ public sealed class WebGlRuntimeIdleResult
 
     public List<string> Blockers { get; set; } = [];
 
+    public bool SemanticIdle { get; set; }
+
+    public bool VisualIdle { get; set; }
+
+    public bool FinalRenderDrained { get; set; }
+
+    public List<string> SemanticBlockers { get; set; } = [];
+
+    public List<string> VisualBlockers { get; set; } = [];
+
     public WebGlRuntimeDiagnostics? Diagnostics { get; set; }
 }

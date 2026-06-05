@@ -9,6 +9,8 @@ Render exchange/investment scenario without new domain-specific Components conce
 Repository scope: **Both repos**  
 Priority: **P1**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Map portfolios/entities/exchange edges to generic objects, links, symbols and stages.
@@ -20,6 +22,15 @@ Priority: **P1**
 
 - browser observer proof for third scenario
 - generic validation passes
+
+## Executed proof
+
+- `proof/SB12/failing-first-bridge-bound-readiness.txt` records the pre-change bridge-bound visual mapping diagnostics and missing browser observer exercise.
+- `proof/SB12/transcripts/generic-visualization-tests.txt` passes 42/42 focused Economy tests for renderer binding, strict generic projection, readiness classification, and SB11 visual event coverage.
+- `proof/SB12/transcripts/real-run-export.txt` exports the real `multi-goods-elite` artifacts, including `webgl.run-document.json`.
+- `proof/SB12/browser/multi-goods-browser-assertions.json` verifies the generated run id, 23 objects, 12 links, one generic stage, matching document hashes, runtime idle, final positions, no genericity failures, and no disallowed console messages.
+- `proof/SB12/browser/multi-goods-browser-after.png` and `proof/SB12/browser/multi-goods-browser-console.log` provide the required browser screenshot and console evidence.
+- `proof/SB12/transcripts/webgl-sandbox-build.txt` builds `CanDoItAll.Components.WebGlSandbox` with 0 warnings and 0 errors.
 
 
 ## Hard gates

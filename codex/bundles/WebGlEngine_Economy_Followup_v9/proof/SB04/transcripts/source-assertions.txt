@@ -1,0 +1,36 @@
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserRuntimeContracts.cs:30: ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:25: public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:34: return await sceneView.ApplyCommandBatchAndWaitAsync(
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:69: bool appliedWithRuntimeIdleWait = ShouldUseApplyCommandBatchAndWait();
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:71: ? await runtime.ApplyCommandBatchAndWaitAsync(
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:73: BuildRuntimeIdleWaitOptions($"command-batch:{frameApplyResult.FrameIndex}"),
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:303: private bool ShouldUseApplyCommandBatchAndWait()
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:309: WebGlRunRuntimeIdleWaitOptions waitOptions = BuildRuntimeIdleWaitOptions(reasonSuffix);
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:313: private WebGlRunRuntimeIdleWaitOptions BuildRuntimeIdleWaitOptions(string reasonSuffix)
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:554: snapshot.Diagnostics["commandLifecycleState"] = commandResult.LifecycleState;
+repo://src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs:559: CopyCommandDiagnostic(commandResult, snapshot.Diagnostics, "runtimeIdleBlockers");
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:73: Assert.Single(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:91: public async Task Adapter_default_apply_uses_command_batch_and_wait_for_settled_result()
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:105: ["runtimeIdleBlockers"] = ""
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:118: Assert.Single(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:130: public async Task Adapter_configured_idle_policy_preserves_scheduled_result_and_idle_blockers()
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:144: ["runtimeIdleBlockers"] = "motion:active:1"
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:171: Assert.Empty(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:179: Assert.Equal("motion:active:1", result.RuntimeSnapshot.Diagnostics["runtimeIdleBlockers"]);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:219: Assert.Single(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:221: Assert.Equal(8, runtime.AppliedAndWaitBatches[0].Stages.Count);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:290: Assert.Single(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:312: Assert.Empty(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:341: Assert.Empty(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:365: Assert.Empty(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:390: Assert.Empty(runtime.AppliedAndWaitBatches);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:415: Assert.Equal(2, runtime.AppliedAndWaitBatches.Count);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:418: Assert.Equal(["stage.first", "stage.second"], runtime.AppliedAndWaitBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:543: Assert.Equal(2, runtime.AppliedAndWaitBatches.Count);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:595: Assert.Equal(2, runtime.AppliedAndWaitBatches.Count);
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:598: Assert.Equal(["stage.first", "stage.second"], runtime.AppliedAndWaitBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:667: public List<WebGlSceneCommandBatch> AppliedAndWaitBatches { get; } = [];
+repo://tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs:711: AppliedAndWaitBatches.Add(batch);
+repo://codex/bundles/WebGlEngine_Economy_Followup_v9/proof/SB04/browser/command-batch-lifecycle-proof.mjs:146: barrierPolicy: "wait-for-active-motions",
+repo://codex/bundles/WebGlEngine_Economy_Followup_v9/proof/SB04/browser/command-batch-lifecycle-proof.mjs:189: nonWaitingResultScheduled: proof.scheduledResult?.success === true &&
+repo://codex/bundles/WebGlEngine_Economy_Followup_v9/proof/SB04/browser/command-batch-lifecycle-proof.mjs:196: waitingResultSettled: proof.settledResult?.success === true &&

@@ -14,6 +14,17 @@ public sealed class WebGlRunActionPlanValidationResult
 public sealed class WebGlRunActionPlanValidator
 {
     private readonly WebGlRunActionNormalizer actionNormalizer = new();
+    private readonly WebGlRunGenericBoundaryOptions boundaryOptions;
+
+    public WebGlRunActionPlanValidator()
+        : this(WebGlRunGenericBoundaryOptions.None)
+    {
+    }
+
+    public WebGlRunActionPlanValidator(WebGlRunGenericBoundaryOptions? boundaryOptions)
+    {
+        this.boundaryOptions = boundaryOptions ?? WebGlRunGenericBoundaryOptions.None;
+    }
 
     public WebGlRunActionPlanValidationResult Validate(WebGlRunActionPlan plan)
     {
@@ -26,7 +37,7 @@ public sealed class WebGlRunActionPlanValidator
 
         result.Errors.AddRange(plan.Errors);
         result.Warnings.AddRange(plan.Warnings);
-        WebGlRunDocumentValidator.ValidateDomainTerms("plan.metadata", plan.Metadata, result.Errors);
+        WebGlRunDocumentValidator.ValidateDomainTerms("plan.metadata", plan.Metadata, result.Errors, boundaryOptions: boundaryOptions);
         ValidateActions(plan.Actions, result);
         ValidateDirectCommands(plan, result);
         return result;
@@ -40,14 +51,15 @@ public sealed class WebGlRunActionPlanValidator
             WebGlRunActionNormalizationResult normalization = actionNormalizer.Normalize(action);
             result.Errors.AddRange(normalization.Errors);
             result.Warnings.AddRange(normalization.Warnings);
-            ValidateActionTree(normalization.Action, actionIds, result);
+            ValidateActionTree(normalization.Action, actionIds, result, boundaryOptions);
         }
     }
 
     private static void ValidateActionTree(
         WebGlRunAction action,
         HashSet<string> actionIds,
-        WebGlRunActionPlanValidationResult result)
+        WebGlRunActionPlanValidationResult result,
+        WebGlRunGenericBoundaryOptions boundaryOptions)
     {
         if (string.IsNullOrWhiteSpace(action.ActionId))
         {
@@ -58,14 +70,15 @@ public sealed class WebGlRunActionPlanValidator
             result.Errors.Add($"Duplicate action id '{action.ActionId}'.");
         }
 
-        WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.kind", action.ActionKind, result.Errors);
-        WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.id", action.ActionId, result.Errors);
-        WebGlRunDocumentValidator.ValidateDomainTerms($"action:{action.ActionId}.metadata", action.Metadata, result.Errors);
+        WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.kind", action.ActionKind, result.Errors, boundaryOptions);
+        WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.id", action.ActionId, result.Errors, boundaryOptions);
+        WebGlRunDocumentValidator.ValidateDomainTerms($"action:{action.ActionId}.metadata", action.Metadata, result.Errors, boundaryOptions: boundaryOptions);
         WebGlRunDocumentValidator.ValidateDomainTerms(
             $"action:{action.ActionId}.parameters",
             action.Parameters,
             result.Errors,
-            allowSourceProvenance: false);
+            allowSourceProvenance: false,
+            boundaryOptions: boundaryOptions);
         if (!double.IsFinite(action.StartsAtSeconds) || action.StartsAtSeconds < 0)
         {
             result.Errors.Add($"Action '{action.ActionId}' start time must be finite and non-negative.");
@@ -88,15 +101,15 @@ public sealed class WebGlRunActionPlanValidator
 
         foreach (WebGlRunAction child in action.Steps)
         {
-            ValidateActionTree(child, actionIds, result);
+            ValidateActionTree(child, actionIds, result, boundaryOptions);
         }
     }
 
-    private static void ValidateDirectCommands(WebGlRunActionPlan plan, WebGlRunActionPlanValidationResult result)
+    private void ValidateDirectCommands(WebGlRunActionPlan plan, WebGlRunActionPlanValidationResult result)
     {
         foreach (WebGlScenePatch patch in plan.Patches)
         {
-            WebGlRunDocumentValidator.ValidateDomainTerms("plan.patch.metadata", patch.Metadata, result.Errors);
+            WebGlRunDocumentValidator.ValidateDomainTerms("plan.patch.metadata", patch.Metadata, result.Errors, boundaryOptions: boundaryOptions);
         }
 
         foreach (WebGlObjectMotionCommand motion in plan.Motions)
@@ -106,7 +119,7 @@ public sealed class WebGlRunActionPlanValidator
                 result.Errors.Add("Direct plan motion requires an object id.");
             }
 
-            WebGlRunDocumentValidator.ValidateDomainTerms($"plan.motion:{motion.MotionId}.metadata", motion.Metadata, result.Errors);
+            WebGlRunDocumentValidator.ValidateDomainTerms($"plan.motion:{motion.MotionId}.metadata", motion.Metadata, result.Errors, boundaryOptions: boundaryOptions);
         }
     }
 

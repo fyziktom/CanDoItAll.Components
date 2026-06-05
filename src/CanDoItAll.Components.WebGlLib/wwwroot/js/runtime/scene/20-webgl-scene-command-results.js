@@ -76,6 +76,7 @@ export function setCommandLifecycle(result, lifecycleState, settled = lifecycleS
 
 export function completeCommandResult(state, result) {
     const existingDiagnostics = result.diagnostics || {};
+    const runtimeStopGeneration = String(state?.runtimeStopGeneration || state?.diagnostics?.runtimeStopGeneration || 0);
     result.success = result.errors.length === 0;
     result.succeeded = result.success;
     if (!result.success) {
@@ -89,9 +90,14 @@ export function completeCommandResult(state, result) {
     result.revision = resolveSceneRevision(state?.sceneModel);
     result.affectedObjectIds = unique(result.affectedObjectIds);
     result.affectedLinkIds = unique(result.affectedLinkIds);
+    result.metadata = {
+        ...(result.metadata || {}),
+        runtimeStopGeneration
+    };
     result.diagnostics = {
         ...existingDiagnostics,
         renderCount: String(state?.diagnostics?.renderCount || 0),
+        runtimeStopGeneration,
         activeMotionCount: String(state?.motions?.size || 0),
         queuedMotionCount: String(countQueuedMotions(state)),
         queuedCommandStageCount: String(state?.diagnostics?.queuedCommandStageCount || 0),

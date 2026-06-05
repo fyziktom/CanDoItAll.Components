@@ -1,5 +1,15 @@
 # SB01 — Current-state and v8 closure audit
 
+## Execution status
+
+Status: **Completed** on 2026-06-04.
+
+Proof:
+
+- `proof/SB01/closure-matrix.md`
+- `proof/SB01/proof-hygiene-report.json`
+- `proof/SB01/semantic-invariants.md`
+
 ## Goal
 
 Audit all v8 requirements against current Components/Economy code and evidence.

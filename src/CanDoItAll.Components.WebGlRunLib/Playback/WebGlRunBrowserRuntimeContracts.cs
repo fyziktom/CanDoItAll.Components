@@ -27,6 +27,12 @@ public interface IWebGlRunBrowserRuntime
         WebGlSceneCommandBatch batch,
         CancellationToken cancellationToken = default);
 
+    ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+        WebGlSceneCommandBatch batch,
+        WebGlRunRuntimeIdleWaitOptions options,
+        bool requireRuntimeIdle = true,
+        CancellationToken cancellationToken = default);
+
     ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default);
 
     ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(

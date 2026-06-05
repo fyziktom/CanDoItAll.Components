@@ -6,6 +6,7 @@ export function createRenderScheduler(state, renderFrame) {
             state.renderRequested = true;
             state.renderReason = reason;
             state.diagnostics.lastScheduledReason = reason;
+            state.diagnostics.finalRenderDrained = false;
             if (state.isRenderingFrame || state.animationHandle) {
                 return;
             }
@@ -19,6 +20,7 @@ export function createRenderScheduler(state, renderFrame) {
             }
 
             state.diagnostics.isRenderLoopActive = false;
+            state.diagnostics.finalRenderDrained = true;
         }
     };
 }
@@ -89,6 +91,7 @@ function requestNextFrame(state, renderFrame) {
         }
 
         state.diagnostics.isRenderLoopActive = false;
+        state.diagnostics.finalRenderDrained = true;
         state.diagnostics.idleSinceTimestamp = performance.now();
     };
     state.animationHandle = requestAnimationFrame(loop);

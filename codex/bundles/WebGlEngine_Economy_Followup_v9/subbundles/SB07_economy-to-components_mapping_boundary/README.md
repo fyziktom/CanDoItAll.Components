@@ -9,6 +9,8 @@ Ensure Economy bridge maps domain terms only into generic visual/run primitives 
 Repository scope: **Both repos**  
 Priority: **P1**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Review every EconomyWebGl* projector metadata key.
@@ -20,6 +22,14 @@ Priority: **P1**
 
 - mapping-boundary-report.md
 - WebGlRunDocumentValidator passing strict generic boundary
+
+## Executed proof
+
+- `proof/SB07/mapping-boundary-report.md` documents every `EconomyWebGl*` projector metadata surface and the allowed generic mapping vocabulary.
+- `proof/SB07/economy-webgl-boundary-tests.txt` passes 38/38 focused Economy WebGL bridge tests.
+- `proof/SB07/webglrunlib-tests.txt` passes 68/68 Components WebGlRunLib tests.
+- `proof/SB07/webglbridge-build.txt` builds `CanDoItAll.Economy.Simulation.WebGlBridge` with 0 warnings and 0 errors.
+- `proof/SB07/economy-strict-mapping-tests.txt` records failing-first evidence where raw diagnostics leaked `well`/`market` into non-source metadata before the fix.
 
 
 ## Hard gates

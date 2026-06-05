@@ -11,11 +11,29 @@ public sealed class WebGlRunDocumentValidationResult
     public bool IsValid => Errors.Count == 0;
 }
 
+public sealed class WebGlRunGenericBoundaryOptions
+{
+    public static WebGlRunGenericBoundaryOptions None { get; } = new();
+
+    public IEnumerable<string> ForbiddenDomainTerms { get; init; } = [];
+}
+
 public sealed class WebGlRunDocumentValidator
 {
     public const string CurrentSchemaVersion = "webgl-run-document/v1";
 
     private readonly WebGlRunTimelineValidator timelineValidator = new();
+    private readonly WebGlRunGenericBoundaryOptions boundaryOptions;
+
+    public WebGlRunDocumentValidator()
+        : this(WebGlRunGenericBoundaryOptions.None)
+    {
+    }
+
+    public WebGlRunDocumentValidator(WebGlRunGenericBoundaryOptions? boundaryOptions)
+    {
+        this.boundaryOptions = boundaryOptions ?? WebGlRunGenericBoundaryOptions.None;
+    }
 
     public WebGlRunDocumentValidationResult Validate(WebGlRunDocument document)
     {
@@ -31,7 +49,7 @@ public sealed class WebGlRunDocumentValidator
             result.Errors.Add("Run id is required.");
         }
 
-        ValidateDomainTerms("document.metadata", document.Metadata, result.Errors);
+        ValidateDomainTerms("document.metadata", document.Metadata, result.Errors, boundaryOptions: boundaryOptions);
         WebGlSceneDocumentValidationResult sceneValidation = WebGlSceneDocumentSerializer.Validate(document.InitialScene);
         foreach (string error in sceneValidation.Errors)
         {
@@ -49,11 +67,14 @@ public sealed class WebGlRunDocumentValidator
             result.Errors.Add(error);
         }
 
-        ValidateFrames(document.Timeline.Frames, result);
+        ValidateFrames(document.Timeline.Frames, result, boundaryOptions);
         return result;
     }
 
-    private static void ValidateFrames(IEnumerable<WebGlRunFrame> frames, WebGlRunDocumentValidationResult result)
+    private static void ValidateFrames(
+        IEnumerable<WebGlRunFrame> frames,
+        WebGlRunDocumentValidationResult result,
+        WebGlRunGenericBoundaryOptions boundaryOptions)
     {
         foreach (WebGlRunFrame frame in frames)
         {
@@ -62,7 +83,7 @@ public sealed class WebGlRunDocumentValidator
                 result.Errors.Add($"Frame '{frame.Index}' time must be finite and non-negative.");
             }
 
-            ValidateDomainTerms($"frame:{frame.Index}.metadata", frame.Metadata, result.Errors);
+            ValidateDomainTerms($"frame:{frame.Index}.metadata", frame.Metadata, result.Errors, boundaryOptions: boundaryOptions);
             if (WebGlRunFrameCommandPolicy.HasMixedDirectAndStagedCommands(frame))
             {
                 result.Errors.Add(WebGlRunFrameCommandPolicy.CreateMixedDirectAndStagedCommandsError(frame.Index));
@@ -77,7 +98,7 @@ public sealed class WebGlRunDocumentValidator
                 }
                 else
                 {
-                    ValidateDomainValue($"stage:{stage.StageId}.id", stage.StageId, result.Errors);
+                    ValidateDomainValue($"stage:{stage.StageId}.id", stage.StageId, result.Errors, boundaryOptions);
                     if (!stageIds.Add(stage.StageId))
                     {
                         result.Errors.Add($"Frame '{frame.Index}' contains duplicate stage id '{stage.StageId}'.");
@@ -94,7 +115,7 @@ public sealed class WebGlRunDocumentValidator
                     result.Errors.Add($"Stage '{stage.StageId}' wait seconds must be finite and non-negative.");
                 }
 
-                ValidateDomainTerms($"stage:{stage.StageId}.metadata", stage.Metadata, result.Errors);
+                ValidateDomainTerms($"stage:{stage.StageId}.metadata", stage.Metadata, result.Errors, boundaryOptions: boundaryOptions);
                 ValidateBarrier(stage, result.Errors);
             }
         }
@@ -104,7 +125,8 @@ public sealed class WebGlRunDocumentValidator
         string scope,
         IReadOnlyDictionary<string, string> metadata,
         List<string> errors,
-        bool allowSourceProvenance = true)
+        bool allowSourceProvenance = true,
+        WebGlRunGenericBoundaryOptions? boundaryOptions = null)
     {
         foreach (KeyValuePair<string, string> item in metadata)
         {
@@ -114,19 +136,23 @@ public sealed class WebGlRunDocumentValidator
                 continue;
             }
 
-            ValidateDomainValue($"{scope}.{item.Key}", item.Key, errors);
-            ValidateDomainValue($"{scope}.{item.Key}.value", item.Value, errors);
+            ValidateDomainValue($"{scope}.{item.Key}", item.Key, errors, boundaryOptions);
+            ValidateDomainValue($"{scope}.{item.Key}.value", item.Value, errors, boundaryOptions);
         }
     }
 
-    internal static void ValidateDomainValue(string scope, string value, List<string> errors)
+    internal static void ValidateDomainValue(
+        string scope,
+        string value,
+        List<string> errors,
+        WebGlRunGenericBoundaryOptions? boundaryOptions = null)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
             return;
         }
 
-        foreach (string term in WebGlRunGenericBoundaryPolicy.ForbiddenDomainTerms)
+        foreach (string term in WebGlRunGenericBoundaryPolicy.GetForbiddenDomainTerms(boundaryOptions))
         {
             if (value.Contains(term, StringComparison.OrdinalIgnoreCase))
             {
@@ -197,22 +223,11 @@ internal static class WebGlRunGenericBoundaryPolicy
         }
     }
 
-    public static readonly string[] ForbiddenDomainTerms =
-    [
-        "economy",
-        "ledger",
-        "market",
-        "production-line",
-        "productionline",
-        "work-order",
-        "workorder",
-        "machine",
-        "account",
-        "buyer",
-        "seller",
-        "price",
-        "vernon"
-    ];
+    public static string[] GetForbiddenDomainTerms(WebGlRunGenericBoundaryOptions? options)
+        => [.. (options ?? WebGlRunGenericBoundaryOptions.None)
+            .ForbiddenDomainTerms
+            .Where(static term => !string.IsNullOrWhiteSpace(term))
+            .Distinct(StringComparer.OrdinalIgnoreCase)];
 
     public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
     {

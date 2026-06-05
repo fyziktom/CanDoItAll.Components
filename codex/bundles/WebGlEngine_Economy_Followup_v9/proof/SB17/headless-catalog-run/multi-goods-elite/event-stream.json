@@ -1,0 +1,816 @@
+{
+  "schemaVersion": "economy-headless-event-stream/v1",
+  "eventStream": {
+    "scenarioId": "probe.multi-goods-elite",
+    "events": [
+      {
+        "eventId": "event.exchange.grain-to-household",
+        "kind": "actor.trade.sell",
+        "eventKind": "actor.trade.sell",
+        "stepIndex": 3,
+        "actorId": "producer.grain",
+        "targetActorId": "consumer.household",
+        "placeId": "place.neighborhood",
+        "resourceId": "grain",
+        "quantity": 14,
+        "durationSeconds": 0,
+        "actorIds": [
+          "producer.grain",
+          "consumer.household"
+        ],
+        "resourceIds": [
+          "grain"
+        ],
+        "sourceId": "producer.grain",
+        "targetId": "consumer.household",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 14,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 10
+        },
+        "participants": [
+          {
+            "participantId": "consumer.household",
+            "role": "target-actor",
+            "actorId": "consumer.household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "grain",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "grain",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.grain-yard",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.grain-yard",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.neighborhood",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.neighborhood",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.grain",
+            "role": "actor",
+            "actorId": "producer.grain",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "exchangeLeg": "food-market",
+          "accessCost": "1.5",
+          "actorGroup": "small-entity",
+          "canonicalEventKind": "actor.trade.sell",
+          "sourceLocationId": "place.grain-yard",
+          "targetLocationId": "place.neighborhood",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.exchange.grain-to-household",
+          "expansionRuleHash": "cdba7e7561c0d1d9d55dbc79eda9f1f7ce81eb44d6e231113060e6243db99f0d",
+          "eventOrder": "0"
+        }
+      },
+      {
+        "eventId": "event.exchange.tools-to-grain-producer",
+        "kind": "actor.trade.sell",
+        "eventKind": "actor.trade.sell",
+        "stepIndex": 3,
+        "actorId": "producer.tools",
+        "targetActorId": "producer.grain",
+        "placeId": "place.grain-yard",
+        "resourceId": "tools",
+        "quantity": 3,
+        "durationSeconds": 0,
+        "actorIds": [
+          "producer.tools",
+          "producer.grain"
+        ],
+        "resourceIds": [
+          "tools"
+        ],
+        "sourceId": "producer.tools",
+        "targetId": "producer.grain",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 3,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 20
+        },
+        "participants": [
+          {
+            "participantId": "place.grain-yard",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.grain-yard",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.workshop",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.workshop",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.grain",
+            "role": "target-actor",
+            "actorId": "producer.grain",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.tools",
+            "role": "actor",
+            "actorId": "producer.tools",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "tools",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "tools",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "exchangeLeg": "tool-market",
+          "accessCost": "2.0",
+          "actorGroup": "producer",
+          "canonicalEventKind": "actor.trade.sell",
+          "sourceLocationId": "place.workshop",
+          "targetLocationId": "place.grain-yard",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.exchange.tools-to-grain-producer",
+          "expansionRuleHash": "cdba7e7561c0d1d9d55dbc79eda9f1f7ce81eb44d6e231113060e6243db99f0d",
+          "eventOrder": "1"
+        }
+      },
+      {
+        "eventId": "event.capital.elite-funds-toolmaker",
+        "kind": "actor.resource.contribution",
+        "eventKind": "actor.resource.contribution",
+        "stepIndex": 3,
+        "actorId": "investor.elite",
+        "targetActorId": "producer.tools",
+        "placeId": "place.workshop",
+        "resourceId": "credit",
+        "quantity": 45,
+        "durationSeconds": 0,
+        "actorIds": [
+          "investor.elite",
+          "producer.tools"
+        ],
+        "resourceIds": [
+          "credit"
+        ],
+        "sourceId": "investor.elite",
+        "targetId": "producer.tools",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 45,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 30
+        },
+        "participants": [
+          {
+            "participantId": "credit",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "credit",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "investor.elite",
+            "role": "actor",
+            "actorId": "investor.elite",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.capital-office",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.capital-office",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.workshop",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.workshop",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.tools",
+            "role": "target-actor",
+            "actorId": "producer.tools",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "capitalKind": "loan-like-funding",
+          "actorGroup": "elite-capital",
+          "canonicalEventKind": "actor.resource.contribution",
+          "sourceLocationId": "place.capital-office",
+          "targetLocationId": "place.workshop",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.capital.elite-funds-toolmaker",
+          "expansionRuleHash": "0b5c0462957661ffc289eb5997e5d57de8874493584d747bb8d35fcc4d134d7f",
+          "eventOrder": "2"
+        }
+      },
+      {
+        "eventId": "event.capital.toolmaker-issues-equity",
+        "kind": "actor.claim.issue",
+        "eventKind": "actor.claim.issue",
+        "stepIndex": 3,
+        "actorId": "producer.tools",
+        "targetActorId": "investor.elite",
+        "placeId": "place.capital-office",
+        "resourceId": "equity-share",
+        "quantity": 15,
+        "durationSeconds": 0,
+        "actorIds": [
+          "producer.tools",
+          "investor.elite"
+        ],
+        "resourceIds": [
+          "equity-share"
+        ],
+        "sourceId": "producer.tools",
+        "targetId": "investor.elite",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 15,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 40
+        },
+        "participants": [
+          {
+            "participantId": "equity-share",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "equity-share",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "investor.elite",
+            "role": "target-actor",
+            "actorId": "investor.elite",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.capital-office",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.capital-office",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.workshop",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.workshop",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.tools",
+            "role": "actor",
+            "actorId": "producer.tools",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "capitalKind": "equity-like-claim",
+          "actorGroup": "elite-capital",
+          "canonicalEventKind": "actor.claim.issue",
+          "sourceLocationId": "place.workshop",
+          "targetLocationId": "place.capital-office",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.capital.toolmaker-issues-equity",
+          "expansionRuleHash": "6145579fbad5a9d4f831c2be122b592b8c345306d785e2302f808a58a741d72e",
+          "eventOrder": "3"
+        }
+      },
+      {
+        "eventId": "event.capital.elite-funds-grain-producer",
+        "kind": "actor.resource.contribution",
+        "eventKind": "actor.resource.contribution",
+        "stepIndex": 3,
+        "actorId": "investor.elite",
+        "targetActorId": "producer.grain",
+        "placeId": "place.grain-yard",
+        "resourceId": "credit",
+        "quantity": 20,
+        "durationSeconds": 0,
+        "actorIds": [
+          "investor.elite",
+          "producer.grain"
+        ],
+        "resourceIds": [
+          "credit"
+        ],
+        "sourceId": "investor.elite",
+        "targetId": "producer.grain",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 20,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 50
+        },
+        "participants": [
+          {
+            "participantId": "credit",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "credit",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "investor.elite",
+            "role": "actor",
+            "actorId": "investor.elite",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.capital-office",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.capital-office",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.grain-yard",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.grain-yard",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.grain",
+            "role": "target-actor",
+            "actorId": "producer.grain",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "capitalKind": "working-capital-line",
+          "actorGroup": "elite-capital",
+          "canonicalEventKind": "actor.resource.contribution",
+          "sourceLocationId": "place.capital-office",
+          "targetLocationId": "place.grain-yard",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.capital.elite-funds-grain-producer",
+          "expansionRuleHash": "0b5c0462957661ffc289eb5997e5d57de8874493584d747bb8d35fcc4d134d7f",
+          "eventOrder": "4"
+        }
+      },
+      {
+        "eventId": "event.policy.progressive-fee",
+        "kind": "actor.tax-fee.pay",
+        "eventKind": "actor.tax-fee.pay",
+        "stepIndex": 3,
+        "actorId": "producer.tools",
+        "targetActorId": "fund.public",
+        "placeId": "place.policy-hall",
+        "resourceId": "credit",
+        "quantity": 6,
+        "durationSeconds": 0,
+        "actorIds": [
+          "producer.tools",
+          "fund.public"
+        ],
+        "resourceIds": [
+          "credit"
+        ],
+        "sourceId": "producer.tools",
+        "targetId": "fund.public",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 6,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 60
+        },
+        "participants": [
+          {
+            "participantId": "credit",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "credit",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "fund.public",
+            "role": "target-actor",
+            "actorId": "fund.public",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.policy-hall",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.policy-hall",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.workshop",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.workshop",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.tools",
+            "role": "actor",
+            "actorId": "producer.tools",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "policyShock": "progressive-liquidity-fee",
+          "adminCost": "2",
+          "canonicalEventKind": "actor.tax-fee.pay",
+          "sourceLocationId": "place.workshop",
+          "targetLocationId": "place.policy-hall",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.policy.progressive-fee",
+          "expansionRuleHash": "698f86f591fc20a307dd0697830e24823e4ac05fd079c0fa1920113df8b4f48d",
+          "eventOrder": "5"
+        }
+      },
+      {
+        "eventId": "event.policy.unmet-demand-watch",
+        "kind": "rule.violation.detect",
+        "eventKind": "rule.violation.detect",
+        "stepIndex": 3,
+        "actorId": "institution.policy-board",
+        "targetActorId": "consumer.household",
+        "placeId": "place.neighborhood",
+        "resourceId": "grain",
+        "quantity": 1,
+        "durationSeconds": 0,
+        "actorIds": [
+          "institution.policy-board",
+          "consumer.household"
+        ],
+        "resourceIds": [
+          "grain"
+        ],
+        "sourceId": "institution.policy-board",
+        "targetId": "consumer.household",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 1,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 70
+        },
+        "participants": [
+          {
+            "participantId": "consumer.household",
+            "role": "target-actor",
+            "actorId": "consumer.household",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "grain",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "grain",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "institution.policy-board",
+            "role": "actor",
+            "actorId": "institution.policy-board",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.neighborhood",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.neighborhood",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.policy-hall",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.policy-hall",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "policyShock": "unmet-demand-watch",
+          "canonicalEventKind": "rule.violation.detect",
+          "sourceLocationId": "place.policy-hall",
+          "targetLocationId": "place.neighborhood",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.policy.unmet-demand-watch",
+          "expansionRuleHash": "400c639fcf15bfe56a9f1cfbce77d1fd0c4a9688268900a81d0eec0c9687a9ab",
+          "eventOrder": "6"
+        }
+      },
+      {
+        "eventId": "event.relationship.elite-dependency",
+        "kind": "actor.obligation.create",
+        "eventKind": "actor.obligation.create",
+        "stepIndex": 3,
+        "actorId": "investor.elite",
+        "targetActorId": "producer.tools",
+        "placeId": "place.workshop",
+        "resourceId": "credit",
+        "quantity": 40,
+        "durationSeconds": 0,
+        "actorIds": [
+          "investor.elite",
+          "producer.tools"
+        ],
+        "resourceIds": [
+          "credit"
+        ],
+        "sourceId": "investor.elite",
+        "targetId": "producer.tools",
+        "source": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "target": {
+          "kind": "",
+          "id": "",
+          "metadata": {}
+        },
+        "participantRefs": [],
+        "occurredAtUtc": "2026-01-04T00:00:00+00:00",
+        "duration": "00:00:00",
+        "magnitude": 40,
+        "timing": {
+          "stepIndex": 3,
+          "offset": "00:00:00",
+          "duration": "00:00:00",
+          "order": 80
+        },
+        "participants": [
+          {
+            "participantId": "credit",
+            "role": "resource",
+            "actorId": "",
+            "resourceId": "credit",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "investor.elite",
+            "role": "actor",
+            "actorId": "investor.elite",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.capital-office",
+            "role": "source-location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.capital-office",
+            "metadata": {}
+          },
+          {
+            "participantId": "place.workshop",
+            "role": "location",
+            "actorId": "",
+            "resourceId": "",
+            "locationId": "place.workshop",
+            "metadata": {}
+          },
+          {
+            "participantId": "producer.tools",
+            "role": "target-actor",
+            "actorId": "producer.tools",
+            "resourceId": "",
+            "locationId": "",
+            "metadata": {}
+          }
+        ],
+        "effects": [],
+        "storeResolutionPolicies": [],
+        "metadata": {
+          "relationshipKind": "capital-dependency",
+          "canonicalEventKind": "actor.obligation.create",
+          "sourceLocationId": "place.capital-office",
+          "targetLocationId": "place.workshop",
+          "expansion": "explicit",
+          "phase": "primary",
+          "expansionProfileId": "none",
+          "expansionProfileVersion": "v1",
+          "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+          "parentEventId": "event.relationship.elite-dependency",
+          "expansionRuleHash": "d74df4ff13348d5e033b12cee08fb891e3327a3b254ad59cc16fc3cefd07535b",
+          "eventOrder": "7"
+        }
+      }
+    ],
+    "metadata": {
+      "definitionHash": "6d3cbdc00aa7fac9286dc79c6a2ddfcc01eb0fe167ce14de5de5c09413540927",
+      "experimentMode": "research-grade",
+      "expansionProfileId": "none",
+      "expansionProfileVersion": "v1",
+      "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+      "expander": "SimulationBehaviorExpander"
+    }
+  }
+}

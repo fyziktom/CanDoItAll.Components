@@ -159,48 +159,56 @@ function applyObjectPatch(state, patch, result) {
         return false;
     }
 
-    const transformChanged = patch.position !== undefined || patch.rotation !== undefined || patch.scale !== undefined;
-    const sizeChanged = patch.size !== undefined;
-    const symbolOnlyChanged = patch.symbols !== undefined &&
-        patch.assetId === undefined &&
-        patch.color === undefined &&
-        patch.metadata === undefined &&
+    const hasPosition = hasPatchValue(patch.position);
+    const hasRotation = hasPatchValue(patch.rotation);
+    const hasScale = hasPatchValue(patch.scale);
+    const hasSize = hasPatchValue(patch.size);
+    const hasAssetId = hasPatchValue(patch.assetId);
+    const hasColor = hasPatchValue(patch.color);
+    const hasSymbols = hasPatchValue(patch.symbols);
+    const hasMetadata = hasPatchValue(patch.metadata);
+    const transformChanged = hasPosition || hasRotation || hasScale;
+    const sizeChanged = hasSize;
+    const symbolOnlyChanged = hasSymbols &&
+        !hasAssetId &&
+        !hasColor &&
+        !hasMetadata &&
         !transformChanged &&
         !sizeChanged;
-    const visualChanged = patch.assetId !== undefined ||
-        patch.color !== undefined ||
-        patch.symbols !== undefined ||
-        patch.metadata !== undefined;
+    const visualChanged = hasAssetId ||
+        hasColor ||
+        hasSymbols ||
+        hasMetadata;
     state.diagnostics.patchedObjectCount = (state.diagnostics.patchedObjectCount || 0) + 1;
-    if (patch.position !== undefined) {
+    if (hasPosition) {
         sceneObject.position = normalizePosition(patch.position);
     }
 
-    if (patch.rotation !== undefined) {
+    if (hasRotation) {
         sceneObject.rotation = normalizeVector(patch.rotation, sceneObject.rotation);
     }
 
-    if (patch.scale !== undefined) {
+    if (hasScale) {
         sceneObject.scale = normalizeVector(patch.scale, sceneObject.scale);
     }
 
-    if (patch.size !== undefined) {
+    if (hasSize) {
         sceneObject.size = normalizeVector(patch.size, sceneObject.size);
     }
 
-    if (patch.assetId !== undefined) {
+    if (hasAssetId) {
         sceneObject.assetId = patch.assetId || "";
     }
 
-    if (patch.color !== undefined) {
+    if (hasColor) {
         sceneObject.color = patch.color || sceneObject.color;
     }
 
-    if (patch.symbols !== undefined) {
+    if (hasSymbols) {
         sceneObject.symbols = Array.isArray(patch.symbols) ? patch.symbols : [];
     }
 
-    if (patch.metadata !== undefined) {
+    if (hasMetadata) {
         sceneObject.metadata = patch.metadata || {};
     }
 
@@ -219,7 +227,7 @@ function applyObjectPatch(state, patch, result) {
             updateObjectRuntimeTransform(state, patch.objectId, false);
         }
 
-        if (patch.symbols !== undefined) {
+        if (hasSymbols) {
             rebuildSymbolsForObject(state, patch.objectId);
         } else if (sizeChanged && !transformChanged) {
             syncSymbolPositionsForObject(state, patch.objectId);
@@ -292,6 +300,10 @@ function normalizePatch(patch) {
 function normalizePosition(value) {
     const vector = normalizeVector(value, { x: 0, y: 0, z: 0 });
     return { x: round(vector.x, 3), y: round(vector.y, 3), z: round(vector.z, 3) };
+}
+
+function hasPatchValue(value) {
+    return value !== undefined && value !== null;
 }
 
 function normalizeVector(value, fallback) {

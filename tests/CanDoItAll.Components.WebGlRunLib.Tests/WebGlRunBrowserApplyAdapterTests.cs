@@ -70,7 +70,10 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.True(result.Success);
         Assert.True(result.AppliedInitialScene);
         Assert.Single(runtime.ImportedScenes);
-        Assert.Single(runtime.AppliedBatches);
+        Assert.Single(runtime.AppliedAndWaitBatches);
+        Assert.Empty(runtime.AppliedBatches);
+        Assert.True(result.CommandBatchResult?.Settled);
+        Assert.Equal(WebGlSceneCommandLifecycleStates.Settled, result.CommandBatchResult?.LifecycleState);
         Assert.Equal(1, result.AppliedStageCount);
         Assert.Equal(2, result.AppliedPatchCount);
         Assert.Equal(2, result.AppliedMotionCount);
@@ -82,6 +85,98 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Equal(WebGlSceneStageBarrierPolicies.WaitForObjectMotions, result.RuntimeSnapshot.StageBarrier.Policy);
         Assert.Contains("active:actor", result.RuntimeSnapshot.StageBarrier.Blockers);
         Assert.Single(result.RuntimeSnapshot.CommandJournalTail);
+    }
+
+    [Fact]
+    public async Task Adapter_default_apply_uses_command_batch_and_wait_for_settled_result()
+    {
+        var runtime = new RecordingBrowserRuntime
+        {
+            BatchResult = new()
+            {
+                Success = true,
+                CommandId = "run-frame:6",
+                LifecycleState = WebGlSceneCommandLifecycleStates.Settled,
+                Settled = true,
+                Diagnostics =
+                {
+                    ["runtimeIdle"] = "true",
+                    ["runtimeIdleTimedOut"] = "false",
+                    ["runtimeIdleBlockers"] = ""
+                }
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(runtime);
+
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(new WebGlRunFrameApplyResult
+        {
+            FrameIndex = 6,
+            CommandBatch = new() { BatchId = "run-frame:6" }
+        });
+
+        Assert.True(result.Success);
+        Assert.Single(runtime.AppliedAndWaitBatches);
+        Assert.Empty(runtime.AppliedBatches);
+        Assert.Single(runtime.IdleWaits);
+        Assert.Equal("playback-apply:command-batch:6", runtime.IdleWaits[0].Reason);
+        Assert.Equal(WebGlSceneCommandLifecycleStates.Settled, result.CommandBatchResult?.LifecycleState);
+        Assert.True(result.CommandBatchResult?.Settled);
+        Assert.Equal(WebGlSceneCommandLifecycleStates.Settled, result.RuntimeSnapshot.Diagnostics["commandLifecycleState"]);
+        Assert.Equal(bool.TrueString, result.RuntimeSnapshot.Diagnostics["commandSettled"]);
+        Assert.Equal("true", result.RuntimeSnapshot.Diagnostics["runtimeIdle"]);
+    }
+
+    [Fact]
+    public async Task Adapter_configured_idle_policy_preserves_scheduled_result_and_idle_blockers()
+    {
+        var runtime = new RecordingBrowserRuntime
+        {
+            BatchResult = new()
+            {
+                Success = true,
+                CommandId = "run-frame:8",
+                LifecycleState = WebGlSceneCommandLifecycleStates.Scheduled,
+                Settled = false,
+                Diagnostics =
+                {
+                    ["runtimeIdle"] = "false",
+                    ["runtimeIdleTimedOut"] = "false",
+                    ["runtimeIdleBlockers"] = "motion:active:1"
+                }
+            },
+            IdleResult = new()
+            {
+                Success = true,
+                Idle = true,
+                Reason = "test",
+                Diagnostics = new()
+            }
+        };
+        var adapter = new WebGlRunBrowserApplyAdapter(
+            runtime,
+            applyOptions: new()
+            {
+                RuntimeIdleWaitPolicy = WebGlRunRuntimeIdleWaitPolicies.AfterPlayback,
+                RuntimeIdle = new() { TimeoutMs = 321, PollIntervalMs = 9, Reason = "SB04-configured-idle" }
+            });
+
+        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(new WebGlRunFrameApplyResult
+        {
+            FrameIndex = 8,
+            CommandBatch = new() { BatchId = "run-frame:8" }
+        });
+
+        Assert.True(result.Success);
+        Assert.Single(runtime.AppliedBatches);
+        Assert.Empty(runtime.AppliedAndWaitBatches);
+        Assert.Single(runtime.IdleWaits);
+        Assert.Equal(321, runtime.IdleWaits[0].TimeoutMs);
+        Assert.Equal(WebGlSceneCommandLifecycleStates.Scheduled, result.CommandBatchResult?.LifecycleState);
+        Assert.False(result.CommandBatchResult?.Settled);
+        Assert.NotNull(result.RuntimeIdleResult);
+        Assert.Equal(WebGlSceneCommandLifecycleStates.Scheduled, result.RuntimeSnapshot.Diagnostics["commandLifecycleState"]);
+        Assert.Equal(bool.FalseString, result.RuntimeSnapshot.Diagnostics["commandSettled"]);
+        Assert.Equal("motion:active:1", result.RuntimeSnapshot.Diagnostics["runtimeIdleBlockers"]);
     }
 
     [Fact]
@@ -121,8 +216,9 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(frame);
 
         Assert.True(result.Success);
-        Assert.Single(runtime.AppliedBatches);
-        Assert.Equal(8, runtime.AppliedBatches[0].Stages.Count);
+        Assert.Single(runtime.AppliedAndWaitBatches);
+        Assert.Empty(runtime.AppliedBatches);
+        Assert.Equal(8, runtime.AppliedAndWaitBatches[0].Stages.Count);
         Assert.Equal("32", result.RuntimeSnapshot.Diagnostics["batchCommandCount"]);
         Assert.Equal("8", result.RuntimeSnapshot.Diagnostics["batchStageCount"]);
         Assert.Equal("40", result.RuntimeSnapshot.Diagnostics["commandCountBeforeNormalization"]);
@@ -191,7 +287,8 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Equal(WebGlRunBrowserApplyFailureReasons.BatchFailed, result.FailureReason);
         Assert.Contains("runtime rejected stage", result.Errors);
         Assert.Contains("stage failed", result.RuntimeSnapshot.RuntimeErrors);
-        Assert.Single(runtime.AppliedBatches);
+        Assert.Single(runtime.AppliedAndWaitBatches);
+        Assert.Empty(runtime.AppliedBatches);
     }
 
     [Fact]
@@ -212,6 +309,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Contains(result.Errors, error => error.Contains("no initial scene", StringComparison.OrdinalIgnoreCase));
         Assert.Empty(runtime.ImportedScenes);
         Assert.Empty(runtime.AppliedBatches);
+        Assert.Empty(runtime.AppliedAndWaitBatches);
     }
 
     [Fact]
@@ -240,6 +338,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Contains("import failed", result.Errors);
         Assert.Single(runtime.ImportedScenes);
         Assert.Empty(runtime.AppliedBatches);
+        Assert.Empty(runtime.AppliedAndWaitBatches);
     }
 
     [Fact]
@@ -263,6 +362,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Equal(WebGlRunBrowserApplyFailureReasons.PreApplyValidationFailed, result.FailureReason);
         Assert.Empty(runtime.ImportedScenes);
         Assert.Empty(runtime.AppliedBatches);
+        Assert.Empty(runtime.AppliedAndWaitBatches);
     }
 
     [Fact]
@@ -287,6 +387,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Equal(WebGlRunBrowserApplyFailureReasons.MultiFramePlaybackRequiresExplicitApply, result.FailureReason);
         Assert.Empty(runtime.ImportedScenes);
         Assert.Empty(runtime.AppliedBatches);
+        Assert.Empty(runtime.AppliedAndWaitBatches);
     }
 
     [Fact]
@@ -311,9 +412,10 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.True(result.Success);
         Assert.True(result.AppliedInitialScene);
         Assert.Single(runtime.ImportedScenes);
-        Assert.Equal(2, runtime.AppliedBatches.Count);
+        Assert.Equal(2, runtime.AppliedAndWaitBatches.Count);
+        Assert.Empty(runtime.AppliedBatches);
         Assert.Equal([1, 2], result.FrameResults.Select(frame => frame.FrameIndex).ToArray());
-        Assert.Equal(["stage.first", "stage.second"], runtime.AppliedBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
+        Assert.Equal(["stage.first", "stage.second"], runtime.AppliedAndWaitBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
     }
 
     [Fact]
@@ -438,7 +540,8 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Equal("3", result.FailureSnapshot.Diagnostics["targetFrameIndex"]);
         Assert.Equal("1", result.FailureSnapshot.Diagnostics["lastAppliedFrameIndex"]);
         Assert.Equal("2", result.FailureSnapshot.Diagnostics["failedFrameIndex"]);
-        Assert.Equal(2, runtime.AppliedBatches.Count);
+        Assert.Equal(2, runtime.AppliedAndWaitBatches.Count);
+        Assert.Empty(runtime.AppliedBatches);
         Assert.Equal([1, 2], result.FrameResults.Select(frame => frame.FrameIndex).ToArray());
         Assert.Contains("frame two failed", result.Errors);
     }
@@ -489,9 +592,10 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Equal("3", result.FailureSnapshot.Diagnostics["targetFrameIndex"]);
         Assert.Equal("2", result.FailureSnapshot.Diagnostics["lastAppliedFrameIndex"]);
         Assert.Equal("frame apply canceled", result.FailureSnapshot.Diagnostics["cancellationReason"]);
-        Assert.Equal(2, runtime.AppliedBatches.Count);
+        Assert.Equal(2, runtime.AppliedAndWaitBatches.Count);
+        Assert.Empty(runtime.AppliedBatches);
         Assert.Equal([1, 2], result.FrameResults.Select(frame => frame.FrameIndex).ToArray());
-        Assert.Equal(["stage.first", "stage.second"], runtime.AppliedBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
+        Assert.Equal(["stage.first", "stage.second"], runtime.AppliedAndWaitBatches.Select(batch => batch.Stages.Single().StageId).ToArray());
     }
 
     [Fact]
@@ -560,9 +664,16 @@ public sealed class WebGlRunBrowserApplyAdapterTests
 
         public List<WebGlSceneCommandBatch> AppliedBatches { get; } = [];
 
+        public List<WebGlSceneCommandBatch> AppliedAndWaitBatches { get; } = [];
+
         public WebGlSceneCommandResult ImportResult { get; set; } = new() { Success = true };
 
-        public WebGlSceneCommandBatchResult BatchResult { get; set; } = new() { Success = true };
+        public WebGlSceneCommandBatchResult BatchResult { get; set; } = new()
+        {
+            Success = true,
+            LifecycleState = WebGlSceneCommandLifecycleStates.Settled,
+            Settled = true
+        };
 
         public Queue<WebGlSceneCommandBatchResult> BatchResults { get; } = [];
 
@@ -587,6 +698,18 @@ public sealed class WebGlRunBrowserApplyAdapterTests
             CancellationToken cancellationToken = default)
         {
             AppliedBatches.Add(batch);
+            OnApplyBatch?.Invoke(batch);
+            return ValueTask.FromResult<WebGlSceneCommandBatchResult?>(BatchResults.Count > 0 ? BatchResults.Dequeue() : BatchResult);
+        }
+
+        public ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+            WebGlSceneCommandBatch batch,
+            WebGlRunRuntimeIdleWaitOptions options,
+            bool requireRuntimeIdle = true,
+            CancellationToken cancellationToken = default)
+        {
+            AppliedAndWaitBatches.Add(batch);
+            IdleWaits.Add(options);
             OnApplyBatch?.Invoke(batch);
             return ValueTask.FromResult<WebGlSceneCommandBatchResult?>(BatchResults.Count > 0 ? BatchResults.Dequeue() : BatchResult);
         }

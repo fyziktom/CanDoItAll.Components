@@ -1,0 +1,44 @@
+name: Domain Leakage Scan
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  generic-src-domain-leakage:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan generic src projects for configured domain terms
+        shell: pwsh
+        run: |
+          $configPath = "tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/domain-leakage-terms.json"
+          $config = Get-Content -Raw -Path $configPath | ConvertFrom-Json
+          $terms = @($config.forbiddenDomainTerms) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+          $roots = @(
+            "src/CanDoItAll.Components.WebGlLib",
+            "src/CanDoItAll.Components.WebGlRunLib"
+          )
+          $files = foreach ($root in $roots) {
+            Get-ChildItem -Path $root -Recurse -File -Include *.cs |
+              Where-Object { $_.FullName -notmatch '[\\/](bin|obj)[\\/]' }
+          }
+          $matches = foreach ($file in $files) {
+            foreach ($term in $terms) {
+              Select-String -Path $file.FullName -SimpleMatch -Pattern $term |
+                ForEach-Object {
+                  [pscustomobject]@{
+                    Path = Resolve-Path -Relative $_.Path
+                    Line = $_.LineNumber
+                    Term = $term
+                    Text = $_.Line.Trim()
+                  }
+                }
+            }
+          }
+          if ($matches) {
+            $matches | Format-Table -AutoSize | Out-String | Write-Host
+            throw "Configured domain terms were found in generic src projects."
+          }
+          "No configured domain terms were found in generic src project C# files."

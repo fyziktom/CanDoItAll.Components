@@ -1,0 +1,70 @@
+{
+  "proof": "SB03 runtime idle final scheduled render",
+  "generatedAt": "2026-06-04T16:44:50.521Z",
+  "assertions": {
+    "scheduledOnlyWasSemanticIdleBeforeWait": true,
+    "scheduledOnlyWasVisualBlockedBeforeWait": true,
+    "scheduledOnlyDrainedAfterTwoProbes": true,
+    "activeMotionStillBlocksSemanticIdle": true,
+    "continuousRenderStillBlocksVisualIdle": true
+  },
+  "beforeScheduledOnly": {
+    "idle": false,
+    "semanticIdle": true,
+    "visualIdle": false,
+    "finalRenderDrained": false,
+    "blockers": [
+      "render-loop:scheduled"
+    ],
+    "semanticBlockers": [],
+    "visualBlockers": [
+      "render-loop:scheduled"
+    ]
+  },
+  "firstProbeDrain": false,
+  "secondProbeDrain": true,
+  "scheduledOnlyResult": {
+    "idle": true,
+    "semanticIdle": true,
+    "visualIdle": true,
+    "finalRenderDrained": true,
+    "blockers": [],
+    "semanticBlockers": [],
+    "visualBlockers": []
+  },
+  "syncedDiagnostics": {
+    "semanticIdle": true,
+    "visualIdle": true,
+    "finalRenderDrained": true
+  },
+  "activeMotionResult": {
+    "idle": false,
+    "semanticIdle": false,
+    "visualIdle": false,
+    "finalRenderDrained": false,
+    "blockers": [
+      "motion:active:1",
+      "render-loop:scheduled"
+    ],
+    "semanticBlockers": [
+      "motion:active:1"
+    ],
+    "visualBlockers": [
+      "render-loop:scheduled"
+    ]
+  },
+  "activeMotionDrain": false,
+  "continuousRenderResult": {
+    "idle": false,
+    "semanticIdle": true,
+    "visualIdle": false,
+    "finalRenderDrained": false,
+    "blockers": [
+      "render-loop:continuous-mode"
+    ],
+    "semanticBlockers": [],
+    "visualBlockers": [
+      "render-loop:continuous-mode"
+    ]
+  }
+}

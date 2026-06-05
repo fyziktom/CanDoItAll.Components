@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using CanDoItAll.Components.BaseLib;
 using CanDoItAll.Components.WebGlLib;
@@ -26,7 +28,7 @@ public partial class RunPlayback
         ShowLabels = false,
         ShowSymbols = true
     };
-    private readonly WebGlRunDocument runDocument;
+    private WebGlRunDocument runDocument;
     private WebGlSceneModel scene = CreateScene();
     private WebGlSceneView? sceneView;
     private WebGlRunDocumentRunner? documentRunner;
@@ -35,12 +37,21 @@ public partial class RunPlayback
     private WebGlRuntimeIdleResult? latestRuntimeIdleResult;
     private WebGlRunBrowserApplyResult? latestApplyResult;
     private WebGlRunRuntimeSnapshot? latestRunSnapshot;
+    private WebGlRunDocument? browserLoadedRunDocument;
+    private WebGlSceneDocument? browserLoadedInitialSceneDocument;
+    private string browserLoadedSceneContentHash = string.Empty;
+    private string browserProofSnapshotHash = string.Empty;
+    private StringBuilder? pendingProofDocumentJson;
     private DotNetObjectReference<RunPlayback>? proofBridgeReference;
+    private readonly WebGlRunPlaybackStopCoordinator stopCoordinator = new();
     private CancellationTokenSource? playbackCancellation;
     private Task? playbackTask;
     private long playbackGeneration;
+    private long latestRuntimeStopGeneration;
+    private int ignoredStaleRuntimeCallbackCount;
     private bool playbackStopRequested = true;
     private bool isPlaying;
+    private string lastPlaybackError = string.Empty;
     private string statusText = "Ready.";
 
     public RunPlayback()
@@ -76,13 +87,21 @@ public partial class RunPlayback
     private string CommandCountAfterText => CountText(latestRuntimeDiagnostics?.CommandCountAfterNormalization);
     private string InteropCallsAvoidedText => CountText(latestRuntimeDiagnostics?.InteropCallsAvoided);
     private string QueuedStageCountText => CountText(latestRuntimeDiagnostics?.QueuedCommandStageCount);
+    private string RuntimeStopGenerationText => latestRuntimeStopGeneration.ToString(CultureInfo.InvariantCulture);
+    private string IdleBlockersText => latestRuntimeIdleResult is null || latestRuntimeIdleResult.Blockers.Count == 0
+        ? "none"
+        : string.Join(", ", latestRuntimeIdleResult.Blockers);
     private string DiagnosticsJson => JsonSerializer.Serialize(new
     {
         runId = runDocument.RunId.Value,
+        runtimeStopGeneration = latestRuntimeStopGeneration,
+        ignoredStaleRuntimeCallbackCount,
+        lastPlaybackError,
         observer = WebGlRunObserverProof.Compare(
             runDocument,
-            runDocument,
+            BrowserLoadedRunDocument,
             BuildObserverSnapshot()),
+        hashes = BuildObserverHashDiagnostics(),
         currentFrameIndex = CurrentFrameIndex,
         isPlaying = IsPlaying,
         latestApply = latestApplyResult is null
@@ -115,7 +134,13 @@ public partial class RunPlayback
                 latestRuntimeIdleResult.Idle,
                 latestRuntimeIdleResult.TimedOut,
                 latestRuntimeIdleResult.ElapsedMs,
-                latestRuntimeIdleResult.Blockers
+                latestRuntimeIdleResult.SemanticIdle,
+                latestRuntimeIdleResult.VisualIdle,
+                latestRuntimeIdleResult.FinalRenderDrained,
+                latestRuntimeIdleResult.Blockers,
+                latestRuntimeIdleResult.SemanticBlockers,
+                latestRuntimeIdleResult.VisualBlockers,
+                blockerText = IdleBlockersText
             },
         runSnapshot = latestRunSnapshot is null
             ? null
@@ -163,10 +188,35 @@ public partial class RunPlayback
             Metadata =
             {
                 ["route"] = "run-playback",
+                ["browserDocumentLoaded"] = (browserLoadedRunDocument is not null).ToString(CultureInfo.InvariantCulture),
+                ["browserLoadedSceneContentHash"] = browserLoadedSceneContentHash,
+                ["browserProofSnapshotHash"] = browserProofSnapshotHash,
+                ["runtimeStopGeneration"] = latestRuntimeStopGeneration.ToString(CultureInfo.InvariantCulture),
                 ["runtimeDiagnosticsCaptured"] = (latestRuntimeDiagnostics is not null).ToString(CultureInfo.InvariantCulture),
                 ["proofSnapshotCaptured"] = (latestSnapshot is not null).ToString(CultureInfo.InvariantCulture)
             }
         };
+
+    private WebGlRunDocument BrowserLoadedRunDocument
+        => browserLoadedRunDocument ?? CreateBrowserNotLoadedDocument();
+
+    private object BuildObserverHashDiagnostics()
+    {
+        WebGlRunDocument browserDocument = BrowserLoadedRunDocument;
+        string expectedDocumentHash = WebGlRunObserverProof.ComputeDocumentHash(runDocument);
+        string browserLoadedDocumentHash = WebGlRunObserverProof.ComputeDocumentHash(browserDocument);
+        return new
+        {
+            browserDocumentLoaded = browserLoadedRunDocument is not null,
+            expectedDocumentHash,
+            browserLoadedDocumentHash,
+            documentHashesMatch = string.Equals(expectedDocumentHash, browserLoadedDocumentHash, StringComparison.Ordinal),
+            expectedSceneContentHash = PrefixSha256(WebGlSceneDocumentSerializer.ComputeSceneContentHash(runDocument.InitialScene)),
+            browserLoadedSceneContentHash,
+            browserProofSnapshotHash,
+            browserLoadedInitialSceneId = browserLoadedInitialSceneDocument?.Scene.SceneId ?? string.Empty
+        };
+    }
 
     private Dictionary<string, WebGlVector3> BuildExpectedFinalObjectPositions()
     {
@@ -207,6 +257,7 @@ public partial class RunPlayback
         long generation = ++playbackGeneration;
         playbackStopRequested = false;
         isPlaying = true;
+        lastPlaybackError = string.Empty;
         statusText = "Playing generic sequence.";
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
         playbackTask = InvokeAsync(() => PlayLoopAsync(generation, cancellationSource));
@@ -245,6 +296,7 @@ public partial class RunPlayback
         {
             if (playbackGeneration == generation)
             {
+                lastPlaybackError = ex.ToString();
                 statusText = ex.Message;
             }
         }
@@ -272,8 +324,73 @@ public partial class RunPlayback
         => StopPlaybackAsync("Canceled.");
 
     [JSInvokable]
-    public Task ProofPlayAsync()
-        => PlayAsync();
+    public async Task ProofLoadDocumentJsonAsync(string documentJson)
+    {
+        WebGlRunDocument? loaded = JsonSerializer.Deserialize<WebGlRunDocument>(documentJson, DiagnosticsJsonOptions);
+        if (loaded is null)
+        {
+            throw new InvalidOperationException("Run document JSON did not deserialize.");
+        }
+
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(loaded);
+        if (!validation.IsValid)
+        {
+            throw new InvalidOperationException($"Run document is invalid: {string.Join("; ", validation.Errors)}");
+        }
+
+        playbackGeneration++;
+        playbackStopRequested = true;
+        isPlaying = false;
+        playbackCancellation?.Cancel();
+        if (sceneView is not null)
+        {
+            await sceneView.StopRuntimeActivityAsync("run-playback-load-document", waitForIdle: false).ConfigureAwait(false);
+        }
+
+        runDocument = loaded;
+        scene = loaded.InitialScene.Scene;
+        ResetObserverState();
+        statusText = $"Loaded {loaded.Timeline.Frames.Count.ToString(CultureInfo.InvariantCulture)} frame run document.";
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    [JSInvokable]
+    public Task ProofBeginDocumentJsonLoadAsync()
+    {
+        pendingProofDocumentJson = new StringBuilder();
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task ProofAppendDocumentJsonChunkAsync(string chunk)
+    {
+        pendingProofDocumentJson ??= new StringBuilder();
+        pendingProofDocumentJson.Append(chunk);
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public async Task ProofCommitDocumentJsonLoadAsync()
+    {
+        string documentJson = pendingProofDocumentJson?.ToString() ?? string.Empty;
+        pendingProofDocumentJson = null;
+        await ProofLoadDocumentJsonAsync(documentJson).ConfigureAwait(false);
+    }
+
+    [JSInvokable]
+    public async Task ProofPlayAsync()
+    {
+        try
+        {
+            await PlayAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            lastPlaybackError = ex.ToString();
+            statusText = ex.Message;
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+        }
+    }
 
     [JSInvokable]
     public Task ProofPauseAsync()
@@ -283,16 +400,29 @@ public partial class RunPlayback
     public Task ProofSnapshotAsync()
         => CaptureProofAsync();
 
+    private void ResetObserverState()
+    {
+        documentRunner = null;
+        latestSnapshot = null;
+        latestRuntimeDiagnostics = null;
+        latestRuntimeIdleResult = null;
+        latestApplyResult = null;
+        latestRunSnapshot = null;
+        browserLoadedRunDocument = null;
+        browserLoadedInitialSceneDocument = null;
+        browserLoadedSceneContentHash = string.Empty;
+        browserProofSnapshotHash = string.Empty;
+        latestRuntimeStopGeneration = 0;
+        ignoredStaleRuntimeCallbackCount = 0;
+        lastPlaybackError = string.Empty;
+        pendingProofDocumentJson = null;
+    }
+
     private async Task ResetAsync()
     {
         await StopPlaybackAsync("Resetting.").ConfigureAwait(false);
-        scene = CreateScene();
-        documentRunner = null;
-        latestApplyResult = null;
-        latestRunSnapshot = null;
-        latestRuntimeDiagnostics = null;
-        latestRuntimeIdleResult = null;
-        latestSnapshot = null;
+        scene = runDocument.InitialScene.Scene;
+        ResetObserverState();
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
 
         if (await EnsureRunnerAsync(forceReload: true).ConfigureAwait(false))
@@ -338,15 +468,26 @@ public partial class RunPlayback
 
     private async Task CaptureProofAsync()
     {
-        if (sceneView is null)
+        WebGlSceneView? currentSceneView = sceneView;
+        if (currentSceneView is null)
         {
             latestSnapshot = null;
             latestRuntimeDiagnostics = null;
             return;
         }
 
-        latestSnapshot = await sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
-        latestRuntimeDiagnostics = await sceneView.GetDiagnosticsAsync().ConfigureAwait(false);
+        WebGlSceneProofSnapshot? snapshot = null;
+        WebGlRuntimeDiagnostics? diagnostics = null;
+        await InvokeAsync(async () =>
+        {
+            snapshot = await currentSceneView.GetProofSnapshotAsync();
+            diagnostics = await currentSceneView.GetDiagnosticsAsync();
+        }).ConfigureAwait(false);
+
+        latestSnapshot = snapshot;
+        browserProofSnapshotHash = ComputeJsonHash(latestSnapshot);
+        latestRuntimeDiagnostics = diagnostics;
+        SyncRuntimeStopGeneration(latestRuntimeDiagnostics);
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
     }
 
@@ -388,29 +529,51 @@ public partial class RunPlayback
 
     private async Task ApplyFrameThroughAdapterAsync(WebGlRunFrameApplyResult frame, CancellationToken cancellationToken)
     {
-        if (sceneView is null)
+        WebGlSceneView? currentSceneView = sceneView;
+        if (currentSceneView is null)
         {
             return;
         }
 
-        var adapter = new WebGlRunBrowserApplyAdapter(
-            new WebGlSceneViewBrowserRuntime(sceneView),
-            runDocument.InitialScene,
-            new WebGlRunBrowserPlaybackApplyOptions
-            {
-                RuntimeIdleWaitPolicy = WebGlRunRuntimeIdleWaitPolicies.AfterPlayback,
-                RuntimeIdle = new WebGlRunRuntimeIdleWaitOptions
+        WebGlRunBrowserApplyResult? result = null;
+        WebGlSceneProofSnapshot? snapshot = null;
+        await InvokeAsync(async () =>
+        {
+            var adapter = new WebGlRunBrowserApplyAdapter(
+                new WebGlSceneViewBrowserRuntime(currentSceneView),
+                runDocument.InitialScene,
+                new WebGlRunBrowserPlaybackApplyOptions
                 {
-                    TimeoutMs = 12_000,
-                    PollIntervalMs = 16,
-                    Reason = "run-playback"
-                }
-            });
-        WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(frame, cancellationToken).ConfigureAwait(false);
+                    RuntimeIdleWaitPolicy = WebGlRunRuntimeIdleWaitPolicies.AfterPlayback,
+                    RuntimeIdle = new WebGlRunRuntimeIdleWaitOptions
+                    {
+                        TimeoutMs = 12_000,
+                        PollIntervalMs = 16,
+                        Reason = "run-playback"
+                    }
+                });
+            result = await adapter.ApplyAsync(frame, cancellationToken);
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                snapshot = await currentSceneView.GetProofSnapshotAsync();
+            }
+        }).ConfigureAwait(false);
+
         if (cancellationToken.IsCancellationRequested)
         {
-            await sceneView.StopRuntimeActivityAsync("playback-apply-canceled", waitForIdle: true).ConfigureAwait(false);
-            latestRuntimeIdleResult = await sceneView.WaitForRuntimeIdleAsync(reason: "playback-apply-canceled").ConfigureAwait(false);
+            WebGlRuntimeIdleResult? idleResult = null;
+            await InvokeAsync(async () =>
+            {
+                await currentSceneView.StopRuntimeActivityAsync("playback-apply-canceled", waitForIdle: true);
+                idleResult = await currentSceneView.WaitForRuntimeIdleAsync(reason: "playback-apply-canceled");
+            }).ConfigureAwait(false);
+            latestRuntimeIdleResult = idleResult;
+            SyncRuntimeStopGeneration(latestRuntimeIdleResult?.Diagnostics);
+            return;
+        }
+
+        if (result is null)
+        {
             return;
         }
 
@@ -418,7 +581,8 @@ public partial class RunPlayback
         latestRunSnapshot = result.RuntimeSnapshot;
         latestRuntimeDiagnostics = result.RuntimeDiagnostics;
         latestRuntimeIdleResult = result.RuntimeIdleResult;
-        latestSnapshot = await sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
+        SyncRuntimeStopGeneration(latestRuntimeDiagnostics);
+        latestSnapshot = snapshot;
         statusText = result.Success
             ? $"Applied generic frame {frame.FrameIndex.ToString(CultureInfo.InvariantCulture)} as one command batch."
             : string.Join(" ", result.Errors);
@@ -430,35 +594,47 @@ public partial class RunPlayback
         playbackStopRequested = true;
         isPlaying = false;
         Task? taskToStop = playbackTask;
-        playbackCancellation?.Cancel();
+        CancellationTokenSource? cancellationToStop = playbackCancellation;
         statusText = status;
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
 
         if (sceneView is not null)
         {
-            WebGlSceneCommandResult? stopResult = await sceneView.StopRuntimeActivityAsync(status, waitForIdle: true).ConfigureAwait(false);
-            if (stopResult?.Success == false)
+            WebGlRunPlaybackStopResult stopResult = await stopCoordinator.StopAsync(new()
             {
-                statusText = string.Join(" ", stopResult.Errors);
-            }
+                Reason = status,
+                StopRuntimeAsync = async (reason, waitForIdle) => await sceneView
+                    .StopRuntimeActivityAsync(reason, waitForIdle: waitForIdle)
+                    .ConfigureAwait(false),
+                CancelPlayback = () => cancellationToStop?.Cancel(),
+                PlaybackTask = taskToStop,
+                PlaybackDrainTimeout = TimeSpan.FromSeconds(2),
+                LateApplyDrainDelay = LatePlaybackApplyDrainDelay
+            }).ConfigureAwait(false);
 
-            await CaptureProofAsync().ConfigureAwait(false);
-            latestRuntimeIdleResult = await sceneView.WaitForRuntimeIdleAsync(reason: "run-playback-stop").ConfigureAwait(false);
-        }
+            SyncRuntimeStopGeneration(stopResult.ImmediateStopResult);
+            SyncRuntimeStopGeneration(stopResult.FinalStopResult);
+            SyncRuntimeStopGeneration(stopResult.LateDrainStopResult);
 
-        if (taskToStop is not null && !taskToStop.IsCompleted)
-        {
-            try
+            if (!stopResult.Success)
             {
-                await taskToStop.WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+                statusText = stopResult.Errors.Count > 0
+                    ? string.Join(" ", stopResult.Errors)
+                    : $"{status} Runtime stop did not complete successfully.";
             }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (TimeoutException)
+            else if (stopResult.PlaybackTaskTimedOut)
             {
                 statusText = $"{status} Playback task did not settle before runtime stop.";
             }
+
+            await CaptureProofAsync().ConfigureAwait(false);
+            latestRuntimeIdleResult = await sceneView.WaitForRuntimeIdleAsync(reason: "run-playback-stop-drain").ConfigureAwait(false);
+            SyncRuntimeStopGeneration(latestRuntimeIdleResult?.Diagnostics);
+        }
+        else
+        {
+            cancellationToStop?.Cancel();
+            await DrainPlaybackTaskWithoutRuntimeAsync(taskToStop, status).ConfigureAwait(false);
         }
 
         if (taskToStop?.IsCompleted == true)
@@ -468,19 +644,6 @@ public partial class RunPlayback
         }
 
         isPlaying = false;
-        if (sceneView is not null)
-        {
-            await Task.Delay(LatePlaybackApplyDrainDelay).ConfigureAwait(false);
-            WebGlSceneCommandResult? drainResult = await sceneView.StopRuntimeActivityAsync($"{status} Late apply drain.", waitForIdle: true).ConfigureAwait(false);
-            if (drainResult?.Success == false)
-            {
-                statusText = string.Join(" ", drainResult.Errors);
-            }
-
-            await CaptureProofAsync().ConfigureAwait(false);
-            latestRuntimeIdleResult = await sceneView.WaitForRuntimeIdleAsync(reason: "run-playback-stop-drain").ConfigureAwait(false);
-        }
-
         playbackStopRequested = true;
         isPlaying = false;
         statusText = statusText.Contains("Playback task did not settle", StringComparison.Ordinal)
@@ -490,14 +653,62 @@ public partial class RunPlayback
     }
 
     private Task HandleMotionCompleted(WebGlSceneCommandResult result)
+        => HandleRuntimeCompletion(result, "Motion completed");
+
+    private Task HandleCommandCompleted(WebGlSceneCommandResult result)
+        => HandleRuntimeCompletion(result, "Command completed");
+
+    private Task HandleRuntimeCompletion(WebGlSceneCommandResult result, string label)
     {
+        if (WebGlRunRuntimeStopGenerationPolicy.IsStale(result, latestRuntimeStopGeneration))
+        {
+            ignoredStaleRuntimeCallbackCount++;
+            return Task.CompletedTask;
+        }
+
         if (!isPlaying)
         {
             return Task.CompletedTask;
         }
 
-        statusText = $"Motion completed: {result.CommandId}.";
+        statusText = $"{label}: {result.CommandId}.";
         return InvokeAsync(StateHasChanged);
+    }
+
+    private async Task DrainPlaybackTaskWithoutRuntimeAsync(Task? taskToStop, string status)
+    {
+        if (taskToStop is null || taskToStop.IsCompleted)
+        {
+            return;
+        }
+
+        try
+        {
+            await taskToStop.WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (TimeoutException)
+        {
+            statusText = $"{status} Playback task did not settle before runtime stop.";
+        }
+    }
+
+    private void SyncRuntimeStopGeneration(WebGlSceneCommandResult? result)
+    {
+        if (WebGlRunRuntimeStopGenerationPolicy.TryRead(result, out long generation))
+        {
+            latestRuntimeStopGeneration = Math.Max(latestRuntimeStopGeneration, generation);
+        }
+    }
+
+    private void SyncRuntimeStopGeneration(WebGlRuntimeDiagnostics? diagnostics)
+    {
+        if (diagnostics is not null)
+        {
+            latestRuntimeStopGeneration = Math.Max(latestRuntimeStopGeneration, diagnostics.RuntimeStopGeneration);
+        }
     }
 
     private bool IsActivePlayback(long generation, CancellationToken cancellationToken)
@@ -532,6 +743,37 @@ public partial class RunPlayback
             }
         };
     }
+
+    private WebGlRunDocument CreateBrowserLoadedRunDocument(WebGlSceneDocument browserLoadedInitialScene)
+        => new()
+        {
+            SchemaVersion = runDocument.SchemaVersion,
+            RunId = runDocument.RunId,
+            InitialScene = browserLoadedInitialScene,
+            Timeline = runDocument.Timeline,
+            Metadata = new(runDocument.Metadata, StringComparer.Ordinal)
+        };
+
+    private WebGlRunDocument CreateBrowserNotLoadedDocument()
+        => new()
+        {
+            SchemaVersion = runDocument.SchemaVersion,
+            RunId = new($"{runDocument.RunId.Value}:browser-not-loaded"),
+            InitialScene = new()
+            {
+                Scene = new()
+                {
+                    SceneId = "browser-not-loaded",
+                    Title = "Browser scene not loaded"
+                },
+                Source = "browser-not-loaded"
+            },
+            Timeline = runDocument.Timeline,
+            Metadata = new(runDocument.Metadata, StringComparer.Ordinal)
+            {
+                ["browserDocumentLoaded"] = "false"
+            }
+        };
 
     private static WebGlRunTimeline CreateTimeline()
     {
@@ -615,18 +857,31 @@ public partial class RunPlayback
     {
         public async ValueTask ApplyInitialSceneAsync(WebGlSceneDocument sceneDocument, CancellationToken cancellationToken = default)
         {
-            if (owner.sceneView is null)
+            WebGlSceneView? currentSceneView = owner.sceneView;
+            if (currentSceneView is null)
             {
                 return;
             }
 
-            var runtime = new WebGlSceneViewBrowserRuntime(owner.sceneView);
-            WebGlSceneCommandResult? importResult = await runtime.ImportSceneAsync(sceneDocument, cancellationToken).ConfigureAwait(false);
-            owner.latestRuntimeDiagnostics = await runtime.GetDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
-            owner.latestRuntimeIdleResult = await runtime.WaitForRuntimeIdleAsync(
-                new WebGlRunRuntimeIdleWaitOptions { Reason = "run-playback-initial-scene" },
-                cancellationToken).ConfigureAwait(false);
-            owner.latestSnapshot = await owner.sceneView.GetProofSnapshotAsync().ConfigureAwait(false);
+            WebGlSceneCommandResult? importResult = null;
+            WebGlRuntimeDiagnostics? diagnostics = null;
+            WebGlRuntimeIdleResult? idleResult = null;
+            WebGlSceneProofSnapshot? snapshot = null;
+            await owner.InvokeAsync(async () =>
+            {
+                var runtime = new WebGlSceneViewBrowserRuntime(currentSceneView);
+                importResult = await runtime.ImportSceneAsync(sceneDocument, cancellationToken);
+                diagnostics = await runtime.GetDiagnosticsAsync(cancellationToken);
+                idleResult = await runtime.WaitForRuntimeIdleAsync(
+                    new WebGlRunRuntimeIdleWaitOptions { Reason = "run-playback-initial-scene" },
+                    cancellationToken);
+                snapshot = await currentSceneView.GetProofSnapshotAsync();
+            }).ConfigureAwait(false);
+            owner.latestRuntimeDiagnostics = diagnostics;
+            owner.latestRuntimeIdleResult = idleResult;
+            owner.latestSnapshot = snapshot;
+            owner.browserProofSnapshotHash = ComputeJsonHash(owner.latestSnapshot);
+            await owner.CaptureBrowserLoadedDocumentAsync(sceneDocument).ConfigureAwait(false);
             owner.latestRunSnapshot = new WebGlRunRuntimeSnapshot
             {
                 RunId = owner.runDocument.RunId.Value,
@@ -644,6 +899,43 @@ public partial class RunPlayback
             cancellationToken.ThrowIfCancellationRequested();
             await owner.ApplyFrameThroughAdapterAsync(frame, cancellationToken).ConfigureAwait(false);
         }
+    }
+
+    private Task CaptureBrowserLoadedDocumentAsync(WebGlSceneDocument expectedInitialSceneDocument)
+    {
+        var browserSceneDocument = new WebGlSceneDocument
+        {
+            SchemaVersion = expectedInitialSceneDocument.SchemaVersion,
+            DocumentId = expectedInitialSceneDocument.DocumentId,
+            Scene = expectedInitialSceneDocument.Scene,
+            RuntimeOptions = expectedInitialSceneDocument.RuntimeOptions,
+            Source = "browser-imported-payload",
+            Metadata = new(expectedInitialSceneDocument.Metadata, StringComparer.Ordinal)
+        };
+        browserSceneDocument.SceneContentHash = WebGlSceneDocumentSerializer.ComputeSceneContentHash(browserSceneDocument);
+        browserSceneDocument.ContentHash = browserSceneDocument.SceneContentHash;
+        browserLoadedInitialSceneDocument = browserSceneDocument;
+        browserLoadedSceneContentHash = PrefixSha256(browserSceneDocument.SceneContentHash);
+        browserLoadedRunDocument = CreateBrowserLoadedRunDocument(browserSceneDocument);
+        return Task.CompletedTask;
+    }
+
+    private static string PrefixSha256(string hash)
+        => string.IsNullOrWhiteSpace(hash)
+            ? string.Empty
+            : hash.StartsWith("sha256:", StringComparison.Ordinal)
+                ? hash
+                : $"sha256:{hash}";
+
+    private static string ComputeJsonHash(object? value)
+    {
+        if (value is null)
+        {
+            return string.Empty;
+        }
+
+        string json = JsonSerializer.Serialize(value, DiagnosticsJsonOptions);
+        return $"sha256:{Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(json))).ToLowerInvariant()}";
     }
 
     private static WebGlSceneModel CreateScene()

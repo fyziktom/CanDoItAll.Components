@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CanDoItAll.Components.WebGlLib;
 using CanDoItAll.Components.WebGlRunLib;
 
@@ -5,6 +6,26 @@ namespace CanDoItAll.Components.WebGlRunLib.Tests;
 
 public sealed class WebGlRunValidatorTests
 {
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
+    private sealed class DomainLeakageTermConfig
+    {
+        public string[] ForbiddenDomainTerms { get; set; } = [];
+    }
+
+    private static WebGlRunGenericBoundaryOptions EconomyBoundaryOptions()
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "fixtures", "domain-leakage-terms.json");
+        DomainLeakageTermConfig config = JsonSerializer.Deserialize<DomainLeakageTermConfig>(File.ReadAllText(path), JsonOptions) ?? new();
+        return new WebGlRunGenericBoundaryOptions
+        {
+            ForbiddenDomainTerms = config.ForbiddenDomainTerms
+        };
+    }
+
     [Fact]
     public void Run_document_validator_rejects_schema_timeline_and_domain_metadata()
     {
@@ -31,7 +52,7 @@ public sealed class WebGlRunValidatorTests
             }
         };
 
-        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyBoundaryOptions()).Validate(document);
 
         Assert.False(validation.IsValid);
         Assert.Contains(validation.Errors, error => error.Contains("schema", StringComparison.OrdinalIgnoreCase));
@@ -39,6 +60,25 @@ public sealed class WebGlRunValidatorTests
         Assert.Contains(validation.Errors, error => error.Contains("Timeline frame rate", StringComparison.Ordinal));
         Assert.Contains(validation.Errors, error => error.Contains("Duplicate frame index", StringComparison.Ordinal));
         Assert.Contains(validation.Errors, error => error.Contains("domain-specific", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Run_document_validator_default_boundary_policy_does_not_embed_economy_terms()
+    {
+        var document = new WebGlRunDocument
+        {
+            RunId = new WebGlRunId("run.default-boundary"),
+            InitialScene = SceneDocument(),
+            Timeline = { FrameRate = 1 },
+            Metadata =
+            {
+                ["economy.ledger"] = "market-clearing"
+            }
+        };
+
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+
+        Assert.True(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
     }
 
     [Fact]
@@ -58,7 +98,7 @@ public sealed class WebGlRunValidatorTests
             }
         };
 
-        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyBoundaryOptions()).Validate(document);
 
         Assert.False(validation.IsValid);
         Assert.Contains(validation.Errors, error => error.Contains("cannot mix frame-level commands with staged commands", StringComparison.OrdinalIgnoreCase));
@@ -106,7 +146,7 @@ public sealed class WebGlRunValidatorTests
             }
         };
 
-        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyBoundaryOptions()).Validate(document);
 
         Assert.True(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
     }
@@ -160,7 +200,7 @@ public sealed class WebGlRunValidatorTests
             }
         };
 
-        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyBoundaryOptions()).Validate(document);
 
         Assert.True(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
     }
@@ -182,7 +222,7 @@ public sealed class WebGlRunValidatorTests
             Timeline = { FrameRate = 1 }
         };
 
-        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyBoundaryOptions()).Validate(document);
 
         Assert.False(validation.IsValid);
         Assert.Contains(validation.Errors, error => error.Contains("source.sourceId", StringComparison.Ordinal));
@@ -220,7 +260,7 @@ public sealed class WebGlRunValidatorTests
             }
         };
 
-        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator().Validate(document);
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyBoundaryOptions()).Validate(document);
 
         Assert.False(validation.IsValid);
         Assert.Contains(validation.Errors, error => error.Contains("stage.market.transfer", StringComparison.Ordinal));
@@ -286,7 +326,7 @@ public sealed class WebGlRunValidatorTests
             ]
         };
 
-        WebGlRunActionPlanValidationResult validation = new WebGlRunActionPlanValidator().Validate(plan);
+        WebGlRunActionPlanValidationResult validation = new WebGlRunActionPlanValidator(EconomyBoundaryOptions()).Validate(plan);
 
         Assert.False(validation.IsValid);
         Assert.Contains(validation.Errors, error => error.Contains("Frame rate", StringComparison.OrdinalIgnoreCase));
@@ -355,7 +395,7 @@ public sealed class WebGlRunValidatorTests
             }
         };
 
-        WebGlRunActionPlanValidationResult validation = new WebGlRunActionPlanValidator().Validate(plan);
+        WebGlRunActionPlanValidationResult validation = new WebGlRunActionPlanValidator(EconomyBoundaryOptions()).Validate(plan);
 
         Assert.True(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
     }
@@ -381,7 +421,7 @@ public sealed class WebGlRunValidatorTests
             ]
         };
 
-        WebGlRunActionPlanValidationResult validation = new WebGlRunActionPlanValidator().Validate(plan);
+        WebGlRunActionPlanValidationResult validation = new WebGlRunActionPlanValidator(EconomyBoundaryOptions()).Validate(plan);
 
         Assert.False(validation.IsValid);
         Assert.Contains(validation.Errors, error => error.Contains("domain-specific", StringComparison.OrdinalIgnoreCase));

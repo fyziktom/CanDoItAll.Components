@@ -27,7 +27,8 @@
                                     Scene="@scene"
                                     Options="@runtimeOptions"
                                     AriaLabel="Generic WebGL run playback scene"
-                                    MotionCompleted="@HandleMotionCompleted" />
+                                    MotionCompleted="@HandleMotionCompleted"
+                                    CommandCompleted="@HandleCommandCompleted" />
                 </section>
 
                 <aside class="webgl-village-panel" aria-label="Run playback inspector">
@@ -86,6 +87,14 @@
                             <div>
                                 <dt>Queued</dt>
                                 <dd data-testid="webgl-run-queued-stages">@QueuedStageCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Stop gen</dt>
+                                <dd data-testid="webgl-run-runtime-stop-generation">@RuntimeStopGenerationText</dd>
+                            </div>
+                            <div>
+                                <dt>Blockers</dt>
+                                <dd data-testid="webgl-run-idle-blockers">@IdleBlockersText</dd>
                             </div>
                         </dl>
                     </section>

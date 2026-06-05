@@ -9,6 +9,8 @@ Add property/metamorphic tests to catch simulator noise independent of specific 
 Repository scope: **Economy**  
 Priority: **P1**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Conservation with closed resources.
@@ -21,6 +23,14 @@ Priority: **P1**
 
 - property test reports
 - negative mutation proof
+
+## Executed proof
+
+- `proof/SB14/property-test-report.json` records passing conservation, monotonicity, independent-event permutation, and replay drift properties.
+- `proof/SB14/negative-mutation-proof.json` records the deliberate `store.buyer.grain += 1` final-frame mutation and confirms the conservation detector fails it.
+- `proof/SB14/transcripts/metamorphic-property-tests.txt` passes 5/5 focused metamorphic/property tests.
+- `proof/SB14/transcripts/source-assertions.txt` verifies the test suite and proof reports cover all required properties.
+- `proof/SB14/transcripts/anti-stub-audit.txt` finds no stub/placeholder/not-implemented markers in the new test file.
 
 
 ## Hard gates

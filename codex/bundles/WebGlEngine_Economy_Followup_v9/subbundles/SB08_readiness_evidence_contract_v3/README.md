@@ -9,6 +9,8 @@ Make readiness runtime/UI/oracle bands artifact-backed, not boolean-backed.
 Repository scope: **Economy**  
 Priority: **P0**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Introduce EvidenceRef model with kind/path/hash/schemaVersion.
@@ -20,6 +22,13 @@ Priority: **P0**
 
 - readiness-report-v3 tests
 - broken evidence negative test
+
+## Executed proof
+
+- `proof/SB08/readiness-report-v3-tests.txt` passes 2/2 readiness v3 tests, including the required broken evidence negative test.
+- `proof/SB08/readiness-adjacent-tests.txt` passes 6/6 adjacent readiness/browser observer tests.
+- `proof/SB08/simulationsandbox-build.txt` builds `CanDoItAll.Economy.SimulationSandbox` with 0 warnings and 0 errors.
+- `proof/SB08/readiness-evidence-contract-report.md` documents the evidence ref contract, validator behavior, and no-browser-proof rationale.
 
 
 ## Hard gates

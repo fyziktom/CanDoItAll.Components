@@ -1,4 +1,23 @@
-# SB04 — ApplyCommandBatch lifecycle contract
+# SB04 - ApplyCommandBatch lifecycle contract
+
+## Status
+
+Completed on 2026-06-04.
+
+## Closure
+
+SB04 clarified scheduled/applied/settled lifecycle across JS and C# adapters. Default browser observer applies now use `ApplyCommandBatchAndWaitAsync` unless a caller explicitly configures a separate runtime-idle policy. Non-waiting apply remains available and surfaces scheduled lifecycle plus idle blockers.
+
+Executed proof:
+
+- `../../proof/SB04/manifest.md`
+- `../../proof/SB04/semantic-invariants.md`
+- `../../proof/SB04/browser/command-batch-lifecycle-assertions.json`
+- `../../proof/SB04/browser/command-batch-lifecycle-after.png`
+- `../../proof/SB04/transcripts/webglrunlib-tests.txt`
+- `../../proof/SB04/transcripts/webgllib-tests.txt`
+- `../../proof/SB04/transcripts/webglsandbox-build.txt`
+- `../../proof/SB04/transcripts/command-batch-lifecycle-playwright.txt`
 
 ## Goal
 
@@ -15,12 +34,10 @@ Priority: **P0**
 - Non-waiting ApplyCommandBatch must return lifecycle=scheduled if work remains.
 - C# command result must surface lifecycle and idle blockers.
 
-
 ## Required proof
 
 - adapter tests for scheduled vs settled
 - browser proof with wait-for-motion barrier
-
 
 ## Hard gates
 

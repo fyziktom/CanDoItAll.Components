@@ -1,0 +1,166 @@
+{
+  "scenarioId": "probe.multi-goods-elite",
+  "displayName": "Multi-goods exchange, elite capital, and policy shock probe",
+  "scenarioKind": "multi-goods-exchange-investment-probe",
+  "startsAtUtc": "2026-01-01T00:00:00Z",
+  "stepCount": 4,
+  "expansionProfileId": "none",
+  "allowedWarningCodes": [ "bridge-bound-visual-field" ],
+  "actors": [
+    { "actorId": "producer.grain", "kind": "producer", "displayName": "Grain cooperative", "homeLocationId": "place.grain-yard" },
+    { "actorId": "producer.tools", "kind": "producer", "displayName": "Tool maker", "homeLocationId": "place.workshop" },
+    { "actorId": "consumer.household", "kind": "consumer", "displayName": "Worker household", "homeLocationId": "place.neighborhood" },
+    { "actorId": "investor.elite", "kind": "capital-provider", "displayName": "Elite investor", "homeLocationId": "place.capital-office" },
+    { "actorId": "institution.policy-board", "kind": "institution", "displayName": "Policy board", "homeLocationId": "place.policy-hall" },
+    { "actorId": "fund.public", "kind": "public-fund", "displayName": "Public liquidity fund", "homeLocationId": "place.policy-hall" }
+  ],
+  "locations": [
+    { "locationId": "place.grain-yard", "kind": "production", "displayName": "Grain yard", "x": 0, "y": 0 },
+    { "locationId": "place.workshop", "kind": "production", "displayName": "Workshop", "x": 3, "y": 0 },
+    { "locationId": "place.neighborhood", "kind": "household", "displayName": "Neighborhood", "x": 1, "y": 2 },
+    { "locationId": "place.capital-office", "kind": "finance", "displayName": "Capital office", "x": 6, "y": 1 },
+    { "locationId": "place.policy-hall", "kind": "institution", "displayName": "Policy hall", "x": 4, "y": 3 }
+  ],
+  "resources": [
+    { "resourceId": "grain", "kind": "consumption-good", "displayName": "Grain", "unit": "unit" },
+    { "resourceId": "tools", "kind": "production-good", "displayName": "Tools", "unit": "unit" },
+    { "resourceId": "credit", "kind": "liquidity", "displayName": "Credit", "unit": "token" },
+    { "resourceId": "equity-share", "kind": "capital-claim", "displayName": "Equity-like share", "unit": "share" }
+  ],
+  "initialStores": [
+    { "storeId": "store.grain-producer.grain", "ownerActorId": "producer.grain", "resourceId": "grain", "locationId": "place.grain-yard", "displayName": "Cooperative grain inventory", "quantity": 60, "unit": "unit", "capacity": 100 },
+    { "storeId": "store.grain-producer.tools", "ownerActorId": "producer.grain", "resourceId": "tools", "locationId": "place.grain-yard", "displayName": "Cooperative tools", "quantity": 2, "unit": "unit", "capacity": 20 },
+    { "storeId": "store.grain-producer.credit", "ownerActorId": "producer.grain", "resourceId": "credit", "locationId": "place.grain-yard", "displayName": "Cooperative credit", "quantity": 10, "unit": "token", "capacity": 200 },
+    { "storeId": "store.toolmaker.tools", "ownerActorId": "producer.tools", "resourceId": "tools", "locationId": "place.workshop", "displayName": "Toolmaker inventory", "quantity": 12, "unit": "unit", "capacity": 40 },
+    { "storeId": "store.toolmaker.credit", "ownerActorId": "producer.tools", "resourceId": "credit", "locationId": "place.workshop", "displayName": "Toolmaker credit", "quantity": 20, "unit": "token", "capacity": 200 },
+    { "storeId": "store.toolmaker.equity", "ownerActorId": "producer.tools", "resourceId": "equity-share", "locationId": "place.workshop", "displayName": "Toolmaker issued shares", "quantity": 20, "unit": "share", "capacity": 40 },
+    { "storeId": "store.household.grain", "ownerActorId": "consumer.household", "resourceId": "grain", "locationId": "place.neighborhood", "displayName": "Household grain", "quantity": 8, "unit": "unit", "capacity": 40 },
+    { "storeId": "store.household.tools", "ownerActorId": "consumer.household", "resourceId": "tools", "locationId": "place.neighborhood", "displayName": "Household tools", "quantity": 1, "unit": "unit", "capacity": 10 },
+    { "storeId": "store.household.credit", "ownerActorId": "consumer.household", "resourceId": "credit", "locationId": "place.neighborhood", "displayName": "Household credit", "quantity": 25, "unit": "token", "capacity": 80 },
+    { "storeId": "store.elite.credit", "ownerActorId": "investor.elite", "resourceId": "credit", "locationId": "place.capital-office", "displayName": "Elite credit reserve", "quantity": 180, "unit": "token", "capacity": 300 },
+    { "storeId": "store.elite.equity", "ownerActorId": "investor.elite", "resourceId": "equity-share", "locationId": "place.capital-office", "displayName": "Elite equity claims", "quantity": 0, "unit": "share", "capacity": 80 },
+    { "storeId": "store.public.credit", "ownerActorId": "fund.public", "resourceId": "credit", "locationId": "place.policy-hall", "displayName": "Public fund credit", "quantity": 0, "unit": "token", "capacity": 200 }
+  ],
+  "ruleDefinitions": [
+    {
+      "ruleId": "rule.elite-capital-dependency-watch",
+      "displayName": "Elite capital dependency watch",
+      "category": "capital-dependency",
+      "parameters": { "maxTopCreditShare": "0.6", "policyShockFee": "6" }
+    }
+  ],
+  "scheduledEvents": [
+    {
+      "scheduledEventId": "event.exchange.grain-to-household",
+      "eventKind": "actor.trade.sell",
+      "stepIndex": 3,
+      "order": 10,
+      "actorIds": [ "producer.grain", "consumer.household" ],
+      "resourceIds": [ "grain" ],
+      "sourceId": "producer.grain",
+      "targetId": "consumer.household",
+      "sourceLocationId": "place.grain-yard",
+      "targetLocationId": "place.neighborhood",
+      "magnitude": 14,
+      "metadata": { "exchangeLeg": "food-market", "accessCost": "1.5", "actorGroup": "small-entity" }
+    },
+    {
+      "scheduledEventId": "event.exchange.tools-to-grain-producer",
+      "eventKind": "actor.trade.sell",
+      "stepIndex": 3,
+      "order": 20,
+      "actorIds": [ "producer.tools", "producer.grain" ],
+      "resourceIds": [ "tools" ],
+      "sourceId": "producer.tools",
+      "targetId": "producer.grain",
+      "sourceLocationId": "place.workshop",
+      "targetLocationId": "place.grain-yard",
+      "magnitude": 3,
+      "metadata": { "exchangeLeg": "tool-market", "accessCost": "2.0", "actorGroup": "producer" }
+    },
+    {
+      "scheduledEventId": "event.capital.elite-funds-toolmaker",
+      "eventKind": "actor.resource.transfer",
+      "stepIndex": 3,
+      "order": 30,
+      "actorIds": [ "investor.elite", "producer.tools" ],
+      "resourceIds": [ "credit" ],
+      "sourceId": "investor.elite",
+      "targetId": "producer.tools",
+      "sourceLocationId": "place.capital-office",
+      "targetLocationId": "place.workshop",
+      "magnitude": 45,
+      "metadata": { "capitalKind": "loan-like-funding", "actorGroup": "elite-capital" }
+    },
+    {
+      "scheduledEventId": "event.capital.toolmaker-issues-equity",
+      "eventKind": "actor.resource.transfer",
+      "stepIndex": 3,
+      "order": 40,
+      "actorIds": [ "producer.tools", "investor.elite" ],
+      "resourceIds": [ "equity-share" ],
+      "sourceId": "producer.tools",
+      "targetId": "investor.elite",
+      "sourceLocationId": "place.workshop",
+      "targetLocationId": "place.capital-office",
+      "magnitude": 15,
+      "metadata": { "capitalKind": "equity-like-claim", "actorGroup": "elite-capital" }
+    },
+    {
+      "scheduledEventId": "event.capital.elite-funds-grain-producer",
+      "eventKind": "actor.resource.transfer",
+      "stepIndex": 3,
+      "order": 50,
+      "actorIds": [ "investor.elite", "producer.grain" ],
+      "resourceIds": [ "credit" ],
+      "sourceId": "investor.elite",
+      "targetId": "producer.grain",
+      "sourceLocationId": "place.capital-office",
+      "targetLocationId": "place.grain-yard",
+      "magnitude": 20,
+      "metadata": { "capitalKind": "working-capital-line", "actorGroup": "elite-capital" }
+    },
+    {
+      "scheduledEventId": "event.policy.progressive-fee",
+      "eventKind": "actor.tax-fee.pay",
+      "stepIndex": 3,
+      "order": 60,
+      "actorIds": [ "producer.tools", "fund.public" ],
+      "resourceIds": [ "credit" ],
+      "sourceId": "producer.tools",
+      "targetId": "fund.public",
+      "sourceLocationId": "place.workshop",
+      "targetLocationId": "place.policy-hall",
+      "magnitude": 6,
+      "metadata": { "policyShock": "progressive-liquidity-fee", "adminCost": "2" }
+    },
+    {
+      "scheduledEventId": "event.policy.unmet-demand-watch",
+      "eventKind": "rule.violation.detect",
+      "stepIndex": 3,
+      "order": 70,
+      "actorIds": [ "institution.policy-board", "consumer.household" ],
+      "resourceIds": [ "grain" ],
+      "sourceId": "institution.policy-board",
+      "targetId": "consumer.household",
+      "sourceLocationId": "place.policy-hall",
+      "targetLocationId": "place.neighborhood",
+      "magnitude": 1,
+      "metadata": { "policyShock": "unmet-demand-watch" }
+    },
+    {
+      "scheduledEventId": "event.relationship.elite-dependency",
+      "eventKind": "relationship.trust.change",
+      "stepIndex": 3,
+      "order": 80,
+      "actorIds": [ "investor.elite", "producer.tools" ],
+      "resourceIds": [ "credit" ],
+      "sourceId": "investor.elite",
+      "targetId": "producer.tools",
+      "sourceLocationId": "place.capital-office",
+      "targetLocationId": "place.workshop",
+      "magnitude": 0.4,
+      "metadata": { "relationshipKind": "capital-dependency" }
+    }
+  ]
+}

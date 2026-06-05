@@ -9,6 +9,8 @@ Add headless and browser observer budgets for new scenario and prevent noisy com
 Repository scope: **Both repos**  
 Priority: **P2**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Measure materialization/projection/metrics/snapshot/browser settle.
@@ -20,6 +22,14 @@ Priority: **P2**
 
 - performance-budget-report.json
 - large-run stress proof
+
+## Executed proof
+
+- `proof/SB16/performance-budget-report.json` measures `multi-goods-elite` materialization, projection, metrics, snapshot build/serialization, and browser batch settle under the large profile.
+- `proof/SB16/performance-budget-report.json` also records negative comparability proof: headless overage drives `not-comparable`, browser-only overage remains a warning.
+- `proof/SB16/large-run-stress-proof.json` records the 100 actor / 500 resource / 1000 event stress run and budget report.
+- `proof/SB16/webglrun-large-playback-budget-metrics.json` records Components WebGlRun large playback metrics.
+- `proof/SB16/transcripts/*budget*.txt` and `proof/SB16/transcripts/large-run-stress-test.txt` pass the focused test runs.
 
 
 ## Hard gates

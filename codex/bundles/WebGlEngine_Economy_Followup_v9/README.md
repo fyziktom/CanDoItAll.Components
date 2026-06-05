@@ -19,6 +19,16 @@ It specifically checks:
 
 The simulator can be used now for exploratory work and strict headless runs, but research-grade claims should require the new v9 gates: artifact-backed readiness, real browser observer proof, external golden oracle corpus, strict no-fallback semantics and at least one third scenario that is not structurally similar to shared-well/farmer-land.
 
+## Execution status
+
+SB01-SB17 are completed. Final closure evidence lives in `proof/SB17/` and `reviews/01-execution-report.md`.
+
+The final decision matrix is intentionally conservative:
+
+- `multi-goods-elite` is `headless-valid` and browser-observer-valid.
+- `shared-well` and `farmer-land` remain strict failures under the final headless catalog run.
+- No scenario is marked research-ready because the final all-catalog run used `--no-oracle`.
+
 ## Subbundles
 
 - `SB01` — Current-state and v8 closure audit

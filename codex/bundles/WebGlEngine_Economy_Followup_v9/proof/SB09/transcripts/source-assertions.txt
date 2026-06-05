@@ -1,0 +1,31 @@
+SB09 source assertions
+
+1. External golden oracle corpus model and loader.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:7
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:15
+   `EconomyGoldenOracleCorpus` declares the schema and loads the external JSON corpus.
+
+2. Production oracle report contract.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:39
+   `EconomyGoldenOracleReport` exposes case counts, pass/fail counts, flattened diffs, and pass state.
+
+3. Oracle runner compares all required bands.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:69
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:119
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:122
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:128
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:138
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:147
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:153
+   The runner compares final stores, flows, issues, relationships, metrics, invariants, expected diagnostics, and hash chains.
+
+4. Path-addressed diffs are emitted by the runner.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:194
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyGoldenOracleCorpus.cs:202
+   Diff helpers preserve oracle id, path, expected value, actual value, and message.
+
+5. Tests execute the production runner and external corpus.
+   repo://C:/repositories/CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs:337
+   repo://C:/repositories/CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs:354
+   repo://C:/repositories/CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs:1255
+   Positive and broken-expected tests load `Fixtures/GoldenOracles/economic-oracles.json` and use `EconomyGoldenOracleRunner`.

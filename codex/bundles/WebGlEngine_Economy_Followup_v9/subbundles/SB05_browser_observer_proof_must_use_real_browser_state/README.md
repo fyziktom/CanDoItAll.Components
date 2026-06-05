@@ -38,3 +38,24 @@ Priority: **P0**
 - Does the change keep Components generic?
 - Does the change separate headless economic truth from browser observer evidence?
 - Could a scenario pass because of fallback/default behavior instead of intended economics?
+
+## Closure
+
+Status: completed on 2026-06-04.
+
+Implemented in Components:
+
+- `RunPlayback` now compares `runDocument` to a distinct browser-loaded document instead of comparing `runDocument` to itself.
+- RunPlayback diagnostics now expose expected/browser document hashes, browser-loaded scene content hash, browser proof snapshot hash, idle diagnostics, completed stage ids, and final object positions.
+- Browser-loaded document capture records the exact imported scene payload after a successful browser import and avoids the previous fragile full-scene export path.
+- The SB05 Playwright proof drives `/run-playback` in a real browser, records screenshot and console logs, and asserts hash parity, observer validity, idle blockers, completed stages, final positions, and source-level absence of self-compare.
+
+Proof:
+
+- `proof/SB05/manifest.md`
+- `proof/SB05/browser/observer-proof-assertions.json`
+- `proof/SB05/browser/observer-proof.json`
+- `proof/SB05/browser/observer-proof-after.png`
+- `proof/SB05/browser/observer-proof-console.log`
+- `proof/SB05/transcripts/source-assertions.txt`
+- `proof/SB05/transcripts/webglsandbox-build.txt`

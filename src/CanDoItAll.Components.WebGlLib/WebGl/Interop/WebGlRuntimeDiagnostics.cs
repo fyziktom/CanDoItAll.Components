@@ -216,6 +216,12 @@ public sealed class WebGlRuntimeDiagnostics
 
     public int IgnoredStaleMotionCompletedCount { get; set; }
 
+    public bool SemanticIdle { get; set; }
+
+    public bool VisualIdle { get; set; }
+
+    public bool FinalRenderDrained { get; set; }
+
     public int CommandCountBeforeNormalization { get; set; }
 
     public int CommandCountAfterNormalization { get; set; }

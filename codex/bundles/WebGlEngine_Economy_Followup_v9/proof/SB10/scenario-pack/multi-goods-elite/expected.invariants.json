@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "invariants/v1",
+  "metrics": [
+    { "metricId": "wealthConcentrationHhi", "metadata": { "kind": "resource-owner-hhi", "resourceId": "credit" } },
+    { "metricId": "topWealthShare", "metadata": { "kind": "top-owner-share", "resourceId": "credit" } },
+    { "metricId": "wealthGiniProxy", "metadata": { "kind": "resource-owner-hhi", "resourceId": "equity-share" } },
+    { "metricId": "liquidityTradeVolume", "metadata": { "kind": "trade-volume", "resourceId": "grain" } },
+    { "metricId": "unmetDemand", "metadata": { "kind": "issue-count", "category": "rule" } },
+    { "metricId": "eliteCapitalDependency", "metadata": { "kind": "transfer-volume", "resourceId": "credit" } }
+  ],
+  "invariants": [
+    { "invariantId": "multi-goods.no-negative-stores", "metadata": { "kind": "no-store-below-zero" } },
+    { "invariantId": "multi-goods.known-frame-references", "metadata": { "kind": "known-frame-references" } },
+    { "invariantId": "multi-goods.wealth-hhi-visible", "metadata": { "metricId": "wealthConcentrationHhi", "min": "0.2", "max": "0.7" } },
+    { "invariantId": "multi-goods.top-share-visible", "metadata": { "metricId": "topWealthShare", "min": "0.4", "max": "0.7" } },
+    { "invariantId": "multi-goods.unmet-demand-visible", "metadata": { "metricId": "unmetDemand", "min": "1" } },
+    { "invariantId": "multi-goods.elite-capital-visible", "metadata": { "metricId": "eliteCapitalDependency", "min": "60" } }
+  ]
+}

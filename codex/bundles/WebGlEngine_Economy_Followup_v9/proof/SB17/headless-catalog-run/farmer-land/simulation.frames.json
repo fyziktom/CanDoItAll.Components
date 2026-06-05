@@ -1,0 +1,797 @@
+{
+  "schemaVersion": "economy-headless-simulation-frames/v1",
+  "frames": [
+    {
+      "frameId": "run.probe.farmer-land.state-transition.frame.0",
+      "run": {
+        "runId": "run.probe.farmer-land.state-transition",
+        "scenarioId": "probe.farmer-land",
+        "backendId": "simple-accounts",
+        "createdAtUtc": "2026-01-01T00:00:00+00:00",
+        "metadata": {
+          "deterministicSeed": "run.probe.farmer-land.state-transition"
+        }
+      },
+      "clock": {
+        "stepIndex": 0,
+        "simulatedAtUtc": "2026-01-01T00:00:00+00:00",
+        "stepDuration": "1.00:00:00"
+      },
+      "actors": [
+        {
+          "actorId": "buyer.external",
+          "kind": "market",
+          "displayName": "External Buyer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "market.external",
+            "location.x": "6",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "farmer.expander",
+          "kind": "farmer",
+          "displayName": "Expander Farmer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "farm.expander",
+            "location.x": "3",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "farmer.small",
+          "kind": "farmer",
+          "displayName": "Small Farmer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "farm.small",
+            "location.x": "0",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "land-board",
+          "kind": "institution",
+          "displayName": "Land Board",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "town-hall",
+            "location.x": "1",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        }
+      ],
+      "resourceStores": [
+        {
+          "storeId": "store.expander.land",
+          "ownerActorId": "farmer.expander",
+          "resourceId": "land-parcel",
+          "resourceKind": "finite-spatial-resource",
+          "displayName": "Expander land",
+          "quantity": 3,
+          "unit": "parcel",
+          "capacity": 6,
+          "metadata": {
+            "locationId": "farm.expander"
+          }
+        },
+        {
+          "storeId": "store.external.cash",
+          "ownerActorId": "buyer.external",
+          "resourceId": "cash",
+          "resourceKind": "cash",
+          "displayName": "External demand cash",
+          "quantity": 100,
+          "unit": "token",
+          "metadata": {
+            "locationId": "market.external"
+          }
+        },
+        {
+          "storeId": "store.small.land",
+          "ownerActorId": "farmer.small",
+          "resourceId": "land-parcel",
+          "resourceKind": "finite-spatial-resource",
+          "displayName": "Small farmer land",
+          "quantity": 2,
+          "unit": "parcel",
+          "capacity": 6,
+          "metadata": {
+            "locationId": "farm.small"
+          }
+        }
+      ],
+      "flows": [],
+      "relationships": [],
+      "events": [],
+      "rules": [],
+      "issues": [],
+      "artifacts": [],
+      "deterministicHash": "2b65ed099c3057e6d82269d2f83d0714caf83ca1dde31c6ec784bdfb75504a07",
+      "metadata": {
+        "materializer": "SimpleSimulationStateTransitionEngine",
+        "baseline": "true",
+        "expansionProfileId": "",
+        "expansionProfileVersion": "",
+        "expansionProfileHash": "7fbdc159c21146395a092fe47a3f51ca242bf5bfa4787bf01a3ea8e3dc1ad3a2"
+      }
+    },
+    {
+      "frameId": "run.probe.farmer-land.state-transition.frame.1",
+      "run": {
+        "runId": "run.probe.farmer-land.state-transition",
+        "scenarioId": "probe.farmer-land",
+        "backendId": "simple-accounts",
+        "createdAtUtc": "2026-01-01T00:00:00+00:00",
+        "metadata": {
+          "deterministicSeed": "run.probe.farmer-land.state-transition"
+        }
+      },
+      "clock": {
+        "stepIndex": 1,
+        "simulatedAtUtc": "2026-01-02T00:00:00+00:00",
+        "stepDuration": "1.00:00:00"
+      },
+      "actors": [
+        {
+          "actorId": "buyer.external",
+          "kind": "market",
+          "displayName": "External Buyer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "market.external",
+            "location.x": "6",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "farmer.expander",
+          "kind": "farmer",
+          "displayName": "Expander Farmer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "farm.expander",
+            "location.x": "3",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "farmer.small",
+          "kind": "farmer",
+          "displayName": "Small Farmer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "farm.small",
+            "location.x": "0",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "land-board",
+          "kind": "institution",
+          "displayName": "Land Board",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "town-hall",
+            "location.x": "1",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        }
+      ],
+      "resourceStores": [
+        {
+          "storeId": "store.expander.land",
+          "ownerActorId": "farmer.expander",
+          "resourceId": "land-parcel",
+          "resourceKind": "finite-spatial-resource",
+          "displayName": "Expander land",
+          "quantity": 4,
+          "unit": "parcel",
+          "capacity": 6,
+          "metadata": {
+            "locationId": "farm.expander",
+            "lastResolutionPolicy.target": "actor-owned"
+          }
+        },
+        {
+          "storeId": "store.external.cash",
+          "ownerActorId": "buyer.external",
+          "resourceId": "cash",
+          "resourceKind": "cash",
+          "displayName": "External demand cash",
+          "quantity": 100,
+          "unit": "token",
+          "metadata": {
+            "locationId": "market.external"
+          }
+        },
+        {
+          "storeId": "store.small.land",
+          "ownerActorId": "farmer.small",
+          "resourceId": "land-parcel",
+          "resourceKind": "finite-spatial-resource",
+          "displayName": "Small farmer land",
+          "quantity": 1,
+          "unit": "parcel",
+          "capacity": 6,
+          "metadata": {
+            "locationId": "farm.small",
+            "lastResolutionPolicy.source": "actor-owned"
+          }
+        }
+      ],
+      "flows": [
+        {
+          "flowId": "flow.event.expander.buy-land.transfer",
+          "fromStoreId": "store.small.land",
+          "toStoreId": "store.expander.land",
+          "fromActorId": "farmer.small",
+          "toActorId": "farmer.expander",
+          "resourceId": "land-parcel",
+          "quantity": 1,
+          "unit": "parcel",
+          "reason": "transfer",
+          "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+          "metadata": {
+            "sourceEventId": "event.expander.buy-land",
+            "storeResolution.source.policy": "actor-owned",
+            "storeResolution.source.storeId": "store.small.land",
+            "storeResolution.source.reason": "default-policy",
+            "storeResolution.source.candidateCount": "1",
+            "storeResolution.source.actorId": "farmer.small",
+            "storeResolution.source.locationId": "",
+            "storeResolution.source.resourceId": "land-parcel",
+            "storeResolution.source.poolId": "",
+            "storeResolution.target.policy": "actor-owned",
+            "storeResolution.target.storeId": "store.expander.land",
+            "storeResolution.target.reason": "default-policy",
+            "storeResolution.target.candidateCount": "1",
+            "storeResolution.target.actorId": "farmer.expander",
+            "storeResolution.target.locationId": "",
+            "storeResolution.target.resourceId": "land-parcel",
+            "storeResolution.target.poolId": ""
+          }
+        }
+      ],
+      "relationships": [],
+      "events": [
+        {
+          "eventId": "event.expander.buy-land",
+          "kind": "actor.trade.sell",
+          "eventKind": "actor.trade.sell",
+          "stepIndex": 1,
+          "actorId": "farmer.expander",
+          "targetActorId": "farmer.small",
+          "placeId": "farm.expander",
+          "resourceId": "land-parcel",
+          "quantity": 1,
+          "durationSeconds": 1800,
+          "actorIds": [
+            "farmer.expander",
+            "farmer.small"
+          ],
+          "resourceIds": [
+            "land-parcel",
+            "cash"
+          ],
+          "sourceId": "farmer.small",
+          "targetId": "farmer.expander",
+          "source": {
+            "kind": "actor",
+            "id": "farmer.small",
+            "metadata": {}
+          },
+          "target": {
+            "kind": "actor",
+            "id": "farmer.expander",
+            "metadata": {}
+          },
+          "participantRefs": [
+            {
+              "kind": "actor",
+              "id": "farmer.expander",
+              "metadata": {}
+            },
+            {
+              "kind": "actor",
+              "id": "farmer.small",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "farm.expander",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "farm.small",
+              "metadata": {}
+            },
+            {
+              "kind": "resource",
+              "id": "land-parcel",
+              "metadata": {}
+            }
+          ],
+          "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+          "duration": "00:30:00",
+          "magnitude": 1,
+          "timing": {
+            "stepIndex": 1,
+            "offset": "00:00:00",
+            "duration": "00:30:00",
+            "order": 0
+          },
+          "participants": [
+            {
+              "participantId": "farm.expander",
+              "role": "location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "farm.expander",
+              "metadata": {}
+            },
+            {
+              "participantId": "farm.small",
+              "role": "source-location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "farm.small",
+              "metadata": {}
+            },
+            {
+              "participantId": "farmer.expander",
+              "role": "actor",
+              "actorId": "farmer.expander",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "farmer.small",
+              "role": "target-actor",
+              "actorId": "farmer.small",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "land-parcel",
+              "role": "resource",
+              "actorId": "",
+              "resourceId": "land-parcel",
+              "locationId": "",
+              "metadata": {}
+            }
+          ],
+          "effects": [],
+          "storeResolutionPolicies": [],
+          "metadata": {
+            "canonicalEventKind": "actor.trade.sell",
+            "sourceLocationId": "farm.small",
+            "targetLocationId": "farm.expander",
+            "expansion": "explicit",
+            "phase": "primary",
+            "expansionProfileId": "none",
+            "expansionProfileVersion": "v1",
+            "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+            "parentEventId": "event.expander.buy-land",
+            "expansionRuleHash": "cdba7e7561c0d1d9d55dbc79eda9f1f7ce81eb44d6e231113060e6243db99f0d",
+            "eventOrder": "0",
+            "storeResolution.source.policy": "actor-owned",
+            "storeResolution.source.storeId": "store.small.land",
+            "storeResolution.source.reason": "default-policy",
+            "storeResolution.source.candidateCount": "1",
+            "storeResolution.source.actorId": "farmer.small",
+            "storeResolution.source.locationId": "",
+            "storeResolution.source.resourceId": "land-parcel",
+            "storeResolution.source.poolId": "",
+            "storeResolution.target.policy": "actor-owned",
+            "storeResolution.target.storeId": "store.expander.land",
+            "storeResolution.target.reason": "default-policy",
+            "storeResolution.target.candidateCount": "1",
+            "storeResolution.target.actorId": "farmer.expander",
+            "storeResolution.target.locationId": "",
+            "storeResolution.target.resourceId": "land-parcel",
+            "storeResolution.target.poolId": ""
+          }
+        },
+        {
+          "eventId": "event.expander.invest",
+          "kind": "actor.work.perform",
+          "eventKind": "actor.work.perform",
+          "stepIndex": 1,
+          "actorId": "farmer.expander",
+          "targetActorId": "crop-output",
+          "placeId": "market.external",
+          "resourceId": "crop-output",
+          "quantity": 8,
+          "durationSeconds": 7200,
+          "actorIds": [
+            "farmer.expander"
+          ],
+          "resourceIds": [
+            "crop-output"
+          ],
+          "sourceId": "farmer.expander",
+          "targetId": "crop-output",
+          "source": {
+            "kind": "actor",
+            "id": "farmer.expander",
+            "metadata": {}
+          },
+          "target": {
+            "kind": "actor",
+            "id": "crop-output",
+            "metadata": {}
+          },
+          "participantRefs": [
+            {
+              "kind": "actor",
+              "id": "crop-output",
+              "metadata": {}
+            },
+            {
+              "kind": "actor",
+              "id": "farmer.expander",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "farm.expander",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "market.external",
+              "metadata": {}
+            },
+            {
+              "kind": "resource",
+              "id": "crop-output",
+              "metadata": {}
+            }
+          ],
+          "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+          "duration": "02:00:00",
+          "magnitude": 8,
+          "timing": {
+            "stepIndex": 1,
+            "offset": "00:00:00",
+            "duration": "02:00:00",
+            "order": 0
+          },
+          "participants": [
+            {
+              "participantId": "crop-output",
+              "role": "target-actor",
+              "actorId": "crop-output",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "farm.expander",
+              "role": "source-location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "farm.expander",
+              "metadata": {}
+            },
+            {
+              "participantId": "farmer.expander",
+              "role": "actor",
+              "actorId": "farmer.expander",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "market.external",
+              "role": "location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "market.external",
+              "metadata": {}
+            }
+          ],
+          "effects": [],
+          "storeResolutionPolicies": [],
+          "metadata": {
+            "canonicalEventKind": "actor.work.perform",
+            "sourceLocationId": "farm.expander",
+            "targetLocationId": "market.external",
+            "expansion": "explicit",
+            "phase": "primary",
+            "expansionProfileId": "none",
+            "expansionProfileVersion": "v1",
+            "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+            "parentEventId": "event.expander.invest",
+            "expansionRuleHash": "cfd0787d4d76492ce9714e4663d15e6f495db682a07910849caf734ba2bfa4fe",
+            "eventOrder": "1"
+          }
+        }
+      ],
+      "rules": [],
+      "issues": [],
+      "artifacts": [],
+      "deterministicHash": "bcc9648db60801bf7b706f76ad1b431d5e928ec9629a89fd0b7d71470ba2bf9e",
+      "metadata": {
+        "materializer": "SimpleSimulationStateTransitionEngine",
+        "expansionProfileId": "",
+        "expansionProfileVersion": "",
+        "expansionProfileHash": "7fbdc159c21146395a092fe47a3f51ca242bf5bfa4787bf01a3ea8e3dc1ad3a2"
+      }
+    },
+    {
+      "frameId": "run.probe.farmer-land.state-transition.frame.2",
+      "run": {
+        "runId": "run.probe.farmer-land.state-transition",
+        "scenarioId": "probe.farmer-land",
+        "backendId": "simple-accounts",
+        "createdAtUtc": "2026-01-01T00:00:00+00:00",
+        "metadata": {
+          "deterministicSeed": "run.probe.farmer-land.state-transition"
+        }
+      },
+      "clock": {
+        "stepIndex": 2,
+        "simulatedAtUtc": "2026-01-03T00:00:00+00:00",
+        "stepDuration": "1.00:00:00"
+      },
+      "actors": [
+        {
+          "actorId": "buyer.external",
+          "kind": "market",
+          "displayName": "External Buyer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "market.external",
+            "location.x": "6",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "farmer.expander",
+          "kind": "farmer",
+          "displayName": "Expander Farmer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "farm.expander",
+            "location.x": "3",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "farmer.small",
+          "kind": "farmer",
+          "displayName": "Small Farmer",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "farm.small",
+            "location.x": "0",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "land-board",
+          "kind": "institution",
+          "displayName": "Land Board",
+          "role": "",
+          "metadata": {
+            "homeLocationId": "town-hall",
+            "location.x": "1",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        }
+      ],
+      "resourceStores": [
+        {
+          "storeId": "store.expander.land",
+          "ownerActorId": "farmer.expander",
+          "resourceId": "land-parcel",
+          "resourceKind": "finite-spatial-resource",
+          "displayName": "Expander land",
+          "quantity": 4,
+          "unit": "parcel",
+          "capacity": 6,
+          "metadata": {
+            "locationId": "farm.expander",
+            "lastResolutionPolicy.target": "actor-owned"
+          }
+        },
+        {
+          "storeId": "store.external.cash",
+          "ownerActorId": "buyer.external",
+          "resourceId": "cash",
+          "resourceKind": "cash",
+          "displayName": "External demand cash",
+          "quantity": 100,
+          "unit": "token",
+          "metadata": {
+            "locationId": "market.external"
+          }
+        },
+        {
+          "storeId": "store.small.land",
+          "ownerActorId": "farmer.small",
+          "resourceId": "land-parcel",
+          "resourceKind": "finite-spatial-resource",
+          "displayName": "Small farmer land",
+          "quantity": 1,
+          "unit": "parcel",
+          "capacity": 6,
+          "metadata": {
+            "locationId": "farm.small",
+            "lastResolutionPolicy.source": "actor-owned"
+          }
+        }
+      ],
+      "flows": [],
+      "relationships": [],
+      "events": [
+        {
+          "eventId": "event.land-board.check",
+          "kind": "rule.check.evaluate",
+          "eventKind": "rule.check.evaluate",
+          "stepIndex": 2,
+          "actorId": "land-board",
+          "targetActorId": "farmer.expander",
+          "placeId": "farm.expander",
+          "resourceId": "land-parcel",
+          "quantity": 0.55,
+          "durationSeconds": 600,
+          "actorIds": [
+            "land-board",
+            "farmer.expander"
+          ],
+          "resourceIds": [
+            "land-parcel"
+          ],
+          "sourceId": "land-board",
+          "targetId": "rule.land-concentration-cap",
+          "source": {
+            "kind": "actor",
+            "id": "land-board",
+            "metadata": {}
+          },
+          "target": {
+            "kind": "object",
+            "id": "rule.land-concentration-cap",
+            "metadata": {}
+          },
+          "participantRefs": [
+            {
+              "kind": "actor",
+              "id": "farmer.expander",
+              "metadata": {}
+            },
+            {
+              "kind": "actor",
+              "id": "land-board",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "farm.expander",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "town-hall",
+              "metadata": {}
+            },
+            {
+              "kind": "object",
+              "id": "rule.land-concentration-cap",
+              "metadata": {}
+            },
+            {
+              "kind": "resource",
+              "id": "land-parcel",
+              "metadata": {}
+            }
+          ],
+          "occurredAtUtc": "2026-01-03T00:00:00+00:00",
+          "duration": "00:10:00",
+          "magnitude": 0.55,
+          "timing": {
+            "stepIndex": 2,
+            "offset": "00:00:00",
+            "duration": "00:10:00",
+            "order": 0
+          },
+          "participants": [
+            {
+              "participantId": "farm.expander",
+              "role": "location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "farm.expander",
+              "metadata": {}
+            },
+            {
+              "participantId": "farmer.expander",
+              "role": "target-actor",
+              "actorId": "farmer.expander",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "land-board",
+              "role": "actor",
+              "actorId": "land-board",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "land-parcel",
+              "role": "resource",
+              "actorId": "",
+              "resourceId": "land-parcel",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "rule.land-concentration-cap",
+              "role": "target",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "town-hall",
+              "role": "source-location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "town-hall",
+              "metadata": {}
+            }
+          ],
+          "effects": [],
+          "storeResolutionPolicies": [],
+          "metadata": {
+            "canonicalEventKind": "rule.check.evaluate",
+            "sourceLocationId": "town-hall",
+            "targetLocationId": "farm.expander",
+            "expansion": "explicit",
+            "phase": "primary",
+            "expansionProfileId": "none",
+            "expansionProfileVersion": "v1",
+            "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+            "parentEventId": "event.land-board.check",
+            "expansionRuleHash": "24afc193931c5348d584b3a5c14282905a5b0d6acb499408c3ae376f087aca26",
+            "eventOrder": "2"
+          }
+        }
+      ],
+      "rules": [],
+      "issues": [],
+      "artifacts": [],
+      "deterministicHash": "b132e2446884c7f82f8bbefe09ce7ac328b63046a76549a30881c5a284d61472",
+      "metadata": {
+        "materializer": "SimpleSimulationStateTransitionEngine",
+        "expansionProfileId": "",
+        "expansionProfileVersion": "",
+        "expansionProfileHash": "7fbdc159c21146395a092fe47a3f51ca242bf5bfa4787bf01a3ea8e3dc1ad3a2"
+      }
+    }
+  ]
+}

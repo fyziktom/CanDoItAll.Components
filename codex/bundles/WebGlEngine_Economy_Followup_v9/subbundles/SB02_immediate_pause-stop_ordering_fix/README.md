@@ -1,5 +1,17 @@
 # SB02 — Immediate Pause/Stop ordering fix
 
+## Execution status
+
+Status: **Completed** on 2026-06-04.
+
+Proof:
+
+- `proof/SB02/manifest.md`
+- `proof/SB02/semantic-invariants.md`
+- `proof/SB02/browser/runplayback-pause-assertions.json`
+- `proof/SB02/browser/runplayback-pause-after.png`
+- `proof/SB02/transcripts/webglrunlib-tests.txt`
+
 ## Goal
 
 Make Pause stop browser runtime before waiting for C# playback drain.

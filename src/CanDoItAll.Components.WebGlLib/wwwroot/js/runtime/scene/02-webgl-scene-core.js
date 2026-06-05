@@ -1,6 +1,7 @@
 import * as THREE from "../../../vendor/three.module.min.js";
 import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
 import { buildRuntimeBudgetDiagnostics, evaluateRuntimeBudget, normalizeRuntimeBudget } from "./38-webgl-scene-runtime-budget.js";
+import { buildRuntimeIdleState } from "./41-webgl-scene-runtime-idle-state.js";
 
 export { THREE };
 
@@ -182,6 +183,7 @@ export function focusHost(state) {
 export function buildDiagnosticsSnapshot(state) {
     const diagnostics = state.diagnostics || {};
     const budget = evaluateRuntimeBudget(state, diagnostics);
+    const runtimeIdle = buildRuntimeIdleState(state);
     return {
         createCount: diagnostics.createCount || 0,
         disposeCount: diagnostics.disposeCount || 0,
@@ -239,6 +241,9 @@ export function buildDiagnosticsSnapshot(state) {
         lastRuntimeStopBlockers: diagnostics.lastRuntimeStopBlockers || [],
         ignoredStaleMotionCompletedCount: diagnostics.ignoredStaleMotionCompletedCount || 0,
         animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
+        semanticIdle: runtimeIdle.semanticIdle,
+        visualIdle: runtimeIdle.visualIdle,
+        finalRenderDrained: runtimeIdle.finalRenderDrained,
         isRenderLoopActive: !!diagnostics.isRenderLoopActive,
         renderSchedulerMode: diagnostics.renderSchedulerMode || state.options.renderMode || "auto",
         lastScheduledReason: diagnostics.lastScheduledReason || "",

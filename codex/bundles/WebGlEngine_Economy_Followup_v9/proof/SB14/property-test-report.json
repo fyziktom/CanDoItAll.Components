@@ -1,0 +1,72 @@
+﻿{
+    "schemaVersion":  "economy-metamorphic-property-report/v1",
+    "sourceTestFile":  "repo://C:/repositories/CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests/SimulationMetamorphicPropertyTests.cs",
+    "testTranscript":  "bundle://proof/SB14/transcripts/metamorphic-property-tests.txt",
+    "passed":  true,
+    "properties":  [
+                       {
+                           "id":  "closed-resource-conservation",
+                           "passed":  true,
+                           "test":  "ClosedResourceTransfers_ConserveTotalsAcrossMagnitudes",
+                           "cases":  5,
+                           "magnitudes":  [
+                                              1,
+                                              2,
+                                              3,
+                                              5,
+                                              8
+                                          ],
+                           "resourceId":  "grain",
+                           "initialTotal":  10,
+                           "expectedFinalTotal":  10,
+                           "invariant":  "For closed resource transfers, total resource quantity remains unchanged across transfer magnitudes."
+                       },
+                       {
+                           "id":  "transfer-magnitude-monotonicity",
+                           "passed":  true,
+                           "test":  "TransferMagnitude_IsMonotonicWhenTargetCapacityAllows",
+                           "cases":  5,
+                           "magnitudes":  [
+                                              1,
+                                              2,
+                                              3,
+                                              4,
+                                              5
+                                          ],
+                           "observedTargetQuantities":  [
+                                                            1,
+                                                            2,
+                                                            3,
+                                                            4,
+                                                            5
+                                                        ],
+                           "targetCapacity":  20,
+                           "invariant":  "When target capacity allows, increasing transfer magnitude never reduces the target store quantity."
+                       },
+                       {
+                           "id":  "independent-event-permutation-invariance",
+                           "passed":  true,
+                           "test":  "IndependentEvents_ArePermutationInvariantForFinalState",
+                           "eventOrders":  [
+                                               "grain-then-tools",
+                                               "tools-then-grain"
+                                           ],
+                           "resources":  [
+                                             "grain",
+                                             "tools"
+                                         ],
+                           "invariant":  "Independent same-step transfers over separate resource/store pairs converge to the same final store signature when event order is permuted."
+                       },
+                       {
+                           "id":  "replay-no-hidden-drift",
+                           "passed":  true,
+                           "test":  "ReplayingSameScenario_HasNoHiddenDrift",
+                           "replayCount":  2,
+                           "comparedSignals":  [
+                                                   "frame deterministic hash chain",
+                                                   "final store signature"
+                                               ],
+                           "invariant":  "Materializing the same scenario twice produces identical frame hashes and final store state."
+                       }
+                   ]
+}

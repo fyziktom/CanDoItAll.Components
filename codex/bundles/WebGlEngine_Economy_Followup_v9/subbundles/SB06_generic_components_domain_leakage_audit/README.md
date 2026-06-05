@@ -9,6 +9,8 @@ Ensure generic WebGlLib/WebGlRunLib production code does not embed economy-speci
 Repository scope: **Components**  
 Priority: **P1**
 
+Status: **Completed**
+
 ## Required implementation work
 
 - Move hardcoded domain terms out of production policy or make them opt-in options.
@@ -20,6 +22,14 @@ Priority: **P1**
 
 - domain-leakage-report.json
 - negative test with economy terms supplied by test config
+
+## Executed proof
+
+- `proof/SB06/domain-leakage-report.json` reports `status=passed`, `filesScanned=142`, and zero configured domain-term matches in generic src C# files.
+- `proof/SB06/transcripts/webglrunlib-tests.txt` passes 68/68 tests, including fixture-driven economy-term rejection and default-boundary allowance.
+- `proof/SB06/transcripts/webglsandbox-build.txt` builds the sandbox with 0 warnings and 0 errors.
+- `proof/SB06/transcripts/source-assertions.txt` proves generic-boundary options, source provenance constraints, fixture-driven terms, and src-only CI scope.
+- `proof/SB06/transcripts/anti-stub-scan.txt` found no placeholder or reopen markers in touched SB06 files.
 
 
 ## Hard gates

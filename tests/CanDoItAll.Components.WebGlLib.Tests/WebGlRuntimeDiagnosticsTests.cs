@@ -223,7 +223,10 @@ public sealed class WebGlRuntimeDiagnosticsTests
               "lastRuntimeStopTimedOut": false,
               "lastRuntimeStopIdleElapsedMs": 17,
               "lastRuntimeStopBlockers": [],
-              "ignoredStaleMotionCompletedCount": 4
+              "ignoredStaleMotionCompletedCount": 4,
+              "semanticIdle": true,
+              "visualIdle": true,
+              "finalRenderDrained": true
             }
             """;
 
@@ -241,6 +244,9 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.Equal(17, diagnostics.LastRuntimeStopIdleElapsedMs);
         Assert.Empty(diagnostics.LastRuntimeStopBlockers);
         Assert.Equal(4, diagnostics.IgnoredStaleMotionCompletedCount);
+        Assert.True(diagnostics.SemanticIdle);
+        Assert.True(diagnostics.VisualIdle);
+        Assert.True(diagnostics.FinalRenderDrained);
     }
 
     [Fact]
@@ -260,11 +266,24 @@ public sealed class WebGlRuntimeDiagnosticsTests
                 "command-stage:barrier",
                 "render-loop:scheduled"
               ],
+              "semanticIdle": false,
+              "visualIdle": false,
+              "finalRenderDrained": false,
+              "semanticBlockers": [
+                "motion:active:1",
+                "command-stage:barrier"
+              ],
+              "visualBlockers": [
+                "render-loop:scheduled"
+              ],
               "diagnostics": {
                 "activeMotionCount": 1,
                 "queuedMotionCount": 0,
                 "queuedCommandStageCount": 0,
                 "isRenderLoopActive": true,
+                "semanticIdle": false,
+                "visualIdle": false,
+                "finalRenderDrained": false,
                 "assetCachePendingDisposalCount": 0
               }
             }
@@ -281,9 +300,17 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.Equal(5, result.PollIntervalMs);
         Assert.Equal(26, result.ElapsedMs);
         Assert.Contains("command-stage:barrier", result.Blockers);
+        Assert.False(result.SemanticIdle);
+        Assert.False(result.VisualIdle);
+        Assert.False(result.FinalRenderDrained);
+        Assert.Contains("motion:active:1", result.SemanticBlockers);
+        Assert.Contains("render-loop:scheduled", result.VisualBlockers);
         Assert.NotNull(result.Diagnostics);
         Assert.Equal(1, result.Diagnostics.ActiveMotionCount);
         Assert.True(result.Diagnostics.IsRenderLoopActive);
+        Assert.False(result.Diagnostics.SemanticIdle);
+        Assert.False(result.Diagnostics.VisualIdle);
+        Assert.False(result.Diagnostics.FinalRenderDrained);
     }
 
     [Fact]
