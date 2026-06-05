@@ -51,6 +51,7 @@ public sealed class WebGlRunDocumentValidator
 
         ValidateDomainValue("document.runId", document.RunId.Value, result.Errors, boundaryOptions);
         ValidateDomainTerms("document.metadata", document.Metadata, result.Errors, boundaryOptions: boundaryOptions);
+        ValidateDriverMetadata("document.metadata", document.Metadata, result.Errors);
         WebGlSceneDocumentValidationResult sceneValidation = WebGlSceneDocumentSerializer.Validate(document.InitialScene);
         foreach (string error in sceneValidation.Errors)
         {
@@ -190,7 +191,13 @@ public sealed class WebGlRunDocumentValidator
         {
             if (allowSourceProvenance && WebGlRunGenericBoundaryPolicy.IsSourceProvenanceKey(item.Key))
             {
-                WebGlRunGenericBoundaryPolicy.ValidateSourceProvenance($"{scope}.{item.Key}", item.Key, item.Value, errors);
+                WebGlRunGenericBoundaryPolicy.ValidateSourceProvenance($"{scope}.{item.Key}", item.Key, item.Value, errors, boundaryOptions);
+                continue;
+            }
+
+            if (WebGlRunGenericBoundaryPolicy.IsDriverManifestKey(item.Key))
+            {
+                WebGlRunGenericBoundaryPolicy.ValidateDriverManifestMetadata($"{scope}.{item.Key}", item.Key, item.Value, errors);
                 continue;
             }
 
@@ -245,17 +252,65 @@ public sealed class WebGlRunDocumentValidator
             errors.Add($"Stage '{stage.StageId}' uses object-motion barrier without barrier object ids.");
         }
     }
+
+    private static void ValidateDriverMetadata(
+        string scope,
+        IReadOnlyDictionary<string, string> metadata,
+        List<string> errors)
+    {
+        bool hasDriverMetadata = metadata.Keys.Any(WebGlRunGenericBoundaryPolicy.IsDriverManifestKey);
+        if (!hasDriverMetadata)
+        {
+            return;
+        }
+
+        RequireDriverMetadata(scope, metadata, WebGlRunDriverMetadataKeys.DriverId, errors);
+        RequireDriverMetadata(scope, metadata, WebGlRunDriverMetadataKeys.DriverVersion, errors);
+        RequireDriverMetadata(scope, metadata, WebGlRunDriverMetadataKeys.DriverHash, errors);
+        RequireDriverMetadata(scope, metadata, WebGlRunDriverMetadataKeys.DriverManifestHash, errors);
+
+        if (metadata.TryGetValue(WebGlRunDriverMetadataKeys.DriverHash, out string? driverHash) &&
+            metadata.TryGetValue(WebGlRunDriverMetadataKeys.DriverManifestHash, out string? manifestHash) &&
+            !string.Equals(driverHash, manifestHash, StringComparison.Ordinal))
+        {
+            errors.Add($"{scope}.{WebGlRunDriverMetadataKeys.DriverManifestHash} must match {WebGlRunDriverMetadataKeys.DriverHash}.");
+        }
+    }
+
+    private static void RequireDriverMetadata(
+        string scope,
+        IReadOnlyDictionary<string, string> metadata,
+        string key,
+        List<string> errors)
+    {
+        if (!metadata.TryGetValue(key, out string? value) || string.IsNullOrWhiteSpace(value))
+        {
+            errors.Add($"{scope}.{key} is required when driver metadata is present.");
+            return;
+        }
+
+        WebGlRunGenericBoundaryPolicy.ValidateDriverManifestMetadata($"{scope}.{key}", key, value, errors);
+    }
 }
 
 internal static class WebGlRunGenericBoundaryPolicy
 {
     private const int MaxSourceProvenanceKeyLength = 96;
     private const int MaxSourceProvenanceValueLength = 512;
+    private const int MaxDriverMetadataValueLength = 128;
 
     public static bool IsSourceProvenanceKey(string key)
         => key.StartsWith("source.", StringComparison.OrdinalIgnoreCase);
 
-    public static void ValidateSourceProvenance(string scope, string key, string value, List<string> errors)
+    public static bool IsDriverManifestKey(string key)
+        => DriverManifestMetadataKeys.Contains(key);
+
+    public static void ValidateSourceProvenance(
+        string scope,
+        string key,
+        string value,
+        List<string> errors,
+        WebGlRunGenericBoundaryOptions? boundaryOptions = null)
     {
         if (!AllowedSourceProvenanceKeys.Contains(key))
         {
@@ -279,6 +334,53 @@ internal static class WebGlRunGenericBoundaryPolicy
         {
             errors.Add($"{scope}.value exceeds the source provenance length limit of {MaxSourceProvenanceValueLength} characters.");
         }
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
+
+        if (HashBackedSourceProvenanceKeys.Contains(key) && !IsStrictSha256(value))
+        {
+            errors.Add($"{scope}.value must be a strict sha256 hash.");
+        }
+
+        if (OpaqueSourceProvenanceKeys.Contains(key) && !IsOpaqueSourceToken(value))
+        {
+            errors.Add($"{scope}.value must be an opaque stable token or strict sha256 hash.");
+        }
+
+        if (!HashBackedSourceProvenanceKeys.Contains(key))
+        {
+            foreach (string term in GetForbiddenDomainTerms(boundaryOptions))
+            {
+                if (value.Contains(term, StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add($"{scope}.value contains domain-specific term '{term}'. Source provenance values must be opaque in generic documents.");
+                }
+            }
+        }
+    }
+
+    public static void ValidateDriverManifestMetadata(string scope, string key, string value, List<string> errors)
+    {
+        if (!DriverManifestMetadataKeys.Contains(key))
+        {
+            errors.Add($"{scope} uses unsupported driver metadata key '{key}'.");
+            return;
+        }
+
+        if (value.Length > MaxDriverMetadataValueLength)
+        {
+            errors.Add($"{scope}.value exceeds the driver metadata length limit of {MaxDriverMetadataValueLength} characters.");
+        }
+
+        if ((string.Equals(key, WebGlRunDriverMetadataKeys.DriverHash, StringComparison.Ordinal) ||
+             string.Equals(key, WebGlRunDriverMetadataKeys.DriverManifestHash, StringComparison.Ordinal)) &&
+            !IsStrictSha256(value))
+        {
+            errors.Add($"{scope}.value must be a strict sha256 hash.");
+        }
     }
 
     public static string[] GetForbiddenDomainTerms(WebGlRunGenericBoundaryOptions? options)
@@ -290,11 +392,11 @@ internal static class WebGlRunGenericBoundaryPolicy
     public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
     {
         "source.eventId",
-        "source.domain",
         "source.inputPackHash",
         "source.kind",
         "source.anchorAlias",
         "source.category",
+        "source.layerId",
         "source.layout.zone",
         "source.linkId",
         "source.nodeId",
@@ -306,8 +408,38 @@ internal static class WebGlRunGenericBoundaryPolicy
         "source.sourceNodeId",
         "source.symbolId",
         "source.targetNodeId",
+        WebGlRunDriverMetadataKeys.SourceTraceMapHash,
         "source.traceId",
         "source.visualActionId"
+    };
+
+    public static readonly HashSet<string> HashBackedSourceProvenanceKeys = new(StringComparer.Ordinal)
+    {
+        "source.inputPackHash",
+        WebGlRunDriverMetadataKeys.SourceTraceMapHash
+    };
+
+    public static readonly HashSet<string> OpaqueSourceProvenanceKeys = new(StringComparer.Ordinal)
+    {
+        "source.eventId",
+        "source.layerId",
+        "source.linkId",
+        "source.nodeId",
+        "source.parentId",
+        "source.simulationFrameId",
+        "source.sourceNodeId",
+        "source.symbolId",
+        "source.targetNodeId",
+        "source.traceId",
+        "source.visualActionId"
+    };
+
+    public static readonly HashSet<string> DriverManifestMetadataKeys = new(StringComparer.Ordinal)
+    {
+        WebGlRunDriverMetadataKeys.DriverId,
+        WebGlRunDriverMetadataKeys.DriverVersion,
+        WebGlRunDriverMetadataKeys.DriverHash,
+        WebGlRunDriverMetadataKeys.DriverManifestHash
     };
 
     public static readonly string[] DisallowedSourcePolicyTerms =
@@ -333,4 +465,45 @@ internal static class WebGlRunGenericBoundaryPolicy
         WebGlSceneStageBarrierPolicies.WaitForRenderIdle,
         WebGlSceneStageBarrierPolicies.WaitForEvent
     };
+
+    private static bool IsOpaqueSourceToken(string value)
+    {
+        if (IsStrictSha256(value))
+        {
+            return true;
+        }
+
+        int dotIndex = value.IndexOf('.', StringComparison.Ordinal);
+        if (dotIndex <= 0 || dotIndex == value.Length - 1)
+        {
+            return false;
+        }
+
+        string prefix = value[..dotIndex];
+        string suffix = value[(dotIndex + 1)..];
+        return prefix.All(static character => char.IsLower(character) || char.IsDigit(character) || character == '-') &&
+               suffix.Length is >= 12 and <= 64 &&
+               suffix.All(static character => (character >= '0' && character <= '9') || (character >= 'a' && character <= 'f'));
+    }
+
+    private static bool IsStrictSha256(string value)
+    {
+        const string Prefix = "sha256:";
+        if (value.Length != Prefix.Length + 64 ||
+            !value.StartsWith(Prefix, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        for (int index = Prefix.Length; index < value.Length; index++)
+        {
+            char character = value[index];
+            if (!((character >= '0' && character <= '9') || (character >= 'a' && character <= 'f')))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

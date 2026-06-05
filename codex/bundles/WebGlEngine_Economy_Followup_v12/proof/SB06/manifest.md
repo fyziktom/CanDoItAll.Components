@@ -1,6 +1,6 @@
 # Proof manifest SB06
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

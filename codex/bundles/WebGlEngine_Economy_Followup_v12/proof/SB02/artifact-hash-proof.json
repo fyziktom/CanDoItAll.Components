@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "economy-evidence-artifact-hash-proof/v1",
+  "status": "passed",
+  "validatedBy": [
+    "proof/SB19/economy-targeted-validation.txt",
+    "proof/SB02/evidence-resolver-tests.txt",
+    "proof/SB02/readiness-evidence-negative-tests.txt"
+  ],
+  "implementation": {
+    "resolver": "C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs",
+    "features": [
+      "absolute, relative, file://, and artifact:// evidence refs",
+      "actual artifact existence and non-empty byte validation",
+      "declared byte count validation",
+      "strict sha256 hash validation",
+      "schemaVersion validation from JSON evidence artifacts"
+    ]
+  },
+  "negativeCase": "ReadinessReportV3_BrokenEvidenceRefsBlockExerciseAndResearchReady keeps status oracle-valid but blocks runtime/browser exercise and researchReady when artifact hashes are invalid."
+}

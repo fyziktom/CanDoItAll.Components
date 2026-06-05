@@ -707,7 +707,7 @@ public partial class RunPlayback
 
     private static WebGlRunDocument CreateRunDocument()
     {
-        return new WebGlRunDocument
+        var document = new WebGlRunDocument
         {
             RunId = new("generic-run-demo"),
             InitialScene = new WebGlSceneDocument { Scene = CreateScene() },
@@ -718,6 +718,8 @@ public partial class RunPlayback
                 ["domain"] = "generic"
             }
         };
+        WebGlRunDriverMetadataKeys.Stamp(document.Metadata, WebGlRunPassThroughDomainMappingDriver.Instance);
+        return document;
     }
 
     private WebGlRunDocument CreateBrowserLoadedRunDocument(WebGlSceneDocument browserLoadedInitialScene)

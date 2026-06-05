@@ -1,6 +1,6 @@
 # Proof manifest SB07
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

@@ -1,6 +1,6 @@
 # Proof manifest SB15
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

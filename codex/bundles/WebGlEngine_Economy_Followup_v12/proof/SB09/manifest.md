@@ -1,6 +1,6 @@
 # Proof manifest SB09
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

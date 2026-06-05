@@ -154,17 +154,16 @@ public sealed class WebGlRunValidatorTests
     [Fact]
     public void Run_document_validator_allows_typed_source_provenance_with_opaque_values()
     {
-        string maxLengthOpaqueValue = new('x', 512);
         var document = new WebGlRunDocument
         {
             RunId = new WebGlRunId("run.source-provenance"),
             InitialScene = SceneDocument(),
             Metadata =
             {
-                ["source.kind"] = "economy-market-run",
-                ["source.domain"] = "economy",
-                ["source.traceId"] = maxLengthOpaqueValue,
-                ["source.inputPackHash"] = "sha256:123"
+                ["source.kind"] = "run",
+                ["source.traceId"] = "trace.aaaaaaaaaaaaaaaa",
+                ["source.inputPackHash"] = StrictHash('1'),
+                ["source.traceMapHash"] = StrictHash('2')
             },
             Timeline =
             {
@@ -177,7 +176,7 @@ public sealed class WebGlRunValidatorTests
                         TimeSeconds = 0,
                         Metadata =
                         {
-                            ["source.simulationFrameId"] = "market-tick",
+                            ["source.simulationFrameId"] = "frame.bbbbbbbbbbbbbbbb",
                             ["source.sequence"] = "0"
                         },
                         Stages =
@@ -188,10 +187,10 @@ public sealed class WebGlRunValidatorTests
                                 StageIndex = 0,
                                 Metadata =
                                 {
-                                    ["source.visualActionId"] = "action.market-clearing",
-                                    ["source.eventId"] = "market-clearing",
-                                    ["source.inputPackHash"] = "sha256:456",
-                                    ["source.parentId"] = "market-tick"
+                                    ["source.visualActionId"] = "visual-action.cccccccccccccccc",
+                                    ["source.eventId"] = "event.dddddddddddddddd",
+                                    ["source.inputPackHash"] = StrictHash('1'),
+                                    ["source.parentId"] = "frame.bbbbbbbbbbbbbbbb"
                                 }
                             }
                         }
@@ -338,17 +337,15 @@ public sealed class WebGlRunValidatorTests
     [Fact]
     public void Action_plan_validator_allows_typed_source_provenance_with_opaque_values()
     {
-        string maxLengthOpaqueValue = new('x', 512);
         var plan = new WebGlRunActionPlan
         {
             FrameRate = 1,
             ActionId = "plan.source-provenance",
             Metadata =
             {
-                ["source.kind"] = "economy-market-run",
-                ["source.domain"] = "economy",
-                ["source.traceId"] = maxLengthOpaqueValue,
-                ["source.inputPackHash"] = "sha256:123"
+                ["source.kind"] = "run",
+                ["source.traceId"] = "trace.aaaaaaaaaaaaaaaa",
+                ["source.inputPackHash"] = StrictHash('1')
             },
             Actions =
             [
@@ -358,10 +355,10 @@ public sealed class WebGlRunValidatorTests
                     ActionKind = WebGlRunActionKinds.Wait,
                     Metadata =
                     {
-                        ["source.visualActionId"] = "action.market-clearing",
-                        ["source.eventId"] = "market-clearing",
-                        ["source.simulationFrameId"] = "market-tick",
-                        ["source.inputPackHash"] = "sha256:123"
+                        ["source.visualActionId"] = "visual-action.cccccccccccccccc",
+                        ["source.eventId"] = "event.dddddddddddddddd",
+                        ["source.simulationFrameId"] = "frame.bbbbbbbbbbbbbbbb",
+                        ["source.inputPackHash"] = StrictHash('1')
                     }
                 }
             ],
@@ -371,10 +368,10 @@ public sealed class WebGlRunValidatorTests
                 {
                     Metadata =
                     {
-                        ["source.visualActionId"] = "action.ledger-adjustment",
-                        ["source.eventId"] = "ledger-adjustment",
-                        ["source.simulationFrameId"] = "ledger-tick",
-                        ["source.inputPackHash"] = "sha256:123"
+                        ["source.visualActionId"] = "visual-action.eeeeeeeeeeeeeeee",
+                        ["source.eventId"] = "event.ffffffffffffffff",
+                        ["source.simulationFrameId"] = "frame.bbbbbbbbbbbbbbbb",
+                        ["source.inputPackHash"] = StrictHash('1')
                     }
                 }
             },
@@ -386,10 +383,10 @@ public sealed class WebGlRunValidatorTests
                     ObjectId = "actor",
                     Metadata =
                     {
-                        ["source.visualActionId"] = "action.market-clearing",
-                        ["source.eventId"] = "market-clearing",
-                        ["source.simulationFrameId"] = "market-tick",
-                        ["source.inputPackHash"] = "sha256:123"
+                        ["source.visualActionId"] = "visual-action.cccccccccccccccc",
+                        ["source.eventId"] = "event.dddddddddddddddd",
+                        ["source.simulationFrameId"] = "frame.bbbbbbbbbbbbbbbb",
+                        ["source.inputPackHash"] = StrictHash('1')
                     }
                 }
             }
@@ -608,7 +605,8 @@ public sealed class WebGlRunValidatorTests
         };
 
     private static WebGlRunDocument ObserverDocument()
-        => new()
+    {
+        var document = new WebGlRunDocument
         {
             RunId = new("run.observer-proof"),
             InitialScene = SceneDocument(),
@@ -641,6 +639,9 @@ public sealed class WebGlRunValidatorTests
                 ["boundary"] = "generic-webgl-observer"
             }
         };
+        WebGlRunDriverMetadataKeys.Stamp(document.Metadata, WebGlRunPassThroughDomainMappingDriver.Instance, StrictHash('9'));
+        return document;
+    }
 
     private static WebGlRunFrame MixedFrame()
         => new()
@@ -727,6 +728,9 @@ public sealed class WebGlRunValidatorTests
                 }
             }
         };
+
+    private static string StrictHash(char value)
+        => $"sha256:{new string(value, 64)}";
 
     private sealed class LogisticsWebGlRunDomainMappingDriver : IWebGlRunDomainMappingDriver
     {

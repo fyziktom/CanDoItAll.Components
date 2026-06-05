@@ -1,6 +1,6 @@
 # Proof manifest SB17
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

@@ -1,6 +1,6 @@
 # Proof manifest SB18
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

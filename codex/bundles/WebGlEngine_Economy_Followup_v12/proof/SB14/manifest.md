@@ -1,6 +1,6 @@
 # Proof manifest SB14
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

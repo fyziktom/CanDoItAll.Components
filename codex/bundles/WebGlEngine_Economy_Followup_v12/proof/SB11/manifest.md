@@ -1,6 +1,6 @@
 # Proof manifest SB11
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

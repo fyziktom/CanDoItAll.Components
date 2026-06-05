@@ -1,6 +1,6 @@
 # Proof manifest SB19
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

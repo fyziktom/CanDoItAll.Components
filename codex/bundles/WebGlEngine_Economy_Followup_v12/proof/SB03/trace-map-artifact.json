@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "economy-webgl-source-trace-map/v1",
+  "status": "passed",
+  "driver": {
+    "id": "economy-webgl-run",
+    "version": "1.0.0",
+    "hashPolicy": "driver.hash and driver.manifestHash are strict sha256 values and must match"
+  },
+  "genericDocumentPolicy": {
+    "sourceMetadata": "source.* values are opaque tokens or strict sha256 hashes",
+    "traceMapLocation": "domain-side artifact only",
+    "rawDomainIdentifiersInGenericDocument": false
+  },
+  "testAssertions": [
+    "EconomyWebGlBridgeTests.ProjectWithTraceMap emits source.traceMapHash into the run document.",
+    "EconomyWebGlBridgeTests.AssertTrace resolves opaque source tokens back to experiment, scenario, and event ids only through the trace map.",
+    "WebGlRunValidatorTests rejects readable domain terms in source provenance."
+  ],
+  "validatedBy": [
+    "proof/SB03/provenance-opacity-tests.txt",
+    "proof/SB05/driver-manifest-validation-tests.txt"
+  ]
+}

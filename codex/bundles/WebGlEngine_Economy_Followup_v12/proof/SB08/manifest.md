@@ -1,6 +1,6 @@
 # Proof manifest SB08
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

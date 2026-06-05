@@ -30,7 +30,13 @@ public sealed class WebGlRunObserverProofReport
     public string SchemaVersion { get; set; } = WebGlRunObserverProof.CurrentSchemaVersion;
     public string ExpectedDocumentHash { get; set; } = string.Empty;
     public string BrowserLoadedDocumentHash { get; set; } = string.Empty;
+    public string ExpectedSceneContentHash { get; set; } = string.Empty;
+    public string BrowserLoadedSceneContentHash { get; set; } = string.Empty;
+    public string ExpectedDriverHash { get; set; } = string.Empty;
+    public string BrowserLoadedDriverHash { get; set; } = string.Empty;
     public bool DocumentHashesMatch { get; set; }
+    public bool SceneContentHashesMatch { get; set; }
+    public bool DriverHashesMatch { get; set; }
     public bool BrowserRuntimeValid { get; set; }
     public bool UiValid { get; set; }
     public bool ObserverProofValid { get; set; }
@@ -68,11 +74,22 @@ public static class WebGlRunObserverProof
 
         string expectedHash = ComputeDocumentHash(expectedDocument);
         string browserHash = ComputeDocumentHash(browserLoadedDocument);
+        string expectedSceneHash = WebGlSceneDocumentSerializer.ComputeSceneContentHash(expectedDocument.InitialScene);
+        string browserSceneHash = WebGlSceneDocumentSerializer.ComputeSceneContentHash(browserLoadedDocument.InitialScene);
+        string expectedDriverHash = expectedDocument.Metadata.GetValueOrDefault(WebGlRunDriverMetadataKeys.DriverHash, string.Empty);
+        string browserDriverHash = browserLoadedDocument.Metadata.GetValueOrDefault(WebGlRunDriverMetadataKeys.DriverHash, string.Empty);
         var report = new WebGlRunObserverProofReport
         {
             ExpectedDocumentHash = expectedHash,
             BrowserLoadedDocumentHash = browserHash,
+            ExpectedSceneContentHash = expectedSceneHash,
+            BrowserLoadedSceneContentHash = browserSceneHash,
+            ExpectedDriverHash = expectedDriverHash,
+            BrowserLoadedDriverHash = browserDriverHash,
             DocumentHashesMatch = string.Equals(expectedHash, browserHash, StringComparison.Ordinal),
+            SceneContentHashesMatch = string.Equals(expectedSceneHash, browserSceneHash, StringComparison.Ordinal),
+            DriverHashesMatch = !string.IsNullOrWhiteSpace(expectedDriverHash) &&
+                                string.Equals(expectedDriverHash, browserDriverHash, StringComparison.Ordinal),
             BrowserRuntimeValid = observer.BrowserRuntimeExercised && observer.RuntimeErrors.Count == 0,
             UiValid = observer.UiExercised && observer.UiErrors.Count == 0,
             Route = observer.Route,
@@ -89,6 +106,24 @@ public static class WebGlRunObserverProof
         if (!report.DocumentHashesMatch)
         {
             report.Errors.Add("browser-document-hash-mismatch");
+        }
+
+        if (!report.SceneContentHashesMatch)
+        {
+            report.Errors.Add("browser-scene-content-hash-mismatch");
+        }
+
+        if (string.IsNullOrWhiteSpace(expectedDriverHash))
+        {
+            report.Errors.Add("expected-driver-hash-missing");
+        }
+        else if (string.IsNullOrWhiteSpace(browserDriverHash))
+        {
+            report.Errors.Add("browser-driver-hash-missing");
+        }
+        else if (!report.DriverHashesMatch)
+        {
+            report.Errors.Add("browser-driver-hash-mismatch");
         }
 
         if (!observer.BrowserRuntimeExercised)
@@ -145,6 +180,9 @@ public static class WebGlRunObserverProof
         report.Metadata["completedStageCount"] = report.CompletedStageIds.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
         report.Metadata["finalObjectPositionCount"] = report.BrowserFinalObjectPositions.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
         report.Metadata["warningCount"] = report.Warnings.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        report.Metadata["documentHashesMatch"] = report.DocumentHashesMatch.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        report.Metadata["sceneContentHashesMatch"] = report.SceneContentHashesMatch.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        report.Metadata["driverHashesMatch"] = report.DriverHashesMatch.ToString(System.Globalization.CultureInfo.InvariantCulture);
         return report;
     }
 

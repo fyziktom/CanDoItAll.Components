@@ -1,6 +1,6 @@
 # Proof manifest SB13
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

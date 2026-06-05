@@ -1,6 +1,6 @@
 # Proof manifest SB02
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 

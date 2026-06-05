@@ -1,6 +1,6 @@
 # Proof manifest SB10
 
-Status: prepared
+Status: completed
 
 Expected artifacts:
 
