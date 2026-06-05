@@ -1,16 +1,12 @@
-# Proof manifest — SB09
+# Proof manifest - SB09
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- WebGlRun observer proof tests: `proof/SB04/transcripts/webglrun-validator-tests.txt`
+- Runtime audits: `proof/SB10/transcripts/webgl-runtime-audits.txt`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed for observer proof logic and runtime audit coverage. No fresh browser screenshot was captured in this pass; no rendered UI surface was changed.

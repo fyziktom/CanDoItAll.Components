@@ -1,16 +1,12 @@
-# Proof manifest — SB05
+# Proof manifest - SB05
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- Economy build transcript: `proof/SB05/transcripts/economy-tests-build.txt`
+- Economy WebGL bridge tests: `proof/SB05/transcripts/economy-webgl-bridge-tests.txt`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed. Economy bridge projection now uses opaque generic run/document/scene/object/link/layer/symbol IDs, scrubs metadata via the driver, and preserves source provenance only under allowed `source.*` keys.

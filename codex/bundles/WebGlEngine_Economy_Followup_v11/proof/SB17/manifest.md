@@ -1,16 +1,12 @@
-# Proof manifest — SB17
+# Proof manifest - SB17
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- WebGlRun validator/driver tests: `proof/SB04/transcripts/webglrun-validator-tests.txt`
+- Broad boundary scan: `proof/SB02/transcripts/domain-boundary-audit-webglrunlib.txt`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed. The logistics canary exercises a non-Economy domain driver manifest, hash, generic action mapping, validation, and metadata scrubbing.

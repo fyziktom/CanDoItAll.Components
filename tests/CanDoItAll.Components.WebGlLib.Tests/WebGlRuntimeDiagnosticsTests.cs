@@ -95,7 +95,7 @@ public sealed class WebGlRuntimeDiagnosticsTests
     {
         const string json = """
             {
-              "runtimeBudgetProfile": "economy-large",
+              "runtimeBudgetProfile": "large",
               "degradedRenderingActive": true,
               "runtimeBudgetWarningCount": 2,
               "runtimeBudgetWarnings": [
@@ -112,7 +112,7 @@ public sealed class WebGlRuntimeDiagnosticsTests
         var diagnostics = JsonSerializer.Deserialize<WebGlRuntimeDiagnostics>(json, JsonOptions);
 
         Assert.NotNull(diagnostics);
-        Assert.Equal("economy-large", diagnostics.RuntimeBudgetProfile);
+        Assert.Equal("large", diagnostics.RuntimeBudgetProfile);
         Assert.True(diagnostics.DegradedRenderingActive);
         Assert.Equal(2, diagnostics.RuntimeBudgetWarningCount);
         Assert.Equal(2, diagnostics.RuntimeBudgetWarnings.Count);

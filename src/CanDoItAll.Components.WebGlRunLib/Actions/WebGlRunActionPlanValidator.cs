@@ -73,6 +73,7 @@ public sealed class WebGlRunActionPlanValidator
         WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.kind", action.ActionKind, result.Errors, boundaryOptions);
         WebGlRunDocumentValidator.ValidateDomainValue($"action:{action.ActionId}.id", action.ActionId, result.Errors, boundaryOptions);
         WebGlRunDocumentValidator.ValidateDomainTerms($"action:{action.ActionId}.metadata", action.Metadata, result.Errors, boundaryOptions: boundaryOptions);
+        WebGlRunDocumentValidator.ValidateDomainTerms($"action:{action.ActionId}.target.metadata", action.Target.Metadata, result.Errors, boundaryOptions: boundaryOptions);
         WebGlRunDocumentValidator.ValidateDomainTerms(
             $"action:{action.ActionId}.parameters",
             action.Parameters,

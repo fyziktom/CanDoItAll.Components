@@ -1,16 +1,11 @@
-# Proof manifest — SB08
+# Proof manifest - SB08
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- Economy semantic/readiness/performance tests: `proof/SB16/transcripts/economy-semantic-readiness-performance-tests.txt`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed via readiness evidence tests that block research-ready status when required artifacts or evidence references are missing.

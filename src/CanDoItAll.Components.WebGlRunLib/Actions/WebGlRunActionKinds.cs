@@ -19,4 +19,25 @@ public static class WebGlRunActionKinds
     public const string DirectedFlowVisual = "directed-flow-visual";
     public const string Wait = "wait";
     public const string ApplyScenePatch = "apply-scene-patch";
+
+    public static readonly IReadOnlySet<string> All = new HashSet<string>(StringComparer.Ordinal)
+    {
+        Sequence,
+        Parallel,
+        ApplyPatch,
+        MoveToObject,
+        MoveToPosition,
+        ReturnToAnchor,
+        SetAsset,
+        SetPose,
+        ChangePose,
+        ShowSymbol,
+        HideSymbol,
+        UpdateSymbol,
+        SetLayerVisibility,
+        PulseLink,
+        DirectedFlowVisual,
+        Wait,
+        ApplyScenePatch
+    };
 }

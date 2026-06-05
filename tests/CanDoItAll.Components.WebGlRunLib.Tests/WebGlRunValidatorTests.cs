@@ -428,6 +428,86 @@ public sealed class WebGlRunValidatorTests
     }
 
     [Fact]
+    public void Action_plan_validator_rejects_domain_specific_target_metadata()
+    {
+        var plan = new WebGlRunActionPlan
+        {
+            FrameRate = 1,
+            ActionId = "plan.target-metadata",
+            Actions =
+            [
+                new()
+                {
+                    ActionId = "action.target-metadata",
+                    ActionKind = WebGlRunActionKinds.MoveToObject,
+                    ObjectId = "actor",
+                    Target = new()
+                    {
+                        ObjectId = "target",
+                        Metadata =
+                        {
+                            ["marketRole"] = "buyer"
+                        }
+                    }
+                }
+            ]
+        };
+
+        WebGlRunActionPlanValidationResult validation = new WebGlRunActionPlanValidator(EconomyBoundaryOptions()).Validate(plan);
+
+        Assert.False(validation.IsValid);
+        Assert.Contains(validation.Errors, error => error.Contains("target.metadata", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(validation.Errors, error => error.Contains("domain-specific", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Run_document_validator_rejects_domain_specific_initial_scene_metadata()
+    {
+        WebGlRunDocument document = ObserverDocument();
+        document.InitialScene.Scene.Objects[0].Metadata["marketRole"] = "buyer";
+        document.InitialScene.Scene.Links.Add(new()
+        {
+            Id = "link.market-flow",
+            SourceObjectId = "actor",
+            TargetObjectId = "actor",
+            Kind = "market"
+        });
+
+        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyBoundaryOptions()).Validate(document);
+
+        Assert.False(validation.IsValid);
+        Assert.Contains(validation.Errors, error => error.Contains("initialScene.scene.objects.actor.metadata.marketRole", StringComparison.Ordinal));
+        Assert.Contains(validation.Errors, error => error.Contains("initialScene.scene.links.link.market-flow", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Domain_mapping_driver_manifest_hash_validation_and_scrubber_support_non_economy_driver()
+    {
+        IWebGlRunDomainMappingDriver driver = new LogisticsWebGlRunDomainMappingDriver();
+
+        WebGlRunDomainMappingDriverValidationResult validation = driver.Validate();
+        WebGlRunDomainMappingDriverManifest manifest = driver.Manifest;
+        IReadOnlyDictionary<string, string> scrubbed = driver.ScrubMetadata(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["source.eventId"] = "shipment.opaque-source-id",
+            ["source.policy"] = "should-not-pass",
+            ["shipment.status"] = "loaded",
+            ["genericStatus"] = "ready"
+        });
+
+        Assert.True(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
+        Assert.Equal("logistics-webgl-run", manifest.DriverId);
+        Assert.Equal(driver.DriverHash, manifest.DriverHash);
+        Assert.StartsWith("sha256:", manifest.DriverHash, StringComparison.Ordinal);
+        Assert.Equal(WebGlRunActionKinds.MoveToObject, manifest.ActionKindMappings["load-pickup"]);
+        Assert.Equal(WebGlRunActionKinds.DirectedFlowVisual, manifest.ActionKindMappings["route-leg"]);
+        Assert.Equal("shipment.opaque-source-id", scrubbed["source.eventId"]);
+        Assert.Equal("ready", scrubbed["genericStatus"]);
+        Assert.DoesNotContain("source.policy", scrubbed.Keys);
+        Assert.DoesNotContain("shipment.status", scrubbed.Keys);
+    }
+
+    [Fact]
     public void Observer_proof_compares_expected_and_browser_documents_without_mutating_source_truth()
     {
         WebGlRunDocument expected = ObserverDocument();
@@ -647,4 +727,31 @@ public sealed class WebGlRunValidatorTests
                 }
             }
         };
+
+    private sealed class LogisticsWebGlRunDomainMappingDriver : IWebGlRunDomainMappingDriver
+    {
+        public string DriverId => "logistics-webgl-run";
+        public string DriverVersion => "1.0.0";
+        public string DisplayName => "Logistics WebGL run mapping";
+        public WebGlRunGenericBoundaryOptions BoundaryOptions { get; } = new()
+        {
+            ForbiddenDomainTerms = ["shipment", "warehouse", "truck"]
+        };
+
+        public IReadOnlyCollection<string> DriverActionKinds { get; } =
+        [
+            "load-pickup",
+            "route-leg",
+            "delivery-wait"
+        ];
+
+        public string MapToGenericActionKind(string driverActionKind)
+            => driverActionKind switch
+            {
+                "load-pickup" => WebGlRunActionKinds.MoveToObject,
+                "route-leg" => WebGlRunActionKinds.DirectedFlowVisual,
+                "delivery-wait" => WebGlRunActionKinds.Wait,
+                _ => WebGlRunActionKinds.Wait
+            };
+    }
 }

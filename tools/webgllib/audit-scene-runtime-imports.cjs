@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { containsForbiddenDomainTerm } = require("./domain-boundary-auditor.cjs");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
 const webGlLibRoot = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib");
@@ -278,7 +279,7 @@ function auditGlobalRegistration(modules, failures) {
 function auditForbiddenDependencies(modules, failures) {
   for (const module of modules.values()) {
     for (const item of module.imports) {
-      if (/webglrunlib|economy|ledger|market|production-line|production line/i.test(item.specifier)) {
+      if (/webglrunlib/i.test(item.specifier) || containsForbiddenDomainTerm(item.specifier)) {
         failures.push(`${relative(module.filePath)} imports forbidden domain/run-layer specifier '${item.specifier}'.`);
         continue;
       }

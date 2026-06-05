@@ -1,16 +1,12 @@
-# Proof manifest — SB01
+# Proof manifest - SB01
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- Source/scope transcript: `proof/SB01/transcripts/source-state-and-scope.txt`
+- Final execution report: `reviews/01-execution-report.md`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed. The prepared v11 bundle validator was rerun and the changed Components/Economy file scope was captured before final closure.

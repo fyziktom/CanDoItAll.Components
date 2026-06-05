@@ -1,16 +1,12 @@
-# Proof manifest — SB03
+# Proof manifest - SB03
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- WebGlLib-only boundary scan: `proof/SB03/transcripts/domain-boundary-audit-webgllib.txt`
+- Runtime diagnostics test transcript: `proof/SB03/transcripts/webgllib-runtime-diagnostics-tests.txt`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed. The remaining generic runtime budget fixture was renamed from a domain-shaped profile label to `large`, and the WebGlLib-only scan passed.

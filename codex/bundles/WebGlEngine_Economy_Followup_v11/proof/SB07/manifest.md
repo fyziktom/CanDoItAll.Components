@@ -1,16 +1,11 @@
-# Proof manifest — SB07
+# Proof manifest - SB07
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- Economy semantic/readiness/performance tests: `proof/SB16/transcripts/economy-semantic-readiness-performance-tests.txt`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed via the focused Economy proof set, including generic investment event normalization and claim/obligation flow assertions.

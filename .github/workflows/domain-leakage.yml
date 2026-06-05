@@ -16,42 +16,17 @@ jobs:
 
       - name: Validate WebGlEngine bundle proof integrity
         shell: pwsh
-        run: python codex/bundles/WebGlEngine_Economy_Followup_v10/scripts/validate_bundle.py --stage prepared
+        run: python codex/bundles/WebGlEngine_Economy_Followup_v11/scripts/validate_bundle.py --stage prepared
 
-  generic-src-domain-leakage:
+  generic-domain-leakage:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Scan generic src projects for configured domain terms
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Scan generic source, tests, docs, tools, workflows and bundle artifacts
         shell: pwsh
-        run: |
-          $configPath = "tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/domain-leakage-terms.json"
-          $config = Get-Content -Raw -Path $configPath | ConvertFrom-Json
-          $terms = @($config.forbiddenDomainTerms) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
-          $roots = @(
-            "src/CanDoItAll.Components.WebGlLib",
-            "src/CanDoItAll.Components.WebGlRunLib"
-          )
-          $files = foreach ($root in $roots) {
-            Get-ChildItem -Path $root -Recurse -File -Include *.cs |
-              Where-Object { $_.FullName -notmatch '[\\/](bin|obj)[\\/]' }
-          }
-          $matches = foreach ($file in $files) {
-            foreach ($term in $terms) {
-              Select-String -Path $file.FullName -SimpleMatch -Pattern $term |
-                ForEach-Object {
-                  [pscustomobject]@{
-                    Path = Resolve-Path -Relative $_.Path
-                    Line = $_.LineNumber
-                    Term = $term
-                    Text = $_.Line.Trim()
-                  }
-                }
-            }
-          }
-          if ($matches) {
-            $matches | Format-Table -AutoSize | Out-String | Write-Host
-            throw "Configured domain terms were found in generic src projects."
-          }
-          "No configured domain terms were found in generic src project C# files."
+        run: node tools/webgllib/audit-webglrunlib-boundary.cjs --config tools/webgllib/domain-boundary-audit.config.json

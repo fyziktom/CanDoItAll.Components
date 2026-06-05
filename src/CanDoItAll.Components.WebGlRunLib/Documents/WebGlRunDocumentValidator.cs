@@ -49,6 +49,7 @@ public sealed class WebGlRunDocumentValidator
             result.Errors.Add("Run id is required.");
         }
 
+        ValidateDomainValue("document.runId", document.RunId.Value, result.Errors, boundaryOptions);
         ValidateDomainTerms("document.metadata", document.Metadata, result.Errors, boundaryOptions: boundaryOptions);
         WebGlSceneDocumentValidationResult sceneValidation = WebGlSceneDocumentSerializer.Validate(document.InitialScene);
         foreach (string error in sceneValidation.Errors)
@@ -61,6 +62,7 @@ public sealed class WebGlRunDocumentValidator
             result.Warnings.Add($"Initial scene: {warning}");
         }
 
+        ValidateInitialSceneDomainTerms(document.InitialScene, result.Errors, boundaryOptions);
         WebGlRunTimelineValidationResult timelineValidation = timelineValidator.Validate(document.Timeline);
         foreach (string error in timelineValidation.Errors)
         {
@@ -69,6 +71,62 @@ public sealed class WebGlRunDocumentValidator
 
         ValidateFrames(document.Timeline.Frames, result, boundaryOptions);
         return result;
+    }
+
+    private static void ValidateInitialSceneDomainTerms(
+        WebGlSceneDocument document,
+        List<string> errors,
+        WebGlRunGenericBoundaryOptions boundaryOptions)
+    {
+        ValidateDomainValue("initialScene.documentId", document.DocumentId, errors, boundaryOptions);
+        ValidateDomainValue("initialScene.source", document.Source, errors, boundaryOptions);
+        ValidateDomainTerms("initialScene.metadata", document.Metadata, errors, boundaryOptions: boundaryOptions);
+        ValidateDomainValue("initialScene.scene.id", document.Scene.SceneId, errors, boundaryOptions);
+        ValidateDomainTerms("initialScene.scene.metadata", document.Scene.Metadata, errors, boundaryOptions: boundaryOptions);
+        ValidateDomainTerms("initialScene.scene.uiState.metadata", document.Scene.UiState.Metadata, errors, boundaryOptions: boundaryOptions);
+
+        foreach (WebGlSceneObject sceneObject in document.Scene.Objects)
+        {
+            string objectScope = $"initialScene.scene.objects.{sceneObject.Id}";
+            ValidateDomainValue($"{objectScope}.id", sceneObject.Id, errors, boundaryOptions);
+            ValidateDomainValue($"{objectScope}.kind", sceneObject.Kind, errors, boundaryOptions);
+            ValidateDomainValue($"{objectScope}.family", sceneObject.Family, errors, boundaryOptions);
+            ValidateDomainTerms($"{objectScope}.metadata", sceneObject.Metadata, errors, boundaryOptions: boundaryOptions);
+            foreach (string tag in sceneObject.Tags)
+            {
+                ValidateDomainValue($"{objectScope}.tags", tag, errors, boundaryOptions);
+            }
+
+            foreach (WebGlSceneObjectAnchor anchor in sceneObject.Anchors)
+            {
+                ValidateDomainValue($"{objectScope}.anchors.{anchor.Key}.key", anchor.Key, errors, boundaryOptions);
+                ValidateDomainTerms($"{objectScope}.anchors.{anchor.Key}.metadata", anchor.Metadata, errors, boundaryOptions: boundaryOptions);
+            }
+
+            foreach (WebGlStatusSymbol symbol in sceneObject.Symbols)
+            {
+                ValidateDomainValue($"{objectScope}.symbols.{symbol.Id}.id", symbol.Id, errors, boundaryOptions);
+                ValidateDomainValue($"{objectScope}.symbols.{symbol.Id}.semanticKind", symbol.SemanticKind, errors, boundaryOptions);
+                ValidateDomainValue($"{objectScope}.symbols.{symbol.Id}.symbolAssetId", symbol.SymbolAssetId, errors, boundaryOptions);
+                ValidateDomainTerms($"{objectScope}.symbols.{symbol.Id}.metadata", symbol.Metadata, errors, boundaryOptions: boundaryOptions);
+            }
+        }
+
+        foreach (WebGlSceneLink link in document.Scene.Links)
+        {
+            string linkScope = $"initialScene.scene.links.{link.Id}";
+            ValidateDomainValue($"{linkScope}.id", link.Id, errors, boundaryOptions);
+            ValidateDomainValue($"{linkScope}.kind", link.Kind, errors, boundaryOptions);
+            ValidateDomainTerms($"{linkScope}.metadata", link.Metadata, errors, boundaryOptions: boundaryOptions);
+        }
+
+        foreach (WebGlSceneLayer layer in document.Scene.Layers)
+        {
+            string layerScope = $"initialScene.scene.layers.{layer.Id}";
+            ValidateDomainValue($"{layerScope}.id", layer.Id, errors, boundaryOptions);
+            ValidateDomainValue($"{layerScope}.kind", layer.Kind, errors, boundaryOptions);
+            ValidateDomainTerms($"{layerScope}.metadata", layer.Metadata, errors, boundaryOptions: boundaryOptions);
+        }
     }
 
     private static void ValidateFrames(
@@ -235,9 +293,19 @@ internal static class WebGlRunGenericBoundaryPolicy
         "source.domain",
         "source.inputPackHash",
         "source.kind",
+        "source.anchorAlias",
+        "source.category",
+        "source.layout.zone",
+        "source.linkId",
+        "source.nodeId",
+        "source.nodeKind",
         "source.parentId",
         "source.sequence",
+        "source.severity",
         "source.simulationFrameId",
+        "source.sourceNodeId",
+        "source.symbolId",
+        "source.targetNodeId",
         "source.traceId",
         "source.visualActionId"
     };

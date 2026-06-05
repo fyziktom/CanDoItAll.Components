@@ -1,16 +1,12 @@
-# Proof manifest — SB10
+# Proof manifest - SB10
 
-Status: prepared
+Status: completed
 
-## Required artifacts
+## Artifacts
 
-- [ ] Failing-first proof or source assertion
-- [ ] Implementation diff summary
-- [ ] Build transcript
-- [ ] Focused test transcript
-- [ ] Boundary/proof scan transcript where relevant
-- [ ] Browser/headless artifacts where relevant
+- JS runtime audits: `proof/SB10/transcripts/webgl-runtime-audits.txt`
+- Pause/stop focused tests: `proof/SB10/transcripts/webglrun-pause-stop-tests.txt`
 
-## Notes
+## Result
 
-This manifest must be updated by Codex during execution. Empty transcript files do not count as proof.
+Passed. Runtime audits pass with known line-count warnings, and pause/stop coordinator plus browser apply adapter tests passed.

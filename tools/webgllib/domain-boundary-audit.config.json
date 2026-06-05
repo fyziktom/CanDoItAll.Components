@@ -1,0 +1,225 @@
+{
+  "schemaVersion": "domain-boundary-audit/v1",
+  "termFiles": [
+    "tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/domain-leakage-terms.json"
+  ],
+  "defaultExtensions": [
+    ".cs",
+    ".razor",
+    ".js",
+    ".css",
+    ".json",
+    ".md",
+    ".csproj",
+    ".props",
+    ".targets",
+    ".yml",
+    ".yaml"
+  ],
+  "defaultExcludeDirs": [
+    ".git",
+    "bin",
+    "obj",
+    "node_modules",
+    "vendor"
+  ],
+  "globalAllowlist": {
+    "paths": [
+      {
+        "glob": "tools/webgllib/domain-boundary-audit.config.json",
+        "reason": "The audit config is the explicit owner of domain boundary terms and allowlist reasons."
+      },
+      {
+        "glob": "tools/webgllib/domain-boundary-auditor.cjs",
+        "reason": "The auditor itself references domain-boundary terminology while enforcing the registry."
+      },
+      {
+        "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/domain-leakage-terms.json",
+        "reason": "Driver-owned validation fixture supplies forbidden terms for focused validator tests."
+      },
+      {
+        "glob": "codex/bundles/WebGlEngine_Economy_Followup_v11/**",
+        "reason": "The active bundle intentionally discusses the audited domain terms as proof and requirements, not shipped behavior."
+      }
+    ],
+    "lines": [
+      {
+        "pattern": "\\bClaimStatus\\b|claim status|research-ready claim|readiness claim|overclaim",
+        "terms": [
+          "claim"
+        ],
+        "reason": "Generic proof code uses claim as an evidence-status word, not the Economy claim instrument."
+      },
+      {
+        "pattern": "machine-readable|machine readable",
+        "terms": [
+          "machine"
+        ],
+        "reason": "Generic tooling uses machine-readable to describe output format."
+      },
+      {
+        "pattern": "WebGlEngine_Economy_Followup_v11|WebGl_Economy_|webgl-economy|webgl-engine-economy",
+        "reason": "Artifact and bundle directory names preserve historical proof lineage."
+      }
+    ]
+  },
+  "profiles": {
+    "webglrunlib": {
+      "projectReferenceRules": [
+        {
+          "project": "src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj",
+          "allowedProjectFileNames": [
+            "CanDoItAll.Components.WebGlLib.csproj"
+          ],
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Economy"
+          ]
+        }
+      ],
+      "scopes": [
+        {
+          "name": "generic-webglrunlib-source",
+          "roots": [
+            "src/CanDoItAll.Components.WebGlRunLib"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "src/CanDoItAll.Components.WebGlRunLib/README.md",
+                "reason": "Package README documents the boundary that sends domain rules to consuming packages."
+              }
+            ]
+          }
+        },
+        {
+          "name": "generic-webgllib-source",
+          "roots": [
+            "src/CanDoItAll.Components.WebGlLib"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "src/CanDoItAll.Components.WebGlLib/README.md",
+                "reason": "Package README documents renderer/domain separation."
+              }
+            ]
+          }
+        },
+        {
+          "name": "focused-generic-tests",
+          "roots": [
+            "tests/CanDoItAll.Components.WebGlLib.Tests",
+            "tests/CanDoItAll.Components.WebGlRunLib.Tests"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunValidatorTests.cs",
+                "reason": "Focused negative tests intentionally inject forbidden domain terms."
+              },
+              {
+                "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunActionPlannerTests.cs",
+                "reason": "Focused provenance tests intentionally inject forbidden domain terms."
+              },
+              {
+                "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunPerformanceBudgetTests.cs",
+                "reason": "Uses generic machine-readable output language."
+              }
+            ]
+          }
+        },
+        {
+          "name": "generic-webgl-docs",
+          "roots": [
+            "docs/webgl"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "docs/webgl/economy-simulation-boundary-plan.md",
+                "reason": "Historical boundary plan intentionally names Economy while documenting separation."
+              },
+              {
+                "glob": "docs/webgl/run-layer-boundary.md",
+                "reason": "Boundary documentation intentionally names consuming domain packages while proving Components remains dependency-neutral."
+              }
+            ]
+          }
+        },
+        {
+          "name": "audit-tools-and-workflows",
+          "roots": [
+            "tools/webgllib",
+            ".github/workflows"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "tools/webgllib/audit-command-batch-parity.cjs",
+                "reason": "Legacy proof artifact directory name includes the previous domain bundle."
+              },
+              {
+                "glob": "tools/webgllib/audit-sharedwell-performance.cjs",
+                "reason": "Legacy proof artifact directory and output label include the previous scenario name."
+              },
+              {
+                "glob": "tools/webgllib/audit-scene-runtime.cjs",
+                "reason": "Legacy proof artifact directory and branch-instruction bundle paths include prior domain bundle names."
+              },
+              {
+                "glob": "tools/webgllib/audit-scene-runtime-imports.cjs",
+                "reason": "Legacy proof artifact directory includes the previous domain bundle."
+              }
+            ]
+          }
+        },
+        {
+          "name": "active-bundle-artifacts",
+          "roots": [
+            "codex/bundles/WebGlEngine_Economy_Followup_v11"
+          ]
+        }
+      ]
+    },
+    "webgllib": {
+      "projectReferenceRules": [
+        {
+          "project": "src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj",
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Components.WebGlRunLib",
+            "CanDoItAll.Economy"
+          ]
+        },
+        {
+          "project": "samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj",
+          "forbiddenReferenceFragments": [
+            "CanDoItAll.Components.WebGlRunLib",
+            "CanDoItAll.Economy"
+          ]
+        }
+      ],
+      "scopes": [
+        {
+          "name": "generic-webgllib-source",
+          "roots": [
+            "src/CanDoItAll.Components.WebGlLib"
+          ],
+          "allowlist": {
+            "paths": [
+              {
+                "glob": "src/CanDoItAll.Components.WebGlLib/README.md",
+                "reason": "Package README documents renderer/domain separation."
+              }
+            ]
+          }
+        },
+        {
+          "name": "webgllib-only-sample",
+          "roots": [
+            "samples/CanDoItAll.Components.WebGlLibOnlyViewer"
+          ]
+        }
+      ]
+    }
+  }
+}
