@@ -57,7 +57,7 @@ Before changing or releasing these packages, run:
 npm run webgl:validate-rc
 ```
 
-The command wraps the focused checks below and emits an artifact manifest under `artifacts/webgl-engine-rc-v15`.
+The command wraps the focused checks below and emits an artifact manifest plus JSON and markdown summaries under `artifacts/webgl-engine-rc-v16`.
 
 ```powershell
 npm run webgllib:test-runtime-idle-policy

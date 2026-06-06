@@ -1,5 +1,6 @@
 using System.Reflection;
 using CanDoItAll.Components.WebGlLib;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace CanDoItAll.Components.WebGlLib.Tests;
@@ -58,6 +59,44 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
         await view.RenderWithParametersAsync(largeScene, runtimeOptions, firstRender: false);
 
         Assert.Single(jsRuntime.Invocations, static invocation => invocation.Identifier == "CanDoItAll.webglScene.update");
+    }
+
+    [Fact]
+    public async Task Scene_create_disables_unhandled_runtime_callbacks_in_interop_options()
+    {
+        var jsRuntime = new RecordingJsRuntime();
+        var view = new TestableWebGlSceneView(jsRuntime);
+
+        await view.RenderWithParametersAsync(Scene("scene.callbacks", "object.callbacks", revision: 1), new WebGlRuntimeOptions(), firstRender: true);
+
+        Invocation invocation = Assert.Single(jsRuntime.Invocations, static item => item.Identifier == "CanDoItAll.webglScene.create");
+        WebGlRuntimeOptions options = Assert.IsType<WebGlRuntimeOptions>(invocation.Arguments[3]);
+        Assert.False(options.NotifyStateChanged);
+        Assert.False(options.NotifyMotionCompleted);
+        Assert.False(options.NotifyCommandCompleted);
+        Assert.False(options.NotifyCommandFailed);
+    }
+
+    [Fact]
+    public async Task Scene_create_keeps_runtime_callbacks_when_handlers_are_attached()
+    {
+        var jsRuntime = new RecordingJsRuntime();
+        var view = new TestableWebGlSceneView(jsRuntime)
+        {
+            StateChanged = EventCallback.Factory.Create<string>(new object(), static _ => { }),
+            MotionCompleted = EventCallback.Factory.Create<WebGlSceneCommandResult>(new object(), static _ => { }),
+            CommandCompleted = EventCallback.Factory.Create<WebGlSceneCommandResult>(new object(), static _ => { }),
+            CommandFailed = EventCallback.Factory.Create<WebGlSceneCommandResult>(new object(), static _ => { })
+        };
+
+        await view.RenderWithParametersAsync(Scene("scene.callbacks.on", "object.callbacks.on", revision: 1), new WebGlRuntimeOptions(), firstRender: true);
+
+        Invocation invocation = Assert.Single(jsRuntime.Invocations, static item => item.Identifier == "CanDoItAll.webglScene.create");
+        WebGlRuntimeOptions options = Assert.IsType<WebGlRuntimeOptions>(invocation.Arguments[3]);
+        Assert.True(options.NotifyStateChanged);
+        Assert.True(options.NotifyMotionCompleted);
+        Assert.True(options.NotifyCommandCompleted);
+        Assert.True(options.NotifyCommandFailed);
     }
 
     [Fact]

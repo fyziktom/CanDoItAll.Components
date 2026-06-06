@@ -27,15 +27,21 @@
     "paths": [
       {
         "glob": "tools/webgllib/domain-boundary-audit.config.json",
-        "reason": "The audit config is the explicit owner of domain boundary terms and allowlist reasons."
+        "reason": "The audit config is the explicit owner of domain boundary terms and allowlist reasons.",
+        "owner": "webgl-boundary",
+        "expires": "2026-12-31"
       },
       {
         "glob": "tools/webgllib/domain-boundary-auditor.cjs",
-        "reason": "The auditor itself references domain-boundary terminology while enforcing the registry."
+        "reason": "The auditor itself references domain-boundary terminology while enforcing the registry.",
+        "owner": "webgl-boundary",
+        "expires": "2026-12-31"
       },
       {
         "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/domain-leakage-terms.json",
-        "reason": "Driver-owned validation fixture supplies forbidden terms for focused validator tests."
+        "reason": "Driver-owned validation fixture supplies forbidden terms for focused validator tests.",
+        "owner": "webgl-boundary",
+        "expires": "2026-12-31"
       },
       {
         "glob": "codex/bundles/WebGlEngine_Economy_Followup_v12/**",
@@ -53,6 +59,12 @@
         "glob": "codex/bundles/WebGlEngine_Stabilization_v14/**",
         "reason": "The active v14 stabilization bundle intentionally discusses the audited domain terms as proof and requirements, not shipped behavior.",
         "owner": "webglrunlib-boundary",
+        "expires": "2026-12-31"
+      },
+      {
+        "glob": "codex/bundles/WebGlEngine_Stabilization_v16/**",
+        "reason": "The active v16 stabilization bundle intentionally discusses audited domain terms as proof and requirements, not shipped behavior.",
+        "owner": "webgl-boundary",
         "expires": "2026-12-31"
       }
     ],
@@ -227,11 +239,15 @@
             "paths": [
               {
                 "glob": "docs/webgl/economy-simulation-boundary-plan.md",
-                "reason": "Historical boundary plan intentionally names Economy while documenting separation."
+                "reason": "Historical boundary plan intentionally names Economy while documenting separation.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               },
               {
                 "glob": "docs/webgl/run-layer-boundary.md",
-                "reason": "Boundary documentation intentionally names consuming domain packages while proving Components remains dependency-neutral."
+                "reason": "Boundary documentation intentionally names consuming domain packages while proving Components remains dependency-neutral.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               }
             ]
           }
@@ -243,32 +259,16 @@
             ".github/workflows"
           ],
           "allowlist": {
-            "paths": [
-              {
-                "glob": "tools/webgllib/audit-command-batch-parity.cjs",
-                "reason": "Legacy proof artifact directory name includes the previous domain bundle."
-              },
-              {
-                "glob": "tools/webgllib/audit-sharedwell-performance.cjs",
-                "reason": "Legacy proof artifact directory and output label include the previous scenario name."
-              },
-              {
-                "glob": "tools/webgllib/audit-scene-runtime.cjs",
-                "reason": "Legacy proof artifact directory and branch-instruction bundle paths include prior domain bundle names."
-              },
-              {
-                "glob": "tools/webgllib/audit-scene-runtime-imports.cjs",
-                "reason": "Legacy proof artifact directory includes the previous domain bundle."
-              }
-            ]
+            "paths": []
           }
         },
         {
           "name": "active-bundle-artifacts",
           "roots": [
-          "codex/bundles/WebGlEngine_Economy_Followup_v12",
-          "codex/bundles/WebGlEngine_Economy_Followup_v13",
-          "codex/bundles/WebGlEngine_Stabilization_v14"
+            "codex/bundles/WebGlEngine_Economy_Followup_v12",
+            "codex/bundles/WebGlEngine_Economy_Followup_v13",
+            "codex/bundles/WebGlEngine_Stabilization_v14",
+            "codex/bundles/WebGlEngine_Stabilization_v16"
           ]
         }
       ]
@@ -295,7 +295,9 @@
             "paths": [
               {
                 "glob": "src/CanDoItAll.Components.WebGlRunLib/README.md",
-                "reason": "Package README documents the boundary that sends domain rules to consuming packages."
+                "reason": "Package README documents the boundary that sends domain rules to consuming packages.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               }
             ]
           }
@@ -309,7 +311,9 @@
             "paths": [
               {
                 "glob": "src/CanDoItAll.Components.WebGlLib/README.md",
-                "reason": "Package README documents renderer/domain separation."
+                "reason": "Package README documents renderer/domain separation.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               }
             ]
           }
@@ -324,15 +328,21 @@
             "paths": [
               {
                 "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunValidatorTests.cs",
-                "reason": "Focused negative tests intentionally inject forbidden domain terms."
+                "reason": "Focused negative tests intentionally inject forbidden domain terms.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               },
               {
                 "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunActionPlannerTests.cs",
-                "reason": "Focused provenance tests intentionally inject forbidden domain terms."
+                "reason": "Focused provenance tests intentionally inject forbidden domain terms.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               },
               {
                 "glob": "tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunPerformanceBudgetTests.cs",
-                "reason": "Uses generic machine-readable output language."
+                "reason": "Uses generic machine-readable output language.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               }
             ]
           }
@@ -346,11 +356,15 @@
             "paths": [
               {
                 "glob": "docs/webgl/economy-simulation-boundary-plan.md",
-                "reason": "Historical boundary plan intentionally names Economy while documenting separation."
+                "reason": "Historical boundary plan intentionally names Economy while documenting separation.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               },
               {
                 "glob": "docs/webgl/run-layer-boundary.md",
-                "reason": "Boundary documentation intentionally names consuming domain packages while proving Components remains dependency-neutral."
+                "reason": "Boundary documentation intentionally names consuming domain packages while proving Components remains dependency-neutral.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               }
             ]
           }
@@ -362,30 +376,14 @@
             ".github/workflows"
           ],
           "allowlist": {
-            "paths": [
-              {
-                "glob": "tools/webgllib/audit-command-batch-parity.cjs",
-                "reason": "Legacy proof artifact directory name includes the previous domain bundle."
-              },
-              {
-                "glob": "tools/webgllib/audit-sharedwell-performance.cjs",
-                "reason": "Legacy proof artifact directory and output label include the previous scenario name."
-              },
-              {
-                "glob": "tools/webgllib/audit-scene-runtime.cjs",
-                "reason": "Legacy proof artifact directory and branch-instruction bundle paths include prior domain bundle names."
-              },
-              {
-                "glob": "tools/webgllib/audit-scene-runtime-imports.cjs",
-                "reason": "Legacy proof artifact directory includes the previous domain bundle."
-              }
-            ]
+            "paths": []
           }
         },
         {
           "name": "active-bundle-artifacts",
           "roots": [
-            "codex/bundles/WebGlEngine_Economy_Followup_v12"
+            "codex/bundles/WebGlEngine_Economy_Followup_v12",
+            "codex/bundles/WebGlEngine_Stabilization_v16"
           ]
         },
         {
@@ -423,7 +421,9 @@
             "paths": [
               {
                 "glob": "src/CanDoItAll.Components.WebGlLib/README.md",
-                "reason": "Package README documents renderer/domain separation."
+                "reason": "Package README documents renderer/domain separation.",
+                "owner": "webgl-boundary",
+                "expires": "2026-12-31"
               }
             ]
           }

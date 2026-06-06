@@ -83,4 +83,43 @@ public partial class WebGlSceneView
         => !string.IsNullOrWhiteSpace(options.RuntimeKey)
             ? options.RuntimeKey
             : JsonSerializer.Serialize(options, SerializerOptions);
+
+    private WebGlRuntimeOptions CreateInteropOptions(WebGlRuntimeOptions options)
+        => new()
+        {
+            DeterministicMode = options.DeterministicMode,
+            PreserveDrawingBuffer = options.PreserveDrawingBuffer,
+            EnableAntialiasing = options.EnableAntialiasing,
+            MaximumDevicePixelRatio = options.MaximumDevicePixelRatio,
+            RenderMode = options.RenderMode,
+            AssetQualityProfile = options.AssetQualityProfile,
+            ShowDiagnosticsPanel = options.ShowDiagnosticsPanel,
+            ShowLabels = options.ShowLabels,
+            ShowSymbols = options.ShowSymbols,
+            AutoFitOnCreate = options.AutoFitOnCreate,
+            MaxCommandResultHistory = options.MaxCommandResultHistory,
+            MaxCommandBatchChildResults = options.MaxCommandBatchChildResults,
+            MaxCommandBatchMessages = options.MaxCommandBatchMessages,
+            MaxCommandBatchProofSnapshotPositions = options.MaxCommandBatchProofSnapshotPositions,
+            NotifyStateChanged = options.NotifyStateChanged && StateChanged.HasDelegate,
+            NotifyMotionCompleted = options.NotifyMotionCompleted && MotionCompleted.HasDelegate,
+            NotifyCommandCompleted = options.NotifyCommandCompleted && CommandCompleted.HasDelegate,
+            NotifyCommandFailed = options.NotifyCommandFailed && CommandFailed.HasDelegate,
+            RuntimeBudget = CloneRuntimeBudget(options.RuntimeBudget ?? new WebGlRuntimeBudgetOptions()),
+            RuntimeKey = options.RuntimeKey
+        };
+
+    private static WebGlRuntimeBudgetOptions CloneRuntimeBudget(WebGlRuntimeBudgetOptions options)
+        => new()
+        {
+            Profile = options.Profile,
+            MaxSceneObjects = options.MaxSceneObjects,
+            MaxLoadedAssets = options.MaxLoadedAssets,
+            MaxAssetCacheEntries = options.MaxAssetCacheEntries,
+            MaxActiveMotions = options.MaxActiveMotions,
+            MaxQueuedMotions = options.MaxQueuedMotions,
+            MaxQueuedCommandStages = options.MaxQueuedCommandStages,
+            MaxEstimatedTriangles = options.MaxEstimatedTriangles,
+            DegradeWhenExceeded = options.DegradeWhenExceeded
+        };
 }

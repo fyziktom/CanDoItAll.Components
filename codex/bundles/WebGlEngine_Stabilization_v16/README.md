@@ -50,3 +50,14 @@ The previous work moved the engine close to release candidate, but several relea
 Run subbundles in order. After every checkpoint, stop and perform the required review/refactor pass before continuing.
 
 Checkpoint subbundles are gates, not optional documentation.
+
+## Validation summary
+
+Execution completed on 2026-06-06.
+
+- Prepared-stage validator passed before implementation.
+- Completed-stage validator passed after implementation: 26 subbundles.
+- RC wrapper passed with artifact manifest `repo://artifacts/webgl-engine-rc-v16/artifact-manifest.json`.
+- Browser observer proof passed with `bundle://proof/SB17/browser/browser-observer-proof.json`.
+- Performance browser and canvas pixel proof passed with `bundle://proof/SB18/browser/performance-proof-browser.json` and `bundle://proof/SB18/browser/performance-proof-pixels.json`.
+- Final execution report: `bundle://reviews/01-execution-report.md`.

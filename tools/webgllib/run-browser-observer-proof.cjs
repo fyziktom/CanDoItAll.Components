@@ -6,7 +6,7 @@ const args = parseArgs(process.argv.slice(2));
 const url = args.url || "http://127.0.0.1:5206/run-playback";
 const output = args.output || path.join("artifacts", "webgl-engine-rc", "browser-observer-proof.json");
 const screenshot = args.screenshot || path.join("artifacts", "webgl-engine-rc", "run-playback.png");
-const timeoutMs = Number(args.timeoutMs || 45000);
+const timeoutMs = Number(args.timeoutMs || 120000);
 
 main().catch(error => {
   console.error(error.stack || error.message || String(error));

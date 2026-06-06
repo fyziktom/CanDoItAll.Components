@@ -6,7 +6,7 @@ const { buildForbiddenDomainTermPatterns } = require("./domain-boundary-auditor.
 const repoRoot = path.resolve(__dirname, "..", "..");
 const sceneRuntimeDir = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene");
 const componentRoot = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "Components", "Shared", "Assets");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-kernel-bridge-hardening-v12", "runtime");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v16", "runtime");
 const reportLines = ["# WebGL runtime audit v12", ""];
 const forbiddenDomainPatterns = buildForbiddenDomainTermPatterns();
 const warningLineThreshold = 220;
@@ -239,9 +239,7 @@ function auditBranchInstructionFiles() {
 function auditLargeScreenPolicyFiles() {
   const policyRoots = [
     path.join(repoRoot, "docs", "webgl"),
-    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_PerformanceHardeningBundle_v7"),
-    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_KernelBridgeHardeningBundle_v12"),
-    path.join(repoRoot, "codex", "bundles", "WebGl_Economy_BridgeStabilityFollowupBundle_v13")
+    path.join(repoRoot, "codex", "bundles", "WebGlEngine_Stabilization_v16")
   ];
   const smallScreenTaskPattern = /\b(small[-\s]?screen|medium[-\s]?screen|mobile|tablet|phone)\b/i;
   for (const root of policyRoots) {

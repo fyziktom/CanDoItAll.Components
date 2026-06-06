@@ -10,7 +10,7 @@ const linkSourcePath = path.join(runtimeSceneDir, "27-webgl-scene-links.js");
 const stageRunnerSourcePath = path.join(runtimeSceneDir, "30-webgl-scene-stage-runner.js");
 const barrierSourcePath = path.join(runtimeSceneDir, "32-webgl-scene-stage-barriers.js");
 const journalSourcePath = path.join(runtimeSceneDir, "33-webgl-scene-command-journal.js");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-kernel-bridge-hardening-v12", "performance");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v16", "performance");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });
@@ -18,7 +18,7 @@ async function main() {
   const links = await importModule(writeLinkAuditModule());
   const stageRunner = await importModule(writeStageRunnerAuditModule());
 
-  const motionProof = measure("1000 independent motions", () => {
+  const motionProof = measure("1000 independent object motions", () => {
     const batch = {
       batchId: "proof.components.1000-motions",
       motions: Array.from({ length: 1000 }, (_, index) => ({
@@ -40,7 +40,7 @@ async function main() {
     };
   });
 
-  const stagedProof = measure("25 actors with 4 ordered stages", () => {
+  const stagedProof = measure("25 generic objects with 4 ordered stages", () => {
     const batch = {
       batchId: "proof.components.25-actors-4-stages",
       batchingPolicy: "preserve-order",
@@ -69,7 +69,7 @@ async function main() {
     };
   });
 
-  const linkProof = measure("1000 links with indexed moved actor update", () => {
+  const linkProof = measure("1000 links with indexed moved object update", () => {
     const state = {
       objectLookup: new Map(),
       linkGroupsByObjectId: new Map(),
@@ -176,14 +176,14 @@ async function main() {
     bottleneckNotes: [
       "Command batching keeps 1000 motion commands in one normalized host interop batch.",
       "Ordered stage policy preserves stage boundaries and prevents duplicate-motion collapse across ordered stages.",
-      "Link synchronization uses linkGroupsByObjectId, so moving one actor updates only indexed adjacent links instead of scanning all scene links.",
+      "Link synchronization uses linkGroupsByObjectId, so moving one object updates only indexed adjacent links instead of scanning all scene links.",
       "The SB14 WebGL runtime scale proof builds 500 scene objects, 1000 links, 1000 attached symbols, drains 500 command stages, and proves the command-stage journal remains bounded at 200 entries."
     ]
   };
 
   const reportPath = path.join(reportDir, "components-performance-proof.json");
   fs.writeFileSync(reportPath, `${JSON.stringify(proof, null, 2)}\n`, "utf8");
-  console.log(`Shared Well WebGlLib performance audit passed. Wrote ${path.relative(repoRoot, reportPath)}.`);
+  console.log(`Generic WebGlLib performance audit passed. Wrote ${path.relative(repoRoot, reportPath)}.`);
 }
 
 function measure(name, action) {

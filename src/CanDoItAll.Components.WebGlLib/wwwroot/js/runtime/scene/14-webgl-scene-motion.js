@@ -272,6 +272,12 @@ function failMotion(state, result, message) {
 }
 
 function notifyMotionCompleted(state, motion) {
+    const notifyMotion = state?.options?.notifyMotionCompleted !== false;
+    const notifyCommand = state?.options?.notifyCommandCompleted !== false;
+    if (!notifyMotion && !notifyCommand) {
+        return;
+    }
+
     const motionGeneration = Number(motion?.runtimeStopGeneration) || 0;
     const currentGeneration = Number(state?.runtimeStopGeneration) || 0;
     if (motionGeneration !== currentGeneration) {
@@ -285,8 +291,11 @@ function notifyMotionCompleted(state, motion) {
     const result = createCommandResult(state, "motion-completed", motion.motionId);
     result.affectedObjectIds.push(motion.objectId);
     result.metadata.runtimeStopGeneration = String(currentGeneration);
-    state.dotNetRef?.invokeMethodAsync("OnMotionCompleted", JSON.stringify(completeCommandResult(state, result)))
-        .catch(error => console.warn("WebGL scene motion completion callback failed.", error));
+    const completedResult = completeCommandResult(state, result);
+    if (notifyMotion) {
+        state.dotNetRef?.invokeMethodAsync("OnMotionCompleted", JSON.stringify(completedResult))
+            .catch(error => console.warn("WebGL scene motion completion callback failed.", error));
+    }
 }
 
 function nextMotionId(state, objectId) {

@@ -13,6 +13,10 @@ export function resolvePointer(state, event) {
 }
 
 export function notifyStateChanged(state) {
+    if (state?.options?.notifyStateChanged === false) {
+        return;
+    }
+
     state.dotNetRef?.invokeMethodAsync("OnSceneStateChanged", JSON.stringify(state.sceneModel.uiState || {}))
         .catch(error => console.warn("WebGL scene state callback failed.", error));
 }

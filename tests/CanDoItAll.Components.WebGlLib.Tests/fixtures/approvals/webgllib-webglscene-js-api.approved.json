@@ -1,33 +1,281 @@
 [
-  { "method": "applyCommandBatch", "resultShape": "WebGlSceneCommandBatchResult|null", "missingRuntimeResult": "null" },
-  { "method": "applyCommandBatchAndWait", "resultShape": "Promise<WebGlSceneCommandBatchResult|null>", "missingRuntimeResult": "null" },
-  { "method": "applyPatch", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "applyPatchDetailed", "resultShape": "WebGlSceneCommandResult|null", "missingRuntimeResult": "null" },
-  { "method": "cancelCommandStages", "resultShape": "WebGlSceneCommandResult|null", "missingRuntimeResult": "null" },
-  { "method": "cancelMotion", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "cancelMotionDetailed", "resultShape": "WebGlSceneCommandResult|null", "missingRuntimeResult": "null" },
-  { "method": "clearMotions", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "clearMotionsDetailed", "resultShape": "WebGlSceneCommandResult|null", "missingRuntimeResult": "null" },
-  { "method": "create", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "dispose", "resultShape": "void", "missingRuntimeResult": "void" },
-  { "method": "enqueueMotion", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "enqueueMotionDetailed", "resultShape": "WebGlSceneCommandResult|null", "missingRuntimeResult": "null" },
-  { "method": "exportImageData", "resultShape": "string|null", "missingRuntimeResult": "null" },
-  { "method": "exportScene", "resultShape": "WebGlSceneModel|null", "missingRuntimeResult": "null" },
-  { "method": "fitView", "resultShape": "void", "missingRuntimeResult": "void" },
-  { "method": "focusObject", "resultShape": "void", "missingRuntimeResult": "void" },
-  { "method": "getDiagnostics", "resultShape": "WebGlRuntimeDiagnostics|null", "missingRuntimeResult": "null" },
-  { "method": "getProofSnapshot", "resultShape": "WebGlSceneProofSnapshot|null", "missingRuntimeResult": "null" },
-  { "method": "getState", "resultShape": "json-string", "missingRuntimeResult": "{}" },
-  { "method": "importScene", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "importSceneDetailed", "resultShape": "WebGlSceneCommandResult|null", "missingRuntimeResult": "null" },
-  { "method": "moveObject", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "requestCommandStageManualStep", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "resetCamera", "resultShape": "void", "missingRuntimeResult": "void" },
-  { "method": "setObjectTransform", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "signalCommandStageEvent", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "stopRuntimeActivity", "resultShape": "WebGlSceneCommandResult|null", "missingRuntimeResult": "null" },
-  { "method": "triggerSelectObject", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "update", "resultShape": "boolean", "missingRuntimeResult": "false" },
-  { "method": "waitForRuntimeIdle", "resultShape": "Promise<WebGlRuntimeIdleResult|null>", "missingRuntimeResult": "null" }
+  {
+    "method": "applyCommandBatch",
+    "parameterShape": "host, WebGlSceneCommandBatch",
+    "resultShape": "WebGlSceneCommandBatchResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Normalizes and schedules patch, motion, and stage commands on the existing runtime.",
+    "idleSettledBehavior": "Returns scheduled or settled batch state without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing; invalid commands produce failed command results."
+  },
+  {
+    "method": "applyCommandBatchAndWait",
+    "parameterShape": "host, WebGlSceneCommandBatch, idle options",
+    "resultShape": "Promise<WebGlSceneCommandBatchResult|null>",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Applies a command batch, then observes runtime idle through the public idle facade.",
+    "idleSettledBehavior": "Waits for the selected idle policy and annotates the batch result with idle diagnostics.",
+    "failureBehavior": "Returns null when runtime is missing; idle timeout marks the result failed."
+  },
+  {
+    "method": "applyPatch",
+    "parameterShape": "host, WebGlScenePatch",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Applies a scene patch to the existing runtime document.",
+    "idleSettledBehavior": "Does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime is missing or patch application fails."
+  },
+  {
+    "method": "applyPatchDetailed",
+    "parameterShape": "host, WebGlScenePatch",
+    "resultShape": "WebGlSceneCommandResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Applies a scene patch and returns detailed affected-object diagnostics.",
+    "idleSettledBehavior": "Does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing; validation failures are returned as failed results."
+  },
+  {
+    "method": "cancelCommandStages",
+    "parameterShape": "host, reason",
+    "resultShape": "WebGlSceneCommandResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Cancels queued and active command stages on the existing runtime.",
+    "idleSettledBehavior": "Clears stage work but does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing; failed cancellation returns failed result diagnostics."
+  },
+  {
+    "method": "cancelMotion",
+    "parameterShape": "host, motionId",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Cancels an active or queued motion by id.",
+    "idleSettledBehavior": "Clears the targeted motion without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime or motion is missing."
+  },
+  {
+    "method": "cancelMotionDetailed",
+    "parameterShape": "host, motionId",
+    "resultShape": "WebGlSceneCommandResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Cancels an active or queued motion and returns lifecycle diagnostics.",
+    "idleSettledBehavior": "Clears the targeted motion without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing; missing motion is reported as failed result."
+  },
+  {
+    "method": "clearMotions",
+    "parameterShape": "host, reason",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Clears active and queued motions from the runtime.",
+    "idleSettledBehavior": "Clears motion work without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime is missing."
+  },
+  {
+    "method": "clearMotionsDetailed",
+    "parameterShape": "host, reason",
+    "resultShape": "WebGlSceneCommandResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Clears active and queued motions and returns lifecycle diagnostics.",
+    "idleSettledBehavior": "Clears motion work without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing."
+  },
+  {
+    "method": "create",
+    "parameterShape": "host, WebGlSceneModel, WebGlRuntimeOptions",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Creates runtime state for a host and imports the initial scene.",
+    "idleSettledBehavior": "Creates initial runtime state without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when host or scene creation fails."
+  },
+  {
+    "method": "dispose",
+    "parameterShape": "host",
+    "resultShape": "void",
+    "missingRuntimeResult": "void",
+    "lifecycleBehavior": "Disposes runtime resources and removes host-owned runtime state.",
+    "idleSettledBehavior": "Cancels work and disposes resources without waiting for selected idle policy completion.",
+    "failureBehavior": "Missing runtime is ignored; disposal exceptions remain runtime errors."
+  },
+  {
+    "method": "enqueueMotion",
+    "parameterShape": "host, WebGlObjectMotionCommand",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Queues or starts object motion according to command queue mode.",
+    "idleSettledBehavior": "Schedules motion without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime is missing or motion cannot be accepted."
+  },
+  {
+    "method": "enqueueMotionDetailed",
+    "parameterShape": "host, WebGlObjectMotionCommand",
+    "resultShape": "WebGlSceneCommandResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Queues or starts object motion and returns lifecycle diagnostics.",
+    "idleSettledBehavior": "Schedules motion without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing; invalid command returns failed result."
+  },
+  {
+    "method": "exportImageData",
+    "parameterShape": "host, mimeType",
+    "resultShape": "string|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Exports the current canvas image data from the existing runtime.",
+    "idleSettledBehavior": "Does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime or canvas export is unavailable."
+  },
+  {
+    "method": "exportScene",
+    "parameterShape": "host",
+    "resultShape": "WebGlSceneModel|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Exports the current runtime scene model.",
+    "idleSettledBehavior": "Does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing."
+  },
+  {
+    "method": "fitView",
+    "parameterShape": "host",
+    "resultShape": "void",
+    "missingRuntimeResult": "void",
+    "lifecycleBehavior": "Adjusts camera framing for the current scene.",
+    "idleSettledBehavior": "Schedules visual work without waiting for selected idle policy completion.",
+    "failureBehavior": "Missing runtime is ignored."
+  },
+  {
+    "method": "focusObject",
+    "parameterShape": "host, objectId",
+    "resultShape": "void",
+    "missingRuntimeResult": "void",
+    "lifecycleBehavior": "Adjusts camera focus to a generic scene object.",
+    "idleSettledBehavior": "Schedules visual work without waiting for selected idle policy completion.",
+    "failureBehavior": "Missing runtime or missing object is ignored by the void facade."
+  },
+  {
+    "method": "getDiagnostics",
+    "parameterShape": "host",
+    "resultShape": "WebGlRuntimeDiagnostics|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Reads a diagnostics snapshot from the current runtime state.",
+    "idleSettledBehavior": "Read-only; does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing."
+  },
+  {
+    "method": "getProofSnapshot",
+    "parameterShape": "host",
+    "resultShape": "WebGlSceneProofSnapshot|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Reads browser-proof state from the current runtime.",
+    "idleSettledBehavior": "Read-only; does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing."
+  },
+  {
+    "method": "getState",
+    "parameterShape": "host",
+    "resultShape": "json-string",
+    "missingRuntimeResult": "{}",
+    "lifecycleBehavior": "Exports minimal serialized runtime state for diagnostics.",
+    "idleSettledBehavior": "Read-only; does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns empty JSON object when runtime is missing."
+  },
+  {
+    "method": "importScene",
+    "parameterShape": "host, WebGlSceneModel, WebGlRuntimeOptions",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Replaces runtime scene state from a supplied generic scene model.",
+    "idleSettledBehavior": "Imports scene without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime is missing or scene import fails."
+  },
+  {
+    "method": "importSceneDetailed",
+    "parameterShape": "host, WebGlSceneModel, WebGlRuntimeOptions",
+    "resultShape": "WebGlSceneCommandResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Imports scene state and returns detailed command diagnostics.",
+    "idleSettledBehavior": "Imports scene without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns null when runtime is missing; invalid scene returns failed result."
+  },
+  {
+    "method": "moveObject",
+    "parameterShape": "host, objectId, targetPosition",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Moves a generic scene object immediately.",
+    "idleSettledBehavior": "Applies movement without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime or object is missing."
+  },
+  {
+    "method": "requestCommandStageManualStep",
+    "parameterShape": "host, stageId",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Signals manual advancement for waiting command stages.",
+    "idleSettledBehavior": "Unblocks stage work without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime is missing or no stage can be advanced."
+  },
+  {
+    "method": "resetCamera",
+    "parameterShape": "host",
+    "resultShape": "void",
+    "missingRuntimeResult": "void",
+    "lifecycleBehavior": "Resets camera to default scene framing.",
+    "idleSettledBehavior": "Schedules visual work without waiting for selected idle policy completion.",
+    "failureBehavior": "Missing runtime is ignored."
+  },
+  {
+    "method": "setObjectTransform",
+    "parameterShape": "host, objectId, transform",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Applies transform fields to a generic scene object.",
+    "idleSettledBehavior": "Applies transform without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime or object is missing."
+  },
+  {
+    "method": "signalCommandStageEvent",
+    "parameterShape": "host, eventId",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Signals event barriers for queued command stages.",
+    "idleSettledBehavior": "Unblocks event-gated stage work without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime is missing or event has no effect."
+  },
+  {
+    "method": "stopRuntimeActivity",
+    "parameterShape": "host, reason",
+    "resultShape": "WebGlSceneCommandResult|null",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Cancels active runtime motions, command stages, and visual activity.",
+    "idleSettledBehavior": "Stops semantic work and can be followed by selected idle policy proof.",
+    "failureBehavior": "Returns null when runtime is missing; stop failures return failed result diagnostics."
+  },
+  {
+    "method": "triggerSelectObject",
+    "parameterShape": "host, objectId",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Raises generic object selection through the public interaction callback path.",
+    "idleSettledBehavior": "Interaction event only; does not wait for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime or object is missing."
+  },
+  {
+    "method": "update",
+    "parameterShape": "host, WebGlSceneModel, WebGlRuntimeOptions",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Updates existing runtime state from parameters and runtime options.",
+    "idleSettledBehavior": "Updates scene state without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime update fails."
+  },
+  {
+    "method": "waitForRuntimeIdle",
+    "parameterShape": "host, WebGlRuntimeIdleOptions",
+    "resultShape": "Promise<WebGlRuntimeIdleResult|null>",
+    "missingRuntimeResult": "null",
+    "lifecycleBehavior": "Observes runtime state until idle criteria are satisfied or timeout expires.",
+    "idleSettledBehavior": "Waits for the selected idle policy: semanticOnly, visualStrict, or allowFinalRenderDrain.",
+    "failureBehavior": "Returns null when runtime is missing; timeout returns non-idle result with blockers."
+  }
 ]

@@ -28,7 +28,11 @@ public partial class WebGlSceneView
     public async Task<bool> ImportSceneAsync(WebGlSceneModel sceneModel)
     {
         ArgumentNullException.ThrowIfNull(sceneModel);
-        bool imported = await JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.importScene", host, sceneModel, Options);
+        bool imported = await JsRuntime.InvokeAsync<bool>(
+            "CanDoItAll.webglScene.importScene",
+            host,
+            sceneModel,
+            CreateInteropOptions(Options));
         if (imported)
         {
             MarkExternalImportApplied(sceneModel, Options);
@@ -40,7 +44,11 @@ public partial class WebGlSceneView
     public async Task<WebGlSceneCommandResult?> ImportSceneDetailedAsync(WebGlSceneModel sceneModel)
     {
         ArgumentNullException.ThrowIfNull(sceneModel);
-        WebGlSceneCommandResult? result = await JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.importSceneDetailed", host, sceneModel, Options);
+        WebGlSceneCommandResult? result = await JsRuntime.InvokeAsync<WebGlSceneCommandResult?>(
+            "CanDoItAll.webglScene.importSceneDetailed",
+            host,
+            sceneModel,
+            CreateInteropOptions(Options));
         if (result?.Success == true)
         {
             MarkExternalImportApplied(sceneModel, Options);
@@ -57,7 +65,7 @@ public partial class WebGlSceneView
             "CanDoItAll.webglScene.importScene",
             host,
             sceneDocument.Scene,
-            importOptions);
+            CreateInteropOptions(importOptions));
         if (imported)
         {
             MarkExternalImportApplied(sceneDocument.Scene, importOptions);
@@ -74,7 +82,7 @@ public partial class WebGlSceneView
             "CanDoItAll.webglScene.importSceneDetailed",
             host,
             sceneDocument.Scene,
-            importOptions);
+            CreateInteropOptions(importOptions));
         if (result?.Success == true)
         {
             MarkExternalImportApplied(sceneDocument.Scene, importOptions);

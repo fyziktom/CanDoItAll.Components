@@ -5,7 +5,7 @@ const { pathToFileURL } = require("node:url");
 const repoRoot = path.resolve(__dirname, "..", "..");
 const runtimeSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "28-webgl-scene-command-batch-normalizer.js");
 const fixtureDir = path.join(__dirname, "command-batch-fixtures");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-economy-sharedwell-hardening-v9", "command-batch-parity");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v16", "command-batch-parity");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });

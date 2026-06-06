@@ -80,7 +80,7 @@ public partial class PerformanceProof
         latestSnapshot = await sceneView.GetProofSnapshotAsync();
         statusText = latestBatchResult?.Success != false ? "proof ready" : "batch error";
         statusTone = latestBatchResult?.Success != false ? "success" : "danger";
-        statusDetail = $"Applied {BatchCommandCountText} commands across {StageCountText} stage(s).";
+        statusDetail = $"Applied {BatchCommandCountText} commands with {StageCountText} queued stage(s).";
         await InvokeAsync(StateHasChanged);
     }
 
@@ -99,18 +99,18 @@ public partial class PerformanceProof
     {
         List<WebGlSceneObject> objects = [];
         List<WebGlSceneLink> links = [];
-        const int actorCount = 100;
-        for (var index = 0; index < actorCount; index++)
+        const int objectCount = 100;
+        for (var index = 0; index < objectCount; index++)
         {
             int row = index / 10;
             int column = index % 10;
-            string id = $"actor.{index:000}";
+            string id = $"object.{index:000}";
             objects.Add(new()
             {
                 Id = id,
-                Kind = "agent",
+                Kind = "proof-object",
                 Family = "performance-proof",
-                Title = $"Actor {index:000}",
+                Title = $"Object {index:000}",
                 Position = new WebGlVector3((column - 4.5) * 0.9, 0, (row - 4.5) * 0.9),
                 Size = new WebGlVector3(0.28, 0.8, 0.28),
                 Color = index % 3 == 0 ? "#38bdf8" : index % 3 == 1 ? "#f59e0b" : "#22c55e",
@@ -127,7 +127,7 @@ public partial class PerformanceProof
                 ],
                 Metadata =
                 {
-                    ["proofRole"] = "performance-actor"
+                    ["proofRole"] = "performance-object"
                 }
             });
 
@@ -136,7 +136,7 @@ public partial class PerformanceProof
                 links.Add(new()
                 {
                     Id = $"link.{index - 1:000}.{index:000}",
-                    SourceObjectId = $"actor.{index - 1:000}",
+                    SourceObjectId = $"object.{index - 1:000}",
                     TargetObjectId = id,
                     Kind = "proof-link",
                     Color = "#64748b",
@@ -191,7 +191,8 @@ public partial class PerformanceProof
             Links = links,
             Metadata =
             {
-                ["proof"] = "sb19-performance",
+                ["proof"] = "sb18-performance",
+                ["proofSubbundle"] = "SB18",
                 ["desktopOnly"] = "true"
             }
         };
@@ -206,7 +207,8 @@ public partial class PerformanceProof
             NextRevision = 1,
             Metadata =
             {
-                ["proof"] = "sb19-performance-color"
+                ["proof"] = "sb18-performance-color",
+                ["proofSubbundle"] = "SB18"
             }
         };
         var secondPatch = new WebGlScenePatch
@@ -216,14 +218,15 @@ public partial class PerformanceProof
             NextRevision = 1,
             Metadata =
             {
-                ["proof"] = "sb19-performance-size"
+                ["proof"] = "sb18-performance-size",
+                ["proofSubbundle"] = "SB18"
             }
         };
 
         List<WebGlObjectMotionCommand> motions = [];
         for (var index = 0; index < 100; index++)
         {
-            string id = $"actor.{index:000}";
+            string id = $"object.{index:000}";
             int row = index / 10;
             int column = index % 10;
             firstPatch.ObjectPatches.Add(new()
@@ -242,26 +245,16 @@ public partial class PerformanceProof
 
         return new()
         {
-            BatchId = "proof.performance.100-actors.200-actions",
+            BatchId = "proof.performance.100-objects.200-actions",
             OrderingMode = BatchOrderingMode.CoalesceIndependent,
-            Stages =
-            [
-                new()
-                {
-                    StageId = "coalesced-patches-and-motions",
-                    OrderingMode = BatchOrderingMode.CoalesceIndependent,
-                    Patches = [firstPatch, secondPatch],
-                    Motions = motions,
-                    Metadata =
-                    {
-                        ["actorCount"] = "100",
-                        ["motionCommandCount"] = "200"
-                    }
-                }
-            ],
+            Patches = [firstPatch, secondPatch],
+            Motions = motions,
             Metadata =
             {
-                ["proof"] = "sb19-performance",
+                ["proof"] = "sb18-performance",
+                ["proofSubbundle"] = "SB18",
+                ["objectCount"] = "100",
+                ["motionCommandCount"] = "200",
                 ["desktopOnly"] = "true"
             }
         };
@@ -278,7 +271,8 @@ public partial class PerformanceProof
             QueueMode = WebGlMotionQueueModes.Replace,
             Metadata =
             {
-                ["proof"] = "sb19-performance-motion"
+                ["proof"] = "sb18-performance-motion",
+                ["proofSubbundle"] = "SB18"
             }
         };
 }

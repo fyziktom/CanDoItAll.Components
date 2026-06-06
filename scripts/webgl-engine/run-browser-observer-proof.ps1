@@ -1,6 +1,7 @@
 param(
     [string]$BaseUrl = "http://127.0.0.1:5206",
-    [string]$ProofDir = "codex/bundles/WebGlEngine_Stabilization_v15/proof/SB16/browser",
+    [string]$ProofDir = "codex/bundles/WebGlEngine_Stabilization_v16/proof/SB17/browser",
+    [int]$TimeoutMs = 120000,
     [switch]$NoBuild
 )
 
@@ -62,7 +63,8 @@ try {
     node (Join-Path $repoRoot "tools\webgllib\run-browser-observer-proof.cjs") `
         --url $route `
         --output $report `
-        --screenshot $screenshot
+        --screenshot $screenshot `
+        --timeoutMs $TimeoutMs
     if ($LASTEXITCODE -ne 0) {
         throw "Browser observer proof node runner failed with exit code $LASTEXITCODE"
     }

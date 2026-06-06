@@ -27,17 +27,19 @@ export function applyCommandBatch(state, batch) {
         warnCommand(result, warning);
     }
 
-    for (const patch of normalized.patches) {
-        const patchResult = applyPatchDetailed(state, patch);
-        appendChildResult(result, patchResult);
-    }
+    withSuppressedChildCommandCallbacks(state, () => {
+        for (const patch of normalized.patches) {
+            const patchResult = applyPatchDetailed(state, patch);
+            appendChildResult(result, patchResult);
+        }
 
-    for (const motion of normalized.motions) {
-        const motionResult = enqueueMotionDetailed(state, motion);
-        appendChildResult(result, motionResult);
-    }
+        for (const motion of normalized.motions) {
+            const motionResult = enqueueMotionDetailed(state, motion);
+            appendChildResult(result, motionResult);
+        }
 
-    applyOrScheduleStages(state, normalized, result);
+        applyOrScheduleStages(state, normalized, result);
+    });
 
     normalized.metrics.batchDurationMs = Math.round(performance.now() - startedAt);
     syncBatchDiagnostics(state, normalized.metrics);
@@ -94,7 +96,19 @@ export async function applyCommandBatchAndWait(state, batch, options = {}) {
 }
 
 export function advanceCommandBatchStages(state, deltaSeconds) {
-    advanceCommandStageRunner(state, deltaSeconds, stage => applyStage(state, stage, null));
+    withSuppressedChildCommandCallbacks(state, () => {
+        advanceCommandStageRunner(state, deltaSeconds, stage => applyStage(state, stage, null));
+    });
+}
+
+function withSuppressedChildCommandCallbacks(state, action) {
+    const previous = state.suppressCommandResultCallbacks === true;
+    state.suppressCommandResultCallbacks = true;
+    try {
+        action();
+    } finally {
+        state.suppressCommandResultCallbacks = previous;
+    }
 }
 
 function applyOrScheduleStages(state, normalized, result) {

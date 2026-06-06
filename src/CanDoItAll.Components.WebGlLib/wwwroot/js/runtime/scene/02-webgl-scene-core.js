@@ -93,7 +93,11 @@ export function normalizeOptions(options) {
         autoFitOnCreate: options?.autoFitOnCreate !== false,
         runtimeKey: resolveString(options?.runtimeKey, ""),
         maxCommandResultHistory: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandResultHistory, 100))),
+        maxCommandBatchChildResults: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandBatchChildResults, 5))), maxCommandBatchMessages: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandBatchMessages, 5))),
+        maxCommandBatchProofSnapshotPositions: Math.max(0, Math.min(1000, resolveFiniteNumber(options?.maxCommandBatchProofSnapshotPositions, 10))),
         maxCommandStageJournalEntries: Math.max(20, Math.min(1000, resolveFiniteNumber(options?.maxCommandStageJournalEntries, 200))),
+        "notifyStateChanged": options?.notifyStateChanged !== false, "notifyMotionCompleted": options?.notifyMotionCompleted !== false,
+        "notifyCommandCompleted": options?.notifyCommandCompleted !== false, "notifyCommandFailed": options?.notifyCommandFailed !== false,
         runtimeBudget: normalizeRuntimeBudget(options?.runtimeBudget)
     };
 }

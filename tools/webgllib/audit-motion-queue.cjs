@@ -4,7 +4,7 @@ const { pathToFileURL } = require("node:url");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
 const runtimeSceneDir = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-runtime-motion-queue-hardening-v15", "motion-queue");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v16", "motion-queue");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });

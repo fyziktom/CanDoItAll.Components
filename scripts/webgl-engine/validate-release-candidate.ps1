@@ -1,6 +1,6 @@
 param(
     [string]$PackageProofSuffix,
-    [string]$ArtifactsRoot = "artifacts/webgl-engine-rc-v15",
+    [string]$ArtifactsRoot = "artifacts/webgl-engine-rc-v16",
     [switch]$SkipBrowserProof
 )
 
@@ -11,10 +11,12 @@ $packageDir = Join-Path $artifacts "packages"
 $nugetPackages = Join-Path $artifacts "nuget-packages"
 $nugetConfig = Join-Path $artifacts "package-proof.NuGet.config"
 $manifestPath = Join-Path $artifacts "artifact-manifest.json"
+$summaryJsonPath = Join-Path $artifacts "validation-summary.json"
+$summaryMarkdownPath = Join-Path $artifacts "validation-summary.md"
 $transcriptPath = Join-Path $artifacts "validate-release-candidate.transcript.txt"
 
 if ([string]::IsNullOrWhiteSpace($PackageProofSuffix)) {
-    $PackageProofSuffix = "-rcv15.$([DateTime]::UtcNow.ToString('yyyyMMddHHmmss'))"
+    $PackageProofSuffix = "-rcv16.$([DateTime]::UtcNow.ToString('yyyyMMddHHmmss'))"
 }
 
 New-Item -ItemType Directory -Force -Path $artifacts | Out-Null
@@ -79,7 +81,7 @@ try {
     Invoke-RcStep "npm audit command batch parity" { npm run webgllib:audit-command-batch-parity }
     Invoke-RcStep "npm audit motion queue" { npm run webgllib:audit-motion-queue }
     Invoke-RcStep "npm audit stage runner" { npm run webgllib:audit-stage-runner }
-    Invoke-RcStep "npm audit large scene performance" { npm run webgllib:audit-sharedwell-performance }
+    Invoke-RcStep "npm audit large scene performance" { npm run webgllib:audit-large-scene-performance }
     Invoke-RcStep "domain audit generic source hard gate" { node tools/webgllib/domain-boundary-auditor.cjs --profile generic-source-hard-gate }
     Invoke-RcStep "domain audit public API hard gate" { node tools/webgllib/domain-boundary-auditor.cjs --profile generic-public-api-hard-gate }
     Invoke-RcStep "domain audit package content hard gate" { node tools/webgllib/domain-boundary-auditor.cjs --profile package-content-hard-gate }
@@ -112,18 +114,58 @@ try {
     }
 }
 finally {
+    $passedCount = @($executed | Where-Object { $_.status -eq "passed" }).Count
+    $failedCount = @($executed | Where-Object { $_.status -eq "failed" }).Count
     $manifest = [ordered]@{
-        schemaVersion = "webgl-engine-rc-validation/v1"
+        schemaVersion = "webgl-engine-rc-validation/v2"
         generatedAtUtc = [DateTime]::UtcNow.ToString("o")
         packageVersion = "0.1.0$PackageProofSuffix"
         artifactsRoot = (Resolve-Path $artifacts).Path
         transcript = $transcriptPath
+        summaryJson = $summaryJsonPath
+        summaryMarkdown = $summaryMarkdownPath
         packageDirectory = $packageDir
         nugetConfig = $nugetConfig
         steps = $executed
+        passedStepCount = $passedCount
+        failedStepCount = $failedCount
         failed = $failed
     }
     $manifest | ConvertTo-Json -Depth 8 | Set-Content -Path $manifestPath
+
+    $summary = [ordered]@{
+        schemaVersion = "webgl-engine-rc-summary/v1"
+        generatedAtUtc = $manifest.generatedAtUtc
+        packageVersion = $manifest.packageVersion
+        status = if ($failed) { "failed" } else { "passed" }
+        passedStepCount = $passedCount
+        failedStepCount = $failedCount
+        artifactManifest = $manifestPath
+        transcript = $transcriptPath
+        steps = $executed
+    }
+    $summary | ConvertTo-Json -Depth 8 | Set-Content -Path $summaryJsonPath
+
+    $stepRows = foreach ($step in $executed) {
+        "| $($step.status) | $($step.name) | $($step.startedUtc) | $($step.endedUtc) |"
+    }
+    if ($stepRows.Count -eq 0) {
+        $stepRows = @("| not-run | no steps executed |  |  |")
+    }
+
+    $summaryMarkdown = @(
+        "# WebGL Engine RC Validation Summary",
+        "",
+        "- Schema: webgl-engine-rc-summary/v1",
+        "- Status: $(if ($failed) { 'failed' } else { 'passed' })",
+        "- Package version: $($manifest.packageVersion)",
+        "- Artifact manifest: $manifestPath",
+        "- Transcript: $transcriptPath",
+        "",
+        "| Status | Step | Started UTC | Ended UTC |",
+        "|---|---|---|---|"
+    ) + $stepRows
+    $summaryMarkdown | Set-Content -Path $summaryMarkdownPath
 }
 
 if ($failed) {

@@ -11,7 +11,7 @@ const vendorDirs = [
   path.join(webGlWwwRoot, "vendor"),
   path.join(webGlJsRoot, "vendor")
 ];
-const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-economy-hardening-v1", "sb02-import-audit");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v16", "scene-runtime-imports");
 
 if (process.argv.includes("--self-test")) {
   runSelfTest();

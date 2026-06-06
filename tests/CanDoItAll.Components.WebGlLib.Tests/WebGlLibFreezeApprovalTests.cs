@@ -38,11 +38,37 @@ public sealed partial class WebGlLibFreezeApprovalTests
             new JsonSerializerOptions(JsonSerializerDefaults.Web)) ?? [];
 
         Assert.Equal(actualMethods, approved.Select(static entry => entry.Method).Order(StringComparer.Ordinal).ToArray());
+        Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.ParameterShape));
         Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.ResultShape));
         Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.MissingRuntimeResult));
+        Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.LifecycleBehavior));
+        Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.IdleSettledBehavior));
+        Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.FailureBehavior));
         Assert.Contains(approved, static entry =>
             string.Equals(entry.Method, "waitForRuntimeIdle", StringComparison.Ordinal) &&
-            entry.ResultShape.Contains("WebGlRuntimeIdleResult", StringComparison.Ordinal));
+            entry.ResultShape.Contains("WebGlRuntimeIdleResult", StringComparison.Ordinal) &&
+            entry.IdleSettledBehavior.Contains("selected idle policy", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(approved, static entry =>
+            string.Equals(entry.Method, "applyCommandBatchAndWait", StringComparison.Ordinal) &&
+            entry.IdleSettledBehavior.Contains("waits", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Webgl_scene_js_api_approval_rejects_deliberate_unapproved_method_probe()
+    {
+        WebGlSceneJsApiManifestEntry[] approved = JsonSerializer.Deserialize<WebGlSceneJsApiManifestEntry[]>(
+            ReadApproval("webgllib-webglscene-js-api.approved.json"),
+            new JsonSerializerOptions(JsonSerializerDefaults.Web)) ?? [];
+        string[] approvedMethods = approved
+            .Select(static entry => entry.Method)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        string[] actualWithDeliberateDrift = approvedMethods
+            .Append("v16UnapprovedProbe")
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.NotEqual(approvedMethods, actualWithDeliberateDrift);
     }
 
     [Fact]
@@ -159,8 +185,16 @@ public sealed partial class WebGlLibFreezeApprovalTests
     {
         public string Method { get; set; } = string.Empty;
 
+        public string ParameterShape { get; set; } = string.Empty;
+
         public string ResultShape { get; set; } = string.Empty;
 
         public string MissingRuntimeResult { get; set; } = string.Empty;
+
+        public string LifecycleBehavior { get; set; } = string.Empty;
+
+        public string IdleSettledBehavior { get; set; } = string.Empty;
+
+        public string FailureBehavior { get; set; } = string.Empty;
     }
 }

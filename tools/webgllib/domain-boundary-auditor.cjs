@@ -322,6 +322,45 @@ function assertSchema(config, configPath) {
     if (!Array.isArray(config.termFiles) || config.termFiles.length === 0) {
         throw new Error(`${configPath}: termFiles must contain at least one registry.`);
     }
+
+    validateAllowlistMetadata(config.globalAllowlist, "globalAllowlist");
+    for (const [profileName, profile] of Object.entries(config.profiles || {})) {
+        for (const scope of profile.scopes || []) {
+            validateAllowlistMetadata(scope.allowlist, `profiles.${profileName}.scopes.${scope.name || "(unnamed)"}.allowlist`);
+        }
+    }
+}
+
+function validateAllowlistMetadata(allowlist, label) {
+    if (!allowlist) {
+        return;
+    }
+
+    for (const [index, item] of (allowlist.paths || []).entries()) {
+        const entryLabel = `${label}.paths[${index}]`;
+        requireAllowlistValue(item.glob, `${entryLabel}.glob`);
+        requireAllowlistValue(item.reason, `${entryLabel}.reason`);
+        requireAllowlistValue(item.owner, `${entryLabel}.owner`);
+        requireAllowlistValue(item.expires, `${entryLabel}.expires`);
+        assertNotExpired(item.expires, `${entryLabel}.expires`);
+    }
+}
+
+function requireAllowlistValue(value, label) {
+    if (typeof value !== "string" || value.trim().length === 0) {
+        throw new Error(`${label} is required for domain-boundary allowlist entries.`);
+    }
+}
+
+function assertNotExpired(value, label) {
+    const parsed = Date.parse(`${value}T23:59:59Z`);
+    if (Number.isNaN(parsed)) {
+        throw new Error(`${label} must be an ISO yyyy-mm-dd date.`);
+    }
+
+    if (parsed < Date.now()) {
+        throw new Error(`${label} expired on ${value}.`);
+    }
 }
 
 function read(filePath) {

@@ -1,9 +1,11 @@
 import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
+import { compactBatchResultForInterop, limitWithOverflow, normalizeLimit } from "./42-webgl-scene-command-result-compaction.js";
 
 const defaultMaxCommandResults = 100;
 const defaultMaxFailedCommands = 50;
-const defaultMaxBatchChildResults = 25;
-const defaultMaxBatchMessages = 25;
+const defaultMaxCallbackMessages = 5;
+
+export { compactBatchResultForInterop };
 
 export const commandLifecycleStates = Object.freeze({
     accepted: "accepted",
@@ -124,62 +126,6 @@ export function completeCommandResult(state, result) {
     return result;
 }
 
-export function compactBatchResultForInterop(state, result) {
-    const totalCommandResultCount = result.commandResults.length;
-    const totalWarningCount = result.warnings.length;
-    const totalErrorCount = result.errors.length;
-    const childLimit = normalizeLimit(state?.options?.maxCommandBatchChildResults, defaultMaxBatchChildResults);
-    const messageLimit = normalizeLimit(state?.options?.maxCommandBatchMessages, defaultMaxBatchMessages);
-
-    result.commandResults = result.commandResults.slice(0, childLimit).map(compactChildCommandResult);
-    result.warnings = limitWithOverflow(result.warnings, messageLimit, totalWarningCount, "warning");
-    result.errors = limitWithOverflow(result.errors, messageLimit, totalErrorCount, "error");
-    result.metadata = {
-        ...result.metadata,
-        totalCommandResultCount: String(totalCommandResultCount),
-        returnedCommandResultCount: String(result.commandResults.length),
-        totalWarningCount: String(totalWarningCount),
-        returnedWarningCount: String(Math.min(totalWarningCount, messageLimit)),
-        totalErrorCount: String(totalErrorCount),
-        returnedErrorCount: String(Math.min(totalErrorCount, messageLimit))
-    };
-}
-
-function compactChildCommandResult(result) {
-    return {
-        commandId: result?.commandId || "",
-        success: result?.success !== false,
-        succeeded: result?.success !== false,
-        lifecycleState: result?.lifecycleState || commandLifecycleStates.settled,
-        settled: result?.settled === true,
-        sceneId: result?.sceneId || "",
-        commandKind: result?.commandKind || "",
-        revision: Number(result?.revision) || 0,
-        errors: limitWithOverflow(result?.errors || [], defaultMaxBatchMessages, result?.errors?.length || 0, "error"),
-        warnings: limitWithOverflow(result?.warnings || [], defaultMaxBatchMessages, result?.warnings?.length || 0, "warning"),
-        affectedObjectIds: limitWithOverflow(result?.affectedObjectIds || [], defaultMaxBatchMessages, result?.affectedObjectIds?.length || 0, "affected object"),
-        affectedLinkIds: limitWithOverflow(result?.affectedLinkIds || [], defaultMaxBatchMessages, result?.affectedLinkIds?.length || 0, "affected link"),
-        diagnostics: result?.diagnostics || {},
-        metadata: {
-            ...(result?.metadata || {}),
-            totalAffectedObjectCount: String(result?.affectedObjectIds?.length || 0),
-            totalAffectedLinkCount: String(result?.affectedLinkIds?.length || 0)
-        }
-    };
-}
-
-function limitWithOverflow(values, limit, totalCount, label) {
-    const items = Array.isArray(values) ? values : [];
-    if (items.length <= limit) {
-        return items;
-    }
-
-    return [
-        ...items.slice(0, limit),
-        `${Math.max(0, totalCount - limit)} additional ${label} item(s) omitted from the interop result.`
-    ];
-}
-
 function rememberCommandResult(state, result) {
     if (!state) {
         return;
@@ -211,11 +157,19 @@ function rememberFailedCommand(state, result) {
 }
 
 function notifyCommandResult(state, result) {
-    if (!state?.dotNetRef) {
+    if (!state?.dotNetRef || state.suppressCommandResultCallbacks === true) {
         return;
     }
 
     const methodName = result.success ? "OnCommandCompleted" : "OnCommandFailed";
+    if (result.success && state.options?.notifyCommandCompleted === false) {
+        return;
+    }
+
+    if (!result.success && state.options?.notifyCommandFailed === false) {
+        return;
+    }
+
     state.dotNetRef
         .invokeMethodAsync(methodName, JSON.stringify(compactCommandResultForCallback(result)))
         .catch(error => console.warn(`WebGL scene ${methodName} callback failed.`, error));
@@ -226,12 +180,12 @@ function compactCommandResultForCallback(result) {
     const totalAffectedLinkCount = result?.affectedLinkIds?.length || 0;
     const affectedObjectIds = limitWithOverflow(
         result?.affectedObjectIds || [],
-        defaultMaxBatchMessages,
+        defaultMaxCallbackMessages,
         totalAffectedObjectCount,
         "affected object");
     const affectedLinkIds = limitWithOverflow(
         result?.affectedLinkIds || [],
-        defaultMaxBatchMessages,
+        defaultMaxCallbackMessages,
         totalAffectedLinkCount,
         "affected link");
 
@@ -244,8 +198,8 @@ function compactCommandResultForCallback(result) {
         sceneId: result?.sceneId || "",
         commandKind: result?.commandKind || "",
         revision: Number(result?.revision) || 0,
-        errors: limitWithOverflow(result?.errors || [], defaultMaxBatchMessages, result?.errors?.length || 0, "error"),
-        warnings: limitWithOverflow(result?.warnings || [], defaultMaxBatchMessages, result?.warnings?.length || 0, "warning"),
+        errors: limitWithOverflow(result?.errors || [], defaultMaxCallbackMessages, result?.errors?.length || 0, "error"),
+        warnings: limitWithOverflow(result?.warnings || [], defaultMaxCallbackMessages, result?.warnings?.length || 0, "warning"),
         affectedObjectIds,
         affectedLinkIds,
         diagnostics: result?.diagnostics || {},
@@ -298,11 +252,6 @@ function buildCommandId(state, commandKind) {
     }
 
     return `${commandKind || "command"}:${Date.now()}`;
-}
-
-function normalizeLimit(value, fallback) {
-    const limit = Number(value);
-    return Number.isFinite(limit) && limit > 0 ? Math.min(Math.floor(limit), 1000) : fallback;
 }
 
 function trimToLimit(items, limit) {

@@ -24,6 +24,20 @@ public sealed class WebGlRuntimeOptions
 
     public int MaxCommandResultHistory { get; set; } = 100;
 
+    public int MaxCommandBatchChildResults { get; set; } = 5;
+
+    public int MaxCommandBatchMessages { get; set; } = 5;
+
+    public int MaxCommandBatchProofSnapshotPositions { get; set; } = 10;
+
+    public bool NotifyStateChanged { get; set; } = true;
+
+    public bool NotifyMotionCompleted { get; set; } = true;
+
+    public bool NotifyCommandCompleted { get; set; } = true;
+
+    public bool NotifyCommandFailed { get; set; } = true;
+
     public WebGlRuntimeBudgetOptions RuntimeBudget { get; set; } = new();
 
     public string RuntimeKey { get; set; } = string.Empty;

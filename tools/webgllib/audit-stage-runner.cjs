@@ -7,7 +7,7 @@ const runtimeSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebG
 const barrierSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "32-webgl-scene-stage-barriers.js");
 const journalSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "33-webgl-scene-command-journal.js");
 const schedulerSourcePath = path.join(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "22-webgl-scene-scheduler.js");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-runtime-stage-runner-hardening-v15", "stage-runner");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v16", "stage-runner");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });
