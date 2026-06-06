@@ -1,5 +1,6 @@
 # Proof manifest SB08
 
-Status: prepared
+Status: completed
 
 Required artifacts: asset-lifecycle-report.md
+

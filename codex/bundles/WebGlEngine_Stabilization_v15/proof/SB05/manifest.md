@@ -1,5 +1,6 @@
 # Proof manifest SB05
 
-Status: prepared
+Status: completed
 
 Required artifacts: facade refactor report
+

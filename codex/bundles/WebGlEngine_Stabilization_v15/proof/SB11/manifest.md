@@ -1,5 +1,6 @@
 # Proof manifest SB11
 
-Status: prepared
+Status: completed
 
 Required artifacts: domain-driver-rc-report.md
+

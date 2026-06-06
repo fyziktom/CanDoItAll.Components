@@ -1,5 +1,6 @@
 # Proof manifest SB06
 
-Status: prepared
+Status: completed
 
 Required artifacts: idle-policy-proof.json
+

@@ -36,7 +36,8 @@ public sealed class WebGlSceneViewBrowserRuntime(WebGlSceneView sceneView) : IWe
             options.TimeoutMs,
             options.PollIntervalMs,
             options.Reason,
-            requireRuntimeIdle).ConfigureAwait(false);
+            requireRuntimeIdle,
+            options.PolicyMode).ConfigureAwait(false);
     }
 
     public async ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)
@@ -54,6 +55,7 @@ public sealed class WebGlSceneViewBrowserRuntime(WebGlSceneView sceneView) : IWe
         return await sceneView.WaitForRuntimeIdleAsync(
             options.TimeoutMs,
             options.PollIntervalMs,
-            options.Reason).ConfigureAwait(false);
+            options.Reason,
+            options.PolicyMode).ConfigureAwait(false);
     }
 }

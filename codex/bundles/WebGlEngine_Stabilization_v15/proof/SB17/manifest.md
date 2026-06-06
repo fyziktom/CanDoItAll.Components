@@ -1,5 +1,6 @@
 # Proof manifest SB17
 
-Status: prepared
+Status: completed
 
 Required artifacts: consumer-docs-report.md
+

@@ -46,6 +46,32 @@ public sealed partial class WebGlLibFreezeApprovalTests
     }
 
     [Fact]
+    public void Webgl_sceneview_csharp_facade_invokes_only_approved_js_api_methods()
+    {
+        string repoRoot = FindRepoRoot();
+        string sceneComponentRoot = Path.Combine(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "Components", "Scene");
+        var approvedMethods = JsonSerializer.Deserialize<WebGlSceneJsApiManifestEntry[]>(
+            ReadApproval("webgllib-webglscene-js-api.approved.json"),
+            new JsonSerializerOptions(JsonSerializerDefaults.Web))?
+            .Select(static entry => entry.Method)
+            .ToHashSet(StringComparer.Ordinal) ?? [];
+
+        string[] invokedMethods = Directory
+            .GetFiles(sceneComponentRoot, "WebGlSceneView*", SearchOption.TopDirectoryOnly)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .SelectMany(path => File.ReadLines(path)
+                .SelectMany(line => WebGlSceneInteropLiteralRegex()
+                    .Matches(line)
+                    .Select(match => match.Groups["name"].Value)))
+            .Distinct(StringComparer.Ordinal)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.NotEmpty(invokedMethods);
+        Assert.All(invokedMethods, method => Assert.Contains(method, approvedMethods));
+    }
+
+    [Fact]
     public void Package_content_matches_freeze_snapshot()
     {
         string approved = ReadApproval("webgllib-package-content.approved.txt");
@@ -58,9 +84,12 @@ public sealed partial class WebGlLibFreezeApprovalTests
     {
         string repoRoot = FindRepoRoot();
         string absoluteSourceRoot = Path.Combine(repoRoot, sourceRoot);
-        string[] lines = Directory.GetFiles(absoluteSourceRoot, "*.cs", SearchOption.AllDirectories)
+        string[] lines = Directory.GetFiles(absoluteSourceRoot, "*", SearchOption.AllDirectories)
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(static path =>
+                string.Equals(Path.GetExtension(path), ".cs", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(Path.GetExtension(path), ".razor", StringComparison.OrdinalIgnoreCase))
             .OrderBy(path => Path.GetRelativePath(repoRoot, path), StringComparer.Ordinal)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { Path = Path.GetRelativePath(repoRoot, path).Replace('\\', '/'), Line = line.Trim(), LineNumber = index + 1 })
@@ -122,6 +151,9 @@ public sealed partial class WebGlLibFreezeApprovalTests
 
     [GeneratedRegex("^\\s{4}(?<name>[A-Za-z0-9_]+)\\s*\\(")]
     private static partial Regex WebGlSceneMethodRegex();
+
+    [GeneratedRegex("\"CanDoItAll\\.webglScene\\.(?<name>[A-Za-z0-9_]+)\"")]
+    private static partial Regex WebGlSceneInteropLiteralRegex();
 
     private sealed class WebGlSceneJsApiManifestEntry
     {

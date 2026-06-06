@@ -1,5 +1,6 @@
 # Proof manifest SB02
 
-Status: prepared
+Status: completed
 
 Required artifacts: external-gap-matrix.md
+

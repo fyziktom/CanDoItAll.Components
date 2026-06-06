@@ -1,3 +1,5 @@
+using CanDoItAll.Components.WebGlLib;
+
 namespace CanDoItAll.Components.WebGlRunLib;
 
 public sealed class WebGlRunBrowserPlaybackApplyOptions
@@ -14,6 +16,8 @@ public sealed class WebGlRunRuntimeIdleWaitOptions
     public int PollIntervalMs { get; set; } = 16;
 
     public string Reason { get; set; } = "playback-apply";
+
+    public string PolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.VisualStrict;
 }
 
 public static class WebGlRunRuntimeIdleWaitPolicies

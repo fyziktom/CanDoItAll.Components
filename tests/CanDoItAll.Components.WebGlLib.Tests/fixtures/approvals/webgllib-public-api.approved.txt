@@ -1,6 +1,84 @@
 src/CanDoItAll.Components.WebGlLib/ComponentNamespaceMarker.cs:3: public static class ComponentNamespaceMarker
 src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.CommandResults.cs:5: public partial class WebGlSceneView
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:5: public partial class WebGlSceneView
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:7: public Task FitViewAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:10: public Task FocusObjectAsync(string objectId)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:13: public Task ResetCameraAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:16: public Task<string?> CaptureImageAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:19: public Task<WebGlSceneProofSnapshot?> GetProofSnapshotAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:22: public Task<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:25: public Task<WebGlSceneModel?> ExportSceneAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:28: public async Task<bool> ImportSceneAsync(WebGlSceneModel sceneModel)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:40: public async Task<WebGlSceneCommandResult?> ImportSceneDetailedAsync(WebGlSceneModel sceneModel)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:52: public async Task<bool> ImportSceneDocumentAsync(WebGlSceneDocument sceneDocument)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:69: public async Task<WebGlSceneCommandResult?> ImportSceneDocumentDetailedAsync(WebGlSceneDocument sceneDocument)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:86: public Task<bool> ApplyPatchAsync(WebGlScenePatch patch)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:89: public Task<WebGlSceneCommandResult?> ApplyPatchDetailedAsync(WebGlScenePatch patch)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:92: public Task<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(WebGlSceneCommandBatch batch)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:95: public Task<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:116: public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:119: public Task<bool> MoveObjectAsync(string objectId, WebGlVector3 position)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:122: public Task<bool> EnqueueMotionAsync(WebGlObjectMotionCommand command)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:125: public Task<WebGlSceneCommandResult?> EnqueueMotionDetailedAsync(WebGlObjectMotionCommand command)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:128: public Task<WebGlSceneCommandResult?> CancelCommandStagesAsync(string reason = "cancelled")
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:131: public async Task<WebGlSceneCommandResult?> StopRuntimeActivityAsync(
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:159: public Task<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:175: public Task<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(WebGlRuntimeIdleOptions options)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:184: public Task<bool> ClearMotionsAsync(string? objectId = null)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:187: public Task<WebGlSceneCommandResult?> ClearMotionsDetailedAsync(string? objectId = null)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:190: public Task<bool> CancelMotionAsync(string motionId)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:193: public Task<WebGlSceneCommandResult?> CancelMotionDetailedAsync(string motionId)
 src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Lifecycle.cs:5: public partial class WebGlSceneView
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:26: public WebGlSceneModel Scene { get; set; } = default!;
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:29: public WebGlRuntimeOptions Options { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:32: public string AriaLabel { get; set; } = "WebGL scene";
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:35: public EventCallback<WebGlSceneSelectionChangedEventArgs> SelectionChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:38: public EventCallback<WebGlSceneHoverChangedEventArgs> HoverChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:41: public EventCallback<WebGlObjectMovedEventArgs> ObjectsMoved { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:44: public EventCallback<string> StateChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:47: public EventCallback<WebGlRuntimeReadyEventArgs> RuntimeReady { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:50: public EventCallback<WebGlRuntimeErrorEventArgs> RuntimeError { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:53: public EventCallback<WebGlSceneCommandResult> MotionCompleted { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:56: public EventCallback<WebGlSceneCommandResult> CommandCompleted { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:59: public EventCallback<WebGlSceneCommandResult> CommandFailed { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:127: public Task OnSceneSelectionChanged(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:134: public Task OnSceneHoverChanged(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:141: public Task OnObjectsMoved(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:148: public Task OnSceneStateChanged(string stateJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:152: public Task OnRuntimeReady(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:159: public Task OnRuntimeError(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:166: public Task OnMotionCompleted(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:173: public Task OnCommandCompleted(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:180: public Task OnCommandFailed(string eventJson)
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor:186: public async ValueTask DisposeAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Shared/Assets/WebGlLibBodyAssets.razor:24: public bool IncludeRuntimeAssets { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/Components/Shared/Assets/WebGlLibBodyAssets.razor:27: public bool? IncludeWorkbenchRuntimeAssets { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Shared/Assets/WebGlLibBodyAssets.razor:30: public bool IncludeSceneRuntimeAssets { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:30: public WebGlWorkbenchSurface Surface { get; set; } = default!;
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:33: public EventCallback<WebGlSelectionChangedEventArgs> SelectionChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:36: public EventCallback<WebGlNodeMovedEventArgs> NodesMoved { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:39: public EventCallback<WebGlConnectionChangeRequest> ConnectionChangeRequested { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:42: public EventCallback<WebGlDeleteRequest> DeleteRequested { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:45: public EventCallback<string> StateChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:48: public EventCallback<string> ChromeActionRequested { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:89: public Task OnSelectionChanged(string? primaryNodeId, string selectedNodeIdsJson)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:97: public Task OnNodesMoved(string positionsJson)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:104: public Task OnConnectionChangeRequested(string requestJson)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:113: public Task OnDeleteRequested(string requestJson)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:122: public Task OnStateChanged(string stateJson)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:126: public Task OnChromeActionRequested(string actionId)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:131: public Task FitViewToSceneAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:134: public Task FocusNodeAsync(string nodeId)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:137: public Task<string?> CaptureImageAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:140: public Task<int> CaptureImageLengthAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:143: public Task OrbitAsync(double deltaAzimuth, double deltaPolar)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:146: public Task PanAsync(double deltaX, double deltaY)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:149: public Task ZoomAsync(double factor)
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:152: public Task TriggerPrimaryClickAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:155: public Task TriggerDoubleClickAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:158: public Task TriggerContextMenuAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:161: public Task ResetCameraAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Workbench/WebGlWorkbench.razor:164: public async ValueTask DisposeAsync()
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/IWebGlAssetCatalogProvider.cs:3: public interface IWebGlAssetCatalogProvider
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/InMemoryWebGlAssetCatalogProvider.cs:3: public sealed class InMemoryWebGlAssetCatalogProvider(WebGlAssetCatalog catalog) : IWebGlAssetCatalogProvider
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/InMemoryWebGlAssetCatalogProvider.cs:7: public ValueTask<WebGlAssetCatalog> GetCatalogAsync(CancellationToken cancellationToken = default)

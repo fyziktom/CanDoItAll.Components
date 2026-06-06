@@ -1,5 +1,6 @@
 # Proof manifest SB20
 
-Status: prepared
+Status: completed
 
 Required artifacts: final-freeze-signoff.md
+

@@ -1,5 +1,6 @@
 # Proof manifest SB07
 
-Status: prepared
+Status: completed
 
 Required artifacts: command-lifecycle-proof.json
+

@@ -189,17 +189,6 @@ src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:23:
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:28: public WebGlRunDocumentValidator()
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:33: public WebGlRunDocumentValidator(WebGlRunGenericBoundaryOptions? boundaryOptions)
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:38: public WebGlRunDocumentValidationResult Validate(WebGlRunDocument document)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:302: public static bool IsSourceProvenanceKey(string key)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:305: public static bool IsDriverManifestKey(string key)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:308: public static void ValidateSourceProvenance(
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:365: public static void ValidateDriverManifestMetadata(string scope, string key, string value, List<string> errors)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:386: public static string[] GetForbiddenDomainTerms(WebGlRunGenericBoundaryOptions? options)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:392: public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:418: public static readonly HashSet<string> HashBackedSourceProvenanceKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:424: public static readonly HashSet<string> OpaqueSourceProvenanceKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:440: public static readonly HashSet<string> DriverManifestMetadataKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:448: public static readonly string[] DisallowedSourcePolicyTerms =
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:462: public static readonly HashSet<string> AllowedSceneBarrierPolicies = new(StringComparer.Ordinal)
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:5: public sealed class WebGlRunFrame
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:7: public long Index { get; set; }
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:9: public double TimeSeconds { get; set; }
@@ -229,6 +218,17 @@ src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:57: public stri
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:59: public WebGlScenePatch Patch { get; set; } = new();
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrameCommandPolicy.cs:5: public static bool HasMixedDirectAndStagedCommands(WebGlRunFrame frame)
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrameCommandPolicy.cs:8: public static string CreateMixedDirectAndStagedCommandsError(long frameIndex)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:11: public static bool IsSourceProvenanceKey(string key)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:14: public static bool IsDriverManifestKey(string key)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:17: public static void ValidateSourceProvenance(
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:74: public static void ValidateDriverManifestMetadata(string scope, string key, string value, List<string> errors)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:95: public static string[] GetForbiddenDomainTerms(WebGlRunGenericBoundaryOptions? options)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:101: public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:127: public static readonly HashSet<string> HashBackedSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:133: public static readonly HashSet<string> OpaqueSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:149: public static readonly HashSet<string> DriverManifestMetadataKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:157: public static readonly string[] DisallowedSourcePolicyTerms =
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunGenericBoundaryPolicy.cs:171: public static readonly HashSet<string> AllowedSceneBarrierPolicies = new(StringComparer.Ordinal)
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:9: public sealed class WebGlRunObserverSnapshot
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:11: public bool BrowserRuntimeExercised { get; set; }
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunObserverProof.cs:12: public bool UiExercised { get; set; }
@@ -436,21 +436,22 @@ src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:85
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:87: public const string RuntimeIdleTimeout = nameof(RuntimeIdleTimeout);
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:90: public static class WebGlRunBrowserPlaybackTransactionPolicies
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyResults.cs:92: public const string StopOnFirstFailure = nameof(StopOnFirstFailure);
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:3: public sealed class WebGlRunBrowserPlaybackApplyOptions
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:5: public string RuntimeIdleWaitPolicy { get; set; } = WebGlRunRuntimeIdleWaitPolicies.None;
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:7: public WebGlRunRuntimeIdleWaitOptions RuntimeIdle { get; set; } = new();
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:10: public sealed class WebGlRunRuntimeIdleWaitOptions
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:12: public int TimeoutMs { get; set; } = 2_000;
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:14: public int PollIntervalMs { get; set; } = 16;
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:16: public string Reason { get; set; } = "playback-apply";
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:19: public static class WebGlRunRuntimeIdleWaitPolicies
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:21: public const string None = nameof(None);
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:23: public const string AfterEachFrame = nameof(AfterEachFrame);
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:25: public const string AfterPlayback = nameof(AfterPlayback);
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:28: public static class WebGlRunBrowserReplayModes
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:30: public const string Incremental = nameof(Incremental);
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:32: public const string AbsoluteReplay = nameof(AbsoluteReplay);
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:34: public const string SnapshotAnchorReplay = nameof(SnapshotAnchorReplay);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:5: public sealed class WebGlRunBrowserPlaybackApplyOptions
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:7: public string RuntimeIdleWaitPolicy { get; set; } = WebGlRunRuntimeIdleWaitPolicies.None;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:9: public WebGlRunRuntimeIdleWaitOptions RuntimeIdle { get; set; } = new();
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:12: public sealed class WebGlRunRuntimeIdleWaitOptions
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:14: public int TimeoutMs { get; set; } = 2_000;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:16: public int PollIntervalMs { get; set; } = 16;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:18: public string Reason { get; set; } = "playback-apply";
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:20: public string PolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.VisualStrict;
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:23: public static class WebGlRunRuntimeIdleWaitPolicies
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:25: public const string None = nameof(None);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:27: public const string AfterEachFrame = nameof(AfterEachFrame);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:29: public const string AfterPlayback = nameof(AfterPlayback);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:32: public static class WebGlRunBrowserReplayModes
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:34: public const string Incremental = nameof(Incremental);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:36: public const string AbsoluteReplay = nameof(AbsoluteReplay);
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserPlaybackOptions.cs:38: public const string SnapshotAnchorReplay = nameof(SnapshotAnchorReplay);
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserRuntimeContracts.cs:5: public interface IWebGlRunBrowserApplyAdapter
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserRuntimeContracts.cs:20: public interface IWebGlRunBrowserRuntime
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs:5: public sealed class WebGlRunDocumentRunner(IWebGlRunFrameApplier? frameApplier = null) : IWebGlRunDocumentRunner
@@ -629,8 +630,8 @@ src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:5
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:7: public async ValueTask<WebGlSceneCommandResult?> ImportSceneAsync(
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:16: public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAsync(
 src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:25: public async ValueTask<WebGlSceneCommandBatchResult?> ApplyCommandBatchAndWaitAsync(
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:42: public async ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)
-src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:48: public async ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:43: public async ValueTask<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync(CancellationToken cancellationToken = default)
+src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlSceneViewBrowserRuntime.cs:49: public async ValueTask<WebGlRuntimeIdleResult?> WaitForRuntimeIdleAsync(
 src/CanDoItAll.Components.WebGlRunLib/WebGlRunActionCompiler.cs:5: public sealed class WebGlRunActionCompiler
 src/CanDoItAll.Components.WebGlRunLib/WebGlRunActionCompiler.cs:9: public WebGlRunTimeline Compile(WebGlRunActionPlan plan)
 src/CanDoItAll.Components.WebGlRunLib/WebGlRunDocumentFrameSource.cs:3: public sealed class WebGlRunDocumentFrameSource(WebGlRunDocument document) : IWebGlRunFrameSource

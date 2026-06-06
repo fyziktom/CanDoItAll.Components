@@ -43,9 +43,21 @@ Browser proof that asserts a final visual state should use `visualStrict`. Compo
 
 Source provenance is intentionally opaque. Generic validators allow stable reference tokens such as `source.provenanceMode` and `source.traceMapRef`, but they do not interpret consumer-specific meaning.
 
+## Companion Docs
+
+- `docs/webgl/external-consumer-quickstart.md` describes package-mode scene and run hosting.
+- `docs/webgl/api-change-request-template.md` is required before changing a frozen API, JS facade, action-kind, package, or driver-manifest surface.
+- `docs/webgl/post-freeze-change-governance.md` defines allowed post-freeze changes and proof requirements.
+
 ## Required Release Checks
 
 Before changing or releasing these packages, run:
+
+```powershell
+npm run webgl:validate-rc
+```
+
+The command wraps the focused checks below and emits an artifact manifest under `artifacts/webgl-engine-rc-v15`.
 
 ```powershell
 npm run webgllib:test-runtime-idle-policy

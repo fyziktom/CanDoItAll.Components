@@ -1,5 +1,6 @@
 # Proof manifest SB18
 
-Status: prepared
+Status: completed
 
 Required artifacts: rc-validation-transcript.txt
+

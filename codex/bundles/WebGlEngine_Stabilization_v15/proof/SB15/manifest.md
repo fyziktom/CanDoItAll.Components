@@ -1,5 +1,6 @@
 # Proof manifest SB15
 
-Status: prepared
+Status: completed
 
 Required artifacts: diagnostics-schema-report.md
+

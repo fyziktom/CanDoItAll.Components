@@ -1,5 +1,6 @@
 # Proof manifest SB10
 
-Status: prepared
+Status: completed
 
 Required artifacts: domain-boundary-report.md
+

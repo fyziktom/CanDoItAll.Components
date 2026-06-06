@@ -69,8 +69,9 @@ export async function applyCommandBatchAndWait(state, batch, options = {}) {
     const timeoutMs = Number(options?.timeoutMs) > 0 ? Number(options.timeoutMs) : 2000;
     const pollIntervalMs = Number(options?.pollIntervalMs) > 0 ? Number(options.pollIntervalMs) : 16;
     const reason = String(options?.reason || `command-batch:${result.commandId || "settled"}`).trim();
+    const policyMode = String(options?.policyMode || "visualStrict").trim() || "visualStrict";
     const requireRuntimeIdle = options?.requireRuntimeIdle !== false && options?.hardFailOnIdleTimeout !== false;
-    const idleResult = await waitForRuntimeIdle(state, { timeoutMs, pollIntervalMs, reason });
+    const idleResult = await waitForRuntimeIdle(state, { timeoutMs, pollIntervalMs, reason, policyMode });
     annotateCommandBatchIdleResult(result, idleResult);
     result.metadata.runtimeIdleRequired = String(requireRuntimeIdle);
     result.diagnostics.runtimeIdleRequired = String(requireRuntimeIdle);
@@ -169,10 +170,12 @@ function syncCommandBatchLifecycle(state, result) {
 
 function annotateCommandBatchIdleResult(result, idleResult) {
     result.metadata.runtimeIdle = String(idleResult?.idle === true);
+    result.metadata.runtimeIdlePolicyMode = String(idleResult?.policyMode || "");
     result.metadata.runtimeIdleTimedOut = String(idleResult?.timedOut === true);
     result.metadata.runtimeIdleElapsedMs = String(idleResult?.elapsedMs || 0);
     result.metadata.runtimeIdleBlockers = (idleResult?.blockers || []).join(",");
     result.diagnostics.runtimeIdle = result.metadata.runtimeIdle;
+    result.diagnostics.runtimeIdlePolicyMode = result.metadata.runtimeIdlePolicyMode;
     result.diagnostics.runtimeIdleTimedOut = result.metadata.runtimeIdleTimedOut;
     result.diagnostics.runtimeIdleElapsedMs = result.metadata.runtimeIdleElapsedMs;
     result.diagnostics.runtimeIdleBlockers = result.metadata.runtimeIdleBlockers;

@@ -119,6 +119,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Empty(runtime.AppliedBatches);
         Assert.Single(runtime.IdleWaits);
         Assert.Equal("playback-apply:command-batch:6", runtime.IdleWaits[0].Reason);
+        Assert.Equal(WebGlRuntimeIdlePolicyModes.VisualStrict, runtime.IdleWaits[0].PolicyMode);
         Assert.Equal(WebGlSceneCommandLifecycleStates.Settled, result.CommandBatchResult?.LifecycleState);
         Assert.True(result.CommandBatchResult?.Settled);
         Assert.Equal(WebGlSceneCommandLifecycleStates.Settled, result.RuntimeSnapshot.Diagnostics["commandLifecycleState"]);
@@ -157,7 +158,13 @@ public sealed class WebGlRunBrowserApplyAdapterTests
             applyOptions: new()
             {
                 RuntimeIdleWaitPolicy = WebGlRunRuntimeIdleWaitPolicies.AfterPlayback,
-                RuntimeIdle = new() { TimeoutMs = 321, PollIntervalMs = 9, Reason = "SB04-configured-idle" }
+                RuntimeIdle = new()
+                {
+                    TimeoutMs = 321,
+                    PollIntervalMs = 9,
+                    Reason = "SB04-configured-idle",
+                    PolicyMode = WebGlRuntimeIdlePolicyModes.SemanticOnly
+                }
             });
 
         WebGlRunBrowserApplyResult result = await adapter.ApplyAsync(new WebGlRunFrameApplyResult
@@ -171,6 +178,7 @@ public sealed class WebGlRunBrowserApplyAdapterTests
         Assert.Empty(runtime.AppliedAndWaitBatches);
         Assert.Single(runtime.IdleWaits);
         Assert.Equal(321, runtime.IdleWaits[0].TimeoutMs);
+        Assert.Equal(WebGlRuntimeIdlePolicyModes.SemanticOnly, runtime.IdleWaits[0].PolicyMode);
         Assert.Equal(WebGlSceneCommandLifecycleStates.Scheduled, result.CommandBatchResult?.LifecycleState);
         Assert.False(result.CommandBatchResult?.Settled);
         Assert.NotNull(result.RuntimeIdleResult);

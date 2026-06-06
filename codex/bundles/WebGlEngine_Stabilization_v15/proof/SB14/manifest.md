@@ -1,5 +1,6 @@
 # Proof manifest SB14
 
-Status: prepared
+Status: completed
 
 Required artifacts: large-scene-budget.json
+

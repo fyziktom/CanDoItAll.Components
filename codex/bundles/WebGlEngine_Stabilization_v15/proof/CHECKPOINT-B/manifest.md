@@ -1,5 +1,6 @@
 # Proof manifest CHECKPOINT-B
 
-Status: prepared
+Status: completed
 
 Required artifacts: checkpoint-b-report.md
+

@@ -1,5 +1,6 @@
 # Proof manifest SB16
 
-Status: prepared
+Status: completed
 
 Required artifacts: browser-observer-proof.json
+

@@ -509,6 +509,29 @@ public sealed class WebGlRunValidatorTests
     }
 
     [Fact]
+    public void Production_line_canary_maps_driver_vocabulary_to_generic_scene_and_run_contracts()
+    {
+        IWebGlRunDomainMappingDriver driver = new ProductionLineCanaryDomainMappingDriver();
+        WebGlRunDomainMappingDriverValidationResult driverValidation = driver.Validate();
+        WebGlRunDomainMappingDriverManifest manifest = driver.Manifest;
+        WebGlRunDocument document = ProductionLineCanaryDocument(driver);
+
+        WebGlRunDocumentValidationResult documentValidation = new WebGlRunDocumentValidator().Validate(document);
+
+        Assert.True(driverValidation.IsValid, string.Join(Environment.NewLine, driverValidation.Errors));
+        Assert.True(documentValidation.IsValid, string.Join(Environment.NewLine, documentValidation.Errors));
+        Assert.Equal(WebGlRunActionKinds.ShowSymbol, manifest.ActionKindMappings["station-status"]);
+        Assert.Equal(WebGlRunActionKinds.DirectedFlowVisual, manifest.ActionKindMappings["conveyor-flow"]);
+        Assert.Equal(WebGlRunActionKinds.MoveToObject, manifest.ActionKindMappings["queue-token-move"]);
+        Assert.Equal("station.intake", document.InitialScene.Scene.Objects[0].Id);
+        Assert.Equal("conveyor", document.InitialScene.Scene.Links.Single().Kind);
+        Assert.Contains(document.Timeline.Frames.SelectMany(frame => frame.Stages), stage =>
+            stage.Motions.Any(motion => motion.MotionId == "motion.wip-token.to-inspection"));
+        Assert.Contains(document.Timeline.Frames.SelectMany(frame => frame.Stages), stage =>
+            stage.ScenePatches.Any(patch => patch.Patch.ObjectPatches.Any(item => item.Symbols?.Any(symbol => symbol.SemanticKind == "quality-alert") == true)));
+    }
+
+    [Fact]
     public void Pass_through_domain_driver_maps_unapproved_action_kinds_to_wait()
     {
         IWebGlRunDomainMappingDriver driver = WebGlRunPassThroughDomainMappingDriver.Instance;
@@ -657,6 +680,159 @@ public sealed class WebGlRunValidatorTests
         return document;
     }
 
+    private static WebGlRunDocument ProductionLineCanaryDocument(IWebGlRunDomainMappingDriver driver)
+    {
+        var document = new WebGlRunDocument
+        {
+            RunId = new("run.production-line-canary"),
+            InitialScene = new()
+            {
+                DocumentId = "scene.production-line-canary",
+                Source = "test-only-canary",
+                Scene = new()
+                {
+                    SceneId = "scene.production-line-canary",
+                    Title = "Generic station flow canary",
+                    Objects =
+                    {
+                        new()
+                        {
+                            Id = "station.intake",
+                            Kind = "station",
+                            Family = "generic-node",
+                            Title = "Intake",
+                            Position = new WebGlVector3(0, 0, 0),
+                            Symbols =
+                            {
+                                new()
+                                {
+                                    Id = "symbol.station.intake.running",
+                                    SemanticKind = "running",
+                                    Color = "#22c55e",
+                                    Intensity = 0.8
+                                }
+                            },
+                            Metadata =
+                            {
+                                ["utilization"] = "0.82"
+                            }
+                        },
+                        new()
+                        {
+                            Id = "buffer.queue",
+                            Kind = "buffer",
+                            Family = "generic-node",
+                            Title = "Queue",
+                            Position = new WebGlVector3(2, 0, 0),
+                            Metadata =
+                            {
+                                ["queueLength"] = "3"
+                            }
+                        },
+                        new()
+                        {
+                            Id = "station.inspect",
+                            Kind = "station",
+                            Family = "generic-node",
+                            Title = "Inspection",
+                            Position = new WebGlVector3(4, 0, 0)
+                        },
+                        new()
+                        {
+                            Id = "token.wip.001",
+                            Kind = "work-item",
+                            Family = "generic-token",
+                            Title = "WIP",
+                            Position = new WebGlVector3(2, 0, 0),
+                            Color = "#f59e0b"
+                        }
+                    },
+                    Links =
+                    {
+                        new()
+                        {
+                            Id = "link.conveyor.intake.inspect",
+                            SourceObjectId = "station.intake",
+                            TargetObjectId = "station.inspect",
+                            Kind = "conveyor",
+                            IsDirectional = true
+                        }
+                    }
+                }
+            },
+            Timeline =
+            {
+                FrameRate = 30,
+                Frames =
+                {
+                    new()
+                    {
+                        Index = 0,
+                        TimeSeconds = 0
+                    },
+                    new()
+                    {
+                        Index = 1,
+                        TimeSeconds = 1,
+                        Stages =
+                        {
+                            new()
+                            {
+                                StageId = "stage.flow",
+                                StageIndex = 0,
+                                Motions =
+                                {
+                                    new()
+                                    {
+                                        MotionId = "motion.wip-token.to-inspection",
+                                        ObjectId = "token.wip.001",
+                                        TargetPosition = new WebGlVector3(4, 0, 0),
+                                        DurationSeconds = 0.5
+                                    }
+                                },
+                                ScenePatches =
+                                {
+                                    new()
+                                    {
+                                        Id = "patch.inspect-alert",
+                                        Patch = new()
+                                        {
+                                            SceneId = "scene.production-line-canary",
+                                            ObjectPatches =
+                                            {
+                                                new()
+                                                {
+                                                    ObjectId = "station.inspect",
+                                                    Symbols =
+                                                    [
+                                                        new()
+                                                        {
+                                                            Id = "symbol.station.inspect.quality-alert",
+                                                            SemanticKind = "quality-alert",
+                                                            Color = "#ef4444",
+                                                            Intensity = 1.0
+                                                        }
+                                                    ],
+                                                    Metadata = new Dictionary<string, string>
+                                                    {
+                                                        ["utilization"] = "0.64"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        WebGlRunDriverMetadataKeys.Stamp(document.Metadata, driver, StrictHash('8'));
+        return document;
+    }
+
     private static WebGlRunFrame MixedFrame()
         => new()
         {
@@ -769,6 +945,33 @@ public sealed class WebGlRunValidatorTests
                 "load-pickup" => WebGlRunActionKinds.MoveToObject,
                 "route-leg" => WebGlRunActionKinds.DirectedFlowVisual,
                 "delivery-wait" => WebGlRunActionKinds.Wait,
+                _ => WebGlRunActionKinds.Wait
+            };
+    }
+
+    private sealed class ProductionLineCanaryDomainMappingDriver : IWebGlRunDomainMappingDriver
+    {
+        public string DriverId => "production-line-canary";
+        public string DriverVersion => "1.0.0";
+        public string DisplayName => "Production line canary";
+        public WebGlRunGenericBoundaryOptions BoundaryOptions { get; } = new()
+        {
+            ForbiddenDomainTerms = ["production-line", "work-order", "machine"]
+        };
+
+        public IReadOnlyCollection<string> DriverActionKinds { get; } =
+        [
+            "station-status",
+            "conveyor-flow",
+            "queue-token-move"
+        ];
+
+        public string MapToGenericActionKind(string driverActionKind)
+            => driverActionKind switch
+            {
+                "station-status" => WebGlRunActionKinds.ShowSymbol,
+                "conveyor-flow" => WebGlRunActionKinds.DirectedFlowVisual,
+                "queue-token-move" => WebGlRunActionKinds.MoveToObject,
                 _ => WebGlRunActionKinds.Wait
             };
     }

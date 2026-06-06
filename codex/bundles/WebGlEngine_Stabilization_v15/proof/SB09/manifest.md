@@ -1,5 +1,6 @@
 # Proof manifest SB09
 
-Status: prepared
+Status: completed
 
 Required artifacts: package-mode-proof.md
+

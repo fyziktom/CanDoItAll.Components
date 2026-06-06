@@ -138,6 +138,7 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
         Assert.True(GetProperty<bool>(options, "requireRuntimeIdle"));
         Assert.True(GetProperty<bool>(options, "hardFailOnIdleTimeout"));
         Assert.Equal("SB03-runtime-idle", GetProperty<string>(options, "reason"));
+        Assert.Equal(WebGlRuntimeIdlePolicyModes.VisualStrict, GetProperty<string>(options, "policyMode"));
     }
 
 

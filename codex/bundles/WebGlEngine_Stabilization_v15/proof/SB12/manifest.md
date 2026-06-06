@@ -1,5 +1,6 @@
 # Proof manifest SB12
 
-Status: prepared
+Status: completed
 
 Required artifacts: production-line-canary-proof.md
+

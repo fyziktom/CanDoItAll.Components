@@ -1,5 +1,6 @@
 # Proof manifest SB03
 
-Status: prepared
+Status: completed
 
 Required artifacts: approved snapshots and API change template
+

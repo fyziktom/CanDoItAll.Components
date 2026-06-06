@@ -1,5 +1,6 @@
 # Proof manifest SB19
 
-Status: prepared
+Status: completed
 
 Required artifacts: governance-template.md
+

@@ -315,7 +315,8 @@ public sealed class WebGlRunBrowserApplyAdapter(
         {
             TimeoutMs = options.RuntimeIdle.TimeoutMs,
             PollIntervalMs = options.RuntimeIdle.PollIntervalMs,
-            Reason = $"{options.RuntimeIdle.Reason}:{reasonSuffix}"
+            Reason = $"{options.RuntimeIdle.Reason}:{reasonSuffix}",
+            PolicyMode = options.RuntimeIdle.PolicyMode
         };
 
     private static bool RecordIdleResult(

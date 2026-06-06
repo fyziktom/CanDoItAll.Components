@@ -1,5 +1,6 @@
 # Proof manifest SB13
 
-Status: prepared
+Status: completed
 
 Required artifacts: interaction-contract-report.md
+
