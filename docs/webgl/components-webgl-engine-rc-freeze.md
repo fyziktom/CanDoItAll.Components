@@ -6,8 +6,8 @@ This document records the release-candidate contract for the generic WebGL subst
 
 The following surfaces are frozen for normal consumers:
 
-- `CanDoItAll.Components.WebGlLib` public C# API captured by `tests/CanDoItAll.Components.WebGlLib.Tests/fixtures/approvals/webgllib-public-api.approved.txt`.
-- `CanDoItAll.Components.WebGlRunLib` public C# API captured by `tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/approvals/webglrunlib-public-api.approved.txt`.
+- `CanDoItAll.Components.WebGlLib` public C# API captured by `tests/CanDoItAll.Components.WebGlLib.Tests/fixtures/approvals/webgllib-public-api.approved.txt` and the metadata-aware `webgllib-public-api.metadata.approved.json`.
+- `CanDoItAll.Components.WebGlRunLib` public C# API captured by `tests/CanDoItAll.Components.WebGlRunLib.Tests/fixtures/approvals/webglrunlib-public-api.approved.txt` and the metadata-aware `webglrunlib-public-api.metadata.approved.json`.
 - `window.CanDoItAll.webglScene` method names and result-shape expectations captured by `tests/CanDoItAll.Components.WebGlLib.Tests/fixtures/approvals/webgllib-webglscene-js-api.approved.json`.
 - WebGlLib and WebGlRunLib package contents captured by the package-content approval snapshots.
 - Generic run-driver manifest and validator behavior captured by the WebGlRunLib approval and validator tests.
@@ -22,7 +22,7 @@ For the WebGlRunLib generic sample:
 
 ```xml
 <UseComponentsWebGlRunLibPackage>true</UseComponentsWebGlRunLibPackage>
-<ComponentsWebGlRunLibPackageVersion>0.1.0-v14.20260605.2</ComponentsWebGlRunLibPackageVersion>
+<ComponentsWebGlRunLibPackageVersion>0.1.0-rcv17.20260606000000</ComponentsWebGlRunLibPackageVersion>
 ```
 
 The sample still supports project-reference mode for nearby development. The `ValidateComponentsWebGlRunLibReference` target rejects ambiguous package/project configuration.
@@ -57,7 +57,7 @@ Before changing or releasing these packages, run:
 npm run webgl:validate-rc
 ```
 
-The command wraps the focused checks below and emits an artifact manifest plus JSON and markdown summaries under `artifacts/webgl-engine-rc-v16`.
+The command wraps the focused checks below and emits per-step transcripts, SHA-256 artifact records, package-mode source assertions, an artifact manifest, and JSON/markdown summaries under `artifacts/webgl-engine-rc-v17`.
 
 ```powershell
 npm run webgllib:test-runtime-idle-policy
@@ -75,3 +75,5 @@ dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifact
 ```
 
 For browser-visible changes, also run the `/run-playback` browser observer proof and capture a screenshot plus the JSON observer report.
+
+Repeated-object and LOD work remains design-gated by `docs/webgl/repeated-object-instancing-lod-design.md`; no heavy instancing backend is part of this release candidate.

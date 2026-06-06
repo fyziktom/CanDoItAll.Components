@@ -2,6 +2,7 @@ import * as THREE from "../../../vendor/three.module.min.js";
 import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
 import { buildRuntimeBudgetDiagnostics, evaluateRuntimeBudget, normalizeRuntimeBudget } from "./38-webgl-scene-runtime-budget.js";
 import { buildRuntimeIdleState } from "./41-webgl-scene-runtime-idle-state.js";
+import { buildModelProfilerSummary } from "./25-webgl-scene-diagnostics.js";
 
 export { THREE };
 
@@ -188,6 +189,8 @@ export function buildDiagnosticsSnapshot(state) {
     const diagnostics = state.diagnostics || {};
     const budget = evaluateRuntimeBudget(state, diagnostics);
     const runtimeIdle = buildRuntimeIdleState(state);
+    const modelDiagnostics = Array.from(diagnostics.modelDiagnostics?.values?.() || []);
+    const modelProfiler = buildModelProfilerSummary(modelDiagnostics, diagnostics);
     return {
         createCount: diagnostics.createCount || 0,
         disposeCount: diagnostics.disposeCount || 0,
@@ -200,8 +203,7 @@ export function buildDiagnosticsSnapshot(state) {
         primitiveInstanceCount: diagnostics.primitiveInstanceIds?.size || 0,
         activeMotionCount: state.motions?.size || 0,
         queuedMotionCount: diagnostics.queuedMotionCount || 0,
-        activeMotionIds: diagnostics.activeMotionIds || [],
-        queuedMotionIds: diagnostics.queuedMotionIds || [],
+        activeMotionIds: diagnostics.activeMotionIds || [], queuedMotionIds: diagnostics.queuedMotionIds || [],
         motionQueueSnapshot: diagnostics.motionQueueSnapshot || [],
         maxMotionQueueLength: diagnostics.maxMotionQueueLength || 0,
         cancelledMotionCount: diagnostics.cancelledMotionCount || 0,
@@ -215,13 +217,10 @@ export function buildDiagnosticsSnapshot(state) {
         queuedCommandStageCount: diagnostics.queuedCommandStageCount || 0,
         commandStageCancelledCount: diagnostics.commandStageCancelledCount || 0,
         commandStageWaitSeconds: diagnostics.commandStageWaitSeconds || 0,
-        commandStageBarrierPolicy: diagnostics.commandStageBarrierPolicy || "",
-        commandStageBarrierTarget: diagnostics.commandStageBarrierTarget || "",
-        commandStageBarrierBlockers: diagnostics.commandStageBarrierBlockers || [],
-        commandStageBarrierEventId: diagnostics.commandStageBarrierEventId || "",
+        commandStageBarrierPolicy: diagnostics.commandStageBarrierPolicy || "", commandStageBarrierTarget: diagnostics.commandStageBarrierTarget || "",
+        commandStageBarrierBlockers: diagnostics.commandStageBarrierBlockers || [], commandStageBarrierEventId: diagnostics.commandStageBarrierEventId || "",
         commandStageBarrierObjectIds: diagnostics.commandStageBarrierObjectIds || [],
-        completedCommandStageIds: diagnostics.completedCommandStageIds || [],
-        failedCommandStageIds: diagnostics.failedCommandStageIds || [],
+        completedCommandStageIds: diagnostics.completedCommandStageIds || [], failedCommandStageIds: diagnostics.failedCommandStageIds || [],
         skippedCommandStageIds: diagnostics.skippedCommandStageIds || [],
         skippedCommandStageCount: diagnostics.skippedCommandStageCount || 0,
         lastStageError: diagnostics.lastStageError || "",
@@ -230,8 +229,7 @@ export function buildDiagnosticsSnapshot(state) {
         commandStageJournalCount: diagnostics.commandStageJournalCount || 0,
         commandStageJournalDroppedCount: diagnostics.commandStageJournalDroppedCount || 0,
         commandStageJournalCounters: diagnostics.commandStageJournalCounters || {},
-        commandStageRecentResultIds: diagnostics.commandStageRecentResultIds || [],
-        commandStageRecentJournalEntries: diagnostics.commandStageRecentJournalEntries || [],
+        commandStageRecentResultIds: diagnostics.commandStageRecentResultIds || [], commandStageRecentJournalEntries: diagnostics.commandStageRecentJournalEntries || [],
         lastStageCancelReason: diagnostics.lastStageCancelReason || "",
         runtimeStopCount: diagnostics.runtimeStopCount || 0,
         runtimeStopGeneration: diagnostics.runtimeStopGeneration || 0,
@@ -239,10 +237,8 @@ export function buildDiagnosticsSnapshot(state) {
         clearedMotionCount: diagnostics.clearedMotionCount || 0,
         lastRuntimeStopClearedMotionCount: diagnostics.lastRuntimeStopClearedMotionCount || 0,
         lastRuntimeStopCancelledCommandStageCount: diagnostics.lastRuntimeStopCancelledCommandStageCount || 0,
-        lastRuntimeStopIdle: !!diagnostics.lastRuntimeStopIdle,
-        lastRuntimeStopTimedOut: !!diagnostics.lastRuntimeStopTimedOut,
-        lastRuntimeStopIdleElapsedMs: diagnostics.lastRuntimeStopIdleElapsedMs || 0,
-        lastRuntimeStopBlockers: diagnostics.lastRuntimeStopBlockers || [],
+        lastRuntimeStopIdle: !!diagnostics.lastRuntimeStopIdle, lastRuntimeStopTimedOut: !!diagnostics.lastRuntimeStopTimedOut,
+        lastRuntimeStopIdleElapsedMs: diagnostics.lastRuntimeStopIdleElapsedMs || 0, lastRuntimeStopBlockers: diagnostics.lastRuntimeStopBlockers || [],
         ignoredStaleMotionCompletedCount: diagnostics.ignoredStaleMotionCompletedCount || 0,
         animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
         semanticIdle: runtimeIdle.semanticIdle,
@@ -254,6 +250,9 @@ export function buildDiagnosticsSnapshot(state) {
         lastDeltaSeconds: round(diagnostics.lastDeltaSeconds || 0, 4),
         estimatedTriangleCount: diagnostics.estimatedTriangleCount || 0,
         estimatedVertexCount: diagnostics.estimatedVertexCount || 0,
+        modelMeshCount: modelProfiler.modelMeshCount, modelVisibleMeshCount: modelProfiler.modelVisibleMeshCount,
+        modelMaterialCount: modelProfiler.modelMaterialCount, modelTransparentMaterialCount: modelProfiler.modelTransparentMaterialCount,
+        largestLoadedAssetBytes: modelProfiler.largestLoadedAssetBytes, estimatedAssetBytes: modelProfiler.estimatedAssetBytes,
         objectCount: state.sceneModel.objects.length,
         visibleObjectCount: diagnostics.visibilityCounts?.visibleObjectCount || 0,
         hiddenObjectCount: diagnostics.visibilityCounts?.hiddenObjectCount || 0,
@@ -314,6 +313,6 @@ export function buildDiagnosticsSnapshot(state) {
         missingFallbackAssetIds: Array.from(diagnostics.missingFallbackAssetIds || []),
         failedPatchCommands: Array.from(diagnostics.failedPatchCommands || []),
         failedCommandDetails: diagnostics.failedCommandDetails || [],
-        modelDiagnostics: Array.from(diagnostics.modelDiagnostics?.values?.() || [])
+        modelDiagnostics
     };
 }

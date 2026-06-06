@@ -59,6 +59,11 @@ export function createDiagnostics() {
         finalRenderDrained: false,
         estimatedTriangleCount: 0,
         estimatedVertexCount: 0,
+        modelMeshCount: 0,
+        modelVisibleMeshCount: 0,
+        modelMaterialCount: 0,
+        modelTransparentMaterialCount: 0,
+        estimatedAssetBytes: 0,
         largestLoadedAssetId: "",
         largestLoadedAssetBytes: 0,
         lastError: "",
@@ -121,4 +126,21 @@ export function createDiagnostics() {
         sceneIndexSyncCount: 0,
         lastSceneIndexSyncReason: ""
     };
+}
+
+export function buildModelProfilerSummary(modelDiagnostics, diagnostics) {
+    return modelDiagnostics.reduce((summary, item) => {
+        summary.modelMeshCount += Number(item?.meshCount || 0);
+        summary.modelVisibleMeshCount += Number(item?.visibleMeshCount || 0);
+        summary.modelMaterialCount += Number(item?.materialCount || 0);
+        summary.modelTransparentMaterialCount += Number(item?.transparentMaterialCount || 0);
+        return summary;
+    }, {
+        modelMeshCount: 0,
+        modelVisibleMeshCount: 0,
+        modelMaterialCount: 0,
+        modelTransparentMaterialCount: 0,
+        largestLoadedAssetBytes: Math.max(0, Number(diagnostics.largestLoadedAssetBytes || 0)),
+        estimatedAssetBytes: Math.max(0, Number(diagnostics.largestLoadedAssetBytes || 0))
+    });
 }

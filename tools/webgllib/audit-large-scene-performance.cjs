@@ -10,7 +10,7 @@ const linkSourcePath = path.join(runtimeSceneDir, "27-webgl-scene-links.js");
 const stageRunnerSourcePath = path.join(runtimeSceneDir, "30-webgl-scene-stage-runner.js");
 const barrierSourcePath = path.join(runtimeSceneDir, "32-webgl-scene-stage-barriers.js");
 const journalSourcePath = path.join(runtimeSceneDir, "33-webgl-scene-command-journal.js");
-const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v16", "performance");
+const reportDir = path.join(repoRoot, "artifacts", "webgl-engine-rc-v17", "performance");
 
 async function main() {
   fs.mkdirSync(reportDir, { recursive: true });

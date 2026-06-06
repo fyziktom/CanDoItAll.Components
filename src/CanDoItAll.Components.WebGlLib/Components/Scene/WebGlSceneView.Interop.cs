@@ -121,6 +121,15 @@ public partial class WebGlSceneView
                 hardFailOnIdleTimeout = requireRuntimeIdle
             }).AsTask();
 
+    public Task<bool> SignalCommandStageEventAsync(string eventId)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.signalCommandStageEvent", host, eventId).AsTask();
+
+    public Task<bool> RequestCommandStageManualStepAsync()
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.requestCommandStageManualStep", host).AsTask();
+
+    public Task<bool> TriggerSelectObjectAsync(string objectId)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.triggerSelectObject", host, objectId).AsTask();
+
     public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
         => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.setObjectTransform", host, objectId, transform).AsTask();
 

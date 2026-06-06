@@ -1,6 +1,6 @@
 param(
     [string]$BaseUrl = "http://127.0.0.1:5206",
-    [string]$ProofDir = "codex/bundles/WebGlEngine_Stabilization_v16/proof/SB17/browser",
+    [string]$ProofDir = "codex/bundles/WebGlEngine_Stabilization_v17/proof/SB16/browser",
     [int]$TimeoutMs = 120000,
     [switch]$NoBuild
 )

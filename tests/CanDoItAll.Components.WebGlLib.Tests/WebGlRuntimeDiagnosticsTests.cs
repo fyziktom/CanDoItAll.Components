@@ -355,6 +355,12 @@ public sealed class WebGlRuntimeDiagnosticsTests
               "missingAssetCount": 0,
               "fallbackObjectCount": 0,
               "modelInstanceCount": 2,
+              "modelMeshCount": 9,
+              "modelVisibleMeshCount": 9,
+              "modelMaterialCount": 9,
+              "modelTransparentMaterialCount": 1,
+              "largestLoadedAssetBytes": 18432,
+              "estimatedAssetBytes": 18432,
               "activeAssetProfile": "model-high",
               "largestLoadedAssetId": "asset.symbol.marker.default:asset.symbol.marker.default.model-low",
               "assetCacheMode": "state-local",
@@ -395,6 +401,12 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.Equal(0, diagnostics.MissingAssetCount);
         Assert.Equal(0, diagnostics.FallbackObjectCount);
         Assert.Equal(2, diagnostics.ModelInstanceCount);
+        Assert.Equal(9, diagnostics.ModelMeshCount);
+        Assert.Equal(9, diagnostics.ModelVisibleMeshCount);
+        Assert.Equal(9, diagnostics.ModelMaterialCount);
+        Assert.Equal(1, diagnostics.ModelTransparentMaterialCount);
+        Assert.Equal(18_432, diagnostics.LargestLoadedAssetBytes);
+        Assert.Equal(18_432, diagnostics.EstimatedAssetBytes);
         Assert.Equal("model-high", diagnostics.ActiveAssetProfile);
         Assert.Equal("state-local", diagnostics.AssetCacheMode);
         Assert.Equal(4, diagnostics.AssetCacheHitCount);

@@ -1,6 +1,6 @@
 param(
     [string]$PackageProofSuffix,
-    [string]$ArtifactsRoot = "artifacts/webgl-engine-rc-v16",
+    [string]$ArtifactsRoot = "artifacts/webgl-engine-rc-v17",
     [switch]$SkipBrowserProof
 )
 

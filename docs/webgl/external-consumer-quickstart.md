@@ -48,4 +48,8 @@ Pack Components with a proof suffix, restore from a local NuGet source with `<cl
 npm run webgl:validate-rc
 ```
 
-The command builds packages, restores isolated samples from the fresh package folder, runs boundary audits, and captures browser observer proof.
+The command builds packages, restores isolated samples from the fresh package folder, asserts the restored samples used package libraries instead of project references, runs boundary audits, and captures browser observer proof.
+
+## Production-Line Canary
+
+`samples/CanDoItAll.Components.WebGlRunLibGenericSample` validates both a generic route document and a sample-only production-line canary. Production-line terms are intentionally confined to sample/test fixtures and documentation; generic `WebGlLib` and `WebGlRunLib` source must remain domain-neutral.
