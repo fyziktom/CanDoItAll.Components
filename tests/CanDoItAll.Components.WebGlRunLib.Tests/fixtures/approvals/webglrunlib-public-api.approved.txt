@@ -195,11 +195,11 @@ src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:308
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:365: public static void ValidateDriverManifestMetadata(string scope, string key, string value, List<string> errors)
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:386: public static string[] GetForbiddenDomainTerms(WebGlRunGenericBoundaryOptions? options)
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:392: public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:416: public static readonly HashSet<string> HashBackedSourceProvenanceKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:422: public static readonly HashSet<string> OpaqueSourceProvenanceKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:437: public static readonly HashSet<string> DriverManifestMetadataKeys = new(StringComparer.Ordinal)
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:445: public static readonly string[] DisallowedSourcePolicyTerms =
-src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:459: public static readonly HashSet<string> AllowedSceneBarrierPolicies = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:418: public static readonly HashSet<string> HashBackedSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:424: public static readonly HashSet<string> OpaqueSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:440: public static readonly HashSet<string> DriverManifestMetadataKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:448: public static readonly string[] DisallowedSourcePolicyTerms =
+src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs:462: public static readonly HashSet<string> AllowedSceneBarrierPolicies = new(StringComparer.Ordinal)
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:5: public sealed class WebGlRunFrame
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:7: public long Index { get; set; }
 src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunFrame.cs:9: public double TimeSeconds { get; set; }
@@ -314,27 +314,27 @@ src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.
 src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:33: public WebGlRunGenericBoundaryOptions BoundaryOptions => WebGlRunGenericBoundaryOptions.None;
 src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:34: public IReadOnlyCollection<string> DriverActionKinds => [];
 src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:36: public string MapToGenericActionKind(string driverActionKind)
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:40: public sealed class WebGlRunDomainMappingDriverManifest
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:42: public const string CurrentSchemaVersion = "webgl-run-domain-driver-manifest/v1";
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:44: public string SchemaVersion { get; set; } = CurrentSchemaVersion;
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:45: public string DriverId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:46: public string DriverVersion { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:47: public string DisplayName { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:48: public string DriverHash { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:49: public Dictionary<string, string> ActionKindMappings { get; set; } = new(StringComparer.Ordinal);
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:50: public List<string> ForbiddenDomainTerms { get; set; } = [];
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:51: public List<string> AllowedSourceProvenanceKeys { get; set; } = [];
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:53: public static WebGlRunDomainMappingDriverManifest FromDriver(IWebGlRunDomainMappingDriver driver)
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:75: public static string ComputeDriverHash(IWebGlRunDomainMappingDriver driver)
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:78: public static string ComputeManifestHash(WebGlRunDomainMappingDriverManifest manifest)
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:109: public sealed class WebGlRunDomainMappingDriverValidationResult
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:111: public List<string> Errors { get; } = [];
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:112: public List<string> Warnings { get; } = [];
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:113: public bool IsValid => Errors.Count == 0;
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:116: public static class WebGlRunDomainMappingDriverMetadataScrubber
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:118: public static Dictionary<string, string> Scrub(
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:159: public static class WebGlRunDomainMappingDriverValidator
-src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:161: public static WebGlRunDomainMappingDriverValidationResult Validate(IWebGlRunDomainMappingDriver driver)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:42: public sealed class WebGlRunDomainMappingDriverManifest
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:44: public const string CurrentSchemaVersion = "webgl-run-domain-driver-manifest/v1";
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:46: public string SchemaVersion { get; set; } = CurrentSchemaVersion;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:47: public string DriverId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:48: public string DriverVersion { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:49: public string DisplayName { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:50: public string DriverHash { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:51: public Dictionary<string, string> ActionKindMappings { get; set; } = new(StringComparer.Ordinal);
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:52: public List<string> ForbiddenDomainTerms { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:53: public List<string> AllowedSourceProvenanceKeys { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:55: public static WebGlRunDomainMappingDriverManifest FromDriver(IWebGlRunDomainMappingDriver driver)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:77: public static string ComputeDriverHash(IWebGlRunDomainMappingDriver driver)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:80: public static string ComputeManifestHash(WebGlRunDomainMappingDriverManifest manifest)
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:111: public sealed class WebGlRunDomainMappingDriverValidationResult
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:113: public List<string> Errors { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:114: public List<string> Warnings { get; } = [];
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:115: public bool IsValid => Errors.Count == 0;
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:118: public static class WebGlRunDomainMappingDriverMetadataScrubber
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:120: public static Dictionary<string, string> Scrub(
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:161: public static class WebGlRunDomainMappingDriverValidator
+src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs:163: public static WebGlRunDomainMappingDriverValidationResult Validate(IWebGlRunDomainMappingDriver driver)
 src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:3: public static class WebGlRunDriverMetadataKeys
 src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:5: public const string DriverId = "driver.id";
 src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDriverMetadataKeys.cs:6: public const string DriverVersion = "driver.version";

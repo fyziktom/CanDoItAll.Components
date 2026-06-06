@@ -41,3 +41,11 @@ No
 ## Notes for Codex
 
 Do not simplify this subbundle by adding a domain-specific shortcut to generic Components. If a test needs a domain vocabulary, create a synthetic non-domain fixture or use the domain-driver options as input without embedding the domain in the generic package.
+
+## Execution status
+
+Status: Completed on 2026-06-05.
+
+Proof manifest: proof/SB07/manifest.md.
+Semantic invariant contract: proof/SB07/semantic-invariants.md.
+Closure result: Pass; final validation is summarized in eviews/01-execution-report.md.

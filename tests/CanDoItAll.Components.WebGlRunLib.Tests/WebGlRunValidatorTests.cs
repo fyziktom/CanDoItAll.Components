@@ -161,7 +161,9 @@ public sealed class WebGlRunValidatorTests
             Metadata =
             {
                 ["source.kind"] = "run",
+                ["source.provenanceMode"] = "opaque",
                 ["source.traceId"] = "trace.aaaaaaaaaaaaaaaa",
+                ["source.traceMapRef"] = "trace-map.9999999999999999",
                 ["source.inputPackHash"] = StrictHash('1'),
                 ["source.traceMapHash"] = StrictHash('2')
             },
@@ -344,7 +346,9 @@ public sealed class WebGlRunValidatorTests
             Metadata =
             {
                 ["source.kind"] = "run",
+                ["source.provenanceMode"] = "opaque",
                 ["source.traceId"] = "trace.aaaaaaaaaaaaaaaa",
+                ["source.traceMapRef"] = "trace-map.9999999999999999",
                 ["source.inputPackHash"] = StrictHash('1')
             },
             Actions =
@@ -502,6 +506,16 @@ public sealed class WebGlRunValidatorTests
         Assert.Equal("ready", scrubbed["genericStatus"]);
         Assert.DoesNotContain("source.policy", scrubbed.Keys);
         Assert.DoesNotContain("shipment.status", scrubbed.Keys);
+    }
+
+    [Fact]
+    public void Pass_through_domain_driver_maps_unapproved_action_kinds_to_wait()
+    {
+        IWebGlRunDomainMappingDriver driver = WebGlRunPassThroughDomainMappingDriver.Instance;
+
+        Assert.Equal(WebGlRunActionKinds.MoveToObject, driver.MapToGenericActionKind(WebGlRunActionKinds.MoveToObject));
+        Assert.Equal(WebGlRunActionKinds.Wait, driver.MapToGenericActionKind("driver-specific-unapproved-action"));
+        Assert.True(driver.Validate().IsValid);
     }
 
     [Fact]

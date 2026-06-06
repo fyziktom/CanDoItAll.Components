@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace CanDoItAll.Components.WebGlLib.Tests;
@@ -19,16 +20,29 @@ public sealed partial class WebGlLibFreezeApprovalTests
     {
         string repoRoot = FindRepoRoot();
         string sceneEntry = Path.Combine(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "01-webgl-scene.js");
-        string[] methods = File.ReadLines(sceneEntry)
-            .Select(line => WebGlSceneMethodRegex().Match(line))
-            .Where(static match => match.Success)
-            .Select(static match => match.Groups["name"].Value)
-            .Order(StringComparer.Ordinal)
-            .ToArray();
+        string[] methods = ReadWebGlSceneMethodNames(sceneEntry);
         string actual = string.Join(Environment.NewLine, methods) + Environment.NewLine;
         string approved = ReadApproval("webgllib-webglscene-js-surface.approved.txt");
 
         Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+    }
+
+    [Fact]
+    public void Webgl_scene_js_api_manifest_matches_freeze_snapshot_and_declares_result_shapes()
+    {
+        string repoRoot = FindRepoRoot();
+        string sceneEntry = Path.Combine(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "01-webgl-scene.js");
+        string[] actualMethods = ReadWebGlSceneMethodNames(sceneEntry);
+        WebGlSceneJsApiManifestEntry[] approved = JsonSerializer.Deserialize<WebGlSceneJsApiManifestEntry[]>(
+            ReadApproval("webgllib-webglscene-js-api.approved.json"),
+            new JsonSerializerOptions(JsonSerializerDefaults.Web)) ?? [];
+
+        Assert.Equal(actualMethods, approved.Select(static entry => entry.Method).Order(StringComparer.Ordinal).ToArray());
+        Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.ResultShape));
+        Assert.DoesNotContain(approved, static entry => string.IsNullOrWhiteSpace(entry.MissingRuntimeResult));
+        Assert.Contains(approved, static entry =>
+            string.Equals(entry.Method, "waitForRuntimeIdle", StringComparison.Ordinal) &&
+            entry.ResultShape.Contains("WebGlRuntimeIdleResult", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -82,6 +96,14 @@ public sealed partial class WebGlLibFreezeApprovalTests
     private static string NormalizeNewLines(string value)
         => value.Replace("\r\n", "\n", StringComparison.Ordinal);
 
+    private static string[] ReadWebGlSceneMethodNames(string sceneEntry)
+        => File.ReadLines(sceneEntry)
+            .Select(line => WebGlSceneMethodRegex().Match(line))
+            .Where(static match => match.Success)
+            .Select(static match => match.Groups["name"].Value)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
     private static string FindRepoRoot()
     {
         DirectoryInfo? directory = new(AppContext.BaseDirectory);
@@ -100,4 +122,13 @@ public sealed partial class WebGlLibFreezeApprovalTests
 
     [GeneratedRegex("^\\s{4}(?<name>[A-Za-z0-9_]+)\\s*\\(")]
     private static partial Regex WebGlSceneMethodRegex();
+
+    private sealed class WebGlSceneJsApiManifestEntry
+    {
+        public string Method { get; set; } = string.Empty;
+
+        public string ResultShape { get; set; } = string.Empty;
+
+        public string MissingRuntimeResult { get; set; } = string.Empty;
+    }
 }

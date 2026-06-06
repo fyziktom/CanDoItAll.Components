@@ -34,7 +34,9 @@ public sealed class WebGlRunPassThroughDomainMappingDriver : IWebGlRunDomainMapp
     public IReadOnlyCollection<string> DriverActionKinds => [];
 
     public string MapToGenericActionKind(string driverActionKind)
-        => string.IsNullOrWhiteSpace(driverActionKind) ? WebGlRunActionKinds.Wait : driverActionKind;
+        => !string.IsNullOrWhiteSpace(driverActionKind) && WebGlRunActionKinds.All.Contains(driverActionKind)
+            ? driverActionKind
+            : WebGlRunActionKinds.Wait;
 }
 
 public sealed class WebGlRunDomainMappingDriverManifest

@@ -1,4 +1,6 @@
 src/CanDoItAll.Components.WebGlLib/ComponentNamespaceMarker.cs:3: public static class ComponentNamespaceMarker
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.CommandResults.cs:5: public partial class WebGlSceneView
+src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Lifecycle.cs:5: public partial class WebGlSceneView
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/IWebGlAssetCatalogProvider.cs:3: public interface IWebGlAssetCatalogProvider
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/InMemoryWebGlAssetCatalogProvider.cs:3: public sealed class InMemoryWebGlAssetCatalogProvider(WebGlAssetCatalog catalog) : IWebGlAssetCatalogProvider
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/InMemoryWebGlAssetCatalogProvider.cs:7: public ValueTask<WebGlAssetCatalog> GetCatalogAsync(CancellationToken cancellationToken = default)
@@ -442,79 +444,94 @@ src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:217:
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:219: public bool SemanticIdle { get; set; }
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:221: public bool VisualIdle { get; set; }
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:223: public bool FinalRenderDrained { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:225: public int CommandCountBeforeNormalization { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:227: public int CommandCountAfterNormalization { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:229: public int CoalescedPatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:231: public int DroppedDuplicateMotionCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:233: public int PreservedOrderedDuplicateMotionCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:235: public int InteropCallsAvoided { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:237: public int PatchedObjectCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:239: public int FullSceneRebuildCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:241: public int TransformOnlyPatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:243: public int SymbolOnlyPatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:245: public int LinkOnlyPatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:247: public int VisualReplacePatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:249: public int MixedIncrementalPatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:251: public int GraphStructurePatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:253: public int SceneRebuildPatchCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:255: public string LastPatchClassification { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:257: public int ReplacedObjectGroupCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:259: public int SymbolOnlyUpdateCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:261: public int LinkUpdateCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:263: public int LinkGeometryUpdateCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:265: public int LinkGeometryRebuildCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:267: public int LinksUpdatedLastFrame { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:269: public int LinkSyncScanCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:271: public int LinkSyncIndexedHitCount { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:273: public string LastError { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:275: public List<string> MissingAssetIds { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:277: public List<string> FailedAssetUris { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:279: public List<string> MissingFallbackAssetIds { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:281: public List<string> FailedPatchCommands { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:283: public List<WebGlSceneCommandResult> FailedCommandDetails { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:285: public List<WebGlModelDiagnostics> ModelDiagnostics { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:288: public sealed class WebGlRuntimeMotionQueueSnapshot
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:290: public string ObjectId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:292: public List<string> QueuedMotionIds { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:295: public sealed class WebGlRuntimeCommandStageQueueItem
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:297: public string BatchId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:299: public string StageId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:301: public string BarrierPolicy { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:303: public double WaitSeconds { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:305: public string BarrierEventId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:308: public sealed class WebGlRuntimeCommandStageResult
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:310: public string ResultId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:312: public string BatchId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:314: public string StageId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:316: public string Status { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:318: public string BarrierPolicy { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:320: public string Error { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:323: public sealed class WebGlRuntimeCommandStageJournalEntry
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:325: public int Sequence { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:327: public long TimestampMs { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:329: public string EventKind { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:331: public string BatchId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:333: public string StageId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:335: public string ResultId { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:337: public string Status { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:339: public string BarrierPolicy { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:341: public string Message { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:225: public string RuntimeIdlePolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.AllowFinalRenderDrain;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:227: public bool RuntimeIdleFinalRenderDrainAllowed { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:229: public bool RuntimeIdleVisualRequired { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:231: public int CommandCountBeforeNormalization { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:233: public int CommandCountAfterNormalization { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:235: public int CoalescedPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:237: public int DroppedDuplicateMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:239: public int PreservedOrderedDuplicateMotionCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:241: public int InteropCallsAvoided { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:243: public int PatchedObjectCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:245: public int FullSceneRebuildCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:247: public int TransformOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:249: public int SymbolOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:251: public int LinkOnlyPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:253: public int VisualReplacePatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:255: public int MixedIncrementalPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:257: public int GraphStructurePatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:259: public int SceneRebuildPatchCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:261: public string LastPatchClassification { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:263: public int ReplacedObjectGroupCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:265: public int SymbolOnlyUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:267: public int LinkUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:269: public int LinkGeometryUpdateCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:271: public int LinkGeometryRebuildCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:273: public int LinksUpdatedLastFrame { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:275: public int LinkSyncScanCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:277: public int LinkSyncIndexedHitCount { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:279: public string LastError { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:281: public List<string> MissingAssetIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:283: public List<string> FailedAssetUris { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:285: public List<string> MissingFallbackAssetIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:287: public List<string> FailedPatchCommands { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:289: public List<WebGlSceneCommandResult> FailedCommandDetails { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:291: public List<WebGlModelDiagnostics> ModelDiagnostics { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:294: public sealed class WebGlRuntimeMotionQueueSnapshot
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:296: public string ObjectId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:298: public List<string> QueuedMotionIds { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:301: public sealed class WebGlRuntimeCommandStageQueueItem
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:303: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:305: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:307: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:309: public double WaitSeconds { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:311: public string BarrierEventId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:314: public sealed class WebGlRuntimeCommandStageResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:316: public string ResultId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:318: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:320: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:322: public string Status { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:324: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:326: public string Error { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:329: public sealed class WebGlRuntimeCommandStageJournalEntry
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:331: public int Sequence { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:333: public long TimestampMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:335: public string EventKind { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:337: public string BatchId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:339: public string StageId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:341: public string ResultId { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:343: public string Status { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:345: public string BarrierPolicy { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:347: public string Message { get; set; } = string.Empty;
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeErrorEventArgs.cs:3: public sealed record WebGlRuntimeErrorEventArgs(
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:3: public static class WebGlRuntimeIdlePolicyModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:5: public const string SemanticOnly = "semanticOnly";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:7: public const string VisualStrict = "visualStrict";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:9: public const string AllowFinalRenderDrain = "allowFinalRenderDrain";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:12: public sealed class WebGlRuntimeIdleOptions
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:14: public int TimeoutMs { get; set; } = 2_000;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:16: public int PollIntervalMs { get; set; } = 16;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:18: public string Reason { get; set; } = "runtime-idle";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs:20: public string PolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.AllowFinalRenderDrain;
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:3: public sealed class WebGlRuntimeIdleResult
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:5: public bool Success { get; set; }
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:7: public bool Idle { get; set; }
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:9: public bool TimedOut { get; set; }
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:11: public string Reason { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:13: public int TimeoutMs { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:15: public int PollIntervalMs { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:17: public int ElapsedMs { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:19: public List<string> Blockers { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:21: public bool SemanticIdle { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:23: public bool VisualIdle { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:25: public bool FinalRenderDrained { get; set; }
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:27: public List<string> SemanticBlockers { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:29: public List<string> VisualBlockers { get; set; } = [];
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:31: public WebGlRuntimeDiagnostics? Diagnostics { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:13: public string PolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.AllowFinalRenderDrain;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:15: public bool FinalRenderDrainAllowed { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:17: public bool VisualIdleRequired { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:19: public int TimeoutMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:21: public int PollIntervalMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:23: public int ElapsedMs { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:25: public List<string> Blockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:27: public bool SemanticIdle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:29: public bool VisualIdle { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:31: public bool FinalRenderDrained { get; set; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:33: public List<string> SemanticBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:35: public List<string> VisualBlockers { get; set; } = [];
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:37: public WebGlRuntimeDiagnostics? Diagnostics { get; set; }
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:3: public sealed class WebGlRuntimeOptions
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:5: public bool DeterministicMode { get; set; } = true;
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:7: public bool PreserveDrawingBuffer { get; set; } = true;

@@ -1,0 +1,86 @@
+Command: rg source assertion pattern set
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+StartedUtc: 2026-06-06T00:16:13.4204696Z
+
+## Directory.Build.props :: IsPackable
+6:    <IsPackable>false</IsPackable>
+
+## samples/CanDoItAll.Components.WebGlRunLibGenericSample/CanDoItAll.Components.WebGlRunLibGenericSample.csproj :: UseComponentsWebGlRunLibPackage|PackageReference|ProjectReference|ValidateComponentsWebGlRunLibReference
+13:    <UseComponentsWebGlRunLibPackage Condition="'$(UseComponentsWebGlRunLibPackage)' == ''">false</UseComponentsWebGlRunLibPackage>
+18:    <ProjectReference Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+19:    <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+22:  <Target Name="ValidateComponentsWebGlRunLibReference" BeforeTargets="ResolveReferences" Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and !Exists('$(ComponentsWebGlRunLibProject)')">
+23:    <Error Text="CanDoItAll.Components.WebGlRunLib project reference was not found at '$(ComponentsWebGlRunLibProject)'. Set ComponentsWebGlRunLibProject to the local project or set UseComponentsWebGlRunLibPackage=true with ComponentsWebGlRunLibPackageVersion." />
+
+## src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleOptions.cs :: WebGlRuntimeIdlePolicyModes|SemanticOnly|VisualStrict|AllowFinalRenderDrain
+3:public static class WebGlRuntimeIdlePolicyModes
+5:    public const string SemanticOnly = "semanticOnly";
+7:    public const string VisualStrict = "visualStrict";
+9:    public const string AllowFinalRenderDrain = "allowFinalRenderDrain";
+20:    public string PolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.AllowFinalRenderDrain;
+
+## src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js :: policyMode|finalRenderDrainAllowed|buildRuntimeIdleState
+3:    buildRuntimeIdleState,
+9:    const idleState = buildRuntimeIdleState(state);
+21:    const policyMode = normalizePolicyMode(options.policyMode);
+27:        lastState = buildRuntimeIdleProbe(state, policyMode);
+36:        if (shouldTreatFinalScheduledRenderAsDrained(lastState, consecutiveSemanticIdleProbes, policyMode)) {
+38:            lastState = buildRuntimeIdleProbe(state, policyMode);
+45:    lastState ??= buildRuntimeIdleProbe(state, policyMode);
+57:        policyMode,
+58:        finalRenderDrainAllowed: lastState.finalRenderDrainAllowed,
+74:    return buildRuntimeIdleState(state).blockers;
+100:function buildRuntimeIdleProbe(state, policyMode) {
+101:    const idleState = buildRuntimeIdleState(state, { policyMode });
+
+## src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js :: semanticOnly|visualStrict|allowFinalRenderDrain|visualIdleRequired|rawVisualBlockers
+4:const semanticOnlyPolicyMode = "semanticOnly";
+5:const visualStrictPolicyMode = "visualStrict";
+6:const allowFinalRenderDrainPolicyMode = "allowFinalRenderDrain";
+10:    const finalRenderDrainAllowed = policyMode === allowFinalRenderDrainPolicyMode;
+11:    const visualIdleRequired = policyMode !== semanticOnlyPolicyMode;
+20:            visualIdleRequired,
+28:    const rawVisualBlockers = collectVisualRuntimeIdleBlockers(state);
+35:        hasOnlyFinalScheduledRenderBlockers(rawVisualBlockers);
+36:    const visualIdle = rawVisualBlockers.length === 0 || finalScheduledRenderDrained;
+37:    const finalRenderDrained = semanticIdle && (rawVisualBlockers.length === 0 || finalScheduledRenderDrained);
+38:    const visualBlockers = visualIdle ? [] : rawVisualBlockers;
+39:    const idle = semanticIdle && (!visualIdleRequired || visualIdle);
+48:        visualIdleRequired,
+49:        blockers: visualIdleRequired ? [...semanticBlockers, ...visualBlockers] : semanticBlockers,
+52:        rawVisualBlockers
+116:export function shouldTreatFinalScheduledRenderAsDrained(idleState, consecutiveSemanticIdleProbes, policyMode = allowFinalRenderDrainPolicyMode) {
+118:        normalizePolicyMode(policyMode) === allowFinalRenderDrainPolicyMode &&
+121:        hasOnlyFinalScheduledRenderBlockers(idleState.rawVisualBlockers || idleState.visualBlockers);
+133:    state.diagnostics.runtimeIdlePolicyMode = resolved.policyMode || allowFinalRenderDrainPolicyMode;
+135:    state.diagnostics.runtimeIdleVisualRequired = resolved.visualIdleRequired !== false;
+140:    if (text === semanticOnlyPolicyMode || text === visualStrictPolicyMode || text === allowFinalRenderDrainPolicyMode) {
+144:    return allowFinalRenderDrainPolicyMode;
+
+## src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs :: WebGlRunActionKinds.All|Wait
+37:        => !string.IsNullOrWhiteSpace(driverActionKind) && WebGlRunActionKinds.All.Contains(driverActionKind)
+39:            : WebGlRunActionKinds.Wait;
+191:            if (!WebGlRunActionKinds.All.Contains(mappedActionKind))
+
+## src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs :: source.provenanceMode|source.traceMapRef
+405:        "source.provenanceMode",
+412:        "source.traceMapRef",
+435:        "source.traceMapRef",
+
+## tools/webgllib/domain-boundary-audit.config.json :: generic-source-hard-gate|package-content-hard-gate|WebGlEngine_Stabilization_v14
+53:        "glob": "codex/bundles/WebGlEngine_Stabilization_v14/**",
+81:    "generic-source-hard-gate": {
+155:    "package-content-hard-gate": {
+271:          "codex/bundles/WebGlEngine_Stabilization_v14"
+394:            "codex/bundles/WebGlEngine_Stabilization_v14"
+
+## docs/webgl/components-webgl-engine-rc-freeze.md :: Frozen Surfaces|Runtime Idle Modes|Required Release Checks
+5:## Frozen Surfaces
+30:## Runtime Idle Modes
+46:## Required Release Checks
+
+
+FinishedUtc: 2026-06-06T00:16:15.1199248Z
+ExitCode: 0
+
+

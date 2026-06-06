@@ -222,6 +222,12 @@ public sealed class WebGlRuntimeDiagnostics
 
     public bool FinalRenderDrained { get; set; }
 
+    public string RuntimeIdlePolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.AllowFinalRenderDrain;
+
+    public bool RuntimeIdleFinalRenderDrainAllowed { get; set; }
+
+    public bool RuntimeIdleVisualRequired { get; set; } = true;
+
     public int CommandCountBeforeNormalization { get; set; }
 
     public int CommandCountAfterNormalization { get; set; }

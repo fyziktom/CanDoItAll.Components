@@ -402,12 +402,14 @@ internal static class WebGlRunGenericBoundaryPolicy
         "source.nodeId",
         "source.nodeKind",
         "source.parentId",
+        "source.provenanceMode",
         "source.sequence",
         "source.severity",
         "source.simulationFrameId",
         "source.sourceNodeId",
         "source.symbolId",
         "source.targetNodeId",
+        "source.traceMapRef",
         WebGlRunDriverMetadataKeys.SourceTraceMapHash,
         "source.traceId",
         "source.visualActionId"
@@ -430,6 +432,7 @@ internal static class WebGlRunGenericBoundaryPolicy
         "source.sourceNodeId",
         "source.symbolId",
         "source.targetNodeId",
+        "source.traceMapRef",
         "source.traceId",
         "source.visualActionId"
     };

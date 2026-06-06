@@ -1,14 +1,23 @@
 import { hasAutomaticStageBarrierWork } from "./32-webgl-scene-stage-barriers.js";
 
 const scheduledRenderBlocker = "render-loop:scheduled";
+const semanticOnlyPolicyMode = "semanticOnly";
+const visualStrictPolicyMode = "visualStrict";
+const allowFinalRenderDrainPolicyMode = "allowFinalRenderDrain";
 
 export function buildRuntimeIdleState(state, options = {}) {
+    const policyMode = normalizePolicyMode(options.policyMode);
+    const finalRenderDrainAllowed = policyMode === allowFinalRenderDrainPolicyMode;
+    const visualIdleRequired = policyMode !== semanticOnlyPolicyMode;
     if (!state) {
         return {
             idle: false,
             semanticIdle: false,
             visualIdle: false,
             finalRenderDrained: false,
+            policyMode,
+            finalRenderDrainAllowed,
+            visualIdleRequired,
             blockers: ["runtime:not-created"],
             semanticBlockers: ["runtime:not-created"],
             visualBlockers: []
@@ -21,20 +30,26 @@ export function buildRuntimeIdleState(state, options = {}) {
     const explicitFinalRenderDrained = options.finalRenderDrained === true ||
         state.diagnostics?.finalRenderDrained === true;
     const finalScheduledRenderDrained = semanticIdle &&
+        finalRenderDrainAllowed &&
         explicitFinalRenderDrained &&
         hasOnlyFinalScheduledRenderBlockers(rawVisualBlockers);
     const visualIdle = rawVisualBlockers.length === 0 || finalScheduledRenderDrained;
     const finalRenderDrained = semanticIdle && (rawVisualBlockers.length === 0 || finalScheduledRenderDrained);
     const visualBlockers = visualIdle ? [] : rawVisualBlockers;
+    const idle = semanticIdle && (!visualIdleRequired || visualIdle);
 
     return {
-        idle: semanticIdle && visualIdle,
+        idle,
         semanticIdle,
         visualIdle,
         finalRenderDrained,
-        blockers: [...semanticBlockers, ...visualBlockers],
+        policyMode,
+        finalRenderDrainAllowed,
+        visualIdleRequired,
+        blockers: visualIdleRequired ? [...semanticBlockers, ...visualBlockers] : semanticBlockers,
         semanticBlockers,
-        visualBlockers
+        visualBlockers,
+        rawVisualBlockers
     };
 }
 
@@ -98,11 +113,12 @@ export function hasOnlyFinalScheduledRenderBlockers(blockers) {
         blockers.every(blocker => blocker === scheduledRenderBlocker);
 }
 
-export function shouldTreatFinalScheduledRenderAsDrained(idleState, consecutiveSemanticIdleProbes) {
+export function shouldTreatFinalScheduledRenderAsDrained(idleState, consecutiveSemanticIdleProbes, policyMode = allowFinalRenderDrainPolicyMode) {
     return idleState?.semanticIdle === true &&
+        normalizePolicyMode(policyMode) === allowFinalRenderDrainPolicyMode &&
         idleState.visualIdle !== true &&
         consecutiveSemanticIdleProbes >= 2 &&
-        hasOnlyFinalScheduledRenderBlockers(idleState.visualBlockers);
+        hasOnlyFinalScheduledRenderBlockers(idleState.rawVisualBlockers || idleState.visualBlockers);
 }
 
 export function syncRuntimeIdleDiagnostics(state, idleState = null) {
@@ -114,6 +130,18 @@ export function syncRuntimeIdleDiagnostics(state, idleState = null) {
     state.diagnostics.semanticIdle = resolved.semanticIdle === true;
     state.diagnostics.visualIdle = resolved.visualIdle === true;
     state.diagnostics.finalRenderDrained = resolved.finalRenderDrained === true;
+    state.diagnostics.runtimeIdlePolicyMode = resolved.policyMode || allowFinalRenderDrainPolicyMode;
+    state.diagnostics.runtimeIdleFinalRenderDrainAllowed = resolved.finalRenderDrainAllowed === true;
+    state.diagnostics.runtimeIdleVisualRequired = resolved.visualIdleRequired !== false;
+}
+
+function normalizePolicyMode(value) {
+    const text = String(value || "").trim();
+    if (text === semanticOnlyPolicyMode || text === visualStrictPolicyMode || text === allowFinalRenderDrainPolicyMode) {
+        return text;
+    }
+
+    return allowFinalRenderDrainPolicyMode;
 }
 
 function addCountBlocker(blockers, name, count) {

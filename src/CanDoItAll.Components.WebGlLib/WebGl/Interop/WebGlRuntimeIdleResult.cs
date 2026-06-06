@@ -10,6 +10,12 @@ public sealed class WebGlRuntimeIdleResult
 
     public string Reason { get; set; } = string.Empty;
 
+    public string PolicyMode { get; set; } = WebGlRuntimeIdlePolicyModes.AllowFinalRenderDrain;
+
+    public bool FinalRenderDrainAllowed { get; set; }
+
+    public bool VisualIdleRequired { get; set; } = true;
+
     public int TimeoutMs { get; set; }
 
     public int PollIntervalMs { get; set; }

@@ -18,12 +18,13 @@ export async function waitForRuntimeIdle(state, options = {}) {
     const timeoutMs = clampPositive(options.timeoutMs, 2000, 60000);
     const pollIntervalMs = clampPositive(options.pollIntervalMs, 16, 1000);
     const reason = normalizeReason(options.reason, "runtime-idle");
+    const policyMode = normalizePolicyMode(options.policyMode);
     const startedAt = performance.now();
     let consecutiveSemanticIdleProbes = 0;
     let lastState = null;
 
     while (performance.now() - startedAt < timeoutMs) {
-        lastState = isRuntimeIdle(state);
+        lastState = buildRuntimeIdleProbe(state, policyMode);
         consecutiveSemanticIdleProbes = lastState.semanticIdle
             ? consecutiveSemanticIdleProbes + 1
             : 0;
@@ -32,16 +33,16 @@ export async function waitForRuntimeIdle(state, options = {}) {
             break;
         }
 
-        if (shouldTreatFinalScheduledRenderAsDrained(lastState, consecutiveSemanticIdleProbes)) {
+        if (shouldTreatFinalScheduledRenderAsDrained(lastState, consecutiveSemanticIdleProbes, policyMode)) {
             markFinalRenderDrained(state);
-            lastState = isRuntimeIdle(state);
+            lastState = buildRuntimeIdleProbe(state, policyMode);
             break;
         }
 
         await delay(pollIntervalMs);
     }
 
-    lastState ??= isRuntimeIdle(state);
+    lastState ??= buildRuntimeIdleProbe(state, policyMode);
     const elapsedMs = Math.round(performance.now() - startedAt);
     syncLastRuntimeStopIdleDiagnostics(state, lastState, elapsedMs);
     lastState = {
@@ -53,6 +54,9 @@ export async function waitForRuntimeIdle(state, options = {}) {
         idle: lastState.idle,
         timedOut: !lastState.idle,
         reason,
+        policyMode,
+        finalRenderDrainAllowed: lastState.finalRenderDrainAllowed,
+        visualIdleRequired: lastState.visualIdleRequired,
         timeoutMs,
         pollIntervalMs,
         elapsedMs,
@@ -82,6 +86,24 @@ function clampPositive(value, fallback, max) {
 function normalizeReason(value, fallback) {
     const text = String(value || "").trim();
     return text || fallback;
+}
+
+function normalizePolicyMode(value) {
+    const text = String(value || "").trim();
+    if (text === "semanticOnly" || text === "visualStrict" || text === "allowFinalRenderDrain") {
+        return text;
+    }
+
+    return "allowFinalRenderDrain";
+}
+
+function buildRuntimeIdleProbe(state, policyMode) {
+    const idleState = buildRuntimeIdleState(state, { policyMode });
+    syncRuntimeIdleDiagnostics(state, idleState);
+    return {
+        ...idleState,
+        diagnostics: buildDiagnosticsSnapshot(state)
+    };
 }
 
 function delay(milliseconds) {

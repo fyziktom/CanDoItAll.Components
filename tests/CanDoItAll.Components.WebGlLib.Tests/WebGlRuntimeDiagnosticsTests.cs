@@ -258,6 +258,9 @@ public sealed class WebGlRuntimeDiagnosticsTests
               "idle": false,
               "timedOut": true,
               "reason": "SB02-runtime-idle",
+              "policyMode": "visualStrict",
+              "finalRenderDrainAllowed": false,
+              "visualIdleRequired": true,
               "timeoutMs": 25,
               "pollIntervalMs": 5,
               "elapsedMs": 26,
@@ -281,11 +284,14 @@ public sealed class WebGlRuntimeDiagnosticsTests
                 "queuedMotionCount": 0,
                 "queuedCommandStageCount": 0,
                 "isRenderLoopActive": true,
-                "semanticIdle": false,
-                "visualIdle": false,
-                "finalRenderDrained": false,
-                "assetCachePendingDisposalCount": 0
-              }
+              "semanticIdle": false,
+              "visualIdle": false,
+              "finalRenderDrained": false,
+              "runtimeIdlePolicyMode": "visualStrict",
+              "runtimeIdleFinalRenderDrainAllowed": false,
+              "runtimeIdleVisualRequired": true,
+              "assetCachePendingDisposalCount": 0
+            }
             }
             """;
 
@@ -303,6 +309,9 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.False(result.SemanticIdle);
         Assert.False(result.VisualIdle);
         Assert.False(result.FinalRenderDrained);
+        Assert.Equal(WebGlRuntimeIdlePolicyModes.VisualStrict, result.PolicyMode);
+        Assert.False(result.FinalRenderDrainAllowed);
+        Assert.True(result.VisualIdleRequired);
         Assert.Contains("motion:active:1", result.SemanticBlockers);
         Assert.Contains("render-loop:scheduled", result.VisualBlockers);
         Assert.NotNull(result.Diagnostics);
@@ -311,6 +320,30 @@ public sealed class WebGlRuntimeDiagnosticsTests
         Assert.False(result.Diagnostics.SemanticIdle);
         Assert.False(result.Diagnostics.VisualIdle);
         Assert.False(result.Diagnostics.FinalRenderDrained);
+        Assert.Equal(WebGlRuntimeIdlePolicyModes.VisualStrict, result.Diagnostics.RuntimeIdlePolicyMode);
+        Assert.False(result.Diagnostics.RuntimeIdleFinalRenderDrainAllowed);
+        Assert.True(result.Diagnostics.RuntimeIdleVisualRequired);
+    }
+
+    [Fact]
+    public void Runtime_idle_policy_modes_are_stable_public_values()
+    {
+        Assert.Equal("semanticOnly", WebGlRuntimeIdlePolicyModes.SemanticOnly);
+        Assert.Equal("visualStrict", WebGlRuntimeIdlePolicyModes.VisualStrict);
+        Assert.Equal("allowFinalRenderDrain", WebGlRuntimeIdlePolicyModes.AllowFinalRenderDrain);
+
+        var options = new WebGlRuntimeIdleOptions
+        {
+            TimeoutMs = 25,
+            PollIntervalMs = 5,
+            Reason = "policy-proof",
+            PolicyMode = WebGlRuntimeIdlePolicyModes.VisualStrict
+        };
+
+        Assert.Equal(25, options.TimeoutMs);
+        Assert.Equal(5, options.PollIntervalMs);
+        Assert.Equal("policy-proof", options.Reason);
+        Assert.Equal(WebGlRuntimeIdlePolicyModes.VisualStrict, options.PolicyMode);
     }
 
     [Fact]

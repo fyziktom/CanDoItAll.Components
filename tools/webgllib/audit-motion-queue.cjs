@@ -204,6 +204,22 @@ function updateObjectRuntimeTransform() {
 function createCommandResult(state, commandKind, commandId) {
   return { success: true, commandKind, commandId, affectedObjectIds: [], affectedLinkIds: [], errors: [], warnings: [], metadata: {} };
 }
+const commandLifecycleStates = Object.freeze({
+  accepted: "accepted",
+  scheduled: "scheduled",
+  active: "active",
+  settled: "settled",
+  cancelled: "cancelled",
+  failed: "failed"
+});
+function setCommandLifecycle(result, lifecycleState, settled = lifecycleState === commandLifecycleStates.settled) {
+  result.lifecycleState = lifecycleState || commandLifecycleStates.accepted;
+  result.settled = settled === true;
+  result.metadata = result.metadata || {};
+  result.metadata.lifecycleState = result.lifecycleState;
+  result.metadata.settled = String(result.settled);
+  return result;
+}
 function completeCommandResult(_state, result) {
   result.success = result.errors.length === 0;
   return result;
