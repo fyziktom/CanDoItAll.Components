@@ -100,6 +100,7 @@ export function updateState(state, scene, options) {
     state.assetLookup = buildAssetLookup(state.sceneModel.assetCatalog);
     state.selectedObjectIds = new Set(state.sceneModel.uiState?.selection?.selectedObjectIds || []);
     state.hoveredObjectId = state.sceneModel.uiState?.hoveredObjectId || "";
+    clearLabelHoverState(state);
     state.diagnostics.updateCount += 1;
     rebuildScene(state);
     applyCameraState(state);
@@ -180,9 +181,11 @@ export function dispose(state) {
         return;
     }
 
+    state.disposed = true;
     if (state.animationHandle) {
         cancelAnimationFrame(state.animationHandle);
     }
+    clearLabelHoverState(state);
     cancelCommandStageRunner(state, "dispose");
 
     state.resizeObserver?.disconnect();
@@ -244,11 +247,16 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         labelElements: new Map(),
         selectedObjectIds: new Set(sceneModel.uiState?.selection?.selectedObjectIds || []),
         hoveredObjectId: sceneModel.uiState?.hoveredObjectId || "",
+        labelHoverObjectId: "",
+        labelHoverExpiresAt: 0,
+        labelHoverHideTimer: 0,
+        labelHoverHideTimerExpiresAt: 0,
         motions: new Map(),
         motionQueuesByObjectId: new Map(),
         commandStageRunner: null,
         dragState: null,
         animationHandle: 0,
+        disposed: false,
         renderRequested: true,
         renderReason: "create",
         frame: 0,
@@ -261,6 +269,17 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         decorations: {},
         handlers: {}
     };
+}
+
+function clearLabelHoverState(state) {
+    if (state.labelHoverHideTimer) {
+        window.clearTimeout(state.labelHoverHideTimer);
+    }
+
+    state.labelHoverObjectId = "";
+    state.labelHoverExpiresAt = 0;
+    state.labelHoverHideTimer = 0;
+    state.labelHoverHideTimerExpiresAt = 0;
 }
 
 function attachHandlers(state) {

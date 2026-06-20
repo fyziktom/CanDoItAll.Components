@@ -90,6 +90,8 @@ export function normalizeOptions(options) {
         assetQualityProfile: normalizeAssetProfile(options?.assetQualityProfile),
         showDiagnosticsPanel: options?.showDiagnosticsPanel !== false,
         showLabels: options?.showLabels !== false,
+        labelVisibilityMode: normalizeLabelVisibilityMode(options?.labelVisibilityMode),
+        labelHoverHideDelayMilliseconds: Math.max(0, Math.min(10000, resolveFiniteNumber(options?.labelHoverHideDelayMilliseconds, 2200))),
         showSymbols: options?.showSymbols !== false,
         autoFitOnCreate: options?.autoFitOnCreate !== false,
         runtimeKey: resolveString(options?.runtimeKey, ""),
@@ -101,6 +103,11 @@ export function normalizeOptions(options) {
         "notifyCommandCompleted": options?.notifyCommandCompleted !== false, "notifyCommandFailed": options?.notifyCommandFailed !== false,
         runtimeBudget: normalizeRuntimeBudget(options?.runtimeBudget)
     };
+}
+
+export function normalizeLabelVisibilityMode(value) {
+    const mode = resolveString(value, "always").toLowerCase();
+    return mode === "hover" || mode === "mouseover" ? "hover" : "always";
 }
 
 export function normalizeRenderMode(value) {

@@ -70,7 +70,7 @@ function requestNextFrame(state, renderFrame) {
     state.diagnostics.idleSinceTimestamp = 0;
     const loop = timestamp => {
         state.animationHandle = 0;
-        if (!state.host.__webglSceneState) {
+        if (state.disposed) {
             state.diagnostics.isRenderLoopActive = false;
             return;
         }

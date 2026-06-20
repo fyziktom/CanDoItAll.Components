@@ -95,6 +95,8 @@ public partial class WebGlSceneView
             AssetQualityProfile = options.AssetQualityProfile,
             ShowDiagnosticsPanel = options.ShowDiagnosticsPanel,
             ShowLabels = options.ShowLabels,
+            LabelVisibilityMode = options.LabelVisibilityMode,
+            LabelHoverHideDelayMilliseconds = options.LabelHoverHideDelayMilliseconds,
             ShowSymbols = options.ShowSymbols,
             AutoFitOnCreate = options.AutoFitOnCreate,
             MaxCommandResultHistory = options.MaxCommandResultHistory,

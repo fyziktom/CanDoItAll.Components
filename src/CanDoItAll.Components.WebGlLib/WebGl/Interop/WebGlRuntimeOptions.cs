@@ -18,6 +18,10 @@ public sealed class WebGlRuntimeOptions
 
     public bool ShowLabels { get; set; } = true;
 
+    public string LabelVisibilityMode { get; set; } = WebGlLabelVisibilityModes.Always;
+
+    public int LabelHoverHideDelayMilliseconds { get; set; } = 2_200;
+
     public bool ShowSymbols { get; set; } = true;
 
     public bool AutoFitOnCreate { get; set; } = true;
@@ -41,6 +45,13 @@ public sealed class WebGlRuntimeOptions
     public WebGlRuntimeBudgetOptions RuntimeBudget { get; set; } = new();
 
     public string RuntimeKey { get; set; } = string.Empty;
+}
+
+public static class WebGlLabelVisibilityModes
+{
+    public const string Always = "always";
+
+    public const string Hover = "hover";
 }
 
 public sealed class WebGlRuntimeBudgetOptions
