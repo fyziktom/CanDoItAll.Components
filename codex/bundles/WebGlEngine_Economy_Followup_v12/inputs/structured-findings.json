@@ -1,0 +1,415 @@
+{
+  "findings": [
+    [
+      "F01",
+      "Done",
+      "Generic action vocabulary is cleaner: DirectedFlowVisual replaced ResourceTransferVisual in WebGlRunLib.",
+      "C-WGRUN-ACTIONKINDS",
+      "Keep and protect with CI. Add negative tests for old ResourceTransferVisual."
+    ],
+    [
+      "F02",
+      "Done/partial",
+      "Generic validator now takes boundary options and scans more scene/run fields.",
+      "C-WGRUN-VALIDATOR",
+      "Keep; add driver-bound source provenance opacity and external audit for exported documents."
+    ],
+    [
+      "F03",
+      "Done/partial",
+      "Generic domain driver contract exists with manifest/hash/scrubber.",
+      "C-DOMAIN-DRIVER",
+      "Good foundation; require driver manifest hash in produced WebGlRunDocument metadata and proof artifacts."
+    ],
+    [
+      "F04",
+      "Partial",
+      "Source provenance still can carry raw domain IDs/values because source.* keys bypass domain-value term validation.",
+      "C-WGRUN-VALIDATOR",
+      "Introduce opaque provenance mode and domain-side trace map artifacts."
+    ],
+    [
+      "F05",
+      "Partial",
+      "Domain leakage CI is stronger, but allowlists are broad and can hide drift in docs/bundles/tools.",
+      "C-DOMAIN-AUDIT",
+      "Split source/package hard gate from docs/history audit; enforce allowlist expiry/reason owner."
+    ],
+    [
+      "F06",
+      "Partial",
+      "Economy bridge mapping driver exists, but bridge contracts/driver/mapper are still packed into a large mixed file.",
+      "E-BRIDGE-DRIVER",
+      "Refactor into driver, contracts, mapper, metadata policy files with focused tests."
+    ],
+    [
+      "F07",
+      "Open",
+      "Multi-goods-elite exists, but currently models exchange/investment mainly as transfers/claims through SimpleAccounts.",
+      "E-MULTIGOODS",
+      "Add exchange/investment semantic driver or explicit event handlers with balance-sheet semantics."
+    ],
+    [
+      "F08",
+      "Open",
+      "Multi-goods metrics exist but need external oracle and metamorphic proofs.",
+      "E-MULTIGOODS-INVARIANTS",
+      "Add external JSON oracle cases and monotonic/conservation metamorphic tests."
+    ],
+    [
+      "F09",
+      "Open",
+      "Readiness evidence validates shape of evidence records but not actual file existence, bytes, hash, or schema content.",
+      "E-READINESS",
+      "Add artifact resolver/hash verifier and make research-ready impossible without real file-backed evidence."
+    ],
+    [
+      "F10",
+      "Open",
+      "SimpleSimulationStateTransitionEngine.Mutations remains a high-risk concentration of semantics.",
+      "E-MUTATIONS",
+      "Split into store resolver, transfer engine, rejection policy, flow factory, diagnostic classifier."
+    ],
+    [
+      "F11",
+      "Open",
+      "Economy boundary audit has line-count gates but needs CI integration and updated allowlist for refactor state.",
+      "E-BOUNDARY-AUDIT",
+      "Run as mandatory gate and fail bundle closure if disabled or not cited."
+    ],
+    [
+      "F12",
+      "Open",
+      "We still need non-economy generic driver canary to prove WebGlRunLib is not tuned to economic visual flows.",
+      "C-DOMAIN-DRIVER",
+      "Add manufacturing/logistics-neutral or graph-process driver using DirectedFlowVisual and non-economic symbols."
+    ]
+  ],
+  "subbundles": [
+    [
+      "SB01",
+      "Current-state and v11 closure audit",
+      "Audit actual v11 implementation across Components/webgl-engine and Economy/main. Produce a closure matrix: accepted, partial, open, regressions.",
+      [
+        "All source refs"
+      ],
+      [
+        "closure-matrix.md",
+        "changed-file-inventory.txt",
+        "proof-integrity-inventory.txt"
+      ]
+    ],
+    [
+      "SB02",
+      "Evidence resolver and artifact-backed readiness",
+      "Make EconomyExperimentEvidenceValidator verify real artifact existence, byte size, SHA-256, and schema version through an artifact root/resolver.",
+      [
+        "E-READINESS"
+      ],
+      [
+        "evidence-resolver-tests.txt",
+        "readiness-evidence-negative-tests.txt",
+        "artifact-hash-proof.json"
+      ]
+    ],
+    [
+      "SB03",
+      "Source provenance opacity policy",
+      "Prevent raw domain identifiers from leaking through source.* metadata in generic WebGlRunDocument. Domain driver must emit opaque source hashes and write a domain-side trace map artifact.",
+      [
+        "C-WGRUN-VALIDATOR",
+        "C-DOMAIN-DRIVER",
+        "E-BRIDGE-DRIVER"
+      ],
+      [
+        "provenance-opacity-tests.txt",
+        "trace-map-artifact.json",
+        "generic-run-document-no-raw-domain-ids.txt"
+      ]
+    ],
+    [
+      "SB04",
+      "Domain boundary audit CI v2",
+      "Harden Components domain audit: separate package/source hard gates from docs/history scans, enforce term registry expansion and allowlist expiry, include JS/Razor/JSON/workflow files.",
+      [
+        "C-DOMAIN-AUDIT"
+      ],
+      [
+        "domain-audit-source-gate.txt",
+        "domain-audit-docs-report.txt",
+        "allowlist-review.md"
+      ]
+    ],
+    [
+      "SB05",
+      "Domain driver manifest hardening",
+      "Require driver manifest id/version/hash/action mappings in WebGlRunDocument metadata and browser observer proof. Reject unsupported driver mappings.",
+      [
+        "C-DOMAIN-DRIVER",
+        "E-BRIDGE-DRIVER"
+      ],
+      [
+        "driver-manifest-validation-tests.txt",
+        "driver-hash-in-run-document.json"
+      ]
+    ],
+    [
+      "SB06",
+      "Economy bridge driver refactor",
+      "Split EconomyWebGlBridgeContracts.cs responsibilities into contracts, EconomyWebGlRunDomainMappingDriver, metadata scrubber policy, and visual action mapper.",
+      [
+        "E-BRIDGE-DRIVER"
+      ],
+      [
+        "bridge-file-split-proof.txt",
+        "bridge-focused-tests.txt"
+      ]
+    ],
+    [
+      "SB07",
+      "DirectedFlowVisual semantics boundary",
+      "Document and enforce that DirectedFlowVisual is a visual-only generic flow, not economic resource movement. Economy driver owns all resource/economic meaning.",
+      [
+        "C-WGRUN-ACTIONKINDS",
+        "E-BRIDGE-DRIVER"
+      ],
+      [
+        "directed-flow-boundary-tests.txt",
+        "generic-action-docs.md"
+      ]
+    ],
+    [
+      "SB08",
+      "Simple simulation mutation split",
+      "Refactor SimpleSimulationStateTransitionEngine.Mutations into StoreResolutionService, TransferEngine, RejectionPolicy, FlowFactory, and StoreResolutionMetadataPolicy.",
+      [
+        "E-MUTATIONS"
+      ],
+      [
+        "mutation-split-build.txt",
+        "mutation-focused-tests.txt",
+        "line-count-audit.txt"
+      ]
+    ],
+    [
+      "SB09",
+      "Exchange/investment semantic driver",
+      "Add explicit semantics for multi-leg exchange, investment/contribution, claim issuance, return/repayment, and obligation relationship updates without baking them into generic simulation abstractions.",
+      [
+        "E-MULTIGOODS",
+        "E-BRIDGE-DRIVER"
+      ],
+      [
+        "exchange-investment-driver-tests.txt",
+        "semantic-driver-boundary.md"
+      ]
+    ],
+    [
+      "SB10",
+      "Multi-goods-elite research canary closure",
+      "Promote multi-goods-elite from sample to research canary: strict scenario pack, no unresolved mappings, external oracle, design matrix, performance profile.",
+      [
+        "E-MULTIGOODS",
+        "E-MULTIGOODS-INVARIANTS"
+      ],
+      [
+        "multi-goods-headless-report.json",
+        "multi-goods-readiness-report.json",
+        "canary-closure.md"
+      ]
+    ],
+    [
+      "SB11",
+      "External oracle corpus v3",
+      "Move/extend golden oracles into external JSON corpus covering shared-well, farmer-land, and multi-goods-elite with expected stores, flows, relationships, metrics, diagnostics, and hash chains.",
+      [
+        "E-MULTIGOODS-INVARIANTS"
+      ],
+      [
+        "oracle-corpus.json",
+        "oracle-run-proof.txt",
+        "negative-oracle-diff-proof.txt"
+      ]
+    ],
+    [
+      "SB12",
+      "Metamorphic economics tests",
+      "Add monotonic and conservation tests: increasing investment changes dependency/concentration; increasing fee changes liquidity; reciprocal exchange conserves goods/credit as declared.",
+      [
+        "E-MULTIGOODS",
+        "E-MULTIGOODS-INVARIANTS"
+      ],
+      [
+        "metamorphic-test-results.txt",
+        "conservation-test-results.txt"
+      ]
+    ],
+    [
+      "SB13",
+      "Design matrix binding registry v4",
+      "Replace ad hoc factor binding switch with registered binding drivers. Add bindings for multi-goods investment amount, fee rate, claim issue size, and exchange volume.",
+      [
+        "E-MULTIGOODS",
+        "E-READINESS"
+      ],
+      [
+        "factor-binding-registry-tests.txt",
+        "effective-source-diff-proof.json"
+      ]
+    ],
+    [
+      "SB14",
+      "Browser observer real-state proof v2",
+      "Require browser proof to export actual loaded run-document hash, scene content hash, runtime idle state, completed stages, final object positions, and driver hash.",
+      [
+        "C-DOMAIN-DRIVER"
+      ],
+      [
+        "browser-observer-proof.json",
+        "playwright-transcript.txt"
+      ]
+    ],
+    [
+      "SB15",
+      "Noise firewall and diagnostic classification",
+      "Every warning/error must be classified into scenario, simulation, metrics, projection, runtime, UI, oracle, or performance. Unclassified diagnostics fail ResearchStrict.",
+      [
+        "E-READINESS"
+      ],
+      [
+        "diagnostic-classification-tests.txt",
+        "unclassified-diagnostic-negative-test.txt"
+      ]
+    ],
+    [
+      "SB16",
+      "Performance/comparability budgets v2",
+      "Add budgets for multi-goods-elite headless materialization, metrics, oracle validation, artifact hashing, and browser observer proof. Mark not-comparable on budget hard failures.",
+      [
+        "E-READINESS",
+        "E-MULTIGOODS"
+      ],
+      [
+        "performance-budget-report.json",
+        "not-comparable-negative-test.txt"
+      ]
+    ],
+    [
+      "SB17",
+      "Non-economy generic driver canary",
+      "Add a small non-economy driver/canary, e.g. neutral workflow/logistics movement, to prove WebGlRunLib and DirectedFlowVisual remain domain-neutral.",
+      [
+        "C-DOMAIN-DRIVER",
+        "C-WGRUN-ACTIONKINDS"
+      ],
+      [
+        "non-economy-driver-proof.txt",
+        "generic-boundary-report.txt"
+      ]
+    ],
+    [
+      "SB18",
+      "Docs and operator workflow",
+      "Document when a simulation is exploratory/headless-valid/oracle-valid/research-ready, and how to run the canonical CLI/test sequence.",
+      [
+        "E-READINESS"
+      ],
+      [
+        "operator-workflow.md",
+        "research-readiness-checklist.md"
+      ]
+    ],
+    [
+      "SB19",
+      "Final cross-repo red-team closure",
+      "Run all required builds/tests/audits, validate bundle proof, inspect zero-length transcripts, and produce final QA report with reopen list.",
+      [
+        "All"
+      ],
+      [
+        "final-red-team-report.md",
+        "completed-validator.txt",
+        "sha256.txt"
+      ]
+    ]
+  ],
+  "sourceRefs": [
+    {
+      "id": "C-WGRUN-ACTIONKINDS",
+      "repo": "fyziktom/CanDoItAll.Components",
+      "ref": "webgl-engine",
+      "path": "src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs",
+      "finding": "Generic action vocabulary now uses DirectedFlowVisual and exposes WebGlRunActionKinds.All; ResourceTransferVisual is removed."
+    },
+    {
+      "id": "C-WGRUN-VALIDATOR",
+      "repo": "fyziktom/CanDoItAll.Components",
+      "ref": "webgl-engine",
+      "path": "src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs",
+      "finding": "Boundary options are configurable and validator now scans run id, initial scene ids/kinds/tags/symbols/links/layers, frame/stage metadata."
+    },
+    {
+      "id": "C-DOMAIN-DRIVER",
+      "repo": "fyziktom/CanDoItAll.Components",
+      "ref": "webgl-engine",
+      "path": "src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs",
+      "finding": "Generic domain driver contract, manifest, hash, metadata scrubber, and driver validator exist."
+    },
+    {
+      "id": "C-DOMAIN-AUDIT",
+      "repo": "fyziktom/CanDoItAll.Components",
+      "ref": "webgl-engine",
+      "path": "tools/webgllib/domain-boundary-audit.config.json",
+      "finding": "Domain leakage CI scans source/docs/tools/workflows with term registry and explicit allowlists."
+    },
+    {
+      "id": "E-BRIDGE-DRIVER",
+      "repo": "fyziktom/CanDoItAll.Economy",
+      "ref": "main",
+      "path": "src/CanDoItAll.Economy.Simulation.WebGlBridge/EconomyWebGlBridgeContracts.cs",
+      "finding": "Economy bridge implements EconomyWebGlRunDomainMappingDriver and maps ResourceTransferVisual to DirectedFlowVisual."
+    },
+    {
+      "id": "E-MAPPING-BOUNDARY",
+      "repo": "fyziktom/CanDoItAll.Economy",
+      "ref": "main",
+      "path": "src/CanDoItAll.Economy.Simulation.WebGlBridge/EconomyWebGlMappingBoundary.cs",
+      "finding": "Economy-owned strict generic boundary terms include economy, ledger, market, buyer/seller, investor, elite, price, water, well."
+    },
+    {
+      "id": "E-MULTIGOODS",
+      "repo": "fyziktom/CanDoItAll.Economy",
+      "ref": "main",
+      "path": "src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox/multi-goods-elite/scenario.definition.json",
+      "finding": "Third canary scenario exists with grain/tools/credit/equity-share, exchange, contribution, claim issue, fee, policy, and obligation events."
+    },
+    {
+      "id": "E-MULTIGOODS-INVARIANTS",
+      "repo": "fyziktom/CanDoItAll.Economy",
+      "ref": "main",
+      "path": "src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox/multi-goods-elite/expected.invariants.json",
+      "finding": "Third canary has concentration, top share, trade volume, issue count, and elite capital dependency metrics/invariants."
+    },
+    {
+      "id": "E-READINESS",
+      "repo": "fyziktom/CanDoItAll.Economy",
+      "ref": "main",
+      "path": "src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs",
+      "finding": "Readiness report now has evidence records and bands, but evidence validator validates record structure rather than reading/hash-checking files."
+    },
+    {
+      "id": "E-MUTATIONS",
+      "repo": "fyziktom/CanDoItAll.Economy",
+      "ref": "main",
+      "path": "src/CanDoItAll.Economy.Simulation.SimpleAccounts/SimpleSimulationStateTransitionEngine.Mutations.cs",
+      "finding": "Mutation layer still combines store resolution, transfers, severity/rejection policy, flow metadata, and store policy resolution."
+    },
+    {
+      "id": "E-BOUNDARY-AUDIT",
+      "repo": "fyziktom/CanDoItAll.Economy",
+      "ref": "main",
+      "path": "scripts/audit-simulation-boundaries.ps1",
+      "finding": "Economy boundary script enforces reference boundaries, line-count gates, determinism, and example-specific term scans."
+    }
+  ]
+}

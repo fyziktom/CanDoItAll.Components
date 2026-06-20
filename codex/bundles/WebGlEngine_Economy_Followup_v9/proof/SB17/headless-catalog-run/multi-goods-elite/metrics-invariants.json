@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "economy-headless-metrics-invariants/v1",
+  "metrics": [
+    {
+      "metricId": "wealthConcentrationHhi",
+      "value": 0.330774,
+      "unit": "ratio",
+      "metadata": {
+        "kind": "resource-owner-hhi",
+        "resourceId": "credit",
+        "unit": "ratio",
+        "precision": "6",
+        "sourceFrameHash": "6329f8bc16c2c2a4c2794fc904b1e4a61766bd413ea1fe241db98f609cd0596b",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "resource-owner-hhi"
+      }
+    },
+    {
+      "metricId": "topWealthShare",
+      "value": 0.489362,
+      "unit": "ratio",
+      "metadata": {
+        "kind": "top-owner-share",
+        "resourceId": "credit",
+        "unit": "ratio",
+        "precision": "6",
+        "sourceFrameHash": "6329f8bc16c2c2a4c2794fc904b1e4a61766bd413ea1fe241db98f609cd0596b",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "top-owner-share"
+      }
+    },
+    {
+      "metricId": "wealthGiniProxy",
+      "value": 0.6250,
+      "unit": "ratio",
+      "metadata": {
+        "kind": "resource-owner-hhi",
+        "resourceId": "equity-share",
+        "unit": "ratio",
+        "precision": "6",
+        "sourceFrameHash": "6329f8bc16c2c2a4c2794fc904b1e4a61766bd413ea1fe241db98f609cd0596b",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "resource-owner-hhi"
+      }
+    },
+    {
+      "metricId": "liquidityTradeVolume",
+      "value": 14,
+      "unit": "unit",
+      "metadata": {
+        "kind": "trade-volume",
+        "resourceId": "grain",
+        "unit": "unit",
+        "precision": "6",
+        "sourceFrameHash": "6329f8bc16c2c2a4c2794fc904b1e4a61766bd413ea1fe241db98f609cd0596b",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "trade-volume"
+      }
+    },
+    {
+      "metricId": "unmetDemand",
+      "value": 1,
+      "unit": "count",
+      "metadata": {
+        "kind": "issue-count",
+        "category": "rule",
+        "unit": "count",
+        "precision": "0",
+        "sourceFrameHash": "6329f8bc16c2c2a4c2794fc904b1e4a61766bd413ea1fe241db98f609cd0596b",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "issue-count"
+      }
+    },
+    {
+      "metricId": "eliteCapitalDependency",
+      "value": 71,
+      "unit": "unit",
+      "metadata": {
+        "kind": "transfer-volume",
+        "resourceId": "credit",
+        "unit": "unit",
+        "precision": "6",
+        "sourceFrameHash": "6329f8bc16c2c2a4c2794fc904b1e4a61766bd413ea1fe241db98f609cd0596b",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "transfer-volume"
+      }
+    }
+  ],
+  "metricDiagnostics": [],
+  "invariants": [
+    {
+      "invariantId": "multi-goods.no-negative-stores",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.no-negative-stores\u0027 passed.",
+      "metadata": {
+        "negativeStoreCount": "0"
+      }
+    },
+    {
+      "invariantId": "multi-goods.known-frame-references",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.known-frame-references\u0027 passed.",
+      "metadata": {
+        "missingReferenceCount": "0"
+      }
+    },
+    {
+      "invariantId": "multi-goods.wealth-hhi-visible",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.wealth-hhi-visible\u0027 passed.",
+      "metadata": {
+        "metricId": "wealthConcentrationHhi",
+        "value": "0.330774"
+      }
+    },
+    {
+      "invariantId": "multi-goods.top-share-visible",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.top-share-visible\u0027 passed.",
+      "metadata": {
+        "metricId": "topWealthShare",
+        "value": "0.489362"
+      }
+    },
+    {
+      "invariantId": "multi-goods.unmet-demand-visible",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.unmet-demand-visible\u0027 passed.",
+      "metadata": {
+        "metricId": "unmetDemand",
+        "value": "1"
+      }
+    },
+    {
+      "invariantId": "multi-goods.elite-capital-visible",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.elite-capital-visible\u0027 passed.",
+      "metadata": {
+        "metricId": "eliteCapitalDependency",
+        "value": "71"
+      }
+    }
+  ],
+  "metricHashes": [
+    {
+      "metricId": "eliteCapitalDependency",
+      "kind": "transfer-volume",
+      "hash": "sha256:3c1f1be6714734173881237cfba273ef7f6e8276934a8f9778c86be18a2c5f3f"
+    },
+    {
+      "metricId": "liquidityTradeVolume",
+      "kind": "trade-volume",
+      "hash": "sha256:aa1dec7dace4a5410b76cd1e52da3339e0c7d7e7214b7b7693c732345cbe1820"
+    },
+    {
+      "metricId": "topWealthShare",
+      "kind": "top-owner-share",
+      "hash": "sha256:57709903237328cdd7b96c137fa5671f68e9d0402e0068002f51287cd2b81587"
+    },
+    {
+      "metricId": "unmetDemand",
+      "kind": "issue-count",
+      "hash": "sha256:0ace085685367762b779e4ce1f6c9673cf9f7324f13cb7e14d82593900b0f7fb"
+    },
+    {
+      "metricId": "wealthConcentrationHhi",
+      "kind": "resource-owner-hhi",
+      "hash": "sha256:30eb984e2e1d2bbcbc22b0cc8fe4e893d504c04b2742585577634a0d4aa9b51e"
+    },
+    {
+      "metricId": "wealthGiniProxy",
+      "kind": "resource-owner-hhi",
+      "hash": "sha256:1caa9ceb046a86fbea9124aa21c86ca5bec4986fbef809e5826e2bd98185c028"
+    }
+  ],
+  "invariantHashes": [
+    {
+      "metricId": "multi-goods.elite-capital-visible",
+      "kind": "",
+      "hash": "sha256:cdca4634edb1201fe16d3976ced04abfc6d1b724925bf068e7ce10d9fb8c820a"
+    },
+    {
+      "metricId": "multi-goods.known-frame-references",
+      "kind": "",
+      "hash": "sha256:959682fee074cf7ba96ba5db1b9e07de815ea82a0292caa6b87ee367ec45eeb0"
+    },
+    {
+      "metricId": "multi-goods.no-negative-stores",
+      "kind": "",
+      "hash": "sha256:841eb96a92f1a2be9720645807a3a0377541385dd2e5b5451fc30b22c964a56a"
+    },
+    {
+      "metricId": "multi-goods.top-share-visible",
+      "kind": "",
+      "hash": "sha256:e719c9db0bd8d8b7ec56b4a8f1fea5103f175ac29058f276ec5438b84ff4dd0f"
+    },
+    {
+      "metricId": "multi-goods.unmet-demand-visible",
+      "kind": "",
+      "hash": "sha256:7b6ec959b96a2e731a43e18d3aed6c57bf80b68d9b49820824b1673dc0feafc5"
+    },
+    {
+      "metricId": "multi-goods.wealth-hhi-visible",
+      "kind": "",
+      "hash": "sha256:f28dd76538e14eff657b26ca773d7018f47e5c10104cc1e2e0100fc9303b8e08"
+    }
+  ]
+}

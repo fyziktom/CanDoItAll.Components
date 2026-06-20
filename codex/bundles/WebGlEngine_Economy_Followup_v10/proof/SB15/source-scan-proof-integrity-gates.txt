@@ -1,0 +1,16 @@
+﻿SB15 source scan for proof-integrity gates
+
+Source: scripts\validate_bundle.py
+PASS: 'proof-artifact-empty' at line 131: errors.append(f"proof-artifact-empty:{rel_manifest}:{rel_resolved}")
+PASS: 'proof-artifact-missing' at line 127: errors.append(f"proof-artifact-missing:{rel_manifest}:{ref}")
+PASS: 'proof-scan-skipped-or-placeholder' at line 141: errors.append(f"proof-scan-skipped-or-placeholder:{rel_manifest}:{rel_resolved}")
+PASS: 'stale-screenshot' at line 156: "stale-screenshot:"
+PASS: 'screenshot-without-machine-readable-assertions' at line 150: errors.append(f"screenshot-without-machine-readable-assertions:{rel_manifest}")
+PASS: 'CLOSED_STATUSES' at line 22: CLOSED_STATUSES = {"pass", "passed", "complete", "completed"}
+PASS: 'CLOSED_STATUSES' at line 108: closed = status in CLOSED_STATUSES
+PASS: 'SKIPPED_SCAN_RE' at line 26: SKIPPED_SCAN_RE = re.compile(
+PASS: 'SKIPPED_SCAN_RE' at line 140: if "scan" in resolved.name.lower() and SKIPPED_SCAN_RE.search(content):
+
+Source: ..\..\..\.github\workflows\domain-leakage.yml
+PASS: 'bundle-proof-integrity' at line 8: bundle-proof-integrity:
+PASS: 'validate_bundle.py --stage prepared' at line 19: run: python codex/bundles/WebGlEngine_Economy_Followup_v10/scripts/validate_bundle.py --stage prepared

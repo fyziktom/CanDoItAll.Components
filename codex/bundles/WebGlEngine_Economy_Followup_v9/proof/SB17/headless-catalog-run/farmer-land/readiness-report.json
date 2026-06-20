@@ -1,0 +1,699 @@
+{
+  "schemaVersion": "economy-experiment-readiness/v3",
+  "experimentId": "experiment.farmer-land.anti-oligarchy.v1",
+  "scenarioPackHash": "sha256:1b959a574057d7541b12713ac38dc4149c2bf47b54ca530be45dcfcc0919720c",
+  "runHash": "546ae26e051766ca2910b79195fb6a1ff8b0d15e64fccd11d27a6c8d102cd6e6",
+  "status": "failed",
+  "researchReady": false,
+  "scenario": {
+    "band": "scenario",
+    "valid": false,
+    "status": "fail",
+    "passCount": 0,
+    "failCount": 1,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [
+      "invalid-value:scenario.expansionProfileId: Strict mode requires an explicit behavior expansion profile."
+    ],
+    "warnings": [],
+    "metadata": {}
+  },
+  "simulation": {
+    "band": "simulation",
+    "valid": false,
+    "status": "fail",
+    "passCount": 0,
+    "failCount": 4,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [
+      "missing-actor:events.event.expander.invest.actorIds: Actor \u0027crop-output\u0027 was not found in state indexes.",
+      "missing-resource:events.event.expander.invest.resourceIds: Resource \u0027crop-output\u0027 was not found in state store indexes.",
+      "unknown-event-handler:events.event.expander.invest.eventKind: No simulation event handler is registered for event kind \u0027actor.work.perform\u0027.",
+      "unknown-event-handler:events.event.land-board.check.eventKind: No simulation event handler is registered for event kind \u0027rule.check.evaluate\u0027."
+    ],
+    "warnings": [],
+    "metadata": {}
+  },
+  "metrics": {
+    "band": "metrics",
+    "valid": true,
+    "status": "pass",
+    "passCount": 1,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {}
+  },
+  "projection": {
+    "band": "projection",
+    "valid": true,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False"
+    }
+  },
+  "runtime": {
+    "band": "runtime",
+    "valid": true,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "exerciseRequested": "False",
+      "evidenceCount": "0",
+      "validEvidenceCount": "0",
+      "invalidEvidenceCount": "0",
+      "evidenceValidatorsPassed": "False"
+    }
+  },
+  "ui": {
+    "band": "ui",
+    "valid": true,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "exerciseRequested": "False",
+      "evidenceCount": "0",
+      "validEvidenceCount": "0",
+      "invalidEvidenceCount": "0",
+      "evidenceValidatorsPassed": "False"
+    }
+  },
+  "oracle": {
+    "band": "oracle",
+    "valid": true,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "exerciseRequested": "False",
+      "evidenceCount": "0",
+      "validEvidenceCount": "0",
+      "invalidEvidenceCount": "0",
+      "evidenceValidatorsPassed": "False"
+    }
+  },
+  "browserObserver": {
+    "band": "browser-observer",
+    "valid": false,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "runtimeExercised": "False",
+      "uiExercised": "False",
+      "evidenceValidatorsPassed": "False",
+      "runtimeEvidenceValidatorsPassed": "False",
+      "uiEvidenceValidatorsPassed": "False",
+      "runtimeEvidenceCount": "0",
+      "uiEvidenceCount": "0",
+      "validRuntimeEvidenceCount": "0",
+      "validUiEvidenceCount": "0"
+    }
+  },
+  "performance": {
+    "band": "performance",
+    "valid": true,
+    "status": "pass",
+    "passCount": 1,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "profileId": "large",
+      "profileKind": "research-performance-budget",
+      "measurementCount": "1",
+      "hardFailureCount": "0",
+      "warningCount": "0",
+      "comparable": "True",
+      "topBottlenecks": "headless-load-materialize:971.224ms:7739168B"
+    }
+  },
+  "confidenceLevel": "L0-invalid-scenario",
+  "budgetReport": {
+    "schemaVersion": "economy-performance-budget/v1",
+    "profileId": "large",
+    "profileKind": "research-performance-budget",
+    "measurements": [
+      {
+        "name": "headless-load-materialize",
+        "category": "headless",
+        "elapsedMilliseconds": 971.2243,
+        "allocatedBytes": 7739168,
+        "frameCount": 3,
+        "eventCount": 3,
+        "objectCount": 3,
+        "artifactBytes": 0,
+        "budgetMilliseconds": 120000,
+        "budgetBytes": 536870912,
+        "hardFailure": false,
+        "message": "",
+        "isHeadless": true
+      }
+    ],
+    "hardFailureCount": 0,
+    "warningCount": 0,
+    "comparable": true,
+    "topBottlenecks": [
+      "headless-load-materialize:971.224ms:7739168B"
+    ],
+    "headlessValid": true
+  },
+  "warningBudgetReport": {
+    "budget": 0,
+    "warningCount": 0,
+    "allowlistedWarningCount": 0,
+    "nonAllowlistedWarningCount": 0,
+    "allWarningsAllowlisted": true,
+    "withinBudget": true,
+    "allowlistedWarningCodes": [],
+    "warnings": []
+  },
+  "gates": [
+    {
+      "gate": "headless-economic-correctness",
+      "status": "fail",
+      "passCount": 1,
+      "failCount": 5,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "scenarioValid": "False",
+        "simulationValid": "False",
+        "metricsValid": "True"
+      }
+    },
+    {
+      "gate": "performance-budget",
+      "status": "pass",
+      "passCount": 1,
+      "failCount": 0,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "band": "performance",
+        "valid": "True",
+        "profileId": "large",
+        "hardFailureCount": "0",
+        "measurementCount": "1",
+        "topBottlenecks": "headless-load-materialize:971.224ms:7739168B"
+      }
+    },
+    {
+      "gate": "oracle-economic-correctness",
+      "status": "not-run",
+      "passCount": 0,
+      "failCount": 0,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "band": "oracle",
+        "valid": "True",
+        "exercised": "False"
+      }
+    },
+    {
+      "gate": "browser-observer",
+      "status": "not-run",
+      "passCount": 0,
+      "failCount": 1,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "band": "browser-observer",
+        "valid": "False",
+        "exercised": "False"
+      }
+    },
+    {
+      "gate": "warning-budget",
+      "status": "pass",
+      "passCount": 1,
+      "failCount": 0,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "budget": "0",
+        "withinBudget": "True",
+        "allWarningsAllowlisted": "True"
+      }
+    }
+  ],
+  "artifactCitations": [
+    {
+      "artifactId": "event-stream",
+      "fileName": "event-stream.json",
+      "relativePath": "event-stream.json",
+      "uri": "artifact://event-stream.json",
+      "hash": "sha256:87dd4d67a2d6d7542f754e772dfae145d032cd31e5952775b3a260289dff2282",
+      "bytes": 9631,
+      "schemaVersion": "economy-headless-event-stream/v1"
+    },
+    {
+      "artifactId": "frame-hashes",
+      "fileName": "frame-hashes.json",
+      "relativePath": "frame-hashes.json",
+      "uri": "artifact://frame-hashes.json",
+      "hash": "sha256:731042d96785d985aeb4d609d1b660c0bba92a17b5d1317dbee78391c47749fd",
+      "bytes": 1158,
+      "schemaVersion": "economy-headless-frame-hashes/v1"
+    },
+    {
+      "artifactId": "metrics-invariants",
+      "fileName": "metrics-invariants.json",
+      "relativePath": "metrics-invariants.json",
+      "uri": "artifact://metrics-invariants.json",
+      "hash": "sha256:e651e4c977fa4534387a8fb1ff8560e28eca79fdb235d12fcf5579a7da433b9d",
+      "bytes": 2090,
+      "schemaVersion": "economy-headless-metrics-invariants/v1"
+    },
+    {
+      "artifactId": "simulation-frames",
+      "fileName": "simulation.frames.json",
+      "relativePath": "simulation.frames.json",
+      "uri": "artifact://simulation.frames.json",
+      "hash": "sha256:4a0f70689b5451e33ab4b9c881760739d1084c6a7fbd0ce9af630c7537c72037",
+      "bytes": 25831,
+      "schemaVersion": "economy-headless-simulation-frames/v1"
+    },
+    {
+      "artifactId": "warnings",
+      "fileName": "warnings.json",
+      "relativePath": "warnings.json",
+      "uri": "artifact://warnings.json",
+      "hash": "sha256:abdc05b4c2271227b1b9f8333d95a4f9b68a153fec6eb001b7c536b5bde802e1",
+      "bytes": 368,
+      "schemaVersion": "economy-headless-warnings/v1"
+    }
+  ],
+  "evidence": [],
+  "diagnosticClassifications": [
+    {
+      "source": "backend",
+      "band": "simulation",
+      "severity": "error",
+      "code": "missing-actor",
+      "path": "events.event.expander.invest.actorIds",
+      "message": "Actor \u0027crop-output\u0027 was not found in state indexes.",
+      "classified": true
+    },
+    {
+      "source": "backend",
+      "band": "simulation",
+      "severity": "error",
+      "code": "missing-resource",
+      "path": "events.event.expander.invest.resourceIds",
+      "message": "Resource \u0027crop-output\u0027 was not found in state store indexes.",
+      "classified": true
+    },
+    {
+      "source": "backend",
+      "band": "simulation",
+      "severity": "error",
+      "code": "unknown-event-handler",
+      "path": "events.event.expander.invest.eventKind",
+      "message": "No simulation event handler is registered for event kind \u0027actor.work.perform\u0027.",
+      "classified": true
+    },
+    {
+      "source": "backend",
+      "band": "simulation",
+      "severity": "error",
+      "code": "unknown-event-handler",
+      "path": "events.event.land-board.check.eventKind",
+      "message": "No simulation event handler is registered for event kind \u0027rule.check.evaluate\u0027.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "bridge-bound-visual-field",
+      "path": "visualMapping.anchorAliases.anchorKey",
+      "message": "Strict mode does not allow warning \u0027bridge-bound-visual-field\u0027: Bridge-bound visual field remains for current runtime bridge compatibility; split it into a renderer-specific mapping extension later.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "bridge-bound-visual-field",
+      "path": "visualMapping.categories.assetId",
+      "message": "Strict mode does not allow warning \u0027bridge-bound-visual-field\u0027: Bridge-bound visual field remains for current runtime bridge compatibility; split it into a renderer-specific mapping extension later.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "bridge-bound-visual-field",
+      "path": "visualMapping.poseHints.assetId",
+      "message": "Strict mode does not allow warning \u0027bridge-bound-visual-field\u0027: Bridge-bound visual field remains for current runtime bridge compatibility; split it into a renderer-specific mapping extension later.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.admin.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.conflict.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.crop-output.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.land-parcel.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.maintenance.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.resource.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.risk.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.rule.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.tax-fee.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.trade.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.trust.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "scenario",
+      "severity": "error",
+      "code": "invalid-value",
+      "path": "scenario.expansionProfileId",
+      "message": "Strict mode requires an explicit behavior expansion profile.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "bridge-bound-visual-field",
+      "path": "visualMapping.anchorAliases.anchorKey",
+      "message": "Strict mode does not allow warning \u0027bridge-bound-visual-field\u0027: Bridge-bound visual field remains for current runtime bridge compatibility; split it into a renderer-specific mapping extension later.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "bridge-bound-visual-field",
+      "path": "visualMapping.categories.assetId",
+      "message": "Strict mode does not allow warning \u0027bridge-bound-visual-field\u0027: Bridge-bound visual field remains for current runtime bridge compatibility; split it into a renderer-specific mapping extension later.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "bridge-bound-visual-field",
+      "path": "visualMapping.poseHints.assetId",
+      "message": "Strict mode does not allow warning \u0027bridge-bound-visual-field\u0027: Bridge-bound visual field remains for current runtime bridge compatibility; split it into a renderer-specific mapping extension later.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.admin.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.conflict.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.crop-output.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.land-parcel.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.maintenance.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.resource.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.risk.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.rule.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.tax-fee.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.trade.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "missing-symbol-asset",
+      "path": "visualMapping.symbolMappings.trust.symbolAssetId",
+      "message": "Strict mode does not allow warning \u0027missing-symbol-asset\u0027: Symbol mapping has no asset id and will rely on semantic/runtime symbol fallback.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "scenario",
+      "severity": "error",
+      "code": "invalid-value",
+      "path": "scenario.expansionProfileId",
+      "message": "Strict mode requires an explicit behavior expansion profile.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "simulation",
+      "severity": "error",
+      "code": "missing-actor",
+      "path": "events.event.expander.invest.actorIds",
+      "message": "Actor \u0027crop-output\u0027 was not found in state indexes.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "simulation",
+      "severity": "error",
+      "code": "missing-resource",
+      "path": "events.event.expander.invest.resourceIds",
+      "message": "Resource \u0027crop-output\u0027 was not found in state store indexes.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "simulation",
+      "severity": "error",
+      "code": "unknown-event-handler",
+      "path": "events.event.expander.invest.eventKind",
+      "message": "No simulation event handler is registered for event kind \u0027actor.work.perform\u0027.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "simulation",
+      "severity": "error",
+      "code": "unknown-event-handler",
+      "path": "events.event.land-board.check.eventKind",
+      "message": "No simulation event handler is registered for event kind \u0027rule.check.evaluate\u0027.",
+      "classified": true
+    }
+  ],
+  "metadata": {
+    "browserRuntimeExercised": "False",
+    "uiExercised": "False",
+    "projectionExercised": "False",
+    "oracleProofExercised": "False",
+    "oracleCoverageLabel": "no-oracle",
+    "browserObserverExercised": "False",
+    "runtimeEvidenceCount": "0",
+    "uiEvidenceCount": "0",
+    "oracleEvidenceCount": "0",
+    "validRuntimeEvidenceCount": "0",
+    "validUiEvidenceCount": "0",
+    "validOracleEvidenceCount": "0",
+    "runtimeEvidenceValidatorsPassed": "False",
+    "uiEvidenceValidatorsPassed": "False",
+    "oracleEvidenceValidatorsPassed": "False",
+    "unclassifiedDiagnosticCount": "0",
+    "policyId": "research-strict",
+    "policyMode": "research-grade",
+    "researchClaimsAllowed": "True",
+    "warningBudget": "0",
+    "performanceProfileId": "large",
+    "expansionProfileId": "",
+    "expansionProfileVersion": "",
+    "expansionProfileHash": "7fbdc159c21146395a092fe47a3f51ca242bf5bfa4787bf01a3ea8e3dc1ad3a2",
+    "frameCount": "3",
+    "deltaCount": "2",
+    "artifactSetValid": "True",
+    "artifactCitationCount": "5",
+    "artifactMissingCount": "0",
+    "artifactInvalidCount": "0"
+  }
+}

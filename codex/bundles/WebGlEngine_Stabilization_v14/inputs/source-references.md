@@ -1,0 +1,16 @@
+- `CanDoItAll.Components` `CanDoItAll.Components.slnx` — Solution now includes WebGlLib, WebGlRunLib, WebGlSandbox, WebGlLib-only viewer and generic WebGlRunLib sample.
+- `CanDoItAll.Components` `Directory.Build.props` — Global IsPackable=true and package metadata apply broadly; needs explicit package-scope approval before RC freeze.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj` — WebGlLib is Razor SDK, net10.0, browser supported, depends on Microsoft.AspNetCore.Components.Web and OverlayLib.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj` — WebGlRunLib is net10.0 generic run/playback package over WebGlLib.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor` — WebGlSceneView currently owns lifecycle, JS interop, import/export, command APIs, runtime idle/stop and callbacks; needs freeze-safe facade split.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/01-webgl-scene.js` — Global window.CanDoItAll.webglScene API surface must be approved and frozen.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/26-webgl-scene-command-batch.js` — applyCommandBatchAndWait now hard-fails on idle timeout by default, but needs contract tests and public lifecycle docs.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js` — waitForRuntimeIdle returns semantic/visual/final-render-drained state and now has nuanced idle semantics.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js` — Runtime idle splits semantic and visual blockers; final scheduled render drain needs explicit proof modes.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs` — Generic action vocabulary includes DirectedFlowVisual and an All set; this should become action-kind freeze baseline.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs` — Generic domain-driver contract exists with manifest/hash/scrubber/validator.
+- `CanDoItAll.Components` `src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs` — Validator checks schema, scene/run metadata, source provenance and domain boundary options.
+- `CanDoItAll.Components` `.github/workflows/domain-leakage.yml` — CI runs domain leakage audit via Node tool.
+- `CanDoItAll.Components` `tools/webgllib/domain-boundary-audit.config.json` — Audit config scans generic source/tests/docs/tools/workflows with allowlists.
+- `CanDoItAll.Components` `samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj` — WebGlLib-only package/project switch exists.
+- `CanDoItAll.Components` `samples/CanDoItAll.Components.WebGlRunLibGenericSample/CanDoItAll.Components.WebGlRunLibGenericSample.csproj` — Generic RunLib sample exists but currently only references project; needs package-mode proof.

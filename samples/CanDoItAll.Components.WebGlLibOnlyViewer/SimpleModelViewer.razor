@@ -1,0 +1,44 @@
+<WebGlSceneView Scene="@SampleScene"
+                Options="@RenderOptions"
+                AriaLabel="WebGlLib-only primitive model viewer" />
+
+@code {
+    private static readonly WebGlRuntimeOptions RenderOptions = new()
+    {
+        RenderMode = WebGlRenderModes.OnDemand
+    };
+
+    private static readonly WebGlSceneModel SampleScene = new()
+    {
+        SceneId = "webgllib-only-sample",
+        Title = "WebGlLib-only primitive viewer",
+        Description = "A minimal generic scene rendered through WebGlSceneView without WebGlRunLib.",
+        AssetCatalog =
+        {
+            Assets =
+            [
+                new WebGlAssetDefinition
+                {
+                    Id = "asset.sample.box",
+                    Kind = WebGlAssetKinds.Primitive,
+                    Format = WebGlAssetFormats.Primitive,
+                    PrimitiveKind = WebGlPrimitiveKinds.Box,
+                    DisplayName = "Sample box",
+                    Color = "#38bdf8"
+                }
+            ]
+        },
+        Objects =
+        [
+            new WebGlSceneObject
+            {
+                Id = "object.sample.box",
+                Title = "Sample box",
+                AssetId = "asset.sample.box",
+                Position = WebGlVector3.Zero,
+                Size = new WebGlVector3(1.5, 1.5, 1.5),
+                Color = "#38bdf8"
+            }
+        ]
+    };
+}

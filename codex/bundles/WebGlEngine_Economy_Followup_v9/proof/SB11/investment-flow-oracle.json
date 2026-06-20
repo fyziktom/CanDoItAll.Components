@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "sb11-investment-flow-oracle/v1",
+  "scenarioId": "generic.investment-flow",
+  "passed": true,
+  "totals": {
+    "credit": 110,
+    "equityClaim": 10
+  },
+  "stores": [
+    {
+      "storeId": "store.operator.claim",
+      "ownerActorId": "operator",
+      "resourceId": "equity-claim",
+      "quantity": 6
+    },
+    {
+      "storeId": "store.operator.credit",
+      "ownerActorId": "operator",
+      "resourceId": "credit",
+      "quantity": 38
+    },
+    {
+      "storeId": "store.provider.claim",
+      "ownerActorId": "capital-provider",
+      "resourceId": "equity-claim",
+      "quantity": 4
+    },
+    {
+      "storeId": "store.provider.credit",
+      "ownerActorId": "capital-provider",
+      "resourceId": "credit",
+      "quantity": 72
+    }
+  ],
+  "flows": [
+    {
+      "flowId": "flow.event.generic.claim.claim",
+      "reason": "claim",
+      "fromActorId": "operator",
+      "toActorId": "capital-provider",
+      "resourceId": "equity-claim",
+      "quantity": 4
+    },
+    {
+      "flowId": "flow.event.generic.contribution.contribution",
+      "reason": "contribution",
+      "fromActorId": "capital-provider",
+      "toActorId": "operator",
+      "resourceId": "credit",
+      "quantity": 40
+    },
+    {
+      "flowId": "flow.event.generic.return.return",
+      "reason": "return",
+      "fromActorId": "operator",
+      "toActorId": "capital-provider",
+      "resourceId": "credit",
+      "quantity": 12
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipId": "rel.operator.capital-provider.actor.obligation.create",
+      "kind": "actor.obligation.create",
+      "sourceActorId": "operator",
+      "targetActorId": "capital-provider",
+      "strength": 40
+    }
+  ],
+  "diagnostics": []
+}

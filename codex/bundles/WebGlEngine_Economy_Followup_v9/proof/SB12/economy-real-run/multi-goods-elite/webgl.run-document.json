@@ -1,0 +1,2258 @@
+{
+  "schemaVersion": "webgl-run-document/v1",
+  "runId": {
+    "value": "sb12-multi-goods.experiment.multi-goods-elite.exchange-investment.v1"
+  },
+  "initialScene": {
+    "schemaVersion": "webgl-scene-document/v1",
+    "documentId": "sb12-multi-goods.experiment.multi-goods-elite.exchange-investment.v1.initial-scene",
+    "scene": {
+      "sceneId": "sb12-multi-goods.experiment.multi-goods-elite.exchange-investment.v1.scene",
+      "title": "experiment.multi-goods-elite.exchange-investment.v1",
+      "description": "",
+      "revision": 0,
+      "assetCatalog": {
+        "catalogId": "",
+        "version": "1.0",
+        "defaultFallbackAssetId": "",
+        "assets": [],
+        "modelImportRecipes": [],
+        "metadata": {}
+      },
+      "environment": {
+        "backgroundColor": "#0f172a",
+        "groundColor": "#1f2937",
+        "gridColor": "#64748b",
+        "groundSize": 36,
+        "gridDivisions": 24,
+        "ambientLightIntensity": 0.6,
+        "directionalLightIntensity": 1.2,
+        "fogEnabled": true,
+        "fogColor": "#0f172a",
+        "fogNear": 80,
+        "fogFar": 180
+      },
+      "camera": {
+        "projectionMode": "perspective",
+        "viewMode": "isometric",
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "distance": 32,
+        "zoom": 1,
+        "azimuth": -0.78,
+        "polar": 1.02,
+        "fieldOfView": 48
+      },
+      "uiState": {
+        "selection": {
+          "selectedObjectIds": [],
+          "primaryObjectId": "",
+          "contextActionId": ""
+        },
+        "hoveredObjectId": "",
+        "showGrid": true,
+        "showGround": true,
+        "showLabels": true,
+        "showSymbols": true,
+        "deterministicMode": true,
+        "activeAssetProfile": "primitive",
+        "revision": 0,
+        "metadata": {}
+      },
+      "interaction": {
+        "selectionMode": "single",
+        "allowHover": true,
+        "allowClickSelection": true,
+        "allowMultiSelect": false,
+        "allowDragOnGroundPlane": false,
+        "allowCameraPan": true,
+        "allowCameraZoom": true,
+        "allowCameraOrbit": true,
+        "fitViewOnCreate": true,
+        "focusOnDoubleClick": true,
+        "dragAxisLock": "",
+        "dragSnapGridSize": 0
+      },
+      "layers": [
+        {
+          "id": "layer.actors",
+          "title": "Actors",
+          "kind": "actor",
+          "isVisible": true,
+          "sortOrder": 0,
+          "objectIds": [
+            "object.node.actor.consumer.household",
+            "object.node.actor.fund.public",
+            "object.node.actor.institution.policy-board",
+            "object.node.actor.investor.elite",
+            "object.node.actor.producer.grain",
+            "object.node.actor.producer.tools",
+            "object.node.location.place.capital-office",
+            "object.node.location.place.grain-yard",
+            "object.node.location.place.neighborhood",
+            "object.node.location.place.policy-hall",
+            "object.node.location.place.workshop"
+          ],
+          "metadata": {
+            "source.category": "actor"
+          }
+        },
+        {
+          "id": "layer.resources",
+          "title": "Resources",
+          "kind": "resource",
+          "isVisible": true,
+          "sortOrder": 1,
+          "objectIds": [
+            "object.node.resource.store.elite.credit",
+            "object.node.resource.store.elite.equity",
+            "object.node.resource.store.grain-producer.credit",
+            "object.node.resource.store.grain-producer.grain",
+            "object.node.resource.store.grain-producer.tools",
+            "object.node.resource.store.household.credit",
+            "object.node.resource.store.household.grain",
+            "object.node.resource.store.household.tools",
+            "object.node.resource.store.public.credit",
+            "object.node.resource.store.toolmaker.credit",
+            "object.node.resource.store.toolmaker.equity",
+            "object.node.resource.store.toolmaker.tools"
+          ],
+          "metadata": {
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "layer.signals",
+          "title": "Signals",
+          "kind": "risk",
+          "isVisible": true,
+          "sortOrder": 2,
+          "objectIds": [],
+          "metadata": {
+            "source.category": "risk"
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "object.node.actor.consumer.household",
+          "kind": "actor",
+          "family": "entity",
+          "title": "Worker household",
+          "subtitle": "actor",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 1,
+            "y": 2,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "consumer.household",
+            "role": "",
+            "locationId": "place.neighborhood",
+            "source.nodeId": "node.actor.consumer.household",
+            "source.nodeKind": "actor",
+            "source.category": "actor",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.fund.public",
+          "kind": "actor",
+          "family": "entity",
+          "title": "Public liquidity fund",
+          "subtitle": "actor",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 4,
+            "y": 3,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "fund.public",
+            "role": "",
+            "locationId": "place.policy-hall",
+            "source.nodeId": "node.actor.fund.public",
+            "source.nodeKind": "actor",
+            "source.category": "actor",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.institution.policy-board",
+          "kind": "actor",
+          "family": "entity",
+          "title": "Policy board",
+          "subtitle": "institution",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 4,
+            "y": 3,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "institution.policy-board",
+            "role": "",
+            "locationId": "place.policy-hall",
+            "source.nodeId": "node.actor.institution.policy-board",
+            "source.nodeKind": "actor",
+            "source.category": "institution",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.investor.elite",
+          "kind": "actor",
+          "family": "entity",
+          "title": "Elite investor",
+          "subtitle": "actor",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 6,
+            "y": 1,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "investor.elite",
+            "role": "",
+            "locationId": "place.capital-office",
+            "source.nodeId": "node.actor.investor.elite",
+            "source.nodeKind": "actor",
+            "source.category": "actor",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.producer.grain",
+          "kind": "actor",
+          "family": "entity",
+          "title": "Grain cooperative",
+          "subtitle": "actor",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "producer.grain",
+            "role": "",
+            "locationId": "place.grain-yard",
+            "source.nodeId": "node.actor.producer.grain",
+            "source.nodeKind": "actor",
+            "source.category": "actor",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.actor.producer.tools",
+          "kind": "actor",
+          "family": "entity",
+          "title": "Tool maker",
+          "subtitle": "actor",
+          "description": "",
+          "assetId": "asset.actor",
+          "position": {
+            "x": 3,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#38bdf8",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "actorId": "producer.tools",
+            "role": "",
+            "locationId": "place.workshop",
+            "source.nodeId": "node.actor.producer.tools",
+            "source.nodeKind": "actor",
+            "source.category": "actor",
+            "source.layout.zone": "actors"
+          }
+        },
+        {
+          "id": "object.node.location.place.capital-office",
+          "kind": "location",
+          "family": "place",
+          "title": "place.capital-office",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "asset.location",
+          "position": {
+            "x": 6,
+            "y": 1,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#a78bfa",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "place.capital-office",
+            "locationOrder": "0",
+            "source.nodeId": "node.location.place.capital-office",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.place.grain-yard",
+          "kind": "location",
+          "family": "place",
+          "title": "place.grain-yard",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "asset.location",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#a78bfa",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "place.grain-yard",
+            "locationOrder": "1",
+            "source.nodeId": "node.location.place.grain-yard",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.place.neighborhood",
+          "kind": "location",
+          "family": "place",
+          "title": "place.neighborhood",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "asset.location",
+          "position": {
+            "x": 1,
+            "y": 2,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#a78bfa",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "place.neighborhood",
+            "locationOrder": "2",
+            "source.nodeId": "node.location.place.neighborhood",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.place.policy-hall",
+          "kind": "location",
+          "family": "place",
+          "title": "place.policy-hall",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "asset.location",
+          "position": {
+            "x": 4,
+            "y": 3,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#a78bfa",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "place.policy-hall",
+            "locationOrder": "3",
+            "source.nodeId": "node.location.place.policy-hall",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.location.place.workshop",
+          "kind": "location",
+          "family": "place",
+          "title": "place.workshop",
+          "subtitle": "location",
+          "description": "",
+          "assetId": "asset.location",
+          "position": {
+            "x": 3,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#a78bfa",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "locationId": "place.workshop",
+            "locationOrder": "4",
+            "source.nodeId": "node.location.place.workshop",
+            "source.nodeKind": "location",
+            "source.category": "location",
+            "source.layout.zone": "location"
+          }
+        },
+        {
+          "id": "object.node.resource.store.elite.credit",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Elite credit reserve",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 0,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "investor.elite",
+            "resourceId": "credit",
+            "storeId": "store.elite.credit",
+            "locationId": "place.capital-office",
+            "source.nodeId": "node.resource.store.elite.credit",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "180",
+            "metric.unit": "token",
+            "metric.capacityUsed": "0.6"
+          }
+        },
+        {
+          "id": "object.node.resource.store.elite.equity",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Elite equity claims",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 1.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "investor.elite",
+            "resourceId": "equity-share",
+            "storeId": "store.elite.equity",
+            "locationId": "place.capital-office",
+            "source.nodeId": "node.resource.store.elite.equity",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "0",
+            "metric.unit": "share",
+            "metric.capacityUsed": "0"
+          }
+        },
+        {
+          "id": "object.node.resource.store.grain-producer.credit",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Cooperative credit",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 3,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "producer.grain",
+            "resourceId": "credit",
+            "storeId": "store.grain-producer.credit",
+            "locationId": "place.grain-yard",
+            "source.nodeId": "node.resource.store.grain-producer.credit",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "10",
+            "metric.unit": "token",
+            "metric.capacityUsed": "0.05"
+          }
+        },
+        {
+          "id": "object.node.resource.store.grain-producer.grain",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Cooperative grain inventory",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 4.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "producer.grain",
+            "resourceId": "grain",
+            "storeId": "store.grain-producer.grain",
+            "locationId": "place.grain-yard",
+            "source.nodeId": "node.resource.store.grain-producer.grain",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "60",
+            "metric.unit": "unit",
+            "metric.capacityUsed": "0.6"
+          }
+        },
+        {
+          "id": "object.node.resource.store.grain-producer.tools",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Cooperative tools",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 6,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "producer.grain",
+            "resourceId": "tools",
+            "storeId": "store.grain-producer.tools",
+            "locationId": "place.grain-yard",
+            "source.nodeId": "node.resource.store.grain-producer.tools",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "2",
+            "metric.unit": "unit",
+            "metric.capacityUsed": "0.1"
+          }
+        },
+        {
+          "id": "object.node.resource.store.household.credit",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Household credit",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 7.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "consumer.household",
+            "resourceId": "credit",
+            "storeId": "store.household.credit",
+            "locationId": "place.neighborhood",
+            "source.nodeId": "node.resource.store.household.credit",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "25",
+            "metric.unit": "token",
+            "metric.capacityUsed": "0.313"
+          }
+        },
+        {
+          "id": "object.node.resource.store.household.grain",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Household grain",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 9,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "consumer.household",
+            "resourceId": "grain",
+            "storeId": "store.household.grain",
+            "locationId": "place.neighborhood",
+            "source.nodeId": "node.resource.store.household.grain",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "8",
+            "metric.unit": "unit",
+            "metric.capacityUsed": "0.2"
+          }
+        },
+        {
+          "id": "object.node.resource.store.household.tools",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Household tools",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 10.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "consumer.household",
+            "resourceId": "tools",
+            "storeId": "store.household.tools",
+            "locationId": "place.neighborhood",
+            "source.nodeId": "node.resource.store.household.tools",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "1",
+            "metric.unit": "unit",
+            "metric.capacityUsed": "0.1"
+          }
+        },
+        {
+          "id": "object.node.resource.store.public.credit",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Public fund credit",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 12,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "fund.public",
+            "resourceId": "credit",
+            "storeId": "store.public.credit",
+            "locationId": "place.policy-hall",
+            "source.nodeId": "node.resource.store.public.credit",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "0",
+            "metric.unit": "token",
+            "metric.capacityUsed": "0"
+          }
+        },
+        {
+          "id": "object.node.resource.store.toolmaker.credit",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Toolmaker credit",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 13.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "producer.tools",
+            "resourceId": "credit",
+            "storeId": "store.toolmaker.credit",
+            "locationId": "place.workshop",
+            "source.nodeId": "node.resource.store.toolmaker.credit",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "20",
+            "metric.unit": "token",
+            "metric.capacityUsed": "0.1"
+          }
+        },
+        {
+          "id": "object.node.resource.store.toolmaker.equity",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Toolmaker issued shares",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 15,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "producer.tools",
+            "resourceId": "equity-share",
+            "storeId": "store.toolmaker.equity",
+            "locationId": "place.workshop",
+            "source.nodeId": "node.resource.store.toolmaker.equity",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "20",
+            "metric.unit": "share",
+            "metric.capacityUsed": "0.5"
+          }
+        },
+        {
+          "id": "object.node.resource.store.toolmaker.tools",
+          "kind": "resource",
+          "family": "stock",
+          "title": "Toolmaker inventory",
+          "subtitle": "resource",
+          "description": "",
+          "assetId": "asset.resource",
+          "position": {
+            "x": 16.5,
+            "y": 1.5,
+            "z": 0
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "tone": "neutral",
+          "color": "#22c55e",
+          "isSelectable": true,
+          "isDraggable": false,
+          "symbols": [],
+          "anchors": [
+            {
+              "key": "center",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {}
+            },
+            {
+              "key": "",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "metadata": {
+                "source.anchorAlias": "center"
+              }
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "ownerActorId": "producer.tools",
+            "resourceId": "tools",
+            "storeId": "store.toolmaker.tools",
+            "locationId": "place.workshop",
+            "source.nodeId": "node.resource.store.toolmaker.tools",
+            "source.nodeKind": "resource",
+            "source.category": "resource",
+            "source.layout.zone": "resources",
+            "metric.quantity": "12",
+            "metric.unit": "unit",
+            "metric.capacityUsed": "0.3"
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "link.link.owns.consumer.household.store.household.credit",
+          "sourceObjectId": "object.node.actor.consumer.household",
+          "targetObjectId": "object.node.resource.store.household.credit",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.consumer.household.store.household.credit",
+            "source.sourceNodeId": "node.actor.consumer.household",
+            "source.targetNodeId": "node.resource.store.household.credit",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.consumer.household.store.household.grain",
+          "sourceObjectId": "object.node.actor.consumer.household",
+          "targetObjectId": "object.node.resource.store.household.grain",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.consumer.household.store.household.grain",
+            "source.sourceNodeId": "node.actor.consumer.household",
+            "source.targetNodeId": "node.resource.store.household.grain",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.consumer.household.store.household.tools",
+          "sourceObjectId": "object.node.actor.consumer.household",
+          "targetObjectId": "object.node.resource.store.household.tools",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.consumer.household.store.household.tools",
+            "source.sourceNodeId": "node.actor.consumer.household",
+            "source.targetNodeId": "node.resource.store.household.tools",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.fund.public.store.public.credit",
+          "sourceObjectId": "object.node.actor.fund.public",
+          "targetObjectId": "object.node.resource.store.public.credit",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.fund.public.store.public.credit",
+            "source.sourceNodeId": "node.actor.fund.public",
+            "source.targetNodeId": "node.resource.store.public.credit",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.investor.elite.store.elite.credit",
+          "sourceObjectId": "object.node.actor.investor.elite",
+          "targetObjectId": "object.node.resource.store.elite.credit",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.investor.elite.store.elite.credit",
+            "source.sourceNodeId": "node.actor.investor.elite",
+            "source.targetNodeId": "node.resource.store.elite.credit",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.investor.elite.store.elite.equity",
+          "sourceObjectId": "object.node.actor.investor.elite",
+          "targetObjectId": "object.node.resource.store.elite.equity",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.investor.elite.store.elite.equity",
+            "source.sourceNodeId": "node.actor.investor.elite",
+            "source.targetNodeId": "node.resource.store.elite.equity",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.producer.grain.store.grain-producer.credit",
+          "sourceObjectId": "object.node.actor.producer.grain",
+          "targetObjectId": "object.node.resource.store.grain-producer.credit",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.producer.grain.store.grain-producer.credit",
+            "source.sourceNodeId": "node.actor.producer.grain",
+            "source.targetNodeId": "node.resource.store.grain-producer.credit",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.producer.grain.store.grain-producer.grain",
+          "sourceObjectId": "object.node.actor.producer.grain",
+          "targetObjectId": "object.node.resource.store.grain-producer.grain",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.producer.grain.store.grain-producer.grain",
+            "source.sourceNodeId": "node.actor.producer.grain",
+            "source.targetNodeId": "node.resource.store.grain-producer.grain",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.producer.grain.store.grain-producer.tools",
+          "sourceObjectId": "object.node.actor.producer.grain",
+          "targetObjectId": "object.node.resource.store.grain-producer.tools",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.producer.grain.store.grain-producer.tools",
+            "source.sourceNodeId": "node.actor.producer.grain",
+            "source.targetNodeId": "node.resource.store.grain-producer.tools",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.producer.tools.store.toolmaker.credit",
+          "sourceObjectId": "object.node.actor.producer.tools",
+          "targetObjectId": "object.node.resource.store.toolmaker.credit",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.producer.tools.store.toolmaker.credit",
+            "source.sourceNodeId": "node.actor.producer.tools",
+            "source.targetNodeId": "node.resource.store.toolmaker.credit",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.producer.tools.store.toolmaker.equity",
+          "sourceObjectId": "object.node.actor.producer.tools",
+          "targetObjectId": "object.node.resource.store.toolmaker.equity",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.producer.tools.store.toolmaker.equity",
+            "source.sourceNodeId": "node.actor.producer.tools",
+            "source.targetNodeId": "node.resource.store.toolmaker.equity",
+            "source.category": "resource"
+          }
+        },
+        {
+          "id": "link.link.owns.producer.tools.store.toolmaker.tools",
+          "sourceObjectId": "object.node.actor.producer.tools",
+          "targetObjectId": "object.node.resource.store.toolmaker.tools",
+          "kind": "ownership",
+          "label": "resource",
+          "color": "#94a3b8",
+          "width": 1,
+          "opacity": 0.75,
+          "isDirectional": true,
+          "metadata": {
+            "source.linkId": "link.owns.producer.tools.store.toolmaker.tools",
+            "source.sourceNodeId": "node.actor.producer.tools",
+            "source.targetNodeId": "node.resource.store.toolmaker.tools",
+            "source.category": "resource"
+          }
+        }
+      ],
+      "metadata": {
+        "source.kind": "scene",
+        "source.domain": "economy",
+        "source.traceId": "experiment.multi-goods-elite.exchange-investment.v1",
+        "source.inputPackHash": "sha256:0e0208c8df26f5de39bca2e2895ee53db6383d09b292b5611c1de50fcc9ffdf9"
+      }
+    },
+    "runtimeOptions": {
+      "deterministicMode": true,
+      "preserveDrawingBuffer": true,
+      "enableAntialiasing": true,
+      "maximumDevicePixelRatio": 2,
+      "renderMode": "auto",
+      "assetQualityProfile": "primitive",
+      "showDiagnosticsPanel": true,
+      "showLabels": true,
+      "showSymbols": true,
+      "autoFitOnCreate": true,
+      "maxCommandResultHistory": 100,
+      "runtimeBudget": {
+        "profile": "standard",
+        "maxSceneObjects": 500,
+        "maxLoadedAssets": 128,
+        "maxAssetCacheEntries": 128,
+        "maxActiveMotions": 256,
+        "maxQueuedMotions": 512,
+        "maxQueuedCommandStages": 128,
+        "maxEstimatedTriangles": 250000,
+        "degradeWhenExceeded": true
+      },
+      "runtimeKey": ""
+    },
+    "diagnostics": {
+      "createCount": 0,
+      "disposeCount": 0,
+      "updateCount": 0,
+      "renderCount": 0,
+      "loadedAssetCount": 0,
+      "missingAssetCount": 0,
+      "fallbackObjectCount": 0,
+      "modelInstanceCount": 0,
+      "primitiveInstanceCount": 0,
+      "activeMotionCount": 0,
+      "queuedMotionCount": 0,
+      "activeMotionIds": [],
+      "queuedMotionIds": [],
+      "motionQueueSnapshot": [],
+      "maxMotionQueueLength": 0,
+      "cancelledMotionCount": 0,
+      "motionAcceptedCount": 0,
+      "motionCompletedCount": 0,
+      "motionFailedCount": 0,
+      "animatedSymbolCount": 0,
+      "isRenderLoopActive": false,
+      "renderSchedulerMode": "auto",
+      "lastScheduledReason": "",
+      "lastDeltaSeconds": 0,
+      "estimatedTriangleCount": 0,
+      "estimatedVertexCount": 0,
+      "objectCount": 0,
+      "visibleObjectCount": 0,
+      "hiddenObjectCount": 0,
+      "visibleLinkCount": 0,
+      "hiddenLinkCount": 0,
+      "sceneIndexSyncCount": 0,
+      "lastSceneIndexSyncReason": "",
+      "symbolCount": 0,
+      "deterministicMode": false,
+      "activeAssetProfile": "primitive",
+      "renderMode": "auto",
+      "runtimeBudgetProfile": "",
+      "degradedRenderingActive": false,
+      "runtimeBudgetWarningCount": 0,
+      "runtimeBudgetWarnings": [],
+      "runtimeBudgetMaxSceneObjects": 0,
+      "runtimeBudgetMaxLoadedAssets": 0,
+      "runtimeBudgetMaxActiveMotions": 0,
+      "runtimeBudgetMaxQueuedMotions": 0,
+      "lastFrameReason": "",
+      "frameTimeMs": 0,
+      "averageFrameTimeMs": 0,
+      "peakFrameTimeMs": 0,
+      "idleSinceMs": 0,
+      "largestLoadedAssetId": "",
+      "assetCacheMode": "state-local",
+      "assetCacheEntryCount": 0,
+      "assetCacheHitCount": 0,
+      "assetCacheMissCount": 0,
+      "disposedTemplateCount": 0,
+      "assetCachePendingDisposalCount": 0,
+      "assetCacheDisposedPromiseCount": 0,
+      "assetCacheDisposalErrorCount": 0,
+      "materialCloneCount": 0,
+      "disposedGeometryCount": 0,
+      "disposedMaterialCount": 0,
+      "disposedTextureCount": 0,
+      "retainedSharedTextureCount": 0,
+      "batchCommandCount": 0,
+      "batchStageCount": 0,
+      "batchDurationMs": 0,
+      "currentCommandBatchId": "",
+      "currentCommandStageId": "",
+      "completedCommandStageCount": 0,
+      "failedCommandStageCount": 0,
+      "queuedCommandStageCount": 0,
+      "skippedCommandStageCount": 0,
+      "commandStageCancelledCount": 0,
+      "commandStageWaitSeconds": 0,
+      "commandStageBarrierPolicy": "",
+      "commandStageBarrierTarget": "",
+      "commandStageBarrierBlockers": [],
+      "commandStageBarrierEventId": "",
+      "commandStageBarrierObjectIds": [],
+      "commandStageBarrierElapsedSeconds": 0,
+      "commandStageBarrierTimeoutSeconds": 0,
+      "commandStageBarrierTimedOut": false,
+      "lastStageBarrierWarning": "",
+      "completedCommandStageIds": [],
+      "failedCommandStageIds": [],
+      "skippedCommandStageIds": [],
+      "lastStageError": "",
+      "commandStageResultLog": [],
+      "commandStageQueueSnapshot": [],
+      "commandStageJournalCount": 0,
+      "commandStageJournalDroppedCount": 0,
+      "commandStageJournalCounters": {},
+      "commandStageRecentResultIds": [],
+      "commandStageRecentJournalEntries": [],
+      "lastStageCancelReason": "",
+      "runtimeStopCount": 0,
+      "runtimeStopGeneration": 0,
+      "lastRuntimeStopReason": "",
+      "clearedMotionCount": 0,
+      "lastRuntimeStopClearedMotionCount": 0,
+      "lastRuntimeStopCancelledCommandStageCount": 0,
+      "lastRuntimeStopIdle": false,
+      "lastRuntimeStopTimedOut": false,
+      "lastRuntimeStopIdleElapsedMs": 0,
+      "lastRuntimeStopBlockers": [],
+      "ignoredStaleMotionCompletedCount": 0,
+      "semanticIdle": false,
+      "visualIdle": false,
+      "finalRenderDrained": false,
+      "commandCountBeforeNormalization": 0,
+      "commandCountAfterNormalization": 0,
+      "coalescedPatchCount": 0,
+      "droppedDuplicateMotionCount": 0,
+      "preservedOrderedDuplicateMotionCount": 0,
+      "interopCallsAvoided": 0,
+      "patchedObjectCount": 0,
+      "fullSceneRebuildCount": 0,
+      "transformOnlyPatchCount": 0,
+      "symbolOnlyPatchCount": 0,
+      "linkOnlyPatchCount": 0,
+      "visualReplacePatchCount": 0,
+      "mixedIncrementalPatchCount": 0,
+      "graphStructurePatchCount": 0,
+      "sceneRebuildPatchCount": 0,
+      "lastPatchClassification": "",
+      "replacedObjectGroupCount": 0,
+      "symbolOnlyUpdateCount": 0,
+      "linkUpdateCount": 0,
+      "linkGeometryUpdateCount": 0,
+      "linkGeometryRebuildCount": 0,
+      "linksUpdatedLastFrame": 0,
+      "linkSyncScanCount": 0,
+      "linkSyncIndexedHitCount": 0,
+      "lastError": "",
+      "missingAssetIds": [],
+      "failedAssetUris": [],
+      "missingFallbackAssetIds": [],
+      "failedPatchCommands": [],
+      "failedCommandDetails": [],
+      "modelDiagnostics": []
+    },
+    "savedAtUtc": "2026-06-04T22:44:31.2913839+00:00",
+    "source": "experiment.multi-goods-elite.exchange-investment.v1",
+    "sceneContentHash": "",
+    "documentHash": "",
+    "contentHash": "",
+    "metadata": {
+      "source.kind": "initial-scene",
+      "source.domain": "economy",
+      "source.traceId": "experiment.multi-goods-elite.exchange-investment.v1",
+      "source.inputPackHash": "sha256:0e0208c8df26f5de39bca2e2895ee53db6383d09b292b5611c1de50fcc9ffdf9",
+      "bridge": "webgl-initial-scene-projector",
+      "visualState.poseCount": "5",
+      "visualState.symbolCount": "6",
+      "objectCount": "23",
+      "linkCount": "12"
+    }
+  },
+  "timeline": {
+    "frameRate": 12,
+    "frames": [
+      {
+        "index": 0,
+        "timeSeconds": 0,
+        "stages": [],
+        "scenePatches": [],
+        "motions": [],
+        "metadata": {
+          "source.kind": "frame",
+          "source.domain": "economy",
+          "source.simulationFrameId": "run.probe.multi-goods-elite.state-transition.frame.0",
+          "source.parentId": "run.probe.multi-goods-elite.state-transition",
+          "source.inputPackHash": "sha256:0e0208c8df26f5de39bca2e2895ee53db6383d09b292b5611c1de50fcc9ffdf9",
+          "source.sequence": "0",
+          "frameHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+          "orderingMode": "Sequential",
+          "batchingPolicy": "preserve-order",
+          "stageCount": "0",
+          "commandCount": "0"
+        }
+      },
+      {
+        "index": 3,
+        "timeSeconds": 3,
+        "stages": [
+          {
+            "stageId": "visual-action.f2b111bb7318",
+            "sequenceId": "",
+            "parentActionId": "",
+            "stageIndex": 0,
+            "stageGroupId": "",
+            "coalescingScope": "none",
+            "orderIndex": 0,
+            "executionPolicy": "preserve-order",
+            "startsAtSeconds": 0,
+            "waitSeconds": 0.5,
+            "barrierPolicy": "wait-seconds",
+            "barrierObjectIds": [],
+            "barrierEventId": "",
+            "scenePatches": [
+              {
+                "id": "visual-action.f2b111bb7318.patch.0",
+                "patch": {
+                  "sceneId": "",
+                  "baseRevision": 0,
+                  "nextRevision": 0,
+                  "objectPatches": [
+                    {
+                      "objectId": "object.node.actor.institution.policy-board",
+                      "symbols": [
+                        {
+                          "id": "visual-action.f2b111bb7318",
+                          "symbolAssetId": "",
+                          "semanticKind": "risk",
+                          "intensity": 0,
+                          "color": "#facc15",
+                          "scale": 1,
+                          "heightOffset": 1.2,
+                          "anchor": "top",
+                          "billboardToCamera": true,
+                          "effectKey": "pulse",
+                          "tooltip": "",
+                          "sortOrder": 0,
+                          "isVisible": true,
+                          "metadata": {}
+                        }
+                      ]
+                    }
+                  ],
+                  "addObjects": [],
+                  "removeObjectIds": [],
+                  "addLinks": [],
+                  "removeLinkIds": [],
+                  "metadata": {
+                    "source.visualActionId": "action.event.policy.unmet-demand-watch.primary",
+                    "source.eventId": "event.policy.unmet-demand-watch",
+                    "bridge": "visual-action-mapper",
+                    "actionId": "visual-action.f2b111bb7318",
+                    "actionKind": "show-symbol",
+                    "parentActionId": "",
+                    "stageId": "visual-action.f2b111bb7318",
+                    "stageIndex": "0",
+                    "visualActionId": "visual-action.f2b111bb7318",
+                    "sourceEventId": "",
+                    "source.simulationFrameId": "run.probe.multi-goods-elite.state-transition.frame.3",
+                    "source.inputPackHash": "sha256:0e0208c8df26f5de39bca2e2895ee53db6383d09b292b5611c1de50fcc9ffdf9"
+                  }
+                }
+              }
+            ],
+            "motions": [],
+            "metadata": {
+              "actionId": "visual-action.f2b111bb7318",
+              "actionKind": "show-symbol",
+              "sequenceId": "",
+              "parentActionId": "",
+              "stageGroupId": "",
+              "coalescingScope": "stage-only",
+              "stageIndex": "0",
+              "orderIndex": "0",
+              "executionPolicy": "preserve-order",
+              "batchingPolicy": "preserve-order",
+              "orderingMode": "PreserveOrder",
+              "barrierPolicy": "wait-seconds",
+              "barrierEventId": "",
+              "stageCommandCount": "1",
+              "source.visualActionId": "action.event.policy.unmet-demand-watch.primary",
+              "source.eventId": "event.policy.unmet-demand-watch",
+              "source.simulationFrameId": "run.probe.multi-goods-elite.state-transition.frame.3",
+              "source.inputPackHash": "sha256:0e0208c8df26f5de39bca2e2895ee53db6383d09b292b5611c1de50fcc9ffdf9",
+              "commandBatchId": "run-plan:visual-action.f2b111bb7318"
+            }
+          }
+        ],
+        "scenePatches": [],
+        "motions": [],
+        "metadata": {
+          "source.kind": "frame",
+          "source.domain": "economy",
+          "source.simulationFrameId": "run.probe.multi-goods-elite.state-transition.frame.3",
+          "source.parentId": "run.probe.multi-goods-elite.state-transition",
+          "source.inputPackHash": "sha256:0e0208c8df26f5de39bca2e2895ee53db6383d09b292b5611c1de50fcc9ffdf9",
+          "source.sequence": "3",
+          "frameHash": "6329f8bc16c2c2a4c2794fc904b1e4a61766bd413ea1fe241db98f609cd0596b",
+          "orderingMode": "Sequential",
+          "batchingPolicy": "preserve-order",
+          "action.visual-action.b51fcd1e9253.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027visual-action.b51fcd1e9253\u0027.",
+          "action.visual-action.98dddd917c8a.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027visual-action.98dddd917c8a\u0027.",
+          "action.visual-action.0310661e1023.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027visual-action.0310661e1023\u0027.",
+          "action.visual-action.35b9e1a9361c.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027visual-action.35b9e1a9361c\u0027.",
+          "action.visual-action.580078f8f9fb.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027visual-action.580078f8f9fb\u0027.",
+          "action.visual-action.44cf2f6a473b.errors": "Unsupported WebGL run action kind \u0027resource-transfer-visual\u0027 for action \u0027visual-action.44cf2f6a473b\u0027.",
+          "action.visual-action.ee0127aabc2e.errors": "Unsupported WebGL run action kind \u0027pulse-link\u0027 for action \u0027visual-action.ee0127aabc2e\u0027.",
+          "stageCount": "1",
+          "commandCount": "1"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "source.kind": "run",
+    "source.domain": "economy",
+    "source.traceId": "experiment.multi-goods-elite.exchange-investment.v1",
+    "source.inputPackHash": "sha256:0e0208c8df26f5de39bca2e2895ee53db6383d09b292b5611c1de50fcc9ffdf9",
+    "bridge": "webgl-run-projector",
+    "diagnostic.0": "invalid-webgl-action-plan.55570a4c4d72",
+    "diagnostic.1": "invalid-webgl-action-plan.dda2b5f25fea",
+    "diagnostic.2": "invalid-webgl-action-plan.35203c612349",
+    "diagnostic.3": "invalid-webgl-action-plan.a01dd293393a",
+    "diagnostic.4": "invalid-webgl-action-plan.1d394497d204",
+    "diagnostic.5": "invalid-webgl-action-plan.142f8f81f986",
+    "diagnostic.6": "invalid-webgl-action-plan.f3b09a118edc",
+    "diagnosticCount": "7",
+    "nodeObjectMappingCount": "23",
+    "frameCount": "2"
+  }
+}

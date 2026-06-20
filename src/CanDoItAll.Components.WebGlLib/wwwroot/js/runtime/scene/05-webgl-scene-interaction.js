@@ -1,18 +1,7 @@
-import { THREE, focusHost } from "./02-webgl-scene-core.js";
+import { focusHost } from "./02-webgl-scene-core.js";
 import { beginDrag, cancelDrag, completeDrag, isClickSuppressed, updateDrag } from "./12-webgl-scene-drag.js";
 import { syncObjectRings } from "./11-webgl-scene-graph.js";
-
-export function resolvePointer(state, event) {
-    const rect = state.renderer.domElement.getBoundingClientRect();
-    return {
-        rect,
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-        ndc: new THREE.Vector2(
-            ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1,
-            -(((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 - 1))
-    };
-}
+import { notifyStateChanged, resolvePointer } from "./24-webgl-scene-notifications.js";
 
 export function findHit(state, event) {
     if (!state.hitMeshes.length) {
@@ -140,20 +129,6 @@ export function selectObjects(state, objectIds) {
     notifyStateChanged(state);
     focusHost(state);
     state.scheduleRender("selection");
-}
-
-export function notifyStateChanged(state) {
-    state.dotNetRef?.invokeMethodAsync("OnSceneStateChanged", JSON.stringify(state.sceneModel.uiState || {}))
-        .catch(error => console.warn("WebGL scene state callback failed.", error));
-}
-
-export function notifyObjectsMoved(state, positions) {
-    if (!positions.length) {
-        return;
-    }
-
-    state.dotNetRef?.invokeMethodAsync("OnObjectsMoved", JSON.stringify({ positions }))
-        .catch(error => console.warn("WebGL scene objects moved callback failed.", error));
 }
 
 function notifySelectionChanged(state) {

@@ -1,0 +1,883 @@
+{
+  "snapshotId": "snapshot.run.probe.multi-goods-elite.state-transition.0",
+  "schemaVersion": "candoitall.economy.simulation-snapshot/v1",
+  "runId": "run.probe.multi-goods-elite.state-transition",
+  "scenarioId": "probe.multi-goods-elite",
+  "stepIndex": 0,
+  "simulatedAtUtc": "2026-01-01T00:00:00+00:00",
+  "frame": {
+    "frameId": "run.probe.multi-goods-elite.state-transition.frame.0",
+    "run": {
+      "runId": "run.probe.multi-goods-elite.state-transition",
+      "scenarioId": "probe.multi-goods-elite",
+      "backendId": "simple-accounts",
+      "createdAtUtc": "2026-01-01T00:00:00+00:00",
+      "metadata": {
+        "deterministicSeed": "run.probe.multi-goods-elite.state-transition"
+      }
+    },
+    "clock": {
+      "stepIndex": 0,
+      "simulatedAtUtc": "2026-01-01T00:00:00+00:00",
+      "stepDuration": "1.00:00:00"
+    },
+    "actors": [
+      {
+        "actorId": "consumer.household",
+        "kind": "consumer",
+        "displayName": "Worker household",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "place.neighborhood",
+          "location.x": "1",
+          "location.y": "2",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "fund.public",
+        "kind": "public-fund",
+        "displayName": "Public liquidity fund",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "place.policy-hall",
+          "location.x": "4",
+          "location.y": "3",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "institution.policy-board",
+        "kind": "institution",
+        "displayName": "Policy board",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "place.policy-hall",
+          "location.x": "4",
+          "location.y": "3",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "investor.elite",
+        "kind": "capital-provider",
+        "displayName": "Elite investor",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "place.capital-office",
+          "location.x": "6",
+          "location.y": "1",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "producer.grain",
+        "kind": "producer",
+        "displayName": "Grain cooperative",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "place.grain-yard",
+          "location.x": "0",
+          "location.y": "0",
+          "location.z": "0"
+        }
+      },
+      {
+        "actorId": "producer.tools",
+        "kind": "producer",
+        "displayName": "Tool maker",
+        "role": "",
+        "metadata": {
+          "homeLocationId": "place.workshop",
+          "location.x": "3",
+          "location.y": "0",
+          "location.z": "0"
+        }
+      }
+    ],
+    "resourceStores": [
+      {
+        "storeId": "store.elite.credit",
+        "ownerActorId": "investor.elite",
+        "resourceId": "credit",
+        "resourceKind": "liquidity",
+        "displayName": "Elite credit reserve",
+        "quantity": 180,
+        "unit": "token",
+        "capacity": 300,
+        "metadata": {
+          "locationId": "place.capital-office"
+        }
+      },
+      {
+        "storeId": "store.elite.equity",
+        "ownerActorId": "investor.elite",
+        "resourceId": "equity-share",
+        "resourceKind": "capital-claim",
+        "displayName": "Elite equity claims",
+        "quantity": 0,
+        "unit": "share",
+        "capacity": 80,
+        "metadata": {
+          "locationId": "place.capital-office"
+        }
+      },
+      {
+        "storeId": "store.grain-producer.credit",
+        "ownerActorId": "producer.grain",
+        "resourceId": "credit",
+        "resourceKind": "liquidity",
+        "displayName": "Cooperative credit",
+        "quantity": 10,
+        "unit": "token",
+        "capacity": 200,
+        "metadata": {
+          "locationId": "place.grain-yard"
+        }
+      },
+      {
+        "storeId": "store.grain-producer.grain",
+        "ownerActorId": "producer.grain",
+        "resourceId": "grain",
+        "resourceKind": "consumption-good",
+        "displayName": "Cooperative grain inventory",
+        "quantity": 60,
+        "unit": "unit",
+        "capacity": 100,
+        "metadata": {
+          "locationId": "place.grain-yard"
+        }
+      },
+      {
+        "storeId": "store.grain-producer.tools",
+        "ownerActorId": "producer.grain",
+        "resourceId": "tools",
+        "resourceKind": "production-good",
+        "displayName": "Cooperative tools",
+        "quantity": 2,
+        "unit": "unit",
+        "capacity": 20,
+        "metadata": {
+          "locationId": "place.grain-yard"
+        }
+      },
+      {
+        "storeId": "store.household.credit",
+        "ownerActorId": "consumer.household",
+        "resourceId": "credit",
+        "resourceKind": "liquidity",
+        "displayName": "Household credit",
+        "quantity": 25,
+        "unit": "token",
+        "capacity": 80,
+        "metadata": {
+          "locationId": "place.neighborhood"
+        }
+      },
+      {
+        "storeId": "store.household.grain",
+        "ownerActorId": "consumer.household",
+        "resourceId": "grain",
+        "resourceKind": "consumption-good",
+        "displayName": "Household grain",
+        "quantity": 8,
+        "unit": "unit",
+        "capacity": 40,
+        "metadata": {
+          "locationId": "place.neighborhood"
+        }
+      },
+      {
+        "storeId": "store.household.tools",
+        "ownerActorId": "consumer.household",
+        "resourceId": "tools",
+        "resourceKind": "production-good",
+        "displayName": "Household tools",
+        "quantity": 1,
+        "unit": "unit",
+        "capacity": 10,
+        "metadata": {
+          "locationId": "place.neighborhood"
+        }
+      },
+      {
+        "storeId": "store.public.credit",
+        "ownerActorId": "fund.public",
+        "resourceId": "credit",
+        "resourceKind": "liquidity",
+        "displayName": "Public fund credit",
+        "quantity": 0,
+        "unit": "token",
+        "capacity": 200,
+        "metadata": {
+          "locationId": "place.policy-hall"
+        }
+      },
+      {
+        "storeId": "store.toolmaker.credit",
+        "ownerActorId": "producer.tools",
+        "resourceId": "credit",
+        "resourceKind": "liquidity",
+        "displayName": "Toolmaker credit",
+        "quantity": 20,
+        "unit": "token",
+        "capacity": 200,
+        "metadata": {
+          "locationId": "place.workshop"
+        }
+      },
+      {
+        "storeId": "store.toolmaker.equity",
+        "ownerActorId": "producer.tools",
+        "resourceId": "equity-share",
+        "resourceKind": "capital-claim",
+        "displayName": "Toolmaker issued shares",
+        "quantity": 20,
+        "unit": "share",
+        "capacity": 40,
+        "metadata": {
+          "locationId": "place.workshop"
+        }
+      },
+      {
+        "storeId": "store.toolmaker.tools",
+        "ownerActorId": "producer.tools",
+        "resourceId": "tools",
+        "resourceKind": "production-good",
+        "displayName": "Toolmaker inventory",
+        "quantity": 12,
+        "unit": "unit",
+        "capacity": 40,
+        "metadata": {
+          "locationId": "place.workshop"
+        }
+      }
+    ],
+    "flows": [],
+    "relationships": [],
+    "events": [],
+    "rules": [],
+    "issues": [],
+    "artifacts": [],
+    "deterministicHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+    "metadata": {
+      "materializer": "SimpleSimulationStateTransitionEngine",
+      "baseline": "true",
+      "expansionProfileId": "none",
+      "expansionProfileVersion": "v1",
+      "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e"
+    }
+  },
+  "appliedEvents": [],
+  "pendingEvents": [
+    {
+      "eventId": "event.exchange.grain-to-household",
+      "kind": "actor.trade.sell",
+      "eventKind": "actor.trade.sell",
+      "stepIndex": 3,
+      "actorId": "producer.grain",
+      "targetActorId": "consumer.household",
+      "placeId": "",
+      "resourceId": "grain",
+      "quantity": 14,
+      "durationSeconds": 0,
+      "actorIds": [
+        "producer.grain",
+        "consumer.household"
+      ],
+      "resourceIds": [
+        "grain"
+      ],
+      "sourceId": "producer.grain",
+      "targetId": "consumer.household",
+      "source": {
+        "kind": "actor",
+        "id": "producer.grain",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "consumer.household",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 14,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 10
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.exchange.tools-to-grain-producer",
+      "kind": "actor.trade.sell",
+      "eventKind": "actor.trade.sell",
+      "stepIndex": 3,
+      "actorId": "producer.tools",
+      "targetActorId": "producer.grain",
+      "placeId": "",
+      "resourceId": "tools",
+      "quantity": 3,
+      "durationSeconds": 0,
+      "actorIds": [
+        "producer.tools",
+        "producer.grain"
+      ],
+      "resourceIds": [
+        "tools"
+      ],
+      "sourceId": "producer.tools",
+      "targetId": "producer.grain",
+      "source": {
+        "kind": "actor",
+        "id": "producer.tools",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "producer.grain",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 3,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 20
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.capital.elite-funds-toolmaker",
+      "kind": "actor.resource.contribution",
+      "eventKind": "actor.resource.contribution",
+      "stepIndex": 3,
+      "actorId": "investor.elite",
+      "targetActorId": "producer.tools",
+      "placeId": "",
+      "resourceId": "credit",
+      "quantity": 45,
+      "durationSeconds": 0,
+      "actorIds": [
+        "investor.elite",
+        "producer.tools"
+      ],
+      "resourceIds": [
+        "credit"
+      ],
+      "sourceId": "investor.elite",
+      "targetId": "producer.tools",
+      "source": {
+        "kind": "actor",
+        "id": "investor.elite",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "producer.tools",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 45,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 30
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.capital.toolmaker-issues-equity",
+      "kind": "actor.claim.issue",
+      "eventKind": "actor.claim.issue",
+      "stepIndex": 3,
+      "actorId": "producer.tools",
+      "targetActorId": "investor.elite",
+      "placeId": "",
+      "resourceId": "equity-share",
+      "quantity": 15,
+      "durationSeconds": 0,
+      "actorIds": [
+        "producer.tools",
+        "investor.elite"
+      ],
+      "resourceIds": [
+        "equity-share"
+      ],
+      "sourceId": "producer.tools",
+      "targetId": "investor.elite",
+      "source": {
+        "kind": "actor",
+        "id": "producer.tools",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "investor.elite",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 15,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 40
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.capital.elite-funds-grain-producer",
+      "kind": "actor.resource.contribution",
+      "eventKind": "actor.resource.contribution",
+      "stepIndex": 3,
+      "actorId": "investor.elite",
+      "targetActorId": "producer.grain",
+      "placeId": "",
+      "resourceId": "credit",
+      "quantity": 20,
+      "durationSeconds": 0,
+      "actorIds": [
+        "investor.elite",
+        "producer.grain"
+      ],
+      "resourceIds": [
+        "credit"
+      ],
+      "sourceId": "investor.elite",
+      "targetId": "producer.grain",
+      "source": {
+        "kind": "actor",
+        "id": "investor.elite",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "producer.grain",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 20,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 50
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.policy.progressive-fee",
+      "kind": "actor.tax-fee.pay",
+      "eventKind": "actor.tax-fee.pay",
+      "stepIndex": 3,
+      "actorId": "producer.tools",
+      "targetActorId": "fund.public",
+      "placeId": "",
+      "resourceId": "credit",
+      "quantity": 6,
+      "durationSeconds": 0,
+      "actorIds": [
+        "producer.tools",
+        "fund.public"
+      ],
+      "resourceIds": [
+        "credit"
+      ],
+      "sourceId": "producer.tools",
+      "targetId": "fund.public",
+      "source": {
+        "kind": "actor",
+        "id": "producer.tools",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "fund.public",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 6,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 60
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.policy.unmet-demand-watch",
+      "kind": "rule.violation.detect",
+      "eventKind": "rule.violation.detect",
+      "stepIndex": 3,
+      "actorId": "institution.policy-board",
+      "targetActorId": "consumer.household",
+      "placeId": "",
+      "resourceId": "grain",
+      "quantity": 1,
+      "durationSeconds": 0,
+      "actorIds": [
+        "institution.policy-board",
+        "consumer.household"
+      ],
+      "resourceIds": [
+        "grain"
+      ],
+      "sourceId": "institution.policy-board",
+      "targetId": "consumer.household",
+      "source": {
+        "kind": "actor",
+        "id": "institution.policy-board",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "consumer.household",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 1,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 70
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    },
+    {
+      "eventId": "event.relationship.elite-dependency",
+      "kind": "actor.obligation.create",
+      "eventKind": "actor.obligation.create",
+      "stepIndex": 3,
+      "actorId": "investor.elite",
+      "targetActorId": "producer.tools",
+      "placeId": "",
+      "resourceId": "credit",
+      "quantity": 40,
+      "durationSeconds": 0,
+      "actorIds": [
+        "investor.elite",
+        "producer.tools"
+      ],
+      "resourceIds": [
+        "credit"
+      ],
+      "sourceId": "investor.elite",
+      "targetId": "producer.tools",
+      "source": {
+        "kind": "actor",
+        "id": "investor.elite",
+        "metadata": {}
+      },
+      "target": {
+        "kind": "actor",
+        "id": "producer.tools",
+        "metadata": {}
+      },
+      "participantRefs": [],
+      "occurredAtUtc": "0001-01-01T00:00:00+00:00",
+      "duration": "00:00:00",
+      "magnitude": 40,
+      "timing": {
+        "stepIndex": 3,
+        "offset": "00:00:00",
+        "duration": "00:00:00",
+        "order": 80
+      },
+      "participants": [],
+      "effects": [],
+      "storeResolutionPolicies": [],
+      "metadata": {}
+    }
+  ],
+  "metrics": [
+    {
+      "metricId": "wealthConcentrationHhi",
+      "value": 0.607062,
+      "unit": "ratio",
+      "metadata": {
+        "kind": "resource-owner-hhi",
+        "resourceId": "credit",
+        "unit": "ratio",
+        "precision": "6",
+        "sourceFrameHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "resource-owner-hhi"
+      }
+    },
+    {
+      "metricId": "topWealthShare",
+      "value": 0.765957,
+      "unit": "ratio",
+      "metadata": {
+        "kind": "top-owner-share",
+        "resourceId": "credit",
+        "unit": "ratio",
+        "precision": "6",
+        "sourceFrameHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "top-owner-share"
+      }
+    },
+    {
+      "metricId": "wealthGiniProxy",
+      "value": 1,
+      "unit": "ratio",
+      "metadata": {
+        "kind": "resource-owner-hhi",
+        "resourceId": "equity-share",
+        "unit": "ratio",
+        "precision": "6",
+        "sourceFrameHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "resource-owner-hhi"
+      }
+    },
+    {
+      "metricId": "liquidityTradeVolume",
+      "value": 0,
+      "unit": "unit",
+      "metadata": {
+        "kind": "trade-volume",
+        "resourceId": "grain",
+        "unit": "unit",
+        "precision": "6",
+        "sourceFrameHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "trade-volume"
+      }
+    },
+    {
+      "metricId": "unmetDemand",
+      "value": 0,
+      "unit": "count",
+      "metadata": {
+        "kind": "issue-count",
+        "category": "rule",
+        "unit": "count",
+        "precision": "0",
+        "sourceFrameHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "issue-count"
+      }
+    },
+    {
+      "metricId": "eliteCapitalDependency",
+      "value": 0,
+      "unit": "unit",
+      "metadata": {
+        "kind": "transfer-volume",
+        "resourceId": "credit",
+        "unit": "unit",
+        "precision": "6",
+        "sourceFrameHash": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "transfer-volume"
+      }
+    }
+  ],
+  "invariants": [
+    {
+      "invariantId": "multi-goods.no-negative-stores",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.no-negative-stores\u0027 passed.",
+      "metadata": {
+        "negativeStoreCount": "0"
+      }
+    },
+    {
+      "invariantId": "multi-goods.known-frame-references",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.known-frame-references\u0027 passed.",
+      "metadata": {
+        "missingReferenceCount": "0"
+      }
+    },
+    {
+      "invariantId": "multi-goods.wealth-hhi-visible",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.wealth-hhi-visible\u0027 passed.",
+      "metadata": {
+        "metricId": "wealthConcentrationHhi",
+        "value": "0.607062"
+      }
+    },
+    {
+      "invariantId": "multi-goods.top-share-visible",
+      "passed": false,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.top-share-visible\u0027 failed for metric \u0027topWealthShare\u0027 with value 0.765957.",
+      "metadata": {
+        "metricId": "topWealthShare",
+        "value": "0.765957"
+      }
+    },
+    {
+      "invariantId": "multi-goods.unmet-demand-visible",
+      "passed": false,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.unmet-demand-visible\u0027 failed for metric \u0027unmetDemand\u0027 with value 0.",
+      "metadata": {
+        "metricId": "unmetDemand",
+        "value": "0"
+      }
+    },
+    {
+      "invariantId": "multi-goods.elite-capital-visible",
+      "passed": false,
+      "severity": "error",
+      "message": "Invariant \u0027multi-goods.elite-capital-visible\u0027 failed for metric \u0027eliteCapitalDependency\u0027 with value 0.",
+      "metadata": {
+        "metricId": "eliteCapitalDependency",
+        "value": "0"
+      }
+    }
+  ],
+  "visualState": {
+    "visualFrameId": "run.probe.multi-goods-elite.state-transition.frame.0",
+    "playbackFrameId": "sb12-multi-goods.experiment.multi-goods-elite.exchange-investment.v1.frame.0",
+    "playbackFrameIndex": 0,
+    "nodeObjectIds": {
+      "node.actor.consumer.household": "object.node.actor.consumer.household",
+      "node.actor.fund.public": "object.node.actor.fund.public",
+      "node.actor.institution.policy-board": "object.node.actor.institution.policy-board",
+      "node.actor.investor.elite": "object.node.actor.investor.elite",
+      "node.actor.producer.grain": "object.node.actor.producer.grain",
+      "node.actor.producer.tools": "object.node.actor.producer.tools",
+      "node.location.place.capital-office": "object.node.location.place.capital-office",
+      "node.location.place.grain-yard": "object.node.location.place.grain-yard",
+      "node.location.place.neighborhood": "object.node.location.place.neighborhood",
+      "node.location.place.policy-hall": "object.node.location.place.policy-hall",
+      "node.location.place.workshop": "object.node.location.place.workshop",
+      "node.resource.store.elite.credit": "object.node.resource.store.elite.credit",
+      "node.resource.store.elite.equity": "object.node.resource.store.elite.equity",
+      "node.resource.store.grain-producer.credit": "object.node.resource.store.grain-producer.credit",
+      "node.resource.store.grain-producer.grain": "object.node.resource.store.grain-producer.grain",
+      "node.resource.store.grain-producer.tools": "object.node.resource.store.grain-producer.tools",
+      "node.resource.store.household.credit": "object.node.resource.store.household.credit",
+      "node.resource.store.household.grain": "object.node.resource.store.household.grain",
+      "node.resource.store.household.tools": "object.node.resource.store.household.tools",
+      "node.resource.store.public.credit": "object.node.resource.store.public.credit",
+      "node.resource.store.toolmaker.credit": "object.node.resource.store.toolmaker.credit",
+      "node.resource.store.toolmaker.equity": "object.node.resource.store.toolmaker.equity",
+      "node.resource.store.toolmaker.tools": "object.node.resource.store.toolmaker.tools"
+    },
+    "activeActionIds": [],
+    "pendingActionIds": [],
+    "activeStageIds": [],
+    "pendingStageIds": [],
+    "runtimeDiagnostics": {
+      "document.diagnostic.0": "invalid-webgl-action-plan.55570a4c4d72",
+      "document.diagnostic.1": "invalid-webgl-action-plan.dda2b5f25fea",
+      "document.diagnostic.2": "invalid-webgl-action-plan.35203c612349",
+      "document.diagnostic.3": "invalid-webgl-action-plan.a01dd293393a",
+      "document.diagnostic.4": "invalid-webgl-action-plan.1d394497d204",
+      "document.diagnostic.5": "invalid-webgl-action-plan.142f8f81f986",
+      "document.diagnostic.6": "invalid-webgl-action-plan.f3b09a118edc",
+      "runFrame.index": "0",
+      "runFrame.stageCount": "0"
+    },
+    "runtimeAttachment": {
+      "runtimeKind": "webgl-run",
+      "currentPlaybackCommand": "none",
+      "currentFrameIndex": 0,
+      "activeMotionIds": [],
+      "queuedMotionIds": [],
+      "activeStageIds": [],
+      "pendingStageIds": [],
+      "activeBarrierPolicy": "",
+      "activeBarrierBlockers": [],
+      "commandJournalTail": [],
+      "renderDiagnosticsSummary": "frame=0;stages=0;motions=0;patches=0;barrierPolicy=none",
+      "selectedObjectIds": [],
+      "selectedActionIds": [],
+      "diagnostics": {
+        "document.diagnostic.0": "invalid-webgl-action-plan.55570a4c4d72",
+        "document.diagnostic.1": "invalid-webgl-action-plan.dda2b5f25fea",
+        "document.diagnostic.2": "invalid-webgl-action-plan.35203c612349",
+        "document.diagnostic.3": "invalid-webgl-action-plan.a01dd293393a",
+        "document.diagnostic.4": "invalid-webgl-action-plan.1d394497d204",
+        "document.diagnostic.5": "invalid-webgl-action-plan.142f8f81f986",
+        "document.diagnostic.6": "invalid-webgl-action-plan.f3b09a118edc",
+        "runFrame.index": "0",
+        "runFrame.stageCount": "0"
+      },
+      "metadata": {
+        "source.visualFrameId": "run.probe.multi-goods-elite.state-transition.frame.0",
+        "source.playbackFrameId": "0",
+        "source.stageCount": "0"
+      }
+    },
+    "metadata": {
+      "source.visualRunId": "run.probe.multi-goods-elite.state-transition",
+      "source.runDocumentId": "sb12-multi-goods.experiment.multi-goods-elite.exchange-investment.v1",
+      "source.snapshotId": "snapshot.run.probe.multi-goods-elite.state-transition.0"
+    }
+  },
+  "provenanceHashes": {
+    "scenario": "f67788fe6d64f17c06a3378d1e713a1291da181c2f4e865c50235f0057672e7c",
+    "frame": "6de077290b8191c53fb4a7d7397a94adf662a561bb771352a741c8a8b10af56f",
+    "snapshot.data": "b4a1c904d0ca0d693b1abe21b567bdefebc77e846c254489d049279d1e752834",
+    "snapshot.dataState": "b4a1c904d0ca0d693b1abe21b567bdefebc77e846c254489d049279d1e752834",
+    "snapshot.visualState": "961a84992a0f22830243047420c01d017ab10b27dcfac2534eb69a5ceda12d04",
+    "snapshot.visualRuntime": "961a84992a0f22830243047420c01d017ab10b27dcfac2534eb69a5ceda12d04",
+    "snapshot.full": "d5106a5f1c7612128891565c18468892874248226c51d46513614a23fecb65d9"
+  },
+  "metadata": {
+    "experimentId": "experiment.multi-goods-elite.exchange-investment.v1",
+    "backendId": "simple-accounts",
+    "visualFrameId": "run.probe.multi-goods-elite.state-transition.frame.0",
+    "builder": "SimulationSnapshotBuilder"
+  },
+  "deterministicHash": "d5106a5f1c7612128891565c18468892874248226c51d46513614a23fecb65d9"
+}

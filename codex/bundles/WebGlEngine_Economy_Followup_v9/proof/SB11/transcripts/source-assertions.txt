@@ -1,0 +1,87 @@
+﻿SB11 source assertions
+
+Event constants:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:91:    public const string ActorResourceContribution = "actor.resource.contribution";
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:92:    public const string ActorObligationCreate = "actor.obligation.create";
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:93:    public const string ActorClaimIssue = "actor.claim.issue";
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:94:    public const string ActorReturnPay = "actor.return.pay";
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:143:    public const string ActorResourceContribution = SimulationEventKind.ActorResourceContribution;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:144:    public const string ActorObligationCreate = SimulationEventKind.ActorObligationCreate;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:145:    public const string ActorClaimIssue = SimulationEventKind.ActorClaimIssue;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:146:    public const string ActorReturnPay = SimulationEventKind.ActorReturnPay;
+
+Registry normalization/order/known entries:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:43:        ["contribution"] = SimulationEventKind.ActorResourceContribution,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:44:        ["resource-contribution"] = SimulationEventKind.ActorResourceContribution,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:45:        ["obligation"] = SimulationEventKind.ActorObligationCreate,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:46:        ["obligation-create"] = SimulationEventKind.ActorObligationCreate,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:47:        ["claim"] = SimulationEventKind.ActorClaimIssue,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:48:        ["claim-issue"] = SimulationEventKind.ActorClaimIssue,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:49:        ["return-pay"] = SimulationEventKind.ActorReturnPay,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:50:        ["return-payment"] = SimulationEventKind.ActorReturnPay
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:81:            SimulationEventKind.ActorResourceContribution => 47,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:84:            SimulationEventKind.ActorClaimIssue => 57,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:85:            SimulationEventKind.ActorReturnPay => 58,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:91:            SimulationEventKind.ActorObligationCreate or SimulationEventKind.RelationshipTrustChange or SimulationEventKind.RelationshipConflictChange => 100,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:103:        SimulationEventKind.ActorResourceContribution,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:104:        SimulationEventKind.ActorObligationCreate,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:105:        SimulationEventKind.ActorClaimIssue,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:106:        SimulationEventKind.ActorReturnPay,
+
+Simple-account handlers and flow reasons:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:69:            Handler(SimulationEventKind.ActorResourceContribution, 30, context => SimpleSimulationStateTransitionEngine.ApplyActorTransfer(context, "contribution")),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:72:            Handler(SimulationEventKind.ActorClaimIssue, 35, context => SimpleSimulationStateTransitionEngine.ApplyActorTransfer(context, "claim")),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:73:            Handler(SimulationEventKind.ActorReturnPay, 35, context => SimpleSimulationStateTransitionEngine.ApplyActorTransfer(context, "return")),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:90:            Handler(SimulationEventKind.ActorObligationCreate, 60, context => SimpleSimulationStateTransitionEngine.UpdateRelationship(context, SimulationEventKind.ActorObligationCreate)),
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:116:            return new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:15:            return;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:21:            return;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:39:            return;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:89:            return;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:108:    internal static void ApplyActorTransfer(SimpleSimulationEventApplyContext context, string reason)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:241:        return state.StoresByLocationAndResource.GetValueOrDefault(StoreKey(sourceLocationId, simulationEvent.ResourceId)) ??
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:256:        return ResolveStore(
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:286:            return;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:292:            return;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:306:        return stores.FirstOrDefault(store => string.Equals(store.Metadata.GetValueOrDefault("locationId"), sourceLocationId, StringComparison.Ordinal)) ??
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:352:            return null;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:364:            return context.Options.FailOnAmbiguousStoreResolution ? null : matches[0];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:369:        return matches[0];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:407:            return declared;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:420:            return new()
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:431:        return new()
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:468:        return store is null ? [] : [store];
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:475:            return;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:524:        return flow;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationStateTransitionEngine.Mutations.cs:544:            return;
+
+Normalizer nullable cleanup:
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:138:        string sourceLocationId = simulationEvent.Metadata.GetValueOrDefault("sourceLocationId") ?? string.Empty;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:139:        string targetLocationId = simulationEvent.Metadata.GetValueOrDefault("targetLocationId") ?? string.Empty;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:140:        AddParticipant(participants, sourceLocationId, "source-location", locationId: sourceLocationId);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:141:        AddParticipant(participants, targetLocationId, "target-location", locationId: targetLocationId);
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:206:            string.Equals(simulationEvent.Metadata.GetValueOrDefault("sourceLocationId"), id, StringComparison.Ordinal) ||
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventNormalizer.cs:207:            string.Equals(simulationEvent.Metadata.GetValueOrDefault("targetLocationId"), id, StringComparison.Ordinal))
+
+Tests and semantic oracle assertions:
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:158:    public void GenericInvestmentEventKinds_AreKnownNormalizedAndHandled()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:160:        Assert.Equal(SimulationEventKind.ActorResourceContribution, SimulationEventKindRegistry.Normalize("resource-contribution"));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:161:        Assert.Equal(SimulationEventKind.ActorObligationCreate, SimulationEventKindRegistry.Normalize("obligation-create"));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:162:        Assert.Equal(SimulationEventKind.ActorClaimIssue, SimulationEventKindRegistry.Normalize("claim-issue"));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:163:        Assert.Equal(SimulationEventKind.ActorReturnPay, SimulationEventKindRegistry.Normalize("return-pay"));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:167:            SimulationEventKind.ActorResourceContribution,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:168:            SimulationEventKind.ActorObligationCreate,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:169:            SimulationEventKind.ActorClaimIssue,
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:170:            SimulationEventKind.ActorReturnPay
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:179:    public void GenericInvestmentFlow_PrimitivesConserveResourcesAndCreateClaimsAndObligations()
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:182:            BuildGenericInvestmentDefinition(),
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:184:                Event("event.generic.contribution", SimulationEventKind.ActorResourceContribution, "capital-provider", "operator", "credit", 40),
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:185:                Event("event.generic.claim", SimulationEventKind.ActorClaimIssue, "operator", "capital-provider", "equity-claim", 4),
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:186:                Event("event.generic.obligation", SimulationEventKind.ActorObligationCreate, "operator", "capital-provider", "credit", 40),
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:187:                Event("event.generic.return", SimulationEventKind.ActorReturnPay, "operator", "capital-provider", "credit", 12)
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:192:        Assert.Equal(110, TotalQuantity(result.Frame, "credit"));
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:197:        Assert.Contains(result.Frame.Flows, flow => flow.Reason == "contribution" && flow.ResourceId == "credit" && flow.Quantity == 40);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:198:        Assert.Contains(result.Frame.Flows, flow => flow.Reason == "claim" && flow.ResourceId == "equity-claim" && flow.Quantity == 4);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:199:        Assert.Contains(result.Frame.Flows, flow => flow.Reason == "return" && flow.ResourceId == "credit" && flow.Quantity == 12);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:200:        SimulationRelationship obligation = Assert.Single(result.Frame.Relationships, relationship => relationship.Kind == SimulationEventKind.ActorObligationCreate);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:1458:    private static SimulationScenarioDefinition BuildGenericInvestmentDefinition()

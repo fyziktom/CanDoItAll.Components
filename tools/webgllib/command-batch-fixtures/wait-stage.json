@@ -1,0 +1,49 @@
+{
+  "name": "wait-stage",
+  "input": {
+    "batchId": "fixture.wait-stage",
+    "orderingMode": 2,
+    "stages": [
+      {
+        "stageId": "move-to-target",
+        "orderingMode": 2,
+        "waitSeconds": 0.5,
+        "motions": [
+          {
+            "motionId": "actor.1.to.target",
+            "objectId": "actor.1",
+            "targetPosition": { "x": 4, "y": 0, "z": 0 }
+          }
+        ]
+      },
+      {
+        "stageId": "return-home",
+        "orderingMode": 2,
+        "waitSeconds": 0.25,
+        "motions": [
+          {
+            "motionId": "actor.1.to.home",
+            "objectId": "actor.1",
+            "targetPosition": { "x": 0, "y": 0, "z": 0 }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "batchCommandCount": 2,
+    "commandCountBeforeNormalization": 2,
+    "commandCountAfterNormalization": 2,
+    "stageCount": 2,
+    "patchCount": 0,
+    "motionCount": 0,
+    "coalescedPatchCount": 0,
+    "droppedDuplicateMotionCount": 0,
+    "preservedOrderedDuplicateMotionCount": 0,
+    "interopCallsAvoided": 1,
+    "stageSummaries": [
+      { "stageId": "move-to-target", "waitSeconds": 0.5, "patchCount": 0, "motionCount": 1 },
+      { "stageId": "return-home", "waitSeconds": 0.25, "patchCount": 0, "motionCount": 1 }
+    ]
+  }
+}

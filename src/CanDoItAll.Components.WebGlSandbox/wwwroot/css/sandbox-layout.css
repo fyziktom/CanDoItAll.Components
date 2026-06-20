@@ -79,6 +79,15 @@ body {
     min-height: 100vh;
 }
 
+.webgl-screen-warning {
+    display: none;
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid rgba(234, 179, 8, 0.4);
+    background: #fef3c7;
+    color: #713f12;
+    font-weight: 750;
+}
+
 .webgl-page {
     min-height: 100vh;
     padding: 1.2rem;
@@ -134,4 +143,45 @@ body {
     max-width: 34rem;
     color: #475569;
     line-height: 1.55;
+}
+
+@media (max-width: 1180px) {
+    .webgl-screen-warning {
+        display: block;
+    }
+}
+
+@media (max-width: 760px) {
+    .webgl-shell {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .webgl-nav {
+        position: static;
+        height: auto;
+        padding: 0.85rem;
+        border-right: 0;
+        border-bottom: 1px solid rgba(100, 116, 139, 0.28);
+    }
+
+    .webgl-nav__links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .webgl-nav__link {
+        padding: 0.62rem;
+        text-align: center;
+    }
+
+    .webgl-page {
+        padding: 0.85rem;
+    }
+
+    .webgl-page--fill {
+        min-height: auto;
+    }
+
+    .webgl-home-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }

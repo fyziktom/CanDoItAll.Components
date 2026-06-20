@@ -1,0 +1,14 @@
+| Requirement | Subbundles |
+|---|---|
+| R01 | SB01, SB02, SB08, SB16 |
+| R02 | SB02, SB03, SB04, SB08 |
+| R03 | SB03, SB08 |
+| R04 | SB04, SB05, SB16 |
+| R05 | SB05, SB11, SB17 |
+| R06 | SB09, SB16 |
+| R07 | SB07, SB09, SB15 |
+| R08 | SB10, SB11, SB13, SB14 |
+| R09 | SB12, SB13 |
+| R10 | SB06, SB07, SB09, SB12, SB13, SB14 |
+| R11 | SB01, SB16 |
+| R12 | SB08, SB16 |

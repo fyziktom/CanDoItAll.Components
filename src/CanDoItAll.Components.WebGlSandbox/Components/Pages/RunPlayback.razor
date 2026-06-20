@@ -1,0 +1,131 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+@page "/run-playback"
+@implements IDisposable
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+
+<PageTitle>WebGL Run Playback</PageTitle>
+
+<div class="webgl-page webgl-page--fill">
+    <PageScaffold MaxWidthClass="max-w-full" FillHeight="true">
+        <Header>
+            <PageHeader Eyebrow="Generic run layer" Title="Run Playback" Description="Domain-neutral frame playback over WebGL scene patches.">
+                <Actions>
+                    <Button Text="Play" Icon="play_arrow" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Success" Variant="Variant.Outlined" Click="@PlayAsync" />
+                    <Button Text="Pause" Icon="pause" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@PauseAsync" />
+                    <Button Text="Cancel" Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@CancelAsync" />
+                    <Button Text="Step" Icon="skip_next" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@StepAsync" />
+                    <Button Text="Batch frame" Icon="dynamic_feed" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Click="@ApplyBatchProofFrameAsync" />
+                    <Button Text="Reset" Icon="restart_alt" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ResetAsync" />
+                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofAsync" />
+                </Actions>
+            </PageHeader>
+        </Header>
+        <ChildContent>
+            <div class="webgl-village-workspace">
+                <section class="webgl-village-stage" data-testid="webgl-run-playback-stage">
+                    <WebGlSceneView @ref="sceneView"
+                                    Scene="@scene"
+                                    Options="@runtimeOptions"
+                                    AriaLabel="Generic WebGL run playback scene"
+                                    MotionCompleted="@HandleMotionCompleted"
+                                    CommandCompleted="@HandleCommandCompleted" />
+                </section>
+
+                <aside class="webgl-village-panel" aria-label="Run playback inspector">
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Playback</span>
+                            <StatusBadge Text="@PlaybackStatus" Tone="@PlaybackTone" />
+                        </div>
+                        <dl class="webgl-proof-grid">
+                            <div>
+                                <dt>Frame</dt>
+                                <dd data-testid="webgl-run-frame">@CurrentFrameIndex</dd>
+                            </div>
+                            <div>
+                                <dt>Playing</dt>
+                                <dd data-testid="webgl-run-playing">@IsPlaying</dd>
+                            </div>
+                            <div>
+                                <dt>Renders</dt>
+                                <dd data-testid="webgl-run-render-count">@latestSnapshot?.RenderCount</dd>
+                            </div>
+                            <div>
+                                <dt>Motions</dt>
+                                <dd>@latestSnapshot?.ActiveMotionCount</dd>
+                            </div>
+                        </dl>
+                        <p class="webgl-proof-note" data-testid="webgl-run-status">@statusText</p>
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Batch metrics</span>
+                            <StatusBadge Text="@CurrentBatchIdText" Tone="info" />
+                        </div>
+                        <dl class="webgl-proof-grid">
+                            <div>
+                                <dt>Commands</dt>
+                                <dd data-testid="webgl-run-batch-command-count">@BatchCommandCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Stages</dt>
+                                <dd data-testid="webgl-run-batch-stage-count">@BatchStageCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Before</dt>
+                                <dd data-testid="webgl-run-command-before">@CommandCountBeforeText</dd>
+                            </div>
+                            <div>
+                                <dt>After</dt>
+                                <dd data-testid="webgl-run-command-after">@CommandCountAfterText</dd>
+                            </div>
+                            <div>
+                                <dt>Avoided</dt>
+                                <dd data-testid="webgl-run-interop-avoided">@InteropCallsAvoidedText</dd>
+                            </div>
+                            <div>
+                                <dt>Queued</dt>
+                                <dd data-testid="webgl-run-queued-stages">@QueuedStageCountText</dd>
+                            </div>
+                            <div>
+                                <dt>Stop gen</dt>
+                                <dd data-testid="webgl-run-runtime-stop-generation">@RuntimeStopGenerationText</dd>
+                            </div>
+                            <div>
+                                <dt>Blockers</dt>
+                                <dd data-testid="webgl-run-idle-blockers">@IdleBlockersText</dd>
+                            </div>
+                        </dl>
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Timeline</span>
+                            <StatusBadge Text="@($"{runDocument.Timeline.Frames.Count} frames")" Tone="info" />
+                        </div>
+                        <div class="webgl-object-list">
+                            @foreach (var frame in runDocument.Timeline.Frames)
+                            {
+                                <button type="button"
+                                        class="@(CurrentFrameIndex == frame.Index ? "webgl-object-list__item is-active" : "webgl-object-list__item")"
+                                        @onclick="() => SeekAsync(frame.Index)">
+                                    <span>Frame @frame.Index</span>
+                                    <small>@frame.TimeSeconds.ToString("0.0")s</small>
+                                </button>
+                            }
+                        </div>
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Diagnostics JSON</span>
+                            <StatusBadge Text="@($"{BatchActorCount} actors")" Tone="success" />
+                        </div>
+                        <pre class="webgl-proof-json" data-testid="webgl-run-diagnostics-json">@DiagnosticsJson</pre>
+                    </section>
+                </aside>
+            </div>
+        </ChildContent>
+    </PageScaffold>
+</div>

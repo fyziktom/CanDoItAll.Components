@@ -1,0 +1,177 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260606022130
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$ErrorActionPreference = 'Stop'
+$proofDir = Join-Path (Get-Location) 'codex\bundles\WebGlEngine_Stabilization_v16\proof\SB18\browser'
+$transcriptDir = Join-Path (Get-Location) 'codex\bundles\WebGlEngine_Stabilization_v16\proof\SB18\transcripts'
+New-Item -ItemType Directory -Force -Path $proofDir, $transcriptDir | Out-Null
+$transcriptPath = Join-Path $transcriptDir 'performance-proof-browser-transcript.txt'
+Start-Transcript -Path $transcriptPath -Force | Out-Null
+$port = 5098
+$url = "http://127.0.0.1:$port"
+$serverDir = Join-Path $proofDir 'server'
+New-Item -ItemType Directory -Force -Path $serverDir | Out-Null
+$stdout = Join-Path $serverDir 'performance-proof-server.stdout.log'
+$stderr = Join-Path $serverDir 'performance-proof-server.stderr.log'
+$server = $null
+try {
+    $server = Start-Process -FilePath 'dotnet' -ArgumentList @('run','--no-build','--no-launch-profile','--project','src\CanDoItAll.Components.WebGlSandbox\CanDoItAll.Components.WebGlSandbox.csproj','--urls',$url) -WorkingDirectory (Get-Location) -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru -WindowStyle Hidden
+    $deadline = (Get-Date).AddSeconds(90)
+    do {
+        Start-Sleep -Milliseconds 750
+        try {
+            $response = Invoke-WebRequest -Uri "$url/performance-proof" -UseBasicParsing -TimeoutSec 5
+            if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 500) { break }
+        } catch {
+            if ((Get-Date) -gt $deadline) { throw }
+        }
+    } while ((Get-Date) -lt $deadline)
+    if ((Get-Date) -ge $deadline) { throw "Sandbox did not become ready at $url" }
+
+    $env:PROOF_URL = "$url/performance-proof"
+    $env:PROOF_JSON = Join-Path $proofDir 'performance-proof-browser.json'
+    $env:PROOF_PAGE_SCREENSHOT = Join-Path $proofDir 'performance-proof.png'
+    $env:PROOF_CANVAS_SCREENSHOT = Join-Path $proofDir 'performance-proof-canvas.png'
+    $nodeScript = @'
+const fs = require('fs');
+const { chromium } = require('playwright');
+
+(async () => {
+  const url = process.env.PROOF_URL;
+  const jsonPath = process.env.PROOF_JSON;
+  const pageScreenshot = process.env.PROOF_PAGE_SCREENSHOT;
+  const canvasScreenshot = process.env.PROOF_CANVAS_SCREENSHOT;
+  const browser = await chromium.launch({ headless: true, args: ['--ignore-gpu-blocklist', '--use-gl=swiftshader'] });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+  const consoleMessages = [];
+  const consoleErrors = [];
+  const pageErrors = [];
+  page.on('console', message => {
+    const entry = { type: message.type(), text: message.text() };
+    consoleMessages.push(entry);
+    if (message.type() === 'error') {
+      consoleErrors.push(entry);
+    }
+  });
+  page.on('pageerror', error => pageErrors.push(String(error && error.stack || error)));
+  await page.goto(url, { waitUntil: 'networkidle', timeout: 120000 });
+  const canvas = page.locator('[data-testid="webgl-performance-stage"] canvas').first();
+  await canvas.waitFor({ state: 'visible', timeout: 120000 });
+  await page.waitForFunction(() => {
+    const status = document.querySelector('[data-testid="webgl-performance-status"]');
+    return status && /Applied\s+\d+\s+commands/.test(status.textContent || '');
+  }, null, { timeout: 120000 });
+  await page.waitForTimeout(1500);
+  const statusText = await page.locator('[data-testid="webgl-performance-status"]').innerText();
+  const metrics = await page.evaluate(() => {
+    const text = id => (document.querySelector(`[data-testid="${id}"]`)?.textContent || '').trim();
+    const number = id => Number(text(id) || '0');
+    const canvas = document.querySelector('[data-testid="webgl-performance-stage"] canvas');
+    const rect = canvas ? canvas.getBoundingClientRect() : null;
+    return {
+      status: text('webgl-performance-status'),
+      commandCount: number('webgl-performance-command-count'),
+      durationMs: number('webgl-performance-batch-duration'),
+      coalescedPatches: number('webgl-performance-coalesced-patches'),
+      droppedMotions: number('webgl-performance-dropped-motions'),
+      stageCount: number('webgl-performance-stage-count'),
+      objectCount: number('webgl-performance-object-count'),
+      renderCount: number('webgl-performance-render-count'),
+      activeMotions: number('webgl-performance-active-motions'),
+      cacheHits: number('webgl-performance-cache-hits'),
+      cacheMisses: number('webgl-performance-cache-misses'),
+      linkRebuilds: number('webgl-performance-link-rebuilds'),
+      canvas: rect ? { width: Math.round(rect.width), height: Math.round(rect.height) } : null
+    };
+  });
+  await page.screenshot({ path: pageScreenshot, fullPage: true });
+  await canvas.screenshot({ path: canvasScreenshot });
+  const filteredConsoleErrors = consoleErrors.filter(entry => !/favicon\.ico/.test(entry.text));
+  const result = {
+    url,
+    capturedAtUtc: new Date().toISOString(),
+    statusText,
+    metrics,
+    screenshots: { page: pageScreenshot, canvas: canvasScreenshot },
+    consoleErrors: filteredConsoleErrors,
+    pageErrors,
+    consoleMessages: consoleMessages.slice(-50),
+    passed: filteredConsoleErrors.length === 0 && pageErrors.length === 0 && metrics.commandCount === 202 && metrics.objectCount === 100 && metrics.renderCount > 0 && metrics.canvas && metrics.canvas.width > 0 && metrics.canvas.height > 0
+  };
+  fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2));
+  await browser.close();
+  if (!result.passed) {
+    console.error(JSON.stringify(result, null, 2));
+    process.exit(1);
+  }
+  console.log(`Performance browser proof passed: ${jsonPath}`);
+})();
+'@
+    node -e $nodeScript
+    if ($LASTEXITCODE -ne 0) { throw "Playwright performance proof failed with exit code $LASTEXITCODE" }
+
+    $pixelJson = Join-Path $proofDir 'performance-proof-pixels.json'
+    Add-Type -AssemblyName System.Drawing
+    $bitmap = [System.Drawing.Bitmap]::FromFile($env:PROOF_CANVAS_SCREENSHOT)
+    try {
+        $nonBlank = 0
+        $distinct = New-Object 'System.Collections.Generic.HashSet[string]'
+        for ($xStep = 1; $xStep -le 9; $xStep++) {
+            for ($yStep = 1; $yStep -le 9; $yStep++) {
+                $x = [Math]::Min($bitmap.Width - 1, [Math]::Max(0, [int][Math]::Round($bitmap.Width * $xStep / 10)))
+                $y = [Math]::Min($bitmap.Height - 1, [Math]::Max(0, [int][Math]::Round($bitmap.Height * $yStep / 10)))
+                $pixel = $bitmap.GetPixel($x, $y)
+                $key = ('#{0:X2}{1:X2}{2:X2}{3:X2}' -f $pixel.A, $pixel.R, $pixel.G, $pixel.B)
+                [void]$distinct.Add($key)
+                if ($pixel.A -gt 0 -and ($pixel.R -ne 0 -or $pixel.G -ne 0 -or $pixel.B -ne 0)) { $nonBlank++ }
+            }
+        }
+        $pixelResult = [pscustomobject]@{
+            capturedAtUtc = (Get-Date).ToUniversalTime().ToString('o')
+            image = $env:PROOF_CANVAS_SCREENSHOT
+            width = $bitmap.Width
+            height = $bitmap.Height
+            sampleCount = 81
+            nonBlankSamples = $nonBlank
+            distinctSampleColorCount = $distinct.Count
+            passed = ($bitmap.Width -gt 0 -and $bitmap.Height -gt 0 -and $nonBlank -gt 20 -and $distinct.Count -gt 3)
+        }
+        $pixelResult | ConvertTo-Json -Depth 5 | Set-Content -Path $pixelJson -Encoding utf8
+        if (-not $pixelResult.passed) { throw "Canvas pixel proof failed: $pixelJson" }
+        Write-Host "Performance canvas pixel proof passed: $pixelJson"
+    }
+    finally {
+        $bitmap.Dispose()
+    }
+}
+finally {
+    if ($server -and -not $server.HasExited) {
+        Stop-Process -Id $server.Id -Force
+        $server.WaitForExit(10000) | Out-Null
+    }
+    Stop-Transcript | Out-Null
+}
+Process ID: 27176
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+PS>TerminatingError(Invoke-WebRequest): "The operation has timed out."
+
+Performance canvas pixel proof passed: C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Stabilization_v16\proof\SB18\browser\performance-proof-pixels.json
+**********************
+Windows PowerShell transcript end
+End time: 20260606022209
+**********************

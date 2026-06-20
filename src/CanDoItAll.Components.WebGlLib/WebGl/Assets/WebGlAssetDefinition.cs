@@ -28,6 +28,10 @@ public sealed class WebGlAssetDefinition
 
     public double DefaultScale { get; set; } = 1.0;
 
+    public string ImportRecipeId { get; set; } = string.Empty;
+
+    public WebGlModelImportOptions ImportOptions { get; set; } = new();
+
     public bool SupportsTint { get; set; } = true;
 
     public bool SupportsBillboard { get; set; }

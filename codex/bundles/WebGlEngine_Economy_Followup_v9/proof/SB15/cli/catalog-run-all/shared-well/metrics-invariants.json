@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "economy-headless-metrics-invariants/v1",
+  "metrics": [
+    {
+      "metricId": "ruleViolationCount",
+      "value": 1,
+      "unit": "count",
+      "metadata": {
+        "kind": "issue-count",
+        "unit": "count",
+        "precision": "0",
+        "sourceFrameHash": "ce4f6e483c46631b69050da92607e6a6928470f63c0ba3b09356e1ebe10b7654",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "issue-count"
+      }
+    },
+    {
+      "metricId": "wellDepletionRate",
+      "value": 95,
+      "unit": "unit",
+      "metadata": {
+        "kind": "resource-total",
+        "resourceId": "water",
+        "unit": "unit",
+        "precision": "6",
+        "sourceFrameHash": "ce4f6e483c46631b69050da92607e6a6928470f63c0ba3b09356e1ebe10b7654",
+        "evaluatorVersion": "simulation-metric-evaluator/v2",
+        "metricRegistryVersion": "simulation-metric-kind-registry/v1",
+        "registeredDescriptorId": "resource-total"
+      }
+    }
+  ],
+  "metricDiagnostics": [],
+  "invariants": [
+    {
+      "invariantId": "shared-well.violations-visible",
+      "passed": true,
+      "severity": "error",
+      "message": "Invariant \u0027shared-well.violations-visible\u0027 passed.",
+      "metadata": {
+        "metricId": "ruleViolationCount",
+        "value": "1"
+      }
+    }
+  ],
+  "metricHashes": [
+    {
+      "metricId": "ruleViolationCount",
+      "kind": "issue-count",
+      "hash": "sha256:dd22f11701040b66dd93f9ec1afa4fa744c57936bf5ae30b6f071881cffb88bf"
+    },
+    {
+      "metricId": "wellDepletionRate",
+      "kind": "resource-total",
+      "hash": "sha256:ec0b6813bf711b3cb20a758ef08a793f96e926235a5be3271044e09abd0c8dab"
+    }
+  ],
+  "invariantHashes": [
+    {
+      "metricId": "shared-well.violations-visible",
+      "kind": "",
+      "hash": "sha256:989161a797b6a83b9475cb6d3ea6f13d2ad419f1f6a092d44a1cc54003e836a4"
+    }
+  ]
+}

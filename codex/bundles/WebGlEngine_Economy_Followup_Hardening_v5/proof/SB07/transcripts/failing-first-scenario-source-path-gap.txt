@@ -1,0 +1,66 @@
+﻿SB07 failing-first baseline from HEAD before scenario source cleanup
+
+FileSystem catalog baseline snippets:
+      public Stream OpenExperiment(string scenarioId)
+>         => File.OpenRead(GetScenario(scenarioId).ExperimentJsonPath);
+  
+              descriptor,
+>             () => File.OpenRead(descriptor.ExperimentJsonPath),
+              relativePath => OpenCompanionFile(descriptor.ScenarioId, relativePath));
+          string path = ResolveInsideScenario(scenarioDirectory, relativePath);
+>         return File.Exists(path) ? File.OpenRead(path) : null;
+      }
+  
+>     public string ResolveExperimentJsonPath(string scenarioId)
+>         => GetScenario(scenarioId).ExperimentJsonPath;
+  
+          var validationErrors = new List<string>();
+>         string? resolvedExperimentPath = TryResolveInsideScenario(scenarioDirectory, experimentFile);
+>         if (resolvedExperimentPath is null)
+          {
+  
+>         string experimentPath = resolvedExperimentPath ?? Path.Combine(scenarioDirectory, ExperimentFileName);
+  
+  
+>         if (!File.Exists(experimentPath))
+          {
+          {
+>             ValidateExperimentInputPack(experimentPath, scenarioDirectory, validationErrors);
+          }
+              .Where(path => !string.Equals(Path.GetFileName(path), ManifestFileName, StringComparison.OrdinalIgnoreCase))
+>             .Where(path => !string.Equals(Path.GetFullPath(path), Path.GetFullPath(experimentPath), StringComparison.OrdinalIgnoreCase))
+              .Select(path => Path.GetRelativePath(scenarioDirectory, path).Replace('\\', '/'))
+  
+>         string contentHash = File.Exists(experimentPath) ? ComputeFileHash(experimentPath) : string.Empty;
+          string packHash = ComputeScenarioPackHash(scenarioDirectory);
+              FirstNonEmpty(manifest?.Title, FormatTitle(scenarioId)),
+>             experimentPath,
+              companionFiles)
+      private static void ValidateExperimentInputPack(
+>         string experimentPath,
+          string scenarioDirectory,
+              SimulationExperimentInputPack pack = JsonSerializer.Deserialize<SimulationExperimentInputPack>(
+>                     File.ReadAllText(experimentPath),
+                      ManifestJsonOptions)
+      {
+>         using FileStream stream = File.OpenRead(path);
+          return $"sha256:{Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant()}";
+
+Runtime test baseline snippets:
+  
+>         Assert.DoesNotContain("\"tests\"", source, StringComparison.OrdinalIgnoreCase);
+>         Assert.DoesNotContain("\"Fixtures\"", source, StringComparison.OrdinalIgnoreCase);
+>         Assert.DoesNotContain("\"ExperimentInputs\"", source, StringComparison.OrdinalIgnoreCase);
+>         Assert.DoesNotContain("new EconomySimulationSandboxSessionService", source, StringComparison.Ordinal);
+      }
+          Assert.StartsWith("sha256:", scenario.PackHash, StringComparison.Ordinal);
+>         Assert.DoesNotContain($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", scenario.ExperimentJsonPath, StringComparison.OrdinalIgnoreCase);
+>         Assert.DoesNotContain("CanDoItAll.Economy.Tests", scenario.ExperimentJsonPath, StringComparison.OrdinalIgnoreCase);
+  
+          IEconomySimulationSandboxSessionService service = new EconomySimulationSandboxSessionService();
+>         EconomySimulationSandboxSession session = service.Load(
+>             scenario.ExperimentJsonPath,
+              new()
+          IEconomySimulationSandboxSessionService service = new EconomySimulationSandboxSessionService();
+>         EconomySimulationSandboxSession session = service.Load(
+              source,

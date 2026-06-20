@@ -21,6 +21,13 @@ public sealed class WebGlScenePatch
     public Dictionary<string, string> Metadata { get; set; } = [];
 }
 
+public static class WebGlScenePatchTransactionModes
+{
+    public const string Strict = "strict";
+
+    public const string PermissiveInvalidLinks = "permissive-invalid-links";
+}
+
 public sealed class WebGlSceneObjectPatch
 {
     public string ObjectId { get; set; } = string.Empty;

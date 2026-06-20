@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "sb02-browser-pause-proof/v1",
+  "route": "/run-playback",
+  "viewport": "1920x1080",
+  "bridge": "CanDoItAll.webglSandbox.runPlayback",
+  "action": "Proof bridge invoked Play, active browser runtime work observed, proof bridge invoked Pause, runtime idle awaited",
+  "runtimeReady": {
+    "objectCount": 2,
+    "renderCount": 2
+  },
+  "beforePause": {
+    "observedActiveRuntimeWork": true,
+    "observedAfterMs": 247,
+    "activeMotionCount": 1,
+    "queuedMotionCount": 0,
+    "queuedCommandStageCount": 2,
+    "currentCommandBatchId": "run-frame:1",
+    "currentCommandStageId": "run.move.target"
+  },
+  "afterPause": {
+    "status": "Paused.",
+    "idle": true,
+    "idleTimedOut": false,
+    "idleElapsedMs": 0,
+    "blockers": [],
+    "activeMotionCount": 0,
+    "queuedMotionCount": 0,
+    "queuedCommandStageCount": 0,
+    "currentCommandBatchId": "",
+    "currentCommandStageId": "",
+    "runtimeStopCount": 2,
+    "lastRuntimeStopIdle": true,
+    "lastRuntimeStopTimedOut": false,
+    "lastRuntimeStopClearedMotionCount": 0,
+    "lastRuntimeStopCancelledCommandStageCount": 0,
+    "proofSnapshotActiveMotionCount": 0,
+    "proofSnapshotQueuedMotionCount": 0,
+    "proofSnapshotQueuedCommandStageCount": 0
+  },
+  "assertions": {
+    "activeWorkObservedBeforePause": true,
+    "activeAndQueuedMotionsZeroAfterPause": true,
+    "queuedStagesZeroAfterPause": true,
+    "runtimeIdleAfterPause": true,
+    "noIdleBlockersAfterPause": true,
+    "consoleErrorsZero": true
+  },
+  "screenshotPath": "C:\\repositories\\CanDoItAll.Components\\codex\\bundles\\WebGlEngine_Economy_Followup_v8\\proof\\SB02\\screenshot.png"
+}

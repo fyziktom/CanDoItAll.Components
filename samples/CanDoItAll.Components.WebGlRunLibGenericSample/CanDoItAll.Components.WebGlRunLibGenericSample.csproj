@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>CanDoItAll.Components.WebGlRunLibGenericSample</AssemblyName>
+    <RootNamespace>CanDoItAll.Components.WebGlRunLibGenericSample</RootNamespace>
+    <Description>Minimal generic WebGlRunLib consumer sample without domain package references.</Description>
+    <IsPackable>false</IsPackable>
+    <ComponentsWebGlRunLibProject>..\..\src\CanDoItAll.Components.WebGlRunLib\CanDoItAll.Components.WebGlRunLib.csproj</ComponentsWebGlRunLibProject>
+    <UseComponentsWebGlRunLibPackage Condition="'$(UseComponentsWebGlRunLibPackage)' == ''">false</UseComponentsWebGlRunLibPackage>
+    <ComponentsWebGlRunLibPackageVersion Condition="'$(ComponentsWebGlRunLibPackageVersion)' == ''">$(PackageVersion)</ComponentsWebGlRunLibPackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and Exists('$(ComponentsWebGlRunLibProject)')" Include="$(ComponentsWebGlRunLibProject)" />
+    <PackageReference Condition="'$(UseComponentsWebGlRunLibPackage)' == 'true'" Include="CanDoItAll.Components.WebGlRunLib" Version="$(ComponentsWebGlRunLibPackageVersion)" />
+  </ItemGroup>
+
+  <Target Name="ValidateComponentsWebGlRunLibReference" BeforeTargets="ResolveReferences" Condition="'$(UseComponentsWebGlRunLibPackage)' != 'true' and !Exists('$(ComponentsWebGlRunLibProject)')">
+    <Error Text="CanDoItAll.Components.WebGlRunLib project reference was not found at '$(ComponentsWebGlRunLibProject)'. Set ComponentsWebGlRunLibProject to the local project or set UseComponentsWebGlRunLibPackage=true with ComponentsWebGlRunLibPackageVersion." />
+  </Target>
+
+</Project>

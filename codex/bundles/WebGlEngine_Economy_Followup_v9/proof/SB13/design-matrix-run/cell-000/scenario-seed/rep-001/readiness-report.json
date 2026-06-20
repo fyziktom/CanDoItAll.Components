@@ -1,0 +1,427 @@
+{
+  "schemaVersion": "economy-experiment-readiness/v3",
+  "experimentId": "factor.materialization.v2",
+  "scenarioPackHash": "sha256:866a832ed69657be20ae62314bc97f692b631d4f3ca053e4b9c72f6c2530a93f",
+  "runHash": "26cf70de59b8044ab0ff7810eabb20c0a4a660d33b08df2d91c2d1fc14122898",
+  "status": "headless-valid",
+  "researchReady": false,
+  "scenario": {
+    "band": "scenario",
+    "valid": true,
+    "status": "pass",
+    "passCount": 1,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {}
+  },
+  "simulation": {
+    "band": "simulation",
+    "valid": true,
+    "status": "pass",
+    "passCount": 1,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {}
+  },
+  "metrics": {
+    "band": "metrics",
+    "valid": true,
+    "status": "pass",
+    "passCount": 1,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {}
+  },
+  "projection": {
+    "band": "projection",
+    "valid": false,
+    "status": "fail",
+    "passCount": 0,
+    "failCount": 4,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [
+      "unclassified-diagnostic:input:invalid-input:parameters.id",
+      "unclassified-diagnostic:input:invalid-input:placement.id",
+      "unclassified-diagnostic:projection:invalid-input:parameters.id",
+      "unclassified-diagnostic:projection:invalid-input:placement.id"
+    ],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False"
+    }
+  },
+  "runtime": {
+    "band": "runtime",
+    "valid": true,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "exerciseRequested": "False",
+      "evidenceCount": "0",
+      "validEvidenceCount": "0",
+      "invalidEvidenceCount": "0",
+      "evidenceValidatorsPassed": "False"
+    }
+  },
+  "ui": {
+    "band": "ui",
+    "valid": true,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "exerciseRequested": "False",
+      "evidenceCount": "0",
+      "validEvidenceCount": "0",
+      "invalidEvidenceCount": "0",
+      "evidenceValidatorsPassed": "False"
+    }
+  },
+  "oracle": {
+    "band": "oracle",
+    "valid": true,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "exerciseRequested": "False",
+      "evidenceCount": "0",
+      "validEvidenceCount": "0",
+      "invalidEvidenceCount": "0",
+      "evidenceValidatorsPassed": "False"
+    }
+  },
+  "browserObserver": {
+    "band": "browser-observer",
+    "valid": false,
+    "status": "not-run",
+    "passCount": 0,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "exercised": "False",
+      "runtimeExercised": "False",
+      "uiExercised": "False",
+      "evidenceValidatorsPassed": "False",
+      "runtimeEvidenceValidatorsPassed": "False",
+      "uiEvidenceValidatorsPassed": "False",
+      "runtimeEvidenceCount": "0",
+      "uiEvidenceCount": "0",
+      "validRuntimeEvidenceCount": "0",
+      "validUiEvidenceCount": "0"
+    }
+  },
+  "performance": {
+    "band": "performance",
+    "valid": true,
+    "status": "pass",
+    "passCount": 1,
+    "failCount": 0,
+    "warningCount": 0,
+    "warningsAllowlisted": true,
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "profileId": "large",
+      "profileKind": "research-performance-budget",
+      "measurementCount": "1",
+      "hardFailureCount": "0",
+      "warningCount": "0",
+      "comparable": "True",
+      "topBottlenecks": "headless-load-materialize:633.164ms:3355456B"
+    }
+  },
+  "confidenceLevel": "L4-headless-strict-economic-result",
+  "budgetReport": {
+    "schemaVersion": "economy-performance-budget/v1",
+    "profileId": "large",
+    "profileKind": "research-performance-budget",
+    "measurements": [
+      {
+        "name": "headless-load-materialize",
+        "category": "headless",
+        "elapsedMilliseconds": 633.1638,
+        "allocatedBytes": 3355456,
+        "frameCount": 2,
+        "eventCount": 1,
+        "objectCount": 2,
+        "artifactBytes": 0,
+        "budgetMilliseconds": 120000,
+        "budgetBytes": 536870912,
+        "hardFailure": false,
+        "message": "",
+        "isHeadless": true
+      }
+    ],
+    "hardFailureCount": 0,
+    "warningCount": 0,
+    "comparable": true,
+    "topBottlenecks": [
+      "headless-load-materialize:633.164ms:3355456B"
+    ],
+    "headlessValid": true
+  },
+  "warningBudgetReport": {
+    "budget": 0,
+    "warningCount": 0,
+    "allowlistedWarningCount": 0,
+    "nonAllowlistedWarningCount": 0,
+    "allWarningsAllowlisted": true,
+    "withinBudget": true,
+    "allowlistedWarningCodes": [],
+    "warnings": []
+  },
+  "gates": [
+    {
+      "gate": "headless-economic-correctness",
+      "status": "pass",
+      "passCount": 3,
+      "failCount": 0,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "scenarioValid": "True",
+        "simulationValid": "True",
+        "metricsValid": "True"
+      }
+    },
+    {
+      "gate": "performance-budget",
+      "status": "pass",
+      "passCount": 1,
+      "failCount": 0,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "band": "performance",
+        "valid": "True",
+        "profileId": "large",
+        "hardFailureCount": "0",
+        "measurementCount": "1",
+        "topBottlenecks": "headless-load-materialize:633.164ms:3355456B"
+      }
+    },
+    {
+      "gate": "oracle-economic-correctness",
+      "status": "not-run",
+      "passCount": 0,
+      "failCount": 0,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "band": "oracle",
+        "valid": "True",
+        "exercised": "False"
+      }
+    },
+    {
+      "gate": "browser-observer",
+      "status": "not-run",
+      "passCount": 0,
+      "failCount": 1,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "band": "browser-observer",
+        "valid": "False",
+        "exercised": "False"
+      }
+    },
+    {
+      "gate": "warning-budget",
+      "status": "pass",
+      "passCount": 1,
+      "failCount": 0,
+      "warningCount": 0,
+      "warningsAllowlisted": true,
+      "metadata": {
+        "budget": "0",
+        "withinBudget": "True",
+        "allWarningsAllowlisted": "True"
+      }
+    }
+  ],
+  "artifactCitations": [
+    {
+      "artifactId": "event-stream",
+      "fileName": "event-stream.json",
+      "relativePath": "event-stream.json",
+      "uri": "artifact://event-stream.json",
+      "hash": "sha256:49a144325073475e5f296e8af7e0b54aa7afa7ea720a34afb2ae0ea3b80d8bc0",
+      "bytes": 3246,
+      "schemaVersion": "economy-headless-event-stream/v1"
+    },
+    {
+      "artifactId": "frame-hashes",
+      "fileName": "frame-hashes.json",
+      "relativePath": "frame-hashes.json",
+      "uri": "artifact://frame-hashes.json",
+      "hash": "sha256:ac7b64a8dac2110bba99b486a63adc25855f8fb4cc388b29e54c1dda2cb3a031",
+      "bytes": 828,
+      "schemaVersion": "economy-headless-frame-hashes/v1"
+    },
+    {
+      "artifactId": "metrics-invariants",
+      "fileName": "metrics-invariants.json",
+      "relativePath": "metrics-invariants.json",
+      "uri": "artifact://metrics-invariants.json",
+      "hash": "sha256:9e20108ace9c54a3d5a326bd6935f8f1f2da4dcb75d41c843706e453f0c2be31",
+      "bytes": 1224,
+      "schemaVersion": "economy-headless-metrics-invariants/v1"
+    },
+    {
+      "artifactId": "simulation-frames",
+      "fileName": "simulation.frames.json",
+      "relativePath": "simulation.frames.json",
+      "uri": "artifact://simulation.frames.json",
+      "hash": "sha256:76b163ccc898a23bd084c7d020f0f491503904e9839ae4deaccadd93d45ab804",
+      "bytes": 11041,
+      "schemaVersion": "economy-headless-simulation-frames/v1"
+    },
+    {
+      "artifactId": "warnings",
+      "fileName": "warnings.json",
+      "relativePath": "warnings.json",
+      "uri": "artifact://warnings.json",
+      "hash": "sha256:abdc05b4c2271227b1b9f8333d95a4f9b68a153fec6eb001b7c536b5bde802e1",
+      "bytes": 368,
+      "schemaVersion": "economy-headless-warnings/v1"
+    }
+  ],
+  "evidence": [],
+  "diagnosticClassifications": [
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "fallback-heavy-mapping",
+      "path": "visualMapping.fallbacks.allowNoOpPoseFallback",
+      "message": "Strict mode does not allow warning \u0027fallback-heavy-mapping\u0027: Mapping relies on no-op pose fallback for at least one action or has no pose hints.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "projection",
+      "severity": "error",
+      "code": "fallback-heavy-mapping",
+      "path": "visualMapping.fallbacks.allowNoOpSymbolFallback",
+      "message": "Strict mode does not allow warning \u0027fallback-heavy-mapping\u0027: Mapping relies on no-op symbol fallback for at least one action or has no symbol mappings.",
+      "classified": true
+    },
+    {
+      "source": "input",
+      "band": "unclassified",
+      "severity": "error",
+      "code": "invalid-input",
+      "path": "parameters.id",
+      "message": "Parameter set id is required.",
+      "classified": false
+    },
+    {
+      "source": "input",
+      "band": "unclassified",
+      "severity": "error",
+      "code": "invalid-input",
+      "path": "placement.id",
+      "message": "Placement id is required.",
+      "classified": false
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "fallback-heavy-mapping",
+      "path": "visualMapping.fallbacks.allowNoOpPoseFallback",
+      "message": "Strict mode does not allow warning \u0027fallback-heavy-mapping\u0027: Mapping relies on no-op pose fallback for at least one action or has no pose hints.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "projection",
+      "severity": "error",
+      "code": "fallback-heavy-mapping",
+      "path": "visualMapping.fallbacks.allowNoOpSymbolFallback",
+      "message": "Strict mode does not allow warning \u0027fallback-heavy-mapping\u0027: Mapping relies on no-op symbol fallback for at least one action or has no symbol mappings.",
+      "classified": true
+    },
+    {
+      "source": "projection",
+      "band": "unclassified",
+      "severity": "error",
+      "code": "invalid-input",
+      "path": "parameters.id",
+      "message": "Parameter set id is required.",
+      "classified": false
+    },
+    {
+      "source": "projection",
+      "band": "unclassified",
+      "severity": "error",
+      "code": "invalid-input",
+      "path": "placement.id",
+      "message": "Placement id is required.",
+      "classified": false
+    }
+  ],
+  "metadata": {
+    "browserRuntimeExercised": "False",
+    "uiExercised": "False",
+    "projectionExercised": "False",
+    "oracleProofExercised": "False",
+    "oracleCoverageLabel": "no-oracle",
+    "browserObserverExercised": "False",
+    "runtimeEvidenceCount": "0",
+    "uiEvidenceCount": "0",
+    "oracleEvidenceCount": "0",
+    "validRuntimeEvidenceCount": "0",
+    "validUiEvidenceCount": "0",
+    "validOracleEvidenceCount": "0",
+    "runtimeEvidenceValidatorsPassed": "False",
+    "uiEvidenceValidatorsPassed": "False",
+    "oracleEvidenceValidatorsPassed": "False",
+    "unclassifiedDiagnosticCount": "4",
+    "policyId": "research-strict",
+    "policyMode": "research-grade",
+    "researchClaimsAllowed": "True",
+    "warningBudget": "0",
+    "performanceProfileId": "large",
+    "expansionProfileId": "none",
+    "expansionProfileVersion": "v1",
+    "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+    "frameCount": "2",
+    "deltaCount": "1",
+    "artifactSetValid": "True",
+    "artifactCitationCount": "5",
+    "artifactMissingCount": "0",
+    "artifactInvalidCount": "0"
+  }
+}

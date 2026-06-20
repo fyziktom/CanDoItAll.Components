@@ -1,12 +1,13 @@
 import {
     THREE,
     clamp,
-    disposeObject3D,
     resolveFiniteNumber,
     resolveObjectSize,
     resolveString
 } from "./02-webgl-scene-core.js";
 import { syncAssetVisual } from "./03-webgl-scene-assets.js";
+import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
+import { isObjectVisible } from "./23-webgl-scene-indexes.js";
 
 export function rebuildSymbols(state) {
     clearSymbols(state);
@@ -17,6 +18,10 @@ export function rebuildSymbols(state) {
 
     let animatedSymbolCount = 0;
     for (const sceneObject of state.sceneModel.objects || []) {
+        if (!isObjectVisible(state, sceneObject)) {
+            continue;
+        }
+
         const symbols = (sceneObject.symbols || [])
             .filter(symbol => symbol?.isVisible !== false)
             .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
@@ -43,13 +48,47 @@ export function clearSymbols(state) {
     for (const group of state.symbolGroups.values()) {
         state.scene.remove(group);
         group.userData.disposed = true;
-        disposeObject3D(group);
+        disposeSceneObjectTree(group, state.diagnostics);
     }
 
     state.symbolGroups.clear();
     if (state.diagnostics) {
         state.diagnostics.animatedSymbolCount = 0;
     }
+}
+
+export function rebuildSymbolsForObject(state, objectId) {
+    for (const group of Array.from(state.symbolGroups.values())) {
+        if (group.userData.ownerObjectId !== objectId) {
+            continue;
+        }
+
+        state.scene.remove(group);
+        group.userData.disposed = true;
+        disposeSceneObjectTree(group, state.diagnostics);
+        state.symbolGroups.delete(group.userData.symbolRuntimeId);
+    }
+
+    const sceneObject = state.objectLookup.get(objectId);
+    if (!sceneObject ||
+        state.options.showSymbols === false ||
+        state.sceneModel.uiState?.showSymbols === false ||
+        !isObjectVisible(state, sceneObject)) {
+        recomputeAnimatedSymbolCount(state);
+        return;
+    }
+
+    const symbols = (sceneObject.symbols || [])
+        .filter(symbol => symbol?.isVisible !== false)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    const size = resolveObjectSize(sceneObject);
+    const center = (symbols.length - 1) / 2;
+    symbols.forEach((symbol, index) => {
+        const symbolGroup = createSymbolGroup(state, sceneObject, symbol, size, index - center);
+        state.symbolGroups.set(symbolGroup.userData.symbolRuntimeId, symbolGroup);
+        state.scene.add(symbolGroup);
+    });
+    recomputeAnimatedSymbolCount(state);
 }
 
 function createSymbolGroup(state, sceneObject, symbol, objectSize, offsetIndex) {
@@ -173,4 +212,10 @@ export function syncSymbolPositionsForObject(state, objectId) {
         group.position.set(basePosition.x + offsetIndex * spacing, basePosition.y + size.y + heightOffset, basePosition.z);
         group.userData.basePosition = group.position.clone();
     });
+}
+
+function recomputeAnimatedSymbolCount(state) {
+    state.diagnostics.animatedSymbolCount = Array.from(state.symbolGroups.values())
+        .filter(group => group.userData.effectKey && group.userData.effectKey !== "none")
+        .length;
 }

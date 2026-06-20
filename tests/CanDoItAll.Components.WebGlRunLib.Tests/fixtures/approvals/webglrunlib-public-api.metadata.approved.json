@@ -1,0 +1,1627 @@
+[
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunActionPlanner",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlan Plan(CanDoItAll.Components.WebGlRunLib.WebGlRunAction action, CanDoItAll.Components.WebGlRunLib.WebGlRunPlanningContext context)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunBrowserApplyAdapter",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyResult\u003E ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunFrameApplyResult frameApplyResult, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyResult\u003E ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult playbackResult, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunBrowserPlaybackApplyResult\u003E ApplyPlaybackAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult playbackResult, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunBrowserRuntime",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics\u003E GetDiagnosticsAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult\u003E WaitForRuntimeIdleAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeIdleWaitOptions options, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult\u003E ApplyCommandBatchAndWaitAsync(CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch batch, CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeIdleWaitOptions options, System.Boolean requireRuntimeIdle = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult\u003E ApplyCommandBatchAsync(CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch batch, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E ImportSceneAsync(CanDoItAll.Components.WebGlLib.WebGlSceneDocument sceneDocument, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunDocumentRunner",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E ApplyCurrentFrameAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E CancelAsync(System.String reason = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E LoadAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E PauseAsync(System.String reason = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E SeekAsync(System.Int64 frameIndex, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E StepBackwardAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E StepForwardAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E StopAsync(System.String reason = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunExecutionState State {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunDomainMappingDriver",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverValidationResult Validate()",
+      "method System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.String\u003E ScrubMetadata(System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.String\u003E metadata)",
+      "method System.String MapToGenericActionKind(System.String driverActionKind)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverManifest Manifest {get;}",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunGenericBoundaryOptions BoundaryOptions {get;}",
+      "property System.Collections.Generic.IReadOnlyCollection\u003CSystem.String\u003E DriverActionKinds {get;}",
+      "property System.String DisplayName {get;}",
+      "property System.String DriverHash {get;}",
+      "property System.String DriverId {get;}",
+      "property System.String DriverVersion {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunFrameApplier",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunFrameApplyResult frame, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunFrameSource",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E GetFrameAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunId runId, System.Int64 frameIndex, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunFrameStore",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask\u003CSystem.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E\u003E ListFramesAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunId runId, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunInitialSceneApplier",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask ApplyInitialSceneAsync(CanDoItAll.Components.WebGlLib.WebGlSceneDocument sceneDocument, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunPlaybackController",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeSnapshot ExportRuntimeSnapshot()",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackCommand command, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult\u003E ApplyDetailedAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackCommand command, System.Threading.CancellationToken cancellationToken = optional)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackState State {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunSceneProjector\u003CTFrame\u003E",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method CanDoItAll.Components.WebGlLib.WebGlScenePatch ProjectPatch(TFrame frame)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.IWebGlRunSnapshotStore",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask SaveAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackState state, CanDoItAll.Components.WebGlLib.WebGlSceneDocument sceneDocument, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.InMemoryWebGlRunFrameStore",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E GetFrameAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunId runId, System.Int64 frameIndex, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CSystem.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E\u003E ListFramesAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunId runId, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.InputDocumentRef",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String ContentHash {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Path {get;set;}",
+      "property System.String SchemaVersion {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.InputHashRef",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String ContentHash {get;set;}",
+      "property System.String Kind {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.RunSourceRef",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.InputDocumentRef\u003E Inputs {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.InputHashRef\u003E Hashes {get;set;}",
+      "property System.String SourceId {get;set;}",
+      "property System.String SourceKind {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlActionBinding",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String ActionKind {get;set;}",
+      "property System.String PoseKey {get;set;}",
+      "property System.String SymbolKey {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlPoseDefinition",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Offset {get;set;}",
+      "property System.Boolean IsNoOpFallback {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Rotation {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Scale {get;set;}",
+      "property System.String AssetId {get;set;}",
+      "property System.String AssetVariantId {get;set;}",
+      "property System.String PoseKey {get;set;}",
+      "property System.String SymbolKey {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunAction",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunActionTarget Target {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Parameters {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunAction\u003E Steps {get;set;}",
+      "property System.Double DurationSeconds {get;set;}",
+      "property System.Double StartsAtSeconds {get;set;}",
+      "property System.Int32 OrderIndex {get;set;}",
+      "property System.Int32 StageIndex {get;set;}",
+      "property System.String ActionId {get;set;}",
+      "property System.String ActionKind {get;set;}",
+      "property System.String CoalescingScope {get;set;}",
+      "property System.String Easing {get;set;}",
+      "property System.String ExecutionPolicy {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String ObjectId {get;set;}",
+      "property System.String ParentActionId {get;set;}",
+      "property System.String PoseKey {get;set;}",
+      "property System.String ResolvedKind {get;}",
+      "property System.String ResolvedObjectId {get;}",
+      "property System.String ResolvedTargetObjectId {get;}",
+      "property System.String SequenceId {get;set;}",
+      "property System.String StageGroupId {get;set;}",
+      "property System.String SubjectObjectId {get;set;}",
+      "property System.String SymbolKey {get;set;}",
+      "property System.String TargetObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionCompiler",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline Compile(CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlan plan)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionKinds",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String ApplyPatch",
+      "field static const System.String ApplyScenePatch",
+      "field static const System.String ChangePose",
+      "field static const System.String DirectedFlowVisual",
+      "field static const System.String HideSymbol",
+      "field static const System.String MoveToObject",
+      "field static const System.String MoveToPosition",
+      "field static const System.String Parallel",
+      "field static const System.String PulseLink",
+      "field static const System.String ReturnToAnchor",
+      "field static const System.String Sequence",
+      "field static const System.String SetAsset",
+      "field static const System.String SetLayerVisibility",
+      "field static const System.String SetPose",
+      "field static const System.String ShowSymbol",
+      "field static const System.String UpdateSymbol",
+      "field static const System.String Wait",
+      "field static readonly System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E All"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionMapping",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Parameters {get;set;}",
+      "property System.String ActionKind {get;set;}",
+      "property System.String EventKind {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionNormalizationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunAction Action {get;set;}",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionNormalizer",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunActionNormalizationResult Normalize(CanDoItAll.Components.WebGlRunLib.WebGlRunAction action)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlan",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E TargetResolutionDiagnostics {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand\u003E Motions {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlScenePatch\u003E Patches {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunAction\u003E Actions {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunObjectBinding\u003E ObjectBindings {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E DroppedStepIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Int32 FrameRate {get;set;}",
+      "property System.Int32 GeneratedMotionCount {get;}",
+      "property System.Int32 GeneratedPatchCount {get;}",
+      "property System.String ActionId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanBatchBuilder",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch Build(CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlan plan)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanBatchCompiler",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch Compile(CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlan plan)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanValidator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "ctor(CanDoItAll.Components.WebGlRunLib.WebGlRunGenericBoundaryOptions boundaryOptions)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanValidationResult Validate(CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlan plan)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanner",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlan Plan(CanDoItAll.Components.WebGlRunLib.WebGlRunAction action, CanDoItAll.Components.WebGlRunLib.WebGlRunPlanningContext context)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanningDiagnostics",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionStage",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand\u003E Motions {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFramePatch\u003E ScenePatches {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E BarrierObjectIds {get;set;}",
+      "property System.Double StartsAtSeconds {get;set;}",
+      "property System.Double WaitSeconds {get;set;}",
+      "property System.Int32 OrderIndex {get;set;}",
+      "property System.Int32 StageIndex {get;set;}",
+      "property System.String BarrierEventId {get;set;}",
+      "property System.String BarrierPolicy {get;set;}",
+      "property System.String CoalescingScope {get;set;}",
+      "property System.String ExecutionPolicy {get;set;}",
+      "property System.String ParentActionId {get;set;}",
+      "property System.String SequenceId {get;set;}",
+      "property System.String StageGroupId {get;set;}",
+      "property System.String StageId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionStageBoundary",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Int32 StageIndex {get;set;}",
+      "property System.String BoundaryId {get;set;}",
+      "property System.String CoalescingScope {get;set;}",
+      "property System.String StageGroupId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionStagePolicy",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String CoalescingScope {get;set;}",
+      "property System.String ExecutionPolicy {get;set;}",
+      "property System.String StageGroupId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionStep",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunAction Action {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double DelaySeconds {get;set;}",
+      "property System.String StepId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunActionTarget",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Offset {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Position {get;set;}",
+      "property System.String AnchorKey {get;set;}",
+      "property System.String FallbackAnchorKey {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunAnchorKeys",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Admin",
+      "field static const System.String Back",
+      "field static const System.String Base",
+      "field static const System.String Center",
+      "field static const System.String Front",
+      "field static const System.String Home",
+      "field static const System.String Left",
+      "field static const System.String Right",
+      "field static const System.String Top",
+      "field static const System.String Trade",
+      "field static const System.String Use",
+      "field static const System.String Work"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyAdapter",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlRunLib.IWebGlRunBrowserRuntime runtime, CanDoItAll.Components.WebGlLib.WebGlSceneDocument initialScene = optional, CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserPlaybackApplyOptions applyOptions = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyResult\u003E ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunFrameApplyResult frameApplyResult, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyResult\u003E ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult playbackResult, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunBrowserPlaybackApplyResult\u003E ApplyPlaybackAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult playbackResult, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyFailureReasons",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String BatchFailed",
+      "field static const System.String CancellationRequested",
+      "field static const System.String MultiFramePlaybackRequiresExplicitApply",
+      "field static const System.String PreApplyValidationFailed",
+      "field static const System.String ResetFailed",
+      "field static const System.String RuntimeIdleTimeout"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics RuntimeDiagnostics {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult RuntimeIdleResult {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult CommandBatchResult {get;set;}",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeSnapshot RuntimeSnapshot {get;set;}",
+      "property System.Boolean AppliedInitialScene {get;set;}",
+      "property System.Boolean Success {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Int32 AppliedMotionCount {get;set;}",
+      "property System.Int32 AppliedPatchCount {get;set;}",
+      "property System.Int32 AppliedStageCount {get;set;}",
+      "property System.Int64 FrameIndex {get;set;}",
+      "property System.String FailureReason {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserPlaybackApplyOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeIdleWaitOptions RuntimeIdle {get;set;}",
+      "property System.String RuntimeIdleWaitPolicy {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserPlaybackApplyResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeSnapshot FailureSnapshot {get;set;}",
+      "property System.Boolean AppliedInitialScene {get;set;}",
+      "property System.Boolean Canceled {get;set;}",
+      "property System.Boolean RequiresSceneReset {get;set;}",
+      "property System.Boolean Success {get;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult\u003E RuntimeIdleResults {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunBrowserApplyResult\u003E FrameResults {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Int64 TargetFrameIndex {get;set;}",
+      "property System.Nullable\u003CSystem.Int64\u003E FailedFrameIndex {get;set;}",
+      "property System.Nullable\u003CSystem.Int64\u003E LastAppliedFrameIndex {get;set;}",
+      "property System.String CancellationReason {get;set;}",
+      "property System.String FailureReason {get;set;}",
+      "property System.String ReplayMode {get;set;}",
+      "property System.String RequestedCommand {get;set;}",
+      "property System.String RuntimeIdleWaitPolicy {get;set;}",
+      "property System.String TransactionPolicy {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserPlaybackTransactionPolicies",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String StopOnFirstFailure"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunBrowserReplayModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String AbsoluteReplay",
+      "field static const System.String Incremental",
+      "field static const System.String SnapshotAnchorReplay"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunCoalescingScopes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Frame",
+      "field static const System.String None",
+      "field static const System.String StageOnly"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDocument",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneDocument InitialScene {get;set;}",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunId RunId {get;set;}",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline Timeline {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String SchemaVersion {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentFrameSource",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E GetFrameAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunId runId, System.Int64 frameIndex, System.Threading.CancellationToken cancellationToken = optional)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunDocument Document {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentProvenanceValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentProvenanceValidator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "ctor(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E disallowedTerms)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentProvenanceValidationResult Validate(CanDoItAll.Components.WebGlRunLib.RunSourceRef source)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentProvenanceValidationResult Validate(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentRunner",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlRunLib.IWebGlRunFrameApplier frameApplier = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E ApplyCurrentFrameAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E CancelAsync(System.String reason = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E LoadAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E PauseAsync(System.String reason = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E SeekAsync(System.Int64 frameIndex, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E StepBackwardAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E StepForwardAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult\u003E StopAsync(System.String reason = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunExecutionState State {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentValidator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "ctor(CanDoItAll.Components.WebGlRunLib.WebGlRunGenericBoundaryOptions boundaryOptions)",
+      "field static const System.String CurrentSchemaVersion",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunDocumentValidationResult Validate(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverManifest",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "field static const System.String CurrentSchemaVersion",
+      "method static CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverManifest FromDriver(CanDoItAll.Components.WebGlRunLib.IWebGlRunDomainMappingDriver driver)",
+      "method static System.String ComputeDriverHash(CanDoItAll.Components.WebGlRunLib.IWebGlRunDomainMappingDriver driver)",
+      "method static System.String ComputeManifestHash(CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverManifest manifest)",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E ActionKindMappings {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AllowedSourceProvenanceKeys {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ForbiddenDomainTerms {get;set;}",
+      "property System.String DisplayName {get;set;}",
+      "property System.String DriverHash {get;set;}",
+      "property System.String DriverId {get;set;}",
+      "property System.String DriverVersion {get;set;}",
+      "property System.String SchemaVersion {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverMetadataScrubber",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Scrub(System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.String\u003E metadata, CanDoItAll.Components.WebGlRunLib.WebGlRunGenericBoundaryOptions boundaryOptions)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverValidator",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static CanDoItAll.Components.WebGlRunLib.WebGlRunDomainMappingDriverValidationResult Validate(CanDoItAll.Components.WebGlRunLib.IWebGlRunDomainMappingDriver driver)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunDriverMetadataKeys",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String DriverHash",
+      "field static const System.String DriverId",
+      "field static const System.String DriverManifestHash",
+      "field static const System.String DriverVersion",
+      "field static const System.String SourceTraceMapHash",
+      "method static System.Void Stamp(System.Collections.Generic.IDictionary\u003CSystem.String,System.String\u003E metadata, CanDoItAll.Components.WebGlRunLib.IWebGlRunDomainMappingDriver driver, System.String traceMapHash = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunEvent",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double DurationSeconds {get;set;}",
+      "property System.Double StartsAtSeconds {get;set;}",
+      "property System.String EventId {get;set;}",
+      "property System.String EventKind {get;set;}",
+      "property System.String SubjectObjectId {get;set;}",
+      "property System.String TargetObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunExecutionDiagnostics",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E FailedLinkIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E FailedMotionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E FailedPatchIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SourceFrameIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SourceStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E UnresolvedObjectIds {get;set;}",
+      "property System.Int32 FailedLinkCount {get;set;}",
+      "property System.Int32 FailedMotionCount {get;set;}",
+      "property System.Int32 FailedPatchCount {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunExecutionResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunExecutionDiagnostics ExecutionDiagnostics {get;set;}",
+      "property System.Boolean AppliedInitialScene {get;set;}",
+      "property System.Boolean Canceled {get;set;}",
+      "property System.Boolean Paused {get;set;}",
+      "property System.Boolean Stopped {get;set;}",
+      "property System.Boolean Succeeded {get;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Diagnostics {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AppliedStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CanceledStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Int64 CurrentFrameIndex {get;set;}",
+      "property System.String Operation {get;set;}",
+      "property System.String PlaybackLifecycleReason {get;set;}",
+      "property System.String PlaybackLifecycleState {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunExecutionState",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunDocument Document {get;set;}",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunExecutionDiagnostics ExecutionDiagnostics {get;set;}",
+      "property System.Boolean InitialSceneLoaded {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Diagnostics {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ActiveStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CanceledStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CompletedStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E FailedStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E PendingStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SkippedStageIds {get;set;}",
+      "property System.Int32 PlaybackCancelCount {get;set;}",
+      "property System.Int32 PlaybackPauseCount {get;set;}",
+      "property System.Int32 PlaybackStopCount {get;set;}",
+      "property System.Int64 CurrentFrameIndex {get;set;}",
+      "property System.String CurrentCommandBatchId {get;set;}",
+      "property System.String LastPlaybackCommandKind {get;set;}",
+      "property System.String LastPlaybackStopReason {get;set;}",
+      "property System.String PlaybackLifecycleState {get;set;}",
+      "property System.String RunId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunFrame",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand\u003E Motions {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunActionStage\u003E Stages {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFramePatch\u003E ScenePatches {get;set;}",
+      "property System.Double TimeSeconds {get;set;}",
+      "property System.Int64 Index {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunFrameApplyResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method static CanDoItAll.Components.WebGlRunLib.WebGlRunFrameApplyResult FromFrame(CanDoItAll.Components.WebGlRunLib.WebGlRunFrame frame)",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch CommandBatch {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneDocument InitialScene {get;set;}",
+      "property System.Boolean RequiresSceneReset {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Double TimeSeconds {get;set;}",
+      "property System.Int64 FrameIndex {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunFramePatch",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlScenePatch Patch {get;set;}",
+      "property System.String Id {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunFrameResolver",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunFrame ResolveFrame(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline, System.Int64 frameIndex)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunFrame ResolveNextFrame(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline, System.Int64 currentFrameIndex)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunFrame ResolvePreviousFrame(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline, System.Int64 currentFrameIndex)",
+      "method System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E ResolveReplayFrames(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline, System.Int64 targetFrameIndex)",
+      "method System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E ResolveSnapshotAnchorReplayFrames(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline, System.Int64 targetFrameIndex)",
+      "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E OrderFrames(System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E frames)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunGenericBoundaryOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.IEnumerable\u003CSystem.String\u003E ForbiddenDomainTerms {get;set;}",
+      "property static CanDoItAll.Components.WebGlRunLib.WebGlRunGenericBoundaryOptions None {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunId",
+    "kind": "struct",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.ValueType",
+    "members": [
+      "ctor(System.String Value)",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlRunLib.WebGlRunId other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String Value)",
+      "property System.String Value {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunObjectBinding",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E AnchorPosition {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Position {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunObserverProof",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String CurrentSchemaVersion",
+      "method static CanDoItAll.Components.WebGlRunLib.WebGlRunObserverProofReport Compare(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument expectedDocument, CanDoItAll.Components.WebGlRunLib.WebGlRunDocument browserLoadedDocument, CanDoItAll.Components.WebGlRunLib.WebGlRunObserverSnapshot observer)",
+      "method static System.String ComputeDocumentHash(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunObserverProofReport",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean BrowserRuntimeValid {get;set;}",
+      "property System.Boolean DocumentHashesMatch {get;set;}",
+      "property System.Boolean DriverHashesMatch {get;set;}",
+      "property System.Boolean ObserverProofValid {get;set;}",
+      "property System.Boolean RuntimeIdle {get;set;}",
+      "property System.Boolean SceneContentHashesMatch {get;set;}",
+      "property System.Boolean UiValid {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,CanDoItAll.Components.WebGlLib.WebGlVector3\u003E BrowserFinalObjectPositions {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,CanDoItAll.Components.WebGlLib.WebGlVector3\u003E ExpectedFinalObjectPositions {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CompletedStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RuntimeIdleBlockers {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.String BrowserLoadedDocumentHash {get;set;}",
+      "property System.String BrowserLoadedDriverHash {get;set;}",
+      "property System.String BrowserLoadedSceneContentHash {get;set;}",
+      "property System.String ClaimStatus {get;set;}",
+      "property System.String ExpectedDocumentHash {get;set;}",
+      "property System.String ExpectedDriverHash {get;set;}",
+      "property System.String ExpectedSceneContentHash {get;set;}",
+      "property System.String Route {get;set;}",
+      "property System.String SchemaVersion {get;set;}",
+      "property System.String ScreenshotPath {get;set;}",
+      "property System.String Viewport {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunObserverSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics RuntimeDiagnostics {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult RuntimeIdleResult {get;set;}",
+      "property System.Boolean BrowserRuntimeExercised {get;set;}",
+      "property System.Boolean UiExercised {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,CanDoItAll.Components.WebGlLib.WebGlVector3\u003E FinalObjectPositions {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CompletedStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ConsoleErrors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RuntimeErrors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RuntimeWarnings {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E UiErrors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E UiWarnings {get;set;}",
+      "property System.String Route {get;set;}",
+      "property System.String ScreenshotPath {get;set;}",
+      "property System.String Viewport {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPassThroughDomainMappingDriver",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method System.String MapToGenericActionKind(System.String driverActionKind)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunGenericBoundaryOptions BoundaryOptions {get;}",
+      "property System.Collections.Generic.IReadOnlyCollection\u003CSystem.String\u003E DriverActionKinds {get;}",
+      "property System.String DisplayName {get;}",
+      "property System.String DriverId {get;}",
+      "property System.String DriverVersion {get;}",
+      "property static CanDoItAll.Components.WebGlRunLib.WebGlRunPassThroughDomainMappingDriver Instance {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlanningContext",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneModel Scene {get;set;}",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlVisualStateCatalog VisualStates {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,CanDoItAll.Components.WebGlLib.WebGlVector3\u003E ObjectPositions {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,CanDoItAll.Components.WebGlLib.WebGlSceneObject\u003E ObjectIndex {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackClock",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method System.String BuildDeterministicTimelineIdentity(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document)",
+      "method System.TimeSpan ResolveFrameDelay(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline, System.Double playbackSpeed)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackCommand",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Nullable\u003CSystem.Int64\u003E TargetFrameIndex {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Reason {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackCommandKinds",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Cancel",
+      "field static const System.String Next",
+      "field static const System.String Pause",
+      "field static const System.String Play",
+      "field static const System.String Previous",
+      "field static const System.String Reset",
+      "field static const System.String Resume",
+      "field static const System.String Seek",
+      "field static const System.String Step",
+      "field static const System.String Stop"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackController",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlRunLib.IWebGlRunFrameSource frameSource, CanDoItAll.Components.WebGlRunLib.WebGlRunTimelineValidator timelineValidator, CanDoItAll.Components.WebGlRunLib.WebGlRunFrameResolver frameResolver = optional, CanDoItAll.Components.WebGlLib.WebGlSceneDocument initialScene = optional, CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline = optional, System.Nullable\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunId\u003E runId = optional, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.String\u003E runSourceProvenance = optional)",
+      "ctor(CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeSnapshot ExportRuntimeSnapshot()",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackCommand command, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult\u003E ApplyDetailedAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackCommand command, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult\u003E PlayToEndAsync(CanDoItAll.Components.WebGlRunLib.IWebGlRunFrameApplier frameApplier, CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackOptions options = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackState State {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackLifecycleStates",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Canceled",
+      "field static const System.String Idle",
+      "field static const System.String Paused",
+      "field static const System.String Playing",
+      "field static const System.String Stopped"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean StopAtTimelineEnd {get;set;}",
+      "property System.Func\u003CSystem.TimeSpan,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask\u003E DelayAsync {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunFrame CurrentFrame {get;set;}",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackState State {get;set;}",
+      "property System.Boolean RequiresSceneReset {get;set;}",
+      "property System.Boolean Success {get;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E RunSourceProvenance {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E FramesToApply {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;}",
+      "property System.Int32 FramesApplied {get;set;}",
+      "property System.Int32 StagesQueued {get;set;}",
+      "property System.Int64 TargetFrameIndex {get;set;}",
+      "property System.String PlaybackLifecycleReason {get;set;}",
+      "property System.String PlaybackLifecycleState {get;set;}",
+      "property System.String ReplayMode {get;set;}",
+      "property System.String RequestedCommand {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackState",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunId RunId {get;set;}",
+      "property System.Boolean InitialSceneLoaded {get;set;}",
+      "property System.Boolean IsPlaying {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CurrentActionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CurrentStageIds {get;set;}",
+      "property System.Double PlaybackSpeed {get;set;}",
+      "property System.Int32 PlaybackCancelCount {get;set;}",
+      "property System.Int32 PlaybackPauseCount {get;set;}",
+      "property System.Int32 PlaybackStopCount {get;set;}",
+      "property System.Int32 QueuedStageCount {get;set;}",
+      "property System.Int64 CurrentFrameIndex {get;set;}",
+      "property System.String CurrentCommandBatchId {get;set;}",
+      "property System.String CurrentStageId {get;set;}",
+      "property System.String InitialSceneId {get;set;}",
+      "property System.String LastPlaybackCommandKind {get;set;}",
+      "property System.String LastPlaybackStopReason {get;set;}",
+      "property System.String PlaybackLifecycleState {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackStopCoordinator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackStopResult\u003E StopAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackStopRequest request)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackStopRequest",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Action CancelPlayback {get;set;}",
+      "property System.Func\u003CSystem.String,System.Boolean,System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E\u003E StopRuntimeAsync {get;set;}",
+      "property System.String Reason {get;set;}",
+      "property System.Threading.Tasks.Task PlaybackTask {get;set;}",
+      "property System.TimeSpan LateApplyDrainDelay {get;set;}",
+      "property System.TimeSpan PlaybackDrainTimeout {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackStopResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandResult FinalStopResult {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandResult ImmediateStopResult {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandResult LateDrainStopResult {get;set;}",
+      "property System.Boolean PlaybackTaskCanceled {get;set;}",
+      "property System.Boolean PlaybackTaskTimedOut {get;set;}",
+      "property System.Boolean Success {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeIdleWaitOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Int32 PollIntervalMs {get;set;}",
+      "property System.Int32 TimeoutMs {get;set;}",
+      "property System.String PolicyMode {get;set;}",
+      "property System.String Reason {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeIdleWaitPolicies",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String AfterEachFrame",
+      "field static const System.String AfterPlayback",
+      "field static const System.String None"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunStageBarrierSnapshot StageBarrier {get;set;}",
+      "property System.Boolean InitialSceneLoaded {get;set;}",
+      "property System.Boolean IsPlaying {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Diagnostics {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E RunSourceProvenance {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeCommandStageJournalEntry\u003E CommandJournalTail {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeMotionQueueSnapshot\u003E MotionQueueSnapshot {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ActiveMotionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ActiveStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CurrentActionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CurrentStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E QueuedMotionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E QueuedStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RuntimeErrors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RuntimeWarnings {get;set;}",
+      "property System.Double PlaybackSpeed {get;set;}",
+      "property System.Int32 ActiveMotionCount {get;set;}",
+      "property System.Int32 CommandJournalDroppedCount {get;set;}",
+      "property System.Int32 InitialLinkCount {get;set;}",
+      "property System.Int32 InitialObjectCount {get;set;}",
+      "property System.Int32 PlaybackCancelCount {get;set;}",
+      "property System.Int32 PlaybackPauseCount {get;set;}",
+      "property System.Int32 PlaybackStopCount {get;set;}",
+      "property System.Int32 QueuedMotionCount {get;set;}",
+      "property System.Int32 QueuedStageCount {get;set;}",
+      "property System.Int64 CurrentFrameIndex {get;set;}",
+      "property System.String CurrentCommandBatchId {get;set;}",
+      "property System.String CurrentStageId {get;set;}",
+      "property System.String InitialSceneId {get;set;}",
+      "property System.String LastPlaybackCommandKind {get;set;}",
+      "property System.String LastPlaybackStopReason {get;set;}",
+      "property System.String PlaybackLifecycleState {get;set;}",
+      "property System.String RunId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeStopGenerationPolicy",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static System.Boolean IsStale(CanDoItAll.Components.WebGlLib.WebGlSceneCommandResult result, System.Int64 currentGeneration)",
+      "method static System.Boolean TryRead(CanDoItAll.Components.WebGlLib.WebGlSceneCommandResult result, out System.Int64 generation)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunSceneViewFrameApplier",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlLib.WebGlSceneView sceneView, CanDoItAll.Components.WebGlRunLib.WebGlRunDocument document)",
+      "method System.Threading.Tasks.ValueTask ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunFrameApplyResult frame, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask ApplyAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunPlaybackResult result, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask ApplyInitialSceneAsync(CanDoItAll.Components.WebGlLib.WebGlSceneDocument sceneDocument, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunStageBarrierSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean TimedOut {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Blockers {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ObjectIds {get;set;}",
+      "property System.Double ElapsedSeconds {get;set;}",
+      "property System.Double TimeoutSeconds {get;set;}",
+      "property System.Double WaitSeconds {get;set;}",
+      "property System.String EventId {get;set;}",
+      "property System.String Policy {get;set;}",
+      "property System.String Target {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunStageExecutionPolicies",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String CoalesceWithinStage",
+      "field static const System.String Parallel",
+      "field static const System.String PreserveOrder"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunStageIdPolicy",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method System.String Resolve(CanDoItAll.Components.WebGlRunLib.WebGlRunAction action)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunStageOrderingPolicy",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunActionStage\u003E OrderStages(CanDoItAll.Components.WebGlRunLib.WebGlRunFrame frame)",
+      "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunActionStage\u003E OrderStages(System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunActionStage\u003E stages)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunTargetResolution",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean Succeeded {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Position {get;set;}",
+      "property System.String AnchorKey {get;set;}",
+      "property System.String AnchorKind {get;set;}",
+      "property System.String TargetObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunTargetResolver",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlVector3 ResolveAnchor(CanDoItAll.Components.WebGlLib.WebGlSceneObject sceneObject, System.String anchorKey, CanDoItAll.Components.WebGlLib.WebGlVector3 offset)",
+      "method CanDoItAll.Components.WebGlLib.WebGlVector3 ResolveAnchor(CanDoItAll.Components.WebGlLib.WebGlSceneObject sceneObject, System.String anchorKey, CanDoItAll.Components.WebGlLib.WebGlVector3 offset, System.String fallbackAnchorKey)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunTargetResolution ResolveTarget(CanDoItAll.Components.WebGlRunLib.WebGlRunActionTarget target, CanDoItAll.Components.WebGlRunLib.WebGlRunPlanningContext context)",
+      "method System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Resolve(CanDoItAll.Components.WebGlRunLib.WebGlRunActionTarget target, CanDoItAll.Components.WebGlRunLib.WebGlRunPlanningContext context)",
+      "property CanDoItAll.Components.WebGlRunLib.WebGlRunActionPlanningDiagnostics Diagnostics {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlRunFrame\u003E Frames {get;set;}",
+      "property System.Int32 FrameRate {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunTimelineValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean Success {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunTimelineValidator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlRunTimelineValidationResult Validate(CanDoItAll.Components.WebGlRunLib.WebGlRunTimeline timeline)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlRunVisualStateResolver",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlPoseDefinition ResolvePose(CanDoItAll.Components.WebGlRunLib.WebGlRunAction action, CanDoItAll.Components.WebGlRunLib.WebGlRunPlanningContext context)",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlSymbolDefinition ResolveSymbol(CanDoItAll.Components.WebGlRunLib.WebGlRunAction action, CanDoItAll.Components.WebGlRunLib.WebGlRunPlanningContext context)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlSceneViewBrowserRuntime",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlLib.WebGlSceneView sceneView)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics\u003E GetDiagnosticsAsync(System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult\u003E WaitForRuntimeIdleAsync(CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeIdleWaitOptions options, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult\u003E ApplyCommandBatchAndWaitAsync(CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch batch, CanDoItAll.Components.WebGlRunLib.WebGlRunRuntimeIdleWaitOptions options, System.Boolean requireRuntimeIdle = optional, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult\u003E ApplyCommandBatchAsync(CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch batch, System.Threading.CancellationToken cancellationToken = optional)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E ImportSceneAsync(CanDoItAll.Components.WebGlLib.WebGlSceneDocument sceneDocument, System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlSymbolDefinition",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsNoOpFallback {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String EffectKey {get;set;}",
+      "property System.String SemanticKind {get;set;}",
+      "property System.String SymbolAssetId {get;set;}",
+      "property System.String SymbolKey {get;set;}",
+      "property System.String Tooltip {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlVisualStateCatalog",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlActionBinding\u003E ActionBindings {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlPoseDefinition\u003E Poses {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlRunLib.WebGlSymbolDefinition\u003E Symbols {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlVisualStateCatalogFallbacks",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "property static CanDoItAll.Components.WebGlRunLib.WebGlPoseDefinition NoOpPose {get;}",
+      "property static CanDoItAll.Components.WebGlRunLib.WebGlSymbolDefinition NoOpSymbol {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlVisualStateCatalogValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlRunLib.WebGlVisualStateCatalogValidator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlRunLib.WebGlVisualStateCatalogValidationResult Validate(CanDoItAll.Components.WebGlRunLib.WebGlVisualStateCatalog catalog, CanDoItAll.Components.WebGlLib.WebGlAssetCatalog assetCatalog = optional)"
+    ]
+  }
+]

@@ -10,6 +10,8 @@ public sealed class WebGlAssetCatalog
 
     public List<WebGlAssetDefinition> Assets { get; set; } = [];
 
+    public List<WebGlModelImportRecipe> ModelImportRecipes { get; set; } = [];
+
     public Dictionary<string, string> Metadata { get; set; } = [];
 }
 

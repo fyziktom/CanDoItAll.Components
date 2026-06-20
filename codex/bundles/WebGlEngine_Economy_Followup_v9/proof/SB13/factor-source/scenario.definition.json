@@ -1,0 +1,134 @@
+{
+  "scenarioId": "factor.materialization.v2",
+  "displayName": "Factor Materialization V2",
+  "scenarioKind": "",
+  "baseCurrency": "TOKEN",
+  "startsAtUtc": "2026-01-01T00:00:00+00:00",
+  "stepCount": 3,
+  "stepDuration": "1.00:00:00",
+  "seed": 0,
+  "experimentMode": 1,
+  "expansionProfileId": "none",
+  "allowedWarningCodes": [],
+  "entities": [],
+  "places": [],
+  "actors": [
+    {
+      "actorId": "seller",
+      "kind": "actor",
+      "displayName": "",
+      "role": "",
+      "homeLocationId": "market",
+      "metadata": {}
+    },
+    {
+      "actorId": "buyer",
+      "kind": "actor",
+      "displayName": "",
+      "role": "",
+      "homeLocationId": "market",
+      "metadata": {}
+    }
+  ],
+  "resources": [
+    {
+      "resourceId": "grain",
+      "kind": "",
+      "displayName": "",
+      "unit": "",
+      "capacity": 20,
+      "allowsNegativeCapacity": false,
+      "metadata": {}
+    }
+  ],
+  "locations": [
+    {
+      "locationId": "market",
+      "kind": "",
+      "displayName": "",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "metadata": {}
+    }
+  ],
+  "objects": [],
+  "stores": [],
+  "initialStores": [
+    {
+      "storeId": "store.seller.grain",
+      "ownerActorId": "seller",
+      "resourceId": "grain",
+      "locationId": "market",
+      "displayName": "",
+      "quantity": 10,
+      "unit": "unit",
+      "capacity": 20,
+      "allowsNegativeCapacity": false,
+      "metadata": {}
+    },
+    {
+      "storeId": "store.buyer.grain",
+      "ownerActorId": "buyer",
+      "resourceId": "grain",
+      "locationId": "market",
+      "displayName": "",
+      "quantity": 0,
+      "unit": "unit",
+      "capacity": 10,
+      "allowsNegativeCapacity": false,
+      "metadata": {}
+    }
+  ],
+  "behaviors": [],
+  "relationships": [],
+  "eventTemplates": [],
+  "scheduledEvents": [
+    {
+      "scheduledEventId": "event.design.transfer",
+      "eventKind": "actor.resource.transfer",
+      "stepIndex": 1,
+      "actorIds": [
+        "seller",
+        "buyer"
+      ],
+      "resourceIds": [
+        "grain"
+      ],
+      "sourceId": "seller",
+      "targetId": "buyer",
+      "sourceLocationId": "market",
+      "targetLocationId": "market",
+      "magnitude": 2,
+      "duration": "00:00:00",
+      "offset": "00:00:00",
+      "order": 0,
+      "storeResolutionPolicies": [],
+      "metadata": {
+        "investmentRate": "0.10"
+      }
+    }
+  ],
+  "rules": [],
+  "ruleDefinitions": [
+    {
+      "ruleId": "rule.policy",
+      "displayName": "",
+      "category": "policy",
+      "parameters": {
+        "policyShockFee": "6",
+        "maxTopCreditShare": "0.6"
+      },
+      "metadata": {}
+    }
+  ],
+  "schedule": {
+    "scheduleId": "",
+    "stepDuration": "1.00:00:00",
+    "metadata": {}
+  },
+  "backendHints": [],
+  "metadata": {
+    "scenarioVariant": "baseline"
+  }
+}

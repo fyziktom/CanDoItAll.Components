@@ -1,0 +1,56 @@
+{
+  "schema": "candoitall.v9.sb01.proof-hygiene-report",
+  "capturedUtc": "2026-06-04T15:55:00Z",
+  "auditedBundle": "repo://codex/bundles/WebGlEngine_Economy_Followup_v8",
+  "auditorBundle": "repo://codex/bundles/WebGlEngine_Economy_Followup_v9",
+  "stage": "completed",
+  "proofFileCount": 55,
+  "zeroLengthProofFiles": [],
+  "emptyPassingTranscriptReferences": [],
+  "placeholderProofFiles": [],
+  "thinManifestWarnings": [
+    "v8 manifests are mostly short index files; v9 closure must use artifact-backed manifests with source assertions and changed-file hashes for each executed critical subbundle."
+  ],
+  "nonBlockingWarnings": [
+    "Some v8 semantic-invariants.md files are only 197 bytes, which is acceptable only as historical v8 evidence and not sufficient for v9 critical closure."
+  ],
+  "sourceAuditFindings": [
+    {
+      "id": "SB01-F01",
+      "status": "open",
+      "owner": "SB02",
+      "evidence": "repo://src/CanDoItAll.Components.WebGlSandbox/Components/Pages/RunPlayback.razor.cs",
+      "summary": "Pause path still cancels before first JS stop and uses wait-for-idle stop instead of the v9 immediate best-effort stop plus final drain contract."
+    },
+    {
+      "id": "SB01-F02",
+      "status": "open",
+      "owner": "SB05",
+      "evidence": "repo://src/CanDoItAll.Components.WebGlSandbox/Components/Pages/RunPlayback.razor.cs",
+      "summary": "RunPlayback observer diagnostics compare runDocument with itself."
+    },
+    {
+      "id": "SB01-F03",
+      "status": "open",
+      "owner": "SB03",
+      "evidence": "repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js",
+      "summary": "Runtime idle still reports scheduled render-loop work as a blocker without semantic idle and final render drain fields."
+    },
+    {
+      "id": "SB01-F04",
+      "status": "open",
+      "owner": "SB06",
+      "evidence": "repo://src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs",
+      "summary": "Generic Components validator still ships hardcoded economy-domain example terms."
+    },
+    {
+      "id": "SB01-F05",
+      "status": "open",
+      "owner": "SB10",
+      "evidence": "repo://src/CanDoItAll.Economy.Node/SimulationScenarios/EconomySimulationSandbox",
+      "summary": "No dedicated multi-goods exchange/investment/elite scenario pack was found in current scenario inputs."
+    }
+  ],
+  "gateResult": "pass",
+  "nextSubbundle": "SB02"
+}

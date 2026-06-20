@@ -6,6 +6,7 @@ import {
     normalizeScene,
     resolveActiveAssetProfile
 } from "./02-webgl-scene-core.js";
+import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
 import { buildAssetLookup } from "./03-webgl-scene-assets.js";
 import {
     handleClick,
@@ -27,6 +28,12 @@ import {
 } from "./06-webgl-scene-camera.js";
 import { buildDecorations, clearDynamicScene, rebuildScene } from "./11-webgl-scene-graph.js";
 import { attachRenderLoop } from "./15-webgl-scene-render-loop.js";
+import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
+import { buildHostShell } from "./19-webgl-scene-shell.js";
+import { completeCommandResult, createCommandResult } from "./20-webgl-scene-command-results.js";
+import { createAssetCache, disposeAssetCache } from "./21-webgl-scene-asset-cache.js";
+import { createDiagnostics } from "./25-webgl-scene-diagnostics.js";
+import { cancelCommandStageRunner } from "./30-webgl-scene-stage-runner.js";
 
 export function createState(host, dotNetRef, scene, options) {
     const sceneModel = normalizeScene(scene);
@@ -86,21 +93,32 @@ export function createState(host, dotNetRef, scene, options) {
 }
 
 export function updateState(state, scene, options) {
+    cancelCommandStageRunner(state, "scene-update");
     state.sceneModel = normalizeScene(scene);
     state.options = normalizeOptions(options);
     state.sceneModel.uiState.activeAssetProfile = resolveActiveAssetProfile(state);
     state.assetLookup = buildAssetLookup(state.sceneModel.assetCatalog);
     state.selectedObjectIds = new Set(state.sceneModel.uiState?.selection?.selectedObjectIds || []);
     state.hoveredObjectId = state.sceneModel.uiState?.hoveredObjectId || "";
+    clearLabelHoverState(state);
     state.diagnostics.updateCount += 1;
     rebuildScene(state);
     applyCameraState(state);
+    state.scheduleRender("scene-update");
 }
 
 export function importScene(state, scene, options) {
+    return importSceneDetailed(state, scene, options).success;
+}
+
+export function importSceneDetailed(state, scene, options) {
+    const result = createCommandResult(state, "scene-import", scene?.sceneId || "");
+    cancelCommandStageRunner(state, "scene-import");
     updateState(state, scene, options || state.options);
     state.scheduleRender("scene-import");
-    return true;
+    result.affectedObjectIds.push(...(state.sceneModel.objects || []).map(item => item.id));
+    result.affectedLinkIds.push(...(state.sceneModel.links || []).map(item => item.id));
+    return completeCommandResult(state, result);
 }
 
 export function resolveState(host) {
@@ -116,6 +134,7 @@ export function exportImageData(state) {
 export function exportScene(state) {
     updateCameraModel(state);
     const exported = clonePayload(state.sceneModel);
+    exported.revision = resolveSceneRevision(state.sceneModel);
     exported.uiState = exported.uiState || {};
     exported.uiState.hoveredObjectId = state.hoveredObjectId || "";
     exported.uiState.selection = {
@@ -124,7 +143,7 @@ export function exportScene(state) {
         contextActionId: ""
     };
     exported.uiState.activeAssetProfile = resolveActiveAssetProfile(state);
-    exported.uiState.revision = exported.uiState.revision || state.sceneModel.uiState?.revision || 0;
+    exported.uiState.revision = exported.revision;
     return exported;
 }
 
@@ -162,9 +181,12 @@ export function dispose(state) {
         return;
     }
 
+    state.disposed = true;
     if (state.animationHandle) {
         cancelAnimationFrame(state.animationHandle);
     }
+    clearLabelHoverState(state);
+    cancelCommandStageRunner(state, "dispose");
 
     state.resizeObserver?.disconnect();
     state.renderer.domElement.removeEventListener("pointermove", state.handlers.pointerMove);
@@ -177,33 +199,16 @@ export function dispose(state) {
     state.controls.removeEventListener("change", state.handlers.controlsChange);
     state.controls.dispose();
     clearDynamicScene(state);
-    state.decorations.ground && state.scene.remove(state.decorations.ground);
-    state.decorations.grid && state.scene.remove(state.decorations.grid);
-    state.renderer.dispose();
-    state.host.innerHTML = "";
-    delete state.host.__webglSceneState;
-}
+    disposeAssetCache(state);
+    for (const decoration of Object.values(state.decorations || {})) {
+        state.scene.remove(decoration);
+        disposeSceneObjectTree(decoration, state.diagnostics);
+    }
 
-function buildHostShell(host) {
-    host.innerHTML = "";
-    host.classList.add("wgl-scene-runtime-host");
-    const stage = document.createElement("div");
-    stage.className = "wgl-scene-stage";
-    const labelLayer = document.createElement("div");
-    labelLayer.className = "wgl-scene-label-layer";
-    const emptyState = document.createElement("div");
-    emptyState.className = "wgl-scene-empty-state";
-    emptyState.innerHTML = "<div class=\"wgl-scene-empty-state__card\"><p class=\"wgl-scene-empty-state__title\">No scene objects</p><p class=\"wgl-scene-empty-state__body\">Add generic scene objects to render the WebGL proof surface.</p></div>";
-    const diagnosticsPanel = document.createElement("div");
-    diagnosticsPanel.className = "wgl-scene-diagnostics";
-    const diagnosticsTitle = document.createElement("p");
-    diagnosticsTitle.className = "wgl-scene-diagnostics__title";
-    diagnosticsTitle.textContent = "Runtime";
-    const diagnosticsMeta = document.createElement("p");
-    diagnosticsMeta.className = "wgl-scene-diagnostics__meta";
-    diagnosticsPanel.append(diagnosticsTitle, diagnosticsMeta);
-    host.append(stage, labelLayer, emptyState, diagnosticsPanel);
-    return { stage, labelLayer, emptyState, diagnosticsPanel, diagnosticsMeta };
+    state.renderer.dispose();
+    state.diagnostics.disposeCount += 1;
+    state.host.replaceChildren();
+    delete state.host.__webglSceneState;
 }
 
 function addLights(scene, environment) {
@@ -231,52 +236,50 @@ function buildState(host, dotNetRef, sceneModel, options, shell, scene, renderer
         initialCamera: clonePayload(sceneModel.camera || {}),
         options,
         assetLookup: buildAssetLookup(sceneModel.assetCatalog),
-        assetCache: new Map(),
+        assetCache: createAssetCache(),
         objectLookup: new Map(),
         objectGroups: new Map(),
         objectPositions: new Map(),
         hitMeshes: [],
         linkGroups: [],
+        linkGroupsByObjectId: new Map(),
         symbolGroups: new Map(),
         labelElements: new Map(),
         selectedObjectIds: new Set(sceneModel.uiState?.selection?.selectedObjectIds || []),
         hoveredObjectId: sceneModel.uiState?.hoveredObjectId || "",
+        labelHoverObjectId: "",
+        labelHoverExpiresAt: 0,
+        labelHoverHideTimer: 0,
+        labelHoverHideTimerExpiresAt: 0,
         motions: new Map(),
+        motionQueuesByObjectId: new Map(),
+        commandStageRunner: null,
         dragState: null,
         animationHandle: 0,
+        disposed: false,
         renderRequested: true,
         renderReason: "create",
         frame: 0,
         lastRenderTimestamp: 0,
         cameraDampingFrames: 0,
         diagnostics: createDiagnostics(),
+        commandResults: [],
+        nextCommandSequence: 0,
+        nextMotionSequence: 0,
         decorations: {},
         handlers: {}
     };
 }
 
-function createDiagnostics() {
-    return {
-        createCount: 1,
-        updateCount: 0,
-        renderCount: 0,
-        loadedAssetIds: new Set(),
-        missingAssetIds: new Set(),
-        fallbackObjectIds: new Set(),
-        modelInstanceIds: new Set(),
-        primitiveInstanceIds: new Set(),
-        failedAssetUris: new Set(),
-        missingFallbackAssetIds: new Set(),
-        failedPatchCommands: new Set(),
-        animatedSymbolCount: 0,
-        estimatedTriangleCount: 0,
-        estimatedVertexCount: 0,
-        largestLoadedAssetId: "",
-        largestLoadedAssetBytes: 0,
-        lastError: "",
-        lastFrameReason: "",
-        frameTimeMs: 0
-    };
+function clearLabelHoverState(state) {
+    if (state.labelHoverHideTimer) {
+        window.clearTimeout(state.labelHoverHideTimer);
+    }
+
+    state.labelHoverObjectId = "";
+    state.labelHoverExpiresAt = 0;
+    state.labelHoverHideTimer = 0;
+    state.labelHoverHideTimerExpiresAt = 0;
 }
 
 function attachHandlers(state) {

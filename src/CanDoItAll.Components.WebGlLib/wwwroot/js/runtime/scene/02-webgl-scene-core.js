@@ -1,23 +1,15 @@
 import * as THREE from "../../../vendor/three.module.min.js";
+import { resolveSceneRevision } from "./34-webgl-scene-revisions.js";
+import { buildRuntimeBudgetDiagnostics, evaluateRuntimeBudget, normalizeRuntimeBudget } from "./38-webgl-scene-runtime-budget.js";
+import { buildRuntimeIdleState } from "./41-webgl-scene-runtime-idle-state.js";
+import { buildModelProfilerSummary } from "./25-webgl-scene-diagnostics.js";
 
 export { THREE };
 
-export const projectionModes = Object.freeze({
-    perspective: "perspective",
-    orthographic: "orthographic"
-});
+export const projectionModes = Object.freeze({ perspective: "perspective", orthographic: "orthographic" });
 
-export const primitiveKinds = Object.freeze({
-    box: "box",
-    house: "house",
-    sphere: "sphere",
-    cylinder: "cylinder",
-    cone: "cone",
-    tree: "tree",
-    person: "person",
-    marker: "marker",
-    gear: "gear"
-});
+const primitiveKindNames = ["box", "house", "sphere", "cylinder", "cone", "tree", "person", "marker", "gear"];
+export const primitiveKinds = Object.freeze(Object.fromEntries(primitiveKindNames.map(kind => [kind, kind])));
 
 export function clonePayload(value) {
     if (typeof structuredClone === "function") {
@@ -48,11 +40,7 @@ export function resolveString(value, fallback = "") {
 }
 
 export function resolveVector3(value, fallback = { x: 0, y: 0, z: 0 }) {
-    return {
-        x: resolveFiniteNumber(value?.x ?? value?.X, fallback.x || 0),
-        y: resolveFiniteNumber(value?.y ?? value?.Y, fallback.y || 0),
-        z: resolveFiniteNumber(value?.z ?? value?.Z, fallback.z || 0)
-    };
+    return { x: resolveFiniteNumber(value?.x ?? value?.X, fallback.x || 0), y: resolveFiniteNumber(value?.y ?? value?.Y, fallback.y || 0), z: resolveFiniteNumber(value?.z ?? value?.Z, fallback.z || 0) };
 }
 
 export function toThreeVector(value, fallback) {
@@ -80,6 +68,11 @@ export function normalizeScene(scene) {
     normalized.camera = normalized.camera || {};
     normalized.uiState = normalized.uiState || {};
     normalized.uiState.activeAssetProfile = normalizeAssetProfile(normalized.uiState.activeAssetProfile);
+    normalized.revision = resolveSceneRevision(normalized);
+    if (!Number.isFinite(Number(normalized.uiState.revision)) || Number(normalized.uiState.revision) <= 0) {
+        normalized.uiState.revision = normalized.revision;
+    }
+
     normalized.interaction = normalized.interaction || {};
     normalized.objects = Array.isArray(normalized.objects) ? normalized.objects : [];
     normalized.links = Array.isArray(normalized.links) ? normalized.links : [];
@@ -97,10 +90,24 @@ export function normalizeOptions(options) {
         assetQualityProfile: normalizeAssetProfile(options?.assetQualityProfile),
         showDiagnosticsPanel: options?.showDiagnosticsPanel !== false,
         showLabels: options?.showLabels !== false,
+        labelVisibilityMode: normalizeLabelVisibilityMode(options?.labelVisibilityMode),
+        labelHoverHideDelayMilliseconds: Math.max(0, Math.min(10000, resolveFiniteNumber(options?.labelHoverHideDelayMilliseconds, 2200))),
         showSymbols: options?.showSymbols !== false,
         autoFitOnCreate: options?.autoFitOnCreate !== false,
-        runtimeKey: resolveString(options?.runtimeKey, "")
+        runtimeKey: resolveString(options?.runtimeKey, ""),
+        maxCommandResultHistory: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandResultHistory, 100))),
+        maxCommandBatchChildResults: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandBatchChildResults, 5))), maxCommandBatchMessages: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandBatchMessages, 5))),
+        maxCommandBatchProofSnapshotPositions: Math.max(0, Math.min(1000, resolveFiniteNumber(options?.maxCommandBatchProofSnapshotPositions, 10))),
+        maxCommandStageJournalEntries: Math.max(20, Math.min(1000, resolveFiniteNumber(options?.maxCommandStageJournalEntries, 200))),
+        "notifyStateChanged": options?.notifyStateChanged !== false, "notifyMotionCompleted": options?.notifyMotionCompleted !== false,
+        "notifyCommandCompleted": options?.notifyCommandCompleted !== false, "notifyCommandFailed": options?.notifyCommandFailed !== false,
+        runtimeBudget: normalizeRuntimeBudget(options?.runtimeBudget)
     };
+}
+
+export function normalizeLabelVisibilityMode(value) {
+    const mode = resolveString(value, "always").toLowerCase();
+    return mode === "hover" || mode === "mouseover" ? "hover" : "always";
 }
 
 export function normalizeRenderMode(value) {
@@ -143,20 +150,12 @@ export function resolveObjectPosition(sceneObject) {
 
 export function resolveObjectSize(sceneObject) {
     const size = resolveVector3(sceneObject?.size, { x: 1, y: 1, z: 1 });
-    return {
-        x: Math.max(0.05, size.x),
-        y: Math.max(0.05, size.y),
-        z: Math.max(0.05, size.z)
-    };
+    return { x: Math.max(0.05, size.x), y: Math.max(0.05, size.y), z: Math.max(0.05, size.z) };
 }
 
 export function resolveObjectScale(sceneObject) {
     const scale = resolveVector3(sceneObject?.scale, { x: 1, y: 1, z: 1 });
-    return {
-        x: Math.max(0.01, scale.x),
-        y: Math.max(0.01, scale.y),
-        z: Math.max(0.01, scale.z)
-    };
+    return { x: Math.max(0.01, scale.x), y: Math.max(0.01, scale.y), z: Math.max(0.01, scale.z) };
 }
 
 export function resolveObjectRotation(sceneObject) {
@@ -185,29 +184,6 @@ export function createMaterial(color, options = {}) {
     });
 }
 
-export function disposeObject3D(object) {
-    if (!object) {
-        return;
-    }
-
-    object.traverse(child => {
-        if (child.userData?.skipDispose) {
-            return;
-        }
-
-        child.geometry?.dispose?.();
-        if (Array.isArray(child.material)) {
-            for (const material of child.material) {
-                material?.map?.dispose?.();
-                material?.dispose?.();
-            }
-        } else {
-            child.material?.map?.dispose?.();
-            child.material?.dispose?.();
-        }
-    });
-}
-
 export function focusHost(state) {
     try {
         state?.host?.focus?.({ preventScroll: true });
@@ -218,8 +194,13 @@ export function focusHost(state) {
 
 export function buildDiagnosticsSnapshot(state) {
     const diagnostics = state.diagnostics || {};
+    const budget = evaluateRuntimeBudget(state, diagnostics);
+    const runtimeIdle = buildRuntimeIdleState(state);
+    const modelDiagnostics = Array.from(diagnostics.modelDiagnostics?.values?.() || []);
+    const modelProfiler = buildModelProfilerSummary(modelDiagnostics, diagnostics);
     return {
         createCount: diagnostics.createCount || 0,
+        disposeCount: diagnostics.disposeCount || 0,
         updateCount: diagnostics.updateCount || 0,
         renderCount: diagnostics.renderCount || 0,
         loadedAssetCount: diagnostics.loadedAssetIds?.size || 0,
@@ -228,21 +209,117 @@ export function buildDiagnosticsSnapshot(state) {
         modelInstanceCount: diagnostics.modelInstanceIds?.size || 0,
         primitiveInstanceCount: diagnostics.primitiveInstanceIds?.size || 0,
         activeMotionCount: state.motions?.size || 0,
+        queuedMotionCount: diagnostics.queuedMotionCount || 0,
+        activeMotionIds: diagnostics.activeMotionIds || [], queuedMotionIds: diagnostics.queuedMotionIds || [],
+        motionQueueSnapshot: diagnostics.motionQueueSnapshot || [],
+        maxMotionQueueLength: diagnostics.maxMotionQueueLength || 0,
+        cancelledMotionCount: diagnostics.cancelledMotionCount || 0,
+        motionAcceptedCount: diagnostics.motionAcceptedCount || 0,
+        motionCompletedCount: diagnostics.motionCompletedCount || 0,
+        motionFailedCount: diagnostics.motionFailedCount || 0,
+        currentCommandBatchId: diagnostics.currentCommandBatchId || "",
+        currentCommandStageId: diagnostics.currentCommandStageId || "",
+        completedCommandStageCount: diagnostics.completedCommandStageCount || 0,
+        failedCommandStageCount: diagnostics.failedCommandStageCount || 0,
+        queuedCommandStageCount: diagnostics.queuedCommandStageCount || 0,
+        commandStageCancelledCount: diagnostics.commandStageCancelledCount || 0,
+        commandStageWaitSeconds: diagnostics.commandStageWaitSeconds || 0,
+        commandStageBarrierPolicy: diagnostics.commandStageBarrierPolicy || "", commandStageBarrierTarget: diagnostics.commandStageBarrierTarget || "",
+        commandStageBarrierBlockers: diagnostics.commandStageBarrierBlockers || [], commandStageBarrierEventId: diagnostics.commandStageBarrierEventId || "",
+        commandStageBarrierObjectIds: diagnostics.commandStageBarrierObjectIds || [],
+        completedCommandStageIds: diagnostics.completedCommandStageIds || [], failedCommandStageIds: diagnostics.failedCommandStageIds || [],
+        skippedCommandStageIds: diagnostics.skippedCommandStageIds || [],
+        skippedCommandStageCount: diagnostics.skippedCommandStageCount || 0,
+        lastStageError: diagnostics.lastStageError || "",
+        commandStageResultLog: diagnostics.commandStageResultLog || [],
+        commandStageQueueSnapshot: diagnostics.commandStageQueueSnapshot || [],
+        commandStageJournalCount: diagnostics.commandStageJournalCount || 0,
+        commandStageJournalDroppedCount: diagnostics.commandStageJournalDroppedCount || 0,
+        commandStageJournalCounters: diagnostics.commandStageJournalCounters || {},
+        commandStageRecentResultIds: diagnostics.commandStageRecentResultIds || [], commandStageRecentJournalEntries: diagnostics.commandStageRecentJournalEntries || [],
+        lastStageCancelReason: diagnostics.lastStageCancelReason || "",
+        runtimeStopCount: diagnostics.runtimeStopCount || 0,
+        runtimeStopGeneration: diagnostics.runtimeStopGeneration || 0,
+        lastRuntimeStopReason: diagnostics.lastRuntimeStopReason || "",
+        clearedMotionCount: diagnostics.clearedMotionCount || 0,
+        lastRuntimeStopClearedMotionCount: diagnostics.lastRuntimeStopClearedMotionCount || 0,
+        lastRuntimeStopCancelledCommandStageCount: diagnostics.lastRuntimeStopCancelledCommandStageCount || 0,
+        lastRuntimeStopIdle: !!diagnostics.lastRuntimeStopIdle, lastRuntimeStopTimedOut: !!diagnostics.lastRuntimeStopTimedOut,
+        lastRuntimeStopIdleElapsedMs: diagnostics.lastRuntimeStopIdleElapsedMs || 0, lastRuntimeStopBlockers: diagnostics.lastRuntimeStopBlockers || [],
+        ignoredStaleMotionCompletedCount: diagnostics.ignoredStaleMotionCompletedCount || 0,
         animatedSymbolCount: diagnostics.animatedSymbolCount || 0,
+        semanticIdle: runtimeIdle.semanticIdle,
+        visualIdle: runtimeIdle.visualIdle,
+        finalRenderDrained: runtimeIdle.finalRenderDrained,
+        isRenderLoopActive: !!diagnostics.isRenderLoopActive,
+        renderSchedulerMode: diagnostics.renderSchedulerMode || state.options.renderMode || "auto",
+        lastScheduledReason: diagnostics.lastScheduledReason || "",
+        lastDeltaSeconds: round(diagnostics.lastDeltaSeconds || 0, 4),
         estimatedTriangleCount: diagnostics.estimatedTriangleCount || 0,
         estimatedVertexCount: diagnostics.estimatedVertexCount || 0,
+        modelMeshCount: modelProfiler.modelMeshCount, modelVisibleMeshCount: modelProfiler.modelVisibleMeshCount,
+        modelMaterialCount: modelProfiler.modelMaterialCount, modelTransparentMaterialCount: modelProfiler.modelTransparentMaterialCount,
+        largestLoadedAssetBytes: modelProfiler.largestLoadedAssetBytes, estimatedAssetBytes: modelProfiler.estimatedAssetBytes,
         objectCount: state.sceneModel.objects.length,
+        visibleObjectCount: diagnostics.visibilityCounts?.visibleObjectCount || 0,
+        hiddenObjectCount: diagnostics.visibilityCounts?.hiddenObjectCount || 0,
+        visibleLinkCount: diagnostics.visibilityCounts?.visibleLinkCount || 0,
+        hiddenLinkCount: diagnostics.visibilityCounts?.hiddenLinkCount || 0,
+        sceneIndexSyncCount: diagnostics.sceneIndexSyncCount || 0,
+        lastSceneIndexSyncReason: diagnostics.lastSceneIndexSyncReason || "",
         symbolCount: state.symbolGroups.size,
         deterministicMode: state.options.deterministicMode,
-        activeAssetProfile: resolveActiveAssetProfile(state),
+        activeAssetProfile: budget.degraded ? "primitive" : resolveActiveAssetProfile(state),
         renderMode: state.options.renderMode || "auto",
+        ...buildRuntimeBudgetDiagnostics(budget),
         lastFrameReason: diagnostics.lastFrameReason || "",
         frameTimeMs: round(diagnostics.frameTimeMs || 0, 2),
+        averageFrameTimeMs: round(diagnostics.averageFrameTimeMs || 0, 2),
+        peakFrameTimeMs: round(diagnostics.peakFrameTimeMs || 0, 2),
+        idleSinceMs: diagnostics.idleSinceTimestamp ? round(performance.now() - diagnostics.idleSinceTimestamp, 0) : 0,
         largestLoadedAssetId: diagnostics.largestLoadedAssetId || "",
+        assetCacheMode: diagnostics.assetCacheMode || state.assetCache?.mode || "state-local", assetCacheEntryCount: diagnostics.assetCacheEntryCount || 0,
+        assetCacheHitCount: diagnostics.assetCacheHitCount || 0,
+        assetCacheMissCount: diagnostics.assetCacheMissCount || 0,
+        disposedTemplateCount: diagnostics.disposedTemplateCount || 0,
+        assetCachePendingDisposalCount: diagnostics.assetCachePendingDisposalCount || 0, assetCacheDisposedPromiseCount: diagnostics.assetCacheDisposedPromiseCount || 0, assetCacheDisposalErrorCount: diagnostics.assetCacheDisposalErrorCount || 0,
+        materialCloneCount: diagnostics.materialCloneCount || 0,
+        disposedGeometryCount: diagnostics.disposedGeometryCount || 0,
+        disposedMaterialCount: diagnostics.disposedMaterialCount || 0,
+        disposedTextureCount: diagnostics.disposedTextureCount || 0, retainedSharedTextureCount: diagnostics.retainedSharedTextureCount || 0,
+        batchCommandCount: diagnostics.batchCommandCount || 0,
+        batchStageCount: diagnostics.batchStageCount || 0,
+        batchDurationMs: diagnostics.batchDurationMs || 0,
+        commandCountBeforeNormalization: diagnostics.commandCountBeforeNormalization || 0,
+        commandCountAfterNormalization: diagnostics.commandCountAfterNormalization || 0,
+        coalescedPatchCount: diagnostics.coalescedPatchCount || 0,
+        droppedDuplicateMotionCount: diagnostics.droppedDuplicateMotionCount || 0,
+        preservedOrderedDuplicateMotionCount: diagnostics.preservedOrderedDuplicateMotionCount || 0,
+        interopCallsAvoided: diagnostics.interopCallsAvoided || 0,
+        patchedObjectCount: diagnostics.patchedObjectCount || 0,
+        fullSceneRebuildCount: diagnostics.fullSceneRebuildCount || 0,
+        transformOnlyPatchCount: diagnostics.transformOnlyPatchCount || 0,
+        symbolOnlyPatchCount: diagnostics.symbolOnlyPatchCount || 0,
+        linkOnlyPatchCount: diagnostics.linkOnlyPatchCount || 0,
+        visualReplacePatchCount: diagnostics.visualReplacePatchCount || 0,
+        mixedIncrementalPatchCount: diagnostics.mixedIncrementalPatchCount || 0,
+        graphStructurePatchCount: diagnostics.graphStructurePatchCount || 0,
+        sceneRebuildPatchCount: diagnostics.sceneRebuildPatchCount || 0,
+        lastPatchClassification: diagnostics.lastPatchClassification || "",
+        replacedObjectGroupCount: diagnostics.replacedObjectGroupCount || 0,
+        symbolOnlyUpdateCount: diagnostics.symbolOnlyUpdateCount || 0,
+        linkUpdateCount: diagnostics.linkUpdateCount || 0,
+        linkGeometryUpdateCount: diagnostics.linkGeometryUpdateCount || 0,
+        linkGeometryRebuildCount: diagnostics.linkGeometryRebuildCount || 0,
+        linksUpdatedLastFrame: diagnostics.linksUpdatedLastFrame || 0,
+        linkSyncScanCount: diagnostics.linkSyncScanCount || 0,
+        linkSyncIndexedHitCount: diagnostics.linkSyncIndexedHitCount || 0,
         lastError: diagnostics.lastError || "",
         missingAssetIds: Array.from(diagnostics.missingAssetIds || []),
         failedAssetUris: Array.from(diagnostics.failedAssetUris || []),
         missingFallbackAssetIds: Array.from(diagnostics.missingFallbackAssetIds || []),
-        failedPatchCommands: Array.from(diagnostics.failedPatchCommands || [])
+        failedPatchCommands: Array.from(diagnostics.failedPatchCommands || []),
+        failedCommandDetails: diagnostics.failedCommandDetails || [],
+        modelDiagnostics
     };
 }

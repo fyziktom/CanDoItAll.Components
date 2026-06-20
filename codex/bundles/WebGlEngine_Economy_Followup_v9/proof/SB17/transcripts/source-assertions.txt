@@ -1,0 +1,280 @@
+﻿SB17 source assertions
+Generated=2026-06-04T21:30:31.9978476-04:00
+
+## Components stop coordinator exists
+cwd=C:\repositories\CanDoItAll.Components
+pattern=WebGlRunPlaybackStopCoordinator|RuntimeStopGenerationPolicy|StopGeneration
+matchCount=11
+result=PASS
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:6:public sealed class WebGlRunPlaybackStopCoordinatorTests
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:14:        var coordinator = new WebGlRunPlaybackStopCoordinator();
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:25:                    Metadata = { ["runtimeStopGeneration"] = waitForIdle ? "2" : "1" }
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:51:        var coordinator = new WebGlRunPlaybackStopCoordinator();
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:75:            Metadata = { ["runtimeStopGeneration"] = "3" }
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:79:            Diagnostics = { ["runtimeStopGeneration"] = "4" }
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:82:        Assert.True(WebGlRunRuntimeStopGenerationPolicy.IsStale(stale, currentGeneration: 4));
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackStopCoordinatorTests.cs:83:        Assert.False(WebGlRunRuntimeStopGenerationPolicy.IsStale(current, currentGeneration: 4));
+src/CanDoItAll.Components.WebGlRunLib/Playback\WebGlRunPlaybackStopCoordinator.cs:43:public sealed class WebGlRunPlaybackStopCoordinator
+src/CanDoItAll.Components.WebGlRunLib/Playback\WebGlRunRuntimeStopGenerationPolicy.cs:6:public static class WebGlRunRuntimeStopGenerationPolicy
+src/CanDoItAll.Components.WebGlRunLib/Playback\WebGlRunRuntimeStopGenerationPolicy.cs:22:            !values.TryGetValue("runtimeStopGeneration", out string? value) ||
+
+## Components runtime idle diagnostics include semantic/visual/final render state
+cwd=C:\repositories\CanDoItAll.Components
+pattern=semanticIdle|visualIdle|finalRenderDrained|runtimeIdleBlockers|command-stage
+matchCount=64
+result=PASS
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:227:              "semanticIdle": true,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:228:              "visualIdle": true,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:229:              "finalRenderDrained": true
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:266:                "command-stage:barrier",
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:269:              "semanticIdle": false,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:270:              "visualIdle": false,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:271:              "finalRenderDrained": false,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:274:                "command-stage:barrier"
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:284:                "semanticIdle": false,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:285:                "visualIdle": false,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:286:                "finalRenderDrained": false,
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:302:        Assert.Contains("command-stage:barrier", result.Blockers);
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs:78:        Assert.Equal("command-stage-cancel", cancelStages.CommandKind);
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs:102:                Blockers = ["motion:active:1", "command-stage:queued:1"],
+tests/CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs:249:                    CommandKind = "command-stage-cancel",
+src/CanDoItAll.Components.WebGlLib\Components\Scene\WebGlSceneView.razor:344:            result.Metadata["runtimeIdleBlockers"] = string.Join(",", idleResult.Blockers);
+src/CanDoItAll.Components.WebGlLib\Components\Scene\WebGlSceneView.razor:345:            result.Diagnostics["runtimeIdleBlockers"] = string.Join(",", idleResult.Blockers);
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:244:        semanticIdle: runtimeIdle.semanticIdle,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:245:        visualIdle: runtimeIdle.visualIdle,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:246:        finalRenderDrained: runtimeIdle.finalRenderDrained,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:9:            semanticIdle: false,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:10:            visualIdle: false,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:11:            finalRenderDrained: false,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:20:    const semanticIdle = semanticBlockers.length === 0;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:21:    const explicitFinalRenderDrained = options.finalRenderDrained === true ||
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:22:        state.diagnostics?.finalRenderDrained === true;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:23:    const finalScheduledRenderDrained = semanticIdle &&
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:26:    const visualIdle = rawVisualBlockers.length === 0 || finalScheduledRenderDrained;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:27:    const finalRenderDrained = semanticIdle && (rawVisualBlockers.length === 0 || finalScheduledRenderDrained);
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:28:    const visualBlockers = visualIdle ? [] : rawVisualBlockers;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:31:        idle: semanticIdle && visualIdle,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:32:        semanticIdle,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:33:        visualIdle,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:34:        finalRenderDrained,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:57:    addCountBlocker(blockers, "command-stage:queued", queuedStageCount);
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:59:        blockers.push("command-stage:barrier");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:63:        blockers.push("command-stage:active");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:67:        blockers.push("command-stage:automatic-work");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:102:    return idleState?.semanticIdle === true &&
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:103:        idleState.visualIdle !== true &&
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:114:    state.diagnostics.semanticIdle = resolved.semanticIdle === true;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:115:    state.diagnostics.visualIdle = resolved.visualIdle === true;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\41-webgl-scene-runtime-idle-state.js:116:    state.diagnostics.finalRenderDrained = resolved.finalRenderDrained === true;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:46:        state.scheduleRender("command-stage");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\30-webgl-scene-stage-runner.js:63:        state.scheduleRender("command-stage");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:57:        semanticIdle: true,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:58:        visualIdle: true,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:59:        finalRenderDrained: false,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js:9:            state.diagnostics.finalRenderDrained = false;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js:23:            state.diagnostics.finalRenderDrained = true;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js:40:        return "command-stage";
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\22-webgl-scene-scheduler.js:94:        state.diagnostics.finalRenderDrained = true;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\39-webgl-scene-runtime-stop.js:8:    const result = createCommandResult(state, "command-stage-cancel", normalizedReason);
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\39-webgl-scene-runtime-stop.js:25:    state.scheduleRender("command-stage-cancel");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\40-webgl-scene-runtime-idle.js:27:        consecutiveSemanticIdleProbes = lastState.semanticIdle
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\40-webgl-scene-runtime-idle.js:60:        semanticIdle: lastState.semanticIdle,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\40-webgl-scene-runtime-idle.js:61:        visualIdle: lastState.visualIdle,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\40-webgl-scene-runtime-idle.js:62:        finalRenderDrained: lastState.finalRenderDrained,
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\40-webgl-scene-runtime-idle.js:93:        state.diagnostics.finalRenderDrained = true;
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:102:        state.scheduleRender("command-stage");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:160:    result.metadata.runtimeIdleBlockers = blockers.join(",");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:162:    result.diagnostics.runtimeIdleBlockers = blockers.join(",");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:174:    result.metadata.runtimeIdleBlockers = (idleResult?.blockers || []).join(",");
+src/CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\26-webgl-scene-command-batch.js:178:    result.diagnostics.runtimeIdleBlockers = result.metadata.runtimeIdleBlockers;
+
+## Components WebGlRun validation remains generic/domain boundary driven
+cwd=C:\repositories\CanDoItAll.Components
+pattern=ForbiddenExecutableIdTerms|GenericExecutableBoundary|SourceProvenance|ForbiddenTerm
+matchCount=27
+result=PASS
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:44:        Assert.Equal("sha256:input", result.RunSourceProvenance["inputPackHash"]);
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:45:        Assert.Equal("sha256:run", result.RunSourceProvenance["runPlanHash"]);
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:46:        Assert.Equal("sha256:visual", result.RunSourceProvenance["visualMappingHash"]);
+tests/CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:158:        Assert.Equal("sha256:input", snapshot.RunSourceProvenance["inputPackHash"]);
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:128:        bool allowSourceProvenance = true,
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:133:            if (allowSourceProvenance && WebGlRunGenericBoundaryPolicy.IsSourceProvenanceKey(item.Key))
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:135:                WebGlRunGenericBoundaryPolicy.ValidateSourceProvenance($"{scope}.{item.Key}", item.Key, item.Value, errors);
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:194:    private const int MaxSourceProvenanceKeyLength = 96;
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:195:    private const int MaxSourceProvenanceValueLength = 512;
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:197:    public static bool IsSourceProvenanceKey(string key)
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:200:    public static void ValidateSourceProvenance(string scope, string key, string value, List<string> errors)
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:202:        if (!AllowedSourceProvenanceKeys.Contains(key))
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:207:        if (key.Length > MaxSourceProvenanceKeyLength)
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:209:            errors.Add($"{scope} exceeds the source provenance key length limit of {MaxSourceProvenanceKeyLength} characters.");
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:220:        if (value.Length > MaxSourceProvenanceValueLength)
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:222:            errors.Add($"{scope}.value exceeds the source provenance length limit of {MaxSourceProvenanceValueLength} characters.");
+src/CanDoItAll.Components.WebGlRunLib\Documents\WebGlRunDocumentValidator.cs:232:    public static readonly HashSet<string> AllowedSourceProvenanceKeys = new(StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionPlanValidator.cs:80:            allowSourceProvenance: false,
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:13:    private readonly Dictionary<string, string> runSourceProvenance;
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:23:            ExtractRunSourceProvenance(document.Metadata))
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:34:        IReadOnlyDictionary<string, string>? runSourceProvenance = null)
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:41:        this.runSourceProvenance = new Dictionary<string, string>(runSourceProvenance ?? new Dictionary<string, string>(), StringComparer.Ordinal);
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:63:            RunSourceProvenance = new Dictionary<string, string>(runSourceProvenance, StringComparer.Ordinal)
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:166:            RunSourceProvenance = new Dictionary<string, string>(runSourceProvenance, StringComparer.Ordinal),
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:277:    private static Dictionary<string, string> ExtractRunSourceProvenance(IReadOnlyDictionary<string, string> metadata)
+src/CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackResult.cs:33:    public Dictionary<string, string> RunSourceProvenance { get; set; } = [];
+src/CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunRuntimeSnapshot.cs:69:    public Dictionary<string, string> RunSourceProvenance { get; set; } = [];
+
+## Economy renderer binding boundary exists
+cwd=C:\repositories\CanDoItAll.Economy
+pattern=RendererBinding|rendererBinding|EconomyWebGlRendererBindingResolver|EconomyWebGlMappingBoundary
+matchCount=41
+result=PASS
+src\CanDoItAll.Economy.Node\SimulationScenarios\EconomySimulationSandbox\multi-goods-elite\visual.mapping.json:41:  "rendererBinding": {
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlVisualStateCatalogProjector.cs:25:                            EconomyWebGlRendererBindingResolver.ResolvePoseAsset(mapping, pose.PoseKey)),
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlVisualStateCatalogProjector.cs:28:                            EconomyWebGlRendererBindingResolver.ResolvePoseVariant(mapping, pose.PoseKey)),
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlVisualStateCatalogProjector.cs:44:                            EconomyWebGlRendererBindingResolver.ResolveSymbolAsset(mapping, FirstNonEmpty(symbol.SymbolKey, symbol.SymbolCategory), symbol.SymbolCategory)),
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlSymbolProjector.cs:22:                EconomyWebGlRendererBindingResolver.ResolveSymbolAsset(mapping, FirstNonEmpty(mapped?.SymbolKey, mapped?.SymbolCategory, symbol.Category), symbol.Category)),
+tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:89:    public void MultiGoodsVisualMapping_UsesRendererBindingWithoutBridgeBoundNeutralFields()
+tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:95:        Assert.NotEmpty(mapping.RendererBinding.CategoryAssetIds);
+tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:96:        Assert.NotEmpty(mapping.RendererBinding.PoseAssetIds);
+tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:97:        Assert.NotEmpty(mapping.RendererBinding.SymbolAssetIds);
+tests\CanDoItAll.Economy.Tests\SimulationExperimentLoaderTests.cs:98:        Assert.NotEmpty(mapping.RendererBinding.AnchorKeys);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunValidator.cs:52:        WebGlRunDocumentValidationResult validation = new WebGlRunDocumentValidator(EconomyWebGlMappingBoundary.StrictGenericBoundaryOptions).Validate(document);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:6:internal static class EconomyWebGlRendererBindingResolver
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:9:        => Resolve(mapping.RendererBinding.CategoryAssetIds, visualCategory);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:12:        => Resolve(mapping.RendererBinding.NodeAssetIds, sourceKind, visualCategory);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:15:        => Resolve(mapping.RendererBinding.PoseAssetIds, poseKey);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:18:        => Resolve(mapping.RendererBinding.PoseVariantIds, poseKey);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:21:        => Resolve(mapping.RendererBinding.SymbolAssetIds, symbolKey, symbolCategory);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:24:        => Resolve(mapping.RendererBinding.AnchorKeys, alias);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRendererBindingResolver.cs:27:        => FirstNonEmpty(mapping.Fallbacks.DiagnosticObjectId, mapping.RendererBinding.DiagnosticObjectId);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlProjectionDiagnostics.cs:42:        string diagnosticObjectId = EconomyWebGlRendererBindingResolver.ResolveDiagnosticObjectId(mapping);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlProjectionDiagnostics.cs:82:            metadata[$"diagnostic.{index}"] = EconomyWebGlMappingBoundary.ToStableToken(ResolveDiagnosticCode(diagnostic), diagnostic);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlNodeProjector.cs:28:            EconomyWebGlRendererBindingResolver.ResolveCategoryAsset(mapping, category?.VisualCategory ?? node.Category),
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlNodeProjector.cs:29:            EconomyWebGlRendererBindingResolver.ResolveNodeAsset(mapping, node.Kind, node.Category));
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlMappingBoundary.cs:7:public static class EconomyWebGlMappingBoundary
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:83:            ActionId = EconomyWebGlMappingBoundary.ToGenericActionId(action.ActionId),
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:185:        => EconomyWebGlRendererBindingResolver.ResolveAnchorOrDefault(mapping, value);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:143:            string genericActionId = EconomyWebGlMappingBoundary.ToGenericActionId(action.ActionId);
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:185:        string genericActionId = EconomyWebGlMappingBoundary.ToGenericActionId(action.ActionId);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:80:                mapping.RendererBinding.NodeAssetIds,
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:98:                ResolveRendererValue(mapping.RendererBinding.CategoryAssetIds, category.VisualCategory));
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:114:                ResolveRendererValue(mapping.RendererBinding.PoseAssetIds, pose.PoseKey));
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:117:                ResolveRendererValue(mapping.RendererBinding.PoseVariantIds, pose.PoseKey));
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:137:                ResolveRendererValue(mapping.RendererBinding.SymbolAssetIds, symbolKey, symbol.SymbolCategory));
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingValidation.cs:152:                ResolveRendererValue(mapping.RendererBinding.AnchorKeys, alias.Alias));
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingRendererBinding.cs:3:public sealed class EconomyVisualRendererBindingDefinition
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\EconomyVisualMappingDefinition.cs:14:    public EconomyVisualRendererBindingDefinition RendererBinding { get; set; } = new();
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:35:    public void MultiGoodsEliteFixtureProjectsWithRendererBindingAndStrictGenericRunBoundary()
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:39:        WebGlRunDocumentValidationResult genericValidation = new WebGlRunDocumentValidator(EconomyWebGlMappingBoundary.StrictGenericBoundaryOptions).Validate(session.RunDocument);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:138:        WebGlRunDocumentValidationResult genericValidation = new WebGlRunDocumentValidator(EconomyWebGlMappingBoundary.StrictGenericBoundaryOptions).Validate(document);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:180:        WebGlRunDocumentValidationResult genericValidation = new WebGlRunDocumentValidator(EconomyWebGlMappingBoundary.StrictGenericBoundaryOptions).Validate(document);
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\multi-goods-elite\visual.mapping.json:41:  "rendererBinding": {
+
+## Economy headless manifest hardening and diff categories exist
+cwd=C:\repositories\CanDoItAll.Economy
+pattern=ApprovedVolatileArtifacts|manifest-diff|CategoryCounts|scenario|model|policy|oracle|runtime
+matchCount=1097
+result=PASS
+src/CanDoItAll.Economy.Cli\Program.cs:43:        new("scenario run", "Run a simulation scenario headlessly from a catalog scenario id or legacy experiment path.", RunScenarioHeadlessAsync),
+src/CanDoItAll.Economy.Cli\Program.cs:44:        new("scenario manifest-diff", "Compare two headless run manifests and categorize scenario/model/policy/oracle/runtime changes.", DiffScenarioHeadlessManifestAsync)
+src/CanDoItAll.Economy.Cli\Program.cs:98:        ScenarioId? scenarioId = ToScenarioId(commandLine.Get("scenario", null));
+src/CanDoItAll.Economy.Cli\Program.cs:101:            .ReadConfirmedTransactionsAsync(ledgerId, scenarioId, cancellationToken)
+src/CanDoItAll.Economy.Cli\Program.cs:129:                ToScenarioId(commandLine.Get("scenario", null)),
+src/CanDoItAll.Economy.Cli\Program.cs:149:                ToScenarioId(commandLine.Get("scenario", null)),
+src/CanDoItAll.Economy.Cli\Program.cs:168:                ToScenarioId(commandLine.Get("scenario", null)),
+src/CanDoItAll.Economy.Cli\Program.cs:287:                    commandLine.GetOptional("scenario")),
+src/CanDoItAll.Economy.Cli\Program.cs:309:                    commandLine.GetOptional("scenario")),
+src/CanDoItAll.Economy.Cli\Program.cs:327:                    commandLine.GetOptional("scenario")),
+src/CanDoItAll.Economy.Cli\Program.cs:357:        string outputDirectory = Require(commandLine, "output", "scenario run requires --output <directory>.");
+src/CanDoItAll.Economy.Cli\Program.cs:361:            OracleCoverageLabel = commandLine.GetBool("no-oracle", false)
+src/CanDoItAll.Economy.Cli\Program.cs:363:                : commandLine.Get("oracle-coverage", string.Empty)
+src/CanDoItAll.Economy.Cli\Program.cs:366:        string scenarioId = commandLine.Get("scenario", string.Empty);
+src/CanDoItAll.Economy.Cli\Program.cs:374:                throw new InvalidOperationException("scenario run --all requires --catalog <directory>.");
+src/CanDoItAll.Economy.Cli\Program.cs:384:                $"OK scenarios={batch.Runs.Count} output={Path.GetFullPath(outputDirectory)} statuses={string.Join(",", batch.StatusByScenario.Select(static item => $"{item.Key}:{item.Value}"))}");
+src/CanDoItAll.Economy.Cli\Program.cs:389:        if (!string.IsNullOrWhiteSpace(scenarioId))
+src/CanDoItAll.Economy.Cli\Program.cs:393:                throw new InvalidOperationException("scenario run with --scenario requires --catalog <directory>.");
+src/CanDoItAll.Economy.Cli\Program.cs:398:                scenarioId,
+src/CanDoItAll.Economy.Cli\Program.cs:408:            throw new InvalidOperationException("scenario run requires --scenario <id> with --catalog <directory>, --all with --catalog, or --experiment <path>.");
+src/CanDoItAll.Economy.Cli\Program.cs:414:            $"OK scenario={run.ScenarioId} status={run.ReadinessReport?.Status ?? EconomyExperimentReadinessStatuses.Failed} confidence={run.ReadinessReport?.ConfidenceLevel ?? EconomyExperimentConfidenceLevels.L0} runHash={run.RunHash} manifest={run.ReproducibilityManifestPath} researchReady={run.ReadinessReport?.ResearchReady.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "False"} output={run.OutputDirectory}");
+src/CanDoItAll.Economy.Cli\Program.cs:421:        string baselinePath = Require(commandLine, "baseline", "scenario manifest-diff requires --baseline <headless-run-manifest.json>.");
+src/CanDoItAll.Economy.Cli\Program.cs:422:        string candidatePath = Require(commandLine, "candidate", "scenario manifest-diff requires --candidate <headless-run-manifest.json>.");
+src/CanDoItAll.Economy.Cli\Program.cs:430:        string categories = diff.CategoryCounts.Count == 0
+src/CanDoItAll.Economy.Cli\Program.cs:432:            : string.Join(",", diff.CategoryCounts.Select(static item => $"{item.Key}:{item.Value}"));
+src/CanDoItAll.Economy.Cli\Program.cs:433:        Console.WriteLine($"{(diff.AreEquivalent ? "OK" : "DIFF")} manifest-diff differences={diff.Differences.Count} categories={categories}");
+src/CanDoItAll.Economy.Cli\Program.cs:462:                ToScenarioId(commandLine.Get("scenario", null))),
+src/CanDoItAll.Economy.Cli\Program.cs:592:        Console.WriteLine("  --provider postgres|inmemory --connection <connection> --database <name> --ledger <id> --scenario <id>");
+src/CanDoItAll.Economy.Cli\Program.cs:596:        Console.WriteLine("  --catalog <directory> --scenario <id> --output <directory> [--clean] [--no-oracle] [--json]");
+src/CanDoItAll.Economy.Cli\Program.cs:597:        Console.WriteLine("  --catalog <directory> --all --output <directory> [--clean] [--no-oracle] [--json]");
+src/CanDoItAll.Economy.Cli\Program.cs:606:        Console.WriteLine("  economy scenario run --catalog ./SimulationScenarios/EconomySimulationSandbox --scenario shared-well --output ./out --no-oracle");
+src/CanDoItAll.Economy.Cli\Program.cs:609:        Console.WriteLine("  scenario lifecycle/fork commands");
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:39:    public const string Scenario = "scenario";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:43:    public const string Runtime = "runtime";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:45:    public const string Oracle = "oracle";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:55:    public const string OracleValid = "oracle-valid";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:64:    public const string GoldenOracle = "golden-oracle";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:65:    public const string NoOracle = "no-oracle";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:71:    public const string OracleEconomicCorrectness = "oracle-economic-correctness";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:79:    public const string L0 = "L0-invalid-scenario";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:80:    public const string L1 = "L1-scenario-loaded";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:84:    public const string L5 = "L5-browser-runtime-and-ui-verified";
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:349:        SimulationExperimentPolicy policy = options.Policy ?? SimulationExperimentPolicy.ResearchStrict;
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:352:        EconomyExperimentValidityBand scenario = BuildBand(EconomyExperimentValidityBands.Scenario, ScenarioMessages(projection));
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:356:        EconomyExperimentValidityBand runtime = BuildRuntimeBand(options);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:358:        EconomyExperimentValidityBand oracle = BuildOracleBand(options);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:359:        EconomyExperimentValidityBand browserObserver = BuildBrowserObserverBand(runtime, ui);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:362:        ApplyUnclassifiedDiagnosticFailures(projectionBand, diagnosticClassifications, policy);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:369:            Scenario = scenario,
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:373:            Runtime = runtime,
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:375:            Oracle = oracle,
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:386:                ["oracleProofExercised"] = options.OracleProofExercised.ToString(System.Globalization.CultureInfo.InvariantCulture),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:387:                ["oracleCoverageLabel"] = ResolveOracleCoverageLabel(options),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:389:                ["runtimeEvidenceCount"] = options.RuntimeEvidence.Count.ToString(System.Globalization.CultureInfo.InvariantCulture),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:391:                ["oracleEvidenceCount"] = options.OracleEvidence.Count.ToString(System.Globalization.CultureInfo.InvariantCulture),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:392:                ["validRuntimeEvidenceCount"] = runtime.Metadata.GetValueOrDefault("validEvidenceCount", "0"),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:394:                ["validOracleEvidenceCount"] = oracle.Metadata.GetValueOrDefault("validEvidenceCount", "0"),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:395:                ["runtimeEvidenceValidatorsPassed"] = runtime.Metadata.GetValueOrDefault("evidenceValidatorsPassed", "False"),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:397:                ["oracleEvidenceValidatorsPassed"] = oracle.Metadata.GetValueOrDefault("evidenceValidatorsPassed", "False"),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:399:                ["policyId"] = policy.PolicyId,
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:400:                ["policyMode"] = SimulationExperimentModeNames.ToName(policy.Mode),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:401:                ["researchClaimsAllowed"] = policy.ResearchClaimsAllowed.ToString(System.Globalization.CultureInfo.InvariantCulture),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:402:                ["warningBudget"] = ResolveWarningBudget(options, policy).ToString(System.Globalization.CultureInfo.InvariantCulture),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:412:        FinalizeHardGateReport(report, options, policy);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:518:        EconomyExperimentValidityBand runtime,
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:521:        bool runtimeExercised = IsExercised(runtime);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:523:        bool exercised = runtimeExercised && uiExercised;
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:524:        bool evidenceValidatorsPassed = EvidenceValidatorsPassed(runtime) && EvidenceValidatorsPassed(ui);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:525:        List<string> errors = [.. runtime.Errors.Concat(ui.Errors).Distinct(StringComparer.Ordinal)];
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:526:        List<string> warnings = [.. runtime.Warnings.Concat(ui.Warnings).Distinct(StringComparer.Ordinal)];
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:540:                ["runtimeExercised"] = runtimeExercised.ToString(System.Globalization.CultureInfo.InvariantCulture),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:543:                ["runtimeEvidenceValidatorsPassed"] = runtime.Metadata.GetValueOrDefault("evidenceValidatorsPassed", "False"),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:545:                ["runtimeEvidenceCount"] = runtime.Metadata.GetValueOrDefault("evidenceCount", "0"),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:547:                ["validRuntimeEvidenceCount"] = runtime.Metadata.GetValueOrDefault("validEvidenceCount", "0"),
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:666:        SimulationExperimentPolicy policy)
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:668:        report.WarningBudgetReport = BuildWarningBudgetReport(report, options, policy);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:669:        ApplyWarningAllowlist(report, ResolveAllowlistedWarningCodes(options, policy));
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:679:                               policy.ResearchClaimsAllowed &&
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:687:        report.Status = ResolveStatus(report, policy);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentReadiness.cs:693:        SimulationExperimentPolicy policy)
+
+## Economy factor materialization and property proof exist
+cwd=C:\repositories\CanDoItAll.Economy
+pattern=effectiveScenarioHash|JsonPointer|MaterializedFactor|ConservationProperty_FailsOnNegativeMutation|IndependentEvents_ArePermutationInvariant
+matchCount=19
+result=PASS
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:190:    private static readonly HashSet<string> AllowedScenarioJsonPointerRoots = new(StringComparer.Ordinal)
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:574:                return ApplyScenarioJsonPointer(ref definition, factor, level, value, effects);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:813:    private static bool ApplyScenarioJsonPointer(
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:827:        if (!IsSafeScenarioJsonPointer(pointer))
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:834:        if (!TryResolveJsonPointerTarget(root, pointer, out JsonNode? oldNode, out Action<JsonNode?> replace))
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:839:        JsonNode? newNode = CreateJsonPointerValue(value, oldNode, factor, level);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:950:    private static bool IsSafeScenarioJsonPointer(string pointer)
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:957:        string[] segments = ParseJsonPointerSegments(pointer);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:959:               AllowedScenarioJsonPointerRoots.Contains(segments[0]) &&
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:966:    private static bool TryResolveJsonPointerTarget(
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:974:        string[] segments = ParseJsonPointerSegments(pointer);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:983:            current = ResolveJsonPointerChild(current, segments[index]);
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:1015:    private static JsonNode? ResolveJsonPointerChild(JsonNode? node, string segment)
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:1033:    private static string[] ParseJsonPointerSegments(string pointer)
+src/CanDoItAll.Economy.SimulationSandbox\EconomyExperimentDesignHarness.cs:1039:    private static JsonNode? CreateJsonPointerValue(
+tests/CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:1252:    public void ExperimentDesignHarness_MaterializesJsonPointerFactorsAndRecordsEffectiveScenarioHashes()
+tests/CanDoItAll.Economy.Tests\SimulationEconomicTrustHardeningTests.cs:1377:            Assert.Contains("effectiveScenarioHash", summaryJson, StringComparison.Ordinal);
+tests/CanDoItAll.Economy.Tests\SimulationMetamorphicPropertyTests.cs:52:    public void IndependentEvents_ArePermutationInvariantForFinalState()
+tests/CanDoItAll.Economy.Tests\SimulationMetamorphicPropertyTests.cs:86:    public void ConservationProperty_FailsOnNegativeMutation()

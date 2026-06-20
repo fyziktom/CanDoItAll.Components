@@ -1,41 +1,106 @@
-import { round, resolveObjectPosition } from "./02-webgl-scene-core.js";
-import { notifyStateChanged } from "./05-webgl-scene-interaction.js";
+import {
+    round,
+    resolveObjectPosition,
+    resolveObjectRotation,
+    resolveObjectScale
+} from "./02-webgl-scene-core.js";
 import { updateObjectRuntimeTransform } from "./11-webgl-scene-graph.js";
+import {
+    commandLifecycleStates,
+    completeCommandResult,
+    createCommandResult,
+    failCommand,
+    setCommandLifecycle
+} from "./20-webgl-scene-command-results.js";
+import { notifyStateChanged } from "./24-webgl-scene-notifications.js";
+import {
+    activateNextMotion,
+    clearObjectMotionState,
+    clearQueuedObjectMotions,
+    enqueueObjectMotion,
+    getObjectQueue,
+    hasActiveObjectMotion,
+    hasObjectMotion,
+    syncMotionQueueDiagnostics
+} from "./29-webgl-scene-motion-queues.js";
 
 export function enqueueMotion(state, command) {
-    const normalized = normalizeCommand(state, command);
+    return enqueueMotionDetailed(state, command).success;
+}
+
+export function enqueueMotionDetailed(state, command) {
+    const result = createCommandResult(state, "motion-enqueue", command?.motionId || command?.commandId || "");
+    const normalized = normalizeCommand(state, command, result);
     if (!normalized) {
-        return false;
+        return completeCommandResult(state, result);
     }
 
-    if (normalized.replaceExistingForObject !== false) {
-        for (const [motionId, motion] of state.motions.entries()) {
-            if (motion.objectId === normalized.objectId) {
-                state.motions.delete(motionId);
-            }
-        }
+    if (normalized.queuePolicy === "reject-if-active" && hasObjectMotion(state, normalized.objectId)) {
+        failMotion(state, result, `Motion target '${normalized.objectId}' already has active or queued motion.`);
+        result.metadata.queuePolicy = normalized.queuePolicy;
+        return completeCommandResult(state, result);
+    }
+
+    if (normalized.queuePolicy === "replace") {
+        clearQueuedObjectMotions(state, normalized.objectId, result);
+    }
+
+    if (normalized.queuePolicy === "cancel-and-replace") {
+        clearObjectMotionState(state, normalized.objectId);
+    }
+
+    if ((normalized.queuePolicy === "append" || normalized.queuePolicy === "replace") &&
+        hasActiveObjectMotion(state, normalized.objectId)) {
+        enqueueObjectMotion(state, normalized);
+        state.diagnostics.motionAcceptedCount += 1;
+        result.commandId = normalized.motionId;
+        result.affectedObjectIds.push(normalized.objectId);
+        result.metadata.motionQueueMode = normalized.queuePolicy;
+        result.metadata.queuePolicy = normalized.queuePolicy;
+        result.metadata.motionQueueDepth = String(getObjectQueue(state, normalized.objectId).length);
+        setCommandLifecycle(result, commandLifecycleStates.scheduled, false);
+        state.scheduleRender("motion-queued");
+        return completeCommandResult(state, result);
     }
 
     state.motions.set(normalized.motionId, normalized);
+    state.diagnostics.motionAcceptedCount += 1;
+    syncMotionQueueDiagnostics(state);
+    result.commandId = normalized.motionId;
+    result.affectedObjectIds.push(normalized.objectId);
+    result.metadata.queuePolicy = normalized.queuePolicy;
+    setCommandLifecycle(result, commandLifecycleStates.active, false);
     state.scheduleRender("motion-enqueued");
-    return true;
+    return completeCommandResult(state, result);
 }
 
 export function clearMotions(state, objectId) {
+    return clearMotionsDetailed(state, objectId).success;
+}
+
+export function clearMotionsDetailed(state, objectId) {
+    const result = createCommandResult(state, "motion-clear", "");
     if (!objectId) {
+        const affectedObjectIds = new Set(Array.from(state.motions.values()).map(motion => motion.objectId));
+        let cancelledCount = state.motions.size;
+        for (const [queuedObjectId, queue] of state.motionQueuesByObjectId || []) {
+            affectedObjectIds.add(queuedObjectId);
+            cancelledCount += queue.length;
+        }
+
+        result.affectedObjectIds.push(...affectedObjectIds);
         state.motions.clear();
+        state.motionQueuesByObjectId?.clear();
+        state.diagnostics.cancelledMotionCount = (state.diagnostics.cancelledMotionCount || 0) + cancelledCount;
+        syncMotionQueueDiagnostics(state);
         state.scheduleRender("motion-clear");
-        return true;
+        return completeCommandResult(state, result);
     }
 
-    for (const [motionId, motion] of state.motions.entries()) {
-        if (motion.objectId === objectId) {
-            state.motions.delete(motionId);
-        }
-    }
+    clearObjectMotionState(state, objectId, result);
 
     state.scheduleRender("motion-clear");
-    return true;
+    return completeCommandResult(state, result);
 }
 
 export function advanceMotions(state, deltaSeconds) {
@@ -54,17 +119,17 @@ export function advanceMotions(state, deltaSeconds) {
         motion.elapsedSeconds += deltaSeconds;
         const t = Math.min(1, motion.elapsedSeconds / Math.max(motion.durationSeconds, 0.001));
         const eased = applyEasing(t, motion.easing);
-        sceneObject.position = {
-            x: round(lerp(motion.startPosition.x, motion.targetPosition.x, eased), 3),
-            y: round(lerp(motion.startPosition.y, motion.targetPosition.y, eased), 3),
-            z: round(lerp(motion.startPosition.z, motion.targetPosition.z, eased), 3)
-        };
-        updateObjectRuntimeTransform(state, motion.objectId, true);
+        sceneObject.position = lerpVector(motion.startPosition, motion.targetPosition, eased, 3);
+        sceneObject.rotation = lerpVector(motion.startRotation, motion.targetRotation, eased, 4);
+        sceneObject.scale = lerpVector(motion.startScale, motion.targetScale, eased, 4);
+        updateObjectRuntimeTransform(state, motion.objectId, false);
 
         if (t >= 1) {
             if (motion.snapAtEnd !== false) {
                 sceneObject.position = motion.targetPosition;
-                updateObjectRuntimeTransform(state, motion.objectId, true);
+                sceneObject.rotation = motion.targetRotation;
+                sceneObject.scale = motion.targetScale;
+                updateObjectRuntimeTransform(state, motion.objectId, false);
             }
 
             completed.push(motion.motionId);
@@ -72,7 +137,13 @@ export function advanceMotions(state, deltaSeconds) {
     }
 
     for (const motionId of completed) {
+        const motion = state.motions.get(motionId);
         state.motions.delete(motionId);
+        if (motion) {
+            state.diagnostics.motionCompletedCount += 1;
+            notifyMotionCompleted(state, motion);
+            activateNextMotion(state, motion.objectId, vectorPayload);
+        }
     }
 
     if (completed.length) {
@@ -80,17 +151,24 @@ export function advanceMotions(state, deltaSeconds) {
     }
 
     state.scheduleRender(state.motions.size ? "motion" : "motion-complete");
+    syncMotionQueueDiagnostics(state);
 }
 
-function normalizeCommand(state, command) {
+
+function normalizeCommand(state, command, result) {
     const objectId = command?.objectId || "";
     const sceneObject = objectId ? state.objectLookup.get(objectId) : null;
     if (!sceneObject) {
-        return failMotion(state, `Motion target '${objectId}' was not found.`);
+        failMotion(state, result, `Motion target '${objectId}' was not found.`);
+        return null;
     }
 
-    const startPosition = resolveObjectPosition(sceneObject);
+    const startPosition = vectorPayload(resolveObjectPosition(sceneObject));
+    const startRotation = resolveObjectRotation(sceneObject);
+    const startScale = resolveObjectScale(sceneObject);
     const targetPosition = normalizePosition(command.targetPosition, startPosition);
+    const targetRotation = command.targetRotation ? normalizePosition(command.targetRotation, startRotation) : startRotation;
+    const targetScale = command.targetScale ? normalizeScale(command.targetScale, startScale) : startScale;
     const distance = Math.hypot(
         targetPosition.x - startPosition.x,
         targetPosition.y - startPosition.y,
@@ -103,16 +181,43 @@ function normalizeCommand(state, command) {
             : distance / Math.max(speed, 0.001));
 
     return {
-        motionId: command.motionId || `${objectId}:${Date.now()}`,
+        motionId: command.motionId || nextMotionId(state, objectId),
         objectId,
-        startPosition: { x: startPosition.x, y: startPosition.y, z: startPosition.z },
+        runtimeStopGeneration: state.runtimeStopGeneration || 0,
+        startPosition,
         targetPosition,
+        startRotation,
+        targetRotation,
+        startScale,
+        targetScale,
         durationSeconds: duration,
         elapsedSeconds: 0,
         easing: command.easing || "linear",
         snapAtEnd: command.snapAtEnd !== false,
-        replaceExistingForObject: command.replaceExistingForObject !== false
+        replaceExistingForObject: command.replaceExistingForObject !== false,
+        queuePolicy: normalizeQueuePolicy(command)
     };
+}
+
+function normalizeQueuePolicy(command) {
+    const value = String(
+        command.queuePolicy ||
+        command.metadata?.queuePolicy ||
+        command.queueMode ||
+        command.metadata?.queueMode ||
+        ""
+    ).trim().toLowerCase();
+    switch (value) {
+        case "append":
+        case "replace":
+        case "cancel-and-replace":
+        case "reject-if-active":
+            return value;
+        case "":
+            return command.replaceExistingForObject === false ? "append" : "cancel-and-replace";
+        default:
+            return "cancel-and-replace";
+    }
 }
 
 function normalizePosition(value, fallback) {
@@ -120,6 +225,15 @@ function normalizePosition(value, fallback) {
         x: round(Number(value?.x ?? value?.X ?? fallback.x), 3),
         y: round(Number(value?.y ?? value?.Y ?? fallback.y), 3),
         z: round(Number(value?.z ?? value?.Z ?? fallback.z), 3)
+    };
+}
+
+function normalizeScale(value, fallback) {
+    const scale = normalizePosition(value, fallback);
+    return {
+        x: Math.max(0.01, scale.x),
+        y: Math.max(0.01, scale.y),
+        z: Math.max(0.01, scale.z)
     };
 }
 
@@ -140,9 +254,55 @@ function lerp(start, end, t) {
     return start + (end - start) * t;
 }
 
-function failMotion(state, message) {
-    state.diagnostics.failedPatchCommands.add(message);
-    state.diagnostics.lastError = message;
-    state.notifyRuntimeError?.("WebGL scene motion failed.", new Error(message));
-    return null;
+function lerpVector(start, end, t, decimals) {
+    return {
+        x: round(lerp(start.x, end.x, t), decimals),
+        y: round(lerp(start.y, end.y, t), decimals),
+        z: round(lerp(start.z, end.z, t), decimals)
+    };
+}
+
+function vectorPayload(vector) {
+    return { x: vector.x, y: vector.y, z: vector.z };
+}
+
+function failMotion(state, result, message) {
+    state.diagnostics.motionFailedCount += 1;
+    return failCommand(state, result, message, "WebGL scene motion failed.");
+}
+
+function notifyMotionCompleted(state, motion) {
+    const notifyMotion = state?.options?.notifyMotionCompleted !== false;
+    const notifyCommand = state?.options?.notifyCommandCompleted !== false;
+    if (!notifyMotion && !notifyCommand) {
+        return;
+    }
+
+    const motionGeneration = Number(motion?.runtimeStopGeneration) || 0;
+    const currentGeneration = Number(state?.runtimeStopGeneration) || 0;
+    if (motionGeneration !== currentGeneration) {
+        if (state?.diagnostics) {
+            state.diagnostics.ignoredStaleMotionCompletedCount = (state.diagnostics.ignoredStaleMotionCompletedCount || 0) + 1;
+        }
+
+        return;
+    }
+
+    const result = createCommandResult(state, "motion-completed", motion.motionId);
+    result.affectedObjectIds.push(motion.objectId);
+    result.metadata.runtimeStopGeneration = String(currentGeneration);
+    const completedResult = completeCommandResult(state, result);
+    if (notifyMotion) {
+        state.dotNetRef?.invokeMethodAsync("OnMotionCompleted", JSON.stringify(completedResult))
+            .catch(error => console.warn("WebGL scene motion completion callback failed.", error));
+    }
+}
+
+function nextMotionId(state, objectId) {
+    if (state.options?.deterministicMode !== false) {
+        state.nextMotionSequence = (state.nextMotionSequence || 0) + 1;
+        return `${objectId}:motion:${state.nextMotionSequence}`;
+    }
+
+    return `${objectId}:motion:${Date.now()}`;
 }

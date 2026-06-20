@@ -1,0 +1,44 @@
+name: Domain Leakage Scan
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  bundle-proof-integrity:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate WebGlEngine v17 bundle proof integrity
+        shell: pwsh
+        run: python codex/bundles/WebGlEngine_Stabilization_v17/scripts/validate_bundle.py --stage prepared
+
+  generic-domain-leakage:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Scan generic source hard gate
+        shell: pwsh
+        run: node tools/webgllib/audit-webglrunlib-boundary.cjs --config tools/webgllib/domain-boundary-audit.config.json --profile generic-source-hard-gate
+
+      - name: Scan generic public API hard gate
+        shell: pwsh
+        run: node tools/webgllib/audit-webglrunlib-boundary.cjs --config tools/webgllib/domain-boundary-audit.config.json --profile generic-public-api-hard-gate
+
+      - name: Scan generic package content hard gate
+        shell: pwsh
+        run: node tools/webgllib/audit-webglrunlib-boundary.cjs --config tools/webgllib/domain-boundary-audit.config.json --profile package-content-hard-gate
+
+      - name: Scan docs and bundle historical soft audit
+        shell: pwsh
+        run: node tools/webgllib/audit-webglrunlib-boundary.cjs --config tools/webgllib/domain-boundary-audit.config.json --profile docs-and-bundle-soft-audit

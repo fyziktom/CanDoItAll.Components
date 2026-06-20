@@ -1,0 +1,32 @@
+SB08 source assertions
+
+1. EvidenceRef model introduced.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:112
+   `EconomyExperimentEvidenceRef` carries `Kind`, `Path`, `Hash`, and `SchemaVersion`.
+
+2. Evidence records include and validate the ref contract.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:129
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:132
+   `EconomyExperimentEvidenceRecord.Ref` is part of the report model, and `IsValid` delegates to `EconomyExperimentEvidenceValidator`.
+
+3. The evidence validator rejects missing or malformed refs.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:167
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:235
+   Validator checks required kind/path/hash/schemaVersion, expected band matching, positive bytes, strict `sha256:<64 lowercase hex>`, and top-level hash/schema consistency when present.
+
+4. Runtime/UI/oracle exercise is validator-gated.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:596
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:605
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:608
+   `BuildExplicitBand` separates `exerciseRequested` from accepted `exercised`, and accepts exercise only when evidence validators pass.
+
+5. Browser observer and research-ready consume validator outcomes.
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:524
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:678
+   repo://C:/repositories/CanDoItAll.Economy/src/CanDoItAll.Economy.SimulationSandbox/EconomyExperimentReadiness.cs:883
+   Browser observer metadata includes the combined evidence validator result, and `ResearchReady` requires validator-passed oracle and browser-observer evidence.
+
+6. Positive and negative tests cover the contract.
+   repo://C:/repositories/CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs:446
+   repo://C:/repositories/CanDoItAll.Economy/tests/CanDoItAll.Economy.Tests/SimulationEconomicTrustHardeningTests.cs:544
+   The v3 test asserts evidence refs and validator metadata; the broken-ref test proves a malformed runtime ref blocks runtime exercise, browser observer pass, and research-ready.

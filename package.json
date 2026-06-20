@@ -9,6 +9,19 @@
     "webgllib:build-assets": "node tools/webgllib/build-assets.cjs",
     "webgllib:verify-assets": "node tools/webgllib/verify-assets.cjs",
     "webgllib:inventory-glb": "node tools/webgllib/inventory-glb-assets.cjs",
+    "webgllib:model-diagnostics": "node tools/webgllib/export-model-diagnostics.cjs",
+    "webgllib:audit-scene-runtime": "node tools/webgllib/audit-scene-runtime.cjs",
+    "webgllib:audit-scene-runtime-imports": "node tools/webgllib/audit-scene-runtime-imports.cjs",
+    "webgllib:audit-boundary": "node tools/webgllib/audit-webgllib-boundary.cjs",
+    "webglrunlib:audit-boundary": "node tools/webgllib/audit-webglrunlib-boundary.cjs",
+    "webgllib:test-resource-ownership": "node tools/webgllib/test-resource-ownership.mjs",
+    "webgllib:audit-large-scene-performance": "node tools/webgllib/audit-large-scene-performance.cjs",
+    "webgllib:audit-command-batch-parity": "node tools/webgllib/audit-command-batch-parity.cjs",
+    "webgllib:audit-motion-queue": "node tools/webgllib/audit-motion-queue.cjs",
+    "webgllib:audit-stage-runner": "node tools/webgllib/audit-stage-runner.cjs",
+    "webgllib:test-runtime-idle-policy": "node tools/webgllib/test-runtime-idle-policy.mjs",
+    "webgllib:test-command-batch-runtime-idle-policy": "node tools/webgllib/test-command-batch-runtime-idle-policy.cjs",
+    "webgl:validate-rc": "powershell -ExecutionPolicy Bypass -File scripts/validate-webgl-rc.ps1",
     "tailwind:build": "npm --prefix Tailwind run build",
     "tailwind:watch": "npm --prefix Tailwind run watch",
     "build": "dotnet build CanDoItAll.Components.slnx",
@@ -16,6 +29,7 @@
   },
   "type": "commonjs",
   "devDependencies": {
+    "playwright": "^1.60.0",
     "three": "^0.184.0"
   }
 }

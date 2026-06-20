@@ -1,0 +1,2455 @@
+[
+  {
+    "name": "CanDoItAll.Components.WebGlLib.BatchOrderingMode",
+    "kind": "enum",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.Enum",
+    "members": [
+      "field System.Int32 value__",
+      "field static const CanDoItAll.Components.WebGlLib.BatchOrderingMode CoalesceIndependent",
+      "field static const CanDoItAll.Components.WebGlLib.BatchOrderingMode PreserveOrder",
+      "field static const CanDoItAll.Components.WebGlLib.BatchOrderingMode Sequential"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.ComponentNamespaceMarker",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": []
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.DefaultWebGlSymbolPolicy",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "ctor(CanDoItAll.Components.WebGlLib.WebGlSymbolIntensityPolicy intensityPolicy, CanDoItAll.Components.WebGlLib.WebGlSymbolPalette palette)",
+      "method CanDoItAll.Components.WebGlLib.WebGlStatusSymbol Normalize(CanDoItAll.Components.WebGlLib.WebGlStatusSymbol symbol)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.IWebGlAssetCatalogProvider",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlAssetCatalog\u003E GetCatalogAsync(System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.IWebGlSceneDocumentMigrator",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method CanDoItAll.Components.WebGlLib.WebGlSceneDocumentMigrationResult Migrate(CanDoItAll.Components.WebGlLib.WebGlSceneDocument document)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.IWebGlSymbolPolicy",
+    "kind": "interface",
+    "isAbstract": true,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "method CanDoItAll.Components.WebGlLib.WebGlStatusSymbol Normalize(CanDoItAll.Components.WebGlLib.WebGlStatusSymbol symbol)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.InMemoryWebGlAssetCatalogProvider",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlLib.WebGlAssetCatalog catalog)",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlAssetCatalog\u003E GetCatalogAsync(System.Threading.CancellationToken cancellationToken = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetAnimation",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean Loop {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double Speed {get;set;}",
+      "property System.String ClipName {get;set;}",
+      "property System.String SemanticKey {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetCatalog",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlAssetDefinition\u003E Assets {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlModelImportRecipe\u003E ModelImportRecipes {get;set;}",
+      "property System.String CatalogId {get;set;}",
+      "property System.String DefaultFallbackAssetId {get;set;}",
+      "property System.String Version {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetCatalogValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetCatalogValidator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlAssetCatalogValidationResult Validate(CanDoItAll.Components.WebGlLib.WebGlAssetCatalog catalog)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetDefinition",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlAssetPerformanceHint PerformanceHint {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlModelImportOptions ImportOptions {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 BoundsHint {get;set;}",
+      "property System.Boolean SupportsBillboard {get;set;}",
+      "property System.Boolean SupportsTint {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlAssetAnimation\u003E Animations {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlAssetMaterialOverride\u003E MaterialOverrides {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlAssetVariant\u003E Variants {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Tags {get;set;}",
+      "property System.Double DefaultScale {get;set;}",
+      "property System.Double LodDistanceHint {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String DisplayName {get;set;}",
+      "property System.String FallbackAssetId {get;set;}",
+      "property System.String Format {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String ImportRecipeId {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String License {get;set;}",
+      "property System.String PreferredVariantId {get;set;}",
+      "property System.String PrimitiveKind {get;set;}",
+      "property System.String QualityTier {get;set;}",
+      "property System.String Source {get;set;}",
+      "property System.String ThumbnailUri {get;set;}",
+      "property System.String Uri {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetFormats",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Glb",
+      "field static const System.String Gltf",
+      "field static const System.String Primitive"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetKinds",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Material",
+      "field static const System.String Model",
+      "field static const System.String Primitive",
+      "field static const System.String Symbol"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetMaterialOverride",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsEmissive {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double Opacity {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String MaterialName {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetPerformanceHint",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean PreferInstancing {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Int32 RecommendedMaxInstanceCount {get;set;}",
+      "property System.Int32 TriangleCountHint {get;set;}",
+      "property System.Int32 VertexCountHint {get;set;}",
+      "property System.Int64 ByteSizeHint {get;set;}",
+      "property System.String QualityTier {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetQualityProfiles",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String HighDetailGlb",
+      "field static const System.String MixedGlb",
+      "field static const System.String Primitive"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetQualityTiers",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String ModelHigh",
+      "field static const System.String ModelLow",
+      "field static const System.String ModelMedium",
+      "field static const System.String Primitive",
+      "field static const System.String Unknown"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetVariant",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlAssetPerformanceHint PerformanceHint {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlModelImportOptions ImportOptions {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Scale {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String DisplayName {get;set;}",
+      "property System.String FallbackAssetId {get;set;}",
+      "property System.String Format {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String ImportRecipeId {get;set;}",
+      "property System.String PrimitiveKind {get;set;}",
+      "property System.String QualityTier {get;set;}",
+      "property System.String Uri {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAssetVariantResolver",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlResolvedAssetVariant Resolve(CanDoItAll.Components.WebGlLib.WebGlAssetDefinition asset, CanDoItAll.Components.WebGlLib.WebGlSceneObject sceneObject, System.String qualityProfile)",
+      "method static System.String NormalizeProfile(System.String profile)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAutomationAnchorSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Double X {get;set;}",
+      "property System.Double Y {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String NodeId {get;set;}",
+      "property System.String PortId {get;set;}",
+      "property System.String Role {get;set;}",
+      "property System.String Side {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAutomationEdgeSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsPrimaryPath {get;set;}",
+      "property System.Double Emphasis {get;set;}",
+      "property System.Double Opacity {get;set;}",
+      "property System.Double X {get;set;}",
+      "property System.Double Y {get;set;}",
+      "property System.String CategoryKey {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String SourceAnchorId {get;set;}",
+      "property System.String SourceNodeId {get;set;}",
+      "property System.String SourcePortId {get;set;}",
+      "property System.String TargetAnchorId {get;set;}",
+      "property System.String TargetNodeId {get;set;}",
+      "property System.String TargetPortId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAutomationNodeSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean Selected {get;set;}",
+      "property System.Double Height {get;set;}",
+      "property System.Double Left {get;set;}",
+      "property System.Double SceneDepth {get;set;}",
+      "property System.Double SceneHeight {get;set;}",
+      "property System.Double SceneWidth {get;set;}",
+      "property System.Double Top {get;set;}",
+      "property System.Double Width {get;set;}",
+      "property System.Double X {get;set;}",
+      "property System.Double Y {get;set;}",
+      "property System.Double Z {get;set;}",
+      "property System.String Family {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Subtitle {get;set;}",
+      "property System.String Title {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlAutomationSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean DeterministicMode {get;set;}",
+      "property System.Boolean IsStageMaximized {get;set;}",
+      "property System.Boolean ShowAnchors {get;set;}",
+      "property System.Boolean ShowEdgeLabels {get;set;}",
+      "property System.Boolean ShowGrid {get;set;}",
+      "property System.Boolean TransparentGround {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlAutomationAnchorSnapshot\u003E Anchors {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlAutomationEdgeSnapshot\u003E Edges {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlAutomationNodeSnapshot\u003E Nodes {get;set;}",
+      "property System.Double NodeSpacingFactor {get;set;}",
+      "property System.Int32 ViewportHeight {get;set;}",
+      "property System.Int32 ViewportWidth {get;set;}",
+      "property System.String ActiveViewPreset {get;set;}",
+      "property System.String LayoutMode {get;set;}",
+      "property System.String NodeInfoMode {get;set;}",
+      "property System.String ProjectionMode {get;set;}",
+      "property System.String SceneKey {get;set;}",
+      "property System.String SurfaceId {get;set;}",
+      "property System.String ToolMode {get;set;}",
+      "property System.String ViewMode {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlCameraCommand",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCamera Camera {get;set;}",
+      "property System.String Action {get;set;}",
+      "property System.String CommandId {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlConnectionChangeRequest",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String ActionId, System.String EdgeId, System.String SourceNodeId, System.String SourceAnchorId, System.String SourcePortId, System.String TargetNodeId, System.String TargetAnchorId, System.String TargetPortId, System.String Kind, System.String CategoryKey)",
+      "method CanDoItAll.Components.WebGlLib.WebGlConnectionChangeRequest \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlConnectionChangeRequest other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String ActionId, out System.String EdgeId, out System.String SourceNodeId, out System.String SourceAnchorId, out System.String SourcePortId, out System.String TargetNodeId, out System.String TargetAnchorId, out System.String TargetPortId, out System.String Kind, out System.String CategoryKey)",
+      "property System.String ActionId {get;set;}",
+      "property System.String CategoryKey {get;set;}",
+      "property System.String EdgeId {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String SourceAnchorId {get;set;}",
+      "property System.String SourceNodeId {get;set;}",
+      "property System.String SourcePortId {get;set;}",
+      "property System.String TargetAnchorId {get;set;}",
+      "property System.String TargetNodeId {get;set;}",
+      "property System.String TargetPortId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlDeleteRequest",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String NodeId, System.String EdgeId)",
+      "method CanDoItAll.Components.WebGlLib.WebGlDeleteRequest \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlDeleteRequest other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String NodeId, out System.String EdgeId)",
+      "property System.String EdgeId {get;set;}",
+      "property System.String NodeId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlDragBounds",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Double MaxX {get;set;}",
+      "property System.Double MaxZ {get;set;}",
+      "property System.Double MinX {get;set;}",
+      "property System.Double MinZ {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlHoverState",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 WorldPosition {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double ScreenX {get;set;}",
+      "property System.Double ScreenY {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlInteractionOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlDragBounds DragBounds {get;set;}",
+      "property System.Boolean AllowCameraOrbit {get;set;}",
+      "property System.Boolean AllowCameraPan {get;set;}",
+      "property System.Boolean AllowCameraZoom {get;set;}",
+      "property System.Boolean AllowClickSelection {get;set;}",
+      "property System.Boolean AllowDragOnGroundPlane {get;set;}",
+      "property System.Boolean AllowHover {get;set;}",
+      "property System.Boolean AllowMultiSelect {get;set;}",
+      "property System.Boolean FitViewOnCreate {get;set;}",
+      "property System.Boolean FocusOnDoubleClick {get;set;}",
+      "property System.Double DragSnapGridSize {get;set;}",
+      "property System.String DragAxisLock {get;set;}",
+      "property System.String SelectionMode {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlLibBodyAssets",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+    "members": [
+      "ctor()",
+      "property System.Boolean IncludeRuntimeAssets {get;set;}",
+      "property System.Boolean IncludeSceneRuntimeAssets {get;set;}",
+      "property System.Nullable\u003CSystem.Boolean\u003E IncludeWorkbenchRuntimeAssets {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlLibHeadAssets",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+    "members": [
+      "ctor()"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlModelCenterModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String CenterBottom",
+      "field static const System.String CenterBounds",
+      "field static const System.String PreserveOrigin"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlModelDiagnostics",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Center {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Max {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Min {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Size {get;set;}",
+      "property System.Boolean HasScene {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Int32 MaterialCount {get;set;}",
+      "property System.Int32 MeshCount {get;set;}",
+      "property System.Int32 TransparentMaterialCount {get;set;}",
+      "property System.Int32 VisibleMeshCount {get;set;}",
+      "property System.String AssetId {get;set;}",
+      "property System.String Uri {get;set;}",
+      "property System.String VariantId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlModelFitModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String FitBounds",
+      "field static const System.String FixedScale",
+      "field static const System.String OriginalScale"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlModelImportOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 PositionOffset {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 RotationOffset {get;set;}",
+      "property System.Boolean DebugBounds {get;set;}",
+      "property System.Boolean DisableTint {get;set;}",
+      "property System.Boolean ForceDoubleSidedMaterial {get;set;}",
+      "property System.Boolean NormalizeMaterialVisibility {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E KnownIssueNotes {get;set;}",
+      "property System.Double FixedScale {get;set;}",
+      "property System.Double UnitScale {get;set;}",
+      "property System.String CameraPresetHint {get;set;}",
+      "property System.String CenterMode {get;set;}",
+      "property System.String FitMode {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlModelImportRecipe",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlModelImportOptions Options {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.String DisplayName {get;set;}",
+      "property System.String Id {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlModelImportRecipeResolver",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlModelImportOptions Resolve(CanDoItAll.Components.WebGlLib.WebGlAssetCatalog catalog, CanDoItAll.Components.WebGlLib.WebGlAssetDefinition asset, CanDoItAll.Components.WebGlLib.WebGlAssetVariant variant = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlMotionEasings",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String EaseIn",
+      "field static const System.String EaseInOut",
+      "field static const System.String EaseOut",
+      "field static const System.String Linear"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlMotionQueueModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Append",
+      "field static const System.String CancelAndReplace",
+      "field static const System.String RejectIfActive",
+      "field static const System.String Replace"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlNodeMovedEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlLib.WebGlNodePositionChange\u003E Positions)",
+      "method CanDoItAll.Components.WebGlLib.WebGlNodeMovedEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlNodeMovedEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlLib.WebGlNodePositionChange\u003E Positions)",
+      "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlLib.WebGlNodePositionChange\u003E Positions {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlNodePositionChange",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String NodeId, System.Double X, System.Double Y, System.Double Z)",
+      "method CanDoItAll.Components.WebGlLib.WebGlNodePositionChange \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlNodePositionChange other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String NodeId, out System.Double X, out System.Double Y, out System.Double Z)",
+      "property System.Double X {get;set;}",
+      "property System.Double Y {get;set;}",
+      "property System.Double Z {get;set;}",
+      "property System.String NodeId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 TargetPosition {get;set;}",
+      "property System.Boolean ReplaceExistingForObject {get;set;}",
+      "property System.Boolean SnapAtEnd {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double DurationSeconds {get;set;}",
+      "property System.Double SpeedUnitsPerSecond {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E TargetRotation {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E TargetScale {get;set;}",
+      "property System.String Easing {get;set;}",
+      "property System.String MotionId {get;set;}",
+      "property System.String ObjectId {get;set;}",
+      "property System.String QueueMode {get;set;}",
+      "property System.String QueuePolicy {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlObjectMovedEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlLib.WebGlSceneObjectPositionChange\u003E Positions)",
+      "method CanDoItAll.Components.WebGlLib.WebGlObjectMovedEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlObjectMovedEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlLib.WebGlSceneObjectPositionChange\u003E Positions)",
+      "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.WebGlLib.WebGlSceneObjectPositionChange\u003E Positions {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlPrimitiveKinds",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Box",
+      "field static const System.String Cone",
+      "field static const System.String Cylinder",
+      "field static const System.String Gear",
+      "field static const System.String House",
+      "field static const System.String Marker",
+      "field static const System.String Person",
+      "field static const System.String Sphere",
+      "field static const System.String Tree"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRenderModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Auto",
+      "field static const System.String Continuous",
+      "field static const System.String OnDemand"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlResolvedAssetVariant",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlResolvedAssetVariant FromBaseAsset(CanDoItAll.Components.WebGlLib.WebGlAssetDefinition asset, System.String requestedProfile)",
+      "method static CanDoItAll.Components.WebGlLib.WebGlResolvedAssetVariant FromVariant(CanDoItAll.Components.WebGlLib.WebGlAssetDefinition asset, CanDoItAll.Components.WebGlLib.WebGlAssetVariant variant, System.String requestedProfile)",
+      "property CanDoItAll.Components.WebGlLib.WebGlAssetPerformanceHint PerformanceHint {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Scale {get;set;}",
+      "property System.Boolean UsesVariant {get;}",
+      "property System.String AssetId {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String FallbackAssetId {get;set;}",
+      "property System.String Format {get;set;}",
+      "property System.String PrimitiveKind {get;set;}",
+      "property System.String QualityTier {get;set;}",
+      "property System.String RequestedProfile {get;set;}",
+      "property System.String Uri {get;set;}",
+      "property System.String VariantId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeBridge",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics Diagnostics {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeOptions Options {get;set;}",
+      "property System.String Namespace {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean DegradeWhenExceeded {get;set;}",
+      "property System.Int32 MaxActiveMotions {get;set;}",
+      "property System.Int32 MaxAssetCacheEntries {get;set;}",
+      "property System.Int32 MaxEstimatedTriangles {get;set;}",
+      "property System.Int32 MaxLoadedAssets {get;set;}",
+      "property System.Int32 MaxQueuedCommandStages {get;set;}",
+      "property System.Int32 MaxQueuedMotions {get;set;}",
+      "property System.Int32 MaxSceneObjects {get;set;}",
+      "property System.String Profile {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetProfiles",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions Large()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions Medium()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions Scene100()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions Scene1000Plus()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions Scene500()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions Small()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions Stress()"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeCommandStageJournalEntry",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Int32 Sequence {get;set;}",
+      "property System.Int64 TimestampMs {get;set;}",
+      "property System.String BarrierPolicy {get;set;}",
+      "property System.String BatchId {get;set;}",
+      "property System.String EventKind {get;set;}",
+      "property System.String Message {get;set;}",
+      "property System.String ResultId {get;set;}",
+      "property System.String StageId {get;set;}",
+      "property System.String Status {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeCommandStageQueueItem",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Double WaitSeconds {get;set;}",
+      "property System.String BarrierEventId {get;set;}",
+      "property System.String BarrierPolicy {get;set;}",
+      "property System.String BatchId {get;set;}",
+      "property System.String StageId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeCommandStageResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.String BarrierPolicy {get;set;}",
+      "property System.String BatchId {get;set;}",
+      "property System.String Error {get;set;}",
+      "property System.String ResultId {get;set;}",
+      "property System.String StageId {get;set;}",
+      "property System.String Status {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean CommandStageBarrierTimedOut {get;set;}",
+      "property System.Boolean DegradedRenderingActive {get;set;}",
+      "property System.Boolean DeterministicMode {get;set;}",
+      "property System.Boolean FinalRenderDrained {get;set;}",
+      "property System.Boolean IsRenderLoopActive {get;set;}",
+      "property System.Boolean LastRuntimeStopIdle {get;set;}",
+      "property System.Boolean LastRuntimeStopTimedOut {get;set;}",
+      "property System.Boolean RuntimeIdleFinalRenderDrainAllowed {get;set;}",
+      "property System.Boolean RuntimeIdleVisualRequired {get;set;}",
+      "property System.Boolean SemanticIdle {get;set;}",
+      "property System.Boolean VisualIdle {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.Int32\u003E CommandStageJournalCounters {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlModelDiagnostics\u003E ModelDiagnostics {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeCommandStageJournalEntry\u003E CommandStageRecentJournalEntries {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeCommandStageQueueItem\u003E CommandStageQueueSnapshot {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeCommandStageResult\u003E CommandStageResultLog {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeMotionQueueSnapshot\u003E MotionQueueSnapshot {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E FailedCommandDetails {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ActiveMotionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CommandStageBarrierBlockers {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CommandStageBarrierObjectIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CommandStageRecentResultIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CompletedCommandStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E FailedAssetUris {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E FailedCommandStageIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E FailedPatchCommands {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E LastRuntimeStopBlockers {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E MissingAssetIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E MissingFallbackAssetIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E QueuedMotionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RuntimeBudgetWarnings {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SkippedCommandStageIds {get;set;}",
+      "property System.Double AverageFrameTimeMs {get;set;}",
+      "property System.Double CommandStageBarrierElapsedSeconds {get;set;}",
+      "property System.Double CommandStageBarrierTimeoutSeconds {get;set;}",
+      "property System.Double CommandStageWaitSeconds {get;set;}",
+      "property System.Double FrameTimeMs {get;set;}",
+      "property System.Double IdleSinceMs {get;set;}",
+      "property System.Double LastDeltaSeconds {get;set;}",
+      "property System.Double PeakFrameTimeMs {get;set;}",
+      "property System.Int32 ActiveMotionCount {get;set;}",
+      "property System.Int32 AnimatedSymbolCount {get;set;}",
+      "property System.Int32 AssetCacheDisposalErrorCount {get;set;}",
+      "property System.Int32 AssetCacheDisposedPromiseCount {get;set;}",
+      "property System.Int32 AssetCacheEntryCount {get;set;}",
+      "property System.Int32 AssetCacheHitCount {get;set;}",
+      "property System.Int32 AssetCacheMissCount {get;set;}",
+      "property System.Int32 AssetCachePendingDisposalCount {get;set;}",
+      "property System.Int32 BatchCommandCount {get;set;}",
+      "property System.Int32 BatchDurationMs {get;set;}",
+      "property System.Int32 BatchStageCount {get;set;}",
+      "property System.Int32 CancelledMotionCount {get;set;}",
+      "property System.Int32 ClearedMotionCount {get;set;}",
+      "property System.Int32 CoalescedPatchCount {get;set;}",
+      "property System.Int32 CommandCountAfterNormalization {get;set;}",
+      "property System.Int32 CommandCountBeforeNormalization {get;set;}",
+      "property System.Int32 CommandStageCancelledCount {get;set;}",
+      "property System.Int32 CommandStageJournalCount {get;set;}",
+      "property System.Int32 CommandStageJournalDroppedCount {get;set;}",
+      "property System.Int32 CompletedCommandStageCount {get;set;}",
+      "property System.Int32 CreateCount {get;set;}",
+      "property System.Int32 DisposeCount {get;set;}",
+      "property System.Int32 DisposedGeometryCount {get;set;}",
+      "property System.Int32 DisposedMaterialCount {get;set;}",
+      "property System.Int32 DisposedTemplateCount {get;set;}",
+      "property System.Int32 DisposedTextureCount {get;set;}",
+      "property System.Int32 DroppedDuplicateMotionCount {get;set;}",
+      "property System.Int32 EstimatedTriangleCount {get;set;}",
+      "property System.Int32 EstimatedVertexCount {get;set;}",
+      "property System.Int32 FailedCommandStageCount {get;set;}",
+      "property System.Int32 FallbackObjectCount {get;set;}",
+      "property System.Int32 FullSceneRebuildCount {get;set;}",
+      "property System.Int32 GraphStructurePatchCount {get;set;}",
+      "property System.Int32 HiddenLinkCount {get;set;}",
+      "property System.Int32 HiddenObjectCount {get;set;}",
+      "property System.Int32 IgnoredStaleMotionCompletedCount {get;set;}",
+      "property System.Int32 InteropCallsAvoided {get;set;}",
+      "property System.Int32 LastRuntimeStopCancelledCommandStageCount {get;set;}",
+      "property System.Int32 LastRuntimeStopClearedMotionCount {get;set;}",
+      "property System.Int32 LastRuntimeStopIdleElapsedMs {get;set;}",
+      "property System.Int32 LinkGeometryRebuildCount {get;set;}",
+      "property System.Int32 LinkGeometryUpdateCount {get;set;}",
+      "property System.Int32 LinkOnlyPatchCount {get;set;}",
+      "property System.Int32 LinkSyncIndexedHitCount {get;set;}",
+      "property System.Int32 LinkSyncScanCount {get;set;}",
+      "property System.Int32 LinkUpdateCount {get;set;}",
+      "property System.Int32 LinksUpdatedLastFrame {get;set;}",
+      "property System.Int32 LoadedAssetCount {get;set;}",
+      "property System.Int32 MaterialCloneCount {get;set;}",
+      "property System.Int32 MaxMotionQueueLength {get;set;}",
+      "property System.Int32 MissingAssetCount {get;set;}",
+      "property System.Int32 MixedIncrementalPatchCount {get;set;}",
+      "property System.Int32 ModelInstanceCount {get;set;}",
+      "property System.Int32 ModelMaterialCount {get;set;}",
+      "property System.Int32 ModelMeshCount {get;set;}",
+      "property System.Int32 ModelTransparentMaterialCount {get;set;}",
+      "property System.Int32 ModelVisibleMeshCount {get;set;}",
+      "property System.Int32 MotionAcceptedCount {get;set;}",
+      "property System.Int32 MotionCompletedCount {get;set;}",
+      "property System.Int32 MotionFailedCount {get;set;}",
+      "property System.Int32 ObjectCount {get;set;}",
+      "property System.Int32 PatchedObjectCount {get;set;}",
+      "property System.Int32 PreservedOrderedDuplicateMotionCount {get;set;}",
+      "property System.Int32 PrimitiveInstanceCount {get;set;}",
+      "property System.Int32 QueuedCommandStageCount {get;set;}",
+      "property System.Int32 QueuedMotionCount {get;set;}",
+      "property System.Int32 RenderCount {get;set;}",
+      "property System.Int32 ReplacedObjectGroupCount {get;set;}",
+      "property System.Int32 RetainedSharedTextureCount {get;set;}",
+      "property System.Int32 RuntimeBudgetMaxActiveMotions {get;set;}",
+      "property System.Int32 RuntimeBudgetMaxLoadedAssets {get;set;}",
+      "property System.Int32 RuntimeBudgetMaxQueuedMotions {get;set;}",
+      "property System.Int32 RuntimeBudgetMaxSceneObjects {get;set;}",
+      "property System.Int32 RuntimeBudgetWarningCount {get;set;}",
+      "property System.Int32 RuntimeStopCount {get;set;}",
+      "property System.Int32 RuntimeStopGeneration {get;set;}",
+      "property System.Int32 SceneIndexSyncCount {get;set;}",
+      "property System.Int32 SceneRebuildPatchCount {get;set;}",
+      "property System.Int32 SkippedCommandStageCount {get;set;}",
+      "property System.Int32 SymbolCount {get;set;}",
+      "property System.Int32 SymbolOnlyPatchCount {get;set;}",
+      "property System.Int32 SymbolOnlyUpdateCount {get;set;}",
+      "property System.Int32 TransformOnlyPatchCount {get;set;}",
+      "property System.Int32 UpdateCount {get;set;}",
+      "property System.Int32 VisibleLinkCount {get;set;}",
+      "property System.Int32 VisibleObjectCount {get;set;}",
+      "property System.Int32 VisualReplacePatchCount {get;set;}",
+      "property System.Int64 EstimatedAssetBytes {get;set;}",
+      "property System.Int64 LargestLoadedAssetBytes {get;set;}",
+      "property System.String ActiveAssetProfile {get;set;}",
+      "property System.String AssetCacheMode {get;set;}",
+      "property System.String CommandStageBarrierEventId {get;set;}",
+      "property System.String CommandStageBarrierPolicy {get;set;}",
+      "property System.String CommandStageBarrierTarget {get;set;}",
+      "property System.String CurrentCommandBatchId {get;set;}",
+      "property System.String CurrentCommandStageId {get;set;}",
+      "property System.String LargestLoadedAssetId {get;set;}",
+      "property System.String LastError {get;set;}",
+      "property System.String LastFrameReason {get;set;}",
+      "property System.String LastPatchClassification {get;set;}",
+      "property System.String LastRuntimeStopReason {get;set;}",
+      "property System.String LastSceneIndexSyncReason {get;set;}",
+      "property System.String LastScheduledReason {get;set;}",
+      "property System.String LastStageBarrierWarning {get;set;}",
+      "property System.String LastStageCancelReason {get;set;}",
+      "property System.String LastStageError {get;set;}",
+      "property System.String RenderMode {get;set;}",
+      "property System.String RenderSchedulerMode {get;set;}",
+      "property System.String RuntimeBudgetProfile {get;set;}",
+      "property System.String RuntimeIdlePolicyMode {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeErrorEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String SceneId, System.String Message, System.String Detail)",
+      "method CanDoItAll.Components.WebGlLib.WebGlRuntimeErrorEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlRuntimeErrorEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String SceneId, out System.String Message, out System.String Detail)",
+      "property System.String Detail {get;set;}",
+      "property System.String Message {get;set;}",
+      "property System.String SceneId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeIdleOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Int32 PollIntervalMs {get;set;}",
+      "property System.Int32 TimeoutMs {get;set;}",
+      "property System.String PolicyMode {get;set;}",
+      "property System.String Reason {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeIdlePolicyModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String AllowFinalRenderDrain",
+      "field static const System.String SemanticOnly",
+      "field static const System.String VisualStrict"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics Diagnostics {get;set;}",
+      "property System.Boolean FinalRenderDrainAllowed {get;set;}",
+      "property System.Boolean FinalRenderDrained {get;set;}",
+      "property System.Boolean Idle {get;set;}",
+      "property System.Boolean SemanticIdle {get;set;}",
+      "property System.Boolean Success {get;set;}",
+      "property System.Boolean TimedOut {get;set;}",
+      "property System.Boolean VisualIdle {get;set;}",
+      "property System.Boolean VisualIdleRequired {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Blockers {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SemanticBlockers {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E VisualBlockers {get;set;}",
+      "property System.Int32 ElapsedMs {get;set;}",
+      "property System.Int32 PollIntervalMs {get;set;}",
+      "property System.Int32 TimeoutMs {get;set;}",
+      "property System.String PolicyMode {get;set;}",
+      "property System.String Reason {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeMotionQueueSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E QueuedMotionIds {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeBudgetOptions RuntimeBudget {get;set;}",
+      "property System.Boolean AutoFitOnCreate {get;set;}",
+      "property System.Boolean DeterministicMode {get;set;}",
+      "property System.Boolean EnableAntialiasing {get;set;}",
+      "property System.Boolean NotifyCommandCompleted {get;set;}",
+      "property System.Boolean NotifyCommandFailed {get;set;}",
+      "property System.Boolean NotifyMotionCompleted {get;set;}",
+      "property System.Boolean NotifyStateChanged {get;set;}",
+      "property System.Boolean PreserveDrawingBuffer {get;set;}",
+      "property System.Boolean ShowDiagnosticsPanel {get;set;}",
+      "property System.Boolean ShowLabels {get;set;}",
+      "property System.Boolean ShowSymbols {get;set;}",
+      "property System.Double MaximumDevicePixelRatio {get;set;}",
+      "property System.Int32 MaxCommandBatchChildResults {get;set;}",
+      "property System.Int32 MaxCommandBatchMessages {get;set;}",
+      "property System.Int32 MaxCommandBatchProofSnapshotPositions {get;set;}",
+      "property System.Int32 MaxCommandResultHistory {get;set;}",
+      "property System.String AssetQualityProfile {get;set;}",
+      "property System.String RenderMode {get;set;}",
+      "property System.String RuntimeKey {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlRuntimeReadyEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String SceneId, CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics Diagnostics)",
+      "method CanDoItAll.Components.WebGlLib.WebGlRuntimeReadyEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlRuntimeReadyEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String SceneId, out CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics Diagnostics)",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics Diagnostics {get;set;}",
+      "property System.String SceneId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneBatchingPolicies",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String CoalesceWithinStage",
+      "field static const System.String Parallel",
+      "field static const System.String PreserveOrder"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCamera",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Target {get;set;}",
+      "property System.Double Azimuth {get;set;}",
+      "property System.Double Distance {get;set;}",
+      "property System.Double FieldOfView {get;set;}",
+      "property System.Double Polar {get;set;}",
+      "property System.Double Zoom {get;set;}",
+      "property System.String ProjectionMode {get;set;}",
+      "property System.String ViewMode {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommand",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Position {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Parameters {get;set;}",
+      "property System.String CommandId {get;set;}",
+      "property System.String CommandType {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.BatchOrderingMode OrderingMode {get;set;}",
+      "property System.Boolean AllowDuplicateMotionsPerObject {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand\u003E Motions {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchStage\u003E Stages {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlScenePatch\u003E Patches {get;set;}",
+      "property System.String BatchId {get;set;}",
+      "property System.String BatchingPolicy {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchMetrics",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Int32 BatchCommandCount {get;set;}",
+      "property System.Int32 BatchDurationMs {get;set;}",
+      "property System.Int32 CoalescedPatchCount {get;set;}",
+      "property System.Int32 CommandCountAfterNormalization {get;set;}",
+      "property System.Int32 CommandCountBeforeNormalization {get;set;}",
+      "property System.Int32 DroppedDuplicateMotionCount {get;set;}",
+      "property System.Int32 EstimatedHostInteropCallCount {get;set;}",
+      "property System.Int32 InteropCallsAvoided {get;set;}",
+      "property System.Int32 PreservedOrderedDuplicateMotionCount {get;set;}",
+      "property System.Int32 StageCount {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchNormalizationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch Batch {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchMetrics Metrics {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchNormalizer",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchNormalizationResult Normalize(CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch batch)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandResult",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchMetrics Metrics {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneProofSnapshot ProofSnapshot {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E CommandResults {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchStage",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.BatchOrderingMode OrderingMode {get;set;}",
+      "property System.Boolean AllowDuplicateMotionsPerObject {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand\u003E Motions {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlScenePatch\u003E Patches {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E BarrierObjectIds {get;set;}",
+      "property System.Double WaitSeconds {get;set;}",
+      "property System.String BarrierEventId {get;set;}",
+      "property System.String BarrierPolicy {get;set;}",
+      "property System.String BatchingPolicy {get;set;}",
+      "property System.String StageId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandLifecycleStates",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Accepted",
+      "field static const System.String Active",
+      "field static const System.String Cancelled",
+      "field static const System.String Failed",
+      "field static const System.String Scheduled",
+      "field static const System.String Settled"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneProofSnapshot Snapshot {get;set;}",
+      "property System.Boolean Settled {get;set;}",
+      "property System.Boolean Succeeded {get;set;}",
+      "property System.Boolean Success {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Diagnostics {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AffectedLinkIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AffectedObjectIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}",
+      "property System.Int32 Revision {get;set;}",
+      "property System.String CommandId {get;set;}",
+      "property System.String CommandKind {get;set;}",
+      "property System.String LifecycleState {get;set;}",
+      "property System.String Message {get;set;}",
+      "property System.String SceneId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandStageJournalCounters",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Int32 Applied {get;set;}",
+      "property System.Int32 Completed {get;set;}",
+      "property System.Int32 Failures {get;set;}",
+      "property System.Int32 Started {get;set;}",
+      "property System.Int32 Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneCommandStageJournalEntry",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Int32 Sequence {get;set;}",
+      "property System.Int32 TimestampMs {get;set;}",
+      "property System.String BarrierPolicy {get;set;}",
+      "property System.String BatchId {get;set;}",
+      "property System.String EventKind {get;set;}",
+      "property System.String Message {get;set;}",
+      "property System.String ResultId {get;set;}",
+      "property System.String StageId {get;set;}",
+      "property System.String Status {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneDocument",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics Diagnostics {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeOptions RuntimeOptions {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneModel Scene {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.DateTimeOffset SavedAtUtc {get;set;}",
+      "property System.String ContentHash {get;set;}",
+      "property System.String DocumentHash {get;set;}",
+      "property System.String DocumentId {get;set;}",
+      "property System.String SceneContentHash {get;set;}",
+      "property System.String SchemaVersion {get;set;}",
+      "property System.String Source {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneDocumentMigrationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneDocument Document {get;set;}",
+      "property System.Boolean Changed {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AppliedMigrations {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneDocumentSerializer",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String CurrentSchemaVersion",
+      "method static CanDoItAll.Components.WebGlLib.WebGlSceneDocument Deserialize(System.String json)",
+      "method static CanDoItAll.Components.WebGlLib.WebGlSceneDocument Normalize(CanDoItAll.Components.WebGlLib.WebGlSceneDocument document, CanDoItAll.Components.WebGlLib.WebGlSceneDocumentSerializerOptions options = optional)",
+      "method static CanDoItAll.Components.WebGlLib.WebGlSceneDocumentValidationResult Validate(CanDoItAll.Components.WebGlLib.WebGlSceneDocument document)",
+      "method static System.String ComputeSceneContentHash(CanDoItAll.Components.WebGlLib.WebGlSceneDocument document)",
+      "method static System.String Serialize(CanDoItAll.Components.WebGlLib.WebGlSceneDocument document, CanDoItAll.Components.WebGlLib.WebGlSceneDocumentSerializerOptions options = optional)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneDocumentSerializerOptions",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IncludeDiagnostics {get;set;}",
+      "property System.Boolean IncludeRuntimeOptions {get;set;}",
+      "property System.Boolean IncludeUiState {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneDocumentValidationResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneEnvironment",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean FogEnabled {get;set;}",
+      "property System.Double AmbientLightIntensity {get;set;}",
+      "property System.Double DirectionalLightIntensity {get;set;}",
+      "property System.Double FogFar {get;set;}",
+      "property System.Double FogNear {get;set;}",
+      "property System.Double GridDivisions {get;set;}",
+      "property System.Double GroundSize {get;set;}",
+      "property System.String BackgroundColor {get;set;}",
+      "property System.String FogColor {get;set;}",
+      "property System.String GridColor {get;set;}",
+      "property System.String GroundColor {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneHoverChangedEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String ObjectId, System.Double ScreenX, System.Double ScreenY)",
+      "method CanDoItAll.Components.WebGlLib.WebGlSceneHoverChangedEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlSceneHoverChangedEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String ObjectId, out System.Double ScreenX, out System.Double ScreenY)",
+      "property System.Double ScreenX {get;set;}",
+      "property System.Double ScreenY {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneLayer",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsVisible {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ObjectIds {get;set;}",
+      "property System.Int32 SortOrder {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Title {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneLink",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsDirectional {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double Opacity {get;set;}",
+      "property System.Double Width {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Label {get;set;}",
+      "property System.String SourceObjectId {get;set;}",
+      "property System.String TargetObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneModel",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlAssetCatalog AssetCatalog {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlInteractionOptions Interaction {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCamera Camera {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneEnvironment Environment {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneUiState UiState {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneLayer\u003E Layers {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneLink\u003E Links {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneObject\u003E Objects {get;set;}",
+      "property System.Int32 Revision {get;set;}",
+      "property System.String Description {get;set;}",
+      "property System.String SceneId {get;set;}",
+      "property System.String Title {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneModelValidator",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlSceneDocumentValidationResult Validate(CanDoItAll.Components.WebGlLib.WebGlSceneModel scene)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneObject",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Position {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Rotation {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Scale {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Size {get;set;}",
+      "property System.Boolean IsDraggable {get;set;}",
+      "property System.Boolean IsSelectable {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneObjectAnchor\u003E Anchors {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlStatusSymbol\u003E Symbols {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Tags {get;set;}",
+      "property System.String AssetId {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String Description {get;set;}",
+      "property System.String Family {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Subtitle {get;set;}",
+      "property System.String Title {get;set;}",
+      "property System.String Tone {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneObjectAnchor",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Offset {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Position {get;set;}",
+      "property System.String Key {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneObjectPatch",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlStatusSymbol\u003E Symbols {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Position {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Rotation {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Scale {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlVector3\u003E Size {get;set;}",
+      "property System.String AssetId {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneObjectPositionChange",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String ObjectId, CanDoItAll.Components.WebGlLib.WebGlVector3 Position)",
+      "method CanDoItAll.Components.WebGlLib.WebGlSceneObjectPositionChange \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlSceneObjectPositionChange other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String ObjectId, out CanDoItAll.Components.WebGlLib.WebGlVector3 Position)",
+      "property CanDoItAll.Components.WebGlLib.WebGlVector3 Position {get;set;}",
+      "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlScenePatch",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneLink\u003E AddLinks {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneObject\u003E AddObjects {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneObjectPatch\u003E ObjectPatches {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RemoveLinkIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RemoveObjectIds {get;set;}",
+      "property System.Int32 BaseRevision {get;set;}",
+      "property System.Int32 NextRevision {get;set;}",
+      "property System.String SceneId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlScenePatchReducer",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlScenePatchResult Apply(CanDoItAll.Components.WebGlLib.WebGlSceneModel scene, CanDoItAll.Components.WebGlLib.WebGlScenePatch patch)",
+      "method CanDoItAll.Components.WebGlLib.WebGlScenePatchResult Validate(CanDoItAll.Components.WebGlLib.WebGlSceneModel scene, CanDoItAll.Components.WebGlLib.WebGlScenePatch patch)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlScenePatchResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsValid {get;}",
+      "property System.Boolean Success {get;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AddedLinkIds {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AddedObjectIds {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AffectedLinkIds {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E AffectedObjectIds {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Errors {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E PatchedObjectIds {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RemovedLinkIds {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E RemovedObjectIds {get;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Warnings {get;}",
+      "property System.Int32 NextRevision {get;set;}",
+      "property System.Int32 Revision {get;set;}",
+      "property System.String CommandKind {get;set;}",
+      "property System.String SceneId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlScenePatchTransactionModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String PermissiveInvalidLinks",
+      "field static const System.String Strict"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneProjectionModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Orthographic",
+      "field static const System.String Perspective"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneProofSnapshot",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneCommandStageJournalCounters CommandStageJournalCounters {get;set;}",
+      "property System.Boolean IsRenderLoopActive {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,CanDoItAll.Components.WebGlLib.WebGlVector3\u003E ObjectPositions {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandStageJournalEntry\u003E CommandStageRecentJournalEntries {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E ActiveMotionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CommandStageBarrierBlockers {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E CommandStageRecentResultIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E QueuedMotionIds {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SelectedObjectIds {get;set;}",
+      "property System.Double AverageFrameTimeMs {get;set;}",
+      "property System.Double CommandStageWaitSeconds {get;set;}",
+      "property System.Double PeakFrameTimeMs {get;set;}",
+      "property System.Int32 ActiveMotionCount {get;set;}",
+      "property System.Int32 AssetCacheDisposalErrorCount {get;set;}",
+      "property System.Int32 AssetCacheDisposedPromiseCount {get;set;}",
+      "property System.Int32 AssetCacheEntryCount {get;set;}",
+      "property System.Int32 AssetCacheHitCount {get;set;}",
+      "property System.Int32 AssetCacheMissCount {get;set;}",
+      "property System.Int32 AssetCachePendingDisposalCount {get;set;}",
+      "property System.Int32 ClearedMotionCount {get;set;}",
+      "property System.Int32 CommandStageJournalCount {get;set;}",
+      "property System.Int32 CommandStageJournalDroppedCount {get;set;}",
+      "property System.Int32 CompletedCommandStageCount {get;set;}",
+      "property System.Int32 DisposedGeometryCount {get;set;}",
+      "property System.Int32 DisposedMaterialCount {get;set;}",
+      "property System.Int32 DisposedTemplateCount {get;set;}",
+      "property System.Int32 DisposedTextureCount {get;set;}",
+      "property System.Int32 EstimatedTriangleCount {get;set;}",
+      "property System.Int32 EstimatedVertexCount {get;set;}",
+      "property System.Int32 FailedCommandStageCount {get;set;}",
+      "property System.Int32 FallbackObjectCount {get;set;}",
+      "property System.Int32 FullSceneRebuildCount {get;set;}",
+      "property System.Int32 GraphStructurePatchCount {get;set;}",
+      "property System.Int32 HiddenLinkCount {get;set;}",
+      "property System.Int32 HiddenObjectCount {get;set;}",
+      "property System.Int32 LastRuntimeStopCancelledCommandStageCount {get;set;}",
+      "property System.Int32 LastRuntimeStopClearedMotionCount {get;set;}",
+      "property System.Int32 LinkCount {get;set;}",
+      "property System.Int32 LinkGeometryRebuildCount {get;set;}",
+      "property System.Int32 LinkGeometryUpdateCount {get;set;}",
+      "property System.Int32 LinkOnlyPatchCount {get;set;}",
+      "property System.Int32 LinkSyncIndexedHitCount {get;set;}",
+      "property System.Int32 LinkSyncScanCount {get;set;}",
+      "property System.Int32 LinkUpdateCount {get;set;}",
+      "property System.Int32 LinksUpdatedLastFrame {get;set;}",
+      "property System.Int32 LoadedAssetCount {get;set;}",
+      "property System.Int32 MaterialCloneCount {get;set;}",
+      "property System.Int32 MissingAssetCount {get;set;}",
+      "property System.Int32 MixedIncrementalPatchCount {get;set;}",
+      "property System.Int32 ModelInstanceCount {get;set;}",
+      "property System.Int32 ObjectCount {get;set;}",
+      "property System.Int32 PrimitiveInstanceCount {get;set;}",
+      "property System.Int32 QueuedCommandStageCount {get;set;}",
+      "property System.Int32 QueuedMotionCount {get;set;}",
+      "property System.Int32 RenderCount {get;set;}",
+      "property System.Int32 RetainedSharedTextureCount {get;set;}",
+      "property System.Int32 RuntimeStopCount {get;set;}",
+      "property System.Int32 SceneRebuildPatchCount {get;set;}",
+      "property System.Int32 SkippedCommandStageCount {get;set;}",
+      "property System.Int32 SymbolCount {get;set;}",
+      "property System.Int32 SymbolOnlyPatchCount {get;set;}",
+      "property System.Int32 TransformOnlyPatchCount {get;set;}",
+      "property System.Int32 ViewportHeight {get;set;}",
+      "property System.Int32 ViewportWidth {get;set;}",
+      "property System.Int32 VisibleLinkCount {get;set;}",
+      "property System.Int32 VisibleObjectCount {get;set;}",
+      "property System.Int32 VisualReplacePatchCount {get;set;}",
+      "property System.String ActiveAssetProfile {get;set;}",
+      "property System.String AssetCacheMode {get;set;}",
+      "property System.String CommandStageBarrierEventId {get;set;}",
+      "property System.String CommandStageBarrierPolicy {get;set;}",
+      "property System.String CommandStageBarrierTarget {get;set;}",
+      "property System.String CurrentCommandBatchId {get;set;}",
+      "property System.String CurrentCommandStageId {get;set;}",
+      "property System.String HoveredObjectId {get;set;}",
+      "property System.String LargestLoadedAssetId {get;set;}",
+      "property System.String LastPatchClassification {get;set;}",
+      "property System.String LastRuntimeStopReason {get;set;}",
+      "property System.String SceneId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneRevisionPolicy",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static System.Int32 Resolve(CanDoItAll.Components.WebGlLib.WebGlSceneModel scene)",
+      "method static System.Int32 ResolveNext(CanDoItAll.Components.WebGlLib.WebGlSceneModel scene, System.Int32 requestedRevision)",
+      "method static System.Void Commit(CanDoItAll.Components.WebGlLib.WebGlSceneModel scene, System.Int32 revision)",
+      "method static System.Void Normalize(CanDoItAll.Components.WebGlLib.WebGlSceneModel scene)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneSelectionChangedEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String PrimaryObjectId, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedObjectIds)",
+      "method CanDoItAll.Components.WebGlLib.WebGlSceneSelectionChangedEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlSceneSelectionChangedEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String PrimaryObjectId, out System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedObjectIds)",
+      "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedObjectIds {get;set;}",
+      "property System.String PrimaryObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneSelectionState",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SelectedObjectIds {get;set;}",
+      "property System.String ContextActionId {get;set;}",
+      "property System.String PrimaryObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneStageBarrierPolicies",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String ManualStep",
+      "field static const System.String None",
+      "field static const System.String TimeDelay",
+      "field static const System.String WaitForActiveMotions",
+      "field static const System.String WaitForEvent",
+      "field static const System.String WaitForObjectMotions",
+      "field static const System.String WaitForRenderIdle",
+      "field static const System.String WaitSeconds"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneUiState",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneSelectionState Selection {get;set;}",
+      "property System.Boolean DeterministicMode {get;set;}",
+      "property System.Boolean ShowGrid {get;set;}",
+      "property System.Boolean ShowGround {get;set;}",
+      "property System.Boolean ShowLabels {get;set;}",
+      "property System.Boolean ShowSymbols {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Int32 Revision {get;set;}",
+      "property System.String ActiveAssetProfile {get;set;}",
+      "property System.String HoveredObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneView",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+    "members": [
+      "ctor()",
+      "method System.Threading.Tasks.Task FitViewAsync()",
+      "method System.Threading.Tasks.Task FocusObjectAsync(System.String objectId)",
+      "method System.Threading.Tasks.Task OnCommandCompleted(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnCommandFailed(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnMotionCompleted(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnObjectsMoved(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnRuntimeError(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnRuntimeReady(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnSceneHoverChanged(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnSceneSelectionChanged(System.String eventJson)",
+      "method System.Threading.Tasks.Task OnSceneStateChanged(System.String stateJson)",
+      "method System.Threading.Tasks.Task ResetCameraAsync()",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeDiagnostics\u003E GetDiagnosticsAsync()",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult\u003E WaitForRuntimeIdleAsync(CanDoItAll.Components.WebGlLib.WebGlRuntimeIdleOptions options)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeIdleResult\u003E WaitForRuntimeIdleAsync(System.Int32 timeoutMs = optional, System.Int32 pollIntervalMs = optional, System.String reason = optional, System.String policyMode = optional)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult\u003E ApplyCommandBatchAndWaitAsync(CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch batch, System.Int32 timeoutMs = optional, System.Int32 pollIntervalMs = optional, System.String reason = optional, System.Boolean requireRuntimeIdle = optional, System.String runtimeIdlePolicyMode = optional)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandBatchResult\u003E ApplyCommandBatchAsync(CanDoItAll.Components.WebGlLib.WebGlSceneCommandBatch batch)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E ApplyPatchDetailedAsync(CanDoItAll.Components.WebGlLib.WebGlScenePatch patch)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E CancelCommandStagesAsync(System.String reason = optional)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E CancelMotionDetailedAsync(System.String motionId)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E ClearMotionsDetailedAsync(System.String objectId = optional)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E EnqueueMotionDetailedAsync(CanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand command)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E ImportSceneDetailedAsync(CanDoItAll.Components.WebGlLib.WebGlSceneModel sceneModel)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E ImportSceneDocumentDetailedAsync(CanDoItAll.Components.WebGlLib.WebGlSceneDocument sceneDocument)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E StopRuntimeActivityAsync(System.String reason = optional, System.Boolean waitForIdle = optional, System.Int32 timeoutMs = optional, System.Int32 pollIntervalMs = optional, System.Boolean requireIdle = optional, System.String runtimeIdlePolicyMode = optional)",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneModel\u003E ExportSceneAsync()",
+      "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.WebGlLib.WebGlSceneProofSnapshot\u003E GetProofSnapshotAsync()",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E ApplyPatchAsync(CanDoItAll.Components.WebGlLib.WebGlScenePatch patch)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E CancelMotionAsync(System.String motionId)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E ClearMotionsAsync(System.String objectId = optional)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E EnqueueMotionAsync(CanDoItAll.Components.WebGlLib.WebGlObjectMotionCommand command)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E ImportSceneAsync(CanDoItAll.Components.WebGlLib.WebGlSceneModel sceneModel)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E ImportSceneDocumentAsync(CanDoItAll.Components.WebGlLib.WebGlSceneDocument sceneDocument)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E MoveObjectAsync(System.String objectId, CanDoItAll.Components.WebGlLib.WebGlVector3 position)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E RequestCommandStageManualStepAsync()",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E SetObjectTransformAsync(System.String objectId, CanDoItAll.Components.WebGlLib.WebGlSceneObjectPatch transform)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E SignalCommandStageEventAsync(System.String eventId)",
+      "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E TriggerSelectObjectAsync(System.String objectId)",
+      "method System.Threading.Tasks.Task\u003CSystem.String\u003E CaptureImageAsync()",
+      "method System.Threading.Tasks.ValueTask DisposeAsync()",
+      "property CanDoItAll.Components.WebGlLib.WebGlRuntimeOptions Options {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlSceneModel Scene {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlObjectMovedEventArgs\u003E ObjectsMoved {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeErrorEventArgs\u003E RuntimeError {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlRuntimeReadyEventArgs\u003E RuntimeReady {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E CommandCompleted {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E CommandFailed {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlSceneCommandResult\u003E MotionCompleted {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlSceneHoverChangedEventArgs\u003E HoverChanged {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlSceneSelectionChangedEventArgs\u003E SelectionChanged {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E StateChanged {get;set;}",
+      "property System.String AriaLabel {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSceneViewModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Front",
+      "field static const System.String Isometric",
+      "field static const System.String Perspective",
+      "field static const System.String Top"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSelectionChangedEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String PrimaryNodeId, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds)",
+      "method CanDoItAll.Components.WebGlLib.WebGlSelectionChangedEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlSelectionChangedEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String PrimaryNodeId, out System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds)",
+      "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds {get;set;}",
+      "property System.String PrimaryNodeId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSelectionModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Multiple",
+      "field static const System.String None",
+      "field static const System.String Single"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlStatusSymbol",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean BillboardToCamera {get;set;}",
+      "property System.Boolean IsVisible {get;set;}",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E Metadata {get;set;}",
+      "property System.Double HeightOffset {get;set;}",
+      "property System.Double Intensity {get;set;}",
+      "property System.Double Scale {get;set;}",
+      "property System.Int32 SortOrder {get;set;}",
+      "property System.String Anchor {get;set;}",
+      "property System.String Color {get;set;}",
+      "property System.String EffectKey {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String SemanticKind {get;set;}",
+      "property System.String SymbolAssetId {get;set;}",
+      "property System.String Tooltip {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSymbolAnchors",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Back",
+      "field static const System.String Center",
+      "field static const System.String Front",
+      "field static const System.String Left",
+      "field static const System.String Right",
+      "field static const System.String Top"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSymbolEffects",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Blink",
+      "field static const System.String Float",
+      "field static const System.String Glow",
+      "field static const System.String None",
+      "field static const System.String Pulse",
+      "field static const System.String ScaleByIntensity",
+      "field static const System.String Shake",
+      "field static const System.String Spin"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSymbolIntensityPolicy",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Double MaximumOpacity {get;set;}",
+      "property System.Double MaximumScale {get;set;}",
+      "property System.Double MinimumOpacity {get;set;}",
+      "property System.Double MinimumScale {get;set;}",
+      "property System.String HighColor {get;set;}",
+      "property System.String LowColor {get;set;}",
+      "property System.String MediumColor {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlSymbolPalette",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method System.String Resolve(System.String semanticKind)",
+      "property System.Collections.Generic.Dictionary\u003CSystem.String,System.String\u003E CustomColors {get;set;}",
+      "property System.String Alert {get;set;}",
+      "property System.String Busy {get;set;}",
+      "property System.String Info {get;set;}",
+      "property System.String Neutral {get;set;}",
+      "property System.String Ready {get;set;}",
+      "property System.String Warning {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlVector3",
+    "kind": "struct",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.ValueType",
+    "members": [
+      "ctor(System.Double X, System.Double Y, System.Double Z)",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlVector3 other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.Double X, out System.Double Y, out System.Double Z)",
+      "property System.Double X {get;set;}",
+      "property System.Double Y {get;set;}",
+      "property System.Double Z {get;set;}",
+      "property static CanDoItAll.Components.WebGlLib.WebGlVector3 One {get;}",
+      "property static CanDoItAll.Components.WebGlLib.WebGlVector3 Zero {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbench",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+    "members": [
+      "ctor()",
+      "method System.Threading.Tasks.Task FitViewToSceneAsync()",
+      "method System.Threading.Tasks.Task FocusNodeAsync(System.String nodeId)",
+      "method System.Threading.Tasks.Task OnChromeActionRequested(System.String actionId)",
+      "method System.Threading.Tasks.Task OnConnectionChangeRequested(System.String requestJson)",
+      "method System.Threading.Tasks.Task OnDeleteRequested(System.String requestJson)",
+      "method System.Threading.Tasks.Task OnNodesMoved(System.String positionsJson)",
+      "method System.Threading.Tasks.Task OnSelectionChanged(System.String primaryNodeId, System.String selectedNodeIdsJson)",
+      "method System.Threading.Tasks.Task OnStateChanged(System.String stateJson)",
+      "method System.Threading.Tasks.Task OrbitAsync(System.Double deltaAzimuth, System.Double deltaPolar)",
+      "method System.Threading.Tasks.Task PanAsync(System.Double deltaX, System.Double deltaY)",
+      "method System.Threading.Tasks.Task ResetCameraAsync()",
+      "method System.Threading.Tasks.Task TriggerContextMenuAsync()",
+      "method System.Threading.Tasks.Task TriggerDoubleClickAsync()",
+      "method System.Threading.Tasks.Task TriggerPrimaryClickAsync()",
+      "method System.Threading.Tasks.Task ZoomAsync(System.Double factor)",
+      "method System.Threading.Tasks.Task\u003CSystem.Int32\u003E CaptureImageLengthAsync()",
+      "method System.Threading.Tasks.Task\u003CSystem.String\u003E CaptureImageAsync()",
+      "method System.Threading.Tasks.ValueTask DisposeAsync()",
+      "property CanDoItAll.Components.WebGlLib.WebGlWorkbenchSurface Surface {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlConnectionChangeRequest\u003E ConnectionChangeRequested {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlDeleteRequest\u003E DeleteRequested {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlNodeMovedEventArgs\u003E NodesMoved {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlSelectionChangedEventArgs\u003E SelectionChanged {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ChromeActionRequested {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E StateChanged {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchAnchor",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsRequired {get;set;}",
+      "property System.Int32 Order {get;set;}",
+      "property System.Int32 TotalOnSide {get;set;}",
+      "property System.String AccentColor {get;set;}",
+      "property System.String CategoryKey {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Label {get;set;}",
+      "property System.String NodeId {get;set;}",
+      "property System.String PortId {get;set;}",
+      "property System.String Role {get;set;}",
+      "property System.String Side {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchAnchorRoles",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Input",
+      "field static const System.String Output"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchCameraState",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Double Azimuth {get;set;}",
+      "property System.Double Distance {get;set;}",
+      "property System.Double Polar {get;set;}",
+      "property System.Double TargetX {get;set;}",
+      "property System.Double TargetY {get;set;}",
+      "property System.Double TargetZ {get;set;}",
+      "property System.Double Zoom {get;set;}",
+      "property System.String ProjectionMode {get;set;}",
+      "property System.String ViewMode {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchCameraViewModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Perspective",
+      "field static const System.String XY",
+      "field static const System.String XZ",
+      "field static const System.String YZ",
+      "method static System.String Normalize(System.String value, System.String projectionMode = optional)",
+      "method static System.String ResolveProjectionMode(System.String viewMode)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchChrome",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlWorkbenchChromeToolbarAction\u003E ToolbarActions {get;set;}",
+      "property System.String EmptyStateDescription {get;set;}",
+      "property System.String EmptyStateTitle {get;set;}",
+      "property System.String HintText {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchChromeToolbarAction",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IconOnly {get;set;}",
+      "property System.Boolean IsActive {get;set;}",
+      "property System.Boolean IsToggled {get;set;}",
+      "property System.Boolean IsVisible {get;set;}",
+      "property System.Double Width {get;set;}",
+      "property System.String Glyph {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Label {get;set;}",
+      "property System.String Tone {get;set;}",
+      "property System.String VisualLabel {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchConnectionActions",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Connect",
+      "field static const System.String Disconnect",
+      "field static const System.String ReconnectTarget"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchDiagnostics",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean DeterministicMode {get;set;}",
+      "property System.Int32 ConnectionCommitCount {get;set;}",
+      "property System.Int32 CreateCount {get;set;}",
+      "property System.Int32 DragCommitCount {get;set;}",
+      "property System.Int32 EdgeCount {get;set;}",
+      "property System.Int32 ExportCount {get;set;}",
+      "property System.Int32 NodeCount {get;set;}",
+      "property System.Int32 RenderCount {get;set;}",
+      "property System.Int32 UpdateCount {get;set;}",
+      "property System.String ProjectionMode {get;set;}",
+      "property System.String ViewMode {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchEdge",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsPrimaryPath {get;set;}",
+      "property System.Boolean IsUserAuthored {get;set;}",
+      "property System.Double DepthOffset {get;set;}",
+      "property System.Double Emphasis {get;set;}",
+      "property System.Double Opacity {get;set;}",
+      "property System.String AccentColor {get;set;}",
+      "property System.String CategoryKey {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Label {get;set;}",
+      "property System.String SourceAnchorId {get;set;}",
+      "property System.String SourceNodeId {get;set;}",
+      "property System.String SourcePortId {get;set;}",
+      "property System.String TargetAnchorId {get;set;}",
+      "property System.String TargetNodeId {get;set;}",
+      "property System.String TargetPortId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchLayoutModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String AlternatingArc",
+      "field static const System.String CenterLane",
+      "field static const System.String CriticalPathSpine",
+      "field static const System.String FanoutCorridor",
+      "field static const System.String LayeredOrbit",
+      "field static const System.String RadialBurst",
+      "method static System.String Normalize(System.String value)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchNode",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property System.Boolean IsReadOnly {get;set;}",
+      "property System.Boolean IsSelected {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlWorkbenchAnchor\u003E Anchors {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E Tags {get;set;}",
+      "property System.Double Depth {get;set;}",
+      "property System.Double Height {get;set;}",
+      "property System.Double Width {get;set;}",
+      "property System.Double X {get;set;}",
+      "property System.Double Y {get;set;}",
+      "property System.Double Z {get;set;}",
+      "property System.String AccentColor {get;set;}",
+      "property System.String BorderColor {get;set;}",
+      "property System.String Description {get;set;}",
+      "property System.String Family {get;set;}",
+      "property System.String FillColor {get;set;}",
+      "property System.String Id {get;set;}",
+      "property System.String Kind {get;set;}",
+      "property System.String Status {get;set;}",
+      "property System.String Subtitle {get;set;}",
+      "property System.String Title {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchNodeInfoModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Detailed",
+      "field static const System.String Hidden",
+      "field static const System.String Miniature",
+      "method static System.String Normalize(System.String value)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchProjectionModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Orthographic",
+      "field static const System.String Perspective"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchSurface",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "property CanDoItAll.Components.WebGlLib.WebGlWorkbenchChrome Chrome {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlWorkbenchUiState UiState {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlWorkbenchEdge\u003E Edges {get;set;}",
+      "property System.Collections.Generic.List\u003CCanDoItAll.Components.WebGlLib.WebGlWorkbenchNode\u003E Nodes {get;set;}",
+      "property System.String SceneKey {get;set;}",
+      "property System.String Subtitle {get;set;}",
+      "property System.String SurfaceId {get;set;}",
+      "property System.String Title {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchToolModes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Connect",
+      "field static const System.String Delete",
+      "field static const System.String Reconnect",
+      "field static const System.String Select",
+      "method static System.String Normalize(System.String value)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchUiState",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "field static const System.String CurrentVersion",
+      "method System.String ToJson()",
+      "method static CanDoItAll.Components.WebGlLib.WebGlWorkbenchUiState Parse(System.String json)",
+      "property CanDoItAll.Components.WebGlLib.WebGlWorkbenchCameraState Camera {get;set;}",
+      "property System.Boolean DeterministicMode {get;set;}",
+      "property System.Boolean IsStageMaximized {get;set;}",
+      "property System.Boolean ShowAnchors {get;set;}",
+      "property System.Boolean ShowDiagnostics {get;set;}",
+      "property System.Boolean ShowEdgeLabels {get;set;}",
+      "property System.Boolean ShowGrid {get;set;}",
+      "property System.Boolean TransparentGround {get;set;}",
+      "property System.Collections.Generic.List\u003CSystem.String\u003E SelectedNodeIds {get;set;}",
+      "property System.Double NodeSpacingFactor {get;set;}",
+      "property System.Int64 CameraRevision {get;set;}",
+      "property System.String ActiveViewPreset {get;set;}",
+      "property System.String LayoutMode {get;set;}",
+      "property System.String NodeInfoMode {get;set;}",
+      "property System.String ToolMode {get;set;}",
+      "property System.String Version {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlWorkbenchViewPresets",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "field static const System.String Branching",
+      "field static const System.String Dependencies",
+      "field static const System.String Focus",
+      "field static const System.String Overview",
+      "field static const System.String Roles"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib._Imports",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "",
+    "members": [
+      "ctor()"
+    ]
+  }
+]

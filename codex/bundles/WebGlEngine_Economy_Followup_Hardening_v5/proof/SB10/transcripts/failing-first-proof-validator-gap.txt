@@ -1,0 +1,11 @@
+﻿SB10 failing-first proof validator gap
+Captured: 2026-06-03T12:13:05-04:00
+
+Command: rg -n "transcripts|browser|assertions|screenshot|failing-first|stale|package" scripts\validate_bundle.py
+Expected before fix: no matches, proving the prepared validator does not inspect proof integrity details.
+--- source scan ---
+No matches found.
+
+Command: python scripts\validate_bundle.py --stage prepared --profile initiative
+Bundle validation passed for stage=prepared, profile=initiative, subbundles=12
+ExitCode: 0

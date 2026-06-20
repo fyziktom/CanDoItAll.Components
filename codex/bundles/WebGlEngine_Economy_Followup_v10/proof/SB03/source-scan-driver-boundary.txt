@@ -1,0 +1,20 @@
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:60:public sealed class EconomyWebGlRunDomainMappingDriver : IWebGlRunDomainMappingDriver
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:62:    public static EconomyWebGlRunDomainMappingDriver Instance { get; } = new();
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:78:        EconomyVisualActionKind.ResourceTransferVisual,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:95:            EconomyVisualActionKind.ResourceTransferVisual => WebGlRunActionKinds.DirectedFlowVisual,
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:104:    private readonly IWebGlRunDomainMappingDriver mappingDriver;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:107:        : this(EconomyWebGlRunDomainMappingDriver.Instance)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:111:    public EconomyVisualActionWebGlMapper(IWebGlRunDomainMappingDriver mappingDriver)
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlBridgeContracts.cs:113:        this.mappingDriver = mappingDriver ?? EconomyWebGlRunDomainMappingDriver.Instance;
+C:\repositories\CanDoItAll.Economy\src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlMappedActionValidator.cs:92:            or WebGlRunActionKinds.DirectedFlowVisual
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:78:        Assert.Contains(mapping.EffectiveActionMappings, static item => item.EventKind == SimulationEventKind.ActorTaxFeePay && item.ActionKind == EconomyVisualActionKind.ResourceTransferVisual && item.SymbolCategory == "tax-fee");
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:93:        IWebGlRunDomainMappingDriver driver = EconomyWebGlRunDomainMappingDriver.Instance;
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:95:        Assert.Contains(EconomyVisualActionKind.ResourceTransferVisual, driver.DriverActionKinds);
+C:\repositories\CanDoItAll.Economy\tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:96:        Assert.Equal(WebGlRunActionKinds.DirectedFlowVisual, driver.MapToGenericActionKind(EconomyVisualActionKind.ResourceTransferVisual));
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\DomainDrivers\WebGlRunDomainMappingDriver.cs:3:public interface IWebGlRunDomainMappingDriver
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\DomainDrivers\WebGlRunDomainMappingDriver.cs:12:public sealed class WebGlRunPassThroughDomainMappingDriver : IWebGlRunDomainMappingDriver
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\DomainDrivers\WebGlRunDomainMappingDriver.cs:14:    public static WebGlRunPassThroughDomainMappingDriver Instance { get; } = new();
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\WebGlRunActionCompiler.cs:124:            case WebGlRunActionKinds.DirectedFlowVisual:
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:137:            or WebGlRunActionKinds.DirectedFlowVisual
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionNormalizer.cs:155:            or WebGlRunActionKinds.DirectedFlowVisual
+C:\repositories\CanDoItAll.Components\src\CanDoItAll.Components.WebGlRunLib\Actions\WebGlRunActionKinds.cs:19:    public const string DirectedFlowVisual = "directed-flow-visual";

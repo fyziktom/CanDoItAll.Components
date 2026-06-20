@@ -1,22 +1,16 @@
-import {
-    createState,
-    dispose,
-    exportImageData,
-    exportScene,
-    importScene,
-    notifyCreateError,
-    resolveState,
-    updateState
-} from "./10-webgl-scene-lifecycle.js";
+import { createState, dispose, exportImageData, exportScene, importScene, importSceneDetailed, notifyCreateError, resolveState, updateState } from "./10-webgl-scene-lifecycle.js";
 import { selectObjects } from "./05-webgl-scene-interaction.js";
 import { focusObject, fitView, resetCamera } from "./06-webgl-scene-camera.js";
 import { getProofSnapshot } from "./08-webgl-scene-proof.js";
-import { applyPatch, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
-import { clearMotions, enqueueMotion } from "./14-webgl-scene-motion.js";
+import { applyPatch, applyPatchDetailed, moveObject, setObjectTransform } from "./13-webgl-scene-patching.js";
+import { applyCommandBatch, applyCommandBatchAndWait } from "./26-webgl-scene-command-batch.js";
+import { requestCommandStageManualStep, signalCommandStageEvent } from "./30-webgl-scene-stage-runner.js";
+import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
+import { cancelMotion, cancelMotionDetailed } from "./31-webgl-scene-motion-cancellation.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
-
+import { cancelCommandStages as cancelRuntimeCommandStages, stopRuntimeActivity as stopRuntimeActivityCore } from "./39-webgl-scene-runtime-stop.js";
+import { waitForRuntimeIdle as waitForRuntimeIdleCore } from "./40-webgl-scene-runtime-idle.js";
 const root = window.CanDoItAll = window.CanDoItAll || {};
-
 root.webglScene = {
     create(host, dotNetRef, scene, options) {
         if (!host) {
@@ -62,6 +56,18 @@ root.webglScene = {
         } catch (error) {
             state.notifyRuntimeError("WebGL scene import failed.", error);
             return false;
+        }
+    },
+    importSceneDetailed(host, scene, options) {
+        const state = resolveState(host);
+        if (!state) {
+            return null;
+        }
+        try {
+            return importSceneDetailed(state, scene, options);
+        } catch (error) {
+            state.notifyRuntimeError("WebGL scene import failed.", error);
+            return null;
         }
     },
     dispose(host) {
@@ -112,6 +118,17 @@ root.webglScene = {
         const state = resolveState(host);
         return state ? applyPatch(state, patch) : false;
     },
+    applyPatchDetailed(host, patch) { const state = resolveState(host); return state ? applyPatchDetailed(state, patch) : null; },
+    applyCommandBatch(host, batch) { const state = resolveState(host); return state ? applyCommandBatch(state, batch) : null; },
+    applyCommandBatchAndWait(host, batch, options) { const state = resolveState(host); return state ? applyCommandBatchAndWait(state, batch, options) : null; },
+    signalCommandStageEvent(host, eventId) {
+        const state = resolveState(host);
+        return state ? signalCommandStageEvent(state, eventId) : false;
+    },
+    requestCommandStageManualStep(host) { const state = resolveState(host); return state ? requestCommandStageManualStep(state) : false; },
+    cancelCommandStages(host, reason) { const state = resolveState(host); return state ? cancelRuntimeCommandStages(state, reason) : null; },
+    stopRuntimeActivity(host, reason) { const state = resolveState(host); return state ? stopRuntimeActivityCore(state, reason) : null; },
+    waitForRuntimeIdle(host, options) { const state = resolveState(host); return state ? waitForRuntimeIdleCore(state, options) : null; },
     setObjectTransform(host, objectId, transform) {
         const state = resolveState(host);
         return state ? setObjectTransform(state, objectId, transform) : false;
@@ -124,16 +141,31 @@ root.webglScene = {
         const state = resolveState(host);
         return state ? enqueueMotion(state, command) : false;
     },
+    enqueueMotionDetailed(host, command) {
+        const state = resolveState(host);
+        return state ? enqueueMotionDetailed(state, command) : null;
+    },
     clearMotions(host, objectId) {
         const state = resolveState(host);
         return state ? clearMotions(state, objectId) : false;
+    },
+    clearMotionsDetailed(host, objectId) {
+        const state = resolveState(host);
+        return state ? clearMotionsDetailed(state, objectId) : null;
+    },
+    cancelMotion(host, motionId) {
+        const state = resolveState(host);
+        return state ? cancelMotion(state, motionId) : false;
+    },
+    cancelMotionDetailed(host, motionId) {
+        const state = resolveState(host);
+        return state ? cancelMotionDetailed(state, motionId) : null;
     },
     triggerSelectObject(host, objectId) {
         const state = resolveState(host);
         if (!state) {
             return false;
         }
-
         selectObjects(state, objectId ? [objectId] : []);
         return true;
     }

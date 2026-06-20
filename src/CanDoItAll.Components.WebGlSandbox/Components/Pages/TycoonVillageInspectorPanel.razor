@@ -50,6 +50,10 @@
                 <dd data-testid="webgl-proof-object-count">@DisplayObjectCount</dd>
             </div>
             <div>
+                <dt>Visible</dt>
+                <dd data-testid="webgl-proof-visible-object-count">@DisplayVisibleObjectCount</dd>
+            </div>
+            <div>
                 <dt>Loaded</dt>
                 <dd data-testid="webgl-proof-loaded-asset-count">@DisplayLoadedAssetCount</dd>
             </div>
@@ -65,6 +69,13 @@
         <p class="webgl-proof-note" data-testid="webgl-hovered-object-id">Hover: @(string.IsNullOrWhiteSpace(HoveredObjectId) ? "none" : HoveredObjectId)</p>
         <p class="webgl-proof-note" data-testid="webgl-last-move">@LastMoveStatus</p>
         <p class="webgl-proof-note" data-testid="webgl-export-status">@ExportStatus</p>
+        <p class="webgl-proof-note" data-testid="webgl-patch-proof-status">@PatchProofStatus</p>
+        <p class="webgl-proof-note" data-testid="webgl-patch-proof-mode">@PatchProofMode</p>
+        <p class="webgl-proof-note" data-testid="webgl-patch-proof-classification">@PatchProofClassification</p>
+        <p class="webgl-proof-note" data-testid="webgl-patch-proof-affected-objects">@PatchProofAffectedObjectIds</p>
+        <p class="webgl-proof-note" data-testid="webgl-patch-proof-affected-links">@PatchProofAffectedLinkIds</p>
+        <p class="webgl-proof-note" data-testid="webgl-patch-proof-skipped-links">@PatchProofSkippedLinkIds</p>
+        <p class="webgl-proof-note" data-testid="webgl-patch-proof-message-counts">@PatchProofMessageCounts</p>
         @if (!string.IsNullOrWhiteSpace(RuntimeError))
         {
             <p class="webgl-runtime-error" data-testid="webgl-runtime-error">@RuntimeError</p>
@@ -101,6 +112,9 @@
     public WebGlSceneProofSnapshot? LatestSnapshot { get; set; }
 
     [Parameter]
+    public WebGlSceneCommandResult? LatestPatchResult { get; set; }
+
+    [Parameter]
     public string RuntimeStatusText { get; set; } = "initializing";
 
     [Parameter]
@@ -128,7 +142,24 @@
     public EventCallback<string> SelectObject { get; set; }
 
     private int DisplayObjectCount => LatestSnapshot?.ObjectCount ?? Scene.Objects.Count;
+    private int DisplayVisibleObjectCount => LatestSnapshot?.VisibleObjectCount ?? Scene.Objects.Count(item => Scene.Layers
+        .Where(layer => layer.IsVisible == false)
+        .All(layer => !layer.ObjectIds.Contains(item.Id, StringComparer.Ordinal)));
     private int DisplayLoadedAssetCount => LatestSnapshot?.LoadedAssetCount ?? 0;
     private int DisplayModelCount => LatestSnapshot?.ModelInstanceCount ?? 0;
     private int DisplayFallbackCount => LatestSnapshot?.FallbackObjectCount ?? 0;
+    private string PatchProofStatus => LatestPatchResult is null ? "none" : LatestPatchResult.Success ? "success" : "failed";
+    private string PatchProofMode => PatchMetadata("patchTransactionMode");
+    private string PatchProofClassification => PatchMetadata("patchClassification");
+    private string PatchProofSkippedLinkIds => PatchMetadata("skippedLinkIds");
+    private string PatchProofAffectedObjectIds => LatestPatchResult is null ? "none" : string.Join(",", LatestPatchResult.AffectedObjectIds);
+    private string PatchProofAffectedLinkIds => LatestPatchResult is null ? "none" : string.Join(",", LatestPatchResult.AffectedLinkIds);
+    private string PatchProofMessageCounts => LatestPatchResult is null
+        ? "none"
+        : $"errors={LatestPatchResult.Errors.Count};warnings={LatestPatchResult.Warnings.Count}";
+
+    private string PatchMetadata(string key)
+        => LatestPatchResult?.Metadata.TryGetValue(key, out var value) == true && !string.IsNullOrWhiteSpace(value)
+            ? value
+            : "none";
 }

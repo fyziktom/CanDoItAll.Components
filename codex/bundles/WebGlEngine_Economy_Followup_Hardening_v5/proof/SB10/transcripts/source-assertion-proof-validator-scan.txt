@@ -1,0 +1,41 @@
+﻿SB10 source assertion scan - proof validator contracts
+Captured: 2026-06-03T12:19:55-04:00
+
+Command: rg -n "blank transcript|browser screenshots exist without JSON assertions|critical proof lacks failing-first|stale package/feed marker|source-assertion|--root|completed" scripts\validate_bundle.py scripts\test_validate_bundle.py
+--- matches ---
+scripts\test_validate_bundle.py:35:    completed_sb01: bool = True,
+scripts\test_validate_bundle.py:46:        is_completed = completed_sb01 and number == 1
+scripts\test_validate_bundle.py:47:        status = "Completed" if is_completed else "Prepared"
+scripts\test_validate_bundle.py:55:        manifest_status = "completed" if is_completed else "prepared"
+scripts\test_validate_bundle.py:59:            + ("- Local failing-first evidence is required.\n" if is_completed and not missing_failing_first else ""),
+scripts\test_validate_bundle.py:66:    if not completed_sb01:
+scripts\test_validate_bundle.py:76:        transcript_dir / "source-assertion-fixture-scan.txt",
+scripts\test_validate_bundle.py:110:                "--root",
+scripts\test_validate_bundle.py:125:            create_fixture_bundle(root, completed_sb01=False)
+scripts\test_validate_bundle.py:131:    def test_rejects_blank_completed_transcripts(self) -> None:
+scripts\test_validate_bundle.py:139:        self.assertIn("blank transcript", result.stdout.lower())
+scripts\test_validate_bundle.py:151:    def test_rejects_critical_completed_proof_without_failing_first(self) -> None:
+scripts\test_validate_bundle.py:159:        self.assertIn("critical proof lacks failing-first evidence", result.stdout.lower())
+scripts\test_validate_bundle.py:169:        self.assertIn("stale package/feed marker", result.stdout.lower())
+scripts\test_validate_bundle.py:171:    def test_accepts_completed_proof_with_integrity_artifacts(self) -> None:
+scripts\validate_bundle.py:49:    def is_completed(self) -> bool:
+scripts\validate_bundle.py:51:            self.readme_status.lower() == "completed"
+scripts\validate_bundle.py:52:            or self.manifest_status.lower() == "completed"
+scripts\validate_bundle.py:161:def validate_completed_proof(root: Path, proof: SubbundleProof) -> list[str]:
+scripts\validate_bundle.py:165:    if proof.manifest_status.lower() != "completed":
+scripts\validate_bundle.py:166:        errors.append(f"{label} completed subbundle has proof manifest status '{proof.manifest_status or 'missing'}'")
+scripts\validate_bundle.py:172:            errors.append(f"{label} completed proof still contains placeholder marker '{marker}'")
+scripts\validate_bundle.py:177:        errors.append(f"{label} completed proof has no transcript files")
+scripts\validate_bundle.py:181:            errors.append(f"{label} blank transcript: {rel(transcript, root)}")
+scripts\validate_bundle.py:193:        errors.append(f"{label} critical proof lacks failing-first evidence")
+scripts\validate_bundle.py:195:    if transcript_files and not any("source-assertion" in name for name in transcript_names):
+scripts\validate_bundle.py:196:        errors.append(f"{label} completed proof lacks a source-assertion transcript")
+scripts\validate_bundle.py:215:            errors.append(f"{label} browser screenshots exist without JSON assertions")
+scripts\validate_bundle.py:230:                errors.append(f"{label} stale package/feed marker '{marker}' in {rel(transcript, root)}")
+scripts\validate_bundle.py:242:    if stage.lower() == "completed":
+scripts\validate_bundle.py:244:            if not proof.is_completed:
+scripts\validate_bundle.py:245:                errors.append(f"SB{proof.number:02d} is not completed")
+scripts\validate_bundle.py:248:        if proof.is_completed:
+scripts\validate_bundle.py:249:            errors.extend(validate_completed_proof(root, proof))
+scripts\validate_bundle.py:259:        "--root",
+ExitCode: 0

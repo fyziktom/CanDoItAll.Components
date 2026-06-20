@@ -1,6 +1,7 @@
-import { disposeObject3D, primitiveKinds, resolveActiveAssetProfile, resolveFiniteNumber, resolveString } from "./02-webgl-scene-core.js";
+import { primitiveKinds, resolveActiveAssetProfile, resolveFiniteNumber, resolveString } from "./02-webgl-scene-core.js";
 import { createPrimitiveVisual } from "./09-webgl-scene-primitives.js";
 import { buildModelInstance, loadModelAsset } from "./16-webgl-scene-models.js";
+import { disposeSceneObjectTree } from "./17-webgl-scene-resources.js";
 
 export function buildAssetLookup(catalog) {
     const lookup = new Map();
@@ -46,7 +47,8 @@ function resolveFallbackAsset(state, missingAssetId) {
         displayName: "Fallback box",
         color: "#94a3b8",
         supportsTint: true,
-        boundsHint: { x: 1, y: 1, z: 1 }
+        boundsHint: { x: 1, y: 1, z: 1 },
+        importOptions: {}
     };
 }
 
@@ -55,7 +57,9 @@ export function resolveAssetForObject(state, sceneObject, options = {}) {
     const profile = resolveActiveAssetProfile(state);
     const explicitVariantId = sceneObject?.metadata?.assetVariantId || sceneObject?.metadata?.preferredAssetVariantId || "";
     const variant = findVariant(baseAsset, explicitVariantId, profile);
-    const resolved = variant ? mergeVariant(baseAsset, variant, profile) : mergeBaseAsset(baseAsset, profile);
+    const resolved = variant
+        ? mergeVariant(state.sceneModel.assetCatalog, baseAsset, variant, profile)
+        : mergeBaseAsset(state.sceneModel.assetCatalog, baseAsset, profile);
 
     if (profile === "primitive" && resolved.format !== "primitive") {
         return resolvePrimitiveFallback(state, baseAsset, resolved);
@@ -93,11 +97,11 @@ export function syncAssetVisual(state, sceneObject, group, options = {}) {
                 return;
             }
 
-            const instance = buildModelInstance(assetTemplate, sceneObject, asset, options);
+            const instance = buildModelInstance(assetTemplate, sceneObject, asset, options, state.diagnostics);
             group.add(instance);
             if (fallback.parent === group) {
                 group.remove(fallback);
-                disposeObject3D(fallback);
+                disposeSceneObjectTree(fallback);
             }
 
             state.diagnostics.fallbackObjectIds.delete(objectId);
@@ -139,17 +143,18 @@ function findVariant(asset, explicitVariantId, profile) {
     return variants.find(variant => same(variant.qualityTier, "model-low"));
 }
 
-function mergeBaseAsset(asset, profile) {
+function mergeBaseAsset(catalog, asset, profile) {
     return {
         ...asset,
         variantId: "",
         qualityTier: resolveString(asset?.qualityTier, profile),
         performanceHint: asset?.performanceHint || {},
+        importOptions: resolveImportOptions(catalog, asset, null),
         requestedProfile: profile
     };
 }
 
-function mergeVariant(asset, variant, profile) {
+function mergeVariant(catalog, asset, variant, profile) {
     return {
         ...asset,
         id: asset.id,
@@ -161,6 +166,7 @@ function mergeVariant(asset, variant, profile) {
         color: variant.color || asset.color || "#94a3b8",
         qualityTier: variant.qualityTier || asset.qualityTier || profile,
         scale: variant.scale || { x: 1, y: 1, z: 1 },
+        importOptions: resolveImportOptions(catalog, asset, variant),
         performanceHint: variant.performanceHint || asset.performanceHint || {},
         requestedProfile: profile
     };
@@ -190,6 +196,7 @@ function resolvePrimitiveFallback(state, baseAsset, resolvedAsset) {
         color: baseAsset?.color || "#94a3b8",
         supportsTint: true,
         boundsHint: baseAsset?.boundsHint || { x: 1, y: 1, z: 1 },
+        importOptions: {},
         requestedProfile: resolveActiveAssetProfile(state),
         performanceHint: {
             qualityTier: "primitive"
@@ -205,4 +212,22 @@ function addPerformanceHint(state, asset) {
 
 function same(left, right) {
     return String(left || "").toLowerCase() === String(right || "").toLowerCase();
+}
+
+function resolveImportOptions(catalog, asset, variant) {
+    return {
+        ...resolveRecipeOptions(catalog, asset?.importRecipeId),
+        ...(asset?.importOptions || {}),
+        ...resolveRecipeOptions(catalog, variant?.importRecipeId),
+        ...(variant?.importOptions || {})
+    };
+}
+
+function resolveRecipeOptions(catalog, recipeId) {
+    if (!catalog || !recipeId) {
+        return {};
+    }
+
+    const recipe = (catalog.modelImportRecipes || []).find(item => same(item.id, recipeId));
+    return recipe?.options || {};
 }

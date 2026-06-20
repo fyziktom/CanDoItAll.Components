@@ -14,15 +14,13 @@
 </div>
 
 @code {
-    private static readonly System.Text.Json.JsonSerializerOptions SerializerOptions = new(System.Text.Json.JsonSerializerDefaults.Web)
-    {
-        PropertyNameCaseInsensitive = true
-    };
-
     private ElementReference host;
     private DotNetObjectReference<WebGlSceneView>? objectReference;
     private string? pendingSceneKey;
     private string? appliedSceneKey;
+    private string? externalImportSceneKey;
+    private string? externalImportReplacedParameterKey;
+    private string? externalImportReplacedSceneId;
 
     [Parameter, EditorRequired]
     public WebGlSceneModel Scene { get; set; } = default!;
@@ -51,9 +49,30 @@
     [Parameter]
     public EventCallback<WebGlRuntimeErrorEventArgs> RuntimeError { get; set; }
 
+    [Parameter]
+    public EventCallback<WebGlSceneCommandResult> MotionCompleted { get; set; }
+
+    [Parameter]
+    public EventCallback<WebGlSceneCommandResult> CommandCompleted { get; set; }
+
+    [Parameter]
+    public EventCallback<WebGlSceneCommandResult> CommandFailed { get; set; }
+
     protected override void OnParametersSet()
     {
-        pendingSceneKey = SerializePayload(Scene, Options);
+        string parameterSceneKey = CreateSceneLifecycleKey(Scene, Options);
+        if (ShouldKeepExternalImport(parameterSceneKey, Scene.SceneId))
+        {
+            pendingSceneKey = externalImportSceneKey;
+            return;
+        }
+
+        if (!string.Equals(parameterSceneKey, externalImportSceneKey, StringComparison.Ordinal))
+        {
+            ClearExternalImportLifecycle();
+        }
+
+        pendingSceneKey = parameterSceneKey;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -69,7 +88,7 @@
                     host,
                     objectReference,
                     Scene,
-                    Options);
+                    CreateInteropOptions(Options));
 
                 if (created)
                 {
@@ -90,11 +109,12 @@
                 "CanDoItAll.webglScene.update",
                 host,
                 Scene,
-                Options);
+                CreateInteropOptions(Options));
 
             if (updated)
             {
                 appliedSceneKey = pendingSceneKey;
+                ClearExternalImportLifecycle();
             }
         }
         catch (JSException ex)
@@ -142,44 +162,26 @@
         return args is null ? Task.CompletedTask : RuntimeError.InvokeAsync(args);
     }
 
-    public Task FitViewAsync()
-        => JsRuntime.InvokeVoidAsync("CanDoItAll.webglScene.fitView", host).AsTask();
+    [JSInvokable]
+    public Task OnMotionCompleted(string eventJson)
+    {
+        var args = Deserialize<WebGlSceneCommandResult>(eventJson);
+        return args is null ? Task.CompletedTask : MotionCompleted.InvokeAsync(args);
+    }
 
-    public Task FocusObjectAsync(string objectId)
-        => JsRuntime.InvokeVoidAsync("CanDoItAll.webglScene.focusObject", host, objectId).AsTask();
+    [JSInvokable]
+    public Task OnCommandCompleted(string eventJson)
+    {
+        var args = Deserialize<WebGlSceneCommandResult>(eventJson);
+        return args is null ? Task.CompletedTask : CommandCompleted.InvokeAsync(args);
+    }
 
-    public Task ResetCameraAsync()
-        => JsRuntime.InvokeVoidAsync("CanDoItAll.webglScene.resetCamera", host).AsTask();
-
-    public Task<string?> CaptureImageAsync()
-        => JsRuntime.InvokeAsync<string?>("CanDoItAll.webglScene.exportImageData", host).AsTask();
-
-    public Task<WebGlSceneProofSnapshot?> GetProofSnapshotAsync()
-        => JsRuntime.InvokeAsync<WebGlSceneProofSnapshot?>("CanDoItAll.webglScene.getProofSnapshot", host).AsTask();
-
-    public Task<WebGlRuntimeDiagnostics?> GetDiagnosticsAsync()
-        => JsRuntime.InvokeAsync<WebGlRuntimeDiagnostics?>("CanDoItAll.webglScene.getDiagnostics", host).AsTask();
-
-    public Task<WebGlSceneModel?> ExportSceneAsync()
-        => JsRuntime.InvokeAsync<WebGlSceneModel?>("CanDoItAll.webglScene.exportScene", host).AsTask();
-
-    public Task<bool> ImportSceneAsync(WebGlSceneModel sceneModel)
-        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.importScene", host, sceneModel, Options).AsTask();
-
-    public Task<bool> ApplyPatchAsync(WebGlScenePatch patch)
-        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.applyPatch", host, patch).AsTask();
-
-    public Task<bool> SetObjectTransformAsync(string objectId, WebGlSceneObjectPatch transform)
-        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.setObjectTransform", host, objectId, transform).AsTask();
-
-    public Task<bool> MoveObjectAsync(string objectId, WebGlVector3 position)
-        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.moveObject", host, objectId, position).AsTask();
-
-    public Task<bool> EnqueueMotionAsync(WebGlObjectMotionCommand command)
-        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.enqueueMotion", host, command).AsTask();
-
-    public Task<bool> ClearMotionsAsync(string? objectId = null)
-        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.clearMotions", host, objectId).AsTask();
+    [JSInvokable]
+    public Task OnCommandFailed(string eventJson)
+    {
+        var args = Deserialize<WebGlSceneCommandResult>(eventJson);
+        return args is null ? Task.CompletedTask : CommandFailed.InvokeAsync(args);
+    }
 
     public async ValueTask DisposeAsync()
     {
@@ -203,9 +205,4 @@
         objectReference?.Dispose();
     }
 
-    private static string SerializePayload(WebGlSceneModel scene, WebGlRuntimeOptions options)
-        => System.Text.Json.JsonSerializer.Serialize(new { scene, options }, SerializerOptions);
-
-    private static T? Deserialize<T>(string json)
-        => System.Text.Json.JsonSerializer.Deserialize<T>(json, SerializerOptions);
 }

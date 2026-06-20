@@ -1,0 +1,451 @@
+﻿SB12 source assertion final contract scan
+Generated: 2026-06-03
+Scope: Components runtime stop/playback lifecycle, WebGlRun transaction/performance contracts, Economy replay/source/hash contracts, SB12 audit-script hardening.
+
+## Components runtime stop and RunPlayback lifecycle
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunDocumentRunnerTests.cs:185:        WebGlRunExecutionResult pause = await runner.PauseAsync("user pause");
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunDocumentRunnerTests.cs:196:        WebGlRunExecutionResult cancel = await runner.CancelAsync("user cancel");
+docs\webgl\run-layer-boundary.md:47:Use `WebGlRunDocumentRunner` for deterministic load, seek, step, pause, cancel, stop, and current-frame execution. Use `WebGlRunBrowserApplyAdapter.ApplyPlaybackAsync` for multi-frame browser replay, and call `WebGlSceneView.StopRuntimeActivityAsync(reason)` on Pause, Cancel, Stop, Reset, Dispose, and route changes so active motions and queued stages are cleared through the public WebGlLib boundary.
+docs\webgl\playback-hosting-and-troubleshooting.md:12:6. On Pause, Cancel, Stop, Reset, and Dispose, cancel host-side work first, then call `WebGlSceneView.StopRuntimeActivityAsync(reason)`.
+docs\webgl\playback-hosting-and-troubleshooting.md:28:await runner.PauseAsync("user pause", CancellationToken.None);
+docs\webgl\playback-hosting-and-troubleshooting.md:29:await sceneView.StopRuntimeActivityAsync("user pause");
+docs\webgl\playback-hosting-and-troubleshooting.md:37:- Confirm Pause, Cancel, Stop, Reset, Dispose, and route changes call `StopRuntimeActivityAsync(reason)`.
+docs\webgl\playback-hosting-and-troubleshooting.md:39:- Confirm `runtimeStopCount` increments and `lastRuntimeStopReason` matches the host action, such as `Paused.` or `user pause`.
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:37:    private long playbackGeneration;
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:126:        long generation = ++playbackGeneration;
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:138:            while (IsActivePlayback(generation, cancellationToken) && CurrentFrameIndex < MaxFrameIndex)
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:141:                if (!IsActivePlayback(generation, cancellationToken))
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:157:            if (playbackGeneration == generation)
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:164:            if (playbackGeneration == generation)
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:171:            if (playbackGeneration == generation)
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:186:    private Task PauseAsync()
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:187:        => StopPlaybackAsync("Paused.");
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:189:    private Task CancelAsync()
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:190:        => StopPlaybackAsync("Canceled.");
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:194:        await StopPlaybackAsync("Resetting.").ConfigureAwait(false);
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:212:        await StopPlaybackAsync("Stepping.").ConfigureAwait(false);
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:227:        await StopPlaybackAsync($"Seeking frame {frameIndex.ToString(CultureInfo.InvariantCulture)}.").ConfigureAwait(false);
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:319:    private async Task StopPlaybackAsync(string status)
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:321:        playbackGeneration++;
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:327:            WebGlSceneCommandResult? stopResult = await sceneView.StopRuntimeActivityAsync(status).ConfigureAwait(false);
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:339:    private Task HandleMotionCompleted(WebGlSceneCommandResult result)
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:350:    private bool IsActivePlayback(long generation, CancellationToken cancellationToken)
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:351:        => playbackGeneration == generation &&
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor.cs:357:        playbackGeneration++;
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor:13:                    <Button Text="Pause" Icon="pause" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@PauseAsync" />
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor:14:                    <Button Text="Cancel" Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@CancelAsync" />
+src\CanDoItAll.Components.WebGlSandbox\Components\Pages\RunPlayback.razor:29:                                    MotionCompleted="@HandleMotionCompleted" />
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs:70:        WebGlSceneCommandResult? stop = await view.StopRuntimeActivityAsync("pause");
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs:79:        Assert.Contains(jsRuntime.Invocations, static invocation => invocation.Identifier == "CanDoItAll.webglScene.stopRuntimeActivity");
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs:82:            invocation.Identifier == "CanDoItAll.webglScene.stopRuntimeActivity" &&
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlSceneViewExternalImportLifecycleTests.cs:168:                "CanDoItAll.webglScene.stopRuntimeActivity" => new WebGlSceneCommandResult
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:196:              "runtimeStopCount": 2,
+tests\CanDoItAll.Components.WebGlLib.Tests\WebGlRuntimeDiagnosticsTests.cs:197:              "lastRuntimeStopReason": "pause",
+src\CanDoItAll.Components.WebGlRunLib\README.md:55:Host Pause, Cancel, Stop, Reset, Dispose, and route-change handlers must cancel the host loop and call `WebGlSceneView.StopRuntimeActivityAsync(reason)` through `WebGlSceneViewBrowserRuntime`/`WebGlSceneView`. A C# paused flag is not enough proof if `queuedCommandStageCount`, `activeMotionCount`, or `queuedMotionCount` continue changing in browser diagnostics.
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunExecutionContracts.cs:19:    ValueTask<WebGlRunExecutionResult> PauseAsync(string reason = "paused", CancellationToken cancellationToken = default);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunExecutionContracts.cs:21:    ValueTask<WebGlRunExecutionResult> CancelAsync(string reason = "canceled", CancellationToken cancellationToken = default);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:203:    public ValueTask<WebGlRunExecutionResult> PauseAsync(string reason = "paused", CancellationToken cancellationToken = default)
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:206:    public ValueTask<WebGlRunExecutionResult> CancelAsync(string reason = "canceled", CancellationToken cancellationToken = default)
+src\CanDoItAll.Components.WebGlLib\Components\Scene\WebGlSceneView.razor:295:    public Task<WebGlSceneCommandResult?> StopRuntimeActivityAsync(string reason = "runtime-stop")
+src\CanDoItAll.Components.WebGlLib\Components\Scene\WebGlSceneView.razor:296:        => JsRuntime.InvokeAsync<WebGlSceneCommandResult?>("CanDoItAll.webglScene.stopRuntimeActivity", host, reason).AsTask();
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:245:        runtimeStopCount: diagnostics.runtimeStopCount || 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\02-webgl-scene-core.js:246:        lastRuntimeStopReason: diagnostics.lastRuntimeStopReason || "",
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\01-webgl-scene.js:11:import { cancelCommandStages as cancelRuntimeCommandStages, stopRuntimeActivity as stopRuntimeActivityCore } from "./39-webgl-scene-runtime-stop.js";
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\01-webgl-scene.js:137:    stopRuntimeActivity(host, reason) { const state = resolveState(host); return state ? stopRuntimeActivityCore(state, reason) : null; },
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:43:        runtimeStopCount: state.diagnostics.runtimeStopCount || 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:44:        lastRuntimeStopReason: state.diagnostics.lastRuntimeStopReason || "",
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:92:            runtimeStopCount: String(state.diagnostics.runtimeStopCount || 0),
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\08-webgl-scene-proof.js:93:            lastRuntimeStopReason: state.diagnostics.lastRuntimeStopReason || "",
+src\CanDoItAll.Components.BaseLib\Components\Modals\DialogService.cs:146:    internal Task CancelAsync(DialogReference dialog, CancellationToken cancellationToken)
+src\CanDoItAll.Components.BaseLib\Components\Modals\DialogService.cs:235:        cancellationRegistration = cancellationToken.Register(() => _ = owner.CancelAsync(this, cancellationToken));
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\39-webgl-scene-runtime-stop.js:29:export function stopRuntimeActivity(state, reason = "runtime-stop") {
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\39-webgl-scene-runtime-stop.js:53:    state.diagnostics.runtimeStopCount = (state.diagnostics.runtimeStopCount || 0) + 1;
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\39-webgl-scene-runtime-stop.js:54:    state.diagnostics.lastRuntimeStopReason = normalizedReason;
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\39-webgl-scene-runtime-stop.js:71:        runtimeStopCount: String(state.diagnostics.runtimeStopCount || 0),
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:45:        runtimeStopCount: 0,
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\25-webgl-scene-diagnostics.js:46:        lastRuntimeStopReason: "",
+
+## WebGlRun lifecycle, transaction, cancellation, and budget contracts
+docs\webgl\run-layer-boundary.md:47:Use `WebGlRunDocumentRunner` for deterministic load, seek, step, pause, cancel, stop, and current-frame execution. Use `WebGlRunBrowserApplyAdapter.ApplyPlaybackAsync` for multi-frame browser replay, and call `WebGlSceneView.StopRuntimeActivityAsync(reason)` on Pause, Cancel, Stop, Reset, Dispose, and route changes so active motions and queued stages are cleared through the public WebGlLib boundary.
+docs\webgl\playback-hosting-and-troubleshooting.md:13:7. Use `ApplyPlaybackAsync(WebGlRunPlaybackResult, cancellationToken)` for multi-frame browser replay. Use `ApplyAsync(WebGlRunFrameApplyResult)` only for a direct single-frame apply.
+docs\webgl\playback-hosting-and-troubleshooting.md:25:WebGlRunBrowserPlaybackApplyResult browser = await adapter.ApplyPlaybackAsync(playback, cancellationToken);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:35:        await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 3 });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:37:        var result = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 1 });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:40:        Assert.Equal(WebGlRunPlaybackCommandKinds.Seek, result.RequestedCommand);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:84:        var reset = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Reset });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:92:        var pause = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Pause });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:96:        var resumed = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Resume });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:121:        var seek = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Seek, TargetFrameIndex = 0 });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:122:        var step = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Step });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:123:        var previous = await controller.ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Previous });
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPlaybackControllerTests.cs:143:            Kind = WebGlRunPlaybackCommandKinds.Seek,
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPerformanceBudgetTests.cs:71:            SchemaVersion = "webglrun-performance-budget/v1",
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPerformanceBudgetTests.cs:237:        => Environment.GetEnvironmentVariable("CDA_WEBGLRUN_BUDGET_METRICS_PATH") is { Length: > 0 } configured
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunPerformanceBudgetTests.cs:239:            : Path.Combine(AppContext.BaseDirectory, "webglrun-performance-budget-metrics.json");
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunDocumentRunnerTests.cs:188:        Assert.Equal(WebGlRunPlaybackLifecycleStates.Paused, runner.State.PlaybackLifecycleState);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunDocumentRunnerTests.cs:199:        Assert.Equal(WebGlRunPlaybackLifecycleStates.Canceled, runner.State.PlaybackLifecycleState);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunDocumentRunnerTests.cs:210:        Assert.Equal(WebGlRunPlaybackLifecycleStates.Stopped, runner.State.PlaybackLifecycleState);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunDocumentRunnerTests.cs:234:        Assert.Equal(WebGlRunPlaybackLifecycleStates.Canceled, runner.State.PlaybackLifecycleState);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:299:            RequestedCommand = WebGlRunPlaybackCommandKinds.Seek,
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:309:        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:333:            RequestedCommand = WebGlRunPlaybackCommandKinds.Seek,
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:343:        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:346:        Assert.Equal(2, result.FailedFrameIndex);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:350:        Assert.Equal(WebGlRunBrowserPlaybackTransactionPolicies.StopOnFirstFailure, result.TransactionPolicy);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:351:        Assert.NotNull(result.FailureSnapshot);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:352:        Assert.Equal("3", result.FailureSnapshot.Diagnostics["targetFrameIndex"]);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:353:        Assert.Equal("1", result.FailureSnapshot.Diagnostics["lastAppliedFrameIndex"]);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:354:        Assert.Equal("2", result.FailureSnapshot.Diagnostics["failedFrameIndex"]);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:383:            RequestedCommand = WebGlRunPlaybackCommandKinds.Seek,
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:393:        WebGlRunBrowserPlaybackApplyResult result = await adapter.ApplyPlaybackAsync(playback, cancellation.Token);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:398:        Assert.Equal("frame apply canceled", result.CancellationReason);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:400:        Assert.Equal(2, result.FailedFrameIndex);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:402:        Assert.NotNull(result.FailureSnapshot);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:403:        Assert.Equal("3", result.FailureSnapshot.Diagnostics["targetFrameIndex"]);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:404:        Assert.Equal("2", result.FailureSnapshot.Diagnostics["lastAppliedFrameIndex"]);
+tests\CanDoItAll.Components.WebGlRunLib.Tests\WebGlRunBrowserApplyAdapterTests.cs:405:        Assert.Equal("frame apply canceled", result.FailureSnapshot.Diagnostics["cancellationReason"]);
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackResult.cs:25:    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:86:        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Reset, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:89:            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:98:        State.IsPlaying = string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:99:                          string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Resume, StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:103:            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Playing;
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:176:            new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Play },
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:189:                await ApplyDetailedAsync(new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Pause }, cancellationToken).ConfigureAwait(false);
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:209:                new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Next },
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:224:        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Reset, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:229:        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Seek, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:239:        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Previous, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:244:        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Play, StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:245:            string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Resume, StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:246:            string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Step, StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:247:            string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Next, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:275:        => string.Equals(commandKind, WebGlRunPlaybackCommandKinds.Pause, StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:276:           string.Equals(commandKind, WebGlRunPlaybackCommandKinds.Cancel, StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:277:           string.Equals(commandKind, WebGlRunPlaybackCommandKinds.Stop, StringComparison.OrdinalIgnoreCase);
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:288:        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Cancel, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:290:            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Canceled;
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:295:        if (string.Equals(command.Kind, WebGlRunPlaybackCommandKinds.Stop, StringComparison.OrdinalIgnoreCase))
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:297:            State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Stopped;
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackController.cs:302:        State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Paused;
+src\CanDoItAll.Components.WebGlRunLib\WebGlRunPlaybackCommandKinds.cs:3:public static class WebGlRunPlaybackCommandKinds
+src\CanDoItAll.Components.WebGlRunLib\README.md:53:Use `WebGlRunBrowserApplyAdapter.ApplyAsync(WebGlRunFrameApplyResult)` only for a direct single-frame apply. The legacy `ApplyAsync(WebGlRunPlaybackResult)` overload remains for compatibility with single-frame playback results, but it fails closed when `FramesToApply` contains multiple frames. Use `ApplyPlaybackAsync(WebGlRunPlaybackResult)` for multi-frame playback; it resets the scene once when required, applies each frame in the playback result order, returns per-frame results, and stops on the first failed frame.
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunRuntimeSnapshot.cs:55:    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunPlaybackState.cs:27:    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunPlaybackLifecycleStates.cs:3:public static class WebGlRunPlaybackLifecycleStates
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\37-webgl-scene-patch-policy.js:6:export function resolvePatchTransactionPolicy(patch) {
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\13-webgl-scene-patching.js:8:    resolvePatchTransactionPolicy
+src\CanDoItAll.Components.WebGlLib\wwwroot\js\runtime\scene\13-webgl-scene-patching.js:277:    const transactionPolicy = resolvePatchTransactionPolicy(patch);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunExecutionContracts.cs:55:    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunExecutionContracts.cs:88:    public string PlaybackLifecycleState { get; set; } = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:25:            new WebGlRunPlaybackCommand { Kind = WebGlRunPlaybackCommandKinds.Reset },
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:67:                Kind = WebGlRunPlaybackCommandKinds.Seek,
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:94:                    Kind = WebGlRunPlaybackCommandKinds.Seek,
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:186:        State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:199:        => StepAsync(WebGlRunPlaybackCommandKinds.Step, "step-forward", cancellationToken);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:201:        => StepAsync(WebGlRunPlaybackCommandKinds.Previous, "step-backward", cancellationToken);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:204:        => ApplyLifecycleControlAsync(WebGlRunPlaybackCommandKinds.Pause, "pause", WebGlRunPlaybackLifecycleStates.Paused, reason, cancellationToken);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:207:        => ApplyLifecycleControlAsync(WebGlRunPlaybackCommandKinds.Cancel, "cancel", WebGlRunPlaybackLifecycleStates.Canceled, reason, cancellationToken);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:210:        => ApplyLifecycleControlAsync(WebGlRunPlaybackCommandKinds.Stop, "stop", WebGlRunPlaybackLifecycleStates.Stopped, reason, cancellationToken);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:284:        State.PlaybackLifecycleState = WebGlRunPlaybackLifecycleStates.Idle;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:337:        CompleteLifecycleTransition(result, WebGlRunPlaybackLifecycleStates.Canceled, reason, canceledStageIds);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:357:        result.Paused = string.Equals(lifecycleState, WebGlRunPlaybackLifecycleStates.Paused, StringComparison.Ordinal);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:358:        result.Canceled = string.Equals(lifecycleState, WebGlRunPlaybackLifecycleStates.Canceled, StringComparison.Ordinal);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunDocumentRunner.cs:359:        result.Stopped = string.Equals(lifecycleState, WebGlRunPlaybackLifecycleStates.Stopped, StringComparison.Ordinal);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserRuntimeContracts.cs:15:    ValueTask<WebGlRunBrowserPlaybackApplyResult> ApplyPlaybackAsync(
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyResults.cs:42:    public string TransactionPolicy { get; set; } = WebGlRunBrowserPlaybackTransactionPolicies.StopOnFirstFailure;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyResults.cs:50:    public long? FailedFrameIndex { get; set; }
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyResults.cs:56:    public string CancellationReason { get; set; } = string.Empty;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyResults.cs:58:    public WebGlRunRuntimeSnapshot? FailureSnapshot { get; set; }
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:89:                    "Playback result contains multiple frames to apply. Use ApplyPlaybackAsync to apply reset and frames explicitly."
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:115:    public async ValueTask<WebGlRunBrowserPlaybackApplyResult> ApplyPlaybackAsync(
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:126:            TransactionPolicy = WebGlRunBrowserPlaybackTransactionPolicies.StopOnFirstFailure,
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:134:            result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, null, result);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:142:            result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, null, result);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:153:                result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, null, result);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:182:                result.FailureSnapshot = BuildPlaybackFailureSnapshot(playbackResult, resetFailureDiagnostics, result);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:217:                result.FailedFrameIndex = frameResult.FrameIndex;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:222:                result.FailureSnapshot = frameResult.RuntimeSnapshot;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:223:                AnnotatePlaybackFailureSnapshot(result.FailureSnapshot, playbackResult, result);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:250:        result.FailedFrameIndex = canceledFrameIndex;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:252:        result.CancellationReason = cancellationReason;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:254:        result.FailureSnapshot = failureSnapshot ?? BuildPlaybackFailureSnapshot(
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:258:        AnnotatePlaybackFailureSnapshot(result.FailureSnapshot, playbackResult, result);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:286:    private static WebGlRunRuntimeSnapshot BuildPlaybackFailureSnapshot(
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:293:            CurrentFrameIndex = result.FailedFrameIndex ?? result.LastAppliedFrameIndex ?? playbackResult.TargetFrameIndex,
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:330:        AnnotatePlaybackFailureSnapshot(snapshot, playbackResult, result);
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:334:    private static void AnnotatePlaybackFailureSnapshot(
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:341:        snapshot.Diagnostics["failedFrameIndex"] = result.FailedFrameIndex?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "";
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:342:        snapshot.Diagnostics["transactionPolicy"] = result.TransactionPolicy;
+src\CanDoItAll.Components.WebGlRunLib\Playback\WebGlRunBrowserApplyAdapter.cs:344:        snapshot.Diagnostics["cancellationReason"] = result.CancellationReason;
+
+## SB12 audit-script hardening
+tools\webgllib\audit-scene-runtime-imports.cjs:101:  const strippedSource = stripImportStatements(stripCommentsAndStrings(source));
+tools\webgllib\audit-scene-runtime-imports.cjs:311:function stripImportStatements(source) {
+tools\webgllib\audit-scene-runtime-imports.cjs:323:    if (isObjectMethodKey(source, match.index, name.length)) {
+tools\webgllib\audit-scene-runtime-imports.cjs:333:function isObjectMethodKey(source, index, length) {
+tools\webgllib\audit-scene-runtime.cjs:276:    ["src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunBrowserApplyAdapter.cs", "Existing multi-frame browser transaction adapter remains monitored by WebGlRunBrowserApplyAdapterTests and final playback proof."],
+tools\webgllib\audit-scene-runtime.cjs:277:    ["src/CanDoItAll.Components.WebGlRunLib/Playback/WebGlRunDocumentRunner.cs", "Existing runner lifecycle coordinator remains monitored by WebGlRunDocumentRunnerTests and final playback proof."]
+tools\webgllib\audit-scene-runtime.cjs:279:  const allowedLargeTestFiles = new Map([
+tools\webgllib\audit-scene-runtime.cjs:280:    ["tests/CanDoItAll.Components.WebGlRunLib.Tests/WebGlRunBrowserApplyAdapterTests.cs", "Existing browser adapter transaction suite is intentionally kept together until fixture extraction is scheduled."]
+tools\webgllib\audit-scene-runtime.cjs:302:    if (lines > 500 && !allowedLargeTestFiles.has(rel)) {
+
+## Economy replay, pathless source, and manifest hash contracts
+docs\SCENARIOS_AND_SIMULATION.md:77:- a strict `packHash` using `sha256:<64 lowercase hex characters>`;
+docs\SCENARIOS_AND_SIMULATION.md:78:- `fileHashes` entries for every required file, also using strict SHA-256 content hashes.
+docs\SCENARIOS_AND_SIMULATION.md:85:2. Recompute experiment input hashes and the manifest `fileHashes`.
+docs\SCENARIOS_AND_SIMULATION.md:86:3. Recompute the manifest `packHash`.
+docs\SCENARIOS_AND_SIMULATION.md:88:5. Verify `GetScenarioSource(scenarioId)` and the sandbox UI load the scenario without direct file-system paths.
+docs\SCENARIOS_AND_SIMULATION.md:95:- `incremental`: apply only the next contiguous forward frame when the browser has a known stable frame.
+tests\CanDoItAll.Economy.Tests\EconomyRealProbeArtifactExporterTests.cs:110:            .First(static item => item.Metadata.ContainsKey("source.inputPackHash"));
+tests\CanDoItAll.Economy.Tests\EconomyRealProbeArtifactExporterTests.cs:111:        stage.Metadata.Remove("source.inputPackHash");
+tests\CanDoItAll.Economy.Tests\EconomyReadinessProbeTests.cs:34:                    ExperimentJsonPath = Fixture("shared-well", "experiment.json")
+tests\CanDoItAll.Economy.Tests\EconomyReadinessProbeTests.cs:41:                    ExperimentJsonPath = Fixture("farmer-land", "experiment.json")
+tests\CanDoItAll.Economy.Tests\EconomySimulationSandboxComponentTests.cs:64:            .LoadScenario(
+tests\CanDoItAll.Economy.Tests\EconomySimulationSandboxComponentTests.cs:125:            .LoadScenario(
+tests\CanDoItAll.Economy.Tests\EconomySimulationSandboxComponentTests.cs:224:            PackHash = "sha256:pathless-shared-well-test",
+tests\CanDoItAll.Economy.Tests\EconomyWebGlInitialSceneProjectorSplitTests.cs:219:        Assert.Equal("sha256:stage", stage.Metadata["source.inputPackHash"]);
+docs\simulation\architecture-boundaries.md:70:- Runtime scenario manifests must lock every manifest-required file through `fileHashes` and lock the complete required-file set through `packHash`; experiment input pack hashes alone are not sufficient for catalog trust.
+docs\simulation\architecture-boundaries.md:72:- Browser replay should use full reset replay for manual/seek/load/back/recovery paths and reserve incremental replay for contiguous forward steps from a known stable browser frame.
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:121:        Assert.Equal("sha256:abc", document.Metadata["source.inputPackHash"]);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeTests.cs:361:        Assert.Equal($"sha256:{probeId}", stage.Metadata["source.inputPackHash"]);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:91:        const string inputPackHash = "sha256:dynamic-object";
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:96:            Metadata = SourceMetadata("action.add-object", "event.add-object", frameId, inputPackHash),
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:105:                        Metadata = SourceMetadata("action.add-object", "event.add-object", frameId, inputPackHash),
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:132:            addStage.Motions.Add(DynamicObjectMotion("motion.dynamic.same-stage", frameId, inputPackHash));
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:155:                Metadata = SourceMetadata("action.move-dynamic", "event.move-dynamic", frameId, inputPackHash),
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:158:                    DynamicObjectMotion("motion.dynamic.after-add", frameId, inputPackHash)
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:194:    private static WebGlObjectMotionCommand DynamicObjectMotion(string motionId, string frameId, string inputPackHash)
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:201:            Metadata = SourceMetadata("action.move-dynamic", "event.move-dynamic", frameId, inputPackHash)
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:208:        string inputPackHash)
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.Helpers.cs:214:            ["source.inputPackHash"] = inputPackHash
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:286:                ["source.inputPackHash"] = "sha256:invalid-stage-source"
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:339:        Assert.Equal("sha256:explicit-fallback", stage.Metadata["source.inputPackHash"]);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:355:        Assert.Equal("sha256:strict-gap", stage.Metadata["source.inputPackHash"]);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:359:        Assert.Equal("sha256:strict-gap", motion.Metadata["source.inputPackHash"]);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:412:        AssertStrictFailure("missing-source-input-pack-hash", document => document.Timeline.Frames.Single().Stages.Single().Metadata["source.inputPackHash"] = string.Empty);
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:416:        AssertStrictFailure("missing-command-source-input-pack-hash", document => document.Timeline.Frames.Single().Stages.Single().Motions.Single().Metadata.Remove("source.inputPackHash"));
+tests\CanDoItAll.Economy.Tests\EconomyWebGlBridgeStrictMappingTests.cs:429:                        ["source.inputPackHash"] = "sha256:strict-gap"
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\shared-well\experiment.json:75:    "packHash": "sha256:630f5fba3abac34af4db31bfe75bfb38669e84a2a7ddcf40516fa314ad67cdfc",
+tests\CanDoItAll.Economy.Tests\Fixtures\ExperimentInputs\farmer-land\experiment.json:74:    "packHash": "sha256:1b959a574057d7541b12713ac38dc4149c2bf47b54ca530be45dcfcc0919720c",
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunValidator.cs:37:                Require(!string.IsNullOrWhiteSpace(stage.Metadata.GetValueOrDefault("source.inputPackHash")), $"{stagePath}.source", "Stage must cite the source input pack hash.", result, "missing-source-input-pack-hash");
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunValidator.cs:185:        Require(!string.IsNullOrWhiteSpace(metadata.GetValueOrDefault("source.inputPackHash")), $"{path}.source.inputPackHash", "Command must cite the source input pack hash.", result, "missing-command-source-input-pack-hash");
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunProjector.cs:33:                ["source.inputPackHash"] = input.ExperimentHash
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlRunProjector.cs:47:                ["source.inputPackHash"] = input.ExperimentHash,
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:36:                ["source.inputPackHash"] = input.ExperimentHash,
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:128:                    ["source.inputPackHash"] = input.ExperimentHash,
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:173:        plan.Metadata["source.inputPackHash"] = input.ExperimentHash;
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlActionStageProjector.cs:256:            ["source.inputPackHash"] = input.ExperimentHash
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:115:                    ["source.inputPackHash"] = input.ExperimentHash
+src\CanDoItAll.Economy.Simulation.WebGlBridge\EconomyWebGlInitialSceneProjector.cs:123:                ["source.inputPackHash"] = input.ExperimentHash,
+tests\CanDoItAll.Economy.Tests\SimulationSnapshotAnalysisProbeTests.cs:172:        snapshot.ProvenanceHashes["experimentPack"] = projection.Input.ExperimentInputPack.Hashes.PackHash;
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:75:        Assert.NotEmpty(loaded.ExperimentInputPack.Hashes.PackHash);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:167:        EconomySimulationSandboxSession session = service.LoadScenario(
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:173:        Assert.Equal(string.Empty, session.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:175:        Assert.Equal("catalog", exported.ScenarioSourceKind);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:176:        Assert.StartsWith("sha256:", exported.ScenarioPackHash, StringComparison.Ordinal);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:177:        Assert.Equal(string.Empty, exported.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:239:            badHash.InputPackHash = $"sha256:{new string('0', 64)}";
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:282:        EconomySimulationSandboxSession session = await service.LoadScenarioAsync(
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:291:        Assert.Equal("catalog", exported.ScenarioSourceKind);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:293:        Assert.Equal(string.Empty, exported.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:300:        Assert.Equal(session.Input.ExperimentInputPack.Hashes.PackHash, exported.InputPackHash);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:323:        legacy.ScenarioSourceKind = string.Empty;
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:336:    public void SessionImport_UsesCatalogScenarioIdWhenExportedPathMovesAndRejectsPackHashMismatch()
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:345:            EconomySimulationSandboxSession session = service.LoadScenario("shared-well", new() { RunIdPrefix = "portable", FrameRate = 12 });
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:357:            EconomySimulationSandboxSessionExport badPackHash = CloneExport(exported);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:358:            badPackHash.ScenarioPackHash = $"sha256:{new string('f', 64)}";
+tests\CanDoItAll.Economy.Tests\SimulationSandboxSessionTests.cs:359:            EconomySandboxOperationResult<EconomySimulationSandboxSession> rejected = importedService.ImportSession(badPackHash);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:37:        Assert.StartsWith("sha256:", scenario.PackHash, StringComparison.Ordinal);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:38:        Assert.Equal(string.Empty, scenario.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:48:        EconomySimulationSandboxSession session = service.LoadScenario(
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:61:        Assert.Equal(string.Empty, session.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:67:    public void SessionService_LoadsPathlessScenarioSourceWithoutExperimentJsonPath()
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:70:        EconomySimulationScenarioSource source = catalog.GetScenarioSource(PathlessScenarioId);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:71:        Assert.Equal(string.Empty, source.Descriptor.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:87:        Assert.Equal(string.Empty, session.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:106:        EconomySimulationSandboxSession session = service.LoadScenario(
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:116:        Assert.Equal(string.Empty, descriptor.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:118:        Assert.Equal(string.Empty, session.ExperimentJsonPath);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:128:        Assert.Throws<ArgumentException>(() => catalog.ResolveExperimentJsonPath("../shared-well"));
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:192:    public void FileSystemScenarioCatalogRequiresManifestRequiredFilesList()
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:253:    public void FileSystemScenarioCatalogRejectsChangedManifestRequiredCompanionFile()
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:279:                 error.Contains("packHash", StringComparison.OrdinalIgnoreCase) ||
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:356:    public void FileSystemScenarioCatalogComputesPackHashDeterministicallyAcrossCopyOrder()
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:377:                scenarios.Single(static item => item.ScenarioId == "copy-a").PackHash,
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:378:                scenarios.Single(static item => item.ScenarioId == "copy-b").PackHash);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:403:            Assert.Equal(source.PackHash, output.PackHash);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:447:            PackHash = "sha256:pathless-shared-well-test",
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:504:            ["packHash"] = ComputeScenarioPackHash(scenarioDirectory),
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:510:            manifest["fileHashes"] = BuildFileHashes(scenarioDirectory, requiredFiles);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:528:    private static Dictionary<string, string> BuildFileHashes(string scenarioDirectory, IReadOnlyList<string> requiredFiles)
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:530:        var fileHashes = new Dictionary<string, string>(StringComparer.Ordinal);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:540:            fileHashes[normalizedFile] = ComputeFileHash(path);
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:543:        return fileHashes;
+tests\CanDoItAll.Economy.Tests\SimulationSandboxScenarioCatalogTests.cs:552:    private static string ComputeScenarioPackHash(string scenarioDirectory)
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:1057:                        inputPackHash = stage.Metadata.GetValueOrDefault("source.inputPackHash", string.Empty)
+tests\CanDoItAll.Economy.Tests\SimulationPreparationTests.cs:1070:                            inputPackHash = motion.Metadata.GetValueOrDefault("source.inputPackHash", string.Empty)
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:67:        invalid.Hashes.PackHash = "sha256:stale-pack";
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:75:                VerifyPackHash = true
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:83:        Assert.Contains(result.Messages, message => message.Path == "experimentInput.hashes.packHash");
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:87:    public void ExperimentInputPackValidator_RecomputesPackHashWhenEnabled()
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:96:        pack.Hashes.PackHash = $"sha256:{SimulationDeterministicHash.HashInputPack(pack)}";
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:97:        SimulationScenarioDefinitionValidationResult valid = new SimulationExperimentInputPackValidator().Validate(pack, new() { VerifyPackHash = true });
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:100:        SimulationScenarioDefinitionValidationResult invalid = new SimulationExperimentInputPackValidator().Validate(pack, new() { VerifyPackHash = true });
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputTests.cs:104:        Assert.Contains(invalid.Messages, message => message.Path == "experimentInput.hashes.packHash");
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:51:        Assert.Contains(result.Messages, message => message.Path == "experimentInput.hashes.packHash");
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:60:        pack.Hashes.PackHash = $"sha256:{SimulationDeterministicHash.HashInputPack(pack)}";
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:83:        traversalPack.Hashes.PackHash = $"sha256:{SimulationDeterministicHash.HashInputPack(traversalPack)}";
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:87:        rootedPack.Hashes.PackHash = $"sha256:{SimulationDeterministicHash.HashInputPack(rootedPack)}";
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:119:                VerifyPackHash = true
+tests\CanDoItAll.Economy.Tests\SimulationExperimentInputPackStrictModeTests.cs:146:        pack.Hashes.PackHash = $"sha256:{SimulationDeterministicHash.HashInputPack(pack)}";
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:40:            <strong data-testid="sandbox-scenario-pack-hash">@ShortHash(SelectedScenario?.PackHash)</strong>
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:189:    private string LastReplayMode = "none";
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:191:    private long? LastStableBrowserFrameIndex;
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:239:                ["lastStableFrameIndex"] = LastStableBrowserFrameIndex?.ToString(CultureInfo.InvariantCulture) ?? string.Empty,
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:240:                ["replayMode"] = LastReplayMode,
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:293:            EconomySimulationScenarioSource source = ScenarioCatalog.GetScenarioSource(scenario.ScenarioId);
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:340:            await ApplyCurrentFrameCoreAsync(ReplayRequestStepForward);
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:358:            await ApplyCurrentFrameCoreAsync(ReplayRequestStepBackward);
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:376:            await ApplyCurrentFrameCoreAsync(ReplayRequestSeek);
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:404:        => ExecuteAsync(() => ApplyCurrentFrameCoreAsync(ReplayRequestManual));
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:412:    private async Task ApplyCurrentFrameCoreAsync(string replayRequestKind)
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:420:        EconomyBrowserReplayPlan replayPlan = BuildReplayPlan(Session, LastStableBrowserFrameIndex, replayRequestKind);
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:425:        LastReplayMode = replayPlan.ReplayMode;
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:430:            LastStableBrowserFrameIndex = LastBrowserPlaybackApplyResult.TargetFrameIndex;
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:434:            ? $"Applied {LastReplayMode} browser replay with {LastBrowserPlaybackApplyResult.FrameResults.Count.ToString(CultureInfo.InvariantCulture)} frame(s) through frame {LastBrowserPlaybackApplyResult.TargetFrameIndex.ToString(CultureInfo.InvariantCulture)}."
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:487:            ReplayMode = canApplyIncrementally ? "incremental" : "full",
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:497:        LastReplayMode = "none";
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:499:        LastStableBrowserFrameIndex = null;
+src\CanDoItAll.Economy.Components\Components\SimulationSandbox\EconomySimulationSandboxPage.razor:596:        public string ReplayMode { get; set; } = "full";
+src\CanDoItAll.Economy.Node\SimulationScenarios\EconomySimulationSandbox\shared-well\scenario.manifest.json:8:  "packHash": "sha256:3d14b9b217c122517b54111f3e92a0278232f4940a244cea09d05e3cfd746a0e",
+src\CanDoItAll.Economy.Node\SimulationScenarios\EconomySimulationSandbox\shared-well\scenario.manifest.json:19:  "fileHashes": {
+src\CanDoItAll.Economy.SimulationSandbox\InMemoryEconomySimulationScenarioCatalog.cs:63:    public EconomySimulationScenarioSource GetScenarioSource(string scenarioId)
+src\CanDoItAll.Economy.SimulationSandbox\InMemoryEconomySimulationScenarioCatalog.cs:82:    public string ResolveExperimentJsonPath(string scenarioId)
+src\CanDoItAll.Economy.SimulationSandbox\InMemoryEconomySimulationScenarioCatalog.cs:83:        => GetScenario(scenarioId).ExperimentJsonPath;
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:56:        => File.OpenRead(ResolveExperimentJsonPath(scenarioId));
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:58:    public EconomySimulationScenarioSource GetScenarioSource(string scenarioId)
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:61:        string experimentPath = ResolveExperimentJsonPath(descriptor.ScenarioId);
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:75:    public string ResolveExperimentJsonPath(string scenarioId)
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:99:        string packHash = ComputeScenarioPackHash(scenarioDirectory);
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:123:            ValidateScenarioPackManifest(scenarioDirectory, manifest, experimentFile, packHash, validationErrors);
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:158:            PackHash = packHash,
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:170:        string actualPackHash,
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:198:        if (string.IsNullOrWhiteSpace(manifest.PackHash))
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:200:            validationErrors.Add("Scenario manifest packHash is required.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:204:            if (!IsStrictSha256Hash(manifest.PackHash))
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:206:                validationErrors.Add("Scenario manifest packHash must use sha256:<64 lowercase hexadecimal characters>.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:209:            if (!string.Equals(manifest.PackHash, actualPackHash, StringComparison.Ordinal))
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:211:                validationErrors.Add("Scenario manifest packHash does not match scenario pack files.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:256:        ValidateManifestFileHashes(scenarioDirectory, manifest, required, validationErrors);
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:259:    private static void ValidateManifestFileHashes(
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:265:        if (manifest.FileHashes is null || manifest.FileHashes.Count == 0)
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:267:            validationErrors.Add("Scenario manifest fileHashes must list every required pack file.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:271:        var fileHashes = new Dictionary<string, string?>(StringComparer.Ordinal);
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:272:        foreach (KeyValuePair<string, string> entry in manifest.FileHashes)
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:277:                validationErrors.Add($"Scenario manifest fileHashes entry '{entry.Key}' must be a safe relative path.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:281:            if (!fileHashes.TryAdd(normalizedFile, entry.Value))
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:283:                validationErrors.Add($"Scenario manifest fileHashes contains duplicate file '{normalizedFile}'.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:288:                validationErrors.Add($"Scenario manifest fileHashes entry '{normalizedFile}' must match a requiredFiles entry.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:293:                validationErrors.Add($"Scenario manifest fileHashes entry '{normalizedFile}' was not found.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:299:            if (!fileHashes.TryGetValue(requiredFile, out string? manifestHash))
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:301:                validationErrors.Add($"Scenario manifest fileHashes must include required file '{requiredFile}'.");
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:343:                    VerifyPackHash = true
+src\CanDoItAll.Economy.SimulationSandbox\FileSystemEconomySimulationScenarioCatalog.cs:443:    private static string ComputeScenarioPackHash(string scenarioDirectory)
+src\CanDoItAll.Economy.Node\SimulationScenarios\EconomySimulationSandbox\shared-well\experiment.json:75:    "packHash": "sha256:630f5fba3abac34af4db31bfe75bfb38669e84a2a7ddcf40516fa314ad67cdfc",
+src\CanDoItAll.Economy.Node\SimulationScenarios\EconomySimulationSandbox\farmer-land\experiment.json:74:    "packHash": "sha256:1b959a574057d7541b12713ac38dc4149c2bf47b54ca530be45dcfcc0919720c",
+src\CanDoItAll.Economy.Node\SimulationScenarios\EconomySimulationSandbox\farmer-land\scenario.manifest.json:8:  "packHash": "sha256:a6cd8733e86ae783f7c323c6fa9087a724875220a56f244d02d772e43242b384",
+src\CanDoItAll.Economy.Node\SimulationScenarios\EconomySimulationSandbox\farmer-land\scenario.manifest.json:19:  "fileHashes": {
+src\CanDoItAll.Economy.SimulationSandbox\EconomyRealScenarioRunner.cs:50:        string resolvedScenarioId = ResolveScenarioId(scenarioId, session.ExperimentJsonPath, session);
+src\CanDoItAll.Economy.SimulationSandbox\EconomyRealProbeArtifactExporter.cs:79:            inputPackHash = session.Input.ExperimentInputPack.Hashes.PackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomyRealScenarioReadinessReporter.cs:40:                scenario.ExperimentJsonPath,
+src\CanDoItAll.Economy.SimulationSandbox\EconomyRealScenarioReadinessReporter.cs:407:    public string ExperimentJsonPath { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxPipelines.cs:254:            ExperimentHash = request.Input.ExperimentInputPack.Hashes.PackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:14:    EconomySimulationScenarioSource GetScenarioSource(string scenarioId);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:20:    string ResolveExperimentJsonPath(string scenarioId);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:23:public sealed class EconomySimulationScenarioSource(
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:39:    public static EconomySimulationScenarioSource FromPath(string experimentJsonPath)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:82:    string ExperimentJsonPath,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:93:    public string PackHash { get; init; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:120:    public string PackHash { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:124:    public Dictionary<string, string> FileHashes { get; set; } = [];
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:137:    EconomySimulationSandboxProjection Project(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:151:    EconomySimulationSandboxSession Load(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:154:        EconomySimulationScenarioSource source,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:158:    EconomySandboxOperationResult<EconomySimulationSandboxSession> TryLoad(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:160:    EconomySimulationSandboxSession LoadScenario(string scenarioId, EconomyWebGlProjectionOptions? options = null);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:162:    ValueTask<EconomySimulationSandboxSession> LoadScenarioAsync(
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:167:    EconomySandboxOperationResult<EconomySimulationSandboxSession> TryLoadScenario(string scenarioId, EconomyWebGlProjectionOptions? options = null);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:358:    public string ExperimentJsonPath { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:362:    public string ScenarioPackHash { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:417:    public string ScenarioPackHash { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:419:    public string ScenarioSourceKind { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:424:    public string ExperimentJsonPath { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxContracts.cs:434:    public string InputPackHash { get; set; } = string.Empty;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:26:        return Load(EconomySimulationScenarioSource.FromPath(experimentJsonPath), options);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:43:    public EconomySimulationSandboxSession Load(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:52:            ExperimentJsonPath = descriptor.ExperimentJsonPath,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:56:            ScenarioPackHash = descriptor.PackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:64:        EconomySimulationScenarioSource source,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:73:        EconomySimulationScenarioSource source,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:77:    public EconomySimulationSandboxSession LoadScenario(string scenarioId, EconomyWebGlProjectionOptions? options = null)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:82:        return Load(catalog.GetScenarioSource(scenarioId), options);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:85:    public ValueTask<EconomySimulationSandboxSession> LoadScenarioAsync(
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:91:        return ValueTask.FromResult(LoadScenario(scenarioId, options));
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:94:    public EconomySandboxOperationResult<EconomySimulationSandboxSession> TryLoadScenario(
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:97:        => Try(() => LoadScenario(scenarioId, options));
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:102:        if (string.IsNullOrWhiteSpace(session.ExperimentJsonPath))
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:106:                return Project(session, scenarioCatalog.GetScenarioSource(session.ScenarioId));
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:112:        EconomySimulationSandboxProjection projection = workflow.Project(session.ExperimentJsonPath, session.Options);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:126:        EconomySimulationScenarioSource source)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:131:        session.ExperimentJsonPath = descriptor.ExperimentJsonPath;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:135:        session.ScenarioPackHash = FirstNonEmpty(session.ScenarioPackHash, descriptor.PackHash);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:152:        session.ScenarioPackHash = FirstNonEmpty(session.ScenarioPackHash, session.Input.ExperimentInputPack.Hashes.PackHash);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:180:        if (!string.IsNullOrWhiteSpace(session.ExperimentJsonPath))
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:182:            return $"session.{Path.GetFileNameWithoutExtension(session.ExperimentJsonPath)}";
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:361:            ExperimentJsonPath = sessionExport.ExperimentJsonPath,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:365:            ScenarioPackHash = sessionExport.ScenarioPackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:377:            return Project(session, ResolveImportScenarioSource(sessionExport));
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:386:        session.ExperimentJsonPath = experimentPath;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:390:    private EconomySimulationScenarioSource ResolveImportScenarioSource(EconomySimulationSandboxSessionExport sessionExport)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:395:        if (!string.IsNullOrWhiteSpace(sessionExport.ScenarioPackHash) &&
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:396:            !string.Equals(scenario.PackHash, sessionExport.ScenarioPackHash, StringComparison.Ordinal))
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:401:        return catalog.GetScenarioSource(sessionExport.ScenarioId);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:424:            ["scenarioPackHash"] = session.ScenarioPackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:480:        bool hasLegacyExperimentPath = !string.IsNullOrWhiteSpace(session.ExperimentJsonPath);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:482:        string experimentPath = string.IsNullOrWhiteSpace(session.ExperimentJsonPath)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:484:            : Path.GetFullPath(session.ExperimentJsonPath);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:492:        string inputPackHash = session.Input.ExperimentInputPack.Hashes.PackHash;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:493:        string scenarioPackHash = FirstNonEmpty(session.ScenarioPackHash, inputPackHash);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:500:            ScenarioPackHash = scenarioPackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:501:            ScenarioSourceKind = ResolveScenarioSourceKind(session),
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:505:            ExperimentJsonPath = experimentPath,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:510:            InputPackHash = inputPackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:524:                ["scenarioSourceKind"] = ResolveScenarioSourceKind(session),
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:525:                ["scenarioPackHash"] = scenarioPackHash,
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:526:                ["inputPackHash"] = inputPackHash
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:541:    private static string ResolveScenarioSourceKind(EconomySimulationSandboxSession session)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:548:        return string.IsNullOrWhiteSpace(session.ExperimentJsonPath) ? "pathless" : "legacy-path";
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:593:        if (!string.IsNullOrWhiteSpace(sessionExport.InputPackHash) &&
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:594:            !string.Equals(session.Input.ExperimentInputPack.Hashes.PackHash, sessionExport.InputPackHash, StringComparison.Ordinal))
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:681:            ? Path.GetDirectoryName(Path.GetFullPath(session.ExperimentJsonPath)) ?? Directory.GetCurrentDirectory()
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:742:        if (string.IsNullOrWhiteSpace(sessionExport.ExperimentJsonPath))
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxSessionService.cs:747:        return Path.GetFullPath(sessionExport.ExperimentJsonPath);
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:20:    public EconomySimulationSandboxProjection Project(EconomySimulationScenarioSource source, EconomyWebGlProjectionOptions? options = null)
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:23:        string experimentPath = source.Descriptor.ExperimentJsonPath;
+src\CanDoItAll.Economy.SimulationSandbox\EconomySimulationSandboxWorkflow.cs:120:    private static string MaterializeSource(EconomySimulationScenarioSource source, string targetDirectory)
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:43:    public string PackHash { get; set; } = string.Empty;
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:52:    public bool VerifyPackHash { get; set; }
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:201:        if (options.VerifyPackHash || !string.IsNullOrWhiteSpace(pack.Hashes.PackHash))
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:203:            Require(!string.IsNullOrWhiteSpace(pack.Hashes.PackHash), "experimentInput.hashes.packHash", "Pack hash is required when pack hash verification is enabled.", result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:204:            Require(!options.StrictHashValidation || IsValidContentHash(pack.Hashes.PackHash, strict: true), "experimentInput.hashes.packHash", "Pack hash must use sha256:<64 lowercase hexadecimal characters> in strict mode.", result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:207:                string.Equals(NormalizeHash(pack.Hashes.PackHash), NormalizeHash(actualHash), StringComparison.Ordinal),
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPack.cs:208:                "experimentInput.hashes.packHash",
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:16:    public bool VerifyPackHash { get; set; }
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:81:                VerifyPackHash = options.VerifyPackHash || options.StrictMode
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentInputPackLoader.cs:89:        result.Hashes["pack"] = result.ExperimentInputPack.Hashes.PackHash;
+
+Components runtime hits: 61
+WebGlRun contract hits: 112
+Audit-script hits: 9
+Economy contract hits: 253

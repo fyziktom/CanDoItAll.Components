@@ -1,0 +1,992 @@
+{
+  "schemaVersion": "economy-headless-simulation-frames/v1",
+  "frames": [
+    {
+      "frameId": "run.simple.shared-well-community.state-transition.frame.0",
+      "run": {
+        "runId": "run.simple.shared-well-community.state-transition",
+        "scenarioId": "simple.shared-well-community",
+        "backendId": "simple-accounts",
+        "createdAtUtc": "2026-01-01T00:00:00+00:00",
+        "metadata": {
+          "deterministicSeed": "run.simple.shared-well-community.state-transition"
+        }
+      },
+      "clock": {
+        "stepIndex": 0,
+        "simulatedAtUtc": "2026-01-01T00:00:00+00:00",
+        "stepDuration": "1.00:00:00"
+      },
+      "actors": [
+        {
+          "actorId": "far-household",
+          "kind": "household",
+          "displayName": "Far Household",
+          "role": "buyer",
+          "metadata": {
+            "homeLocationId": "far-home",
+            "location.x": "6",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "near-household",
+          "kind": "household",
+          "displayName": "Near Household",
+          "role": "collector-reseller",
+          "metadata": {
+            "homeLocationId": "near-home",
+            "location.x": "1",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "rule-council",
+          "kind": "institution",
+          "displayName": "Rule Council",
+          "role": "governance",
+          "metadata": {
+            "homeLocationId": "council-hall",
+            "location.x": "-2",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "well-keeper",
+          "kind": "institution",
+          "displayName": "Well Keeper",
+          "role": "maintenance",
+          "metadata": {
+            "homeLocationId": "keeper-office",
+            "location.x": "0",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        }
+      ],
+      "resourceStores": [
+        {
+          "storeId": "store.council.tax",
+          "ownerActorId": "rule-council",
+          "resourceId": "cash",
+          "resourceKind": "cash",
+          "displayName": "Council tax reserve",
+          "quantity": 0,
+          "unit": "token",
+          "metadata": {
+            "locationId": "council-hall"
+          }
+        },
+        {
+          "storeId": "store.far.water",
+          "ownerActorId": "far-household",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Far water stock",
+          "quantity": 1,
+          "unit": "bucket",
+          "capacity": 10,
+          "metadata": {
+            "locationId": "far-home"
+          }
+        },
+        {
+          "storeId": "store.near.water",
+          "ownerActorId": "near-household",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Near water stock",
+          "quantity": 2,
+          "unit": "bucket",
+          "capacity": 20,
+          "metadata": {
+            "locationId": "near-home"
+          }
+        },
+        {
+          "storeId": "store.well.water",
+          "ownerActorId": "well-keeper",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Well water",
+          "quantity": 92,
+          "unit": "bucket",
+          "capacity": 100,
+          "metadata": {
+            "locationId": "shared-well"
+          }
+        }
+      ],
+      "flows": [],
+      "relationships": [
+        {
+          "relationshipId": "rel.near.far.trust",
+          "sourceActorId": "near-household",
+          "targetActorId": "far-household",
+          "kind": "trust",
+          "strength": 0.5,
+          "metadata": {}
+        }
+      ],
+      "events": [],
+      "rules": [
+        {
+          "ruleId": "rule.water-draw-limit",
+          "displayName": "Daily draw limit",
+          "category": "allocation",
+          "metadata": {}
+        },
+        {
+          "ruleId": "rule.resale-tax",
+          "displayName": "Water resale tax",
+          "category": "tax",
+          "metadata": {}
+        },
+        {
+          "ruleId": "rule.admin-ledger",
+          "displayName": "Resale documentation",
+          "category": "admin",
+          "metadata": {}
+        }
+      ],
+      "issues": [],
+      "artifacts": [],
+      "deterministicHash": "5ffc11f500e1ce7613fa15decad055701133ac9c2db3d0c024bd30bd33d5b81a",
+      "metadata": {
+        "materializer": "SimpleSimulationStateTransitionEngine",
+        "baseline": "true",
+        "expansionProfileId": "",
+        "expansionProfileVersion": "",
+        "expansionProfileHash": "7fbdc159c21146395a092fe47a3f51ca242bf5bfa4787bf01a3ea8e3dc1ad3a2"
+      }
+    },
+    {
+      "frameId": "run.simple.shared-well-community.state-transition.frame.1",
+      "run": {
+        "runId": "run.simple.shared-well-community.state-transition",
+        "scenarioId": "simple.shared-well-community",
+        "backendId": "simple-accounts",
+        "createdAtUtc": "2026-01-01T00:00:00+00:00",
+        "metadata": {
+          "deterministicSeed": "run.simple.shared-well-community.state-transition"
+        }
+      },
+      "clock": {
+        "stepIndex": 1,
+        "simulatedAtUtc": "2026-01-02T00:00:00+00:00",
+        "stepDuration": "1.00:00:00"
+      },
+      "actors": [
+        {
+          "actorId": "far-household",
+          "kind": "household",
+          "displayName": "Far Household",
+          "role": "buyer",
+          "metadata": {
+            "homeLocationId": "far-home",
+            "location.x": "6",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "near-household",
+          "kind": "household",
+          "displayName": "Near Household",
+          "role": "collector-reseller",
+          "metadata": {
+            "homeLocationId": "near-home",
+            "location.x": "1",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "rule-council",
+          "kind": "institution",
+          "displayName": "Rule Council",
+          "role": "governance",
+          "metadata": {
+            "homeLocationId": "council-hall",
+            "location.x": "-2",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "well-keeper",
+          "kind": "institution",
+          "displayName": "Well Keeper",
+          "role": "maintenance",
+          "metadata": {
+            "homeLocationId": "keeper-office",
+            "location.x": "0",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        }
+      ],
+      "resourceStores": [
+        {
+          "storeId": "store.council.tax",
+          "ownerActorId": "rule-council",
+          "resourceId": "cash",
+          "resourceKind": "cash",
+          "displayName": "Council tax reserve",
+          "quantity": 0,
+          "unit": "token",
+          "metadata": {
+            "locationId": "council-hall"
+          }
+        },
+        {
+          "storeId": "store.far.water",
+          "ownerActorId": "far-household",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Far water stock",
+          "quantity": 1,
+          "unit": "bucket",
+          "capacity": 10,
+          "metadata": {
+            "locationId": "far-home"
+          }
+        },
+        {
+          "storeId": "store.near.water",
+          "ownerActorId": "near-household",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Near water stock",
+          "quantity": 10,
+          "unit": "bucket",
+          "capacity": 20,
+          "metadata": {
+            "locationId": "near-home",
+            "lastResolutionPolicy.target": "actor-owned"
+          }
+        },
+        {
+          "storeId": "store.well.water",
+          "ownerActorId": "well-keeper",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Well water",
+          "quantity": 84,
+          "unit": "bucket",
+          "capacity": 100,
+          "metadata": {
+            "locationId": "shared-well",
+            "lastResolutionPolicy.shared": "location-owned"
+          }
+        }
+      ],
+      "flows": [
+        {
+          "flowId": "flow.event.near.collect.1.use-source",
+          "fromStoreId": "store.well.water",
+          "toStoreId": "store.near.water",
+          "fromActorId": "well-keeper",
+          "toActorId": "near-household",
+          "resourceId": "water",
+          "quantity": 8,
+          "unit": "bucket",
+          "reason": "use-source",
+          "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+          "metadata": {
+            "sourceEventId": "event.near.collect.1",
+            "storeResolution.target.policy": "actor-owned",
+            "storeResolution.target.storeId": "store.near.water",
+            "storeResolution.target.reason": "default-policy",
+            "storeResolution.target.candidateCount": "1",
+            "storeResolution.target.actorId": "near-household",
+            "storeResolution.target.locationId": "",
+            "storeResolution.target.resourceId": "water",
+            "storeResolution.target.poolId": "",
+            "storeResolution.shared.policy": "location-owned",
+            "storeResolution.shared.storeId": "store.well.water",
+            "storeResolution.shared.reason": "default-policy",
+            "storeResolution.shared.candidateCount": "1",
+            "storeResolution.shared.actorId": "shared-well",
+            "storeResolution.shared.locationId": "shared-well",
+            "storeResolution.shared.resourceId": "water",
+            "storeResolution.shared.poolId": "",
+            "storeResolution.source.policy": "location-owned",
+            "storeResolution.source.storeId": "store.well.water",
+            "storeResolution.source.reason": "default-policy",
+            "storeResolution.source.candidateCount": "1",
+            "storeResolution.source.actorId": "shared-well",
+            "storeResolution.source.locationId": "shared-well",
+            "storeResolution.source.resourceId": "water",
+            "storeResolution.source.poolId": ""
+          }
+        }
+      ],
+      "relationships": [
+        {
+          "relationshipId": "rel.near.far.trust",
+          "sourceActorId": "near-household",
+          "targetActorId": "far-household",
+          "kind": "trust",
+          "strength": 0.5,
+          "metadata": {}
+        }
+      ],
+      "events": [
+        {
+          "eventId": "event.near.collect.1",
+          "kind": "actor.resource.use",
+          "eventKind": "actor.resource.use",
+          "stepIndex": 1,
+          "actorId": "near-household",
+          "targetActorId": "near-household",
+          "placeId": "near-home",
+          "resourceId": "water",
+          "quantity": 8,
+          "durationSeconds": 1200,
+          "actorIds": [
+            "near-household"
+          ],
+          "resourceIds": [
+            "water"
+          ],
+          "sourceId": "shared-well",
+          "targetId": "near-household",
+          "source": {
+            "kind": "location",
+            "id": "shared-well",
+            "metadata": {}
+          },
+          "target": {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          "participantRefs": [
+            {
+              "kind": "actor",
+              "id": "near-household",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "near-home",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "shared-well",
+              "metadata": {}
+            },
+            {
+              "kind": "resource",
+              "id": "water",
+              "metadata": {}
+            }
+          ],
+          "occurredAtUtc": "2026-01-02T00:00:00+00:00",
+          "duration": "00:20:00",
+          "magnitude": 8,
+          "timing": {
+            "stepIndex": 1,
+            "offset": "00:00:00",
+            "duration": "00:20:00",
+            "order": 0
+          },
+          "participants": [
+            {
+              "participantId": "near-home",
+              "role": "location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "near-home",
+              "metadata": {}
+            },
+            {
+              "participantId": "near-household",
+              "role": "actor",
+              "actorId": "near-household",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "shared-well",
+              "role": "source",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "water",
+              "role": "resource",
+              "actorId": "",
+              "resourceId": "water",
+              "locationId": "",
+              "metadata": {}
+            }
+          ],
+          "effects": [],
+          "storeResolutionPolicies": [],
+          "metadata": {
+            "canonicalEventKind": "actor.resource.use",
+            "sourceLocationId": "shared-well",
+            "targetLocationId": "near-home",
+            "expansion": "explicit",
+            "phase": "primary",
+            "expansionProfileId": "none",
+            "expansionProfileVersion": "v1",
+            "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+            "parentEventId": "event.near.collect.1",
+            "expansionRuleHash": "c46e6c59130dc471a9f2aeee6115d489072da61e3f9654535c91a80655454b31",
+            "eventOrder": "0",
+            "storeResolution.target.policy": "actor-owned",
+            "storeResolution.target.storeId": "store.near.water",
+            "storeResolution.target.reason": "default-policy",
+            "storeResolution.target.candidateCount": "1",
+            "storeResolution.target.actorId": "near-household",
+            "storeResolution.target.locationId": "",
+            "storeResolution.target.resourceId": "water",
+            "storeResolution.target.poolId": "",
+            "storeResolution.shared.policy": "location-owned",
+            "storeResolution.shared.storeId": "store.well.water",
+            "storeResolution.shared.reason": "default-policy",
+            "storeResolution.shared.candidateCount": "1",
+            "storeResolution.shared.actorId": "shared-well",
+            "storeResolution.shared.locationId": "shared-well",
+            "storeResolution.shared.resourceId": "water",
+            "storeResolution.shared.poolId": ""
+          }
+        }
+      ],
+      "rules": [
+        {
+          "ruleId": "rule.water-draw-limit",
+          "displayName": "Daily draw limit",
+          "category": "allocation",
+          "metadata": {}
+        },
+        {
+          "ruleId": "rule.resale-tax",
+          "displayName": "Water resale tax",
+          "category": "tax",
+          "metadata": {}
+        },
+        {
+          "ruleId": "rule.admin-ledger",
+          "displayName": "Resale documentation",
+          "category": "admin",
+          "metadata": {}
+        }
+      ],
+      "issues": [],
+      "artifacts": [],
+      "deterministicHash": "c181347c60d9c2385b4aecffbd1ec2d6ea48aecbc9db524df9242396a71d5b69",
+      "metadata": {
+        "materializer": "SimpleSimulationStateTransitionEngine",
+        "expansionProfileId": "",
+        "expansionProfileVersion": "",
+        "expansionProfileHash": "7fbdc159c21146395a092fe47a3f51ca242bf5bfa4787bf01a3ea8e3dc1ad3a2"
+      }
+    },
+    {
+      "frameId": "run.simple.shared-well-community.state-transition.frame.2",
+      "run": {
+        "runId": "run.simple.shared-well-community.state-transition",
+        "scenarioId": "simple.shared-well-community",
+        "backendId": "simple-accounts",
+        "createdAtUtc": "2026-01-01T00:00:00+00:00",
+        "metadata": {
+          "deterministicSeed": "run.simple.shared-well-community.state-transition"
+        }
+      },
+      "clock": {
+        "stepIndex": 2,
+        "simulatedAtUtc": "2026-01-03T00:00:00+00:00",
+        "stepDuration": "1.00:00:00"
+      },
+      "actors": [
+        {
+          "actorId": "far-household",
+          "kind": "household",
+          "displayName": "Far Household",
+          "role": "buyer",
+          "metadata": {
+            "homeLocationId": "far-home",
+            "location.x": "6",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "near-household",
+          "kind": "household",
+          "displayName": "Near Household",
+          "role": "collector-reseller",
+          "metadata": {
+            "homeLocationId": "near-home",
+            "location.x": "1",
+            "location.y": "0",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "rule-council",
+          "kind": "institution",
+          "displayName": "Rule Council",
+          "role": "governance",
+          "metadata": {
+            "homeLocationId": "council-hall",
+            "location.x": "-2",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        },
+        {
+          "actorId": "well-keeper",
+          "kind": "institution",
+          "displayName": "Well Keeper",
+          "role": "maintenance",
+          "metadata": {
+            "homeLocationId": "keeper-office",
+            "location.x": "0",
+            "location.y": "2",
+            "location.z": "0"
+          }
+        }
+      ],
+      "resourceStores": [
+        {
+          "storeId": "store.council.tax",
+          "ownerActorId": "rule-council",
+          "resourceId": "cash",
+          "resourceKind": "cash",
+          "displayName": "Council tax reserve",
+          "quantity": 0,
+          "unit": "token",
+          "metadata": {
+            "locationId": "council-hall"
+          }
+        },
+        {
+          "storeId": "store.far.water",
+          "ownerActorId": "far-household",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Far water stock",
+          "quantity": 4,
+          "unit": "bucket",
+          "capacity": 10,
+          "metadata": {
+            "locationId": "far-home",
+            "lastResolutionPolicy.target": "actor-owned"
+          }
+        },
+        {
+          "storeId": "store.near.water",
+          "ownerActorId": "near-household",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Near water stock",
+          "quantity": 7,
+          "unit": "bucket",
+          "capacity": 20,
+          "metadata": {
+            "locationId": "near-home",
+            "lastResolutionPolicy.target": "actor-owned",
+            "lastResolutionPolicy.source": "actor-owned"
+          }
+        },
+        {
+          "storeId": "store.well.water",
+          "ownerActorId": "well-keeper",
+          "resourceId": "water",
+          "resourceKind": "water",
+          "displayName": "Well water",
+          "quantity": 84,
+          "unit": "bucket",
+          "capacity": 100,
+          "metadata": {
+            "locationId": "shared-well",
+            "lastResolutionPolicy.shared": "location-owned"
+          }
+        }
+      ],
+      "flows": [
+        {
+          "flowId": "flow.event.near.resell.2.transfer",
+          "fromStoreId": "store.near.water",
+          "toStoreId": "store.far.water",
+          "fromActorId": "near-household",
+          "toActorId": "far-household",
+          "resourceId": "water",
+          "quantity": 3,
+          "unit": "bucket",
+          "reason": "transfer",
+          "occurredAtUtc": "2026-01-03T00:00:00+00:00",
+          "metadata": {
+            "sourceEventId": "event.near.resell.2",
+            "storeResolution.source.policy": "actor-owned",
+            "storeResolution.source.storeId": "store.near.water",
+            "storeResolution.source.reason": "default-policy",
+            "storeResolution.source.candidateCount": "1",
+            "storeResolution.source.actorId": "near-household",
+            "storeResolution.source.locationId": "",
+            "storeResolution.source.resourceId": "water",
+            "storeResolution.source.poolId": "",
+            "storeResolution.target.policy": "actor-owned",
+            "storeResolution.target.storeId": "store.far.water",
+            "storeResolution.target.reason": "default-policy",
+            "storeResolution.target.candidateCount": "1",
+            "storeResolution.target.actorId": "far-household",
+            "storeResolution.target.locationId": "",
+            "storeResolution.target.resourceId": "water",
+            "storeResolution.target.poolId": ""
+          }
+        }
+      ],
+      "relationships": [
+        {
+          "relationshipId": "rel.near.far.trust",
+          "sourceActorId": "near-household",
+          "targetActorId": "far-household",
+          "kind": "trust",
+          "strength": 0.5,
+          "metadata": {}
+        }
+      ],
+      "events": [
+        {
+          "eventId": "event.free.violation.2",
+          "kind": "rule.violation.detect",
+          "eventKind": "rule.violation.detect",
+          "stepIndex": 2,
+          "actorId": "near-household",
+          "targetActorId": "rule-council",
+          "placeId": "council-hall",
+          "resourceId": "water",
+          "quantity": -0.1,
+          "durationSeconds": 300,
+          "actorIds": [
+            "near-household",
+            "rule-council"
+          ],
+          "resourceIds": [
+            "water"
+          ],
+          "sourceId": "near-household",
+          "targetId": "rule.water-draw-limit",
+          "source": {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          "target": {
+            "kind": "object",
+            "id": "rule.water-draw-limit",
+            "metadata": {}
+          },
+          "participantRefs": [
+            {
+              "kind": "actor",
+              "id": "near-household",
+              "metadata": {}
+            },
+            {
+              "kind": "actor",
+              "id": "rule-council",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "council-hall",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "near-home",
+              "metadata": {}
+            },
+            {
+              "kind": "object",
+              "id": "rule.water-draw-limit",
+              "metadata": {}
+            },
+            {
+              "kind": "resource",
+              "id": "water",
+              "metadata": {}
+            }
+          ],
+          "occurredAtUtc": "2026-01-03T00:00:00+00:00",
+          "duration": "00:05:00",
+          "magnitude": -0.1,
+          "timing": {
+            "stepIndex": 2,
+            "offset": "00:00:00",
+            "duration": "00:05:00",
+            "order": 0
+          },
+          "participants": [
+            {
+              "participantId": "council-hall",
+              "role": "location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "council-hall",
+              "metadata": {}
+            },
+            {
+              "participantId": "near-home",
+              "role": "source-location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "near-home",
+              "metadata": {}
+            },
+            {
+              "participantId": "near-household",
+              "role": "actor",
+              "actorId": "near-household",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "rule-council",
+              "role": "target-actor",
+              "actorId": "rule-council",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "rule.water-draw-limit",
+              "role": "target",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "water",
+              "role": "resource",
+              "actorId": "",
+              "resourceId": "water",
+              "locationId": "",
+              "metadata": {}
+            }
+          ],
+          "effects": [],
+          "storeResolutionPolicies": [],
+          "metadata": {
+            "canonicalEventKind": "rule.violation.detect",
+            "sourceLocationId": "near-home",
+            "targetLocationId": "council-hall",
+            "expansion": "explicit",
+            "phase": "primary",
+            "expansionProfileId": "none",
+            "expansionProfileVersion": "v1",
+            "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+            "parentEventId": "event.free.violation.2",
+            "expansionRuleHash": "400c639fcf15bfe56a9f1cfbce77d1fd0c4a9688268900a81d0eec0c9687a9ab",
+            "eventOrder": "2"
+          }
+        },
+        {
+          "eventId": "event.near.resell.2",
+          "kind": "actor.trade.sell",
+          "eventKind": "actor.trade.sell",
+          "stepIndex": 2,
+          "actorId": "near-household",
+          "targetActorId": "far-household",
+          "placeId": "far-home",
+          "resourceId": "water",
+          "quantity": 3,
+          "durationSeconds": 1800,
+          "actorIds": [
+            "near-household",
+            "far-household"
+          ],
+          "resourceIds": [
+            "water",
+            "cash"
+          ],
+          "sourceId": "near-household",
+          "targetId": "far-household",
+          "source": {
+            "kind": "actor",
+            "id": "near-household",
+            "metadata": {}
+          },
+          "target": {
+            "kind": "actor",
+            "id": "far-household",
+            "metadata": {}
+          },
+          "participantRefs": [
+            {
+              "kind": "actor",
+              "id": "far-household",
+              "metadata": {}
+            },
+            {
+              "kind": "actor",
+              "id": "near-household",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "far-home",
+              "metadata": {}
+            },
+            {
+              "kind": "location",
+              "id": "near-home",
+              "metadata": {}
+            },
+            {
+              "kind": "resource",
+              "id": "water",
+              "metadata": {}
+            }
+          ],
+          "occurredAtUtc": "2026-01-03T00:00:00+00:00",
+          "duration": "00:30:00",
+          "magnitude": 3,
+          "timing": {
+            "stepIndex": 2,
+            "offset": "00:00:00",
+            "duration": "00:30:00",
+            "order": 0
+          },
+          "participants": [
+            {
+              "participantId": "far-home",
+              "role": "location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "far-home",
+              "metadata": {}
+            },
+            {
+              "participantId": "far-household",
+              "role": "target-actor",
+              "actorId": "far-household",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "near-home",
+              "role": "source-location",
+              "actorId": "",
+              "resourceId": "",
+              "locationId": "near-home",
+              "metadata": {}
+            },
+            {
+              "participantId": "near-household",
+              "role": "actor",
+              "actorId": "near-household",
+              "resourceId": "",
+              "locationId": "",
+              "metadata": {}
+            },
+            {
+              "participantId": "water",
+              "role": "resource",
+              "actorId": "",
+              "resourceId": "water",
+              "locationId": "",
+              "metadata": {}
+            }
+          ],
+          "effects": [],
+          "storeResolutionPolicies": [],
+          "metadata": {
+            "canonicalEventKind": "actor.trade.sell",
+            "sourceLocationId": "near-home",
+            "targetLocationId": "far-home",
+            "expansion": "explicit",
+            "phase": "primary",
+            "expansionProfileId": "none",
+            "expansionProfileVersion": "v1",
+            "expansionProfileHash": "c6acb7c34def84eb0603213cd1cba1528552ae4f5d3eb9111a5439dba333fa4e",
+            "parentEventId": "event.near.resell.2",
+            "expansionRuleHash": "cdba7e7561c0d1d9d55dbc79eda9f1f7ce81eb44d6e231113060e6243db99f0d",
+            "eventOrder": "1",
+            "storeResolution.source.policy": "actor-owned",
+            "storeResolution.source.storeId": "store.near.water",
+            "storeResolution.source.reason": "default-policy",
+            "storeResolution.source.candidateCount": "1",
+            "storeResolution.source.actorId": "near-household",
+            "storeResolution.source.locationId": "",
+            "storeResolution.source.resourceId": "water",
+            "storeResolution.source.poolId": "",
+            "storeResolution.target.policy": "actor-owned",
+            "storeResolution.target.storeId": "store.far.water",
+            "storeResolution.target.reason": "default-policy",
+            "storeResolution.target.candidateCount": "1",
+            "storeResolution.target.actorId": "far-household",
+            "storeResolution.target.locationId": "",
+            "storeResolution.target.resourceId": "water",
+            "storeResolution.target.poolId": ""
+          }
+        }
+      ],
+      "rules": [
+        {
+          "ruleId": "rule.water-draw-limit",
+          "displayName": "Daily draw limit",
+          "category": "allocation",
+          "metadata": {}
+        },
+        {
+          "ruleId": "rule.resale-tax",
+          "displayName": "Water resale tax",
+          "category": "tax",
+          "metadata": {}
+        },
+        {
+          "ruleId": "rule.admin-ledger",
+          "displayName": "Resale documentation",
+          "category": "admin",
+          "metadata": {}
+        }
+      ],
+      "issues": [
+        {
+          "issueId": "issue.event.free.violation.2",
+          "severity": "warning",
+          "category": "rule",
+          "title": "Rule issue for near-household",
+          "description": "",
+          "isResolved": false,
+          "actorIds": [
+            "near-household",
+            "rule-council"
+          ],
+          "resourceIds": [
+            "water"
+          ],
+          "metadata": {
+            "sourceEventId": "event.free.violation.2"
+          }
+        }
+      ],
+      "artifacts": [],
+      "deterministicHash": "ce4f6e483c46631b69050da92607e6a6928470f63c0ba3b09356e1ebe10b7654",
+      "metadata": {
+        "materializer": "SimpleSimulationStateTransitionEngine",
+        "expansionProfileId": "",
+        "expansionProfileVersion": "",
+        "expansionProfileHash": "7fbdc159c21146395a092fe47a3f51ca242bf5bfa4787bf01a3ea8e3dc1ad3a2"
+      }
+    }
+  ]
+}

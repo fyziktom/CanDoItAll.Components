@@ -13,11 +13,34 @@ public sealed class WebGlScenePatchReducer
             return result;
         }
 
-        var objectsById = scene.Objects.ToDictionary(item => item.Id, StringComparer.Ordinal);
+        var objectsById = scene.Objects
+            .Where(static item => !string.IsNullOrWhiteSpace(item.Id))
+            .ToDictionary(item => item.Id, StringComparer.Ordinal);
         foreach (var objectId in patch.RemoveObjectIds.Where(static id => !string.IsNullOrWhiteSpace(id)))
         {
+            if (!objectsById.ContainsKey(objectId))
+            {
+                result.Warnings.Add($"Object '{objectId}' was not found for removal.");
+                continue;
+            }
+
             scene.Objects.RemoveAll(item => string.Equals(item.Id, objectId, StringComparison.Ordinal));
+            var removedLinkIds = scene.Links
+                .Where(item => string.Equals(item.SourceObjectId, objectId, StringComparison.Ordinal) ||
+                               string.Equals(item.TargetObjectId, objectId, StringComparison.Ordinal))
+                .Select(static item => item.Id)
+                .Where(static id => !string.IsNullOrWhiteSpace(id))
+                .ToArray();
+            scene.Links.RemoveAll(item => string.Equals(item.SourceObjectId, objectId, StringComparison.Ordinal) ||
+                                          string.Equals(item.TargetObjectId, objectId, StringComparison.Ordinal));
+            foreach (var layer in scene.Layers)
+            {
+                layer.ObjectIds.RemoveAll(id => string.Equals(id, objectId, StringComparison.Ordinal));
+            }
+
+            objectsById.Remove(objectId);
             result.RemovedObjectIds.Add(objectId);
+            result.RemovedLinkIds.AddRange(removedLinkIds);
         }
 
         foreach (var sceneObject in patch.AddObjects.Where(static item => !string.IsNullOrWhiteSpace(item.Id)))
@@ -44,43 +67,131 @@ public sealed class WebGlScenePatchReducer
 
         foreach (var linkId in patch.RemoveLinkIds.Where(static id => !string.IsNullOrWhiteSpace(id)))
         {
+            if (scene.Links.All(item => !string.Equals(item.Id, linkId, StringComparison.Ordinal)))
+            {
+                result.Warnings.Add($"Link '{linkId}' was not found for removal.");
+                continue;
+            }
+
             scene.Links.RemoveAll(item => string.Equals(item.Id, linkId, StringComparison.Ordinal));
             result.RemovedLinkIds.Add(linkId);
         }
 
+        var missingLinkEndpointMode = WebGlScenePatchPolicy.ResolveMissingLinkEndpointMode(result);
         foreach (var link in patch.AddLinks.Where(static item => !string.IsNullOrWhiteSpace(item.Id)))
         {
+            if (!objectsById.ContainsKey(link.SourceObjectId) || !objectsById.ContainsKey(link.TargetObjectId))
+            {
+                var message = $"Link '{link.Id}' references missing endpoint(s): '{link.SourceObjectId}' -> '{link.TargetObjectId}'.";
+                if (string.Equals(missingLinkEndpointMode, WebGlScenePatchPolicy.MissingLinkEndpointModeWarn, StringComparison.OrdinalIgnoreCase))
+                {
+                    WebGlScenePatchPolicy.AddWarning(result, message);
+                    WebGlScenePatchPolicy.AddSkippedLinkId(result, link.Id);
+                    continue;
+                }
+
+                result.Errors.Add(message);
+                continue;
+            }
+
             scene.Links.RemoveAll(item => string.Equals(item.Id, link.Id, StringComparison.Ordinal));
             scene.Links.Add(link);
             result.AddedLinkIds.Add(link.Id);
         }
 
-        scene.UiState.Revision = patch.NextRevision > 0
-            ? patch.NextRevision
-            : scene.UiState.Revision + 1;
-        result.NextRevision = scene.UiState.Revision;
+        if (result.AffectedObjectIds.Count == 0 && result.AffectedLinkIds.Count == 0)
+        {
+            result.NextRevision = WebGlSceneRevisionPolicy.Resolve(scene);
+            return result;
+        }
+
+        WebGlSceneRevisionPolicy.Commit(scene, WebGlSceneRevisionPolicy.ResolveNext(scene, patch.NextRevision));
+        result.NextRevision = scene.Revision;
+        result.Revision = scene.Revision;
+        result.SceneId = scene.SceneId;
         return result;
     }
 
     public WebGlScenePatchResult Validate(WebGlSceneModel scene, WebGlScenePatch patch)
     {
-        var result = new WebGlScenePatchResult();
+        var result = new WebGlScenePatchResult
+        {
+            SceneId = scene.SceneId,
+            Revision = WebGlSceneRevisionPolicy.Resolve(scene)
+        };
+        WebGlScenePatchPolicy.PopulateResultMetadata(result, patch);
+        var missingLinkEndpointMode = WebGlScenePatchPolicy.ResolveMissingLinkEndpointMode(result);
+
         if (!string.IsNullOrWhiteSpace(patch.SceneId) &&
             !string.Equals(scene.SceneId, patch.SceneId, StringComparison.Ordinal))
         {
             result.Errors.Add($"Patch scene id '{patch.SceneId}' does not match scene '{scene.SceneId}'.");
         }
 
-        if (patch.BaseRevision > 0 && patch.BaseRevision != scene.UiState.Revision)
+        var currentRevision = WebGlSceneRevisionPolicy.Resolve(scene);
+        if (patch.BaseRevision > 0 && patch.BaseRevision != currentRevision)
         {
-            result.Warnings.Add($"Patch base revision {patch.BaseRevision} does not match scene revision {scene.UiState.Revision}.");
+            var message = $"Patch base revision {patch.BaseRevision} does not match scene revision {currentRevision}.";
+            if (WebGlScenePatchPolicy.IsStrictBaseRevision(patch))
+            {
+                result.Errors.Add(message);
+            }
+            else
+            {
+                result.Warnings.Add(message);
+            }
         }
 
+        foreach (var sceneObject in patch.AddObjects)
+        {
+            if (string.IsNullOrWhiteSpace(sceneObject.Id))
+            {
+                result.Errors.Add("Added object id is required.");
+            }
+        }
+
+        var availableObjectIds = scene.Objects
+            .Select(static item => item.Id)
+            .Where(static id => !string.IsNullOrWhiteSpace(id))
+            .Except(patch.RemoveObjectIds.Where(static id => !string.IsNullOrWhiteSpace(id)), StringComparer.Ordinal)
+            .Concat(patch.AddObjects.Select(static item => item.Id).Where(static id => !string.IsNullOrWhiteSpace(id)))
+            .ToHashSet(StringComparer.Ordinal);
         foreach (var objectPatch in patch.ObjectPatches)
         {
             if (string.IsNullOrWhiteSpace(objectPatch.ObjectId))
             {
                 result.Errors.Add("Object patch id is required.");
+                continue;
+            }
+
+            if (!availableObjectIds.Contains(objectPatch.ObjectId))
+            {
+                result.Errors.Add($"Object patch target '{objectPatch.ObjectId}' was not found.");
+            }
+        }
+
+        foreach (var link in patch.AddLinks)
+        {
+            if (string.IsNullOrWhiteSpace(link.Id))
+            {
+                result.Errors.Add("Added link id is required.");
+                continue;
+            }
+
+            if (availableObjectIds.Contains(link.SourceObjectId) && availableObjectIds.Contains(link.TargetObjectId))
+            {
+                continue;
+            }
+
+            var message = $"Link '{link.Id}' references missing endpoint(s): '{link.SourceObjectId}' -> '{link.TargetObjectId}'.";
+            if (string.Equals(missingLinkEndpointMode, WebGlScenePatchPolicy.MissingLinkEndpointModeWarn, StringComparison.OrdinalIgnoreCase))
+            {
+                WebGlScenePatchPolicy.AddWarning(result, message);
+                WebGlScenePatchPolicy.AddSkippedLinkId(result, link.Id);
+            }
+            else
+            {
+                result.Errors.Add(message);
             }
         }
 
@@ -129,25 +240,5 @@ public sealed class WebGlScenePatchReducer
             target.Metadata = new Dictionary<string, string>(patch.Metadata, StringComparer.Ordinal);
         }
     }
-}
 
-public sealed class WebGlScenePatchResult
-{
-    public List<string> Errors { get; } = [];
-
-    public List<string> Warnings { get; } = [];
-
-    public List<string> PatchedObjectIds { get; } = [];
-
-    public List<string> AddedObjectIds { get; } = [];
-
-    public List<string> RemovedObjectIds { get; } = [];
-
-    public List<string> AddedLinkIds { get; } = [];
-
-    public List<string> RemovedLinkIds { get; } = [];
-
-    public int NextRevision { get; set; }
-
-    public bool IsValid => Errors.Count == 0;
 }

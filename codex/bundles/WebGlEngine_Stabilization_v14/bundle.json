@@ -1,0 +1,171 @@
+{
+  "bundleId": "components-webgl-engine-stabilization-followup-v14",
+  "name": "CanDoItAll Components WebGL Engine Stabilization Follow-up Bundle v14",
+  "createdUtc": "2026-06-05T22:36:37.038142+00:00",
+  "scope": "CanDoItAll.Components only",
+  "subbundleCount": 16,
+  "subbundles": [
+    {
+      "id": "SB01",
+      "slug": "current-state-and-proof-integrity-audit",
+      "title": "Current-state and proof integrity audit"
+    },
+    {
+      "id": "SB02",
+      "slug": "package-scope-and-packable-boundary",
+      "title": "Package scope and packable boundary"
+    },
+    {
+      "id": "SB03",
+      "slug": "public-csharp-api-freeze-baseline",
+      "title": "Public C# API freeze baseline"
+    },
+    {
+      "id": "SB04",
+      "slug": "javascript-runtime-api-freeze-baseline",
+      "title": "JavaScript runtime API freeze baseline"
+    },
+    {
+      "id": "SB05",
+      "slug": "webglsceneview-facade-refactor",
+      "title": "WebGlSceneView facade refactor"
+    },
+    {
+      "id": "SB06",
+      "slug": "runtime-idle-policy-modes",
+      "title": "Runtime idle policy modes"
+    },
+    {
+      "id": "SB07",
+      "slug": "command-batch-and-stage-lifecycle-contract",
+      "title": "Command batch and stage lifecycle contract"
+    },
+    {
+      "id": "SB08",
+      "slug": "domain-driver-contract-freeze",
+      "title": "Domain driver contract freeze"
+    },
+    {
+      "id": "SB09",
+      "slug": "source-provenance-opacity",
+      "title": "Source provenance opacity"
+    },
+    {
+      "id": "SB10",
+      "slug": "domain-boundary-audit-v3",
+      "title": "Domain boundary audit v3"
+    },
+    {
+      "id": "SB11",
+      "slug": "package-mode-samples-and-static-assets",
+      "title": "Package-mode samples and static assets"
+    },
+    {
+      "id": "SB12",
+      "slug": "resource-ownership-and-asset-cache-stress",
+      "title": "Resource ownership and asset-cache stress"
+    },
+    {
+      "id": "SB13",
+      "slug": "large-scene-and-compact-lifecycle-proof",
+      "title": "Large scene and compact lifecycle proof"
+    },
+    {
+      "id": "SB14",
+      "slug": "browser-observer-generic-proof",
+      "title": "Browser observer generic proof"
+    },
+    {
+      "id": "SB15",
+      "slug": "docs-and-consumer-migration-guide",
+      "title": "Docs and consumer migration guide"
+    },
+    {
+      "id": "SB16",
+      "slug": "final-components-release-candidate-freeze",
+      "title": "Final Components release-candidate freeze"
+    }
+  ],
+  "sourceReferences": [
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "CanDoItAll.Components.slnx",
+      "note": "Solution now includes WebGlLib, WebGlRunLib, WebGlSandbox, WebGlLib-only viewer and generic WebGlRunLib sample."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "Directory.Build.props",
+      "note": "Global IsPackable=true and package metadata apply broadly; needs explicit package-scope approval before RC freeze."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj",
+      "note": "WebGlLib is Razor SDK, net10.0, browser supported, depends on Microsoft.AspNetCore.Components.Web and OverlayLib."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj",
+      "note": "WebGlRunLib is net10.0 generic run/playback package over WebGlLib."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.razor",
+      "note": "WebGlSceneView currently owns lifecycle, JS interop, import/export, command APIs, runtime idle/stop and callbacks; needs freeze-safe facade split."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/01-webgl-scene.js",
+      "note": "Global window.CanDoItAll.webglScene API surface must be approved and frozen."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/26-webgl-scene-command-batch.js",
+      "note": "applyCommandBatchAndWait now hard-fails on idle timeout by default, but needs contract tests and public lifecycle docs."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js",
+      "note": "waitForRuntimeIdle returns semantic/visual/final-render-drained state and now has nuanced idle semantics."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js",
+      "note": "Runtime idle splits semantic and visual blockers; final scheduled render drain needs explicit proof modes."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlRunLib/Actions/WebGlRunActionKinds.cs",
+      "note": "Generic action vocabulary includes DirectedFlowVisual and an All set; this should become action-kind freeze baseline."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlRunLib/DomainDrivers/WebGlRunDomainMappingDriver.cs",
+      "note": "Generic domain-driver contract exists with manifest/hash/scrubber/validator."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "src/CanDoItAll.Components.WebGlRunLib/Documents/WebGlRunDocumentValidator.cs",
+      "note": "Validator checks schema, scene/run metadata, source provenance and domain boundary options."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": ".github/workflows/domain-leakage.yml",
+      "note": "CI runs domain leakage audit via Node tool."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "tools/webgllib/domain-boundary-audit.config.json",
+      "note": "Audit config scans generic source/tests/docs/tools/workflows with allowlists."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj",
+      "note": "WebGlLib-only package/project switch exists."
+    },
+    {
+      "repo": "CanDoItAll.Components",
+      "path": "samples/CanDoItAll.Components.WebGlRunLibGenericSample/CanDoItAll.Components.WebGlRunLibGenericSample.csproj",
+      "note": "Generic RunLib sample exists but currently only references project; needs package-mode proof."
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:91:    public const string ActorResourceContribution = "actor.resource.contribution";
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:92:    public const string ActorObligationCreate = "actor.obligation.create";
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:93:    public const string ActorClaimIssue = "actor.claim.issue";
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:101:    public const string ActorTaxFeePay = "actor.tax-fee.pay";
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:143:    public const string ActorResourceContribution = SimulationEventKind.ActorResourceContribution;
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:144:    public const string ActorObligationCreate = SimulationEventKind.ActorObligationCreate;
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:145:    public const string ActorClaimIssue = SimulationEventKind.ActorClaimIssue;
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEvent.cs:153:    public const string ActorTaxFeePay = SimulationEventKind.ActorTaxFeePay;
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:42:        ["tax-fee"] = SimulationEventKind.ActorTaxFeePay,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:43:        ["contribution"] = SimulationEventKind.ActorResourceContribution,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:44:        ["resource-contribution"] = SimulationEventKind.ActorResourceContribution,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:45:        ["obligation"] = SimulationEventKind.ActorObligationCreate,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:46:        ["obligation-create"] = SimulationEventKind.ActorObligationCreate,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:47:        ["claim"] = SimulationEventKind.ActorClaimIssue,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:48:        ["claim-issue"] = SimulationEventKind.ActorClaimIssue,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:81:            SimulationEventKind.ActorResourceContribution => 47,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:84:            SimulationEventKind.ActorClaimIssue => 57,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:87:            SimulationEventKind.ActorTaxFeePay => 65,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:91:            SimulationEventKind.ActorObligationCreate or SimulationEventKind.RelationshipTrustChange or SimulationEventKind.RelationshipConflictChange => 100,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:103:        SimulationEventKind.ActorResourceContribution,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:104:        SimulationEventKind.ActorObligationCreate,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:105:        SimulationEventKind.ActorClaimIssue,
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventKindRegistry.cs:113:        SimulationEventKind.ActorTaxFeePay,
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentPolicies.cs:144:            $"{SimulationEventKind.ActorTradeSell}:collect,sell,buy,admin,fee,rule-check",
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationExperimentPolicies.cs:151:            $"{SimulationEventKind.ActorTradeSell}:collect,sell,buy,admin,fee,rule-check",
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:65:                new() { RuleId = "rule.maintenance-contribution", DisplayName = "Maintenance contribution", Category = "maintenance" },
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:71:                Scheduled("event.shared-well.contribution", SimulationEventKind.Maintenance, 1, ["household-south", "well-keeper"], ["labor"], "household-south", "labor", "household-south-home", "well-keeper-workplace", 5),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:74:                Scheduled("event.shared-well.missed-contribution", SimulationEventKind.RuleViolation, 2, ["free-rider", "rule-council"], ["labor", "compliance"], "free-rider", "rule-council", "free-rider-home", "council-place", -8, TimeSpan.FromMinutes(16), 8),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:117:                SimpleSimulationScenarioFactory.Flow("flow.fee.trade.2", "free-rider", "rule-council", "reserve-fund", 1, "trade fee"),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:118:                SimpleSimulationScenarioFactory.Flow("flow.compliance.missed.2", "free-rider", "rule-council", "compliance", -8, "missed contribution")
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:121:                SimpleSimulationScenarioFactory.Issue("issue.shared-well.free-rider", "warning", "conflict", "Missed maintenance contribution", ["free-rider", "rule-council"], ["labor", "compliance"])
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SharedWellCommunityScenarioFactory.cs:122:            ], "missed-contribution"),
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:144:            Require(rule.FeeRate is >= 0 and <= 1, $"parameters.rule.{rule.RuleId}.feeRate", "Fee rate must be between 0 and 1.", result);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationPlacementAndParameters.cs:223:            SetRuleParameter(rule, "feeRate", ruleParameter.FeeRate);
+src\CanDoItAll.Economy.Simulation.Abstractions\Experiment\SimulationMetricAndInvariantEvaluation.cs:294:                            flow.Reason.Contains("fee", StringComparison.OrdinalIgnoreCase) ||
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:177:    public SimulationFeeTaxAdminBurdenResult DeriveFromTrade(SimulationEvent tradeEvent, decimal feeRate, string feeResourceId)
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:180:        decimal fee = Math.Max(0, tradeEvent.Magnitude * feeRate);
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:183:            FeeQuantity = fee,
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:186:                EventId = $"{tradeEvent.EventId}.tax-fee",
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:187:                EventKind = SimulationEventKind.ActorTaxFeePay,
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:189:                TargetActorId = tradeEvent.Metadata.GetValueOrDefault("feeCollectorActorId", tradeEvent.SourceId),
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:190:                ActorIds = [tradeEvent.TargetActorId, tradeEvent.Metadata.GetValueOrDefault("feeCollectorActorId", tradeEvent.SourceId)],
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:191:                ResourceId = feeResourceId,
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:192:                ResourceIds = [feeResourceId],
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:194:                TargetId = tradeEvent.Metadata.GetValueOrDefault("feeCollectorActorId", tradeEvent.SourceId),
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:198:                Magnitude = fee,
+src\CanDoItAll.Economy.Simulation.Abstractions\Scenario\SimulationScenarioPolicies.cs:209:                    ["feeRate"] = feeRate.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture)
+src\CanDoItAll.Economy.Simulation.Abstractions\Events\SimulationEventStream.cs:224:                Clone(simulationEvent, canonicalKind, SimulationEventKind.ActorTaxFeePay, "fee", 4, 4, "trade-policy", profile),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:69:            Handler(SimulationEventKind.ActorResourceContribution, 30, context => SimpleSimulationStateTransitionEngine.ApplyActorTransfer(context, "contribution")),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:72:            Handler(SimulationEventKind.ActorClaimIssue, 35, context => SimpleSimulationStateTransitionEngine.ApplyActorTransfer(context, "claim")),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:74:            Handler(SimulationEventKind.ActorTaxFeePay, 40, context => SimpleSimulationStateTransitionEngine.Transfer(
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:87:                "fee")),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SimpleSimulationEventHandlers.cs:90:            Handler(SimulationEventKind.ActorObligationCreate, 60, context => SimpleSimulationStateTransitionEngine.UpdateRelationship(context, SimulationEventKind.ActorObligationCreate)),
+src\CanDoItAll.Economy.Simulation.SimpleAccounts\SmallEntrepreneurCommunityScenarioFactory.cs:56:                Relationship("rel.baker.fund", "baker", "local-fund", "obligation", 0.52m),

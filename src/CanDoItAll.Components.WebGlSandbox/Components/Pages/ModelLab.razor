@@ -1,0 +1,144 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+@page "/model-lab"
+
+<PageTitle>WebGL Model Lab</PageTitle>
+
+<div class="webgl-page webgl-page--fill">
+    <PageScaffold MaxWidthClass="max-w-full" FillHeight="true">
+        <Header>
+            <PageHeader Eyebrow="Model diagnostics" Title="Model Lab" Description="Inspect one generic asset at a time with primitive fallback, GLB profiles, import bounds, and runtime diagnostics.">
+                <Actions>
+                    <Button Text="Primitive" Icon="deployed_code" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.Primitive)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.Primitive))" />
+                    <Button Text="Model low" Icon="view_in_ar" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.MixedGlb)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.MixedGlb))" />
+                    <Button Text="Model high" Icon="texture" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.HighDetailGlb)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.HighDetailGlb))" />
+                    <Button Text="Bounds" Icon="select_all" Size="ButtonSize.Small" ButtonStyle="@(debugBounds ? ButtonStyle.Primary : ButtonStyle.Light)" Variant="Variant.Outlined" Click="@ToggleDebugBounds" />
+                    <Button Text="Recipe JSON" Icon="data_object" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ExportRecipeJson" />
+                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofAsync" />
+                </Actions>
+            </PageHeader>
+        </Header>
+        <ChildContent>
+            <div class="webgl-model-lab">
+                <section class="webgl-model-lab__stage" data-testid="webgl-model-lab-stage">
+                    <WebGlSceneView @ref="sceneView"
+                                    Scene="@scene"
+                                    Options="@runtimeOptions"
+                                    AriaLabel="WebGL model lab scene"
+                                    RuntimeReady="@HandleRuntimeReady"
+                                    RuntimeError="@HandleRuntimeError" />
+                </section>
+
+                <aside class="webgl-model-lab__panel" aria-label="Model diagnostics">
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Asset</span>
+                            <StatusBadge Text="@selectedProfile" Tone="info" />
+                        </div>
+                        <label class="webgl-field">
+                            <span>Asset</span>
+                            <select value="@selectedAssetId" @onchange="HandleAssetChanged" data-testid="webgl-model-lab-asset">
+                                @foreach (var asset in catalog.Assets.OrderBy(item => item.DisplayName))
+                                {
+                                    <option value="@asset.Id">@asset.DisplayName (@asset.Id)</option>
+                                }
+                            </select>
+                        </label>
+                        <label class="webgl-field">
+                            <span>Variant</span>
+                            <select value="@selectedVariantId" @onchange="HandleVariantChanged" data-testid="webgl-model-lab-variant">
+                                <option value="">Profile default</option>
+                                @foreach (var variant in SelectedAsset?.Variants ?? Enumerable.Empty<WebGlAssetVariant>())
+                                {
+                                    <option value="@variant.Id">@variant.DisplayName (@variant.QualityTier)</option>
+                                }
+                            </select>
+                        </label>
+                        <p class="webgl-proof-note" data-testid="webgl-model-lab-runtime">@runtimeStatus</p>
+                        @if (!string.IsNullOrWhiteSpace(runtimeError))
+                        {
+                            <p class="webgl-runtime-error" data-testid="webgl-model-lab-error">@runtimeError</p>
+                        }
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Diagnostics</span>
+                            <StatusBadge Text="@DiagnosticsStatus" Tone="@DiagnosticsTone" />
+                        </div>
+                        <dl class="webgl-proof-grid">
+                            <div>
+                                <dt>Meshes</dt>
+                                <dd data-testid="webgl-model-lab-meshes">@ActiveDiagnostics?.MeshCount</dd>
+                            </div>
+                            <div>
+                                <dt>Visible</dt>
+                                <dd>@ActiveDiagnostics?.VisibleMeshCount</dd>
+                            </div>
+                            <div>
+                                <dt>Materials</dt>
+                                <dd>@ActiveDiagnostics?.MaterialCount</dd>
+                            </div>
+                            <div>
+                                <dt>Transparent</dt>
+                                <dd>@ActiveDiagnostics?.TransparentMaterialCount</dd>
+                            </div>
+                            <div>
+                                <dt>Fallbacks</dt>
+                                <dd data-testid="webgl-model-lab-fallbacks">@latestDiagnostics?.FallbackObjectCount</dd>
+                            </div>
+                        </dl>
+                        <p class="webgl-proof-note" data-testid="webgl-model-lab-bounds">@BoundsText</p>
+                        @foreach (var warning in ActiveDiagnostics?.Warnings ?? Enumerable.Empty<string>())
+                        {
+                            <p class="webgl-warning-note">@warning</p>
+                        }
+                    </section>
+
+                    <section class="webgl-panel-section">
+                        <div class="webgl-panel-heading">
+                            <span>Import Options</span>
+                            <StatusBadge Text="local" Tone="info" />
+                        </div>
+                        <label class="webgl-field">
+                            <span>Unit scale</span>
+                            <input type="number" step="0.01" min="0.0001" value="@localImportOptions.UnitScale" @onchange="HandleUnitScaleChanged" data-testid="webgl-model-lab-unit-scale" />
+                        </label>
+                        <label class="webgl-field">
+                            <span>Fit mode</span>
+                            <select value="@localImportOptions.FitMode" @onchange="HandleFitModeChanged">
+                                <option value="@WebGlModelFitModes.FitBounds">Fit bounds</option>
+                                <option value="@WebGlModelFitModes.OriginalScale">Original scale</option>
+                                <option value="@WebGlModelFitModes.FixedScale">Fixed scale</option>
+                            </select>
+                        </label>
+                        <label class="webgl-field">
+                            <span>Center mode</span>
+                            <select value="@localImportOptions.CenterMode" @onchange="HandleCenterModeChanged">
+                                <option value="@WebGlModelCenterModes.CenterBottom">Center bottom</option>
+                                <option value="@WebGlModelCenterModes.CenterBounds">Center bounds</option>
+                                <option value="@WebGlModelCenterModes.PreserveOrigin">Preserve origin</option>
+                            </select>
+                        </label>
+                        <label class="webgl-field webgl-field--inline">
+                            <input type="checkbox" checked="@localImportOptions.ForceDoubleSidedMaterial" @onchange="HandleDoubleSidedChanged" />
+                            <span>Double-sided material</span>
+                        </label>
+                        <label class="webgl-field webgl-field--inline">
+                            <input type="checkbox" checked="@localImportOptions.NormalizeMaterialVisibility" @onchange="HandleNormalizeVisibilityChanged" />
+                            <span>Normalize material visibility</span>
+                        </label>
+                        <label class="webgl-field webgl-field--inline">
+                            <input type="checkbox" checked="@localImportOptions.DisableTint" @onchange="HandleDisableTintChanged" />
+                            <span>Disable tint</span>
+                        </label>
+                        <p class="webgl-proof-note" data-testid="webgl-model-lab-active-options">@ActiveImportOptionsText</p>
+                        @if (!string.IsNullOrWhiteSpace(suggestedRecipeJson))
+                        {
+                            <textarea class="webgl-recipe-json" readonly rows="8" data-testid="webgl-model-lab-recipe-json">@suggestedRecipeJson</textarea>
+                        }
+                    </section>
+                </aside>
+            </div>
+        </ChildContent>
+    </PageScaffold>
+</div>

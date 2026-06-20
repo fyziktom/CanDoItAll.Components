@@ -45,7 +45,7 @@ import { clearScene, rebuildScene } from "./07-webgl-workbench-scene-graph.js";
 const root = window.CanDoItAll = window.CanDoItAll || {};
 
 function buildHostShell(host) {
-    host.innerHTML = "";
+    host.replaceChildren();
     host.classList.add("wgl-runtime-host");
 
     const stage = document.createElement("div");
@@ -435,7 +435,7 @@ function dispose(state) {
     state.controls.removeEventListener("end", state.handlers.controlsEnd);
     state.controls.dispose();
     state.chromeController?.dispose();
-    state.host.innerHTML = "";
+    state.host.replaceChildren();
     clearScene(state);
     state.renderer.dispose();
     delete state.host.__webglWorkbenchState;

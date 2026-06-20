@@ -1,0 +1,52 @@
+{
+  "name": "ordered-patch-motion-pose",
+  "input": {
+    "batchId": "fixture.ordered-pose",
+    "patches": [
+      {
+        "metadata": { "preserveOrder": "true" },
+        "objectPatches": [
+          {
+            "objectId": "actor.1",
+            "metadata": { "poseKey": "carry" }
+          }
+        ]
+      },
+      {
+        "metadata": { "dependsOnIntermediateState": "true" },
+        "objectPatches": [
+          {
+            "objectId": "actor.1",
+            "symbols": [
+              {
+                "id": "resource",
+                "semanticKind": "resource"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "motions": [
+      {
+        "motionId": "actor.1.to.target",
+        "objectId": "actor.1",
+        "targetPosition": { "x": 4, "y": 0, "z": 0 }
+      }
+    ]
+  },
+  "expected": {
+    "batchCommandCount": 3,
+    "commandCountBeforeNormalization": 3,
+    "commandCountAfterNormalization": 3,
+    "stageCount": 0,
+    "patchCount": 2,
+    "motionCount": 1,
+    "coalescedPatchCount": 0,
+    "droppedDuplicateMotionCount": 0,
+    "preservedOrderedDuplicateMotionCount": 0,
+    "interopCallsAvoided": 2,
+    "stageSummaries": []
+  }
+}
+

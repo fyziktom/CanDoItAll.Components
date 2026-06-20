@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
-const outputDir = path.join(repoRoot, "artifacts", "webgl-scene-hardening");
+const outputDir = path.join(repoRoot, "artifacts", "webgl-runtime-hardening-v2");
 const outputPath = path.join(outputDir, "glb-inventory.json");
 const inventoryMarkdownPath = path.join(outputDir, "01_INVENTORY.md");
 const variantMarkdownPath = path.join(outputDir, "ASSET_VARIANT_INVENTORY.md");

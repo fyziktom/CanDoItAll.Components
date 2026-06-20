@@ -1,0 +1,60 @@
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:9: semanticIdle: false,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:10: visualIdle: false,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:11: finalRenderDrained: false,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:20: const semanticIdle = semanticBlockers.length === 0;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:21: const explicitFinalRenderDrained = options.finalRenderDrained === true ||
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:22: state.diagnostics?.finalRenderDrained === true;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:23: const finalScheduledRenderDrained = semanticIdle &&
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:24: explicitFinalRenderDrained &&
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:26: const visualIdle = rawVisualBlockers.length === 0 || finalScheduledRenderDrained;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:27: const finalRenderDrained = semanticIdle && (rawVisualBlockers.length === 0 || finalScheduledRenderDrained);
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:28: const visualBlockers = visualIdle ? [] : rawVisualBlockers;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:31: idle: semanticIdle && visualIdle,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:32: semanticIdle,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:33: visualIdle,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:34: finalRenderDrained,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:101: export function shouldTreatFinalScheduledRenderAsDrained(idleState, consecutiveSemanticIdleProbes) {
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:102: return idleState?.semanticIdle === true &&
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:103: idleState.visualIdle !== true &&
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:104: consecutiveSemanticIdleProbes >= 2 &&
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:114: state.diagnostics.semanticIdle = resolved.semanticIdle === true;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:115: state.diagnostics.visualIdle = resolved.visualIdle === true;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/41-webgl-scene-runtime-idle-state.js:116: state.diagnostics.finalRenderDrained = resolved.finalRenderDrained === true;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:22: let consecutiveSemanticIdleProbes = 0;
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:27: consecutiveSemanticIdleProbes = lastState.semanticIdle
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:28: ? consecutiveSemanticIdleProbes + 1
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:35: if (shouldTreatFinalScheduledRenderAsDrained(lastState, consecutiveSemanticIdleProbes)) {
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:36: markFinalRenderDrained(state);
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:63: semanticBlockers: lastState.semanticBlockers,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:64: visualBlockers: lastState.visualBlockers,
+repo://src/CanDoItAll.Components.WebGlLib/wwwroot/js/runtime/scene/40-webgl-scene-runtime-idle.js:91: function markFinalRenderDrained(state) {
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:219: public bool SemanticIdle { get; set; }
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:221: public bool VisualIdle { get; set; }
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeDiagnostics.cs:223: public bool FinalRenderDrained { get; set; }
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:21: public bool SemanticIdle { get; set; }
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:23: public bool VisualIdle { get; set; }
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:25: public bool FinalRenderDrained { get; set; }
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:27: public List<string> SemanticBlockers { get; set; } = [];
+repo://src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeIdleResult.cs:29: public List<string> VisualBlockers { get; set; } = [];
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:227: "semanticIdle": true,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:228: "visualIdle": true,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:229: "finalRenderDrained": true
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:247: Assert.True(diagnostics.SemanticIdle);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:248: Assert.True(diagnostics.VisualIdle);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:249: Assert.True(diagnostics.FinalRenderDrained);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:269: "semanticIdle": false,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:270: "visualIdle": false,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:271: "finalRenderDrained": false,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:272: "semanticBlockers": [
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:276: "visualBlockers": [
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:284: "semanticIdle": false,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:285: "visualIdle": false,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:286: "finalRenderDrained": false,
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:303: Assert.False(result.SemanticIdle);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:304: Assert.False(result.VisualIdle);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:305: Assert.False(result.FinalRenderDrained);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:306: Assert.Contains("motion:active:1", result.SemanticBlockers);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:307: Assert.Contains("render-loop:scheduled", result.VisualBlockers);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:311: Assert.False(result.Diagnostics.SemanticIdle);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:312: Assert.False(result.Diagnostics.VisualIdle);
+repo://tests/CanDoItAll.Components.WebGlLib.Tests/WebGlRuntimeDiagnosticsTests.cs:313: Assert.False(result.Diagnostics.FinalRenderDrained);

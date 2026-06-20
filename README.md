@@ -4,7 +4,8 @@ Shared CanDoItAll component libraries isolated from the main app solution.
 
 ## Packages
 
-All packages are currently versioned together at `0.1.0`.
+All packages are currently versioned together from `CanDoItAllPackageBaseVersion`, which defaults to `0.1.0`.
+For package-consumer proof runs, append a unique prerelease suffix with `CanDoItAllPackageProofSuffix`, for example `-sb11.20260602.1`.
 
 | Package | Role |
 | --- | --- |
@@ -15,6 +16,7 @@ All packages are currently versioned together at `0.1.0`.
 | `CanDoItAll.Components.Mermaid` | Typed Mermaid diagram component and vendored Mermaid assets. |
 | `CanDoItAll.Components.OverlayLib` | Floating overlay and window components. |
 | `CanDoItAll.Components.WebGlLib` | WebGL workbench runtime plus generic scene, asset, symbol, interaction, and proof contracts. |
+| `CanDoItAll.Components.WebGlRunLib` | Generic run/playback/action/stage contracts layered over WebGlLib scene patches. |
 | `CanDoItAll.Components.Sandbox` | Component preview and regression host. |
 | `CanDoItAll.Components.WebGlSandbox` | Standalone WebGL proof host for generic scene demos such as the tycoon village. |
 
@@ -42,13 +44,27 @@ Useful routes:
 
 Domain-specific repositories should map their own data into `WebGlSceneModel` outside this repository. Keep `CanDoItAll.Components.WebGlLib` domain-neutral.
 
+WebGlLib can also be consumed without WebGlRunLib through the minimal Razor sample at `samples/CanDoItAll.Components.WebGlLibOnlyViewer`. The sample supports project-reference mode by default and package mode with `UseComponentsWebGlLibPackage=true`.
+
 Current WebGL hardening proof is large-screen only by design; small-screen layout tuning is out of scope for this bundle.
+
+Playback host integration, Pause troubleshooting, deterministic replay modes, and package-mode proof rules are documented in `docs/webgl/playback-hosting-and-troubleshooting.md`.
 
 ## Pack
 
 ```powershell
-dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages
+$proofSuffix = "-sb11.20260602.1"
+dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages /p:CanDoItAllPackageProofSuffix=$proofSuffix
 ```
+
+This emits all shared component packages at the version in `Directory.Build.props`, plus any proof suffix supplied at pack time. The WebGL integration packages are:
+
+- `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0.nupkg`
+- `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0.nupkg`
+- proof example: `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0-sb11.20260602.1.nupkg`
+- proof example: `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0-sb11.20260602.1.nupkg`
+
+When validating package consumers against freshly packed packages, use a proof/local NuGet.config that points at the fresh package output before any older private feed, set an isolated `NUGET_PACKAGES` cache, and pass the full proof version to consumer restore/build properties. A proof run must fail if the stale feed is used or if the consumer restores a project reference instead of the freshly packed package.
 
 Copy packages into the main repo private feed:
 

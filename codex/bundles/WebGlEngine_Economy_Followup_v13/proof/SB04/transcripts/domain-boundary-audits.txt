@@ -1,0 +1,78 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260605172132
+Username: DESKTOP-92SPMQV\dell
+RunAs User: DESKTOP-92SPMQV\dell
+Configuration Name: 
+Machine: DESKTOP-92SPMQV (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}
+$bundle = 'C:\repositories\CanDoItAll.Components\codex\bundles\WebGlEngine_Economy_Followup_v13'
+$log = Join-Path $bundle 'proof\SB04\transcripts\domain-boundary-audits.txt'
+Start-Transcript -Path $log -Force | Out-Null
+Write-Host 'COMMAND: node audit generic-source-hard-gate'
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile generic-source-hard-gate
+$sourceExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $sourceExit"
+Write-Host 'COMMAND: node audit generic-public-api-hard-gate'
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile generic-public-api-hard-gate
+$apiExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $apiExit"
+Write-Host 'COMMAND: node audit package-content-hard-gate'
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile package-content-hard-gate
+$packageExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $packageExit"
+Write-Host 'COMMAND: node audit docs-and-bundle-soft-audit'
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile docs-and-bundle-soft-audit
+$softExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $softExit"
+Write-Host 'COMMAND: negative probe WEBGLRUNLIB_BOUNDARY_AUDIT_PROBE=farmer generic-source-hard-gate'
+$env:WEBGLRUNLIB_BOUNDARY_AUDIT_PROBE = 'farmer'
+node tools\webgllib\audit-webglrunlib-boundary.cjs --config tools\webgllib\domain-boundary-audit.config.json --profile generic-source-hard-gate
+$negativeExit = $LASTEXITCODE
+Remove-Item Env:\WEBGLRUNLIB_BOUNDARY_AUDIT_PROBE -ErrorAction SilentlyContinue
+Write-Host "EXPECTED NONZERO EXIT CODE: $negativeExit"
+if ($negativeExit -ne 0) {
+    Write-Host 'EXPECTED FAILURE DETECTED: forbidden-term probe failed the hard gate.'
+} else {
+    Write-Host 'UNEXPECTED: forbidden-term probe did not fail the hard gate.'
+}
+Write-Host 'COMMAND: dotnet test Components fake non-domain driver proof'
+dotnet test tests\CanDoItAll.Components.WebGlRunLib.Tests\CanDoItAll.Components.WebGlRunLib.Tests.csproj --no-restore --filter "FullyQualifiedName~Domain_mapping_driver_manifest_hash_validation_and_scrubber_support_non_economy_driver" -m:1 -p:UseSharedCompilation=false -p:BuildInParallel=false
+$fakeDriverExit = $LASTEXITCODE
+Write-Host "EXIT CODE: $fakeDriverExit"
+Stop-Transcript | Out-Null
+if (($sourceExit -ne 0) -or ($apiExit -ne 0) -or ($packageExit -ne 0) -or ($softExit -ne 0) -or ($negativeExit -eq 0) -or ($fakeDriverExit -ne 0)) { exit 1 }
+Get-Item $log | Select-Object FullName,Length
+Process ID: 21028
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+COMMAND: node audit generic-source-hard-gate
+
+EXIT CODE: 0
+COMMAND: node audit generic-public-api-hard-gate
+
+EXIT CODE: 0
+COMMAND: node audit package-content-hard-gate
+
+EXIT CODE: 0
+COMMAND: node audit docs-and-bundle-soft-audit
+
+EXIT CODE: 0
+COMMAND: negative probe WEBGLRUNLIB_BOUNDARY_AUDIT_PROBE=farmer generic-source-hard-gate
+
+EXPECTED NONZERO EXIT CODE: 1
+EXPECTED FAILURE DETECTED: forbidden-term probe failed the hard gate.
+COMMAND: dotnet test Components fake non-domain driver proof
+
+EXIT CODE: 0
+**********************
+Windows PowerShell transcript end
+End time: 20260605172206
+**********************

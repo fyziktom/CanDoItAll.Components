@@ -7,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents(options =>
+    {
+        options.DetailedErrors = builder.Environment.IsDevelopment();
+    });
 builder.Services.AddCanDoItAllBaseLib();
 
 var app = builder.Build();
