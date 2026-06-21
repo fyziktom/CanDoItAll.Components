@@ -1147,6 +1147,11 @@
 
         if (node.isInlineTextNode) {
             nodeElement.classList.add("is-inline-text");
+            const size = getNodeSize(state, node);
+            nodeElement.style.width = `${round(size.width)}px`;
+        }
+        else {
+            nodeElement.style.removeProperty("width");
         }
 
         if (node.isReadOnly) {

@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using CanDoItAll.Components.WebGlRunLib;
@@ -99,8 +100,7 @@ public sealed class WebGlRunFreezeApprovalTests
         string repoRoot = FindRepoRoot();
         string absoluteSourceRoot = Path.Combine(repoRoot, sourceRoot);
         string[] lines = Directory.GetFiles(absoluteSourceRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(static path => !IsExcludedSnapshotPath(path))
             .OrderBy(path => Path.GetRelativePath(repoRoot, path), StringComparer.Ordinal)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { Path = Path.GetRelativePath(repoRoot, path).Replace('\\', '/'), Line = line.Trim(), LineNumber = index + 1 })
@@ -196,19 +196,41 @@ public sealed class WebGlRunFreezeApprovalTests
         string repoRoot = FindRepoRoot();
         string absoluteSourceRoot = Path.Combine(repoRoot, sourceRoot);
         string[] lines = Directory.GetFiles(absoluteSourceRoot, "*", SearchOption.AllDirectories)
-            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(static path => !IsExcludedSnapshotPath(path))
             .OrderBy(path => Path.GetRelativePath(repoRoot, path), StringComparer.Ordinal)
             .Select(path =>
             {
-                var info = new FileInfo(path);
-                string hash = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(path))).ToLowerInvariant();
-                return $"{Path.GetRelativePath(repoRoot, path).Replace('\\', '/')} | bytes={info.Length} | sha256={hash}";
+                byte[] bytes = ReadSnapshotBytes(path);
+                string hash = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
+                return $"{Path.GetRelativePath(repoRoot, path).Replace('\\', '/')} | bytes={bytes.Length} | sha256={hash}";
             })
             .ToArray();
 
         return string.Join(Environment.NewLine, lines) + Environment.NewLine;
     }
+
+    private static bool IsExcludedSnapshotPath(string path)
+        => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
+           path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
+           path.Contains($"{Path.DirectorySeparatorChar}.artifacts{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
+           path.Contains($"{Path.DirectorySeparatorChar}.codex-tmp{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
+
+    private static byte[] ReadSnapshotBytes(string path)
+    {
+        if (!IsTextSnapshotFile(path))
+        {
+            return File.ReadAllBytes(path);
+        }
+
+        return Encoding.UTF8.GetBytes(NormalizeNewLines(File.ReadAllText(path)));
+    }
+
+    private static bool IsTextSnapshotFile(string path)
+        => Path.GetExtension(path).ToLowerInvariant() switch
+        {
+            ".cs" or ".razor" or ".csproj" or ".props" or ".targets" or ".json" or ".js" or ".css" or ".md" or ".txt" or ".xml" => true,
+            _ => false
+        };
 
     private static string NormalizeNewLines(string value)
         => value.Replace("\r\n", "\n", StringComparison.Ordinal);

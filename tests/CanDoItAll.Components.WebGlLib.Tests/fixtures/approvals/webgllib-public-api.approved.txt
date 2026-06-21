@@ -628,28 +628,33 @@ src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:13: publ
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:15: public string AssetQualityProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:17: public bool ShowDiagnosticsPanel { get; set; } = true;
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:19: public bool ShowLabels { get; set; } = true;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:21: public bool ShowSymbols { get; set; } = true;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:23: public bool AutoFitOnCreate { get; set; } = true;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:25: public int MaxCommandResultHistory { get; set; } = 100;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:27: public int MaxCommandBatchChildResults { get; set; } = 5;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:29: public int MaxCommandBatchMessages { get; set; } = 5;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:31: public int MaxCommandBatchProofSnapshotPositions { get; set; } = 10;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:33: public bool NotifyStateChanged { get; set; } = true;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:35: public bool NotifyMotionCompleted { get; set; } = true;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:37: public bool NotifyCommandCompleted { get; set; } = true;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:39: public bool NotifyCommandFailed { get; set; } = true;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:41: public WebGlRuntimeBudgetOptions RuntimeBudget { get; set; } = new();
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:43: public string RuntimeKey { get; set; } = string.Empty;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:46: public sealed class WebGlRuntimeBudgetOptions
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:48: public string Profile { get; set; } = "standard";
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:50: public int MaxSceneObjects { get; set; } = 500;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:52: public int MaxLoadedAssets { get; set; } = 128;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:54: public int MaxAssetCacheEntries { get; set; } = 128;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:56: public int MaxActiveMotions { get; set; } = 256;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:58: public int MaxQueuedMotions { get; set; } = 512;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:60: public int MaxQueuedCommandStages { get; set; } = 128;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:62: public int MaxEstimatedTriangles { get; set; } = 250_000;
-src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:64: public bool DegradeWhenExceeded { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:21: public string LabelVisibilityMode { get; set; } = WebGlLabelVisibilityModes.Always;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:23: public int LabelHoverHideDelayMilliseconds { get; set; } = 2_200;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:25: public bool ShowSymbols { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:27: public bool AutoFitOnCreate { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:29: public int MaxCommandResultHistory { get; set; } = 100;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:31: public int MaxCommandBatchChildResults { get; set; } = 5;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:33: public int MaxCommandBatchMessages { get; set; } = 5;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:35: public int MaxCommandBatchProofSnapshotPositions { get; set; } = 10;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:37: public bool NotifyStateChanged { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:39: public bool NotifyMotionCompleted { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:41: public bool NotifyCommandCompleted { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:43: public bool NotifyCommandFailed { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:45: public WebGlRuntimeBudgetOptions RuntimeBudget { get; set; } = new();
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:47: public string RuntimeKey { get; set; } = string.Empty;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:50: public static class WebGlLabelVisibilityModes
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:52: public const string Always = "always";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:54: public const string Hover = "hover";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:57: public sealed class WebGlRuntimeBudgetOptions
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:59: public string Profile { get; set; } = "standard";
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:61: public int MaxSceneObjects { get; set; } = 500;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:63: public int MaxLoadedAssets { get; set; } = 128;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:65: public int MaxAssetCacheEntries { get; set; } = 128;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:67: public int MaxActiveMotions { get; set; } = 256;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:69: public int MaxQueuedMotions { get; set; } = 512;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:71: public int MaxQueuedCommandStages { get; set; } = 128;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:73: public int MaxEstimatedTriangles { get; set; } = 250_000;
+src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeOptions.cs:75: public bool DegradeWhenExceeded { get; set; } = true;
 src/CanDoItAll.Components.WebGlLib/WebGl/Interop/WebGlRuntimeReadyEventArgs.cs:3: public sealed record WebGlRuntimeReadyEventArgs(
 src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:3: public sealed class WebGlScenePatch
 src/CanDoItAll.Components.WebGlLib/WebGl/Patching/WebGlScenePatch.cs:5: public string SceneId { get; set; } = string.Empty;

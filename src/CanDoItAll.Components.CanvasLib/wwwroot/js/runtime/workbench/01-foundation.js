@@ -590,9 +590,9 @@
             lineHeightPx: 20
         };
         const minWidth = 148;
-        const maxWidth = 348;
+        const maxWidth = 420;
         const maxLines = 12;
-        const widthBias = Math.max(0, Math.min(132, (noteText.length - 18) * 1.45));
+        const widthBias = Math.max(0, Math.min(220, (noteText.length - 18) * 2.25));
         const longWordBias = Math.max(0, longestTokenLength - 12) * 4.5;
         let estimatedWidth = clamp(
             Math.ceil(baseSize.width + widthBias + longWordBias),
