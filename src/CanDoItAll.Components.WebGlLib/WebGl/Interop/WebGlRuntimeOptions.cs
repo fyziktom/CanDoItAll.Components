@@ -24,6 +24,8 @@ public sealed class WebGlRuntimeOptions
 
     public bool ShowSymbols { get; set; } = true;
 
+    public bool ShowLinks { get; set; } = true;
+
     public bool AutoFitOnCreate { get; set; } = true;
 
     public int MaxCommandResultHistory { get; set; } = 100;

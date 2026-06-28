@@ -98,6 +98,7 @@ public partial class WebGlSceneView
             LabelVisibilityMode = options.LabelVisibilityMode,
             LabelHoverHideDelayMilliseconds = options.LabelHoverHideDelayMilliseconds,
             ShowSymbols = options.ShowSymbols,
+            ShowLinks = options.ShowLinks,
             AutoFitOnCreate = options.AutoFitOnCreate,
             MaxCommandResultHistory = options.MaxCommandResultHistory,
             MaxCommandBatchChildResults = options.MaxCommandBatchChildResults,

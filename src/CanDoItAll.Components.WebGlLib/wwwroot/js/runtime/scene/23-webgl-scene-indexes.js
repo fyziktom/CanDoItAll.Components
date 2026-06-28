@@ -89,6 +89,10 @@ export function isObjectVisible(state, sceneObject) {
 }
 
 export function isLinkVisible(state, link) {
+    if (state?.options?.showLinks === false || state?.sceneModel?.uiState?.showLinks === false) {
+        return false;
+    }
+
     return isObjectVisible(state, state.sceneIndexes?.objectById?.get(link.sourceObjectId)) &&
         isObjectVisible(state, state.sceneIndexes?.objectById?.get(link.targetObjectId));
 }

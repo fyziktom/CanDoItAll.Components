@@ -13,6 +13,9 @@ public partial class WebGlSceneView
     public Task ResetCameraAsync()
         => JsRuntime.InvokeVoidAsync("CanDoItAll.webglScene.resetCamera", host).AsTask();
 
+    public Task<bool> SetLinkVisibilityAsync(bool isVisible)
+        => JsRuntime.InvokeAsync<bool>("CanDoItAll.webglScene.setLinkVisibility", host, isVisible).AsTask();
+
     public Task<string?> CaptureImageAsync()
         => JsRuntime.InvokeAsync<string?>("CanDoItAll.webglScene.exportImageData", host).AsTask();
 

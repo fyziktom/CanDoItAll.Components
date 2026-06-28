@@ -7,6 +7,7 @@ import { applyCommandBatch, applyCommandBatchAndWait } from "./26-webgl-scene-co
 import { requestCommandStageManualStep, signalCommandStageEvent } from "./30-webgl-scene-stage-runner.js";
 import { clearMotions, clearMotionsDetailed, enqueueMotion, enqueueMotionDetailed } from "./14-webgl-scene-motion.js";
 import { cancelMotion, cancelMotionDetailed } from "./31-webgl-scene-motion-cancellation.js";
+import { setLinkVisibility as setLinkVisibilityCore } from "./11-webgl-scene-graph.js";
 import { buildDiagnosticsSnapshot } from "./02-webgl-scene-core.js";
 import { cancelCommandStages as cancelRuntimeCommandStages, stopRuntimeActivity as stopRuntimeActivityCore } from "./39-webgl-scene-runtime-stop.js";
 import { waitForRuntimeIdle as waitForRuntimeIdleCore } from "./40-webgl-scene-runtime-idle.js";
@@ -93,6 +94,10 @@ root.webglScene = {
             resetCamera(state);
             state.scheduleRender("reset-camera");
         }
+    },
+    setLinkVisibility(host, isVisible) {
+        const state = resolveState(host);
+        return state ? setLinkVisibilityCore(state, isVisible) : false;
     },
     getState(host) {
         const state = resolveState(host);

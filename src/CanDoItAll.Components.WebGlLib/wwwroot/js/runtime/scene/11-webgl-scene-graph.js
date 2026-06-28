@@ -197,6 +197,22 @@ export function removeLinkGroup(state, linkId) {
     disposeSceneObjectTree(group, state.diagnostics);
 }
 
+export function setLinkVisibility(state, isVisible) {
+    if (!state) {
+        return false;
+    }
+
+    const visible = isVisible !== false;
+    state.options.showLinks = visible;
+    state.sceneModel.uiState ||= {};
+    state.sceneModel.uiState.showLinks = visible;
+    state.sceneModel.uiState.revision = (state.sceneModel.uiState.revision || 0) + 1;
+    state.diagnostics.linkVisibilityUpdateCount = (state.diagnostics.linkVisibilityUpdateCount || 0) + 1;
+    rebuildScene(state);
+    state.scheduleRender(visible ? "links-shown" : "links-hidden");
+    return true;
+}
+
 export function syncObjectRings(state) {
     for (const [objectId, group] of state.objectGroups.entries()) {
         const selected = state.selectedObjectIds.has(objectId);

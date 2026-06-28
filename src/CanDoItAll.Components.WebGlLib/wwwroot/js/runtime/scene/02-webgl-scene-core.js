@@ -93,6 +93,7 @@ export function normalizeOptions(options) {
         labelVisibilityMode: normalizeLabelVisibilityMode(options?.labelVisibilityMode),
         labelHoverHideDelayMilliseconds: Math.max(0, Math.min(10000, resolveFiniteNumber(options?.labelHoverHideDelayMilliseconds, 2200))),
         showSymbols: options?.showSymbols !== false,
+        showLinks: options?.showLinks !== false,
         autoFitOnCreate: options?.autoFitOnCreate !== false,
         runtimeKey: resolveString(options?.runtimeKey, ""),
         maxCommandResultHistory: Math.max(1, Math.min(1000, resolveFiniteNumber(options?.maxCommandResultHistory, 100))),

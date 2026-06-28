@@ -43,6 +43,8 @@ public sealed class WebGlSceneUiState
 
     public bool ShowSymbols { get; set; } = true;
 
+    public bool ShowLinks { get; set; } = true;
+
     public bool DeterministicMode { get; set; } = true;
 
     public string ActiveAssetProfile { get; set; } = WebGlAssetQualityProfiles.Primitive;
