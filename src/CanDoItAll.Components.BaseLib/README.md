@@ -6,6 +6,213 @@ Package version: `0.1.0`.
 
 Primary shared Razor component library with theme tokens, layout primitives, forms, buttons, cards, feedback, navigation, tabs, and CSS output.
 
+## Component Catalog
+
+BaseLib currently exposes 161 Razor components. Links point to the component source file.
+
+### Badges, Chips, And Status
+
+- [Badge](Components/Badges/Badge.razor)
+- [BadgesGroup](Components/Badges/BadgesGroup.razor)
+- [Chip](Components/Badges/Chip.razor)
+- [ChipRow](Components/Badges/ChipRow.razor)
+- [CompactStat](Components/Badges/CompactStat.razor)
+- [CompactStatStrip](Components/Badges/CompactStatStrip.razor)
+- [Pill](Components/Badges/Pill.razor)
+- [PillList](Components/Badges/PillList.razor)
+- [ProfileTagChip](Components/Badges/Compatibility/ProfileTagChip.razor)
+- [ProfileTagChipRow](Components/Badges/Compatibility/ProfileTagChipRow.razor)
+- [StatusBadge](Components/Badges/StatusBadge.razor)
+
+### Buttons And Commands
+
+- [Button](Components/Buttons/Button.razor)
+- [CopyButton](Components/Buttons/CopyButton.razor)
+
+### Cards, Panels, And Metrics
+
+- [ActionCard](Components/Cards/ActionCard.razor)
+- [ActionReviewPanel](Components/Cards/ActionReviewPanel.razor)
+- [AuthCard](Components/Cards/AuthCard.razor)
+- [BuilderStatBox](Components/Cards/Compatibility/BuilderStatBox.razor)
+- [BuilderStatStrip](Components/Cards/Compatibility/BuilderStatStrip.razor)
+- [Card](Components/Cards/Card.razor)
+- [CardActions](Components/Cards/CardActions.razor)
+- [CardButton](Components/Cards/CardButton.razor)
+- [CardGrid](Components/Cards/CardGrid.razor)
+- [CardStatsWithNumber](Components/Cards/CardStatsWithNumber.razor)
+- [HeroCard](Components/Cards/HeroCard.razor)
+- [MetricCard](Components/Cards/MetricCard.razor)
+- [PanelCard](Components/Cards/PanelCard.razor)
+- [ParitySectionCard](Components/Cards/ParitySectionCard.razor)
+- [PriceBar](Components/Cards/PriceBar.razor)
+- [PriceRow](Components/Cards/PriceRow.razor)
+- [SectionCard](Components/Cards/SectionCard.razor)
+- [SheetCard](Components/Cards/Compatibility/SheetCard.razor)
+- [SheetCardHeading](Components/Cards/Compatibility/SheetCardHeading.razor)
+- [SheetCardTop](Components/Cards/Compatibility/SheetCardTop.razor)
+- [SheetGrid](Components/Cards/Compatibility/SheetGrid.razor)
+- [SheetNote](Components/Cards/Compatibility/SheetNote.razor)
+- [SheetSection](Components/Cards/Compatibility/SheetSection.razor)
+- [StatBox](Components/Cards/StatBox.razor)
+- [StatsCardRow](Components/Cards/StatsCardRow.razor)
+- [StatsGrid](Components/Cards/StatsGrid.razor)
+- [SummaryTile](Components/Cards/SummaryTile.razor)
+- [SummaryTiles](Components/Cards/SummaryTiles.razor)
+- [SurfaceCard](Components/Cards/SurfaceCard.razor)
+
+### Data Display And Timelines
+
+- [DiffViewer](Components/DataDisplay/DiffViewer.razor)
+- [Timeline](Components/DataDisplay/Timeline.razor)
+- [TimelineStepper](Components/DataDisplay/TimelineStepper.razor)
+
+### Data Visualization
+
+- [CategoryAxis](Components/DataVisualization/CategoryAxis.razor)
+- [Chart](Components/DataVisualization/Chart.razor)
+- [DataGrid](Components/DataVisualization/DataGrid.razor)
+- [DataGridColumn](Components/DataVisualization/DataGridColumn.razor)
+- [GridLines](Components/DataVisualization/GridLines.razor)
+- [LineSeries](Components/DataVisualization/LineSeries.razor)
+- [ProgressBar](Components/DataVisualization/ProgressBar.razor)
+- [ValueAxis](Components/DataVisualization/ValueAxis.razor)
+
+### Feedback, Help, And Overlays
+
+- [Alert](Components/Feedback/Alert.razor)
+- [Callout](Components/Feedback/Callout.razor)
+- [EmptyState](Components/Feedback/EmptyState.razor)
+- [HelpPopover](Components/Feedback/HelpPopover.razor)
+- [LoadingState](Components/Feedback/LoadingState.razor)
+- [Notification](Components/Feedback/Notification.razor)
+- [StatusCheckList](Components/Feedback/StatusCheckList.razor)
+- [Tooltip](Components/Feedback/Tooltip.razor)
+- [TooltipTarget](Components/Feedback/TooltipTarget.razor)
+- [VerificationList](Components/Feedback/VerificationList.razor)
+
+### Forms And Inputs
+
+- [CheckBox](Components/Forms/CheckBox.razor)
+- [DebugToggle](Components/Forms/Compatibility/DebugToggle.razor)
+- [DropDown](Components/Forms/DropDown.razor)
+- [Editable](Components/Forms/Editable.razor)
+- [EntityPicker](Components/Forms/EntityPicker.razor)
+- [Fieldset](Components/Forms/Fieldset.razor)
+- [FileUpload](Components/Forms/FileUpload.razor)
+- [FormField](Components/Forms/FormField.razor)
+- [FormRow](Components/Forms/FormRow.razor)
+- [FormSection](Components/Forms/FormSection.razor)
+- [FormStack](Components/Forms/FormStack.razor)
+- [InlineActions](Components/Forms/InlineActions.razor)
+- [Numeric](Components/Forms/Numeric.razor)
+- [Password](Components/Forms/Password.razor)
+- [PrefixedField](Components/Forms/PrefixedField.razor)
+- [ProfileField](Components/Forms/Compatibility/ProfileField.razor)
+- [ProfileToggle](Components/Forms/Compatibility/ProfileToggle.razor)
+- [SecretField](Components/Forms/SecretField.razor)
+- [SettingsSwitchLabel](Components/Forms/SettingsSwitchLabel.razor)
+- [SettingsSwitchRow](Components/Forms/SettingsSwitchRow.razor)
+- [SheetField](Components/Forms/Compatibility/SheetField.razor)
+- [Slider](Components/Forms/Slider.razor)
+- [Switch](Components/Forms/Switch.razor)
+- [TagEditor](Components/Forms/TagEditor.razor)
+- [TagTextEdit](Components/Forms/Compatibility/TagTextEdit.razor)
+- [TextArea](Components/Forms/TextArea.razor)
+- [TextBox](Components/Forms/TextBox.razor)
+
+### Identity And Icons
+
+- [Avatar](Components/Identity/Avatar.razor)
+- [CreatorAvatar](Components/Identity/Compatibility/CreatorAvatar.razor)
+- [CreatorLine](Components/Identity/CreatorLine.razor)
+- [CreatorSocialLink](Components/Identity/CreatorSocialLink.razor)
+- [Icon](Components/Identity/Icon.razor)
+
+### Layout And Shells
+
+- [Body](Components/Layout/Body.razor)
+- [Cluster](Components/Layout/Cluster.razor)
+- [Column](Components/Layout/Column.razor)
+- [Grid](Components/Layout/Grid.razor)
+- [Layout](Components/Layout/Layout.razor)
+- [PageScaffold](Components/Layout/PageScaffold.razor)
+- [PageShell](Components/Layout/PageShell.razor)
+- [Row](Components/Layout/Row.razor)
+- [Sidebar](Components/Layout/Sidebar.razor)
+- [Split](Components/Layout/Split.razor)
+- [Stack](Components/Layout/Stack.razor)
+- [StickyActionFooter](Components/Layout/StickyActionFooter.razor)
+- [ThemeHost](Components/Layout/ThemeHost.razor)
+- [WorkspacePanel](Components/Layout/WorkspacePanel.razor)
+- [WorkspaceSplit](Components/Layout/WorkspaceSplit.razor)
+
+### Lists And Selection
+
+- [FactTable](Components/Lists/FactTable.razor)
+- [ListDetailShell](Components/Lists/ListDetailShell.razor)
+- [ListGroup](Components/Lists/ListGroup.razor)
+- [ListItem](Components/Lists/ListItem.razor)
+- [ListPanelHeader](Components/Lists/ListPanelHeader.razor)
+- [MetaList](Components/Lists/MetaList.razor)
+- [PlainList](Components/Lists/PlainList.razor)
+- [SelectionListItem](Components/Lists/SelectionListItem.razor)
+
+### Modals And Dialogs
+
+- [DangerActionDialog](Components/Modals/DangerActionDialog.razor)
+- [Dialog](Components/Modals/Dialog.razor)
+- [DialogHost](Components/Modals/DialogHost.razor)
+- [DialogScaffold](Components/Modals/DialogScaffold.razor)
+- [InspectorDialogLayout](Components/Modals/InspectorDialogLayout.razor)
+- [PickerDialogShell](Components/Modals/PickerDialogShell.razor)
+- [ZyWorkspaceModal](Components/Modals/Compatibility/ZyWorkspaceModal.razor)
+
+### Navigation, Tabs, And Toolbars
+
+- [ContextMenu](Components/Navigation/ContextMenu.razor)
+- [DashboardActions](Components/Navigation/Compatibility/DashboardActions.razor)
+- [FilterBar](Components/Navigation/FilterBar.razor)
+- [ImmersiveRibbonTabs](Components/Navigation/Compatibility/ImmersiveRibbonTabs.razor)
+- [LegalToc](Components/Navigation/LegalToc.razor)
+- [LegalTocNav](Components/Navigation/LegalTocNav.razor)
+- [PageHeader](Components/Navigation/PageHeader.razor)
+- [PageHeaderActionButton](Components/Navigation/PageHeaderActionButton.razor)
+- [PageHeaderActions](Components/Navigation/Compatibility/PageHeaderActions.razor)
+- [PageHeaderCopy](Components/Navigation/Compatibility/PageHeaderCopy.razor)
+- [RibbonTabs](Components/Navigation/RibbonTabs.razor)
+- [SecondaryTabs](Components/Navigation/SecondaryTabs.razor)
+- [Steps](Components/Navigation/Steps.razor)
+- [StepsItem](Components/Navigation/StepsItem.razor)
+- [Tabs](Components/Navigation/Tabs.razor)
+- [TabsItem](Components/Navigation/TabsItem.razor)
+- [Toolbar](Components/Navigation/Toolbar.razor)
+- [ToolbarActions](Components/Navigation/ToolbarActions.razor)
+- [ToolbarFields](Components/Navigation/ToolbarFields.razor)
+- [ToolbarRow](Components/Navigation/ToolbarRow.razor)
+- [TreeView](Components/Navigation/TreeView.razor)
+- [TreeViewNodeRow](Components/Navigation/TreeViewNodeRow.razor)
+
+### Storage
+
+- [StorageBadgeStrip](Components/Storage/StorageBadgeStrip.razor)
+- [StorageSummaryCard](Components/Storage/StorageSummaryCard.razor)
+
+### Typography
+
+- [CopyableMonoValue](Components/Typography/CopyableMonoValue.razor)
+- [Divider](Components/Typography/Divider.razor)
+- [Eyebrow](Components/Typography/Eyebrow.razor)
+- [FooterText](Components/Typography/FooterText.razor)
+- [HashDisplay](Components/Typography/HashDisplay.razor)
+- [Header](Components/Typography/Header.razor)
+- [MonoText](Components/Typography/MonoText.razor)
+- [MutedInline](Components/Typography/MutedInline.razor)
+- [SectionHead](Components/Typography/SectionHead.razor)
+- [SectionHeading](Components/Typography/SectionHeading.razor)
+- [SmallText](Components/Typography/SmallText.razor)
+- [TextBlock](Components/Typography/TextBlock.razor)
+
 ## Project Type
 
 - SDK: `Microsoft.NET.Sdk.Razor`
