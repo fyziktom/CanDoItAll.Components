@@ -1,0 +1,3796 @@
+[
+  {
+    "packageId": "CanDoItAll.Components.CanvasLib",
+    "assemblyName": "CanDoItAll.Components.CanvasLib",
+    "types": [
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AccessibilityMirrorItem",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsPrimary {get;set;}",
+          "property System.Boolean IsSelected {get;set;}",
+          "property System.String ActionLabel {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Label {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AccessibilityMirrorLayer",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.AccessibilityMirrorSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AccessibilityMirrorLayerFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.AccessibilityMirrorSnapshot CreateForCalendar(CanDoItAll.Components.CanvasLib.CanvasCalendarSurface surface, System.Boolean enableDiagnostics = optional)",
+          "method static CanDoItAll.Components.CanvasLib.AccessibilityMirrorSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, System.Boolean enableDiagnostics)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AccessibilityMirrorSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean EnableDiagnostics {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.AccessibilityMirrorItem\u003E Items {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String LiveAnnouncement {get;set;}",
+          "property System.String RegionLabel {get;set;}",
+          "property System.String SummaryLabel {get;set;}",
+          "property System.String SurfaceKind {get;set;}",
+          "property System.String TestHookId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AnimationTimelineOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Int32 BadgePulseDurationMs {get;set;}",
+          "property System.Int32 ConnectorFlowDurationMs {get;set;}",
+          "property System.Int32 OverlayFadeDurationMs {get;set;}",
+          "property System.Int32 ViewportDurationMs {get;set;}",
+          "property System.String OverlayEasing {get;set;}",
+          "property System.String ViewportEasing {get;set;}",
+          "property static CanDoItAll.Components.CanvasLib.AnimationTimelineOptions Default {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AnimationTimelinePhase",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String DurationLabel {get;set;}",
+          "property System.String Key {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Summary {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AnimationTimelinePreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.AnimationTimelinePreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.AnimationTimelinePreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.AnimationTimelinePhase\u003E Phases {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String ReducedMotionLabel {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarCrudBridge",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CalendarCrudBridgeSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarCrudBridgeFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CalendarCrudBridgeSnapshot Create(CanDoItAll.Components.CanvasLib.CanvasCalendarSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarCrudBridgeOperation",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarCrudBridgeSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CalendarCrudBridgeOperation\u003E Operations {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarEventEditorField",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Label {get;set;}",
+          "property System.String Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarEventEditorModal",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CalendarEventEditorModalSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarEventEditorModalFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CalendarEventEditorModalSnapshot Create(CanDoItAll.Components.CanvasLib.CanvasCalendarSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarEventEditorModalSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CalendarEventEditorField\u003E Fields {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E ValidationMessages {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String ModeLabel {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarExportFormatOption",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsPrimary {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Label {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarExportMenu",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CalendarExportMenuSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarExportMenuFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CalendarExportMenuSnapshot Create(CanDoItAll.Components.CanvasLib.CanvasCalendarSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarExportMenuSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CalendarExportFormatOption\u003E Formats {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarMiniMonthDay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean HasEvents {get;set;}",
+          "property System.Boolean IsCurrentMonth {get;set;}",
+          "property System.Boolean IsSelected {get;set;}",
+          "property System.String DayLabel {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarMiniMonthNavigator",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CalendarMiniMonthNavigatorSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarMiniMonthNavigatorFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CalendarMiniMonthNavigatorSnapshot Create(CanDoItAll.Components.CanvasLib.CanvasCalendarSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarMiniMonthNavigatorSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CalendarMiniMonthDay\u003E Days {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String MonthLabel {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarSelectionPanel",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CalendarSelectionPanelSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarSelectionPanelFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CalendarSelectionPanelSnapshot Create(CanDoItAll.Components.CanvasLib.CanvasCalendarSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarSelectionPanelSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarChecklistRow\u003E ChecklistRows {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarPlaylist\u003E LinkedPlaylists {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String EventSubtitle {get;set;}",
+          "property System.String EventTitle {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String TimeRangeLabel {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarTimeGridBlock",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double HeightPercent {get;set;}",
+          "property System.Double TopPercent {get;set;}",
+          "property System.String Color {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Subtitle {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarTimeGridRenderer",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CalendarTimeGridRendererSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarTimeGridRendererFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CalendarTimeGridRendererSnapshot Create(CanDoItAll.Components.CanvasLib.CanvasCalendarSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CalendarTimeGridRendererSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CalendarTimeGridBlock\u003E Blocks {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SlotLabels {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String RangeLabel {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasBoundaryCard",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendar",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.Task OnEventDelete(System.String eventJson, System.String contextJson)",
+          "method System.Threading.Tasks.Task OnExportRequested(System.String format, System.String visibleEventsJson, System.String contextJson)",
+          "method System.Threading.Tasks.Task OnSelectionChanged(System.String selectedEventJson, System.String contextJson)",
+          "method System.Threading.Tasks.Task OnStateChanged(System.String stateJson, System.String selectedEventId, System.String selectedDate, System.String view, System.String scope, System.String timezone)",
+          "method System.Threading.Tasks.Task\u003CSystem.String\u003E OnEventSave(System.String eventJson, System.String contextJson, System.String mode)",
+          "method System.Threading.Tasks.Task\u003CSystem.String\u003E OnPlaylistClone(System.String eventJson, System.String playlistJson, System.String contextJson)",
+          "method System.Threading.Tasks.Task\u003CSystem.String\u003E OnPlaylistLink(System.String eventJson, System.String playlistJson, System.String contextJson)",
+          "method System.Threading.Tasks.Task\u003CSystem.String\u003E OnPlaylistSearch(System.String query, System.String eventJson, System.String contextJson)",
+          "method System.Threading.Tasks.Task\u003CSystem.String\u003E OnPlaylistUnlink(System.String eventJson, System.String playlistJson, System.String contextJson)",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarSurface Surface {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarSelectionChangedEventArgs\u003E SelectionChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarStateChangedEventArgs\u003E StateChanged {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarDeleteRequest,System.Threading.Tasks.Task\u003E DeleteEventAsync {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarExportRequest,System.Threading.Tasks.Task\u003E ExportAsync {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistMutationRequest,System.Threading.Tasks.Task\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E\u003E ClonePlaylistAsync {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistMutationRequest,System.Threading.Tasks.Task\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E\u003E LinkPlaylistAsync {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistMutationRequest,System.Threading.Tasks.Task\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E\u003E UnlinkPlaylistAsync {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistSearchRequest,System.Threading.Tasks.Task\u003CSystem.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarPlaylist\u003E\u003E\u003E SearchPlaylistsAsync {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarSaveRequest,System.Threading.Tasks.Task\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E\u003E SaveEventAsync {get;set;}",
+          "property System.String HostClass {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarChecklistRow",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Label {get;set;}",
+          "property System.String Note {get;set;}",
+          "property System.String Status {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarConnectedEvent",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsPrimary {get;set;}",
+          "property System.Nullable\u003CSystem.DateTimeOffset\u003E ScheduledStartUtc {get;set;}",
+          "property System.String CustomerName {get;set;}",
+          "property System.String EventId {get;set;}",
+          "property System.String EventUrl {get;set;}",
+          "property System.String LocationAddress {get;set;}",
+          "property System.String LocationLabel {get;set;}",
+          "property System.String TimezoneName {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarDeleteRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "method CanDoItAll.Components.CanvasLib.CanvasCalendarDeleteRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasCalendarDeleteRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, out CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarEvent",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean AllDay {get;set;}",
+          "property System.Boolean ReadOnly {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarChecklistRow\u003E ChecklistRows {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarPlaylist\u003E LinkedPlaylists {get;set;}",
+          "property System.Int32 ChecklistItemCount {get;set;}",
+          "property System.Int32 LinkedPlaylistCount {get;set;}",
+          "property System.Nullable\u003CSystem.DateTimeOffset\u003E CreatedUtc {get;set;}",
+          "property System.Nullable\u003CSystem.DateTimeOffset\u003E EndUtc {get;set;}",
+          "property System.Nullable\u003CSystem.DateTimeOffset\u003E StartUtc {get;set;}",
+          "property System.Nullable\u003CSystem.DateTimeOffset\u003E UpdatedUtc {get;set;}",
+          "property System.Nullable\u003CSystem.Decimal\u003E PriceAmount {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E LocationLat {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E LocationLng {get;set;}",
+          "property System.String Category {get;set;}",
+          "property System.String Color {get;set;}",
+          "property System.String Currency {get;set;}",
+          "property System.String CurrentCommitSha256 {get;set;}",
+          "property System.String CustomerEmail {get;set;}",
+          "property System.String CustomerName {get;set;}",
+          "property System.String CustomerPhone {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String EventId {get;set;}",
+          "property System.String EventType {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Location {get;set;}",
+          "property System.String LocationAddress {get;set;}",
+          "property System.String LocationLabel {get;set;}",
+          "property System.String LogisticsNote {get;set;}",
+          "property System.String Notes {get;set;}",
+          "property System.String PlaylistsBuilderUrl {get;set;}",
+          "property System.String RepositoryId {get;set;}",
+          "property System.String Status {get;set;}",
+          "property System.String Timezone {get;set;}",
+          "property System.String TimezoneName {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarExportRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String Format, System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E VisibleEvents, CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "method CanDoItAll.Components.CanvasLib.CanvasCalendarExportRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasCalendarExportRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Format, out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E VisibleEvents, out CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E VisibleEvents {get;set;}",
+          "property System.String Format {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Scope {get;set;}",
+          "property System.String SelectedDate {get;set;}",
+          "property System.String Timezone {get;set;}",
+          "property System.String View {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylist",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsPrimaryEvent {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarConnectedEvent\u003E ConnectedEvents {get;set;}",
+          "property System.Int32 ConnectedEventCount {get;set;}",
+          "property System.Int32 TotalScores {get;set;}",
+          "property System.String BuilderUrl {get;set;}",
+          "property System.String PlaylistId {get;set;}",
+          "property System.String Purpose {get;set;}",
+          "property System.String Status {get;set;}",
+          "property System.String Subtitle {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistMutationRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylist Playlist, CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "method CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistMutationRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistMutationRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, out CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylist Playlist, out CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylist Playlist {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistSearchRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String Query, CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "method CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistSearchRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasCalendarPlaylistSearchRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Query, out CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, out CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context {get;set;}",
+          "property System.String Query {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarSaveRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context, System.String Mode)",
+          "method CanDoItAll.Components.CanvasLib.CanvasCalendarSaveRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasCalendarSaveRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event, out CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context, out System.String Mode)",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarEvent Event {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context {get;set;}",
+          "property System.String Mode {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarSelectionChangedEventArgs",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.CanvasLib.CanvasCalendarEvent SelectedEvent, CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "method CanDoItAll.Components.CanvasLib.CanvasCalendarSelectionChangedEventArgs \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasCalendarSelectionChangedEventArgs other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out CanDoItAll.Components.CanvasLib.CanvasCalendarEvent SelectedEvent, out CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context)",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarEvent SelectedEvent {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasCalendarOperationContext Context {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarStateChangedEventArgs",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String StateJson, System.String SelectedEventId, System.String SelectedDate, System.String View, System.String Scope, System.String Timezone)",
+          "method CanDoItAll.Components.CanvasLib.CanvasCalendarStateChangedEventArgs \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasCalendarStateChangedEventArgs other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String StateJson, out System.String SelectedEventId, out System.String SelectedDate, out System.String View, out System.String Scope, out System.String Timezone)",
+          "property System.String Scope {get;set;}",
+          "property System.String SelectedDate {get;set;}",
+          "property System.String SelectedEventId {get;set;}",
+          "property System.String StateJson {get;set;}",
+          "property System.String Timezone {get;set;}",
+          "property System.String View {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasCalendarSurface",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean AllowCreate {get;set;}",
+          "property System.Boolean AllowDelete {get;set;}",
+          "property System.Boolean AllowDragDrop {get;set;}",
+          "property System.Boolean AllowEdit {get;set;}",
+          "property System.Boolean AllowResize {get;set;}",
+          "property System.Boolean EnableListExport {get;set;}",
+          "property System.Boolean WorkspaceModal {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasCalendarEvent\u003E Events {get;set;}",
+          "property System.Collections.Generic.List\u003CSystem.String\u003E EventStatuses {get;set;}",
+          "property System.Collections.Generic.List\u003CSystem.String\u003E EventTypes {get;set;}",
+          "property System.Collections.Generic.List\u003CSystem.String\u003E TimeZoneOptions {get;set;}",
+          "property System.Int32 BusinessHoursEnd {get;set;}",
+          "property System.Int32 BusinessHoursStart {get;set;}",
+          "property System.Int32 MiniMonthCount {get;set;}",
+          "property System.Int32 SlotMinutes {get;set;}",
+          "property System.Int32 WeekStartsOn {get;set;}",
+          "property System.String InitialView {get;set;}",
+          "property System.String Locale {get;set;}",
+          "property System.String SelectedDate {get;set;}",
+          "property System.String SelectedEventId {get;set;}",
+          "property System.String SurfaceId {get;set;}",
+          "property System.String Timezone {get;set;}",
+          "property System.String ViewStateJson {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasFloatingWindow",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.Task OnGeometryChanged(System.Nullable\u003CSystem.Double\u003E left, System.Nullable\u003CSystem.Double\u003E top, System.Nullable\u003CSystem.Double\u003E width, System.Nullable\u003CSystem.Double\u003E height)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState State {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState\u003E StateChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property System.Boolean AllowResize {get;set;}",
+          "property System.Boolean ShowHeader {get;set;}",
+          "property System.Double DefaultHeight {get;set;}",
+          "property System.Double DefaultWidth {get;set;}",
+          "property System.Double MinHeight {get;set;}",
+          "property System.Double MinWidth {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E MaxHeight {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E MaxWidth {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String BodyClass {get;set;}",
+          "property System.String ContainerSelector {get;set;}",
+          "property System.String DefaultPlacement {get;set;}",
+          "property System.String HideLabel {get;set;}",
+          "property System.String Kicker {get;set;}",
+          "property System.String MinimizeLabel {get;set;}",
+          "property System.String NormalizeLabel {get;set;}",
+          "property System.String RestoreLabel {get;set;}",
+          "property System.String SafeTopSelector {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestId {get;set;}",
+          "property System.String Title {get;set;}",
+          "property System.String WindowId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasInvalidationReason",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasInvalidationReason Data",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasInvalidationReason Diagnostics",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasInvalidationReason Layout",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasInvalidationReason None",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasInvalidationReason PublishState",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasInvalidationReason Selection",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasInvalidationReason Viewport"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLayoutAxisPreference",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasLayoutAxisPreference Auto",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasLayoutAxisPreference Horizontal",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasLayoutAxisPreference Vertical"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLayoutCollisionOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.CanvasLayoutAxisPreference AxisPreference {get;set;}",
+          "property System.Double MinimumGapX {get;set;}",
+          "property System.Double MinimumGapY {get;set;}",
+          "property System.Double PreferredAxisBias {get;set;}",
+          "property System.Double SeparationEpsilon {get;set;}",
+          "property System.Int32 MaxIterations {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLayoutCollisionResolver",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasLayoutNodeBox\u003E Resolve(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasLayoutNodeBox\u003E nodes, CanDoItAll.Components.CanvasLib.CanvasLayoutCollisionOptions options = optional)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLayoutExpansionOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double HorizontalFactor {get;set;}",
+          "property System.Double MinimumOffset {get;set;}",
+          "property System.Double VerticalFactor {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLayoutNodeBox",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.CanvasLib.CanvasLayoutNodeBox Clone()",
+          "method static CanDoItAll.Components.CanvasLib.CanvasLayoutNodeBox FromNode(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode node, System.Boolean isPinned = optional)",
+          "property System.Boolean IsPinned {get;set;}",
+          "property System.Double Bottom {get;}",
+          "property System.Double Height {get;set;}",
+          "property System.Double Left {get;}",
+          "property System.Double Right {get;}",
+          "property System.Double Top {get;}",
+          "property System.Double Width {get;set;}",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}",
+          "property System.String NodeId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLayoutSpacingExpander",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasLayoutNodeBox\u003E Expand(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasLayoutNodeBox\u003E nodes, CanDoItAll.Components.CanvasLib.CanvasLayoutExpansionOptions options = optional)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLibBodyAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeCalendarAssets {get;set;}",
+          "property System.Boolean IncludePreviewAssets {get;set;}",
+          "property System.Boolean IncludeRuntimeAssets {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLibHeadAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasLibNamespaceMarker",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": []
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasSceneHost",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method System.Boolean ShouldCreate()",
+          "method System.Boolean ShouldUpdate()",
+          "method System.Void MarkApplied()",
+          "method System.Void QueueSync(System.String stateKey, System.Boolean shouldSync = optional)",
+          "method System.Void Reset()",
+          "property System.Boolean IsInitialized {get;set;}",
+          "property System.Boolean SurfaceSyncPending {get;set;}",
+          "property System.String AppliedStateKey {get;set;}",
+          "property System.String PendingStateKey {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasSceneHostPreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CanvasSceneHostPreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasSceneHostPreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasSceneLayer",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer Accessibility",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer Backdrop",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer Connectors",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer ContextMenu",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer Diagnostics",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer Nodes",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer Overlays",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasSceneLayer Selection"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasThemeSwatch",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String Label, System.String Value, System.String Description)",
+          "method CanDoItAll.Components.CanvasLib.CanvasThemeSwatch \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasThemeSwatch other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Label, out System.String Value, out System.String Description)",
+          "property System.String Description {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasThemeTokenPack",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.String\u003E ToCssVariables()",
+          "method System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasThemeSwatch\u003E BuildPreviewSwatches()",
+          "method System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E BuildMetrics()",
+          "method System.String ToInlineStyle()",
+          "property System.String AccentEnd {get;set;}",
+          "property System.String AccentStart {get;set;}",
+          "property System.String BackgroundEnd {get;set;}",
+          "property System.String BackgroundMid {get;set;}",
+          "property System.String BackgroundStart {get;set;}",
+          "property System.String BorderSoft {get;set;}",
+          "property System.String CardRadius {get;set;}",
+          "property System.String DarkCard {get;set;}",
+          "property System.String DarkCardBorder {get;set;}",
+          "property System.String ForegroundText {get;set;}",
+          "property System.String MutedText {get;set;}",
+          "property System.String Panel {get;set;}",
+          "property System.String PanelRadius {get;set;}",
+          "property System.String ShadowSoft {get;set;}",
+          "property System.String ShadowStrong {get;set;}",
+          "property System.String StageRadius {get;set;}",
+          "property System.String ThemeKey {get;set;}",
+          "property System.String ThemeName {get;set;}",
+          "property static CanDoItAll.Components.CanvasLib.CanvasThemeTokenPack Default {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbench",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.Task FitViewToSceneAsync()",
+          "method System.Threading.Tasks.Task OnClipboardAction(System.String actionId, System.String payloadJson)",
+          "method System.Threading.Tasks.Task OnContextAction(System.String nodeId, System.String actionId, System.Double x, System.Double y)",
+          "method System.Threading.Tasks.Task OnContextActionRequest(System.String requestJson)",
+          "method System.Threading.Tasks.Task OnCreateAction(System.String requestJson)",
+          "method System.Threading.Tasks.Task OnHelpToggled(System.Boolean isOpen)",
+          "method System.Threading.Tasks.Task OnNodeEdited(System.String requestJson)",
+          "method System.Threading.Tasks.Task OnNodeOpened(System.String nodeId)",
+          "method System.Threading.Tasks.Task OnNodesMoved(System.String positionsJson)",
+          "method System.Threading.Tasks.Task OnSelectionChanged(System.String primaryNodeId, System.String selectedNodeIdsJson, System.Int64 dispatchId = optional)",
+          "method System.Threading.Tasks.Task OnStateChanged(System.String stateJson, System.Int64 dispatchId = optional)",
+          "method System.Threading.Tasks.Task OpenCreateDialogAsync(CanDoItAll.Components.CanvasLib.CanvasWorkbenchAction action, CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest request)",
+          "method System.Threading.Tasks.Task SelectNodesAsync(System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E nodeIds, System.String primaryNodeId = optional)",
+          "method System.Threading.Tasks.Task\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E GetSelectedNodeIdsAsync()",
+          "method System.Threading.Tasks.Task\u003CSystem.String\u003E CaptureImageAsync()",
+          "method System.Threading.Tasks.Task\u003CSystem.String\u003E GetStateJsonAsync()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface Surface {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardRequest\u003E ClipboardRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchContextActionRequest\u003E ContextActionRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest\u003E CreateActionInvoked {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest\u003E NodeEdited {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNodesMovedEventArgs\u003E NodesMoved {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchSelectionChangedEventArgs\u003E SelectionChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E NodeOpened {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E StateChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment OverlayContent {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ToolbarLeftContent {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchAction",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean RequiresFile {get;set;}",
+          "property System.Boolean RequiresInput {get;set;}",
+          "property System.Boolean ShowDefaultTextFields {get;set;}",
+          "property System.Boolean SupportsDragDrop {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAction\u003E Children {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchInputField\u003E InputFields {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchInputValue\u003E DefaultInputValues {get;set;}",
+          "property System.String AcceptedFileTypes {get;set;}",
+          "property System.String ActionId {get;set;}",
+          "property System.String CreateMode {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String FilePrompt {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String MenuLabel {get;set;}",
+          "property System.String MenuSize {get;set;}",
+          "property System.String NotesLabel {get;set;}",
+          "property System.String NotesPlaceholder {get;set;}",
+          "property System.String ObjectSubtype {get;set;}",
+          "property System.String SetupRendererKey {get;set;}",
+          "property System.String ShortcutKey {get;set;}",
+          "property System.String SubmenuLayout {get;set;}",
+          "property System.String SubmitLabel {get;set;}",
+          "property System.String SubtitleLabel {get;set;}",
+          "property System.String SubtitlePlaceholder {get;set;}",
+          "property System.String TitleLabel {get;set;}",
+          "property System.String TitlePlaceholder {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchAnchorPorts",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "field static const System.String Bottom",
+          "field static const System.String Left",
+          "field static const System.String Right",
+          "field static const System.String Top",
+          "method static System.Boolean IsInputPortId(System.String portId)",
+          "method static System.Boolean IsOutputPortId(System.String portId)",
+          "method static System.String ResolveSide(System.String portId)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchAnnotation",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String ActionId {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Kind {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchChip",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Text {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchChrome",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardOptions Clipboard {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchConnectorAnchorOptions ConnectorAnchors {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchDiagnosticsOptions Diagnostics {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchMarqueeOptions MarqueeSelection {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchMinimapOptions Minimap {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchSnapGuideOptions SnapGuides {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchTooltipPopoverOptions TooltipPopover {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchTransformHandleOptions TransformHandles {get;set;}",
+          "property System.Boolean CollapseOnDoubleClick {get;set;}",
+          "property System.Boolean ShowFocusAction {get;set;}",
+          "property System.Boolean ShowQuickCreateRail {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAction\u003E GroupContextActions {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAction\u003E QuickCreateActions {get;set;}",
+          "property System.String ChildNoteActionId {get;set;}",
+          "property System.String EmptyStateDescription {get;set;}",
+          "property System.String EmptyStateKicker {get;set;}",
+          "property System.String EmptyStateTitle {get;set;}",
+          "property System.String FocusActionLabel {get;set;}",
+          "property System.String HintText {get;set;}",
+          "property System.String InlineNotePlaceholder {get;set;}",
+          "property System.String SiblingNoteActionId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean AllowCopy {get;set;}",
+          "property System.Boolean AllowDuplicate {get;set;}",
+          "property System.Boolean AllowPaste {get;set;}",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.String Format {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String ActionId, System.String PayloadJson)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String ActionId, out System.String PayloadJson)",
+          "property System.String ActionId {get;set;}",
+          "property System.String PayloadJson {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchCompactPath",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String DisplayText {get;set;}",
+          "property System.String FullPath {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String PromotedText {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchConnectorAnchorOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Boolean ShowOnHover {get;set;}",
+          "property System.Boolean ShowOnSelection {get;set;}",
+          "property System.String PlacementMode {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchContextActionRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String NodeId, System.String ActionId, System.Double X, System.Double Y, System.String TargetKind = optional, System.String LinkSourceId = optional, System.String LinkTargetId = optional, System.String LinkKind = optional, System.String LinkSourcePortId = optional, System.String LinkTargetPortId = optional)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchContextActionRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchContextActionRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String NodeId, out System.String ActionId, out System.Double X, out System.Double Y, out System.String TargetKind, out System.String LinkSourceId, out System.String LinkTargetId, out System.String LinkKind, out System.String LinkSourcePortId, out System.String LinkTargetPortId)",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}",
+          "property System.String ActionId {get;set;}",
+          "property System.String LinkKind {get;set;}",
+          "property System.String LinkSourceId {get;set;}",
+          "property System.String LinkSourcePortId {get;set;}",
+          "property System.String LinkTargetId {get;set;}",
+          "property System.String LinkTargetPortId {get;set;}",
+          "property System.String NodeId {get;set;}",
+          "property System.String TargetKind {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String ActionId, System.String SourceNodeId, System.Double X, System.Double Y, System.String ParentNodeId, System.String Title, System.String Subtitle, System.String Notes, System.String PlacementKind, System.String CreateMode, System.String ObjectSubtype, CanDoItAll.Components.CanvasLib.CanvasWorkbenchUploadedFile UploadedFile, System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchInputValue\u003E InputValues = optional)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String ActionId, out System.String SourceNodeId, out System.Double X, out System.Double Y, out System.String ParentNodeId, out System.String Title, out System.String Subtitle, out System.String Notes, out System.String PlacementKind, out System.String CreateMode, out System.String ObjectSubtype, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchUploadedFile UploadedFile, out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchInputValue\u003E InputValues)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchUploadedFile UploadedFile {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchInputValue\u003E InputValues {get;set;}",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}",
+          "property System.String ActionId {get;set;}",
+          "property System.String CreateMode {get;set;}",
+          "property System.String Notes {get;set;}",
+          "property System.String ObjectSubtype {get;set;}",
+          "property System.String ParentNodeId {get;set;}",
+          "property System.String PlacementKind {get;set;}",
+          "property System.String SourceNodeId {get;set;}",
+          "property System.String Subtitle {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchDiagnosticsOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Boolean ShowConnectorAnchors {get;set;}",
+          "property System.Boolean ShowNodeBounds {get;set;}",
+          "property System.Boolean ShowViewportStats {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchGroupFrame",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.List\u003CSystem.String\u003E AnchorNodeIds {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchInputField",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsRequired {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchInputOption\u003E Options {get;set;}",
+          "property System.String InputMode {get;set;}",
+          "property System.String Key {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Placeholder {get;set;}",
+          "property System.String SectionDescription {get;set;}",
+          "property System.String SectionKey {get;set;}",
+          "property System.String SectionTitle {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchInputOption",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Label {get;set;}",
+          "property System.String Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchInputValue",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Key {get;set;}",
+          "property System.String Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchLink",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsUserAuthored {get;set;}",
+          "property System.String Kind {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String SourceId {get;set;}",
+          "property System.String SourcePortId {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TargetId {get;set;}",
+          "property System.String TargetPortId {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchMarker",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Icon {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchMarqueeOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.String ModifierKey {get;set;}",
+          "property System.String SelectionMode {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchMinimapOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchModes",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "field static const System.String Authoring",
+          "field static const System.String Delete",
+          "field static const System.String Dependency"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchCompactPath CompactPath {get;set;}",
+          "property System.Boolean IsCollapsible {get;set;}",
+          "property System.Boolean IsInlineTextNode {get;set;}",
+          "property System.Boolean IsPreviewOnly {get;set;}",
+          "property System.Boolean IsReadOnly {get;set;}",
+          "property System.Boolean IsRequired {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAction\u003E ContextActions {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAnnotation\u003E Annotations {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchChip\u003E Chips {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchChip\u003E FooterChips {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchMarker\u003E Markers {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchPort\u003E InputPorts {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchPort\u003E OutputPorts {get;set;}",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}",
+          "property System.Int32 Priority {get;set;}",
+          "property System.Int32 ProgressPercent {get;set;}",
+          "property System.String AccentColor {get;set;}",
+          "property System.String BranchLabel {get;set;}",
+          "property System.String DurationLabel {get;set;}",
+          "property System.String Family {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String InlineText {get;set;}",
+          "property System.String InlineTextPlaceholder {get;set;}",
+          "property System.String Kind {get;set;}",
+          "property System.String LeadText {get;set;}",
+          "property System.String MarkerIcon {get;set;}",
+          "property System.String MarkerLabel {get;set;}",
+          "property System.String MarkerTone {get;set;}",
+          "property System.String MediaContentType {get;set;}",
+          "property System.String MediaFileName {get;set;}",
+          "property System.String MediaKind {get;set;}",
+          "property System.String MediaPreviewAlt {get;set;}",
+          "property System.String MediaPreviewUrl {get;set;}",
+          "property System.String PaletteKey {get;set;}",
+          "property System.String ParentId {get;set;}",
+          "property System.String ProgressMode {get;set;}",
+          "property System.String Status {get;set;}",
+          "property System.String StatusPill {get;set;}",
+          "property System.String Subtitle {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String NodeId, System.String Title, System.String Notes)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String NodeId, out System.String Title, out System.String Notes)",
+          "property System.String NodeId {get;set;}",
+          "property System.String Notes {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeMetrics",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeSize ResolveSize(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode node)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodePositionChange",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String NodeId, System.Double X, System.Double Y)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodePositionChange \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodePositionChange other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String NodeId, out System.Double X, out System.Double Y)",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}",
+          "property System.String NodeId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeSize",
+        "kind": "struct",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.ValueType",
+        "members": [
+          "ctor(System.Double Width, System.Double Height)",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeSize other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Double Width, out System.Double Height)",
+          "property System.Double Height {get;set;}",
+          "property System.Double Width {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodesMovedEventArgs",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNodePositionChange\u003E Positions)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodesMovedEventArgs \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodesMovedEventArgs other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNodePositionChange\u003E Positions)",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNodePositionChange\u003E Positions {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchPoint",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchPort",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsRequired {get;set;}",
+          "property System.String AccentColor {get;set;}",
+          "property System.String CategoryKey {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Kind {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Side {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchPortAnchor",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String PortId {get;set;}",
+          "property System.String Side {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchPortGeometry",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CanvasWorkbenchPortAnchor ResolveInputAnchor(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode node, System.String portId)",
+          "method static CanDoItAll.Components.CanvasLib.CanvasWorkbenchPortAnchor ResolveOutputAnchor(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode node, System.String portId)",
+          "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchPortAnchor\u003E GetInputAnchors(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode node)",
+          "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchPortAnchor\u003E GetOutputAnchors(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode node)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchSelectionChangedEventArgs",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String PrimaryNodeId, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchSelectionChangedEventArgs \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSelectionChangedEventArgs other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String PrimaryNodeId, out System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds)",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds {get;set;}",
+          "property System.String PrimaryNodeId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchSnapGuideOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Double Tolerance {get;set;}",
+          "property System.String ModifierPolicy {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchStage",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.RenderFragment Canvas {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment HeaderActions {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Inspector {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Supporting {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchStat\u003E Stats {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Eyebrow {get;set;}",
+          "property System.String HelpHeading {get;set;}",
+          "property System.String HelpText {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchStat",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}",
+          "property System.String Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchChrome Chrome {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchUiState UiState {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchLink\u003E Links {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNode\u003E Nodes {get;set;}",
+          "property System.String DependencySourceId {get;set;}",
+          "property System.String Mode {get;set;}",
+          "property System.String SurfaceId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchTooltipPopoverOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean FocusTriggers {get;set;}",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Boolean SupportsRichPreview {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchTransformHandleOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Boolean ShowResizeHandles {get;set;}",
+          "property System.Boolean ShowRotateHandle {get;set;}",
+          "property System.String PlacementMode {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchUiState",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "field static const System.String CurrentVersion",
+          "method System.String ToJson()",
+          "method static CanDoItAll.Components.CanvasLib.CanvasWorkbenchUiState Parse(System.String json)",
+          "property System.Boolean IsMaximized {get;set;}",
+          "property System.Boolean ShowDiagnostics {get;set;}",
+          "property System.Boolean ShowMinimap {get;set;}",
+          "property System.Collections.Generic.Dictionary\u003CSystem.String,CanDoItAll.Components.CanvasLib.CanvasWorkbenchPoint\u003E ManualPositions {get;set;}",
+          "property System.Collections.Generic.Dictionary\u003CSystem.String,CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState\u003E WindowStates {get;set;}",
+          "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchGroupFrame\u003E GroupFrames {get;set;}",
+          "property System.Collections.Generic.List\u003CSystem.String\u003E CollapsedNodeIds {get;set;}",
+          "property System.Collections.Generic.List\u003CSystem.String\u003E HighlightedNodeIds {get;set;}",
+          "property System.Collections.Generic.List\u003CSystem.String\u003E SelectedNodeIds {get;set;}",
+          "property System.Double MenuActionScale {get;set;}",
+          "property System.Double PanX {get;set;}",
+          "property System.Double PanY {get;set;}",
+          "property System.Double Zoom {get;set;}",
+          "property System.String ActiveInspectorTab {get;set;}",
+          "property System.String Version {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchUploadedFile",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Base64Data {get;set;}",
+          "property System.String ContentType {get;set;}",
+          "property System.String FileName {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState Clone()",
+          "method CanDoItAll.Components.OverlayLib.OverlayWindowState ToOverlayWindowState()",
+          "method static CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState FromOverlayWindowState(CanDoItAll.Components.OverlayLib.OverlayWindowState value)",
+          "method static CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState Normalize(CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState value)",
+          "property System.Boolean HasCustomGeometry {get;}",
+          "property System.Boolean IsMinimized {get;set;}",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Height {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Left {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Top {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Width {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ChipBadgePrimitive",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.ChipBadgePrimitiveSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ChipBadgePrimitiveFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ChipBadgePrimitiveSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ChipBadgePrimitiveSample",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Icon {get;set;}",
+          "property System.String Text {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ChipBadgePrimitiveSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.ChipBadgePrimitiveSample\u003E Chips {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ClipboardBridge",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.ClipboardBridgeSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ClipboardBridgeFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ClipboardBridgeSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ClipboardBridgeSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CommandHistoryStorePreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CommandHistoryStorePreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CommandHistoryStorePreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CommandHistoryStore\u003CT\u003E",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Func\u003CT,System.String\u003E fingerprint, System.Int32 maxEntries = optional)",
+          "method System.Boolean TryRedo(T currentSnapshot, out T snapshot)",
+          "method System.Boolean TryUndo(T currentSnapshot, out T snapshot)",
+          "method System.Void Clear()",
+          "method System.Void Remember(T snapshot)",
+          "property System.Boolean CanRedo {get;}",
+          "property System.Boolean CanUndo {get;}",
+          "property System.Int32 MaxEntries {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ConnectorAnchorOverlay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.ConnectorAnchorOverlaySnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ConnectorAnchorOverlayFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ConnectorAnchorOverlaySnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ConnectorAnchorOverlaySnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ConnectorPathPrimitive",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.ConnectorPathPrimitiveSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ConnectorPathPrimitiveFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ConnectorPathPrimitiveSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ConnectorPathPrimitiveSegment",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double EndX {get;set;}",
+          "property System.Double EndY {get;set;}",
+          "property System.Double StartX {get;set;}",
+          "property System.Double StartY {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ConnectorPathPrimitiveSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.ConnectorPathPrimitiveSegment\u003E Segments {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ContainerPrimitive",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.ContainerPrimitiveSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ContainerPrimitiveFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ContainerPrimitiveSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ContainerPrimitiveSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsReadOnly {get;set;}",
+          "property System.Boolean IsSelected {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Body {get;set;}",
+          "property System.String Footer {get;set;}",
+          "property System.String Kicker {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ContextMenuHost",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.ContextMenuHostSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ContextMenuHostFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ContextMenuHostSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ContextMenuHostSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAction\u003E Actions {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CreateActionPalette",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.CreateActionPaletteSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CreateActionPaletteFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.CreateActionPaletteSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CreateActionPaletteSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAction\u003E GroupActions {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchAction\u003E QuickActions {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.DiagnosticsOverlay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.DiagnosticsOverlaySnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.DiagnosticsOverlayFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.DiagnosticsOverlaySnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.DiagnosticsOverlaySnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.DragDropController",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.DragDropControllerSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.DragDropControllerFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.DragDropControllerSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.DragDropControllerSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.EmptyStateOverlay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.EmptyStateOverlaySnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.EmptyStateOverlayFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.EmptyStateOverlaySnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.EmptyStateOverlaySnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.FloatingInspectorHost",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.FloatingInspectorHostSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.FloatingInspectorHostFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.FloatingInspectorHostSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.FloatingInspectorHostSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsDetached {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String ActiveTab {get;set;}",
+          "property System.String InspectorBody {get;set;}",
+          "property System.String InspectorTitle {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.GridBackdrop",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.GridBackdropSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.GridBackdropFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.GridBackdropSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.GridBackdropSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.GroupFrameOverlay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.GroupFrameOverlaySnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.GroupFrameOverlayFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.GroupFrameOverlaySnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.GroupFrameOverlaySample",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Int32 NodeCount {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.GroupFrameOverlaySnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.GroupFrameOverlaySample\u003E Frames {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.HitTestService",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.HitTestServiceSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.HitTestServiceFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.HitTestServiceSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.HitTestServiceSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.HoverFocusRouter",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.HoverFocusRouterSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.HoverFocusRouterFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.HoverFocusRouterSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.HoverFocusRouterSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.IconGlyphPrimitive",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.IconGlyphPrimitiveSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.IconGlyphPrimitiveFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.IconGlyphPrimitiveSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.IconGlyphPrimitiveSample",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Glyph {get;set;}",
+          "property System.String Label {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.IconGlyphPrimitiveSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.IconGlyphPrimitiveSample\u003E Glyphs {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ImagePrimitive",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.ImagePrimitiveSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ImagePrimitiveFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ImagePrimitiveSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ImagePrimitiveSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean HasImage {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String AltText {get;set;}",
+          "property System.String ImageUrl {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String ModeLabel {get;set;}",
+          "property System.String PlaceholderLabel {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.InlineEditorComposer",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.InlineEditorComposerSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.InlineEditorComposerFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.InlineEditorComposerSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.InlineEditorComposerSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String DraftLabel {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Placeholder {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String SubmitLabel {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.InvalidationScheduler",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.CanvasLib.CanvasInvalidationReason Consume()",
+          "method System.Void Invalidate(CanDoItAll.Components.CanvasLib.CanvasInvalidationReason reasons)",
+          "property CanDoItAll.Components.CanvasLib.CanvasInvalidationReason PendingReasons {get;}",
+          "property System.Boolean HasPendingWork {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.InvalidationSchedulerPreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.InvalidationSchedulerPreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.InvalidationSchedulerPreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.JsInteropBridge",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(Microsoft.JSInterop.IJSRuntime jsRuntime)",
+          "method System.Threading.Tasks.ValueTask InvokeVoidAsync(System.String identifier, System.Object[] args)",
+          "method System.Threading.Tasks.ValueTask\u003CTValue\u003E InvokeAsync\u003CTValue\u003E(System.String identifier, System.Object[] args)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.JsInteropBridgePreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.JsInteropBridgePreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.JsInteropBridgePreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.KeyboardShortcutRouter",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.KeyboardShortcutRouterSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.KeyboardShortcutRouterFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.KeyboardShortcutRouterSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.KeyboardShortcutRouterSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.LayerStack",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasSceneLayer\u003E layers)",
+          "method System.Boolean Contains(CanDoItAll.Components.CanvasLib.CanvasSceneLayer layer)",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasSceneLayer\u003E Layers {get;}",
+          "property static CanDoItAll.Components.CanvasLib.LayerStack Calendar {get;}",
+          "property static CanDoItAll.Components.CanvasLib.LayerStack Workbench {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.LayerStackPreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.LayerStackPreviewSnapshot CreateForWorkbench()"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.LayerStackPreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.LayoutEngine",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.LayoutEngineSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.LayoutEngineFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.LayoutEngineSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.LayoutEngineSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.MarqueeSelectionOverlay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.MarqueeSelectionOverlaySnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.MarqueeSelectionOverlayFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.MarqueeSelectionOverlaySnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.MarqueeSelectionOverlaySnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.MinimapOverview",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.MinimapOverviewSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.MinimapOverviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.MinimapOverviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.MinimapOverviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.NodeCardComposer",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.NodeCardComposerSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.NodeCardComposerFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.NodeCardComposerSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.NodeCardComposerSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchChip\u003E Chips {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String AccentColor {get;set;}",
+          "property System.String CardSubtitle {get;set;}",
+          "property System.String CardTitle {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String LeadText {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String StatusPill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SceneNodeBounds",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Double X, System.Double Y, System.Double Width, System.Double Height)",
+          "method CanDoItAll.Components.CanvasLib.SceneNodeBounds \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.SceneNodeBounds other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Double X, out System.Double Y, out System.Double Width, out System.Double Height)",
+          "property System.Double Height {get;set;}",
+          "property System.Double Width {get;set;}",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SceneNodeModel",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String Id, System.String ParentId, System.String Family, System.String Kind, CanDoItAll.Components.CanvasLib.SceneNodeBounds Bounds, System.Boolean IsVisible, System.Boolean IsSelected, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E ChildIds)",
+          "method CanDoItAll.Components.CanvasLib.SceneNodeModel \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.SceneNodeModel other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Id, out System.String ParentId, out System.String Family, out System.String Kind, out CanDoItAll.Components.CanvasLib.SceneNodeBounds Bounds, out System.Boolean IsVisible, out System.Boolean IsSelected, out System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E ChildIds)",
+          "method static CanDoItAll.Components.CanvasLib.SceneNodeModel FromWorkbenchNode(CanDoItAll.Components.CanvasLib.CanvasWorkbenchNode node, System.Boolean isSelected = optional, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E childIds = optional, System.Double width = optional, System.Double height = optional)",
+          "property CanDoItAll.Components.CanvasLib.SceneNodeBounds Bounds {get;set;}",
+          "property System.Boolean IsSelected {get;set;}",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E ChildIds {get;set;}",
+          "property System.String Family {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Kind {get;set;}",
+          "property System.String ParentId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SceneNodeModelPreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.SceneNodeModelPreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SceneNodeModelPreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SelectionModel",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method CanDoItAll.Components.CanvasLib.SelectionModel Add(System.String nodeId, System.Boolean makePrimary = optional)",
+          "method CanDoItAll.Components.CanvasLib.SelectionModel Clear()",
+          "method CanDoItAll.Components.CanvasLib.SelectionModel Remove(System.String nodeId)",
+          "method CanDoItAll.Components.CanvasLib.SelectionModel RemoveMissing(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E validNodeIds)",
+          "method CanDoItAll.Components.CanvasLib.SelectionModel Replace(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E selectedNodeIds, System.String primaryNodeId = optional)",
+          "method CanDoItAll.Components.CanvasLib.SelectionModel Toggle(System.String nodeId)",
+          "method System.Collections.Generic.List\u003CSystem.String\u003E ToList()",
+          "method static CanDoItAll.Components.CanvasLib.SelectionModel From(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E selectedNodeIds, System.String primaryNodeId = optional)",
+          "property System.Boolean IsEmpty {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds {get;}",
+          "property System.String PrimaryNodeId {get;}",
+          "property static CanDoItAll.Components.CanvasLib.SelectionModel Empty {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SerializationPersistencePack",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static System.String Serialize\u003CT\u003E(T value)",
+          "method static T Deserialize\u003CT\u003E(System.String json)",
+          "property static System.Text.Json.JsonSerializerOptions DefaultOptions {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SerializationPersistencePackPreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.SerializationPersistencePackPreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SerializationPersistencePackPreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SkeletonStateOverlay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.SkeletonStateOverlaySnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SkeletonStateOverlayFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.SkeletonStateOverlaySnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)",
+          "method static CanDoItAll.Components.CanvasLib.SkeletonStateOverlaySnapshot CreateLoadingSnapshot(System.String title, System.String summary, System.Int32 stageCardCount = optional, System.Int32 inspectorBlockCount = optional)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SkeletonStateOverlaySnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.Int32 InspectorBlockCount {get;set;}",
+          "property System.Int32 StageCardCount {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SnapGuideSystem",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.SnapGuideSystemSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SnapGuideSystemFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.SnapGuideSystemSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.SnapGuideSystemSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextBlockPrimitive",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.TextBlockPrimitiveSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextBlockPrimitiveFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.TextBlockPrimitiveSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextBlockPrimitiveSample",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsTruncated {get;set;}",
+          "property System.Int32 LineCount {get;set;}",
+          "property System.String DisplayText {get;set;}",
+          "property System.String FullText {get;set;}",
+          "property System.String Label {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextBlockPrimitiveSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.TextBlockPrimitiveSample\u003E Samples {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasureFontSpec",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method System.String ToCssFontShorthand()",
+          "property System.Double LetterSpacingPx {get;set;}",
+          "property System.Double LineHeightPx {get;set;}",
+          "property System.Double SizePx {get;set;}",
+          "property System.Int32 Weight {get;set;}",
+          "property System.String Family {get;set;}",
+          "property static CanDoItAll.Components.CanvasLib.TextMeasureFontSpec Default {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasureLineResult",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Int32 Index, System.String Text, System.Int32 EstimatedWidth, System.Boolean IsEllipsized)",
+          "method CanDoItAll.Components.CanvasLib.TextMeasureLineResult \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.TextMeasureLineResult other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Int32 Index, out System.String Text, out System.Int32 EstimatedWidth, out System.Boolean IsEllipsized)",
+          "property System.Boolean IsEllipsized {get;set;}",
+          "property System.Int32 EstimatedWidth {get;set;}",
+          "property System.Int32 Index {get;set;}",
+          "property System.String Text {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasurePreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.TextMeasurePreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasurePreviewSample",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.TextMeasureResult Result {get;set;}",
+          "property System.String ConstraintLabel {get;set;}",
+          "property System.String FontLabel {get;set;}",
+          "property System.String FullText {get;set;}",
+          "property System.String Label {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasurePreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.TextMeasurePreviewSample\u003E Samples {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasureRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.CanvasLib.TextMeasureFontSpec Font {get;set;}",
+          "property System.Boolean IsDisabled {get;set;}",
+          "property System.Boolean IsReadOnly {get;set;}",
+          "property System.Double MaxWidth {get;set;}",
+          "property System.Int32 MaxLines {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Text {get;set;}",
+          "property System.String TruncationMode {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasureResult",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Int32 estimatedWidth, System.Int32 estimatedHeight, System.Int32 lineCount, System.String displayText, System.Boolean isTruncated)",
+          "ctor(System.Int32 estimatedWidth, System.Int32 estimatedHeight, System.Int32 lineCount, System.String displayText, System.Boolean isTruncated, System.String fullText, System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.TextMeasureLineResult\u003E lines)",
+          "property System.Boolean IsTruncated {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.TextMeasureLineResult\u003E Lines {get;}",
+          "property System.Int32 EstimatedHeight {get;}",
+          "property System.Int32 EstimatedWidth {get;}",
+          "property System.Int32 LineCount {get;}",
+          "property System.String DisplayText {get;}",
+          "property System.String FullText {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TextMeasureService",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.CanvasLib.TextMeasureResult Measure(CanDoItAll.Components.CanvasLib.TextMeasureRequest request)",
+          "method CanDoItAll.Components.CanvasLib.TextMeasureResult Measure(System.String text, System.Int32 maxLineLength, System.Int32 maxLines = optional)",
+          "method System.String FitWithEllipsis(System.String text, System.Int32 maxLength)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TooltipPopoverHost",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.TooltipPopoverHostSnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TooltipPopoverHostFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.TooltipPopoverHostSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TooltipPopoverHostSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsEnabled {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TransformHandlesOverlay",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.CanvasLib.TransformHandlesOverlaySnapshot Snapshot {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TransformHandlesOverlayFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.TransformHandlesOverlaySnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface, CanDoItAll.Components.CanvasLib.SelectionModel selection)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.TransformHandlesOverlaySnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportController",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.CanvasLib.ViewportControllerOptions options = optional)",
+          "method CanDoItAll.Components.CanvasLib.ViewportPoint ToHost(CanDoItAll.Components.CanvasLib.ViewportPoint scenePoint, CanDoItAll.Components.CanvasLib.ViewportState state)",
+          "method CanDoItAll.Components.CanvasLib.ViewportPoint ToScene(CanDoItAll.Components.CanvasLib.ViewportPoint hostPoint, CanDoItAll.Components.CanvasLib.ViewportState state)",
+          "method CanDoItAll.Components.CanvasLib.ViewportState ClampToScene(CanDoItAll.Components.CanvasLib.ViewportState state, CanDoItAll.Components.CanvasLib.ViewportSceneBounds bounds, CanDoItAll.Components.CanvasLib.ViewportFrame hostFrame)",
+          "method CanDoItAll.Components.CanvasLib.ViewportState CreateFitViewTarget(CanDoItAll.Components.CanvasLib.ViewportSceneBounds bounds, CanDoItAll.Components.CanvasLib.ViewportFrame hostFrame)",
+          "method CanDoItAll.Components.CanvasLib.ViewportState CreateFocusTarget(CanDoItAll.Components.CanvasLib.ViewportPoint focusPoint, System.Double zoom, CanDoItAll.Components.CanvasLib.ViewportSceneBounds bounds, CanDoItAll.Components.CanvasLib.ViewportFrame hostFrame)",
+          "method CanDoItAll.Components.CanvasLib.ViewportState Normalize(CanDoItAll.Components.CanvasLib.CanvasWorkbenchUiState uiState)",
+          "method CanDoItAll.Components.CanvasLib.ViewportState Normalize(CanDoItAll.Components.CanvasLib.ViewportState state)",
+          "method CanDoItAll.Components.CanvasLib.ViewportState ZoomAroundPoint(CanDoItAll.Components.CanvasLib.ViewportState current, System.Double zoomPercent, CanDoItAll.Components.CanvasLib.ViewportPoint anchor, CanDoItAll.Components.CanvasLib.ViewportSceneBounds bounds, CanDoItAll.Components.CanvasLib.ViewportFrame hostFrame)",
+          "method System.Double NormalizeZoom(System.Double zoom)",
+          "property CanDoItAll.Components.CanvasLib.ViewportControllerOptions Options {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportControllerOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double ClampMarginX {get;set;}",
+          "property System.Double ClampMarginY {get;set;}",
+          "property System.Double DefaultPanX {get;set;}",
+          "property System.Double DefaultPanY {get;set;}",
+          "property System.Double DefaultZoom {get;set;}",
+          "property System.Double FitPadding {get;set;}",
+          "property System.Double MaxZoom {get;set;}",
+          "property System.Double MinZoom {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportControllerPreviewCard",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.String Label {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String ValueLabel {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportControllerPreviewFactory",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.CanvasLib.ViewportControllerPreviewSnapshot CreateForWorkbench(CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface surface)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportControllerPreviewSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.ViewportControllerPreviewCard\u003E Cards {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Metrics {get;set;}",
+          "property System.Double FocusXPercent {get;set;}",
+          "property System.Double FocusYPercent {get;set;}",
+          "property System.Double ViewportHeightPercent {get;set;}",
+          "property System.Double ViewportLeftPercent {get;set;}",
+          "property System.Double ViewportTopPercent {get;set;}",
+          "property System.Double ViewportWidthPercent {get;set;}",
+          "property System.String CurrentPanLabel {get;set;}",
+          "property System.String CurrentZoomLabel {get;set;}",
+          "property System.String FitZoomLabel {get;set;}",
+          "property System.String FocusNodeLabel {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String SceneCenterLabel {get;set;}",
+          "property System.String StatePill {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestHookId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportFrame",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double Height {get;set;}",
+          "property System.Double Width {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportPoint",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double X {get;set;}",
+          "property System.Double Y {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportSceneBounds",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method static CanDoItAll.Components.CanvasLib.ViewportSceneBounds FromNodes(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNode\u003E nodes)",
+          "property CanDoItAll.Components.CanvasLib.ViewportPoint Center {get;}",
+          "property System.Double Height {get;}",
+          "property System.Double MaxX {get;set;}",
+          "property System.Double MaxY {get;set;}",
+          "property System.Double MinX {get;set;}",
+          "property System.Double MinY {get;set;}",
+          "property System.Double Width {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.ViewportState",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property System.Double PanX {get;set;}",
+          "property System.Double PanY {get;set;}",
+          "property System.Double Zoom {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib._Imports",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "",
+        "members": [
+          "ctor()"
+        ]
+      }
+    ]
+  },
+  {
+    "packageId": "CanDoItAll.Components.OverlayLib",
+    "assemblyName": "CanDoItAll.Components.OverlayLib",
+    "types": [
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayComponentToolbox",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E GroupToggled {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ItemSelected {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E SearchTextChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E SectionToggled {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxItem\u003E ItemTrailingContent {get;set;}",
+          "property System.Boolean ShowGroupHeaders {get;set;}",
+          "property System.Boolean ShowHeader {get;set;}",
+          "property System.Boolean ShowSectionHeaders {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxBadge\u003E Badges {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxSection\u003E Sections {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String BodyClass {get;set;}",
+          "property System.String Class {get;set;}",
+          "property System.String EmptyDescription {get;set;}",
+          "property System.String EmptyTitle {get;set;}",
+          "property System.String Eyebrow {get;set;}",
+          "property System.String ItemBodyClass {get;set;}",
+          "property System.String ItemButtonClass {get;set;}",
+          "property System.String ItemIconClass {get;set;}",
+          "property System.String ItemLabelClass {get;set;}",
+          "property System.String ItemRowClass {get;set;}",
+          "property System.String ItemSummaryClass {get;set;}",
+          "property System.String SearchClass {get;set;}",
+          "property System.String SearchPlaceholder {get;set;}",
+          "property System.String SearchTestId {get;set;}",
+          "property System.String SearchText {get;set;}",
+          "property System.String SectionsClass {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestId {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayLibBodyAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeRuntimeAssets {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayLibHeadAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayToolboxBadge",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String Text, System.String Tone = optional, System.String DataTestId = optional)",
+          "method CanDoItAll.Components.OverlayLib.OverlayToolboxBadge \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.OverlayLib.OverlayToolboxBadge other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Text, out System.String Tone, out System.String DataTestId)",
+          "property System.String DataTestId {get;set;}",
+          "property System.String Text {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayToolboxGroup",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String Key, System.String Label, System.String Summary, System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxItem\u003E Items, System.String Icon = optional, System.String Tone = optional, System.Boolean IsExpanded = optional, System.String DataTestId = optional, System.String BodyDataTestId = optional)",
+          "method CanDoItAll.Components.OverlayLib.OverlayToolboxGroup \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.OverlayLib.OverlayToolboxGroup other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Key, out System.String Label, out System.String Summary, out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxItem\u003E Items, out System.String Icon, out System.String Tone, out System.Boolean IsExpanded, out System.String DataTestId, out System.String BodyDataTestId)",
+          "property System.Boolean IsExpanded {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxItem\u003E Items {get;set;}",
+          "property System.String BodyDataTestId {get;set;}",
+          "property System.String DataTestId {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Key {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayToolboxItem",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String ActionId, System.String Label, System.String Summary, System.String Icon = optional, System.String Glyph = optional, System.String Tone = optional, System.Boolean IsDisabled = optional, System.String DataTestId = optional, System.String Metadata = optional)",
+          "method CanDoItAll.Components.OverlayLib.OverlayToolboxItem \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.OverlayLib.OverlayToolboxItem other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String ActionId, out System.String Label, out System.String Summary, out System.String Icon, out System.String Glyph, out System.String Tone, out System.Boolean IsDisabled, out System.String DataTestId, out System.String Metadata)",
+          "property System.Boolean IsDisabled {get;set;}",
+          "property System.String ActionId {get;set;}",
+          "property System.String DataTestId {get;set;}",
+          "property System.String Glyph {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Metadata {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayToolboxSection",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String Key, System.String Label, System.String Description, System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxGroup\u003E Groups, System.String Tone = optional, System.Boolean IsExpanded = optional, System.String DataTestId = optional, System.String BodyDataTestId = optional)",
+          "method CanDoItAll.Components.OverlayLib.OverlayToolboxSection \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.OverlayLib.OverlayToolboxSection other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Key, out System.String Label, out System.String Description, out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxGroup\u003E Groups, out System.String Tone, out System.Boolean IsExpanded, out System.String DataTestId, out System.String BodyDataTestId)",
+          "property System.Boolean IsExpanded {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.OverlayLib.OverlayToolboxGroup\u003E Groups {get;set;}",
+          "property System.String BodyDataTestId {get;set;}",
+          "property System.String DataTestId {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Key {get;set;}",
+          "property System.String Label {get;set;}",
+          "property System.String Tone {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayWindow",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.Task OnGeometryChanged(System.Nullable\u003CSystem.Double\u003E left, System.Nullable\u003CSystem.Double\u003E top, System.Nullable\u003CSystem.Double\u003E width, System.Nullable\u003CSystem.Double\u003E height)",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.OverlayLib.OverlayWindowState State {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.OverlayLib.OverlayWindowState\u003E StateChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property System.Boolean AllowResize {get;set;}",
+          "property System.Boolean ShowHeader {get;set;}",
+          "property System.Double DefaultHeight {get;set;}",
+          "property System.Double DefaultWidth {get;set;}",
+          "property System.Double MinHeight {get;set;}",
+          "property System.Double MinWidth {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E MaxHeight {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E MaxWidth {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String BodyClass {get;set;}",
+          "property System.String ContainerSelector {get;set;}",
+          "property System.String DefaultPlacement {get;set;}",
+          "property System.String HideLabel {get;set;}",
+          "property System.String InteropApiRoot {get;set;}",
+          "property System.String Kicker {get;set;}",
+          "property System.String MinimizeLabel {get;set;}",
+          "property System.String NormalizeLabel {get;set;}",
+          "property System.String RestoreLabel {get;set;}",
+          "property System.String SafeTopSelector {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String TestId {get;set;}",
+          "property System.String Title {get;set;}",
+          "property System.String WindowId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib.OverlayWindowState",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.OverlayLib.OverlayWindowState Clone()",
+          "method static CanDoItAll.Components.OverlayLib.OverlayWindowState Normalize(CanDoItAll.Components.OverlayLib.OverlayWindowState value)",
+          "method static System.Boolean AreEquivalent(CanDoItAll.Components.OverlayLib.OverlayWindowState left, CanDoItAll.Components.OverlayLib.OverlayWindowState right)",
+          "property System.Boolean HasCustomGeometry {get;}",
+          "property System.Boolean IsMinimized {get;set;}",
+          "property System.Boolean IsVisible {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Height {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Left {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Top {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E Width {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.OverlayLib._Imports",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "",
+        "members": [
+          "ctor()"
+        ]
+      }
+    ]
+  }
+]

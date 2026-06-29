@@ -1,5 +1,10 @@
 (function () {
     const root = window.CanDoItAll = window.CanDoItAll || {};
+    if (root.overlayWindow) {
+        root.canvasFloatingWindow = root.overlayWindow;
+        return;
+    }
+
     const windowHosts = new WeakMap();
     const legacyHosts = new WeakMap();
     let zIndexSeed = 640;

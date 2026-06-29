@@ -1,8 +1,8 @@
-# SB08 Sandbox Coverage And Playwright Matrix
+﻿# SB08 Sandbox Coverage And Playwright Matrix
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -59,9 +59,9 @@
 
 1. Start the sandbox and verify the catalog includes Canvas, Canvas benchmark, and Overlays routes.
 2. Build or adapt a matrix script using the prior standard-components visual matrix pattern.
-3. Cover `/groups/canvas` scenarios including happy, dense, empty, disabled/loading, long text, workbench interactions, calendar/preview states, and open floating windows.
-4. Cover `/groups/canvas/benchmark` as benchmark route health only; record that it is not feature parity proof.
-5. Cover `/groups/overlays` with open, minimized, restored, reset, and long-content states.
+3. Cover `route groups/canvas` scenarios including happy, dense, empty, disabled/loading, long text, workbench interactions, calendar/preview states, and open floating windows.
+4. Cover `route groups/canvas/benchmark` as benchmark route health only; record that it is not feature parity proof.
+5. Cover `route groups/overlays` with open, minimized, restored, reset, and long-content states.
 6. Run maximized desktop, 1366x900, 1024x768, and 390x844 passes.
 7. Capture screenshots, console logs, DOM assertions, and a pass/fail matrix.
 8. Reopen the owning subbundle for any critical defect instead of hiding it as residual risk.
@@ -101,7 +101,7 @@
 
 ## Browser Validation Logging
 
-- Routes: `/groups/canvas`, `/groups/canvas/benchmark`, `/groups/overlays`.
+- Routes: `route groups/canvas`, `route groups/canvas/benchmark`, `route groups/overlays`.
 - Viewports: maximized desktop, 1366x900, 1024x768, 390x844.
 - Actions: route render, scenario selection, workbench selection/context menu/zoom, calendar navigation, floating-window lifecycle, benchmark route health.
 - Required evidence paths: `bundle://proof/SB08/screenshots/matrix/...`, `bundle://proof/SB08/matrix-results.json`, `bundle://proof/SB08/browser-actions.txt`, `bundle://proof/SB08/console-log.txt`.
@@ -112,8 +112,22 @@
 - SB09 may proceed only after the matrix passes or critical findings are reopened and resolved by their owning subbundles.
 - SB10 cannot close unless the matrix evidence is complete and browser analytics are updated.
 
+## Closure Summary
+
+- Result: Passed.
+- Matrix command: `node codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs`.
+- Routes covered: `route groups/canvas`, `route groups/canvas/benchmark`, `route groups/overlays`.
+- Viewports covered: 1920x1080, 1366x900, 1024x768, 390x844.
+- Actions recorded: 20 in `bundle://proof/SB08/matrix-results.json`.
+- Console result: 38 informational entries, 0 warnings/errors/pageerrors.
+- Screenshots: 20 in `bundle://proof/SB08/screenshots/matrix`.
+- Benchmark route decision: route health and draw-cost scope only; no feature parity or renderer-migration approval was claimed.
+- Reopened during SB08 and resolved before closure: benchmark shipped preview was collapsed/misleading, and overlay hide/show proof needed bounded-geometry wait after remount.
+- Proof manifest: `bundle://proof/SB08/manifest.md`.
+
 ## Suggested Agent Prompt
 
 ```text
 Execute SB08 only. Run the focused Canvas, Canvas benchmark, and Overlays sandbox matrix with real browser proof, capture screenshots and console logs, reopen owners for critical defects, and update proof/report artifacts before closing.
 ```
+

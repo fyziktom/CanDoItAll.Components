@@ -1,8 +1,8 @@
-# SB06 Calendar And Preview Surface Validation
+﻿# SB06 Calendar And Preview Surface Validation
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -13,14 +13,15 @@
 - RAW03: True validation of Canvas.
 - RAW05: Preserve all functionality.
 - RAW06: Improve maintainability, clarity, and documentation for open source.
-- R04, R09, R11, R12.
+- RAW07: Keep calendar and preview runtime implementation pure JavaScript and avoid npm runtime dependency.
+- R04, R09, R11, R12, R14.
 
 ## Prerequisites
 
 - SB03 contract tests passed.
 - SB04 asset/runtime foundation passed.
 - SB05 workbench route proof passed or documented a non-calendar blocker.
-- Sandbox `/groups/canvas` route is runnable.
+- Sandbox `route groups/canvas` route is runnable.
 
 ## Exact Source References
 
@@ -44,6 +45,7 @@
 - Contract and source assertions for selection, editor, CRUD, playlist/search, export, range, and callback behavior.
 - Minimal repairs needed to preserve current calendar and preview behavior.
 - Documentation notes for any public calendar or preview usage patterns discovered during validation.
+- Source assertion that calendar and preview runtime changes, if any, are pure browser JavaScript/C# and Razor with no npm runtime dependency.
 
 ## Dependency Impact
 
@@ -59,7 +61,7 @@
 
 ## Implementation Steps
 
-1. Start the sandbox and open `/groups/canvas`.
+1. Start the sandbox and open `route groups/canvas`.
 2. Locate the calendar and preview scenarios; add focused sandbox controls only when production behavior cannot otherwise be exercised.
 3. Exercise calendar selection, date range navigation, time grid rendering, mini month navigation, event editor, CRUD callbacks, playlist/search/link/clone/unlink behavior where exposed, and export.
 4. Exercise preview components for happy, dense, empty, disabled/loading, and long-text states.
@@ -79,6 +81,7 @@
 - Do not redesign the calendar surface or change public callback semantics without failing-first proof.
 - Do not treat a route render as sufficient calendar validation.
 - Do not edit WebGL files.
+- Do not add npm runtime dependencies for calendar or preview behavior.
 
 ## Acceptance Checklist
 
@@ -102,7 +105,7 @@
 
 ## Browser Validation Logging
 
-- Route: `/groups/canvas` with calendar and preview scenarios.
+- Route: `route groups/canvas` with calendar and preview scenarios.
 - Viewports: maximized desktop, 1366x900, and 390x844. Add 1024x768 if layout changes.
 - Actions: calendar navigation, date/time selection, event editor open/close/save/cancel where available, export menu, playlist/search actions where exposed, preview component state toggles.
 - Required evidence paths: `bundle://proof/SB06/screenshots/...`, `bundle://proof/SB06/browser-actions.txt`, `bundle://proof/SB06/console-log.txt`.
@@ -118,3 +121,4 @@
 ```text
 Execute SB06 only. Use real browser actions and source assertions to validate Canvas calendar and preview surfaces, repair only scoped defects, capture screenshots and transcripts, and update proof/report artifacts before closing.
 ```
+

@@ -1,8 +1,8 @@
-# SB04 Canvas Runtime Asset And JavaScript Boundary Refactor
+﻿# SB04 Canvas Runtime Asset And JavaScript Boundary Refactor
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -13,7 +13,8 @@ Harden CanvasLib generated assets, script order, JavaScript module ownership, an
 - RAW03: Canvas refactor, improvement, hardening, and true validation.
 - RAW05: Preserve all functionality.
 - RAW06: Maintainable, clear, documented, open-source-ready.
-- R04, R07, R08.
+- RAW07: Keep runtime implementation pure JavaScript and avoid npm runtime dependency.
+- R04, R07, R08, R14.
 
 ## Prerequisites
 
@@ -37,6 +38,7 @@ Harden CanvasLib generated assets, script order, JavaScript module ownership, an
 
 - Canvas runtime module map or docs section.
 - Generated asset verification and, if needed, generator improvements.
+- Pure-JS runtime dependency assertion proving no new npm runtime package is introduced.
 - Node syntax checks for Canvas JS runtime/services/calendar/preview files.
 - Source assertions for script order, public browser facades, lifecycle cleanup, and no manual generated-asset edits.
 - Browser smoke after runtime hardening.
@@ -60,8 +62,9 @@ Harden CanvasLib generated assets, script order, JavaScript module ownership, an
 3. If asset order or generated includes need changes, edit `tools/canvaslib/asset-manifest.json` or generator source, then run `npm run canvaslib:build-assets`.
 4. Run node syntax checks across CanvasLib and OverlayLib JS files touched or depended on.
 5. Refactor only small, behavior-preserving runtime boundaries with source assertions.
-6. Browser-smoke `/groups/canvas` after changes and record console result.
-7. Update execution report and create SB04 proof artifacts.
+6. Assert runtime JavaScript remains framework-free plain browser JS and that `package.json` dependencies are not expanded for runtime Canvas behavior.
+7. Browser-smoke `route groups/canvas` after changes and record console result.
+8. Update execution report and create SB04 proof artifacts.
 
 ## Scope Exceptions
 
@@ -73,6 +76,7 @@ Harden CanvasLib generated assets, script order, JavaScript module ownership, an
 - Do not hand-edit generated `CanvasLibHeadAssets.razor` or `CanvasLibBodyAssets.razor`.
 - Do not rename public browser facades without explicit approval.
 - Do not mix WebGL runtime changes into Canvas runtime work.
+- Do not add npm runtime dependencies for Canvas runtime code.
 
 ## Acceptance Checklist
 
@@ -80,6 +84,7 @@ Harden CanvasLib generated assets, script order, JavaScript module ownership, an
 - Canvas asset include components match generator output.
 - JS syntax checks pass.
 - Module map explains large runtime files and public facades.
+- Dependency assertion proves npm remains tooling-only for this runtime scope.
 - Browser smoke proves Canvas route still loads meaningful content with zero console errors.
 
 ## Proof Required
@@ -95,7 +100,7 @@ Harden CanvasLib generated assets, script order, JavaScript module ownership, an
 
 ## Browser Validation Logging
 
-- Route: `/groups/canvas?scenario=happy-path`.
+- Route: `route groups/canvas scenario happy-path`.
 - Viewports: maximized desktop and 1366x900.
 - Actions: route load, wait for workbench host, verify Canvas runtime facade exists, verify no console errors, capture screenshot.
 - Review questions: Did the workbench render meaningful content? Did generated assets load in order? Are toolbar and stage visible?
@@ -110,3 +115,4 @@ Harden CanvasLib generated assets, script order, JavaScript module ownership, an
 ```text
 Execute SB04 only. Harden generated Canvas assets and JavaScript boundaries with module docs, asset verification, node checks, source assertions, and a Canvas browser smoke. Preserve behavior and avoid WebGL work.
 ```
+

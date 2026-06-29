@@ -1,0 +1,138 @@
+﻿Command: SB04 Canvas runtime facade and lifecycle source assertions
+ExitCode: 0
+
+Pattern: window.CanDoItAll = window.CanDoItAll || {}
+Result: PASS
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-crud-bridge.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-event-editor-modal.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-export-menu.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-mini-month-navigator.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-selection-panel.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\accessibility-mirror-layer.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-time-grid-renderer.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\services\viewport-controller.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\services\text-measure-service.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\services\selection-model.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\services\animation-timeline.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\floating-inspector-host.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\context-menu-host.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\minimap-overview.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\tooltip-popover-host.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\composition\node-card-composer.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\interaction\snap-guide-system.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\composition\layout-engine.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\primitives\text-block-primitive.js:2:    const root = window.CanDoItAll = window.CanDoItAll || {};
+
+Pattern: root.canvasFloatingWindow
+Result: PASS
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:604:    root.canvasFloatingWindow = overlayWindowApi;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:516:    root.canvasFloatingWindow = {
+
+Pattern: canvasWorkbench
+Result: PASS
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\03-interaction-and-state.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\01-foundation.js:1496:    const shared = root.canvasWorkbenchModule = root.canvasWorkbenchModule || {};
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\02-layout-and-legacy-render.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\05-viewport-and-events.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:172:        const state = host?.__canvasWorkbenchState;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:509:        delete state.host.__canvasWorkbenchState;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:607:        const state = host.__canvasWorkbenchState || null;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:645:    root.canvasWorkbench = {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:677:            host.__canvasWorkbenchState = state;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:863:    root.canvasWorkbench.getSceneSnapshot = function (host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:868:    root.canvasWorkbench.getHotZoneCenter = function (host, request) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:873:    root.canvasWorkbenchInternals = shared.workbenchInternals;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\04-context-menu-and-composer.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07b-runtime-rendering.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\06a-canvas-scene-and-hit-testing.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\03a-context-menu-shortcuts.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07a-runtime-interaction-router.js:3:    const shared = root.canvasWorkbenchModule;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\06-canvas-renderers.js:3:    const shared = root.canvasWorkbenchModule;
+
+Pattern: canvasCalendar
+Result: PASS
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\canvasCalendarInterop.js:302:    root.canvasCalendar = {
+
+Pattern: removeEventListener
+Result: PASS
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:178:        window.removeEventListener("pointermove", state.pointerMove, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:179:        window.removeEventListener("pointerup", state.pointerUp, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:180:        window.removeEventListener("pointercancel", state.pointerUp, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:334:            state.handle.removeEventListener("pointerdown", state.pointerDown, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:433:            state.handle.removeEventListener("pointerdown", state.pointerDown, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:476:            window.removeEventListener("pointermove", state.pointerMove, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:477:            window.removeEventListener("pointerup", state.pointerUp, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:478:            window.removeEventListener("pointercancel", state.pointerUp, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:519:            state.handle.removeEventListener("pointerdown", state.pointerDown, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:561:            window.removeEventListener("pointermove", state.pointerMove, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:562:            window.removeEventListener("pointerup", state.pointerUp, true);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:563:            window.removeEventListener("pointercancel", state.pointerUp, true);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\zy-canvas-primitives.js:385:    window.removeEventListener('resize', this.handleResize);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:143:        window.removeEventListener("pointermove", state.pointerMove, true);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:144:        window.removeEventListener("pointerup", state.pointerUp, true);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:145:        window.removeEventListener("pointercancel", state.pointerUp, true);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:282:            state.handle.removeEventListener("pointerdown", state.pointerDown, true);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:376:            state.handle.removeEventListener("pointerdown", state.pointerDown, true);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:419:            window.removeEventListener("pointermove", state.pointerMove, true);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:420:            window.removeEventListener("pointerup", state.pointerUp, true);
+
+Pattern: disconnect
+Result: PASS
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:345:            state.resizeObserver.disconnect();
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:437:            state.resizeObserver.disconnect();
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:528:            state.resizeObserver.disconnect();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:293:            state.resizeObserver.disconnect();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:380:            state.resizeObserver.disconnect();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:471:            state.resizeObserver.disconnect();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\zy-canvas-primitives.js:380:      this.resizeObserver.disconnect();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:708:      }.bind(this), 'Playlist disconnected.');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07-runtime-entry.js:479:            state.resizeObserver.disconnect();
+
+Pattern: dispose
+Result: PASS
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:424:    function disposeWindowState(host) {
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:588:        dispose(host) {
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:593:            disposeWindowState(host);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-event-editor-modal.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-crud-bridge.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-export-menu.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-mini-month-navigator.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-selection-panel.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\calendar-time-grid-renderer.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\canvasCalendarInterop.js:325:        dispose: function (host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\context-menu-host.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\floating-inspector-host.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\tooltip-popover-host.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\chrome\minimap-overview.js:28:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\composition\create-action-palette.js:28:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\composition\node-card-composer.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\composition\inline-editor-composer.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\preview\composition\layout-engine.js:27:        dispose(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:367:    function disposeWindowState(host) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:531:        dispose(host) {
+
+Pattern: invokeMethodAsync
+Result: PASS
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:230:        state.dotNetRef.invokeMethodAsync("OnGeometryChanged", payload.left, payload.top, payload.width, payload.height)
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\canvas-floating-window.js:195:        state.dotNetRef.invokeMethodAsync("OnGeometryChanged", payload.left, payload.top, payload.width, payload.height)
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\02-layout-and-legacy-render.js:1328:        state.dotNetRef.invokeMethodAsync("OnContextAction", node.id, annotation.actionId, round(point.x), round(point.y));
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\02-layout-and-legacy-render.js:1967:        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "copy", payload);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\02-layout-and-legacy-render.js:1980:        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "cut", payload);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\02-layout-and-legacy-render.js:2005:        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "paste", envelope);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\02-layout-and-legacy-render.js:2015:        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "duplicate", JSON.stringify(buildClipboardPayload(state, "duplicate")));
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\04-context-menu-and-composer.js:653:        state.dotNetRef.invokeMethodAsync("OnContextAction", node.id, action.actionId, round(position.x), round(position.y));
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\03-interaction-and-state.js:144:        state.dotNetRef.invokeMethodAsync(
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\03-interaction-and-state.js:171:        state.dotNetRef.invokeMethodAsync("OnStateChanged", snapshot?.stateJson || "{}", snapshot?.dispatchId || 0)
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\03-interaction-and-state.js:224:        return state.dotNetRef.invokeMethodAsync("OnNodesMoved", JSON.stringify(payload))
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\03-interaction-and-state.js:1417:        state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload));
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\03-interaction-and-state.js:1421:        state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload));
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07a-runtime-interaction-router.js:132:        if (!state?.dotNetRef?.invokeMethodAsync) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\07a-runtime-interaction-router.js:136:        void state.dotNetRef.invokeMethodAsync("OnContextActionRequest", JSON.stringify(request));
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\05-viewport-and-events.js:372:                    state.dotNetRef?.invokeMethodAsync) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\05-viewport-and-events.js:374:                    await state.dotNetRef.invokeMethodAsync(
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\05-viewport-and-events.js:972:        state.dotNetRef.invokeMethodAsync("OnHelpToggled", state.helpOpen);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\runtime\workbench\05-viewport-and-events.js:1019:            await state.dotNetRef.invokeMethodAsync("OnNodeOpened", nodeId);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\canvasCalendarInterop.js:156:        await entry.dotNetRef.invokeMethodAsync(
+

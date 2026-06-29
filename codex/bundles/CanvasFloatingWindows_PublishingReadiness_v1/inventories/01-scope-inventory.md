@@ -1,4 +1,4 @@
-# Scope Inventory
+﻿# Scope Inventory
 
 ## Included Projects
 
@@ -14,9 +14,9 @@
 
 | Route | Current Purpose | Required Proof Expansion |
 |---|---|---|
-| `/groups/canvas` | Workbench, calendar, floating window, boundary previews | Workbench interaction, calendar, CanvasFloatingWindow, dense/empty/disabled/long text scenarios |
-| `/groups/canvas/benchmark` | Retained DOM/SVG versus narrow true-canvas materialization evidence | Validate as benchmark-only evidence; do not treat as renderer parity |
-| `/groups/overlays` | Dialogs, tooltips, toasts, sticky footer, OverlayWindow | Open-state floating-window proof and generic OverlayLib regression checks |
+| `route groups/canvas` | Workbench, calendar, floating window, boundary previews | Workbench interaction, calendar, CanvasFloatingWindow, dense/empty/disabled/long text scenarios |
+| `route groups/canvas/benchmark` | Retained DOM/SVG versus narrow true-canvas materialization evidence | Validate as benchmark-only evidence; do not treat as renderer parity |
+| `route groups/overlays` | Dialogs, tooltips, toasts, sticky footer, OverlayWindow | Open-state floating-window proof and generic OverlayLib regression checks |
 
 ## Current Test And Approval Coverage
 
@@ -31,3 +31,4 @@
 - `bundle://proof/SB01/transcripts/sb01-inventory-generation.txt`
 - `bundle://proof/SB01/manifest.md`
 - `bundle://proof/SB01/semantic-invariants.md`
+

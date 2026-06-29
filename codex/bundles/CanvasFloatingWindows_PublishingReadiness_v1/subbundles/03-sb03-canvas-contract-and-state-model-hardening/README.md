@@ -1,8 +1,8 @@
-# SB03 Canvas Contract And State Model Hardening
+﻿# SB03 Canvas Contract And State Model Hardening
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -89,7 +89,7 @@ Create a trustworthy contract-test foundation for CanvasLib state, selection, se
 ## Browser Validation Logging
 
 - N/A unless a source change needs smoke proof.
-- If browser smoke is used, target `/groups/canvas` at 1366x900 and record screenshot/console result.
+- If browser smoke is used, target `route groups/canvas` at 1366x900 and record screenshot/console result.
 
 ## Progression Gate
 
@@ -101,3 +101,4 @@ Create a trustworthy contract-test foundation for CanvasLib state, selection, se
 ```text
 Execute SB03 only. Add CanvasLib contract tests for state, selection, serialization, layout, calendar, and window roundtrip behavior. Preserve functionality, capture failing-first/passing proof where behavior changes, and stop before runtime UI refactors.
 ```
+

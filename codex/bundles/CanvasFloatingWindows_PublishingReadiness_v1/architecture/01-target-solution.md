@@ -1,4 +1,4 @@
-# Target Solution
+﻿# Target Solution
 
 ## End State
 
@@ -10,6 +10,7 @@ CanvasLib and OverlayLib are ready for open-source transfer as maintainable, doc
 - CanvasLib owns canvas-specific composition: workbench state, graph nodes/links, calendar surface, Canvas wrapper windows, workbench toolbar/stage integration, canvas runtime assets, preview components, and Canvas-specific docs.
 - Sandbox owns proof scenarios and demo data only. It must not become the only place where production behavior exists.
 - Tools under `tools/canvaslib` own generated asset synchronization. Generated `CanvasLibHeadAssets.razor` and `CanvasLibBodyAssets.razor` must be regenerated, not manually edited.
+- Runtime Canvas, floating-window, calendar, preview, and related interactive implementation owns no npm runtime dependency. Use pure browser JavaScript plus C# and Razor; reserve npm/Node for existing Tailwind, generated-asset, test, or browser-validation tooling only.
 
 ## Refactor Strategy
 
@@ -33,3 +34,5 @@ CanvasLib and OverlayLib are ready for open-source transfer as maintainable, doc
 - No Economy or consuming-app migration.
 - No wholesale renderer replacement.
 - No broad design restyle disconnected from proof.
+- No npm runtime dependencies for Canvas, floating-window, calendar, preview, or related interactive implementation.
+

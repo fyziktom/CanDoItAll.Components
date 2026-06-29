@@ -2,7 +2,7 @@
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -83,7 +83,7 @@ Freeze the Canvas/Floating Windows publishing scope, regenerate the durable inve
 
 - `bundle://reviews/prepared-validation.txt`
 - `bundle://inventories/current-state-data.json`
-- `bundle://inventories/canvas-floating-windows-publishing-map.xlsx` or documented blocked replacement.
+- `bundle://inventories/canvas-floating-windows-publishing-map.md`
 - `bundle://proof/SB01/manifest.md`
 - `bundle://proof/SB01/semantic-invariants.md`
 - Transcripts for inventory generation, source assertions, and anti-stub audit.

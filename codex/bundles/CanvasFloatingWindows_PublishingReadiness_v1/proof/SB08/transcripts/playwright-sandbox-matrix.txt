@@ -1,0 +1,30 @@
+﻿Command: node codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs
+Routes: /groups/canvas, /groups/canvas/benchmark, /groups/overlays
+Viewports: max-desktop:1920x1080, desktop-1366:1366x900, tablet-1024:1024x768, mobile-390:390x844
+Canvas scenarios: happy-path, dense-content, empty-state, disabled-state, loading-state, long-text
+Actions: 20
+Console entries: 38
+Console warnings/errors/pageerrors: 0
+
+Result: PASS Canvas scenario matrix
+InvariantIds: SB08-INV-CANVAS-SCENARIOS
+Screenshots: bundle://proof/SB08/screenshots/matrix/canvas-scenario-happy-path.png, bundle://proof/SB08/screenshots/matrix/canvas-scenario-dense-content.png, bundle://proof/SB08/screenshots/matrix/canvas-scenario-empty-state.png, bundle://proof/SB08/screenshots/matrix/canvas-scenario-disabled-state.png, bundle://proof/SB08/screenshots/matrix/canvas-scenario-loading-state.png, bundle://proof/SB08/screenshots/matrix/canvas-scenario-long-text.png
+
+Result: PASS Canvas viewport matrix
+InvariantIds: SB08-INV-ROUTE-VIEWPORTS
+Screenshots: bundle://proof/SB08/screenshots/matrix/canvas-viewport-max-desktop.png, bundle://proof/SB08/screenshots/matrix/canvas-viewport-desktop-1366.png, bundle://proof/SB08/screenshots/matrix/canvas-viewport-tablet-1024.png, bundle://proof/SB08/screenshots/matrix/canvas-viewport-mobile-390.png
+
+Result: PASS Canvas interaction smoke
+InvariantIds: SB08-INV-CANVAS-INTERACTIONS
+
+Result: PASS Canvas benchmark route health, painted shipped workbench preview, nonblank prototype, and scoped no-migration warning
+InvariantIds: SB08-INV-BENCHMARK-SCOPE
+Screenshots: bundle://proof/SB08/screenshots/matrix/benchmark-viewport-max-desktop.png, bundle://proof/SB08/screenshots/matrix/benchmark-viewport-desktop-1366.png, bundle://proof/SB08/screenshots/matrix/benchmark-viewport-tablet-1024.png, bundle://proof/SB08/screenshots/matrix/benchmark-viewport-mobile-390.png
+
+Result: PASS Overlay route matrix
+InvariantIds: SB08-INV-OVERLAY-MATRIX
+Screenshots: bundle://proof/SB08/screenshots/matrix/overlay-viewport-max-desktop.png, bundle://proof/SB08/screenshots/matrix/overlay-viewport-desktop-1366.png, bundle://proof/SB08/screenshots/matrix/overlay-viewport-tablet-1024.png, bundle://proof/SB08/screenshots/matrix/overlay-viewport-mobile-390.png
+
+Result: PASS sandbox matrix validated Canvas, Canvas benchmark, and Overlay routes without WebGL coverage or renderer-migration approval.
+ExitCode: 0
+

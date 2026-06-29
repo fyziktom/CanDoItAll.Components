@@ -215,10 +215,11 @@
     }
 
     async function invokeExport(dotNetRef, format, visibleEvents, context) {
+        const normalizedVisibleEvents = asArray(visibleEvents).map(normalizeCalendarEventForDotNet);
         await dotNetRef.invokeMethodAsync(
             "OnExportRequested",
             asText(format),
-            JSON.stringify(visibleEvents || []),
+            JSON.stringify(normalizedVisibleEvents),
             JSON.stringify(context || {}));
     }
 

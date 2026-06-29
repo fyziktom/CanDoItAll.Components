@@ -1,4 +1,4 @@
-# Structured Input
+﻿# Structured Input
 
 ## Raw Notes
 
@@ -10,6 +10,7 @@
 | RAW04 | "do not do webgl part yet." | Exclude WebGL source, runtime, package, and docs changes from this bundle. WebGL may appear only as proof-pattern precedent or an explicit non-scope boundary. |
 | RAW05 | "We must preserve all functionality." | Require compatibility-preserving refactors, failing-first proof for behavior changes, and package/API approval gates before closure. |
 | RAW06 | "make it more maintainable, clear and well documented for soon publishing as opensource." | Include docs, package metadata, API approval, generated-asset policy, source maps, and open-source transfer readiness. |
+| RAW07 | "avoid to use npm or being dependent on it... Main canvas and floating windows, calendar and things like that, implementation must be in pure JS." | Keep runtime implementation plain browser JavaScript plus C# and Razor. Do not add npm runtime dependencies; npm is allowed only for existing Tailwind, generated asset, test, or browser tooling. |
 
 ## Derived Scope
 
@@ -24,3 +25,5 @@
 - No renderer replacement or true-canvas migration in this bundle; `CanvasBenchmark` may be validated as existing evidence only.
 - No generated asset component hand edits.
 - UI completion requires Playwright MCP or local Playwright proof with screenshots, actions, DOM assertions, and visual review notes.
+- No new npm runtime dependency for Canvas, floating-window, calendar, preview, or related interactive implementation.
+

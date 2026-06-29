@@ -8,6 +8,7 @@
 | RAW04 | "do not do webgl part yet." | R03 | SB01,SB04,SB08,SB09,SB10 | WebGL exclusion source assertions and final raw-note closure. |
 | RAW05 | "We must preserve all functionality." | R04,R06-R11 | SB02-SB10 | Failing-first and passing proof for behavior changes, no-regression tests, browser proof, package/API approval. |
 | RAW06 | "make it more maintainable, clear and well documented for soon publishing as opensource." | R01,R02,R07,R12,R13 | SB01,SB04,SB09,SB10 | Module map, ownership docs, package metadata, README/version alignment, final transfer checklist. |
+| RAW07 | "avoid to use npm or being dependent on it... implementation must be in pure JS." | R07,R12,R14 | SB04,SB06,SB07,SB09,SB10 | Runtime dependency assertions, package assertions, pure-JS source checks, and final red-team proof. |
 
 ## Requirement To Subbundle Matrix
 
@@ -26,3 +27,4 @@
 | R11 Playwright matrix | Plans | Supports | Supports | Supports | Feeds | Feeds | Feeds | Owns | Supports | Closes |
 | R12 package/API/docs | Maps | Supports | Supports | Supports | Supports | Supports | Supports | Supports | Owns | Closes |
 | R13 red-team closure | Plans | Feeds | Feeds | Feeds | Feeds | Feeds | Feeds | Feeds | Feeds | Owns |
+| R14 pure-JS runtime and no npm runtime dependency | Maps | Supports | Supports | Owns | Verifies | Owns | Owns | Verifies | Owns | Closes |

@@ -1,8 +1,8 @@
-# SB05 Workbench Interaction And Accessibility Validation
+﻿# SB05 Workbench Interaction And Accessibility Validation
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -18,7 +18,7 @@ Prove CanvasWorkbench production interactions and accessibility support through 
 
 - SB03 contract tests passed.
 - SB04 asset/runtime foundation passed.
-- Sandbox `/groups/canvas` route is runnable.
+- Sandbox `route groups/canvas` route is runnable.
 
 ## Exact Source References
 
@@ -52,7 +52,7 @@ Prove CanvasWorkbench production interactions and accessibility support through 
 
 ## Implementation Steps
 
-1. Start the sandbox and open `/groups/canvas`.
+1. Start the sandbox and open `route groups/canvas`.
 2. Verify route states for happy, dense, empty, disabled, and long-text scenarios.
 3. Exercise selection, context menu, quick create, drag/drop or move behavior, keyboard shortcuts, zoom, fit/focus, maximized state, minimap, diagnostics, help/settings overlays, accessibility mirror, and image export where supported.
 4. Add test hooks or focused sandbox controls only when production behavior cannot otherwise be exercised.
@@ -92,7 +92,7 @@ Prove CanvasWorkbench production interactions and accessibility support through 
 
 ## Browser Validation Logging
 
-- Route: `/groups/canvas` with `happy-path`, `dense-content`, `empty-state`, `disabled-state`, and `long-text` scenarios.
+- Route: `route groups/canvas` with `happy-path`, `dense-content`, `empty-state`, `disabled-state`, and `long-text` scenarios.
 - Viewports: maximized desktop, 1366x900, 1024x768, 390x844.
 - Actions: select node, open context menu, open quick create, drag or move where supported, keyboard shortcuts, zoom, fit/focus, toggle maximized, minimap, diagnostics, help, settings, export.
 - Review questions: Does text fit? Is the stage usable? Are overlays layered correctly? Does the route use available desktop space without breaking mobile orientation?
@@ -107,3 +107,4 @@ Prove CanvasWorkbench production interactions and accessibility support through 
 ```text
 Execute SB05 only. Use real browser actions to validate CanvasWorkbench interactions and accessibility, capture screenshots and assertions, repair only scoped defects, and update proof/report artifacts before closing.
 ```
+

@@ -1,8 +1,8 @@
-# SB09 Packaging Api Docs And Open Source Readiness
+﻿# SB09 Packaging Api Docs And Open Source Readiness
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -14,7 +14,8 @@
 - RAW03: Refactor, improve, harden, and validate Canvas and floating windows.
 - RAW05: Preserve all functionality.
 - RAW06: Make the code maintainable, clear, documented, and ready for open source.
-- R01, R04, R07, R12, R13.
+- RAW07: Keep runtime implementation pure JavaScript and avoid npm runtime dependency.
+- R01, R04, R07, R12, R13, R14.
 
 ## Prerequisites
 
@@ -43,6 +44,7 @@
 - CanvasLib package/API approval coverage comparable to the standard publishing suite.
 - Generated asset verification proof.
 - Package content verification proof for CanvasLib and OverlayLib.
+- Runtime dependency proof showing no new npm runtime dependency is introduced for Canvas/Floating Windows/Calendar.
 - Open-source transfer notes for usage, assets, public contracts, and validation commands.
 - Minimal source or doc repairs needed to make public behavior clear without changing behavior.
 
@@ -66,8 +68,9 @@
 4. Run `npm run canvaslib:verify-assets`; run build-assets only if verification instructs it and commit generated outputs as part of the scoped change.
 5. Run focused tests, then solution build/test/pack commands required by the existing publishing workflow.
 6. Validate README examples and open-source transfer notes against actual package entry points.
-7. Confirm no WebGL package/docs/API files changed.
-8. Update execution report and create SB09 proof artifacts.
+7. Confirm npm/Node usage remains limited to Tailwind, generated asset, test, and browser tooling; reject runtime package dependency drift.
+8. Confirm no WebGL package/docs/API files changed.
+9. Update execution report and create SB09 proof artifacts.
 
 ## Scope Exceptions
 
@@ -80,6 +83,7 @@
 - Do not expand public API accidentally to make approvals pass.
 - Do not publish packages externally.
 - Do not edit WebGL package, docs, or source files.
+- Do not add npm runtime dependencies for Canvas, floating-window, calendar, or preview implementation.
 
 ## Acceptance Checklist
 
@@ -87,8 +91,17 @@
 - CanvasLib has explicit package/API approval coverage or a documented approved test home.
 - Generated assets verify cleanly.
 - Package content includes expected static web assets and excludes unrelated WebGL assets.
+- Package/dependency proof shows runtime code is plain browser JavaScript/C# and Razor and npm remains tooling-only for this scope.
 - Build/test/pack proof passes.
 - Open-source transfer notes list validation commands and known follow-ups.
+
+## Closure Summary
+
+- CanvasLib README now aligns with package version `0.1.1`; OverlayLib README aligns with inherited package version `0.1.0`.
+- Added focused CanvasLib/OverlayLib publishing approval tests for public API metadata, project packability metadata, static web assets, and npm runtime dependency policy.
+- `npm run canvaslib:verify-assets`, focused approval tests, focused release builds, pack commands, package content inspection, runtime dependency proof, source assertions, and anti-stub audit all passed.
+- The broad solution Release build remains recorded as an out-of-scope WebGL sample/test restore exception under `--no-restore`; SB09 did not edit WebGL source, packages, tests, samples, or tools.
+- Proof is recorded in `bundle://proof/SB09/manifest.md`.
 
 ## Proof Required
 
@@ -116,3 +129,4 @@
 ```text
 Execute SB09 only. Align CanvasLib and OverlayLib docs, package metadata, generated assets, public API approvals, and package content proof for open-source readiness while preserving behavior and excluding WebGL.
 ```
+

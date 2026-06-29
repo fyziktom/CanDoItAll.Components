@@ -2,7 +2,7 @@
 
 ## Status
 
-- `Ready`
+- `Completed`
 
 ## Objective
 
@@ -16,7 +16,8 @@
 - RAW04: Do not do WebGL part yet.
 - RAW05: Preserve all functionality.
 - RAW06: Make it maintainable, clear, documented, and ready for open source.
-- R01-R13.
+- RAW07: Keep runtime implementation pure JavaScript and avoid npm runtime dependency.
+- R01-R14.
 
 ## Prerequisites
 
@@ -45,6 +46,7 @@
 - Final raw-note closure audit.
 - Final proof manifest audit covering every subbundle.
 - Fake-proof resistance report.
+- Runtime dependency red-team report proving npm remains tooling-only for this scope.
 - Final build/test/pack and visual matrix evidence summary.
 - Open-source transfer checklist and follow-up list, with WebGL explicitly separated.
 - Bundle status updated to completed only after evidence passes.
@@ -67,9 +69,10 @@
 4. Verify browser analytics include route, viewport, actions, screenshot path, review answer, and reopen decision for every UI phase.
 5. Verify build/test/pack and package/API/docs proof from SB09.
 6. Run source assertions proving WebGL implementation files were not touched.
-7. Create a fake-proof resistance report that lists rejected shallow evidence patterns and why current proof is stronger.
-8. Create a transfer checklist with validation commands, docs status, known follow-ups, and explicit WebGL follow-up separation.
-9. Update bundle README and execution report to completed only when every gate is honestly satisfied.
+7. Run source assertions proving no new npm runtime dependency was introduced for Canvas, floating-window, calendar, or preview implementation.
+8. Create a fake-proof resistance report that lists rejected shallow evidence patterns and why current proof is stronger.
+9. Create a transfer checklist with validation commands, docs status, known follow-ups, explicit WebGL follow-up separation, and npm/tooling boundaries.
+10. Update bundle README and execution report to completed only when every gate is honestly satisfied.
 
 ## Scope Exceptions
 
@@ -82,6 +85,7 @@
 - Do not hide reopened defects as residual risk.
 - Do not edit WebGL files.
 - Do not publish packages externally.
+- Do not accept any new npm runtime dependency in Canvas/Floating Windows/Calendar scope.
 
 ## Acceptance Checklist
 
@@ -91,7 +95,16 @@
 - Browser analytics rows are complete for SB05-SB08.
 - Package/API/docs readiness proof is complete.
 - WebGL exclusion is source-asserted.
+- Runtime dependency proof confirms npm remains tooling-only for this scope.
 - Follow-up list separates WebGL from Canvas/Floating Windows residual items.
+
+## Closure Summary
+
+- Final focused in-scope tests and Canvas generated asset verification passed.
+- SB01-SB10 proof manifests and semantic invariant artifacts exist and are audited.
+- Raw notes RAW01-RAW07 are closed with evidence in `bundle://proof/SB10/raw-note-closure.md`.
+- Fake-proof resistance, WebGL exclusion, runtime dependency red-team, and open-source transfer checklist are recorded under `bundle://proof/SB10/`.
+- WebGL remains explicitly separated as future publishing-readiness work.
 
 ## Proof Required
 

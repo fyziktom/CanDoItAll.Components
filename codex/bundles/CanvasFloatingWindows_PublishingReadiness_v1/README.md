@@ -1,4 +1,4 @@
-# Canvas And Floating Windows Publishing Readiness v1
+﻿# Canvas And Floating Windows Publishing Readiness v1
 
 Bundle id: `CanDoItAll.Components.CanvasFloatingWindows.PublishingReadiness.v1`  
 Created local date: `2026-06-29`  
@@ -16,19 +16,21 @@ Prepare the CanvasLib and floating-window surfaces for future open-source publis
 - Preserve all current public functionality unless a subbundle explicitly proves a bug fix with failing-first and passing evidence.
 - Do not hand-edit generated Canvas asset include components; use `tools/canvaslib/build-assets.cjs` and verify with `tools/canvaslib/verify-assets.cjs`.
 - Do not close UI work from source inspection only. Canvas and floating-window claims require browser proof, open-state screenshots, and explicit visual review.
+- Runtime implementation for Canvas, floating windows, calendar, previews, and related interactive surfaces must stay pure browser JavaScript plus C# and Razor. Do not add npm runtime dependencies; npm may be used only for existing Tailwind, generated-asset, test, or browser-validation tooling.
 
 ## Validation Summary
 
-- Bundle preparation status: `Prepared`
+- Bundle preparation status: `Completed`
 - Bundle readiness gate: `Prepared-stage validator passed on 2026-06-29`
-- Execution status: `Not started`
-- Subbundle gate review: `Pending implementation`
-- Final closure gate: `Pending implementation`
-- Browser validation analytics: `Planned for SB05-SB08 with maximized desktop, fixed desktop, tablet, and mobile passes`
+- Execution status: `Completed`
+- Subbundle gate review: `SB01-SB10 completed`
+- Final closure gate: `Completed-stage validator passed on 2026-06-29`
+- Browser validation analytics: `Completed for SB05-SB08 with maximized desktop, fixed desktop, tablet, and mobile passes`
 
 ## Primary Artifacts
 
 - Original request: `bundle://inputs/00-original-request.md`
+- Runtime constraint update: `bundle://inputs/03-runtime-constraint-update.md`
 - Structured input: `bundle://inputs/02-structured-input.md`
 - Current-state analysis: `bundle://analysis/01-current-state.md`
 - Assumptions and risks: `bundle://analysis/02-assumptions-and-risks.md`
@@ -43,4 +45,5 @@ Prepare the CanvasLib and floating-window surfaces for future open-source publis
 
 ## Handoff Notes
 
-Execution should start at SB01. SB01-SB04 establish the inventory, OverlayLib/CanvasLib boundary, state contracts, and asset/runtime proof foundations. SB05-SB08 perform true UI validation. SB09 and SB10 close publishing-readiness, package/API/docs, and red-team proof. Any browser defect in a later phase must reopen the owning foundation instead of being hidden as residual risk.
+Execution is complete. SB01-SB04 established the inventory, OverlayLib/CanvasLib boundary, state contracts, and asset/runtime proof foundations. SB05-SB08 performed true UI validation. SB09 and SB10 closed publishing-readiness, package/API/docs, red-team proof, raw-note closure, and transfer guidance. WebGL remains explicitly separated as future publishing-readiness work.
+

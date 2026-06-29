@@ -34,6 +34,63 @@ public sealed class LayoutNavigationOverlayBehaviorTests
     }
 
     [Fact]
+    public void OverlayWindowStateNormalizeNullUsesDefaultVisibleWindow()
+    {
+        var normalized = OverlayWindowState.Normalize(null);
+
+        Assert.True(normalized.IsVisible);
+        Assert.False(normalized.IsMinimized);
+        Assert.False(normalized.HasCustomGeometry);
+        Assert.Null(normalized.Left);
+        Assert.Null(normalized.Top);
+        Assert.Null(normalized.Width);
+        Assert.Null(normalized.Height);
+    }
+
+    [Fact]
+    public void OverlayWindowStateNormalizeClearsAllNonPositiveGeometry()
+    {
+        var normalized = OverlayWindowState.Normalize(new OverlayWindowState
+        {
+            Left = 0,
+            Top = -0.01,
+            Width = -320,
+            Height = 0
+        });
+
+        Assert.False(normalized.HasCustomGeometry);
+        Assert.Null(normalized.Left);
+        Assert.Null(normalized.Top);
+        Assert.Null(normalized.Width);
+        Assert.Null(normalized.Height);
+    }
+
+    [Fact]
+    public void OverlayWindowStateClonePreservesVisibilityAndGeometryWithoutSharing()
+    {
+        var original = new OverlayWindowState
+        {
+            IsVisible = false,
+            IsMinimized = true,
+            Left = 12,
+            Top = 24,
+            Width = 360,
+            Height = 280
+        };
+
+        var clone = original.Clone();
+        clone.Left = 48;
+
+        Assert.False(clone.IsVisible);
+        Assert.True(clone.IsMinimized);
+        Assert.Equal(12, original.Left);
+        Assert.Equal(48, clone.Left);
+        Assert.Equal(original.Top, clone.Top);
+        Assert.Equal(original.Width, clone.Width);
+        Assert.Equal(original.Height, clone.Height);
+    }
+
+    [Fact]
     public void OverlayWindowStateEquivalenceUsesNormalizedValues()
     {
         var left = new OverlayWindowState
@@ -52,5 +109,25 @@ public sealed class LayoutNavigationOverlayBehaviorTests
         };
 
         Assert.True(OverlayWindowState.AreEquivalent(left, right));
+    }
+
+    [Fact]
+    public void OverlayWindowStateEquivalenceTreatsNullAndDefaultAsSameWindow()
+    {
+        Assert.True(OverlayWindowState.AreEquivalent(null, new OverlayWindowState()));
+    }
+
+    [Fact]
+    public void OverlayWindowStateEquivalenceDistinguishesVisibilityAndMinimizedSemantics()
+    {
+        Assert.False(
+            OverlayWindowState.AreEquivalent(
+                new OverlayWindowState { IsVisible = true, IsMinimized = false },
+                new OverlayWindowState { IsVisible = false, IsMinimized = false }));
+
+        Assert.False(
+            OverlayWindowState.AreEquivalent(
+                new OverlayWindowState { IsVisible = true, IsMinimized = false },
+                new OverlayWindowState { IsVisible = true, IsMinimized = true }));
     }
 }
