@@ -571,7 +571,7 @@
       this.setMessage('Export callback is not configured.', 'error');
       return;
     }
-    var visible = this.getVisibleEvents(this.state.view === 'list' ? this.state.listScope : this.state.view);
+    var visible = safeArray(this.state.visibleEvents);
     this.options.onExportRequest(asText(format), visible, {
       view: this.state.view,
       scope: this.state.view === 'list' ? this.state.listScope : this.state.view,

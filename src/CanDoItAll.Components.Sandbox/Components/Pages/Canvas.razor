@@ -24,6 +24,21 @@
 
     <ChildContent>
         <SectionCard Title="Workbench runtime" Description="The extracted workbench remains real and interactive while the proof content lives alongside it.">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <Cluster Gap="LayoutGap.Small">
+                    <Button Text="Show inspector"
+                            ButtonStyle="@(ButtonStyle.Light)"
+                            Variant="@(Variant.Outlined)"
+                            Click="@ShowInspectorWindow"
+                            data-testid="show-canvas-inspector" />
+                    <Button Text="Reset inspector"
+                            ButtonStyle="@(ButtonStyle.Light)"
+                            Variant="@(Variant.Outlined)"
+                            Click="@ResetInspectorWindow"
+                            data-testid="reset-canvas-inspector" />
+                </Cluster>
+                <StatusBadge Text="@InspectorWindowStateLabel" Tone="@InspectorWindowStateTone" />
+            </div>
             <div class="sandbox-canvas-host">
                 <CanvasWorkbench Surface="@WorkbenchSurface"
                                  SelectionChanged="HandleWorkbenchSelectionChanged"
@@ -77,11 +92,19 @@
                 <CanvasCalendar Surface="@CurrentCalendarSurface"
                                 HostClass="min-h-[36rem] overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50/80"
                                 SelectionChanged="HandleCalendarSelectionChanged"
-                                StateChanged="HandleCalendarStateChanged" />
+                                StateChanged="HandleCalendarStateChanged"
+                                SaveEventAsync="HandleCalendarEventSaveAsync"
+                                DeleteEventAsync="HandleCalendarEventDeleteAsync"
+                                SearchPlaylistsAsync="HandleCalendarPlaylistSearchAsync"
+                                LinkPlaylistAsync="HandleCalendarPlaylistLinkAsync"
+                                ClonePlaylistAsync="HandleCalendarPlaylistCloneAsync"
+                                UnlinkPlaylistAsync="HandleCalendarPlaylistUnlinkAsync"
+                                ExportAsync="HandleCalendarExportAsync" />
             </SectionCard>
 
             <SectionCard Title="Calendar boundary cards" Description="Selection, export, mini-month, and time-grid previews are reviewable without entering the runtime page.">
                 <div class="space-y-4">
+                    <p class="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500" data-testid="calendar-export-status">@calendarExportStatus</p>
                     <CalendarSelectionPanel Snapshot="@CalendarSelectionSnapshot" />
                     <CalendarExportMenu Snapshot="@CalendarExportSnapshot" />
                     <CalendarMiniMonthNavigator Snapshot="@CalendarMiniMonthSnapshot" />
@@ -111,11 +134,13 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Canvas);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Canvas);
+    private static readonly DateTimeOffset CalendarProofTimestamp = new(2026, 4, 6, 8, 0, 0, TimeSpan.Zero);
 
     private SandboxScenarioKey? initializedScenario;
     private CanvasWorkbenchUiState workbenchUiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.HappyPath);
     private CanvasWorkbenchWindowState inspectorWindowState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.HappyPath);
     private CanvasCalendarSurface currentCalendarSurface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.HappyPath);
+    private string calendarExportStatus = "No calendar export requested";
 
     private CanvasWorkbenchSurface WorkbenchSurface => SandboxCanvasSamples.CreateWorkbenchSurface(CurrentScenario, workbenchUiState, inspectorWindowState);
 
@@ -188,6 +213,7 @@
         workbenchUiState = SandboxCanvasSamples.CreateWorkbenchUiState(CurrentScenario);
         inspectorWindowState = SandboxCanvasSamples.CreateInspectorWindowState(CurrentScenario);
         currentCalendarSurface = SandboxCanvasSamples.CreateCalendarSurface(CurrentScenario);
+        calendarExportStatus = "No calendar export requested";
     }
 
     private Task HandleWorkbenchSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)
@@ -208,6 +234,29 @@
         return Task.CompletedTask;
     }
 
+    private Task ShowInspectorWindow()
+    {
+        var next = inspectorWindowState.Clone();
+        next.IsVisible = true;
+        next.IsMinimized = false;
+        inspectorWindowState = CanvasWorkbenchWindowState.Normalize(next);
+        return Task.CompletedTask;
+    }
+
+    private Task ResetInspectorWindow()
+    {
+        inspectorWindowState = SandboxCanvasSamples.CreateInspectorWindowState(CurrentScenario);
+        return Task.CompletedTask;
+    }
+
+    private string InspectorWindowStateLabel => inspectorWindowState.IsVisible
+        ? inspectorWindowState.IsMinimized ? "Inspector minimized" : "Inspector visible"
+        : "Inspector hidden";
+
+    private string InspectorWindowStateTone => inspectorWindowState.IsVisible
+        ? inspectorWindowState.IsMinimized ? "warning" : "success"
+        : "warning";
+
     private Task HandleCalendarSelectionChanged(CanvasCalendarSelectionChangedEventArgs args)
     {
         currentCalendarSurface.SelectedEventId = args.SelectedEvent?.EventId ?? args.SelectedEvent?.Id ?? string.Empty;
@@ -227,4 +276,203 @@
 
         return Task.CompletedTask;
     }
+
+    private Task<CanvasCalendarEvent?> HandleCalendarEventSaveAsync(CanvasCalendarSaveRequest request)
+    {
+        var saved = NormalizeCalendarEvent(request.Event);
+        ReplaceCalendarEvent(saved);
+        currentCalendarSurface.SelectedEventId = saved.EventId;
+        return Task.FromResult<CanvasCalendarEvent?>(saved);
+    }
+
+    private Task HandleCalendarEventDeleteAsync(CanvasCalendarDeleteRequest request)
+    {
+        var eventId = ResolveCalendarEventId(request.Event);
+        currentCalendarSurface.Events.RemoveAll(item => IsCalendarEventMatch(item, eventId));
+
+        if (string.Equals(currentCalendarSurface.SelectedEventId, eventId, StringComparison.Ordinal))
+        {
+            currentCalendarSurface.SelectedEventId = currentCalendarSurface.Events.FirstOrDefault()?.EventId ?? string.Empty;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private Task<IReadOnlyList<CanvasCalendarPlaylist>> HandleCalendarPlaylistSearchAsync(CanvasCalendarPlaylistSearchRequest request)
+    {
+        var query = request.Query.Trim();
+        var candidates = CreateSandboxPlaylistCatalog(request.Event);
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            candidates = candidates
+                .Where(playlist =>
+                    playlist.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    playlist.Purpose.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    playlist.Status.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        return Task.FromResult<IReadOnlyList<CanvasCalendarPlaylist>>(candidates);
+    }
+
+    private Task<CanvasCalendarEvent?> HandleCalendarPlaylistLinkAsync(CanvasCalendarPlaylistMutationRequest request)
+        => Task.FromResult<CanvasCalendarEvent?>(ApplyPlaylistMutation(request.Event, request.Playlist, PlaylistMutationMode.Link));
+
+    private Task<CanvasCalendarEvent?> HandleCalendarPlaylistCloneAsync(CanvasCalendarPlaylistMutationRequest request)
+        => Task.FromResult<CanvasCalendarEvent?>(ApplyPlaylistMutation(request.Event, request.Playlist, PlaylistMutationMode.Clone));
+
+    private Task<CanvasCalendarEvent?> HandleCalendarPlaylistUnlinkAsync(CanvasCalendarPlaylistMutationRequest request)
+        => Task.FromResult<CanvasCalendarEvent?>(ApplyPlaylistMutation(request.Event, request.Playlist, PlaylistMutationMode.Unlink));
+
+    private async Task HandleCalendarExportAsync(CanvasCalendarExportRequest request)
+    {
+        calendarExportStatus = $"Last calendar export: {request.Format.ToUpperInvariant()} ({request.VisibleEvents.Count} events)";
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private enum PlaylistMutationMode
+    {
+        Link,
+        Clone,
+        Unlink
+    }
+
+    private CanvasCalendarEvent ApplyPlaylistMutation(
+        CanvasCalendarEvent requestedEvent,
+        CanvasCalendarPlaylist requestedPlaylist,
+        PlaylistMutationMode mode)
+    {
+        var eventId = ResolveCalendarEventId(requestedEvent);
+        var calendarEvent = currentCalendarSurface.Events.FirstOrDefault(item => IsCalendarEventMatch(item, eventId))
+            ?? NormalizeCalendarEvent(requestedEvent);
+        var playlistId = requestedPlaylist.PlaylistId.Trim();
+
+        if (mode == PlaylistMutationMode.Unlink)
+        {
+            calendarEvent.LinkedPlaylists.RemoveAll(playlist => string.Equals(playlist.PlaylistId, playlistId, StringComparison.Ordinal));
+        }
+        else
+        {
+            var playlist = ClonePlaylist(requestedPlaylist);
+            if (mode == PlaylistMutationMode.Clone)
+            {
+                playlist.PlaylistId = $"{playlist.PlaylistId}-{calendarEvent.EventId}-copy";
+                playlist.Title = $"{playlist.Title} copy";
+                playlist.ConnectedEvents = [];
+                playlist.ConnectedEventCount = 0;
+                playlist.IsPrimaryEvent = false;
+            }
+
+            if (!calendarEvent.LinkedPlaylists.Any(item => string.Equals(item.PlaylistId, playlist.PlaylistId, StringComparison.Ordinal)))
+            {
+                playlist.IsPrimaryEvent = calendarEvent.LinkedPlaylists.Count == 0;
+                calendarEvent.LinkedPlaylists.Add(playlist);
+            }
+        }
+
+        calendarEvent.LinkedPlaylistCount = calendarEvent.LinkedPlaylists.Count;
+        ReplaceCalendarEvent(calendarEvent);
+        currentCalendarSurface.SelectedEventId = calendarEvent.EventId;
+        return calendarEvent;
+    }
+
+    private void ReplaceCalendarEvent(CanvasCalendarEvent calendarEvent)
+    {
+        var eventId = ResolveCalendarEventId(calendarEvent);
+        var existingIndex = currentCalendarSurface.Events.FindIndex(item => IsCalendarEventMatch(item, eventId));
+        if (existingIndex >= 0)
+        {
+            currentCalendarSurface.Events[existingIndex] = calendarEvent;
+        }
+        else
+        {
+            currentCalendarSurface.Events.Add(calendarEvent);
+        }
+
+        currentCalendarSurface.Events.Sort((left, right) => Nullable.Compare(left.StartUtc, right.StartUtc));
+    }
+
+    private static CanvasCalendarEvent NormalizeCalendarEvent(CanvasCalendarEvent calendarEvent)
+    {
+        var eventId = ResolveCalendarEventId(calendarEvent);
+        if (string.IsNullOrWhiteSpace(eventId))
+        {
+            eventId = $"sandbox-calendar-{Guid.NewGuid():N}";
+        }
+
+        calendarEvent.Id = eventId;
+        calendarEvent.EventId = eventId;
+        calendarEvent.Timezone = string.IsNullOrWhiteSpace(calendarEvent.Timezone) ? "UTC" : calendarEvent.Timezone;
+        calendarEvent.TimezoneName = string.IsNullOrWhiteSpace(calendarEvent.TimezoneName) ? calendarEvent.Timezone : calendarEvent.TimezoneName;
+        calendarEvent.Currency = string.IsNullOrWhiteSpace(calendarEvent.Currency) ? "USD" : calendarEvent.Currency.ToUpperInvariant();
+        calendarEvent.LinkedPlaylistCount = calendarEvent.LinkedPlaylists.Count;
+        calendarEvent.ChecklistItemCount = calendarEvent.ChecklistRows.Count;
+        calendarEvent.UpdatedUtc = CalendarProofTimestamp;
+        calendarEvent.CreatedUtc ??= calendarEvent.UpdatedUtc;
+        return calendarEvent;
+    }
+
+    private static bool IsCalendarEventMatch(CanvasCalendarEvent calendarEvent, string eventId)
+        => string.Equals(calendarEvent.Id, eventId, StringComparison.Ordinal) ||
+           string.Equals(calendarEvent.EventId, eventId, StringComparison.Ordinal);
+
+    private static string ResolveCalendarEventId(CanvasCalendarEvent calendarEvent)
+        => (string.IsNullOrWhiteSpace(calendarEvent.EventId) ? calendarEvent.Id : calendarEvent.EventId).Trim();
+
+    private static List<CanvasCalendarPlaylist> CreateSandboxPlaylistCatalog(CanvasCalendarEvent? calendarEvent)
+    {
+        var eventId = calendarEvent is null ? string.Empty : ResolveCalendarEventId(calendarEvent);
+        return
+        [
+            new CanvasCalendarPlaylist
+            {
+                PlaylistId = "playlist-release-proof",
+                Title = "Release proof playlist",
+                Subtitle = "Cross-event validation set",
+                Purpose = "Reuse proof evidence for publishing readiness",
+                Status = "Ready",
+                TotalScores = 12,
+                ConnectedEventCount = 1,
+                BuilderUrl = "/groups/canvas?scenario=dense-content",
+                ConnectedEvents =
+                [
+                    new CanvasCalendarConnectedEvent
+                    {
+                        EventId = "release-window",
+                        Title = "Release window",
+                        ScheduledStartUtc = new DateTimeOffset(2026, 4, 6, 15, 0, 0, TimeSpan.Zero),
+                        TimezoneName = "UTC",
+                        LocationLabel = "Deployment lane",
+                        IsPrimary = true
+                    }
+                ]
+            },
+            new CanvasCalendarPlaylist
+            {
+                PlaylistId = "playlist-mobile-review",
+                Title = "Mobile review playlist",
+                Subtitle = "Small viewport QA",
+                Purpose = "Validate compact calendar and preview states",
+                Status = "Draft",
+                TotalScores = 8,
+                ConnectedEventCount = string.Equals(eventId, "canvas-proof", StringComparison.Ordinal) ? 1 : 0,
+                BuilderUrl = "/groups/canvas?scenario=long-text"
+            }
+        ];
+    }
+
+    private static CanvasCalendarPlaylist ClonePlaylist(CanvasCalendarPlaylist playlist)
+        => new()
+        {
+            PlaylistId = playlist.PlaylistId,
+            Title = playlist.Title,
+            Subtitle = playlist.Subtitle,
+            Purpose = playlist.Purpose,
+            Status = playlist.Status,
+            TotalScores = playlist.TotalScores,
+            ConnectedEventCount = playlist.ConnectedEventCount,
+            IsPrimaryEvent = playlist.IsPrimaryEvent,
+            BuilderUrl = playlist.BuilderUrl,
+            ConnectedEvents = [.. playlist.ConnectedEvents]
+        };
 }

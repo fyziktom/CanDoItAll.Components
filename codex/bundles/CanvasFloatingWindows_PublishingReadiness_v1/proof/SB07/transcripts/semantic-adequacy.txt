@@ -1,0 +1,37 @@
+Command: semantic adequacy review for SB07 floating-window proof
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+StartedUtc: 2026-06-29T15:43:30.0000000Z
+
+Checked invariants:
+- SB07-INV-RUNTIME-OWNERSHIP
+- SB07-INV-OVERLAY-LIFECYCLE
+- SB07-INV-CANVAS-LIFECYCLE
+- SB07-INV-SAFE-TOP-CONTAINER
+
+Source proof:
+- repo://src/CanDoItAll.Components.CanvasLib/Components/Core/CanvasFloatingWindow.razor wraps OverlayWindow and converts Canvas state to OverlayWindowState.
+- repo://src/CanDoItAll.Components.CanvasLib/wwwroot/js/runtime/canvas-floating-window.js aliases CanDoItAll.canvasFloatingWindow to CanDoItAll.overlayWindow when OverlayLib is present.
+- repo://src/CanDoItAll.Components.OverlayLib/wwwroot/js/runtime/overlay-window.js owns generic drag, resize, safe-top, container, z-index, and facade export behavior.
+- repo://src/CanDoItAll.Components.Sandbox/Components/Pages/Canvas.razor exposes sandbox show/reset controls for the inspector state path.
+- bundle://proof/SB07/transcripts/source-assertions-floating-windows.txt verifies the source paths and invariant ids.
+
+Test and browser proof:
+- bundle://proof/SB07/transcripts/dotnet-build-sandbox.txt proves the sandbox compiles after the Canvas proof controls.
+- bundle://proof/SB07/transcripts/dotnet-test-floating-window-contracts.txt proves Canvas/Overlay state contracts still pass.
+- bundle://proof/SB07/transcripts/node-check-floating-window-js.txt proves changed pure JS and verifier syntax.
+- bundle://proof/SB07/transcripts/npm-canvaslib-verify-assets.txt proves generated Canvas asset includes remain in sync.
+- bundle://proof/SB07/transcripts/playwright-floating-windows.txt proves Overlay and Canvas lifecycles across four viewports with zero console warnings/errors/pageerrors.
+
+Shallow-pass traps rejected:
+- Overlay-only proof without Canvas wrapper validation.
+- Canvas route render without lifecycle controls.
+- Static screenshots without measured frame, safe-top, window, action, and overflow bounds.
+- Runtime ownership docs without browser proof that the facades alias.
+- Hide-state proof that requires a route reload instead of a real show path.
+
+Adversarial negative proof:
+- The verifier rejects stale Canvas runtime ownership by requiring CanDoItAll.canvasFloatingWindow and CanDoItAll.overlayWindow to be the same object.
+- The verifier rejects clipping, toolbar overlap, collapsed mobile windows, tiny action hit areas, failed drag/resize/reset/hide/show, and console warnings/errors/pageerrors.
+
+Result: PASS SB07 semantic adequacy is artifact-backed by source assertions, browser action records, screenshots, changed-file hashes, focused tests, asset verification, and anti-stub audit.
+ExitCode: 0

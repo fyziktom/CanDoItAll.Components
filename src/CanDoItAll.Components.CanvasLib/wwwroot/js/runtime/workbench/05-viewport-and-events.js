@@ -1176,7 +1176,8 @@
                 const isCanvasKeyTarget = !target ||
                     target === state.document.body ||
                     target === state.document.documentElement ||
-                    state.host.contains(target);
+                    state.host.contains(target) ||
+                    !!target?.closest?.(".cw-workbench-shell");
                 if (!isCanvasKeyTarget) {
                     return;
                 }
@@ -1259,6 +1260,13 @@
                     case "Escape":
                         event.preventDefault();
                         {
+                            if (state.helpOpen) {
+                                toggleHelp(state);
+                                render(state);
+                                ensureHostFocus(state);
+                                return;
+                            }
+
                             const hadContextMenu = state.contextMenu?.style.display !== "none";
                             const hadComposer = !!state.composer;
                             clearContextMenu(state);

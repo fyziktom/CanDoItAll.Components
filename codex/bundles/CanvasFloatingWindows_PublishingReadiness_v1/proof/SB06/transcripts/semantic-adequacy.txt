@@ -1,0 +1,40 @@
+Command: semantic adequacy review for SB06 calendar and preview proof
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+StartedUtc: 2026-06-29T15:18:30.0000000Z
+
+Checked invariants:
+- SB06-INV-CALENDAR-SCENARIOS
+- SB06-INV-CALENDAR-VIEWPORTS
+- SB06-INV-CALENDAR-ACTIONS
+- SB06-INV-CALENDAR-CRUD
+- SB06-INV-CALENDAR-EXPORT
+- SB06-INV-PLAYLISTS
+- SB06-INV-PREVIEW-CARDS
+- SB06-INV-CALENDAR-A11Y
+
+Source proof:
+- repo://src/CanDoItAll.Components.CanvasLib/wwwroot/js/calendar/controller/03-editor-and-toolbar.js uses state.visibleEvents for export.
+- repo://src/CanDoItAll.Components.CanvasLib/wwwroot/js/calendar/canvasCalendarInterop.js normalizes visible events before JSON serialization.
+- repo://src/CanDoItAll.Components.Sandbox/Components/Pages/Canvas.razor wires calendar save, delete, playlist, and export callbacks with deterministic proof state.
+- bundle://proof/SB06/transcripts/source-assertions-calendar-preview.txt verifies the source paths and invariant ids.
+
+Test and browser proof:
+- bundle://proof/SB06/transcripts/dotnet-build-sandbox.txt proves the sandbox compiles with the callback wiring.
+- bundle://proof/SB06/transcripts/node-check-calendar-js.txt proves the changed pure JS files and verifier parse.
+- bundle://proof/SB06/transcripts/playwright-calendar-preview.txt proves scenarios, viewports, CRUD, playlist, export, preview cards, accessibility mirror, and zero console warnings/errors/pageerrors.
+
+Shallow-pass traps rejected:
+- Route render without scenario event counts.
+- Screenshot-only proof without browser actions.
+- Static preview cards without source assertions.
+- Export menu open state without nonzero visible event payload.
+- Playlist text without callback mutation.
+- Mobile screenshot without overflow measurements.
+
+Adversarial negative proof:
+- The browser verifier originally exposed export returning zero events while the rendered view had two visible events; the final verifier rejects that condition.
+- The mobile proof records the narrow 193px inner calendar width but still fails on collapsed bounds or lateral overflow.
+- The verifier rejects missing mirror content, missing preview cards, failed CRUD mutations, and console warnings/errors/pageerrors.
+
+Result: PASS SB06 semantic adequacy is artifact-backed by source assertions, browser action records, screenshots, changed-file hashes, and anti-stub audit.
+ExitCode: 0

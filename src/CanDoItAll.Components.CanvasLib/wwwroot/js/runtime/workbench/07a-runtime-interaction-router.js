@@ -829,6 +829,13 @@
                     case "Escape":
                         event.preventDefault();
                         {
+                            if (state.helpOpen) {
+                                toggleHelp(state);
+                                render(state);
+                                ensureHostFocus(state);
+                                return;
+                            }
+
                             const activeMode = resolveSurfaceMode(state);
                             const hadContextMenu = state.contextMenu?.style.display !== "none";
                             const hadComposer = !!state.composer;

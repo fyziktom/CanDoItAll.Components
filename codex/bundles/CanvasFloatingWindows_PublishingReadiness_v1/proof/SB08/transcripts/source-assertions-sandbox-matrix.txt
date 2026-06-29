@@ -1,0 +1,21 @@
+﻿Command: SB08 source assertion scan
+PASS: Sandbox catalog exposes Overlays route -> src\CanDoItAll.Components.Sandbox\SandboxCatalogRegistry.cs contains [/groups/overlays]
+PASS: Sandbox catalog exposes Canvas route -> src\CanDoItAll.Components.Sandbox\SandboxCatalogRegistry.cs contains [/groups/canvas]
+PASS: Canvas benchmark route exists -> src\CanDoItAll.Components.Sandbox\Components\Pages\CanvasBenchmark.razor contains [@page "/groups/canvas/benchmark"]
+PASS: Benchmark states shipped workbench baseline -> src\CanDoItAll.Components.Sandbox\Components\Pages\CanvasBenchmark.razor contains [shipped workbench create path]
+PASS: Benchmark shipped workbench preview label -> src\CanDoItAll.Components.Sandbox\Components\Pages\CanvasBenchmark.razor contains [Shipped Workbench Preview]
+PASS: Benchmark standalone prototype preview label -> src\CanDoItAll.Components.Sandbox\Components\Pages\CanvasBenchmark.razor contains [Standalone Prototype Preview]
+PASS: Benchmark feature-parity warning -> src\CanDoItAll.Components.Sandbox\Components\Pages\CanvasBenchmark.razor contains [does not claim feature parity]
+PASS: Benchmark draw-cost warning -> src\CanDoItAll.Components.Sandbox\Components\Pages\CanvasBenchmark.razor contains [draw-cost evidence only]
+PASS: Verifier covers Canvas scenarios invariant -> codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs contains [SB08-INV-CANVAS-SCENARIOS]
+PASS: Verifier covers route viewports invariant -> codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs contains [SB08-INV-ROUTE-VIEWPORTS]
+PASS: Verifier covers Canvas interactions invariant -> codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs contains [SB08-INV-CANVAS-INTERACTIONS]
+PASS: Verifier covers benchmark scope invariant -> codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs contains [SB08-INV-BENCHMARK-SCOPE]
+PASS: Verifier covers overlay matrix invariant -> codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs contains [SB08-INV-OVERLAY-MATRIX]
+PASS: Verifier excludes renderer migration approval -> codex\bundles\CanvasFloatingWindows_PublishingReadiness_v1\proof\SB08\verify-sandbox-matrix.cjs contains [not renderer-migration approval]
+PASS: Matrix result count = 20 actions.
+PASS: Matrix action kinds = canvas-scenario=6, canvas-viewport=4, canvas-interactions=1, benchmark-route-health=4, benchmark-scope-note=1, overlay-lifecycle=4.
+PASS: No WebGL route is included in SB08 matrix script.
+Result: PASS source assertions for SB08 sandbox matrix.
+ExitCode: 0
+

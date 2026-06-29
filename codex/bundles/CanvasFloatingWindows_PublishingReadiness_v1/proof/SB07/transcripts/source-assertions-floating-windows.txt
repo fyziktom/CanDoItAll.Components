@@ -1,0 +1,125 @@
+﻿Command: rg source assertions for SB07 floating-window ownership and behavior
+WorkingDirectory: C:\repositories\CanDoItAll.Components
+StartedUtc: 2026-06-29T15:42:32.1025317+00:00
+
+## Canvas wrapper delegates to OverlayWindow
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:4:<OverlayWindow WindowId="@WindowId"
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:12:               ContainerSelector="@ContainerSelector"
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:13:               SafeTopSelector="@SafeTopSelector"
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:27:               State="@State.ToOverlayWindowState()"
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:30:</OverlayWindow>
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:58:    public string ContainerSelector { get; set; } = ".cw-stage-surface";
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:61:    public string SafeTopSelector { get; set; } = ".cw-toolbar";
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:124:    private Task HandleOverlayStateChangedAsync(OverlayWindowState state)
+src\CanDoItAll.Components.CanvasLib\Components\Core\CanvasFloatingWindow.razor:125:        => PublishStateAsync(CanvasWorkbenchWindowState.FromOverlayWindowState(state));
+src\CanDoItAll.Components.CanvasLib\Canvas\Workbench\CanvasWorkbenchUiState.cs:168:    public OverlayWindowState ToOverlayWindowState()
+src\CanDoItAll.Components.CanvasLib\Canvas\Workbench\CanvasWorkbenchUiState.cs:169:        => OverlayWindowState.Normalize(
+src\CanDoItAll.Components.CanvasLib\Canvas\Workbench\CanvasWorkbenchUiState.cs:170:            new OverlayWindowState
+src\CanDoItAll.Components.CanvasLib\Canvas\Workbench\CanvasWorkbenchUiState.cs:180:    public static CanvasWorkbenchWindowState FromOverlayWindowState(OverlayWindowState? value)
+src\CanDoItAll.Components.CanvasLib\Canvas\Workbench\CanvasWorkbenchUiState.cs:182:        var normalized = OverlayWindowState.Normalize(value);
+
+## Canvas shim aliases OverlayLib runtime when present
+3:    if (root.overlayWindow) {
+4:        root.canvasFloatingWindow = root.overlayWindow;
+5:        return;
+8:    const windowHosts = new WeakMap();
+9:    const legacyHosts = new WeakMap();
+95:            return;
+174:            return;
+183:            return;
+188:            return;
+196:            return;
+211:            return;
+227:            return;
+232:                return;
+243:                return;
+252:                return;
+283:            return;
+303:                return;
+307:                return;
+361:        const state = windowHosts.get(host) || createWindowState(host, dotNetRef, normalized);
+369:        windowHosts.set(host, state);
+373:        const state = windowHosts.get(host);
+375:            return;
+388:        windowHosts.delete(host);
+406:                return;
+421:                return;
+433:                return;
+461:            return;
+464:        const state = legacyHosts.get(panel) || createLegacyState(panel);
+481:                return;
+499:        legacyHosts.set(panel, state);
+504:            return;
+507:        const state = legacyHosts.get(panel);
+524:                return;
+531:                return;
+538:                return;
+
+## OverlayLib owns generic runtime behavior
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:25:    function resolveContainer(host, options) {
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:62:    function resolveSafeTop(container, options) {
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:86:        const safeTop = resolveSafeTop(container, options);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:108:        const safeTop = resolveSafeTop(container, options);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:239:    function scheduleLayoutRefresh(state) {
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:328:        const handle = state.host.querySelector("[data-cda-overlay-drag], [data-cw-window-drag]");
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:377:            container: resolveContainer(host, options),
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:418:        scheduleLayoutRefresh(state);
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:603:    root.overlayWindow = overlayWindowApi;
+src\CanDoItAll.Components.OverlayLib\wwwroot\js\runtime\overlay-window.js:604:    root.canvasFloatingWindow = overlayWindowApi;
+src\CanDoItAll.Components.OverlayLib\Components\Core\OverlayWindow.razor:18:            <div class="cda-overlay-window__drag cw-floating-window__drag" data-cda-overlay-drag="true" data-cw-window-drag="true">
+src\CanDoItAll.Components.OverlayLib\Components\Core\OverlayWindow.razor:48:                <div class="cda-overlay-window__drag cw-floating-window__drag" data-cda-overlay-drag="true" data-cw-window-drag="true">
+
+## Sandbox exposes real show reset hide lifecycle controls
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:159:                     data-testid="sandbox-overlay-window-frame">
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:162:                         data-testid="sandbox-overlay-window-safe-top">
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:171:                                    Click="@ShowOverlayWindow"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:172:                                    data-testid="show-overlay-window" />
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:176:                                    Click="@ResetOverlayWindow"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:177:                                    data-testid="reset-overlay-window" />
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:204:                        <OverlayWindow WindowId="sandbox-overlay-window"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:208:                                       TestId="sandbox-overlay-window"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:216:                                       ContainerSelector="[data-testid='sandbox-overlay-window-frame']"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:217:                                       SafeTopSelector="[data-testid='sandbox-overlay-window-safe-top']">
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:222:                                    <Toolbar data-testid="sandbox-overlay-window-toolbar">
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:228:                                                         data-testid="sandbox-overlay-window-search" />
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:383:    private Task ShowOverlayWindow()
+src\CanDoItAll.Components.Sandbox\Components\Pages\Overlays.razor:389:    private Task ResetOverlayWindow()
+src\CanDoItAll.Components.Sandbox\Components\Pages\Canvas.razor:32:                            Click="@ShowInspectorWindow"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Canvas.razor:33:                            data-testid="show-canvas-inspector" />
+src\CanDoItAll.Components.Sandbox\Components\Pages\Canvas.razor:37:                            Click="@ResetInspectorWindow"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Canvas.razor:38:                            data-testid="reset-canvas-inspector" />
+src\CanDoItAll.Components.Sandbox\Components\Pages\Canvas.razor:64:                                                  TestId="sandbox-canvas-inspector"
+src\CanDoItAll.Components.Sandbox\Components\Pages\Canvas.razor:237:    private Task ShowInspectorWindow()
+src\CanDoItAll.Components.Sandbox\Components\Pages\Canvas.razor:246:    private Task ResetInspectorWindow()
+
+## Docs and assets record ownership boundary
+src\CanDoItAll.Components.CanvasLib\Canvas\README.md:22:Generated asset includes are owned by `tools/canvaslib/asset-manifest.json`, `tools/canvaslib/build-assets.cjs`, and `tools/canvaslib/verify-assets.cjs`. Regenerate `CanvasLibHeadAssets.razor` and `CanvasLibBodyAssets.razor` through the generator; do not hand-edit them.
+src\CanDoItAll.Components.CanvasLib\Canvas\README.md:29:| Canvas floating window | `wwwroot/js/runtime/canvas-floating-window.js` | `CanDoItAll.canvasFloatingWindow` | Compatibility shim for older direct asset loading. Normal generated Canvas assets load OverlayLib first, so `CanDoItAll.canvasFloatingWindow` aliases `CanDoItAll.overlayWindow` and generic lifecycle behavior stays in OverlayLib. |
+src\CanDoItAll.Components.CanvasLib\Components\Shared\Assets\CanvasLibBodyAssets.razor:6:    <OverlayLibBodyAssets IncludeRuntimeAssets="true" />
+src\CanDoItAll.Components.CanvasLib\Components\Shared\Assets\CanvasLibBodyAssets.razor:12:    <script src="@Assets["_content/CanDoItAll.Components.CanvasLib/js/runtime/canvas-floating-window.js"]"></script>
+
+## SB07 verifier invariants and real browser actions
+32:    resetSelector: "[data-testid='reset-overlay-window']",
+34:    invariantIds: ["SB07-INV-OVERLAY-LIFECYCLE", "SB07-INV-SAFE-TOP-CONTAINER"]
+45:    resetSelector: "[data-testid='reset-canvas-inspector']",
+47:    invariantIds: ["SB07-INV-CANVAS-LIFECYCLE", "SB07-INV-RUNTIME-OWNERSHIP", "SB07-INV-SAFE-TOP-CONTAINER"]
+141:        canvasAliasesOverlay: window.CanDoItAll?.canvasFloatingWindow === window.CanDoItAll?.overlayWindow
+174:  if (!snapshot.api.canvasAliasesOverlay) {
+222:async function dragWindow(page, surface, viewport) {
+239:async function resizeWindow(page, surface, viewport) {
+279:  await page.getByLabel("Minimize window").first().click();
+296:  await page.getByLabel("Expand window").first().click();
+310:  await dragWindow(page, surface, viewport);
+329:  await resizeWindow(page, surface, viewport);
+347:  await page.locator(surface.resetSelector).click();
+350:  assertWindow(snapshot, `${surface.name} ${viewport.name} reset`, assertOptions);
+354:    state: "reset",
+357:    screenshot: await capture(page, `${surface.name}-${viewport.name}-reset`, surface)
+360:  await page.getByLabel("Hide window").first().click();
+374:  assertWindow(snapshot, `${surface.name} ${viewport.name} shown`, assertOptions);
+378:    state: "shown",
+381:    screenshot: await capture(page, `${surface.name}-${viewport.name}-shown`, surface)
+413:        lines.push(`RuntimeAlias: ${initial.api.canvasAliasesOverlay}`);
+
+Result: PASS source assertions found Canvas wrapper delegation, Canvas runtime alias shim, OverlayLib ownership, sandbox proof controls, docs/assets ownership, and SB07 verifier invariants.
+ExitCode: 0

@@ -304,9 +304,6 @@ public static class CanvasBenchmarkSamples
         {
             SelectedNodeIds = [rootId],
             GroupFrames = groupFrames,
-            Zoom = cardsPerRow >= 6 ? 0.28 : cardsPerRow == 5 ? 0.34 : 0.44,
-            PanX = 54,
-            PanY = 72,
             ShowDiagnostics = false,
             ShowMinimap = false,
             ActiveInspectorTab = "overview"

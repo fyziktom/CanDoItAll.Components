@@ -200,7 +200,7 @@ function drawSurface(surface, canvas) {
     };
 }
 
-function createHiddenRetainedWrapper() {
+function createHiddenWorkbenchWrapper() {
     const wrapper = document.createElement("div");
     wrapper.style.position = "fixed";
     wrapper.style.left = "-10000px";
@@ -221,13 +221,13 @@ function createDotNetRefStub() {
     };
 }
 
-async function measureRetained(definition, iterations) {
+async function measureWorkbench(definition, iterations) {
     const workbench = window.CanDoItAll?.canvasWorkbench;
     if (!workbench?.create || !workbench?.dispose) {
-        throw new Error("CanDoItAll.canvasWorkbench is not available for the retained benchmark.");
+        throw new Error("CanDoItAll.canvasWorkbench is not available for the shipped workbench benchmark.");
     }
 
-    const wrapper = createHiddenRetainedWrapper();
+    const wrapper = createHiddenWorkbenchWrapper();
     const dotNetRef = createDotNetRefStub();
     let totalMs = 0;
     let maxMs = 0;
@@ -300,13 +300,13 @@ function buildRecommendation(measurements) {
     if (stressTier.improvementRatio <= 0) {
         return {
             recommendation: "No-go",
-            summary: "The narrow 2D canvas prototype did not beat the retained DOM-SVG baseline on the largest measured tier, so there is no evidence-based reason to replace the shipped renderer."
+            summary: "The standalone prototype did not beat the shipped workbench baseline on the largest measured tier, so there is no evidence-based reason to replace the shipped renderer."
         };
     }
 
     return {
         recommendation: "No-go",
-        summary: `The prototype was ${gainPercent}% faster on raw scene materialization at the largest tier, but it still drops accessibility mirrors, overlay composition, and export-path reuse. Keep the retained renderer as the canonical shipped path.`
+        summary: `The prototype was ${gainPercent}% faster on raw scene materialization at the largest tier, but it still drops accessibility mirrors, overlay composition, and export-path reuse. Keep the shipped workbench renderer as the canonical path.`
     };
 }
 
@@ -327,7 +327,7 @@ export async function runBenchmarkSuite(canvas, definitions, iterations) {
     const measurements = [];
 
     for (const definition of definitions || []) {
-        const retained = await measureRetained(definition, normalizedIterations);
+        const retained = await measureWorkbench(definition, normalizedIterations);
         const prototype = await measureCanvas(definition, canvas, normalizedIterations);
         const improvementRatio = retained.averageMs <= 0
             ? 0

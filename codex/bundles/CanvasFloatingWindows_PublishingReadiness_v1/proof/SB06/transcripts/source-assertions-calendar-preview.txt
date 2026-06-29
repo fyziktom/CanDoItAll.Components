@@ -1,0 +1,262 @@
+﻿Command: scoped rg source assertions for SB06 calendar/preview contracts
+Result: PASS if each section below has matches from production or sandbox source files.
+
+## CanvasCalendar Razor callbacks and state/selection/export bridge
+33:    public Func<CanvasCalendarSaveRequest, Task<CanvasCalendarEvent?>>? SaveEventAsync { get; set; }
+36:    public Func<CanvasCalendarDeleteRequest, Task>? DeleteEventAsync { get; set; }
+51:    public Func<CanvasCalendarExportRequest, Task>? ExportAsync { get; set; }
+82:    public async Task<string?> OnEventSave(string eventJson, string contextJson, string mode)
+86:        if (SaveEventAsync is null)
+91:        var result = await SaveEventAsync(new CanvasCalendarSaveRequest(calendarEvent, context, mode));
+96:    public Task OnEventDelete(string eventJson, string contextJson)
+98:        if (DeleteEventAsync is null)
+105:        return DeleteEventAsync(new CanvasCalendarDeleteRequest(calendarEvent, context));
+109:    public async Task<string> OnPlaylistSearch(string query, string eventJson, string contextJson)
+123:    public Task<string?> OnPlaylistLink(string eventJson, string playlistJson, string contextJson)
+129:    public Task<string?> OnPlaylistClone(string eventJson, string playlistJson, string contextJson)
+135:    public Task<string?> OnPlaylistUnlink(string eventJson, string playlistJson, string contextJson)
+141:    public Task OnSelectionChanged(string selectedEventJson, string contextJson)
+154:    public Task OnStateChanged(string stateJson, string? selectedEventId, string selectedDate, string view, string scope, string timezone)
+171:    public Task OnExportRequested(string format, string visibleEventsJson, string contextJson)
+173:        if (ExportAsync is null)
+180:        return ExportAsync(new CanvasCalendarExportRequest(format, visibleEvents, context));
+
+## Calendar contract records and tolerant serialization
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:3:public sealed class CanvasCalendarSurface
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:7:    public List<CanvasCalendarEvent> Events { get; set; } = [];
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:52:public sealed class CanvasCalendarEvent
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:189:public sealed record CanvasCalendarSaveRequest(
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:190:    CanvasCalendarEvent Event,
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:194:public sealed record CanvasCalendarDeleteRequest(
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:195:    CanvasCalendarEvent Event,
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:198:public sealed record CanvasCalendarPlaylistSearchRequest(
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:200:    CanvasCalendarEvent? Event,
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:203:public sealed record CanvasCalendarPlaylistMutationRequest(
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:204:    CanvasCalendarEvent Event,
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:209:    CanvasCalendarEvent? SelectedEvent,
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:220:public sealed record CanvasCalendarExportRequest(
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CanvasCalendarContracts.cs:222:    IReadOnlyList<CanvasCalendarEvent> VisibleEvents,
+src\CanDoItAll.Components.CanvasLib\Canvas\Core\SerializationPersistencePack.cs:9:        PropertyNameCaseInsensitive = true
+
+## Pure JS calendar runtime actions, export, playlist, timezone, editor
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\canvasCalendarInterop.js:218:        const normalizedVisibleEvents = asArray(visibleEvents).map(normalizeCalendarEventForDotNet);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\canvasCalendarInterop.js:222:            JSON.stringify(normalizedVisibleEvents),
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:114:    this.state.visibleEvents = this.getVisibleEvents(this.state.view === 'list' ? this.state.listScope : this.state.view);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:222:      this.state.visibleEvents.forEach(function(event) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:601:        var items = this.state.visibleEvents.filter(function(event) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1044:        this.persistEvent('update', interaction.previewEvent).then(function(result) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1059:        this.openEditor(interaction.previewEvent, 'create');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1061:        this.openEditor(buildDefaultEvent(this.state.timezone, this.state.locale, interaction.dateKey, interaction.startMinutes || 0, interaction.type === 'create-day-span'), 'create');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1090:        this.openEditor(selectedEvent, 'edit');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1099:      this.openEditor(buildDefaultEvent(this.state.timezone, this.state.locale, region.dateKey, 0, true), 'create');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1104:      this.openEditor(buildDefaultEvent(this.state.timezone, this.state.locale, region.dateKey, timedPoint ? timedPoint.minutes : 9 * 60, false), 'create');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1132:        this.openEditor(selectedEvent, 'edit');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1134:        this.openEditor(buildDefaultEvent(this.state.timezone, this.state.locale, this.state.selectedDateKey, 9 * 60, false), 'create');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\render\04-render-and-interaction.js:1142:        this.persistDelete(current).then(function() {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:303:      + '<p class="zy-calendar-panel-copy" data-role="playlist-choice-copy"></p>'
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:306:      + '<button type="button" class="zy-calendar-button" data-action="playlist-choice-copy">Make copy</button>'
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:351:    this.playlistChoiceCopy = this.host.querySelector('[data-role="playlist-choice-copy"]');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:444:    this.periodSubtitle.textContent = 'Rendered in ' + this.state.timezone + ' | ' + this.state.visibleEvents.length + ' visible event' + (this.state.visibleEvents.length === 1 ? '' : 's');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:489:    this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:516:    this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:577:      this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:709:  CalendarController.prototype.applyTimezone = function(nextTimezone) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:712:    this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:730:    this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:810:      + this.renderStat('Visible', String(this.state.visibleEvents.length))
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:811:      + this.renderStat('All day', String(this.state.visibleEvents.filter(function(event) { return event.allDay; }).length))
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:812:      + this.renderStat('Timed', String(this.state.visibleEvents.filter(function(event) { return !event.allDay; }).length))
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\02-controller-and-dom.js:846:    this.state.visibleEvents = events;
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:197:  CalendarController.prototype.requestPlaylistSearch = function(query) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:247:      return this.requestPlaylistSearch(safeQuery);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:252:      self.requestPlaylistSearch(safeQuery);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:304:  CalendarController.prototype.openEditor = function(event, mode) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:430:    this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:446:    this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:451:  CalendarController.prototype.persistEvent = function(mode, event) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:475:  CalendarController.prototype.persistDelete = function(event) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:521:      this.state.visibleEvents = this.getVisibleEvents(scope);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:555:      this.openEditor(buildDefaultEvent(this.state.timezone, this.state.locale, this.state.selectedDateKey, 9 * 60, false), 'create');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:560:      this.requestExport('csv');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:565:      this.requestExport('xlsx');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:569:  CalendarController.prototype.requestExport = function(format) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:574:    var visible = safeArray(this.state.visibleEvents);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:614:        this.openEditor(selectedEvent, 'edit');
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:630:          this.state.visibleEvents = this.getVisibleEvents();
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:640:        this.persistDelete(current).catch(function(error) {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:729:    if (action === 'playlist-choice-copy') {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:745:        this.persistDelete(this.editorEvent).then(function() {
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:779:      this.applyTimezone(nextTimezone);
+src\CanDoItAll.Components.CanvasLib\wwwroot\js\calendar\controller\03-editor-and-toolbar.js:837:    this.persistEvent(mode === 'create' ? 'create' : 'update', draft).then(function(result) {
+
+## Calendar boundary preview components
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarCrudBridge.cs:14:public sealed class CalendarCrudBridgeSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarCrudBridge.cs:16:    public string TestHookId { get; init; } = "calendar-crud-bridge";
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarCrudBridge.cs:33:    public static CalendarCrudBridgeSnapshot Create(CanvasCalendarSurface surface)
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarCrudBridge.cs:48:        return new CalendarCrudBridgeSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarTimeGridRenderer.cs:16:public sealed class CalendarTimeGridRendererSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarTimeGridRenderer.cs:18:    public string TestHookId { get; init; } = "calendar-time-grid-renderer";
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarTimeGridRenderer.cs:39:    public static CalendarTimeGridRendererSnapshot Create(CanvasCalendarSurface surface)
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarTimeGridRenderer.cs:73:        return new CalendarTimeGridRendererSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarMiniMonthNavigator.cs:16:public sealed class CalendarMiniMonthNavigatorSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarMiniMonthNavigator.cs:18:    public string TestHookId { get; init; } = "calendar-mini-month-navigator";
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarMiniMonthNavigator.cs:37:    public static CalendarMiniMonthNavigatorSnapshot Create(CanvasCalendarSurface surface)
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarMiniMonthNavigator.cs:64:        return new CalendarMiniMonthNavigatorSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarSelectionPanel.cs:3:public sealed class CalendarSelectionPanelSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarSelectionPanel.cs:5:    public string TestHookId { get; init; } = "calendar-selection-panel";
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarSelectionPanel.cs:30:    public static CalendarSelectionPanelSnapshot Create(CanvasCalendarSurface surface)
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarSelectionPanel.cs:37:            return new CalendarSelectionPanelSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarSelectionPanel.cs:49:        return new CalendarSelectionPanelSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarExportMenu.cs:12:public sealed class CalendarExportMenuSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarExportMenu.cs:14:    public string TestHookId { get; init; } = "calendar-export-menu";
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarExportMenu.cs:31:    public static CalendarExportMenuSnapshot Create(CanvasCalendarSurface surface)
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarExportMenu.cs:47:        return new CalendarExportMenuSnapshot
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:6:<CanvasBoundaryCard TestHookId="@Snapshot.TestHookId"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:7:                           Label="@Snapshot.Label"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:8:                           Title="@Snapshot.Title"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:9:                           Summary="@Snapshot.Summary"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:10:                           StatePill="@Snapshot.StatePill"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:11:                           Metrics="@Snapshot.Metrics">
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:13:        @foreach (var format in Snapshot.Formats)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:29:    private string? pendingSnapshotKey;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:32:    public CalendarExportMenuSnapshot Snapshot { get; set; } = default!;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:36:        pendingSnapshotKey = SerializationPersistencePack.Serialize(Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:38:            pendingSnapshotKey,
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:39:            !string.Equals(sceneHost.AppliedStateKey, pendingSnapshotKey, StringComparison.Ordinal));
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:47:            await bridge.InvokeVoidAsync("CanDoItAll.calendarExportMenu.create", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarExportMenu.razor:57:        await bridge.InvokeVoidAsync("CanDoItAll.calendarExportMenu.update", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:6:<CanvasBoundaryCard TestHookId="@Snapshot.TestHookId"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:7:                           Label="@Snapshot.Label"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:8:                           Title="@Snapshot.Title"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:9:                           Summary="@Snapshot.Summary"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:10:                           StatePill="@Snapshot.StatePill"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:11:                           Metrics="@Snapshot.Metrics">
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:14:            <p class="text-lg font-semibold text-slate-950">@Snapshot.EventTitle</p>
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:15:            <p class="mt-1 text-sm text-slate-600">@Snapshot.EventSubtitle</p>
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:16:            <p class="mt-3 text-sm text-slate-700">@Snapshot.TimeRangeLabel</p>
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:23:                    @if (Snapshot.LinkedPlaylists.Count == 0)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:29:                        @foreach (var playlist in Snapshot.LinkedPlaylists)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:43:                    @if (Snapshot.ChecklistRows.Count == 0)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:49:                        @foreach (var row in Snapshot.ChecklistRows)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:69:    private string? pendingSnapshotKey;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:72:    public CalendarSelectionPanelSnapshot Snapshot { get; set; } = default!;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:76:        pendingSnapshotKey = SerializationPersistencePack.Serialize(Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:78:            pendingSnapshotKey,
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:79:            !string.Equals(sceneHost.AppliedStateKey, pendingSnapshotKey, StringComparison.Ordinal));
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:87:            await bridge.InvokeVoidAsync("CanDoItAll.calendarSelectionPanel.create", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarSelectionPanel.razor:97:        await bridge.InvokeVoidAsync("CanDoItAll.calendarSelectionPanel.update", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:6:<CanvasBoundaryCard TestHookId="@Snapshot.TestHookId"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:7:                           Label="@Snapshot.Label"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:8:                           Title="@Snapshot.Title"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:9:                           Summary="@Snapshot.Summary"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:10:                           StatePill="@Snapshot.StatePill"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:11:                           Metrics="@Snapshot.Metrics">
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:13:        @foreach (var operation in Snapshot.Operations)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:31:    private string? pendingSnapshotKey;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:34:    public CalendarCrudBridgeSnapshot Snapshot { get; set; } = default!;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:38:        pendingSnapshotKey = SerializationPersistencePack.Serialize(Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:40:            pendingSnapshotKey,
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:41:            !string.Equals(sceneHost.AppliedStateKey, pendingSnapshotKey, StringComparison.Ordinal));
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:49:            await bridge.InvokeVoidAsync("CanDoItAll.calendarCrudBridge.create", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarCrudBridge.razor:59:        await bridge.InvokeVoidAsync("CanDoItAll.calendarCrudBridge.update", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:6:<CanvasBoundaryCard TestHookId="@Snapshot.TestHookId"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:7:                           Label="@Snapshot.Label"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:8:                           Title="@Snapshot.Title"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:9:                           Summary="@Snapshot.Summary"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:10:                           StatePill="@Snapshot.StatePill"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:11:                           Metrics="@Snapshot.Metrics">
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:14:            <strong class="text-sm text-slate-950">@Snapshot.RangeLabel</strong>
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:18:                @foreach (var label in Snapshot.SlotLabels)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:24:                @for (var index = 0; index < Snapshot.SlotLabels.Count; index++)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:26:                    var top = Snapshot.SlotLabels.Count <= 1 ? 0 : (index * 100d / (Snapshot.SlotLabels.Count - 1));
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:30:                @foreach (var block in Snapshot.Blocks)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:46:    private string? pendingSnapshotKey;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:49:    public CalendarTimeGridRendererSnapshot Snapshot { get; set; } = default!;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:53:        pendingSnapshotKey = SerializationPersistencePack.Serialize(Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:55:            pendingSnapshotKey,
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:56:            !string.Equals(sceneHost.AppliedStateKey, pendingSnapshotKey, StringComparison.Ordinal));
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:64:            await bridge.InvokeVoidAsync("CanDoItAll.calendarTimeGridRenderer.create", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarTimeGridRenderer.razor:74:        await bridge.InvokeVoidAsync("CanDoItAll.calendarTimeGridRenderer.update", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:6:<CanvasBoundaryCard TestHookId="@Snapshot.TestHookId"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:7:                           Label="@Snapshot.Label"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:8:                           Title="@Snapshot.Title"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:9:                           Summary="@Snapshot.Summary"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:10:                           StatePill="@Snapshot.StatePill"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:11:                           Metrics="@Snapshot.Metrics">
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:16:                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">@Snapshot.ModeLabel</p>
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:19:                <span class="rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">@Snapshot.StatePill</span>
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:22:                @foreach (var field in Snapshot.Fields)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:34:            @if (Snapshot.ValidationMessages.Count == 0)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:41:                    @foreach (var message in Snapshot.ValidationMessages)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:54:    private string? pendingSnapshotKey;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:57:    public CalendarEventEditorModalSnapshot Snapshot { get; set; } = default!;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:61:        pendingSnapshotKey = SerializationPersistencePack.Serialize(Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:63:            pendingSnapshotKey,
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:64:            !string.Equals(sceneHost.AppliedStateKey, pendingSnapshotKey, StringComparison.Ordinal));
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:72:            await bridge.InvokeVoidAsync("CanDoItAll.calendarEventEditorModal.create", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarEventEditorModal.razor:82:        await bridge.InvokeVoidAsync("CanDoItAll.calendarEventEditorModal.update", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarEventEditorModal.cs:10:public sealed class CalendarEventEditorModalSnapshot
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarEventEditorModal.cs:12:    public string TestHookId { get; init; } = "calendar-event-editor-modal";
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarEventEditorModal.cs:33:    public static CalendarEventEditorModalSnapshot Create(CanvasCalendarSurface surface)
+src\CanDoItAll.Components.CanvasLib\Canvas\Calendar\CalendarEventEditorModal.cs:75:        return new CalendarEventEditorModalSnapshot
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:6:<CanvasBoundaryCard TestHookId="@Snapshot.TestHookId"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:7:                           Label="@Snapshot.Label"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:8:                           Title="@Snapshot.Title"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:9:                           Summary="@Snapshot.Summary"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:10:                           StatePill="@Snapshot.StatePill"
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:11:                           Metrics="@Snapshot.Metrics">
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:14:            <strong class="text-sm text-slate-950">@Snapshot.MonthLabel</strong>
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:18:            @foreach (var day in Snapshot.Days)
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:39:    private string? pendingSnapshotKey;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:42:    public CalendarMiniMonthNavigatorSnapshot Snapshot { get; set; } = default!;
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:46:        pendingSnapshotKey = SerializationPersistencePack.Serialize(Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:48:            pendingSnapshotKey,
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:49:            !string.Equals(sceneHost.AppliedStateKey, pendingSnapshotKey, StringComparison.Ordinal));
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:57:            await bridge.InvokeVoidAsync("CanDoItAll.calendarMiniMonthNavigator.create", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CalendarMiniMonthNavigator.razor:67:        await bridge.InvokeVoidAsync("CanDoItAll.calendarMiniMonthNavigator.update", host, Snapshot);
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CanvasCalendar.razor:10:    <AccessibilityMirrorLayer Snapshot="@AccessibilitySnapshot" />
+src\CanDoItAll.Components.CanvasLib\Components\Calendar\CanvasCalendar.razor:207:    private AccessibilityMirrorSnapshot AccessibilitySnapshot
+
+## Sandbox calendar callback wiring and deterministic proof state
+81:                                SaveEventAsync="HandleCalendarEventSaveAsync"
+82:                                DeleteEventAsync="HandleCalendarEventDeleteAsync"
+83:                                SearchPlaylistsAsync="HandleCalendarPlaylistSearchAsync"
+84:                                LinkPlaylistAsync="HandleCalendarPlaylistLinkAsync"
+85:                                ClonePlaylistAsync="HandleCalendarPlaylistCloneAsync"
+86:                                UnlinkPlaylistAsync="HandleCalendarPlaylistUnlinkAsync"
+87:                                ExportAsync="HandleCalendarExportAsync" />
+92:                    <p class="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500" data-testid="calendar-export-status">@calendarExportStatus</p>
+122:    private static readonly DateTimeOffset CalendarProofTimestamp = new(2026, 4, 6, 8, 0, 0, TimeSpan.Zero);
+242:    private Task<CanvasCalendarEvent?> HandleCalendarEventSaveAsync(CanvasCalendarSaveRequest request)
+250:    private Task HandleCalendarEventDeleteAsync(CanvasCalendarDeleteRequest request)
+263:    private Task<IReadOnlyList<CanvasCalendarPlaylist>> HandleCalendarPlaylistSearchAsync(CanvasCalendarPlaylistSearchRequest request)
+280:    private Task<CanvasCalendarEvent?> HandleCalendarPlaylistLinkAsync(CanvasCalendarPlaylistMutationRequest request)
+283:    private Task<CanvasCalendarEvent?> HandleCalendarPlaylistCloneAsync(CanvasCalendarPlaylistMutationRequest request)
+286:    private Task<CanvasCalendarEvent?> HandleCalendarPlaylistUnlinkAsync(CanvasCalendarPlaylistMutationRequest request)
+289:    private async Task HandleCalendarExportAsync(CanvasCalendarExportRequest request)
+372:        calendarEvent.UpdatedUtc = CalendarProofTimestamp;
+
+## SB06 verifier invariants and real browser actions
+133:    const mirror = document.querySelector('[data-testid="calendar-accessibility-mirror-layer"]');
+183:      visibleEventCount: visibleMatch ? Number(visibleMatch[1]) : null,
+247:  if (summary.visibleEventCount !== scenario.expectedEvents) {
+248:    throw new Error(`${scenario.name}: expected ${scenario.expectedEvents} visible events, found ${summary.visibleEventCount}`);
+283:async function runScenarioCoverage(browser, actions, consoleEntries, failingConsole) {
+299:        invariantIds: ["SB06-INV-CALENDAR-SCENARIOS", "SB06-INV-PREVIEW-CARDS", "SB06-INV-CALENDAR-A11Y"],
+315:async function runViewportCoverage(browser, actions, consoleEntries, failingConsole) {
+338:        invariantIds: ["SB06-INV-CALENDAR-VIEWPORTS", "SB06-INV-PREVIEW-CARDS", "SB06-INV-CALENDAR-A11Y"],
+353:async function runCalendarInteractions(browser, actions, consoleEntries, failingConsole) {
+449:      "calendar csv export callback");
+469:    await page.locator('.cdi-canvas-calendar-host [data-action="playlist-choice-copy"]').click();
+513:        "SB06-INV-CALENDAR-ACTIONS",
+514:        "SB06-INV-CALENDAR-CRUD",
+515:        "SB06-INV-CALENDAR-EXPORT",
+516:        "SB06-INV-PLAYLISTS"
+554:    await runScenarioCoverage(browser, actions, consoleEntries, failingConsole);
+555:    await runViewportCoverage(browser, actions, consoleEntries, failingConsole);
+556:    await runCalendarInteractions(browser, actions, consoleEntries, failingConsole);
+579:      `VisibleEvents: ${action.summary?.visibleEventCount ?? action.before?.visibleEventCount ?? ""}`,
+
+Result: PASS source assertions found calendar callbacks, contract records, pure JS runtime actions, preview components, sandbox proof wiring, and SB06 verifier invariants.
+ExitCode: 0
+
