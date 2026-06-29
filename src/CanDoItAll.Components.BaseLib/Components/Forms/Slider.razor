@@ -2,11 +2,13 @@
 @typeparam TValue
 
 <input type="range"
-       @attributes='AdditionalAttributes.WithClass("rz-slider h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200")'
+       @attributes='AdditionalAttributes.WithClass("rz-slider h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50")'
+       aria-labelledby="@ResolveLabelledBy()"
        value="@FormatValue(Value)"
        min="@FormatNumber(Min)"
        max="@FormatNumber(Max)"
        step="@FormatNumber(Step)"
+       disabled="@Disabled"
        @onchange="OnChangedAsync"
         />
 
@@ -29,11 +31,22 @@
     [Parameter]
     public object? Step { get; set; } = 1m;
 
+    [Parameter]
+    public bool Disabled { get; set; }
+
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
+    [CascadingParameter(Name = "FormFieldLabelId")]
+    public string? FormFieldLabelId { get; set; }
+
     private async Task OnChangedAsync(ChangeEventArgs args)
     {
+        if (Disabled)
+        {
+            return;
+        }
+
         var text = args.Value?.ToString();
         if (!decimal.TryParse(text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var rawValue)
             && !decimal.TryParse(text, out rawValue))
@@ -97,6 +110,15 @@
         var numeric = ReadDecimal(value);
         return numeric?.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
+
+    private string? ResolveLabelledBy()
+        => HasExplicitAccessibleName() ? null : FormFieldLabelId;
+
+    private bool HasExplicitAccessibleName()
+        => AdditionalAttributes is not null
+            && AdditionalAttributes.Keys.Any(key =>
+                string.Equals(key, "aria-label", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(key, "aria-labelledby", StringComparison.OrdinalIgnoreCase));
 
     private static decimal? ReadDecimal(object? value)
     {

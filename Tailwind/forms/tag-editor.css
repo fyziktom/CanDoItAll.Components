@@ -1,12 +1,7 @@
 @layer components {
   .cad-tag-textedit,
   .zy-tag-textedit {
-    position: relative;
-    display: flex;
-    min-width: 0;
-    flex: 1 1 0%;
-    flex-direction: column;
-    gap: 0.25rem;
+    @apply relative flex min-w-0 w-full max-w-full flex-1 flex-col gap-1;
   }
 
   .cad-tag-textedit:focus-within,
@@ -16,15 +11,10 @@
 
   .cad-tag-textedit__surface,
   .zy-tag-textedit__surface {
-    display: flex;
+    @apply flex min-w-0 max-w-full flex-wrap items-center gap-1.5 rounded-[0.85rem] border px-2 py-1;
     min-height: 2.35rem;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.35rem;
-    border-radius: 0.85rem;
-    border: 1px solid rgba(148, 163, 184, 0.34);
+    border-color: rgba(148, 163, 184, 0.34);
     background: rgba(255, 255, 255, 0.96);
-    padding: 0.28rem 0.55rem;
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
   }
 
@@ -65,20 +55,22 @@
   .zy-tag-textedit__chip,
   .cad-tag-textedit__suggestion,
   .zy-tag-textedit__suggestion {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.2rem;
-    border: 1px solid;
-    border-radius: 999px;
+    @apply inline-flex max-w-full items-center gap-1 rounded-full border;
     padding: 0.08rem 0.4rem;
     font-size: 0.64rem;
     font-weight: 700;
     line-height: 1;
     min-height: 1.15rem !important;
-    white-space: nowrap;
     text-transform: none;
     user-select: none;
     box-shadow: none;
+  }
+
+  .cad-tag-textedit__chip > span:first-child,
+  .zy-tag-textedit__chip > span:first-child,
+  .cad-tag-textedit__suggestion > span:first-child,
+  .zy-tag-textedit__suggestion > span:first-child {
+    @apply min-w-0 truncate;
   }
 
   .cad-tag-textedit__chip,
@@ -207,6 +199,7 @@
   .zy-tag-textedit__input {
     min-width: 4rem;
     flex: 1 1 6rem;
+    max-width: 100%;
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
@@ -231,13 +224,8 @@
     left: 0;
     right: 0;
     z-index: 50;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    min-width: 0;
-    padding: 0.48rem;
-    border: 1px solid rgba(148, 163, 184, 0.28);
-    border-radius: 0.75rem;
+    @apply flex max-h-56 min-w-0 flex-wrap gap-1.5 overflow-auto rounded-xl border p-2;
+    border-color: rgba(148, 163, 184, 0.28);
     background: rgba(255, 255, 255, 0.99);
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
   }

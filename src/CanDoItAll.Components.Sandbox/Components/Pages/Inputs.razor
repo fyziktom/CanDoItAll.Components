@@ -110,6 +110,99 @@
                 </Grid>
             </FormSection>
 
+            <SectionCard Title="Specialized inputs" Description="Composite form helpers prove that wrapping, generated labels, and inline actions stay stable around real controls.">
+                <FormStack data-testid="sandbox-inputs-specialized">
+                    <Fieldset>
+                        <HeaderTemplate>
+                            <span>Scoring and reference fields</span>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <FormRow Split="true">
+                                <FormField Text="Priority threshold">
+                                    <div class="space-y-3" data-testid="sandbox-inputs-slider">
+                                        <Slider TValue="int"
+                                                Value="@AdvancedState.Priority"
+                                                ValueChanged="HandlePriorityChanged"
+                                                Min="0"
+                                                Max="100"
+                                                Step="5"
+                                                Disabled="@IsDisabled"
+                                                data-testid="sandbox-inputs-slider-control" />
+                                        <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+                                            <span>@PriorityLabel</span>
+                                            <StatusBadge Text="@($"{AdvancedState.Priority}%")" Tone="info" />
+                                        </div>
+                                    </div>
+                                </FormField>
+
+                                <FormField Text="Budget reference">
+                                    <PrefixedField Prefix="@BudgetPrefix"
+                                                   Suffix="@BudgetSuffix"
+                                                   StackOnMobile="true"
+                                                   data-testid="sandbox-inputs-prefixed-field">
+                                        <TextBox Value="@AdvancedState.BudgetCode"
+                                                 ValueChanged="HandleBudgetCodeChanged"
+                                                 Immediate="true"
+                                                 Placeholder="@BudgetCodePlaceholder"
+                                                 Disabled="@IsDisabled"
+                                                 Class="cda-input"
+                                                 data-testid="sandbox-inputs-prefixed-field-input" />
+                                    </PrefixedField>
+                                </FormField>
+                            </FormRow>
+                        </ChildContent>
+                    </Fieldset>
+
+                    <Grid Gap="LayoutGap.Large"
+                          ColumnTemplate="repeat(auto-fit,minmax(min(100%,18rem),1fr))">
+                        <FormField Text="Tags">
+                            <TagEditor Value="@AdvancedState.Tags"
+                                       ValueChanged="HandleTagsChanged"
+                                       Suggestions="@TagSuggestions"
+                                       Placeholder="Add review tag"
+                                       Hint="Press comma or Enter to add a tag. Suggestions appear while the field is focused."
+                                       Disabled="@IsDisabled"
+                                       TestId="sandbox-inputs-tag-editor"
+                                       InputTestId="sandbox-inputs-tag-editor-input"
+                                       MaxTags="8"
+                                       MaxLength="36" />
+                        </FormField>
+
+                        <EntityPicker Title="Reviewer lane"
+                                      Description="@ReviewerPickerDescription"
+                                      Items="@ReviewerOptions"
+                                      SelectedId="@AdvancedState.ReviewerId"
+                                      SelectedIdChanged="HandleReviewerChanged"
+                                      Disabled="@IsDisabled"
+                                      data-testid="sandbox-inputs-entity-picker" />
+                    </Grid>
+
+                    <SettingsSwitchRow data-testid="sandbox-inputs-settings-switch">
+                        <div class="min-w-0 space-y-1">
+                            <SettingsSwitchLabel Text="Notify reviewer leads" />
+                            <TextBlock TextStyle="@(TextStyle.Caption)"
+                                       Value="Send a compact summary whenever priority, tags, or selected lane changes." />
+                        </div>
+                        <Switch Value="@AdvancedState.NotifyLeads"
+                                ValueChanged="HandleNotifyLeadsChanged"
+                                AriaLabel="Notify reviewer leads"
+                                Disabled="@IsDisabled"
+                                data-testid="sandbox-inputs-settings-switch-control" />
+                    </SettingsSwitchRow>
+
+                    <InlineActions data-testid="sandbox-inputs-inline-actions">
+                        <Button Text="Reset"
+                                Icon="refresh"
+                                Variant="Variant.Outlined"
+                                Size="ButtonSize.Small"
+                                Disabled="@IsDisabled"
+                                Click="HandleAdvancedReset" />
+                        <StatusBadge Text="@AdvancedSummary" Tone="success" />
+                        <StatusBadge Text="@($"Changes {advancedChangeCount}")" Tone="neutral" />
+                    </InlineActions>
+                </FormStack>
+            </SectionCard>
+
             <SectionCard Title="Inline editable values" Description="Editable switches a displayed property into a shared BaseLib input, then saves the value back to the source item.">
                 <Stack GapScale="LayoutGap.Large" data-testid="sandbox-editable-values">
                     <Grid Gap="LayoutGap.Large"
@@ -281,11 +374,51 @@
         new("Blocked", "Blocked"),
         new("Approved", "Approved")
     ];
+    private static readonly IReadOnlyList<string> TagSuggestions =
+    [
+        "accessibility",
+        "api-contract",
+        "density",
+        "mobile-layout",
+        "publishing",
+        "visual-proof",
+        "wrapping"
+    ];
+    private static readonly IReadOnlyList<EntityPickerItem> ReviewerOptions =
+    [
+        new()
+        {
+            Id = "design-system",
+            Label = "Design system",
+            Description = "Checks visual consistency, spacing, and shared component ownership.",
+            Meta = "UI",
+            Icon = "design_services"
+        },
+        new()
+        {
+            Id = "platform",
+            Label = "Platform foundation",
+            Description = "Reviews base behavior, package readiness, accessibility, and API shape.",
+            Meta = "Base",
+            Icon = "hub"
+        },
+        new()
+        {
+            Id = "release",
+            Label = "Release readiness with a deliberately longer lane name",
+            Description = "Validates publishing notes, proof links, and downstream transfer risks.",
+            Meta = "Publish",
+            Icon = "fact_check"
+        }
+    ];
 
     private int uploadSelectionCount;
     private int uploadedFileCount;
     private long uploadedTotalSizeBytes;
     private IReadOnlyList<string> uploadedFileNames = [];
+    private SandboxScenarioKey advancedStateScenario = SandboxScenarioKey.HappyPath;
+    private AdvancedInputState AdvancedState = CreateAdvancedState(SandboxScenarioKey.HappyPath);
+    private int advancedChangeCount;
     private SandboxScenarioKey editableStateScenario = SandboxScenarioKey.HappyPath;
     private EditableReviewItem EditableState = CreateEditableState(SandboxScenarioKey.HappyPath);
     private int editableSaveCount;
@@ -334,6 +467,35 @@
         ? "Dense scenario notes stay compact but legible."
         : "Explain context, risk, and reviewer expectations.";
 
+    private string PriorityLabel => AdvancedState.Priority switch
+    {
+        >= 85 => "High review priority",
+        >= 55 => "Standard review priority",
+        _ => "Low review priority"
+    };
+
+    private string BudgetPrefix => CurrentScenario == SandboxScenarioKey.LongText
+        ? "fiscal-reference"
+        : "ref";
+
+    private string BudgetSuffix => CurrentScenario == SandboxScenarioKey.LongText
+        ? "approved-usd"
+        : "USD";
+
+    private string BudgetCodePlaceholder => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Long references must not force the control wider than its column."
+        : "Review budget code";
+
+    private string ReviewerPickerDescription => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Long labels and supporting copy must wrap inside the picker without horizontal scrolling."
+        : "Choose the owner lane for this validation pass.";
+
+    private string AdvancedSummary
+        => $"{AdvancedState.Tags.Count} tags | {SelectedReviewerLabel} | {(AdvancedState.NotifyLeads ? "notify" : "quiet")}";
+
+    private string SelectedReviewerLabel
+        => ReviewerOptions.FirstOrDefault(item => item.Id == AdvancedState.ReviewerId)?.Label ?? "No lane";
+
     private string UploadPrimaryText => CurrentScenario switch
     {
         SandboxScenarioKey.LongText => "Drag and drop a longer MusicXML review package without losing the reading rhythm of the surface.",
@@ -362,6 +524,13 @@
 
     protected override void OnParametersSet()
     {
+        if (advancedStateScenario != CurrentScenario)
+        {
+            advancedStateScenario = CurrentScenario;
+            AdvancedState = CreateAdvancedState(CurrentScenario);
+            advancedChangeCount = 0;
+        }
+
         if (editableStateScenario != CurrentScenario)
         {
             editableStateScenario = CurrentScenario;
@@ -412,6 +581,48 @@
 
     private Task HandlePublishChanged(bool value)
     {
+        return Task.CompletedTask;
+    }
+
+    private Task HandlePriorityChanged(int value)
+    {
+        AdvancedState.Priority = value;
+        advancedChangeCount++;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleBudgetCodeChanged(string? value)
+    {
+        AdvancedState.BudgetCode = value ?? string.Empty;
+        advancedChangeCount++;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleTagsChanged(IReadOnlyList<string> value)
+    {
+        AdvancedState.Tags = value;
+        advancedChangeCount++;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleReviewerChanged(string value)
+    {
+        AdvancedState.ReviewerId = value;
+        advancedChangeCount++;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleNotifyLeadsChanged(bool value)
+    {
+        AdvancedState.NotifyLeads = value;
+        advancedChangeCount++;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleAdvancedReset()
+    {
+        AdvancedState = CreateAdvancedState(CurrentScenario);
+        advancedChangeCount++;
         return Task.CompletedTask;
     }
 
@@ -486,6 +697,45 @@
         };
     }
 
+    private static AdvancedInputState CreateAdvancedState(SandboxScenarioKey scenario)
+    {
+        return scenario switch
+        {
+            SandboxScenarioKey.DenseContent => new()
+            {
+                Priority = 82,
+                BudgetCode = "MIG-2026-Q3",
+                Tags = ["density", "publishing", "visual-proof", "wrapping"],
+                ReviewerId = "platform",
+                NotifyLeads = true
+            },
+            SandboxScenarioKey.LongText => new()
+            {
+                Priority = 92,
+                BudgetCode = "COMPONENT-PUBLISHING-READINESS-TRANSFER-REFERENCE",
+                Tags = ["accessibility", "mobile-layout", "publishing", "visual-proof"],
+                ReviewerId = "release",
+                NotifyLeads = true
+            },
+            SandboxScenarioKey.DisabledState => new()
+            {
+                Priority = 44,
+                BudgetCode = "LOCKED-REVIEW",
+                Tags = ["locked", "read-only"],
+                ReviewerId = "design-system",
+                NotifyLeads = false
+            },
+            _ => new()
+            {
+                Priority = 70,
+                BudgetCode = "BASE-READY",
+                Tags = ["accessibility", "publishing"],
+                ReviewerId = "design-system",
+                NotifyLeads = true
+            }
+        };
+    }
+
     private sealed record SelectOption(string Text, string Value);
 
     private sealed record InputFormState(
@@ -498,6 +748,19 @@
         bool RequiresApproval,
         bool PublishExternally,
         string Notes);
+
+    private sealed class AdvancedInputState
+    {
+        public int Priority { get; set; }
+
+        public string BudgetCode { get; set; } = string.Empty;
+
+        public IReadOnlyList<string> Tags { get; set; } = [];
+
+        public string ReviewerId { get; set; } = string.Empty;
+
+        public bool NotifyLeads { get; set; }
+    }
 
     private sealed class EditableReviewItem
     {

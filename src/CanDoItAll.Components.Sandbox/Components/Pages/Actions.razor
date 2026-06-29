@@ -40,6 +40,57 @@
                 </Cluster>
             </SectionCard>
 
+            <SectionCard Title="Icon and badge actions" Description="Icon-only actions, long labels, badges, and chips need stable hit areas and wrapping.">
+                <Grid Gap="LayoutGap.Large"
+                      ColumnTemplate="repeat(auto-fit,minmax(min(100%,16rem),1fr))"
+                      data-testid="sandbox-actions-icon-badge-surface">
+                    <div class="space-y-3">
+                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Icon-only actions" />
+                        <Cluster Gap="LayoutGap.Small">
+                            <Button Icon="visibility"
+                                    Variant="@(Variant.Outlined)"
+                                    ButtonStyle="@(ButtonStyle.Light)"
+                                    Disabled="@IsDisabled"
+                                    data-testid="sandbox-actions-icon-only-view" />
+                            <Button Icon="download"
+                                    Variant="@(Variant.Outlined)"
+                                    ButtonStyle="@(ButtonStyle.Info)"
+                                    Disabled="@IsDisabled"
+                                    data-testid="sandbox-actions-icon-only-download" />
+                            <Button Icon="delete"
+                                    Variant="@(Variant.Text)"
+                                    ButtonStyle="@(ButtonStyle.Danger)"
+                                    Disabled="@IsDisabled"
+                                    data-testid="sandbox-actions-icon-only-delete" />
+                        </Cluster>
+                    </div>
+
+                    <div class="space-y-3">
+                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Long action label" />
+                        <Button Text="@LongActionText"
+                                Icon="rocket_launch"
+                                Variant="@(Variant.Outlined)"
+                                ButtonStyle="@(ButtonStyle.Info)"
+                                Disabled="@IsDisabled"
+                                data-testid="sandbox-actions-long-button" />
+                    </div>
+
+                    <div class="space-y-3">
+                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Badges and chips" />
+                        <BadgesGroup data-testid="sandbox-actions-badge-group">
+                            <Badge Text="Ready" Tone="@(BadgeTone.Success)" />
+                            <Badge Text="@LongBadgeText" Tone="@(BadgeTone.Info)" Button="true" Disabled="@IsDisabled" data-testid="sandbox-actions-badge-button" />
+                            <StatusBadge Text="@LongStatusText" Tone="warning" />
+                        </BadgesGroup>
+
+                        <ChipRow data-testid="sandbox-actions-chip-row">
+                            <Chip Text="Approval" />
+                            <Chip Text="@LongChipText" />
+                        </ChipRow>
+                    </div>
+                </Grid>
+            </SectionCard>
+
             <SectionCard Title="Copy actions" Description="Copy utilities should work as full buttons, square icon buttons, and bare icons while confirming success in place.">
                 <Grid Gap="LayoutGap.Large"
                       Columns="1"
@@ -173,6 +224,22 @@
     private string PrimaryText => CurrentScenario == SandboxScenarioKey.LongText
         ? "Approve shared component update and publish the acceptance proof bundle"
         : "Approve update";
+
+    private string LongActionText => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Open the acceptance evidence package with a deliberately long label"
+        : "Open acceptance evidence";
+
+    private string LongBadgeText => CurrentScenario == SandboxScenarioKey.LongText
+        ? "cross-team proof required before publishing"
+        : "proof required";
+
+    private string LongStatusText => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Waiting on extended screenshot review"
+        : "Waiting proof";
+
+    private string LongChipText => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Long chip label that should wrap without expanding the action row"
+        : "Mobile proof";
 
     private string CopySourceValue => CurrentScenario switch
     {

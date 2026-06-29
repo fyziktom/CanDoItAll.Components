@@ -1,0 +1,81 @@
+@layer components {
+  .cda-entity-picker {
+    @apply flex w-full min-w-0 flex-col gap-3 rounded-2xl border bg-white p-4;
+    border-color: var(--cad-color-border);
+    box-shadow: var(--cad-shadow-soft);
+  }
+
+  .cda-entity-picker[aria-disabled="True"],
+  .cda-entity-picker[aria-disabled="true"] {
+    @apply opacity-70;
+  }
+
+  .cda-entity-picker__header {
+    @apply flex min-w-0 flex-col gap-1;
+  }
+
+  .cda-entity-picker__header h4 {
+    @apply m-0 text-sm font-semibold text-slate-950;
+  }
+
+  .cda-entity-picker__header p {
+    @apply m-0 text-sm leading-6 text-slate-600;
+  }
+
+  .cda-entity-picker__empty {
+    @apply rounded-xl border border-dashed px-4 py-5 text-sm text-slate-500;
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cda-entity-picker__list {
+    @apply grid min-w-0 gap-2;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+
+  .cda-entity-picker__item {
+    @apply flex min-w-0 flex-wrap items-start gap-3 rounded-xl border px-3 py-3 text-left transition;
+    border-color: var(--cad-color-border);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text);
+  }
+
+  .cda-entity-picker__item:hover:not(:disabled) {
+    border-color: var(--cad-tone-primary-soft-border);
+    background: var(--cad-tone-primary-soft-bg);
+  }
+
+  .cda-entity-picker__item:focus-visible {
+    @apply outline-none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cad-tone-primary-soft-bg) 78%, transparent);
+  }
+
+  .cda-entity-picker__item:disabled {
+    @apply cursor-not-allowed opacity-55;
+  }
+
+  .cda-entity-picker__item--selected {
+    border-color: var(--cad-tone-primary-border);
+    background: var(--cad-tone-primary-soft-bg);
+  }
+
+  .cda-entity-picker__item .material-icons {
+    @apply mt-0.5 shrink-0 text-xl text-slate-500;
+  }
+
+  .cda-entity-picker__item > span:not(.material-icons) {
+    @apply flex min-w-[9rem] flex-1 flex-col gap-1;
+  }
+
+  .cda-entity-picker__item strong {
+    @apply min-w-0 break-words text-sm font-semibold text-slate-950;
+  }
+
+  .cda-entity-picker__item small {
+    @apply min-w-0 break-words text-xs leading-5 text-slate-600;
+  }
+
+  .cda-entity-picker__item em {
+    @apply ml-8 shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[0.68rem] not-italic text-slate-600 sm:ml-auto;
+  }
+}

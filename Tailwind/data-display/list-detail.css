@@ -1,0 +1,18 @@
+@layer components {
+  .cda-list-detail-shell {
+    @apply h-full min-h-0 w-full max-w-full flex-1;
+    container-type: inline-size;
+  }
+
+  .cda-list-detail-shell__grid {
+    @apply grid h-full min-h-0 w-full max-w-full;
+    gap: var(--cda-list-detail-gap, 1.5rem);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @container (min-width: 46rem) {
+    .cda-list-detail-shell__grid {
+      grid-template-columns: minmax(0, var(--list-pane-width, 24rem)) minmax(18rem, 1fr);
+    }
+  }
+}

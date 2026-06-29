@@ -26,9 +26,11 @@
         <SectionCard Title="Basic tabs" Description="Start from a calm, readable default with a clear selected state and a panel that feels attached to the active tab.">
             <Tabs SelectedIndex="@selectedTabIndex"
                   SelectedIndexChanged="HandleSelectedTabChanged"
+                  data-testid="sandbox-navigation-basic-tabs"
                   Variant="@(TabsVariant.WorkspacePrimary)"
                   BorderMode="@(TabsBorderMode.Soft)"
                   Tone="@(TabsTone.Primary)"
+                  OverflowMode="@(TabsOverflowMode.Wrap)"
                   AriaLabel="Sandbox navigation tabs">
                 <TabItems>
                     <TabsItem Text="Overview" Icon="bars_staggered">
@@ -48,9 +50,11 @@
             <div class="space-y-4">
                 <Tabs SelectedIndex="@advancedTabIndex"
                       SelectedIndexChanged="HandleAdvancedTabChanged"
+                      data-testid="sandbox-navigation-advanced-tabs"
                       Variant="@(TabsVariant.WorkspaceSecondary)"
                       BorderMode="@(TabsBorderMode.Soft)"
                       Tone="@(TabsTone.Info)"
+                      OverflowMode="@(TabsOverflowMode.Wrap)"
                       Class="rounded-[1.5rem] border border-sky-200/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(240,249,255,0.95)_100%)] p-3 shadow-[0_18px_40px_-32px_rgba(14,116,144,0.3)]"
                       AriaLabel="Advanced sandbox navigation tabs">
                     <TabItems>
@@ -75,10 +79,102 @@
             </div>
         </SectionCard>
 
+        <SectionCard Title="Toolbar, tree, and context menu" Description="Shared navigation utilities should keep filtering, selection, and right-click actions predictable in one compact work area.">
+            <Stack GapScale="LayoutGap.Large">
+                <Toolbar data-testid="sandbox-navigation-toolbar">
+                    <ToolbarRow>
+                        <ToolbarFields>
+                            <TextBox Value="@toolbarQuery"
+                                     ValueChanged="HandleToolbarQueryChanged"
+                                     Immediate="true"
+                                     Placeholder="Filter standard navigation"
+                                     aria-label="Filter standard navigation"
+                                     data-testid="sandbox-navigation-toolbar-query" />
+                            <DropDown TValue="string"
+                                      Data="@ToolbarScopes"
+                                      Value="@toolbarScope"
+                                      ValueChanged="HandleToolbarScopeChanged"
+                                      aria-label="Navigation scope"
+                                      data-testid="sandbox-navigation-toolbar-scope" />
+                        </ToolbarFields>
+                        <ToolbarActions>
+                            <Button Text="Reset"
+                                    ButtonStyle="@(ButtonStyle.Light)"
+                                    Variant="@(Variant.Outlined)"
+                                    Click="@ResetNavigationTools"
+                                    data-testid="sandbox-navigation-toolbar-reset" />
+                        </ToolbarActions>
+                    </ToolbarRow>
+                </Toolbar>
+
+                <Grid Gap="LayoutGap.Large"
+                      ColumnTemplate="minmax(0,1fr)"
+                      ColumnTemplateLg="minmax(16rem,0.85fr) minmax(0,1.15fr)">
+                    <div class="relative min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60"
+                         data-testid="sandbox-navigation-tree-panel">
+                        <TreeView Items="@TreeNodes"
+                                  Style="@(TreeViewStyle.Workbench)"
+                                  AriaLabel="Standard component navigation tree"
+                                  EmptyText="No navigation nodes match the current filter."
+                                  OnSelect="SelectTreeNode"
+                                  OnToggle="ToggleTreeNode"
+                                  OnContextMenu="OpenTreeContextMenu"
+                                  data-testid="sandbox-navigation-tree" />
+                        <ContextMenu data-testid="sandbox-navigation-context-menu-host" />
+
+                        @if (treeContextMenuRequest is not null)
+                        {
+                            <div class="fixed z-[88] w-[min(18rem,calc(100vw-2rem))] rounded-[1rem] border border-slate-200 bg-white p-3 text-sm shadow-[0_18px_48px_rgba(15,23,42,0.18)]"
+                                 style="@ResolveTreeContextMenuStyle()"
+                                 data-testid="sandbox-navigation-tree-context-menu"
+                                 @onclick:stopPropagation="true">
+                                <div class="space-y-1">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Tree action</p>
+                                    <p class="break-words font-semibold text-slate-900">@ResolveTreeNodeLabel(treeContextMenuRequest.NodeId)</p>
+                                </div>
+                                <div class="mt-3 grid gap-2">
+                                    <button type="button"
+                                            class="rounded-lg border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700 transition hover:bg-slate-50"
+                                            @onclick="FocusTreeContextNode"
+                                            data-testid="sandbox-navigation-tree-context-focus">
+                                        Select node
+                                    </button>
+                                    <button type="button"
+                                            class="rounded-lg border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700 transition hover:bg-slate-50"
+                                            @onclick="CloseTreeContextMenu"
+                                            data-testid="sandbox-navigation-tree-context-close">
+                                        Close menu
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-4"
+                         data-testid="sandbox-navigation-tree-detail">
+                        <Stack GapScale="LayoutGap.Medium">
+                            <div class="space-y-1">
+                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@ResolveTreeNodeLabel(selectedTreeNodeId)" />
+                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@ResolveTreeNodeSummary(selectedTreeNodeId)" />
+                            </div>
+                            <Cluster Gap="LayoutGap.Small">
+                                <StatusBadge Text="@toolbarScope" Tone="info" />
+                                <StatusBadge Text="@TreeFilterStatus" Tone="success" />
+                                <StatusBadge Text="@ExpandedTreeStatus" Tone="warning" />
+                            </Cluster>
+                        </Stack>
+                    </div>
+                </Grid>
+            </Stack>
+        </SectionCard>
+
         <div class="sandbox-demo-grid sandbox-demo-grid--two">
             <SectionCard Title="Steps" Description="Step flow should read clearly at a glance and support linear progression.">
                 <Steps Value="@stepIndex"
                        ValueChanged="HandleStepChanged"
+                       data-testid="sandbox-navigation-steps"
+                       PreviousButtonTestId="sandbox-navigation-steps-previous"
+                       NextButtonTestId="sandbox-navigation-steps-next"
                        NavigationPosition="@(StepsNavigationPosition.Both)"
                        Linear="@IsDisabled">
                     <StepsItem Text="Scope" Description="Frame the request and choose the demo group.">
@@ -94,7 +190,8 @@
             </SectionCard>
 
             <SectionCard Title="List-detail shell" Description="Selection and detail context should stay readable with or without a chosen item.">
-                <ListDetailShell ListPaneWidth="20rem">
+                <ListDetailShell ListPaneWidth="20rem"
+                                 data-testid="sandbox-navigation-list-detail">
                     <ListHeader>
                         <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Navigation items" />
                     </ListHeader>
@@ -145,6 +242,26 @@
     private int advancedTabIndex = 1;
     private int stepIndex = 1;
     private string selectedItemId = "overview";
+    private string toolbarQuery = string.Empty;
+    private string toolbarScope = ToolbarScopeAll;
+    private string selectedTreeNodeId = "navigation-tabs";
+    private TreeViewNodeContextMenuRequest? treeContextMenuRequest;
+    private readonly HashSet<string> expandedTreeNodeIds = new(StringComparer.Ordinal)
+    {
+        "navigation-foundations",
+        "navigation-controls"
+    };
+
+    private const string ToolbarScopeAll = "All standard groups";
+    private const string ToolbarScopeNavigation = "Navigation only";
+    private const string ToolbarScopeOverlays = "Overlay dependencies";
+
+    private static readonly IReadOnlyList<string> ToolbarScopes =
+    [
+        ToolbarScopeAll,
+        ToolbarScopeNavigation,
+        ToolbarScopeOverlays
+    ];
 
     private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
 
@@ -155,6 +272,14 @@
     private IReadOnlyList<NavigationItem> NavigationItems => CurrentScenario == SandboxScenarioKey.DenseContent
         ? DenseNavigationItems
         : BaseNavigationItems;
+
+    private IReadOnlyList<TreeViewNode> TreeNodes => FilterTreeNodes(ResolveScopedTreeNodes());
+
+    private string TreeFilterStatus => string.IsNullOrWhiteSpace(toolbarQuery)
+        ? "Unfiltered"
+        : $"Filtered: {toolbarQuery}";
+
+    private string ExpandedTreeStatus => $"{expandedTreeNodeIds.Count} expanded";
 
     private NavigationItem SelectedItem => NavigationItems.FirstOrDefault(item => string.Equals(item.Id, selectedItemId, StringComparison.Ordinal)) ?? NavigationItems[0];
 
@@ -176,10 +301,240 @@
         return Task.CompletedTask;
     }
 
+    private Task HandleToolbarQueryChanged(string? value)
+    {
+        toolbarQuery = value ?? string.Empty;
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleToolbarScopeChanged(string? value)
+    {
+        toolbarScope = string.IsNullOrWhiteSpace(value)
+            ? ToolbarScopeAll
+            : value;
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    private Task ResetNavigationTools()
+    {
+        toolbarQuery = string.Empty;
+        toolbarScope = ToolbarScopeAll;
+        selectedTreeNodeId = "navigation-tabs";
+        treeContextMenuRequest = null;
+        expandedTreeNodeIds.Clear();
+        expandedTreeNodeIds.Add("navigation-foundations");
+        expandedTreeNodeIds.Add("navigation-controls");
+        return Task.CompletedTask;
+    }
+
     private void SelectItem(string id)
     {
         selectedItemId = id;
     }
+
+    private Task SelectTreeNode(string id)
+    {
+        selectedTreeNodeId = id;
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    private Task ToggleTreeNode(string id)
+    {
+        if (!expandedTreeNodeIds.Add(id))
+        {
+            expandedTreeNodeIds.Remove(id);
+        }
+
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    private Task OpenTreeContextMenu(TreeViewNodeContextMenuRequest request)
+    {
+        selectedTreeNodeId = request.NodeId;
+        treeContextMenuRequest = request;
+        return Task.CompletedTask;
+    }
+
+    private Task FocusTreeContextNode()
+    {
+        if (treeContextMenuRequest is not null)
+        {
+            selectedTreeNodeId = treeContextMenuRequest.NodeId;
+        }
+
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    private void CloseTreeContextMenu()
+    {
+        treeContextMenuRequest = null;
+    }
+
+    private string ResolveTreeContextMenuStyle()
+    {
+        var x = Math.Max(16, treeContextMenuRequest?.ClientX ?? 16);
+        var y = Math.Max(16, treeContextMenuRequest?.ClientY ?? 16);
+        return FormattableString.Invariant($"left:clamp(1rem,{x}px,calc(100vw - 18rem));top:clamp(1rem,{y}px,calc(100vh - 12rem));");
+    }
+
+    private IReadOnlyList<TreeViewNode> ResolveScopedTreeNodes()
+    {
+        var foundationNode = CreateBranch(
+            "navigation-foundations",
+            CurrentScenario == SandboxScenarioKey.LongText ? "Layout and shell foundations" : "Foundations",
+            "bars_staggered",
+            "Core layout and shell primitives.",
+            "sandbox-navigation-tree-foundations",
+            "sandbox-navigation-tree-foundations-children",
+            [
+                CreateLeaf("navigation-page-scaffold", "Page scaffold", "Reusable page width and rail structure.", "space_dashboard", "sandbox-navigation-tree-page-scaffold"),
+                CreateLeaf("navigation-list-detail", "List-detail shell", "Shared list and detail layout with stable pane widths.", "view_sidebar", "sandbox-navigation-tree-list-detail")
+            ]);
+
+        var controlsNode = CreateBranch(
+            "navigation-controls",
+            CurrentScenario == SandboxScenarioKey.LongText ? "Tabs, steps, toolbar and tree controls" : "Navigation controls",
+            "account_tree",
+            "Standard movement and selection primitives.",
+            "sandbox-navigation-tree-controls",
+            "sandbox-navigation-tree-controls-children",
+            [
+                CreateLeaf("navigation-tabs", LongTabText, "Workspace tabs with wrapping and active-state proof.", "tab", "sandbox-navigation-tree-tabs"),
+                CreateLeaf("navigation-steps", "Steps", "Linear and selectable step movement.", "timeline", "sandbox-navigation-tree-steps"),
+                CreateLeaf("navigation-toolbar", "Toolbar", "Shared sheet toolbar structure for filters and actions.", "tune", "sandbox-navigation-tree-toolbar"),
+                CreateLeaf("navigation-tree", "Tree view", "Hierarchical navigation with context-menu requests.", "account_tree", "sandbox-navigation-tree-treeview")
+            ]);
+
+        var overlayNode = CreateBranch(
+            "navigation-overlays",
+            CurrentScenario == SandboxScenarioKey.LongText ? "Overlay hosts and contextual surfaces" : "Overlay dependencies",
+            "layers",
+            "Overlay primitives reached from navigation flows.",
+            "sandbox-navigation-tree-overlays",
+            "sandbox-navigation-tree-overlays-children",
+            [
+                CreateLeaf("navigation-context-menu", "Context menu", "Right-click action surface connected to TreeView.", "ads_click", "sandbox-navigation-tree-context-node"),
+                CreateLeaf("navigation-dialog-host", "Dialog host", "Shared modal host used by page-level actions.", "capture", "sandbox-navigation-tree-dialog-host"),
+                CreateLeaf("navigation-overlay-window", "Overlay window", "Floating overlay window with bounded geometry.", "open_in_new", "sandbox-navigation-tree-overlay-window")
+            ]);
+
+        return toolbarScope switch
+        {
+            ToolbarScopeNavigation => [foundationNode, controlsNode],
+            ToolbarScopeOverlays => [overlayNode],
+            _ => [foundationNode, controlsNode, overlayNode]
+        };
+    }
+
+    private IReadOnlyList<TreeViewNode> FilterTreeNodes(IReadOnlyList<TreeViewNode> nodes)
+    {
+        if (string.IsNullOrWhiteSpace(toolbarQuery))
+        {
+            return nodes;
+        }
+
+        var query = toolbarQuery.Trim();
+        return nodes
+            .Select(node => FilterTreeNode(node, query))
+            .Where(node => node is not null)
+            .Cast<TreeViewNode>()
+            .ToArray();
+    }
+
+    private static TreeViewNode? FilterTreeNode(TreeViewNode node, string query)
+    {
+        var filteredChildren = node.Children
+            .Select(child => FilterTreeNode(child, query))
+            .Where(child => child is not null)
+            .Cast<TreeViewNode>()
+            .ToArray();
+
+        var isMatch = node.Text.Contains(query, StringComparison.OrdinalIgnoreCase)
+            || node.Tooltip.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+        if (!isMatch && filteredChildren.Length == 0)
+        {
+            return null;
+        }
+
+        return node with
+        {
+            Children = filteredChildren,
+            IsExpanded = true
+        };
+    }
+
+    private TreeViewNode CreateBranch(
+        string id,
+        string text,
+        string icon,
+        string tooltip,
+        string dataTestId,
+        string childrenDataTestId,
+        IReadOnlyList<TreeViewNode> children)
+        => new()
+        {
+            Id = id,
+            Text = text,
+            Icon = icon,
+            Tooltip = tooltip,
+            BadgeText = children.Count.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            Children = children,
+            ChildrenDataTestId = childrenDataTestId,
+            DataTestId = dataTestId,
+            IsExpanded = expandedTreeNodeIds.Contains(id),
+            IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal)
+        };
+
+    private TreeViewNode CreateLeaf(string id, string text, string tooltip, string icon, string dataTestId)
+        => new()
+        {
+            Id = id,
+            Text = text,
+            Icon = icon,
+            Tooltip = tooltip,
+            DataTestId = dataTestId,
+            IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal),
+            IsDisabled = CurrentScenario == SandboxScenarioKey.DisabledState && string.Equals(id, "navigation-context-menu", StringComparison.Ordinal)
+        };
+
+    private static string ResolveTreeNodeLabel(string id)
+        => id switch
+        {
+            "navigation-foundations" => "Foundations",
+            "navigation-page-scaffold" => "Page scaffold",
+            "navigation-list-detail" => "List-detail shell",
+            "navigation-controls" => "Navigation controls",
+            "navigation-tabs" => "Tabs",
+            "navigation-steps" => "Steps",
+            "navigation-toolbar" => "Toolbar",
+            "navigation-tree" => "Tree view",
+            "navigation-overlays" => "Overlay dependencies",
+            "navigation-context-menu" => "Context menu",
+            "navigation-dialog-host" => "Dialog host",
+            "navigation-overlay-window" => "Overlay window",
+            _ => "Navigation node"
+        };
+
+    private static string ResolveTreeNodeSummary(string id)
+        => id switch
+        {
+            "navigation-page-scaffold" => "PageScaffold keeps page width, rails, and section flow consistent.",
+            "navigation-list-detail" => "ListDetailShell protects list and detail panes from accidental width collapse.",
+            "navigation-tabs" => "Tabs handle selection, keyboard movement, wrapping, scrolling, and disabled states.",
+            "navigation-steps" => "Steps keep linear progression clear while allowing controlled navigation.",
+            "navigation-toolbar" => "Toolbar groups filters and actions without custom page chrome.",
+            "navigation-tree" => "TreeView supports hierarchical selection, expansion, and context-menu requests.",
+            "navigation-context-menu" => "Context-menu behavior should stay bounded, closeable, and connected to the selected node.",
+            "navigation-dialog-host" => "DialogHost owns modal layering so page content can stay focused.",
+            "navigation-overlay-window" => "OverlayWindow adds a bounded floating surface for complex supporting tools.",
+            _ => "Shared navigation components should remain readable under dense, long-text, and mobile conditions."
+        };
 
     private static readonly IReadOnlyList<NavigationItem> BaseNavigationItems =
     [

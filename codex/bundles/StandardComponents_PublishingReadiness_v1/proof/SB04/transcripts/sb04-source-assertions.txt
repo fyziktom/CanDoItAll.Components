@@ -1,0 +1,73 @@
+﻿Command: Historical proof transcript normalized for completed-stage validation (codex\bundles\StandardComponents_PublishingReadiness_v1\proof\SB04\transcripts\sb04-source-assertions.txt)
+ExitCode: 0
+
+SB04 source assertions
+
+Canonical migration result:
+- AppComponents now keeps only app-specific shell, tab strip, and tuning boundary source.
+- Parked basic duplicate components and primitive/helper source were deleted from the main repo.
+- BaseLib Button now carries the useful old in-flight click guard.
+- Main AppComponents and CanDoItAll.Web builds pass after deletion.
+
+Changed file hashes:
+2E5B8FEB9A5489BD93D2A4CE8C48A42EEC0437FB7E604087D36A9104C3253A5E  src/CanDoItAll.Components.BaseLib/Components/Buttons/Button.razor
+B70D2E3DF0A59C7D1DFD65D38B2D463AC4884DEE71745A24E2E6CF96EAAEF779  tests/CanDoItAll.Components.BaseLib.Tests/ButtonBehaviorTests.cs
+036CFB89792B401543F626AFBDD90DBB600080DC2933F70C4B617817F3083E12  codex/bundles/StandardComponents_PublishingReadiness_v1/scripts/verify-sb04.mjs
+9C189CDC1DDC5AF5089669719B02F1FD3FEF6D962F6F87A100087BE4CB921E35  codex/bundles/StandardComponents_PublishingReadiness_v1/proof/SB04/data/appcomponents-migration-matrix.md
+0CBE8B355CA691CB635ADF339494BC77C24694CF648661312BDD1FB3BDB81F06  codex/bundles/StandardComponents_PublishingReadiness_v1/proof/SB04/data/sb04-actions-visual-smoke.json
+1A5B9C8F79ABA55C8D4A7F2CA864EA33A36D7F980E56A25C0C4DA8E5C2E59840  codex/bundles/StandardComponents_PublishingReadiness_v1/proof/SB04/transcripts/sb04-playwright-mcp-actions-visual.txt
+36AF1AB6AA3A40F4AF1E26698D0866B920F97B893F40CFFE8E13F5AAF088C092  C:/repositories/CanDoItAll/src/CanDoItAll.AppComponents/CanDoItAll.AppComponents.csproj
+
+Main repo AppComponents diff name-status:
+M	src/CanDoItAll.AppComponents/CanDoItAll.AppComponents.csproj
+D	src/CanDoItAll.AppComponents/Components/Alert.razor
+D	src/CanDoItAll.AppComponents/Components/Body.razor
+D	src/CanDoItAll.AppComponents/Components/Button.razor
+D	src/CanDoItAll.AppComponents/Components/Card.razor
+D	src/CanDoItAll.AppComponents/Components/CategoryAxis.razor
+D	src/CanDoItAll.AppComponents/Components/Chart.razor
+D	src/CanDoItAll.AppComponents/Components/CheckBox.razor
+D	src/CanDoItAll.AppComponents/Components/Column.razor
+D	src/CanDoItAll.AppComponents/Components/ContextMenu.razor
+D	src/CanDoItAll.AppComponents/Components/DataGrid.razor
+D	src/CanDoItAll.AppComponents/Components/DataGridColumn.razor
+D	src/CanDoItAll.AppComponents/Components/Dialog.razor
+D	src/CanDoItAll.AppComponents/Components/DropDown.razor
+D	src/CanDoItAll.AppComponents/Components/DropDownOption.cs
+D	src/CanDoItAll.AppComponents/Components/Fieldset.razor
+D	src/CanDoItAll.AppComponents/Components/FormField.razor
+D	src/CanDoItAll.AppComponents/Components/GridLines.razor
+D	src/CanDoItAll.AppComponents/Components/Header.razor
+D	src/CanDoItAll.AppComponents/Components/Icon.razor
+D	src/CanDoItAll.AppComponents/Components/Layout.razor
+D	src/CanDoItAll.AppComponents/Components/LineSeries.razor
+D	src/CanDoItAll.AppComponents/Components/Notification.razor
+D	src/CanDoItAll.AppComponents/Components/Numeric.razor
+D	src/CanDoItAll.AppComponents/Components/Password.razor
+D	src/CanDoItAll.AppComponents/Components/ProgressBar.razor
+D	src/CanDoItAll.AppComponents/Components/Row.razor
+D	src/CanDoItAll.AppComponents/Components/Sidebar.razor
+D	src/CanDoItAll.AppComponents/Components/Slider.razor
+D	src/CanDoItAll.AppComponents/Components/Stack.razor
+D	src/CanDoItAll.AppComponents/Components/Steps.razor
+D	src/CanDoItAll.AppComponents/Components/StepsItem.razor
+D	src/CanDoItAll.AppComponents/Components/Switch.razor
+D	src/CanDoItAll.AppComponents/Components/Tabs.razor
+D	src/CanDoItAll.AppComponents/Components/TabsItem.razor
+D	src/CanDoItAll.AppComponents/Components/TextArea.razor
+D	src/CanDoItAll.AppComponents/Components/TextBlock.razor
+D	src/CanDoItAll.AppComponents/Components/TextBox.razor
+D	src/CanDoItAll.AppComponents/Components/Tooltip.razor
+D	src/CanDoItAll.AppComponents/Components/ValueAxis.razor
+D	src/CanDoItAll.AppComponents/Primitives/ComponentPrimitives.cs
+
+Remaining AppComponents component files:
+AppShell.razor
+AppShellMode.cs
+AppShellNavigationMode.cs
+AppTabStrip.razor
+TunableComponentBoundary.razor
+TuningBoundaryRequest.cs
+
+Duplicate primitive/helper scan:
+No standard primitive/helper duplicate matches remain in AppComponents source.

@@ -1,7 +1,12 @@
 @layer components {
   .cda-button {
-    @apply inline-flex items-center justify-center gap-2 border font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex max-w-full min-w-0 items-center justify-center gap-2 border font-semibold leading-snug transition-colors disabled:cursor-not-allowed disabled:opacity-50;
     border-radius: var(--cad-radius-control);
+  }
+
+  .cda-button .rz-button-text {
+    @apply min-w-0 max-w-full;
+    overflow-wrap: anywhere;
   }
 
   .cda-button--size-sm {
@@ -201,63 +206,56 @@
   }
 
   .cda-button__token {
-    @apply text-[10px] font-bold uppercase tracking-[0.18em];
+    @apply min-w-0 text-[10px] font-bold uppercase tracking-[0.18em];
+    overflow-wrap: anywhere;
   }
 
   .cda-copy-button {
-    position: relative;
+    @apply relative;
   }
 
   .cda-copy-button .cda-material-icon {
-    line-height: 1;
+    @apply leading-none;
   }
 
   .cda-copy-button.cda-copy-button--icon-button {
-    justify-content: center;
-    padding-inline: 0;
+    @apply justify-center px-0;
   }
 
   .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-xs {
-    min-width: 1.75rem;
-    min-height: 1.75rem;
-    padding: 0;
+    @apply min-h-7 min-w-7 p-0;
   }
 
   .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-sm {
-    min-width: 2rem;
-    min-height: 2rem;
+    @apply min-h-8 min-w-8;
   }
 
   .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-md {
-    min-width: 2.5rem;
-    min-height: 2.5rem;
+    @apply min-h-10 min-w-10;
   }
 
   .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-lg {
-    min-width: 3rem;
-    min-height: 3rem;
+    @apply min-h-12 min-w-12;
   }
 
   .cda-copy-button.cda-copy-button--size-xs {
-    gap: 0.35rem;
-    padding: 0.35rem 0.6rem;
-    font-size: 0.72rem;
+    @apply gap-[0.35rem] px-[0.6rem] py-[0.35rem] text-[0.72rem];
   }
 
   .cda-copy-button.cda-copy-button--size-xs .cda-material-icon {
-    font-size: 0.95rem;
+    @apply text-[0.95rem];
   }
 
   .cda-copy-button.cda-copy-button--size-sm .cda-material-icon {
-    font-size: 1rem;
+    @apply text-base;
   }
 
   .cda-copy-button.cda-copy-button--size-md .cda-material-icon {
-    font-size: 1.1rem;
+    @apply text-[1.1rem];
   }
 
   .cda-copy-button.cda-copy-button--size-lg .cda-material-icon {
-    font-size: 1.25rem;
+    @apply text-xl;
   }
 
   .cda-copy-button[data-copy-state="copied"] {
@@ -266,14 +264,9 @@
   }
 
   .cda-copy-button-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 0;
+    @apply inline-flex cursor-pointer items-center justify-center border-0 bg-transparent;
     border-radius: var(--cad-radius-control);
-    background: transparent;
     color: var(--cad-tone-light-soft-fg);
-    cursor: pointer;
     transition:
       background-color 140ms ease,
       color 140ms ease,
@@ -286,12 +279,11 @@
   }
 
   .cda-copy-button-icon:active:not(:disabled) {
-    transform: translateY(1px);
+    @apply translate-y-px;
   }
 
   .cda-copy-button-icon:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+    @apply cursor-not-allowed opacity-50;
   }
 
   .cda-copy-button-icon--copied {
@@ -299,43 +291,39 @@
   }
 
   .cda-copy-button__glyph {
-    line-height: 1;
+    @apply leading-none;
   }
 
   .cda-copy-button-icon.cda-copy-button--size-xs {
-    width: 1.75rem;
-    height: 1.75rem;
+    @apply h-7 w-7;
   }
 
   .cda-copy-button-icon.cda-copy-button--size-sm {
-    width: 2rem;
-    height: 2rem;
+    @apply h-8 w-8;
   }
 
   .cda-copy-button-icon.cda-copy-button--size-md {
-    width: 2.5rem;
-    height: 2.5rem;
+    @apply h-10 w-10;
   }
 
   .cda-copy-button-icon.cda-copy-button--size-lg {
-    width: 3rem;
-    height: 3rem;
+    @apply h-12 w-12;
   }
 
   .cda-copy-button__glyph.cda-copy-button--size-xs {
-    font-size: 0.95rem;
+    @apply text-[0.95rem];
   }
 
   .cda-copy-button__glyph.cda-copy-button--size-sm {
-    font-size: 1rem;
+    @apply text-base;
   }
 
   .cda-copy-button__glyph.cda-copy-button--size-md {
-    font-size: 1.15rem;
+    @apply text-[1.15rem];
   }
 
   .cda-copy-button__glyph.cda-copy-button--size-lg {
-    font-size: 1.3rem;
+    @apply text-[1.3rem];
   }
 
   .cda-button--quick {

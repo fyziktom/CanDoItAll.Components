@@ -13,7 +13,7 @@
   }
 
   .cda-treeview__row-shell {
-    @apply flex min-w-0 w-full max-w-full items-center gap-1;
+    @apply flex min-w-0 w-full max-w-full items-start gap-1;
     padding-left: calc(var(--cda-treeview-level, 0) * 0.85rem);
   }
 
@@ -33,7 +33,7 @@
   }
 
   .cda-treeview__row {
-    @apply flex min-w-0 w-full max-w-full flex-1 items-center gap-2 overflow-hidden border px-2.5 py-2 text-left text-sm transition;
+    @apply flex min-w-0 w-full max-w-full flex-1 items-start gap-2 overflow-hidden border px-2.5 py-2 text-left text-sm transition;
     border-radius: var(--cad-radius-control);
     border-color: transparent;
     color: var(--cad-color-text);
@@ -64,11 +64,11 @@
   }
 
   .cda-treeview__text {
-    @apply min-w-0 flex-1 truncate;
+    @apply min-w-0 flex-1 whitespace-normal break-words leading-5;
   }
 
   .cda-treeview__badge {
-    @apply shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em];
+    @apply mt-0.5 shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em];
     border-radius: 9999px;
     background: var(--cad-tone-base-soft-bg);
     color: var(--cad-tone-base-soft-fg);

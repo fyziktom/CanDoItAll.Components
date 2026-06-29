@@ -97,6 +97,11 @@
 
     private async Task OnChangedAsync(ChangeEventArgs args)
     {
+        if (Disabled)
+        {
+            return;
+        }
+
         var key = args.Value?.ToString();
         TValue? next = default;
 
@@ -171,7 +176,7 @@
         return Look switch
         {
             InputLook.Plain => string.Empty,
-            _ => "rz-select w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800"
+            _ => "rz-select min-w-0 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
         };
     }
 

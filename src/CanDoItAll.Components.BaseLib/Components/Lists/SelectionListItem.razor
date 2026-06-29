@@ -3,7 +3,7 @@
 
 <div @attributes='BuildAttributes(ResolveContainerClass())'>
     <Cluster AlignItems="AlignItems.Start"
-             Wrap="FlexWrap.NoWrap"
+             Wrap="FlexWrap.Wrap"
              Gap="@(Dense ? LayoutGap.Small : LayoutGap.Medium)">
         <button type="button"
                 class="cda-selection-list-item__button min-w-0 flex-1 text-left"
@@ -17,7 +17,7 @@
                 <Stack GapScale="LayoutGap.Tiny"
                        Class="min-w-0">
                     <Cluster>
-                        <p class="cda-selection-list-item__title truncate text-sm font-semibold text-slate-950">@Title</p>
+                        <p class="cda-selection-list-item__title text-sm font-semibold leading-5 text-slate-950">@Title</p>
                         @if (!string.IsNullOrWhiteSpace(Eyebrow))
                         {
                             <Pill Tone="PillTone.Label" Text="@Eyebrow" />
@@ -53,7 +53,7 @@
 
         @if (Actions is not null)
         {
-            <div class="shrink-0">
+            <div class="cda-selection-list-item__actions min-w-0 w-full sm:w-auto">
                 @Actions
             </div>
         }

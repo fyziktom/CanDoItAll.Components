@@ -114,8 +114,9 @@
                 <Grid ColumnsLg="2" Columns2Xl="3" Gap="@(LayoutGap.Medium)" Class="sandbox-mermaid-gallery" data-testid="mermaid-gallery">
                     @foreach (var example in GalleryExamples)
                     {
-                        <div class="sandbox-mermaid-gallery__item" data-testid="@($"mermaid-example-{example.Key}")">
-                            <MermaidDiagram Title="@example.Title"
+                        <div @key="example.Key" class="sandbox-mermaid-gallery__item" data-testid="@($"mermaid-example-{example.Key}")">
+                            <MermaidDiagram @key="example.Key"
+                                            Title="@example.Title"
                                             Description="@example.Description"
                                             Source="@example.Source"
                                             Options="@DefaultOptions"
@@ -124,8 +125,7 @@
                                             Class="sandbox-mermaid-diagram--gallery"
                                             Style="@($"--cda-mermaid-min-height: {example.Height};")"
                                             NodeClicked="HandleNodeClicked"
-                                            Rendered="@(result => HandleGalleryRendered(example.Key, result))"
-                                            Error="@(error => HandleGalleryError(example.Key, error))" />
+                                            data-testid="@($"mermaid-gallery-diagram-{example.Key}")" />
 
                             <div class="sandbox-mermaid-gallery__status">
                                 <span>@example.Key</span>
@@ -406,11 +406,12 @@
             "Flow weights between work areas.",
             """
             sankey-beta
-                Source,Target,Value
                 Wrapper,SVG,8
+                Wrapper,Events,5
                 Sandbox,Proof,6
-                MCP,Guidance,4
-                Proof,Confidence,6
+                Sandbox,SVG,3
+                Proof,Confidence,7
+                Events,Confidence,4
             """),
         new(
             "xychart",
@@ -574,8 +575,6 @@
             "20rem")
     ];
 
-    private readonly Dictionary<string, MermaidRenderResult> _galleryRenders = [];
-    private readonly Dictionary<string, MermaidRenderError> _galleryErrors = [];
     private MermaidNodeClickEventArgs? _lastClick;
     private MermaidRenderResult? _primaryRender;
     private MermaidRenderResult? _architectureRender;
@@ -583,17 +582,7 @@
 
     private string ClickedNodeLabel => _lastClick?.Text ?? _lastClick?.NodeId ?? "No node selected";
 
-    private string GetGalleryStatus(string key)
-    {
-        if (_galleryErrors.ContainsKey(key))
-        {
-            return "Error";
-        }
-
-        return _galleryRenders.TryGetValue(key, out var result)
-            ? $"Rendered ({result.NodeCount} nodes)"
-            : "Pending";
-    }
+    private static string GetGalleryStatus(string key) => "Live wrapper sample";
 
     private void HandleNodeClicked(MermaidNodeClickEventArgs args)
     {
@@ -609,19 +598,6 @@
     private void HandleArchitectureRendered(MermaidRenderResult result)
     {
         _architectureRender = result;
-    }
-
-    private void HandleGalleryRendered(string key, MermaidRenderResult result)
-    {
-        _galleryErrors.Remove(key);
-        _galleryRenders[key] = result;
-    }
-
-    private void HandleGalleryError(string key, MermaidRenderError error)
-    {
-        _galleryRenders.Remove(key);
-        _galleryErrors[key] = error;
-        _lastError = error;
     }
 
     private void HandleError(MermaidRenderError error)

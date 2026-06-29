@@ -25,20 +25,20 @@
                         <div class="min-w-0 space-y-1">
                             @if (message.SummaryContent is not null)
                             {
-                                <div class="text-sm font-semibold">@message.SummaryContent(NotificationService)</div>
+                                <div class="text-sm font-semibold break-words">@message.SummaryContent(NotificationService)</div>
                             }
                             else if (!string.IsNullOrWhiteSpace(message.Summary))
                             {
-                                <div class="text-sm font-semibold">@message.Summary</div>
+                                <div class="text-sm font-semibold break-words">@message.Summary</div>
                             }
 
                             @if (message.DetailContent is not null)
                             {
-                                <div class="text-sm leading-6">@message.DetailContent(NotificationService)</div>
+                                <div class="text-sm leading-6 break-words">@message.DetailContent(NotificationService)</div>
                             }
                             else if (!string.IsNullOrWhiteSpace(message.Detail))
                             {
-                                <div class="text-sm leading-6">@message.Detail</div>
+                                <div class="text-sm leading-6 break-words">@message.Detail</div>
                             }
                         </div>
                         <Cluster Gap="LayoutGap.XSmall" Wrap="FlexWrap.NoWrap" Class="shrink-0">

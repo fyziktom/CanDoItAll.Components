@@ -1,0 +1,89 @@
+{
+  "directoryBuild": {
+    "isPackableDefault": "false",
+    "packageReadmeFile": "README.md",
+    "packageLicenseExpression": "MIT",
+    "packageTags": "CanDoItAll;Blazor;Components",
+    "defaultDescription": "Shared CanDoItAll Blazor component package."
+  },
+  "projects": [
+    {
+      "packageId": "CanDoItAll.Components.Common",
+      "sdk": "Microsoft.NET.Sdk",
+      "targetFramework": "net10.0",
+      "assemblyName": "CanDoItAll.Components.Common",
+      "rootNamespace": "CanDoItAll.Components.Common",
+      "isPackable": "true",
+      "description": "",
+      "effectiveDescription": "Shared CanDoItAll Blazor component package.",
+      "hasReadme": true,
+      "packageReferences": [],
+      "projectReferences": []
+    },
+    {
+      "packageId": "CanDoItAll.Components.BaseLib",
+      "sdk": "Microsoft.NET.Sdk.Razor",
+      "targetFramework": "net10.0",
+      "assemblyName": "CanDoItAll.Components.BaseLib",
+      "rootNamespace": "CanDoItAll.Components.BaseLib",
+      "isPackable": "true",
+      "description": "",
+      "effectiveDescription": "Shared CanDoItAll Blazor component package.",
+      "hasReadme": true,
+      "packageReferences": [
+        "Microsoft.AspNetCore.Components.Web"
+      ],
+      "projectReferences": [
+        "..\\CanDoItAll.Components.Common\\CanDoItAll.Components.Common.csproj"
+      ]
+    },
+    {
+      "packageId": "CanDoItAll.Components.Charts",
+      "sdk": "Microsoft.NET.Sdk.Razor",
+      "targetFramework": "net10.0",
+      "assemblyName": "CanDoItAll.Components.Charts",
+      "rootNamespace": "CanDoItAll.Components.Charts",
+      "isPackable": "true",
+      "description": "",
+      "effectiveDescription": "Shared CanDoItAll Blazor component package.",
+      "hasReadme": true,
+      "packageReferences": [
+        "Blazor-ApexCharts",
+        "Microsoft.AspNetCore.Components.Web"
+      ],
+      "projectReferences": []
+    },
+    {
+      "packageId": "CanDoItAll.Components.OverlayLib",
+      "sdk": "Microsoft.NET.Sdk.Razor",
+      "targetFramework": "net10.0",
+      "assemblyName": "CanDoItAll.Components.OverlayLib",
+      "rootNamespace": "CanDoItAll.Components.OverlayLib",
+      "isPackable": "true",
+      "description": "Shared overlay window components, runtime helpers, and assets for CanDoItAll workbench surfaces.",
+      "effectiveDescription": "Shared overlay window components, runtime helpers, and assets for CanDoItAll workbench surfaces.",
+      "hasReadme": true,
+      "packageReferences": [
+        "Microsoft.AspNetCore.Components.Web"
+      ],
+      "projectReferences": [
+        "..\\CanDoItAll.Components.BaseLib\\CanDoItAll.Components.BaseLib.csproj"
+      ]
+    },
+    {
+      "packageId": "CanDoItAll.Components.Mermaid",
+      "sdk": "Microsoft.NET.Sdk.Razor",
+      "targetFramework": "net10.0",
+      "assemblyName": "CanDoItAll.Components.Mermaid",
+      "rootNamespace": "CanDoItAll.Components.Mermaid",
+      "isPackable": "true",
+      "description": "",
+      "effectiveDescription": "Shared CanDoItAll Blazor component package.",
+      "hasReadme": true,
+      "packageReferences": [
+        "Microsoft.AspNetCore.Components.Web"
+      ],
+      "projectReferences": []
+    }
+  ]
+}

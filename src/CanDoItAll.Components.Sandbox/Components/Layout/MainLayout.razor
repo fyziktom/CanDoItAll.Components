@@ -14,10 +14,16 @@
                         <span class="sandbox-brand__title">Components Sandbox</span>
                     </a>
 
-                    <p class="sandbox-brand__summary">A calm validation lab for shared surfaces, typed canvas contracts, and future MCP examples.</p>
+                    <p class="sandbox-brand__summary">A calm validation lab for standard shared surfaces, route coverage, and future MCP examples.</p>
 
-                    <nav class="sandbox-nav" aria-label="Component groups">
-                        @foreach (var group in SandboxCatalogRegistry.Groups)
+                    <nav class="sandbox-nav" aria-label="Standard proof groups">
+                        <a href="/groups/coverage"
+                           class="sandbox-nav__link @(IsActiveRoute("/groups/coverage") ? "is-active" : string.Empty)">
+                            <span class="sandbox-nav__title">Coverage Index</span>
+                            <span class="sandbox-nav__meta">standard / routes / exceptions</span>
+                        </a>
+
+                        @foreach (var group in SandboxCatalogRegistry.StandardGroups)
                         {
                             <a href="@group.Route"
                                class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
@@ -26,6 +32,23 @@
                             </a>
                         }
                     </nav>
+
+                    @if (SandboxCatalogRegistry.DeferredGroups.Count > 0)
+                    {
+                        <div class="space-y-2">
+                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Deferred proof scope" />
+                            <nav class="sandbox-nav" aria-label="Deferred proof groups">
+                                @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
+                                {
+                                    <a href="@group.Route"
+                                       class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
+                                        <span class="sandbox-nav__title">@group.Title</span>
+                                        <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
+                                    </a>
+                                }
+                            </nav>
+                        </div>
+                    }
 
                     <SectionCard Title="Validation Gate" Description="Each page needs happy, dense, and empty proof before sign-off.">
                         <div class="space-y-2">
@@ -57,15 +80,18 @@
     }
 
     private bool IsActive(SandboxGroupDefinition group)
+        => IsActiveRoute(group.Route);
+
+    private bool IsActiveRoute(string route)
     {
         var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         var currentPath = relativePath.Split('?', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
         if (string.IsNullOrWhiteSpace(currentPath))
         {
-            return string.Equals(group.Route, "/", StringComparison.OrdinalIgnoreCase);
+            return string.Equals(route, "/", StringComparison.OrdinalIgnoreCase);
         }
 
-        return string.Equals($"/{currentPath.TrimStart('/')}", group.Route, StringComparison.OrdinalIgnoreCase);
+        return string.Equals($"/{currentPath.TrimStart('/')}", route, StringComparison.OrdinalIgnoreCase);
     }
 
     private void HandleThemeChanged()

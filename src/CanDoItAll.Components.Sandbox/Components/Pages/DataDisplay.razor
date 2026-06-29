@@ -30,10 +30,13 @@
         }
         else if (CurrentScenario == SandboxScenarioKey.EmptyState)
         {
-            <EmptyState Eyebrow="Data display" Title="No results" Description="Adjust the current filters or add records before the shared card and list views can render detail." />
+            <div data-testid="data-display-empty-state">
+                <EmptyState Eyebrow="Data display" Title="No results" Description="Adjust the current filters or add records before the shared card and list views can render detail." />
+            </div>
         }
         else
         {
+            <div data-testid="data-display-summary-strip">
             <SectionCard Title="Summary strip" Description="High-signal metrics should lead the page without becoming a dashboard wallpaper.">
                 <SummaryTiles>
                     @foreach (var tile in Tiles)
@@ -45,9 +48,11 @@
                     }
                 </SummaryTiles>
             </SectionCard>
+            </div>
 
             <Grid Gap="LayoutGap.Large"
-                  ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
+                  ColumnTemplate="repeat(auto-fit,minmax(min(100%,16rem),1fr))"
+                  data-testid="data-display-card-grid">
                 @foreach (var card in Cards)
                 {
                     <Card>
@@ -79,6 +84,7 @@
                 }
             </Grid>
 
+            <div data-testid="data-display-selection-rows">
             <SectionCard Title="Selection rows" Description="List-style display surfaces should preserve scanability and action clarity.">
                 <div class="sandbox-list">
                     @foreach (var row in Rows)
@@ -108,6 +114,7 @@
                     }
                 </div>
             </SectionCard>
+            </div>
         }
     </ChildContent>
 </CatalogPageFrame>

@@ -29,7 +29,8 @@
         }
         else
         {
-            <PageScaffold MaxWidthClass="max-w-[1280px]">
+            <PageScaffold MaxWidthClass="max-w-[1280px]"
+                          data-testid="sandbox-layout-scaffold">
                 <Header>
                     <PageHeader Eyebrow="Shared layout"
                                 Title="@WorkspaceTitle"
@@ -67,7 +68,8 @@
                 </SecondaryRail>
 
                 <ChildContent>
-                    <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                    <div class="sandbox-demo-grid sandbox-demo-grid--two"
+                         data-testid="sandbox-layout-primary-grid">
                         <FormSection Title="Primary workspace" Description="The main region should be able to hold operational content without collapsing the reading rhythm.">
                             <div class="space-y-4">
                                 <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Release acceptance workspace" />
@@ -100,7 +102,8 @@
                         </SectionCard>
                     </div>
 
-                    <ListDetailShell ListPaneWidth="22rem">
+                    <ListDetailShell ListPaneWidth="22rem"
+                                     data-testid="sandbox-layout-list-detail">
                         <ListHeader>
                             <PageHeader Eyebrow="List pane" Title="Shared records" Compact="true" />
                         </ListHeader>
@@ -141,7 +144,8 @@
 
                     <StickyActionFooter StatusLabel="Layout state"
                                         StatusMessage="@FooterMessage"
-                                        StatusTone="@FooterTone">
+                                        StatusTone="@FooterTone"
+                                        data-testid="sandbox-layout-sticky-footer">
                         <SecondaryActions>
                             <Button Text="Save draft" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Disabled="@IsActionDisabled" />
                         </SecondaryActions>

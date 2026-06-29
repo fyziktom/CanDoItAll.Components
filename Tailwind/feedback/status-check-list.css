@@ -1,0 +1,89 @@
+@layer components {
+  .cda-status-check-list {
+    @apply flex w-full min-w-0 flex-col gap-3 rounded-2xl border bg-white p-4;
+    border-color: var(--cad-color-border);
+    box-shadow: var(--cad-shadow-soft);
+  }
+
+  .cda-status-check-list__header {
+    @apply flex min-w-0 flex-col gap-1;
+  }
+
+  .cda-status-check-list__header h4 {
+    @apply m-0 text-sm font-semibold text-slate-950;
+  }
+
+  .cda-status-check-list__header p {
+    @apply m-0 text-sm leading-6 text-slate-600;
+  }
+
+  .cda-status-check-list__empty {
+    @apply rounded-xl border border-dashed px-4 py-5 text-sm text-slate-500;
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cda-status-check-list ul {
+    @apply m-0 flex list-none flex-col gap-2 p-0;
+  }
+
+  .cda-status-check-list li {
+    @apply grid min-w-0 items-start gap-3 rounded-xl border px-3 py-3;
+    grid-template-columns: auto minmax(0, 1fr);
+    border-color: var(--cad-color-border);
+    background: var(--cad-color-surface);
+  }
+
+  .cda-status-check-list__icon {
+    @apply mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm;
+  }
+
+  .cda-status-check-list__icon--success {
+    border-color: var(--cad-tone-success-soft-border);
+    background: var(--cad-tone-success-soft-bg);
+    color: var(--cad-tone-success-soft-fg);
+  }
+
+  .cda-status-check-list__icon--warning,
+  .cda-status-check-list__icon--warn {
+    border-color: var(--cad-tone-warning-soft-border);
+    background: var(--cad-tone-warning-soft-bg);
+    color: var(--cad-tone-warning-soft-fg);
+  }
+
+  .cda-status-check-list__icon--danger,
+  .cda-status-check-list__icon--error {
+    border-color: var(--cad-tone-danger-soft-border);
+    background: var(--cad-tone-danger-soft-bg);
+    color: var(--cad-tone-danger-soft-fg);
+  }
+
+  .cda-status-check-list__icon--info {
+    border-color: var(--cad-tone-info-soft-border);
+    background: var(--cad-tone-info-soft-bg);
+    color: var(--cad-tone-info-soft-fg);
+  }
+
+  .cda-status-check-list__icon--neutral {
+    border-color: var(--cad-tone-base-soft-border);
+    background: var(--cad-tone-base-soft-bg);
+    color: var(--cad-tone-base-soft-fg);
+  }
+
+  .cda-status-check-list li > span:not(.cda-status-check-list__icon) {
+    @apply flex min-w-0 flex-col gap-1;
+  }
+
+  .cda-status-check-list strong {
+    @apply min-w-0 break-words text-sm font-semibold text-slate-950;
+  }
+
+  .cda-status-check-list small {
+    @apply min-w-0 break-words text-xs leading-5 text-slate-600;
+  }
+
+  .cda-status-check-list em {
+    @apply col-start-2 inline-flex w-fit max-w-full rounded-full bg-slate-100 px-2 py-1 text-[0.68rem] not-italic text-slate-600;
+    overflow-wrap: anywhere;
+  }
+}

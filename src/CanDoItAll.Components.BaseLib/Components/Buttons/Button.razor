@@ -9,7 +9,7 @@
     <a href="@Href"
        target="@Target"
        rel="@Rel"
-       aria-disabled="@IsDisabled"
+       aria-disabled="@FormatBoolean(IsDisabled)"
        @attributes="BuildAttributes(ResolveButtonCssClass())"
        @onclick="OnClickAsync">
         @RenderButtonContent(iconName)
@@ -74,15 +74,27 @@ else
     [Parameter]
     public string? Rel { get; set; }
 
-    private bool IsDisabled => Disabled || IsBusy;
+    private bool isClickInFlight;
+
+    private bool IsDisabled => Disabled || IsBusy || isClickInFlight;
 
     private bool IsAnchor => !string.IsNullOrWhiteSpace(Href);
 
     private async Task OnClickAsync()
     {
-        if (!IsDisabled)
+        if (IsDisabled)
+        {
+            return;
+        }
+
+        isClickInFlight = true;
+        try
         {
             await Click.InvokeAsync();
+        }
+        finally
+        {
+            isClickInFlight = false;
         }
     }
 
@@ -235,6 +247,9 @@ else
     {
         return ResolveStyleCss();
     }
+
+    private static string FormatBoolean(bool value)
+        => value ? "true" : "false";
 }
 
 

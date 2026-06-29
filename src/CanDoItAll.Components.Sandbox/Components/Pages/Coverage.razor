@@ -1,0 +1,122 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/coverage"
+@inject NavigationManager Navigation
+
+<PageTitle>Standard Coverage</PageTitle>
+
+<div class="sandbox-page" data-testid="sandbox-coverage-index">
+    <PageScaffold MaxWidthClass="max-w-[1720px]">
+        <Header>
+            <PageHeader Eyebrow="Publishing proof" Title="Standard coverage index" Description="A route-owned map for the standard component groups in this publishing-readiness bundle. Canvas and WebGL implementation proof stays deferred." />
+        </Header>
+
+        <Lead>
+            <div class="sandbox-hero">
+                <div class="sandbox-hero__copy">
+                    <span class="sandbox-hero__eyebrow">Route matrix</span>
+                    <h2 class="sandbox-hero__title">Every standard group has an owner, route, and screenshot target.</h2>
+                    <p class="sandbox-hero__summary">This page is the sandbox checkpoint for BaseLib, Charts, Mermaid, and overlay-facing proof. The generated SB05 coverage JSON maps individual component files to these groups and documents compatibility or asset exceptions.</p>
+                    <div class="sandbox-hero__chips">
+                        <StatusBadge Text="Standard scope" Tone="success" />
+                        <StatusBadge Text="Canvas deferred" Tone="warning" />
+                        <StatusBadge Text="Stable test hooks" Tone="info" />
+                    </div>
+                </div>
+
+                <SummaryTiles ColumnsLg="2" ColumnsXl="2">
+                    <SummaryTile Label="Standard groups" Value="@StandardGroups.Count.ToString()" HelperText="Groups that count for this bundle's standard proof." Tone="info" />
+                    <SummaryTile Label="Standard routes" Value="@StandardRouteCount.ToString()" HelperText="Group and focused example routes available for smoke navigation." Tone="success" />
+                    <SummaryTile Label="Deferred groups" Value="@DeferredGroups.Count.ToString()" HelperText="Canvas/WebGL surfaces remain separate from this pass." Tone="warning" />
+                    <SummaryTile Label="Required proof" Value="Desktop + mobile" HelperText="Every standard route must survive real browser screenshots." />
+                </SummaryTiles>
+            </div>
+        </Lead>
+
+        <SecondaryRail>
+            <SectionCard Title="Scope Boundary" Description="Publishing proof for this bundle stops at standard components.">
+                <div class="sandbox-proof-list" data-testid="sandbox-coverage-deferred">
+                    @foreach (var group in DeferredGroups)
+                    {
+                        <p>@group.Title: @group.Summary</p>
+                    }
+                </div>
+            </SectionCard>
+        </SecondaryRail>
+
+        <ChildContent>
+            <div class="sandbox-page-section">
+                <SectionCard Title="Standard group routes" Description="Each row is a Playwright route target and a generated coverage owner.">
+                    <div class="sandbox-list">
+                        @foreach (var group in StandardGroups)
+                        {
+                            <div data-testid="@GetGroupTestId(group)">
+                                <SelectionListItem Title="@group.Title"
+                                                   Eyebrow="@group.ProofScope"
+                                                   Meta="@group.Route"
+                                                   Summary="@group.Summary"
+                                                   OnSelect="@(() => NavigateTo(group.Route))">
+                                    <div class="flex flex-wrap gap-2">
+                                        <StatusBadge Text="@($"{SandboxCatalogRegistry.GetExamples(group.Key).Count} examples")" Tone="info" />
+                                        @foreach (var focusArea in group.FocusAreas.Take(4))
+                                        {
+                                            <StatusBadge Text="@focusArea" Tone="neutral" />
+                                        }
+                                    </div>
+                                </SelectionListItem>
+                            </div>
+                        }
+                    </div>
+                </SectionCard>
+
+                <SectionCard Title="Focused route targets" Description="Dedicated pages used when a group needs finer visual proof than the group scenario switcher.">
+                    <Grid Gap="LayoutGap.Large"
+                          ColumnTemplate="repeat(auto-fit,minmax(18rem,1fr))">
+                        @foreach (var example in FocusedRoutes)
+                        {
+                            <Card data-testid="@GetRouteTestId(example)">
+                                <div class="space-y-3">
+                                    <div class="space-y-1">
+                                        <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@SandboxCatalogRegistry.GetGroup(example.GroupKey).Title" />
+                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@example.Title" />
+                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@example.Summary" />
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach (var componentName in example.ComponentNames.Take(5))
+                                        {
+                                            <StatusBadge Text="@componentName" Tone="neutral" />
+                                        }
+                                    </div>
+                                    <Button Text="Open route" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => NavigateTo(example.Route))" />
+                                </div>
+                            </Card>
+                        }
+                    </Grid>
+                </SectionCard>
+            </div>
+        </ChildContent>
+    </PageScaffold>
+</div>
+
+@code {
+    private static IReadOnlyList<SandboxGroupDefinition> StandardGroups => SandboxCatalogRegistry.StandardGroups;
+
+    private static IReadOnlyList<SandboxGroupDefinition> DeferredGroups => SandboxCatalogRegistry.DeferredGroups;
+
+    private static IReadOnlyList<SandboxExampleDefinition> FocusedRoutes => SandboxCatalogRegistry.StandardExamples
+        .Where(example => !example.Route.Contains('?'))
+        .ToArray();
+
+    private static int StandardRouteCount => SandboxCatalogRegistry.StandardGroups.Count
+        + FocusedRoutes.Count;
+
+    private static string GetGroupTestId(SandboxGroupDefinition group)
+        => $"sandbox-coverage-group-{group.Key.ToString().ToLowerInvariant()}";
+
+    private static string GetRouteTestId(SandboxExampleDefinition example)
+        => $"sandbox-coverage-route-{example.Id}";
+
+    private void NavigateTo(string route)
+    {
+        Navigation.NavigateTo(route);
+    }
+}

@@ -16,7 +16,7 @@ public abstract class StyledComponentBase : ComponentBase
 
     protected IReadOnlyDictionary<string, object>? BuildAttributes(string? baseClass = null, string? baseStyle = null)
     {
-        return ComponentAttributeExtensions.WithClassAndStyle(
+        return ComponentAttributes.WithClassAndStyle(
             AdditionalAttributes,
             CssClassBuilder.Join(baseClass, Class),
             CssClassBuilder.JoinStyles(baseStyle, Style));

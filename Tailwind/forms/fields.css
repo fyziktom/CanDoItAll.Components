@@ -4,55 +4,50 @@
   }
 
   .cda-prefixed-field {
-    @apply relative block min-w-0 w-full flex-1 max-w-full;
+    @apply flex min-w-0 w-full flex-1 max-w-full items-stretch overflow-hidden rounded-md border bg-white;
+    border-color: var(--cad-color-border);
   }
 
-  .cda-prefixed-field .cda-input {
-    padding-left: var(--cda-prefixed-field-prefix-pad, 0.75rem);
-    padding-right: var(--cda-prefixed-field-suffix-pad, 0.75rem);
+  .cda-prefixed-field .cda-input,
+  .cda-prefixed-field .rz-input,
+  .cda-prefixed-field .rz-numeric,
+  .cda-prefixed-field .rz-select {
+    @apply min-w-0 flex-1 rounded-none border-0 bg-transparent shadow-none;
   }
 
   @media (max-width: 639px) {
     .cda-prefixed-field--stack-mobile {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
+      @apply flex flex-col items-stretch;
     }
 
     .cda-prefixed-field--stack-mobile .cda-prefixed-field__prefix {
-      position: static;
-      display: inline-flex;
-      padding-left: 0;
-    }
-
-    .cda-prefixed-field--stack-mobile .cda-input {
-      padding-left: 0.75rem;
-      padding-right: var(--cda-prefixed-field-suffix-pad, 2.25rem);
+      @apply w-full max-w-full justify-start whitespace-normal break-words border-b border-r-0 leading-4;
     }
 
     .cda-prefixed-field--stack-mobile .cda-prefixed-field__suffix {
-      top: auto;
-      bottom: 0.75rem;
+      @apply w-full max-w-full justify-start whitespace-normal break-words border-l-0 border-t leading-4;
     }
   }
 
   .cda-prefixed-field__prefix {
-    @apply pointer-events-none absolute inset-y-0 left-3 inline-flex items-center text-[10px] font-bold uppercase tracking-[0.18em];
+    @apply pointer-events-none inline-flex min-h-10 max-w-[45%] shrink-0 items-center whitespace-normal break-words border-r bg-slate-50 px-3 text-[10px] font-bold uppercase leading-4 tracking-[0.18em];
+    border-color: var(--cad-color-border);
     color: var(--cad-color-text-soft);
   }
 
   .cda-prefixed-field__suffix {
-    @apply pointer-events-none absolute inset-y-0 right-3 inline-flex items-center text-[10px] font-bold uppercase tracking-[0.18em];
+    @apply pointer-events-none inline-flex min-h-10 max-w-[45%] shrink-0 items-center whitespace-normal break-words border-l bg-slate-50 px-3 text-[10px] font-bold uppercase leading-4 tracking-[0.18em];
+    border-color: var(--cad-color-border);
     color: var(--cad-color-text-soft);
   }
 
   .cda-form-field__label {
-    @apply text-xs font-semibold uppercase tracking-[0.18em] w-full;
+    @apply w-full break-words text-xs font-semibold uppercase tracking-[0.18em];
     color: var(--cad-color-text-soft);
   }
 
   .cda-form-field__content {
-    @apply flex items-center gap-2 w-full max-w-full;
+    @apply flex min-w-0 items-center gap-2 w-full max-w-full;
   }
 
   .cda-field-label {
@@ -82,11 +77,8 @@
   }
 
   :where(.cda-input--textarea) {
-    display: block;
-    width: 100%;
+    @apply block w-full resize-y leading-6;
     min-height: var(--cda-textarea-min-height, 9rem);
-    resize: vertical;
-    line-height: 1.5rem;
   }
 
   .cda-input--mono {

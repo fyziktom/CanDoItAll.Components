@@ -1,0 +1,61 @@
+{
+    "generatedAt":  "2026-06-29T02:50:06.4244798Z",
+    "visualMatrix":  {
+                         "routes":  51,
+                         "viewports":  [
+                                           "max-desktop 1600x1000",
+                                           "desktop 1366x900",
+                                           "tablet 1024x768",
+                                           "mobile 390x844"
+                                       ],
+                         "screenshots":  102,
+                         "finalFolder":  "proof/SB11/screenshots/matrix-final",
+                         "failedChecks":  0,
+                         "consoleErrors":  0
+                     },
+    "defectsFoundByScreenshots":  [
+                                      {
+                                          "area":  "Hero summary tiles",
+                                          "symptom":  "Summary tiles collapsed into narrow vertical columns in desktop hero side rails",
+                                          "repair":  "Hero SummaryTiles now use 2 columns at lg/xl and SummaryTile text has min-width/wrapping hardening",
+                                          "proof":  "matrix-final navigation/home desktop screenshots"
+                                      },
+                                      {
+                                          "area":  "PrefixedField",
+                                          "symptom":  "Long prefix/suffix adornments clipped on mobile",
+                                          "repair":  "Mobile stacked adornments are full width with whitespace-normal and break-words; truncation utility removed",
+                                          "proof":  "sb11-mcp-inputs-long-mobile.png and matrix-final inputs-long-mobile.png"
+                                      },
+                                      {
+                                          "area":  "TreeView",
+                                          "symptom":  "Workbench tree labels ellipsized important navigation labels",
+                                          "repair":  "Tree labels now wrap with break-words and row alignment adjusted for multi-line labels",
+                                          "proof":  "sb11-mcp-navigation-long-mobile.png and matrix-final navigation-long-mobile.png"
+                                      },
+                                      {
+                                          "area":  "ListDetailShell",
+                                          "symptom":  "Detail pane collapsed in constrained desktop card because split was based on viewport rather than component width",
+                                          "repair":  "ListDetailShell now uses a container-query-owned grid and stacks panes until its own width can support the split",
+                                          "proof":  "sb11-mcp-navigation-long-desktop.png and matrix-final navigation-long-desktop.png"
+                                      },
+                                      {
+                                          "area":  "Tabs",
+                                          "symptom":  "Long tab text could clip under scroll/wrap modes",
+                                          "repair":  "Scrollable tabs can grow to label width; wrapping tabs use break-words",
+                                          "proof":  "sb11-mcp-navigation-tabs-long-mobile.png and matrix-final navigation-tabs-long-mobile.png"
+                                      }
+                                  ],
+    "defectReopenDecision":  "All SB11-discovered visual defects were repaired in shared standard components/Tailwind sources before closure; no owning subbundle remains reopened.",
+    "mcpScreenshots":  [
+                           "proof/SB11/screenshots/mcp/sb11-mcp-inputs-long-mobile.png",
+                           "proof/SB11/screenshots/mcp/sb11-mcp-navigation-long-desktop.png",
+                           "proof/SB11/screenshots/mcp/sb11-mcp-navigation-long-mobile.png",
+                           "proof/SB11/screenshots/mcp/sb11-mcp-navigation-tabs-long-mobile.png"
+                       ],
+    "verifierReruns":  {
+                           "sb06":  "22 checks, 0 console errors",
+                           "sb07":  "37 checks, 0 failed, 0 console errors",
+                           "sb08":  "67 checks, 0 failed, 0 console errors",
+                           "sb09":  "57 checks, 0 failed, 0 console errors"
+                       }
+}

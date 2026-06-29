@@ -7,7 +7,7 @@
 <div class="sandbox-page">
     <PageScaffold MaxWidthClass="max-w-[1720px]">
         <Header>
-            <PageHeader Eyebrow="Shared UI" Title="Component catalog" Description="Use the sandbox as the acceptance gate for BaseLib and CanvasLib. Every group has a dedicated route, scenario coverage, and screenshot proof." />
+            <PageHeader Eyebrow="Shared UI" Title="Component catalog" Description="Use the sandbox as the acceptance gate for standard BaseLib, Charts, Mermaid, and overlay surfaces. Canvas/WebGL proof is visible but deferred to its own publishing pass." />
         </Header>
 
         <Lead>
@@ -15,7 +15,7 @@
                 <div class="sandbox-hero__copy">
                     <span class="sandbox-hero__eyebrow">Visual thesis</span>
                     <h2 class="sandbox-hero__title">A calm laboratory for behavior, state, and proof.</h2>
-                    <p class="sandbox-hero__summary">The catalog avoids decorative hero sections and card mosaics. Each group page focuses on scanning, state variation, and whether the shared components still feel intentional under pressure.</p>
+                    <p class="sandbox-hero__summary">The catalog avoids decorative hero sections and card mosaics. Each standard group page focuses on scanning, state variation, and whether the shared components still feel intentional under pressure.</p>
                     <div class="sandbox-hero__chips">
                         <StatusBadge Text="Sticky group nav" Tone="info" />
                         <StatusBadge Text="Scenario switching" Tone="success" />
@@ -23,11 +23,11 @@
                     </div>
                 </div>
 
-                <SummaryTiles>
-                    <SummaryTile Label="Groups" Value="@SandboxCatalogRegistry.Groups.Count.ToString()" HelperText="Every shared component group has a dedicated page." Tone="info" />
-                    <SummaryTile Label="Examples" Value="@SandboxCatalogRegistry.Examples.Count.ToString()" HelperText="Curated scenarios drive screenshots and MCP answers." Tone="success" />
-                    <SummaryTile Label="Required states" Value="Happy / Dense / Empty" HelperText="Loading, disabled, and long-text states appear where relevant." Tone="warning" />
-                    <SummaryTile Label="Output" Value="Screenshot proof" HelperText="Desktop 1440px and mobile 390px are part of the acceptance bar." />
+                <SummaryTiles ColumnsLg="2" ColumnsXl="2">
+                    <SummaryTile Label="Standard groups" Value="@SandboxCatalogRegistry.StandardGroups.Count.ToString()" HelperText="Publishing proof routes exclude Canvas/WebGL implementation work." Tone="info" />
+                    <SummaryTile Label="Standard examples" Value="@SandboxCatalogRegistry.StandardExamples.Count.ToString()" HelperText="Curated scenarios drive screenshots and MCP answers." Tone="success" />
+                    <SummaryTile Label="Deferred groups" Value="@SandboxCatalogRegistry.DeferredGroups.Count.ToString()" HelperText="Canvas/WebGL remains visible but outside this standard bundle." Tone="warning" />
+                    <SummaryTile Label="Output" Value="Coverage proof" HelperText="Desktop and mobile screenshots back the standard route matrix." />
                 </SummaryTiles>
             </div>
         </Lead>
@@ -55,7 +55,7 @@
 
                     <ListContent>
                         <div class="sandbox-list">
-                            @foreach (var group in SandboxCatalogRegistry.Groups)
+                            @foreach (var group in SandboxCatalogRegistry.StandardGroups)
                             {
                                 <SelectionListItem IsSelected="@(group.Key == selectedGroupKey)"
                                                    Title="@group.Title"
@@ -119,6 +119,7 @@
                             </SectionCard>
 
                             <div class="flex flex-wrap gap-3">
+                                <Button Text="Open coverage index" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => NavigateTo("/groups/coverage"))" />
                                 <Button Text="Open happy path" Click="@(() => NavigateTo(SelectedGroup.Route))" />
                                 <Button Text="Open dense proof" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => NavigateTo($"{SelectedGroup.Route}?scenario=dense-content"))" />
                                 <Button Text="Open empty proof" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => NavigateTo($"{SelectedGroup.Route}?scenario=empty-state"))" />

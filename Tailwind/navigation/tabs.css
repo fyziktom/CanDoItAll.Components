@@ -214,7 +214,7 @@
     --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
     --cad-tabs-badge-background: var(--cad-tabs-accent-bg);
     --cad-tabs-badge-color: var(--cad-tabs-accent-fg);
-    @apply flex min-w-0 gap-0;
+    @apply flex min-w-0 w-full max-w-full gap-0;
   }
 
   .cad-tabs--tone-primary {
@@ -296,7 +296,7 @@
   }
 
   .cad-tabs__list {
-    @apply flex min-w-0 items-end gap-2;
+    @apply flex min-w-0 w-full max-w-full items-end gap-2;
     margin: 0;
     padding: 0 0.25rem;
     border-bottom: 1px solid var(--cad-tabs-list-border);
@@ -327,16 +327,12 @@
   }
 
   .cad-tabs--horizontal.cad-tabs--overflow-scroll .cad-tabs__list {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.25rem;
+    @apply flex-nowrap overflow-x-auto pb-1;
   }
 
   .cad-tabs__tab {
-    @apply inline-flex items-center justify-center gap-2 text-left transition;
-    position: relative;
+    @apply relative inline-flex max-w-full items-center justify-center gap-2 whitespace-normal text-left leading-[1.3] transition;
     min-height: var(--cad-tabs-tab-min-height);
-    max-width: 100%;
     padding: var(--cad-tabs-tab-padding);
     border: 1px solid var(--cad-tabs-tab-border);
     border-bottom-width: 0;
@@ -345,14 +341,11 @@
     color: var(--cad-tabs-tab-color);
     font-size: var(--cad-tabs-tab-font-size);
     font-weight: var(--cad-tabs-tab-font-weight);
-    line-height: 1.3;
-    white-space: normal;
     box-shadow: var(--cad-tabs-tab-shadow);
   }
 
   .cad-tabs--horizontal.cad-tabs--overflow-scroll .cad-tabs__tab {
-    white-space: nowrap;
-    flex: 0 0 auto;
+    @apply max-w-none flex-none whitespace-nowrap;
   }
 
   .cad-tabs--vertical .cad-tabs__tab {
@@ -444,8 +437,11 @@
   }
 
   .cad-tabs__tab-text {
-    min-width: 0;
-    display: inline-block;
+    @apply inline-block min-w-0 max-w-full whitespace-normal break-words;
+  }
+
+  .cad-tabs--horizontal.cad-tabs--overflow-scroll .cad-tabs__tab-text {
+    @apply max-w-none whitespace-nowrap;
   }
 
   .cad-tabs__badge {
@@ -457,7 +453,7 @@
   }
 
   .cad-tabs__panels {
-    @apply min-w-0 flex-1;
+    @apply min-w-0 w-full max-w-full flex-1;
   }
 
   .cad-tabs--fill-height .cad-tabs__panels {
@@ -465,6 +461,7 @@
   }
 
   .cad-tabs__panel {
+    max-width: 100%;
     min-width: 0;
     padding: var(--cad-tabs-panel-padding);
     border: 1px solid var(--cad-tabs-panel-border);
@@ -579,14 +576,15 @@
 
   @media (max-width: 900px) {
     .cad-tabs--horizontal.cad-tabs--overflow-auto .cad-tabs__list {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-bottom: 0.25rem;
+      @apply max-w-full flex-nowrap overflow-x-auto pb-1;
     }
 
     .cad-tabs--horizontal.cad-tabs--overflow-auto .cad-tabs__tab {
-      white-space: nowrap;
-      flex: 0 0 auto;
+      @apply max-w-none flex-none whitespace-nowrap;
+    }
+
+    .cad-tabs--horizontal.cad-tabs--overflow-auto .cad-tabs__tab-text {
+      @apply max-w-none whitespace-nowrap;
     }
   }
 
@@ -595,11 +593,25 @@
       @apply flex-col gap-3;
     }
 
+    .cad-tabs--position-left.cad-tabs--vertical,
+    .cad-tabs--position-right.cad-tabs--vertical {
+      @apply flex-col;
+    }
+
     .cad-tabs--vertical .cad-tabs__list {
-      flex: 1 1 auto;
-      border-left: 0;
-      border-right: 0;
-      padding: 0;
+      @apply w-full flex-none border-l-0 border-r-0 p-0;
+    }
+
+    .cad-tabs--position-left.cad-tabs--vertical .cad-tabs__list,
+    .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__list {
+      @apply border-l-0 border-r-0 p-0;
+    }
+
+    .cad-tabs--position-left.cad-tabs--vertical .cad-tabs__panel,
+    .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__panel {
+      margin-left: 0;
+      margin-right: 0;
+      border-radius: var(--cad-tabs-panel-radius);
     }
   }
 }

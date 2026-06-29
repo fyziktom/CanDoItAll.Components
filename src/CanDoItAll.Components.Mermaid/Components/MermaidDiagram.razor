@@ -149,7 +149,7 @@
         }
 
         var renderKey = BuildRenderKey();
-        if (_module is not null && !string.Equals(renderKey, _lastRenderKey, StringComparison.Ordinal))
+        if (_module is not null && await ShouldRenderDiagramAsync(renderKey))
         {
             await RenderAsync(renderKey);
         }
@@ -169,6 +169,7 @@
             return;
         }
 
+        var hadError = _currentError is not null;
         _isRendering = true;
         _currentError = null;
 
@@ -215,7 +216,7 @@
         finally
         {
             _isRendering = false;
-            if (!_disposed)
+            if (!_disposed && (_currentError is not null || hadError))
             {
                 await InvokeAsync(StateHasChanged);
             }
@@ -232,6 +233,28 @@
                 PanZoomEnabled
             },
             KeySerializerOptions);
+    }
+
+    private async Task<bool> ShouldRenderDiagramAsync(string renderKey)
+    {
+        if (!string.Equals(renderKey, _lastRenderKey, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        if (!HasSource || _currentError is not null)
+        {
+            return false;
+        }
+
+        try
+        {
+            return !await _module!.InvokeAsync<bool>("hasRenderedSvg", _diagramElement);
+        }
+        catch (Exception ex) when (ex is JSException or InvalidOperationException)
+        {
+            return true;
+        }
     }
 
     private async Task ZoomInAsync()

@@ -1,0 +1,74 @@
+{
+  "generatedAt": "2026-06-28T18:56:00-04:00",
+  "source": "Playwright MCP screenshot and browser_evaluate observations captured during the SB07 repair loop.",
+  "failures": [
+    {
+      "id": "SB07-NEG-HELP-POPOVER-UNSTYLED",
+      "route": "http://127.0.0.1:5225/groups/feedback?proof=sb07",
+      "viewport": "1366x900",
+      "screenshot": "bundle://proof/SB07/screenshots/mcp/sb07-feedback-desktop-toast-help-v2.png",
+      "observedComputedStyle": {
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(15, 23, 42)",
+        "border": "0px solid rgb(15, 23, 42)",
+        "borderRadius": "0px",
+        "zIndex": "auto",
+        "position": "static",
+        "display": "block"
+      },
+      "decision": "Failed visual proof: the panel opened, but the isolated HelpPopover CSS was not applied in the sandbox."
+    },
+    {
+      "id": "SB07-NEG-HELP-POPOVER-MOBILE-OVERFLOW",
+      "route": "http://127.0.0.1:5225/groups/feedback?scenario=long-text&proof=sb07&v=2",
+      "viewport": "390x844",
+      "observedPanelBox": {
+        "x": -42.20000076293945,
+        "y": 443.20001220703125,
+        "width": 288,
+        "height": 177.58750915527344,
+        "right": 245.79999923706055,
+        "bottom": 620.7875213623047
+      },
+      "overflow": {
+        "left": true,
+        "right": false,
+        "top": false,
+        "bottom": false
+      },
+      "decision": "Failed mobile proof: the absolute panel overflowed off the left side of the viewport."
+    }
+  ],
+  "repairs": [
+    {
+      "id": "SB07-POS-HELP-POPOVER-DESKTOP",
+      "route": "http://127.0.0.1:5225/groups/feedback?proof=sb07&v=2",
+      "viewport": "1366x900",
+      "screenshot": "bundle://proof/SB07/screenshots/mcp/sb07-feedback-desktop-toast-help-v3.png",
+      "verifier": "bundle://proof/SB07/data/sb07-actions-feedback-validation.json",
+      "decision": "Passed: Tailwind-owned panel styling applied and the panel remains within the desktop viewport."
+    },
+    {
+      "id": "SB07-POS-HELP-POPOVER-MOBILE",
+      "route": "http://127.0.0.1:5225/groups/feedback?scenario=long-text&proof=sb07&v=3",
+      "viewport": "390x844",
+      "screenshot": "bundle://proof/SB07/screenshots/mcp/sb07-feedback-mobile-long-toast-help-v2.png",
+      "observedPanelBox": {
+        "x": 16,
+        "y": 674.4125366210938,
+        "width": 343.20001220703125,
+        "height": 153.58750915527344,
+        "right": 359.20001220703125,
+        "bottom": 828.0000457763672
+      },
+      "overflow": {
+        "left": false,
+        "right": false,
+        "top": false,
+        "bottom": false
+      },
+      "verifier": "bundle://proof/SB07/data/sb07-actions-feedback-validation.json",
+      "decision": "Passed: mobile HelpPopover uses a fixed viewport-bound sheet without clipping."
+    }
+  ]
+}

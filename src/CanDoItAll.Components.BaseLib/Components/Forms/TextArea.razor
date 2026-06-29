@@ -55,6 +55,11 @@ else
 
     private async Task OnChangedAsync(ChangeEventArgs args)
     {
+        if (Disabled || ReadOnly)
+        {
+            return;
+        }
+
         var next = args.Value?.ToString();
         Value = next;
         await ValueChanged.InvokeAsync(next);

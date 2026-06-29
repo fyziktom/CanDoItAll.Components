@@ -1,0 +1,42 @@
+[
+  {
+    "finding": "CdaChart empty-state text repeated the same explanation and made the empty chart read noisy in screenshots.",
+    "repair": "CdaChart now renders the shared heading once and the empty body only shows the no-data message.",
+    "proof": [
+      "bundle://proof/SB09/screenshots/mcp/sb09-charts-empty-desktop-full.png",
+      "bundle://proof/SB09/data/sb09-data-display-charts-mermaid-validation.json"
+    ]
+  },
+  {
+    "finding": "Selection list titles and dense summary metadata could truncate or resist wrapping under long generated labels.",
+    "repair": "SelectionListItem title copy and SummaryTile tooltip rows now use min-width and break-word rules; sandbox key/value rows wrap responsively.",
+    "proof": [
+      "bundle://proof/SB09/screenshots/mcp/sb09-data-display-long-mobile-full.png",
+      "bundle://proof/SB09/transcripts/sb09-source-assertions.txt"
+    ]
+  },
+  {
+    "finding": "Mermaid SVGs could disappear after Blazor parent rerenders because the rendered SVG is owned by JavaScript interop.",
+    "repair": "MermaidDiagram now checks for missing rendered SVGs, and mermaidDiagram.js installs a DOM guard that restores the last successful SVG markup if Blazor clears the viewport.",
+    "proof": [
+      "bundle://proof/SB09/screenshots/mcp/sb09-mermaid-gallery-desktop.png",
+      "bundle://proof/SB09/data/sb09-data-display-charts-mermaid-validation.json"
+    ]
+  },
+  {
+    "finding": "The Mermaid Sankey gallery sample emitted invalid NaN SVG paths when Mermaid interpreted a CSV header as data.",
+    "repair": "The Sankey source no longer includes the header row; the verifier requires every gallery example to produce a nonblank SVG without console errors.",
+    "proof": [
+      "bundle://proof/SB09/screenshots/mcp/sb09-mermaid-gallery-desktop.png",
+      "bundle://proof/SB09/transcripts/sb09-playwright-verifier.txt"
+    ]
+  },
+  {
+    "finding": "Mermaid parse failures left Mermaid's built-in fallback error SVG at the bottom of the page outside the wrapper.",
+    "repair": "mermaidDiagram.js now removes Mermaid render artifacts on both success and failure, while the wrapper shows its own structured line, column, token, and expected-token diagnostics.",
+    "proof": [
+      "bundle://proof/SB09/screenshots/mcp/sb09-mermaid-empty-error-full.png",
+      "bundle://proof/SB09/data/sb09-data-display-charts-mermaid-validation.json"
+    ]
+  }
+]

@@ -1,12 +1,13 @@
 @namespace CanDoItAll.Components.BaseLib
 
-<section @attributes='AdditionalAttributes.WithClass("cda-entity-picker")'>
+<section @attributes='AdditionalAttributes.WithClass("cda-entity-picker")'
+         aria-disabled="@FormatBoolean(Disabled)">
     @if (!string.IsNullOrWhiteSpace(Title) || !string.IsNullOrWhiteSpace(Description))
     {
         <header class="cda-entity-picker__header">
             @if (!string.IsNullOrWhiteSpace(Title))
             {
-                <h4>@Title</h4>
+                <h4 id="@titleId">@Title</h4>
             }
             @if (!string.IsNullOrWhiteSpace(Description))
             {
@@ -21,14 +22,17 @@
     }
     else
     {
-        <div class="cda-entity-picker__list" role="listbox" aria-label="@Title">
+        <div class="cda-entity-picker__list"
+             role="listbox"
+             aria-label="@ResolvedListAriaLabel"
+             aria-labelledby="@ResolvedListLabelledBy">
             @foreach (var item in Items)
             {
                 <button type="button"
                         class="@ResolveItemClass(item)"
                         role="option"
-                        aria-selected="@IsSelected(item)"
-                        disabled="@item.Disabled"
+                        aria-selected="@FormatBoolean(IsSelected(item))"
+                        disabled="@(Disabled || item.Disabled)"
                         @onclick="() => SelectAsync(item)">
                     @if (!string.IsNullOrWhiteSpace(item.Icon))
                     {
@@ -52,6 +56,8 @@
 </section>
 
 @code {
+    private readonly string titleId = $"cda-entity-picker-{Guid.NewGuid():N}";
+
     [Parameter]
     public string Title { get; set; } = "Select item";
 
@@ -66,6 +72,12 @@
 
     [Parameter]
     public string? SelectedId { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public string? AriaLabel { get; set; }
 
     [Parameter]
     public EventCallback<string> SelectedIdChanged { get; set; }
@@ -86,7 +98,7 @@
 
     private async Task SelectAsync(EntityPickerItem item)
     {
-        if (item.Disabled)
+        if (Disabled || item.Disabled)
         {
             return;
         }
@@ -95,4 +107,13 @@
         await SelectedIdChanged.InvokeAsync(item.Id);
         await Selected.InvokeAsync(item);
     }
+
+    private string? ResolvedListAriaLabel
+        => string.IsNullOrWhiteSpace(Title) ? AriaLabel : null;
+
+    private string? ResolvedListLabelledBy
+        => string.IsNullOrWhiteSpace(Title) ? null : titleId;
+
+    private static string FormatBoolean(bool value)
+        => value ? "true" : "false";
 }

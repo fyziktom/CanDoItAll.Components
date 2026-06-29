@@ -40,14 +40,14 @@ public static class MermaidSourceNormalizer
             return string.Empty;
         }
 
-        var text = source
+        var text = Dedent(source
             .Replace("\r\n", "\n", StringComparison.Ordinal)
             .Replace('\r', '\n')
             .Trim('\uFEFF')
-            .Trim();
+            .Trim());
 
         return TryExtractFencedSource(text, out var fencedSource)
-            ? fencedSource
+            ? Dedent(fencedSource)
             : text;
     }
 
@@ -199,6 +199,63 @@ public static class MermaidSourceNormalizer
 
     private static string JoinSourceLines(params string[] values)
         => string.Join('\n', values.Select(value => value.Trim()).Where(value => value.Length > 0));
+
+    private static string Dedent(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text) || !text.Contains('\n'))
+        {
+            return text;
+        }
+
+        var lines = text.Split('\n');
+        var candidateLines = lines
+            .Skip(1)
+            .Where(line => !string.IsNullOrWhiteSpace(line))
+            .ToArray();
+
+        if (candidateLines.Length == 0)
+        {
+            return text;
+        }
+
+        var commonIndent = candidateLines
+            .Select(CountLeadingWhitespace)
+            .Where(indent => indent > 0)
+            .DefaultIfEmpty(0)
+            .Min();
+
+        if (commonIndent <= 0)
+        {
+            return text;
+        }
+
+        return string.Join('\n', lines.Select((line, index) =>
+            index == 0 || string.IsNullOrWhiteSpace(line)
+                ? line
+                : line[CountRemovableIndent(line, commonIndent)..]));
+    }
+
+    private static int CountLeadingWhitespace(string value)
+    {
+        var count = 0;
+        while (count < value.Length && char.IsWhiteSpace(value[count]) && value[count] != '\n')
+        {
+            count++;
+        }
+
+        return count;
+    }
+
+    private static int CountRemovableIndent(string value, int maxIndent)
+    {
+        var count = 0;
+        while (count < value.Length && count < maxIndent && char.IsWhiteSpace(value[count]) && value[count] != '\n')
+        {
+            count++;
+        }
+
+        return count;
+    }
 
     private static bool LooksLikeMermaidSource(string source)
     {

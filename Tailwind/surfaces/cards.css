@@ -98,7 +98,7 @@
   }
 
   .cda-summary-tile {
-    @apply border p-5;
+    @apply min-w-0 max-w-full border p-5;
     border-radius: var(--cad-radius-panel);
     border-color: var(--cad-color-border-soft);
     background: color-mix(in srgb, var(--cad-color-surface) 94%, transparent);
@@ -111,7 +111,13 @@
   }
 
   .cda-summary-tile__row {
-    @apply min-w-0;
+    @apply flex min-w-0 max-w-full flex-col gap-1;
+  }
+
+  .cda-summary-tile .cda-eyebrow,
+  .cda-summary-tile__value,
+  .cda-summary-tile__helper {
+    @apply max-w-full break-words;
   }
 
   .cda-summary-tile--compact .cda-eyebrow {
@@ -157,7 +163,7 @@
   }
 
   .cda-summary-tile__value {
-    @apply mt-3 shrink-0 text-2xl font-semibold tracking-tight;
+    @apply mt-3 shrink-0 text-2xl font-semibold tracking-normal;
     color: var(--cad-color-text-strong);
   }
 

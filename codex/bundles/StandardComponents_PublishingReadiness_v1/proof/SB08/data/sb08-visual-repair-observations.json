@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-06-28",
+  "observations": [
+    {
+      "id": "SB08-NEG-OVERLAY-DUPLICATE-STATIC-ASSETS",
+      "area": "Sandbox dependency graph",
+      "detectedBy": "dotnet build src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj --no-restore --nologo",
+      "symptom": "Adding a direct OverlayLib project reference while keeping transitive project references enabled caused duplicate OverlayLib static web asset keys during DiscoverPrecompressedAssets.",
+      "repair": "Set DisableTransitiveProjectReferences=true in the sandbox project and kept explicit direct references, including OverlayLib, so asset ownership is not duplicated.",
+      "proof": [
+        "bundle://proof/SB08/transcripts/sb08-sandbox-build.txt",
+        "repo://src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj"
+      ]
+    },
+    {
+      "id": "SB08-NEG-LAYOUT-COMPOSITION-MAX-CONTENT-OVERFLOW",
+      "area": "Layout composition Row/Column examples",
+      "detectedBy": "bundle://proof/SB08/transcripts/sb08-playwright-verifier.txt",
+      "symptom": "The layout-composition fixed Row/Column example used max-content tracks and produced internal horizontal overflow under desktop measurement.",
+      "repair": "Replaced max-content tracks with bounded minmax(0, fr) tracks.",
+      "proof": [
+        "bundle://proof/SB08/data/sb08-layout-navigation-overlays-validation.json",
+        "bundle://proof/SB08/screenshots/mcp/sb08-layout-composition-desktop-full.png",
+        "repo://src/CanDoItAll.Components.Sandbox/Components/Pages/LayoutComposition.razor"
+      ]
+    },
+    {
+      "id": "SB08-NEG-LAYOUT-COMPOSITION-EMPTY-ROW-STRETCH",
+      "area": "Layout composition mobile visual proof",
+      "detectedBy": "Playwright MCP screenshot visual inspection",
+      "symptom": "The Row/Column examples left a large empty gradient area on mobile because forced two-row grid tracks stretched content rows beyond their natural height.",
+      "repair": "Removed forced Rows=\"2\" on the Row/Column examples so rows size to content.",
+      "proof": [
+        "bundle://proof/SB08/screenshots/mcp/sb08-layout-composition-mobile-long-full.png",
+        "bundle://proof/SB08/screenshots/mcp/sb08-mcp-contact-sheet.png",
+        "repo://src/CanDoItAll.Components.Sandbox/Components/Pages/LayoutComposition.razor"
+      ]
+    }
+  ]
+}

@@ -34,38 +34,41 @@ async function renderCore(container, dotNetReference, request) {
 
   try {
     mermaid.initialize(buildConfig(request?.options));
-    const renderResult = await mermaid.render(`${diagramId}-svg`, source);
-    container.innerHTML = renderResult.svg;
+    const svgId = `${diagramId}-svg`;
+    const renderResult = await mermaid.render(svgId, source);
+    removeMermaidRenderArtifacts(svgId, container);
+    const state = {
+      cleanupCallbacks: [],
+      guardObserver: null,
+      guardTimers: [],
+      panZoom: null,
+      request,
+      dotNetReference,
+      diagramId,
+      svgMarkup: renderResult.svg,
+    };
+    const installed = installRenderedSvg(container, state);
     renderResult.bindFunctions?.(container);
 
-    const svg = container.querySelector('svg');
-    if (!svg) {
+    if (!installed?.svg) {
       return failure(diagramId, {
         message: 'Mermaid rendered without an SVG element.',
       });
     }
 
-    svg.setAttribute('data-cda-mermaid-svg', diagramId);
-    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-
-    const cleanupCallbacks = [];
-    const nodes = attachNodeClicks(svg, diagramId, dotNetReference, cleanupCallbacks);
-    const panZoom = request?.panZoomEnabled === false ? null : attachPanZoom(svg, cleanupCallbacks);
-
-    states.set(container, {
-      cleanupCallbacks,
-      panZoom,
-    });
+    states.set(container, state);
+    scheduleDomGuard(container);
 
     return {
       succeeded: true,
       diagramId,
-      svgElementId: svg.id || null,
-      nodeCount: nodes.length,
+      svgElementId: installed.svg.id || null,
+      nodeCount: installed.nodes.length,
       error: null,
     };
   } catch (error) {
     container.innerHTML = '';
+    removeMermaidRenderArtifacts(`${diagramId}-svg`, container);
     return failure(diagramId, normalizeMermaidError(error, source));
   }
 }
@@ -78,17 +81,30 @@ export function reset(container) {
   states.get(container)?.panZoom?.reset();
 }
 
+export function hasRenderedSvg(container) {
+  return Boolean(container?.querySelector('svg[data-cda-mermaid-svg]'));
+}
+
 export function destroy(container) {
   const state = states.get(container);
   if (!state) {
     return;
   }
 
-  for (const cleanup of state.cleanupCallbacks) {
-    cleanup();
-  }
-
+  runCleanupCallbacks(state);
+  clearGuardTimers(state);
+  disconnectDomGuard(state);
+  removeMermaidRenderArtifacts(`${state.diagramId}-svg`, container);
   states.delete(container);
+}
+
+function removeMermaidRenderArtifacts(svgId, container) {
+  for (const id of [`d${svgId}`, svgId]) {
+    const element = document.getElementById(id);
+    if (element && !container?.contains(element)) {
+      element.remove();
+    }
+  }
 }
 
 function buildConfig(options) {
@@ -177,6 +193,71 @@ function attachNodeClicks(svg, diagramId, dotNetReference, cleanupCallbacks) {
   }
 
   return nodes;
+}
+
+function installRenderedSvg(container, state) {
+  runCleanupCallbacks(state);
+  container.innerHTML = state.svgMarkup;
+  const svg = container.querySelector('svg');
+  if (!svg) {
+    return null;
+  }
+
+  svg.setAttribute('data-cda-mermaid-svg', state.diagramId);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  const nodes = attachNodeClicks(svg, state.diagramId, state.dotNetReference, state.cleanupCallbacks);
+  state.panZoom = state.request?.panZoomEnabled === false ? null : attachPanZoom(svg, state.cleanupCallbacks);
+  return { svg, nodes };
+}
+
+function scheduleDomGuard(container) {
+  const state = states.get(container);
+  if (!state?.svgMarkup) {
+    return;
+  }
+
+  state.guardObserver?.disconnect();
+  state.guardObserver = new MutationObserver(() => {
+    window.queueMicrotask(() => restoreRenderedSvgIfMissing(container));
+  });
+  state.guardObserver.observe(container, { childList: true });
+
+  clearGuardTimers(state);
+  for (const delay of [0, 50, 250, 1000, 2500]) {
+    state.guardTimers.push(window.setTimeout(() => restoreRenderedSvgIfMissing(container), delay));
+  }
+}
+
+function restoreRenderedSvgIfMissing(container) {
+  const state = states.get(container);
+  if (!state?.svgMarkup || !container.isConnected || container.querySelector('svg[data-cda-mermaid-svg]')) {
+    return;
+  }
+
+  installRenderedSvg(container, state);
+}
+
+function runCleanupCallbacks(state) {
+  for (const cleanup of state.cleanupCallbacks ?? []) {
+    cleanup();
+  }
+
+  state.cleanupCallbacks = [];
+  state.panZoom = null;
+}
+
+function clearGuardTimers(state) {
+  for (const timer of state.guardTimers ?? []) {
+    window.clearTimeout(timer);
+  }
+
+  state.guardTimers = [];
+}
+
+function disconnectDomGuard(state) {
+  state.guardObserver?.disconnect();
+  state.guardObserver = null;
 }
 
 function getNodeClickTargets(node) {
@@ -381,13 +462,15 @@ function failure(diagramId, error) {
 function normalizeMermaidError(error, source) {
   const hash = error?.hash ?? {};
   const loc = hash.loc ?? hash.location ?? error?.location ?? {};
-  const message = error?.str || error?.message || 'Mermaid could not parse this diagram.';
-  const messageLine = parseMessageLine(message);
+  const rawMessage = error?.str || error?.message || 'Mermaid could not parse this diagram.';
+  const message = formatErrorMessage(rawMessage);
+  const messageLine = parseMessageLine(rawMessage);
   const line = messageLine
     ?? normalizeLine(loc.first_line, false)
     ?? normalizeLine(loc.start?.line, false)
     ?? normalizeLine(error?.line, false);
-  const column = normalizeColumn(loc.first_column, true) ?? normalizeColumn(loc.start?.character, true) ?? normalizeColumn(error?.column, false);
+  const rawColumn = normalizeColumn(loc.first_column, true) ?? normalizeColumn(loc.start?.character, true) ?? normalizeColumn(error?.column, false);
+  const column = normalizeColumnForSource(source, line, rawColumn);
   const expectedTokens = Array.isArray(hash.expected)
     ? hash.expected.map(cleanExpectedToken).filter(Boolean)
     : [];
@@ -402,6 +485,20 @@ function normalizeMermaidError(error, source) {
     expectedTokens,
     raw: error?.stack || safeJson(error),
   };
+}
+
+function formatErrorMessage(message) {
+  const text = String(message ?? '').trim();
+  if (!text) {
+    return 'Mermaid could not parse this diagram.';
+  }
+
+  if (/parse error/i.test(text)) {
+    return 'Mermaid could not parse this diagram.';
+  }
+
+  return text.split(/\r?\n/)[0]?.replace(/\s+/g, ' ').trim()
+    || 'Mermaid could not parse this diagram.';
 }
 
 function parseMessageLine(message) {
@@ -430,6 +527,19 @@ function normalizeColumn(value, addOne) {
 
   const column = Number(value) + (addOne ? 1 : 0);
   return column > 0 ? column : 1;
+}
+
+function normalizeColumnForSource(source, line, column) {
+  if (!line || !column) {
+    return column;
+  }
+
+  const text = source.split(/\r?\n/)[line - 1];
+  if (text === undefined) {
+    return column;
+  }
+
+  return Math.min(Math.max(column, 1), text.length + 1);
 }
 
 function buildExcerpt(source, line, column) {

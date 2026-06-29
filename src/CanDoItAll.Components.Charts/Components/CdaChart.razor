@@ -4,48 +4,42 @@
 
 @if (!HasRenderableData)
 {
-    <div class="@ShellClass" style="@Style">
-        <div class="rounded-lg border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500">
-            @EmptyText
+    <div @attributes="AdditionalAttributes" data-cda-chart-state="empty" class="@ShellClass" style="@Style">
+        @RenderHeading()
+
+        <div class="flex min-h-48 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50/70 p-6 text-center text-sm text-slate-500">
+            <div class="max-w-prose space-y-1">
+                <p class="font-semibold text-slate-700">@EmptyText</p>
+            </div>
         </div>
     </div>
 }
 else
 {
-    <div @attributes="AdditionalAttributes" class="@ShellClass" style="@Style">
-        @if (!string.IsNullOrWhiteSpace(Title) || !string.IsNullOrWhiteSpace(Description))
-        {
-            <div class="mb-3 space-y-1">
-                @if (!string.IsNullOrWhiteSpace(Title))
-                {
-                    <h3 class="text-base font-semibold text-slate-950">@Title</h3>
-                }
-                @if (!string.IsNullOrWhiteSpace(Description))
-                {
-                    <p class="text-sm text-slate-600">@Description</p>
-                }
-            </div>
-        }
+    <div @attributes="AdditionalAttributes" data-cda-chart-state="ready" class="@ShellClass" style="@Style">
+        @RenderHeading()
 
-        <ApexChart @ref="_chart"
-                   TItem="CdaChartPoint"
-                   Height="@Height"
-                   Options="@_apexOptions">
-            @foreach (var chartSeries in _renderSeries)
-            {
-                <ApexPointSeries TItem="CdaChartPoint"
-                                 Items="@chartSeries.Points"
-                                 Name="@chartSeries.Name"
-                                 Hidden="@(chartSeries.Hidden ? true : null)"
-                                 SeriesType="@ResolveSeriesType(chartSeries)"
-                                 XValue="point => point.XValue"
-                                 YValue="point => (decimal?)point.Value"
-                                 Color="@chartSeries.Color"
-                                 PointColor="point => ResolvePointColor(chartSeries, point)"
-                                 Stroke="@BuildSeriesStroke(chartSeries)"
-                                 ShowDataLabels="@ResolveDataLabels(chartSeries)" />
-            }
-        </ApexChart>
+        <div class="min-w-0 overflow-hidden">
+            <ApexChart @ref="_chart"
+                       TItem="CdaChartPoint"
+                       Height="@Height"
+                       Options="@_apexOptions">
+                @foreach (var chartSeries in _renderSeries)
+                {
+                    <ApexPointSeries TItem="CdaChartPoint"
+                                     Items="@chartSeries.Points"
+                                     Name="@chartSeries.Name"
+                                     Hidden="@(chartSeries.Hidden ? true : null)"
+                                     SeriesType="@ResolveSeriesType(chartSeries)"
+                                     XValue="point => point.XValue"
+                                     YValue="point => (decimal?)point.Value"
+                                     Color="@chartSeries.Color"
+                                     PointColor="point => ResolvePointColor(chartSeries, point)"
+                                     Stroke="@BuildSeriesStroke(chartSeries)"
+                                     ShowDataLabels="@ResolveDataLabels(chartSeries)" />
+                }
+            </ApexChart>
+        </div>
     </div>
 }
 
@@ -87,9 +81,39 @@ else
         ' ',
         new[]
         {
-            "rounded-lg border border-slate-200 bg-white p-4 shadow-sm",
+            "min-w-0 w-full overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm",
             Class
         }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+    private RenderFragment RenderHeading() => builder =>
+    {
+        if (string.IsNullOrWhiteSpace(Title) && string.IsNullOrWhiteSpace(Description))
+        {
+            return;
+        }
+
+        var sequence = 0;
+        builder.OpenElement(sequence++, "div");
+        builder.AddAttribute(sequence++, "class", "mb-3 min-w-0 space-y-1");
+
+        if (!string.IsNullOrWhiteSpace(Title))
+        {
+            builder.OpenElement(sequence++, "h3");
+            builder.AddAttribute(sequence++, "class", "break-words text-base font-semibold text-slate-950");
+            builder.AddContent(sequence++, Title);
+            builder.CloseElement();
+        }
+
+        if (!string.IsNullOrWhiteSpace(Description))
+        {
+            builder.OpenElement(sequence++, "p");
+            builder.AddAttribute(sequence++, "class", "break-words text-sm text-slate-600");
+            builder.AddContent(sequence++, Description);
+            builder.CloseElement();
+        }
+
+        builder.CloseElement();
+    };
 
     protected override void OnParametersSet()
     {

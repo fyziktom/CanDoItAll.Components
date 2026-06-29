@@ -13,7 +13,8 @@
             class="@ToggleClass"
             aria-label="@AriaLabel"
             title="@Title"
-            aria-expanded="@isOpen"
+            aria-expanded="@FormatBoolean(isOpen)"
+            aria-haspopup="dialog"
             @onclick="ToggleAsync"
             @onblur="HandleBlurAsync"
             @onkeydown="HandleKeyDownAsync">
@@ -22,7 +23,10 @@
 
     @if (isOpen)
     {
-        <div class="@PanelClass">
+        <div class="@PanelClass"
+             role="dialog"
+             aria-label="@ResolvePanelLabel()"
+             data-testid="@PanelTestId">
             @if (!string.IsNullOrWhiteSpace(Heading))
             {
                 <strong>@Heading</strong>
@@ -45,6 +49,7 @@
 
 @code {
     private bool isOpen;
+    private bool isPinnedOpen;
     private bool pointerInside;
     private CancellationTokenSource? closeDelayCts;
 
@@ -56,6 +61,9 @@
 
     [Parameter]
     public string PanelClass { get; set; } = "pf-help-popover__panel";
+
+    [Parameter]
+    public string? PanelTestId { get; set; }
 
     [Parameter]
     public string Glyph { get; set; } = "?";
@@ -87,7 +95,20 @@
     private async Task ToggleAsync()
     {
         CancelScheduledClose();
-        isOpen = !isOpen;
+
+        if (isOpen && isPinnedOpen)
+        {
+            isOpen = false;
+            isPinnedOpen = false;
+            pointerInside = false;
+        }
+        else
+        {
+            isOpen = true;
+            isPinnedOpen = true;
+            pointerInside = true;
+        }
+
         await InvokeAsync(StateHasChanged);
     }
 
@@ -95,6 +116,8 @@
     {
         CancelScheduledClose();
         isOpen = false;
+        isPinnedOpen = false;
+        pointerInside = false;
         await InvokeAsync(StateHasChanged);
     }
 
@@ -109,17 +132,29 @@
         }
 
         isOpen = true;
+        isPinnedOpen = false;
         await InvokeAsync(StateHasChanged);
     }
 
     private async Task HandleMouseLeave()
     {
         pointerInside = false;
+
+        if (isPinnedOpen)
+        {
+            return;
+        }
+
         await ScheduleCloseAsync();
     }
 
     private async Task HandleBlurAsync(FocusEventArgs _)
-        => await ScheduleCloseAsync();
+    {
+        if (!isPinnedOpen)
+        {
+            await ScheduleCloseAsync();
+        }
+    }
 
     private async Task HandleKeyDownAsync(KeyboardEventArgs args)
     {
@@ -154,6 +189,12 @@
         {
         }
     }
+
+    private string ResolvePanelLabel()
+        => !string.IsNullOrWhiteSpace(Heading) ? Heading : AriaLabel;
+
+    private static string FormatBoolean(bool value)
+        => value ? "true" : "false";
 
     private void CancelScheduledClose()
     {

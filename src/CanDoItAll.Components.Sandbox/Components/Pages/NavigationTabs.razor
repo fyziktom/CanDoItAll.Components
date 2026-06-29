@@ -263,7 +263,7 @@
                 <div class="sandbox-demo-grid sandbox-demo-grid--two">
                     <SectionCard Title="7. Wrapping in a narrow column"
                                  Description="Long labels and a constrained width should still produce a tidy, intentional multi-row control.">
-                        <div class="max-w-[21rem]" data-testid="tabs-lab-wrap-shell">
+                        <div class="w-full min-w-0 max-w-[21rem]" data-testid="tabs-lab-wrap-shell">
                             <Tabs data-testid="tabs-lab-wrap"
                                   SelectedIndex="@wrapSelectedIndex"
                                   SelectedIndexChanged="HandleWrapChanged"
@@ -289,7 +289,7 @@
 
                     <SectionCard Title="8. Scrollable strip in the same width"
                                  Description="When wrapping becomes too noisy, scroll mode should keep the control to one row without clipping labels or breaking focus behavior.">
-                        <div class="max-w-[21rem]" data-testid="tabs-lab-scroll-shell">
+                        <div class="w-full min-w-0 max-w-[21rem]" data-testid="tabs-lab-scroll-shell">
                             <Tabs data-testid="tabs-lab-scroll"
                                   SelectedIndex="@scrollSelectedIndex"
                                   SelectedIndexChanged="HandleScrollChanged"

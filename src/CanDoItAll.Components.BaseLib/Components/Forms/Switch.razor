@@ -4,6 +4,8 @@
 <label @attributes='BuildAttributes("rz-switch inline-flex cursor-pointer items-center gap-2")'>
     <input type="checkbox"
            class="peer sr-only"
+           aria-label="@AriaLabel"
+           aria-labelledby="@ResolveLabelledBy()"
            checked="@Value"
            disabled="@Disabled"
            @onchange="OnChangedAsync" />
@@ -23,6 +25,15 @@
     [Parameter]
     public bool Disabled { get; set; }
 
+    [Parameter]
+    public string? AriaLabel { get; set; }
+
+    [Parameter]
+    public string? AriaLabelledBy { get; set; }
+
+    [CascadingParameter(Name = "FormFieldLabelId")]
+    public string? FormFieldLabelId { get; set; }
+
     private async Task OnChangedAsync(ChangeEventArgs args)
     {
         if (Disabled)
@@ -35,6 +46,13 @@
         await ValueChanged.InvokeAsync(next);
         await Change.InvokeAsync(next);
     }
+
+    private string? ResolveLabelledBy()
+        => !string.IsNullOrWhiteSpace(AriaLabel)
+            ? null
+            : !string.IsNullOrWhiteSpace(AriaLabelledBy)
+                ? AriaLabelledBy
+                : FormFieldLabelId;
 }
 
 

@@ -105,7 +105,7 @@
                     <div class="@HeroSurfaceClass" data-testid="layout-composition-grid">
                         <Grid Gap="LayoutGap.XLarge" Class="w-full">
                             <Grid Gap="LayoutGap.XLarge"
-                                  ColumnTemplateLg="max-content minmax(0,1fr)"
+                                  ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
                                   Class="w-full">
                                 <Stack Orientation="Orientation.Vertical" Gap="1rem">
                                     <span class="cda-shell-pill cda-shell-pill--neutral">@HeroEyebrow</span>
@@ -173,10 +173,11 @@
                 </SectionCard>
 
                 <SectionCard Title="3. Grid + Row + Column"
-                             Description="This version keeps the whole composition inside the shared layout primitives, but it stays rigid at narrow widths because the rows keep two tracks.">
+                             Description="This version keeps the whole composition inside the shared layout primitives while bounding the two-track composition to wider breakpoints.">
                     <div class="@HeroSurfaceClass" data-testid="layout-composition-row-column-fixed">
-                        <Grid Rows="2"
-                              ColumnTemplate="max-content minmax(0,1fr)"
+                        <Grid Columns="1"
+                              ColumnsLg="2"
+                              ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
                               Gap="LayoutGap.XLarge"
                               Class="w-full">
                             <Row GapScale="LayoutGap.XLarge">
@@ -195,7 +196,7 @@
                                         <Pill>@FreshnessLabel</Pill>
                                     </PillList>
 
-                                    <Row Columns="2" GapScale="LayoutGap.Large">
+                                    <Row Columns="1" ColumnsSm="2" GapScale="LayoutGap.Large">
                                         <Column>
                                             <Button Text="Refresh"
                                                     Icon="refresh"
@@ -214,7 +215,7 @@
                                 </Column>
                             </Row>
 
-                            <Row Columns="2" GapScale="LayoutGap.XLarge">
+                            <Row Columns="1" ColumnsMd="2" GapScale="LayoutGap.XLarge">
                                 <Column>
                                     <FormField Text="Mode" ContainerClass="w-full">
                                         <ChildContent>
@@ -246,11 +247,10 @@
                 <SectionCard Title="4. Responsive Grid + Row + Column"
                              Description="Preferred pattern. The same-row columns inherit and override tracks through the shared primitives, so the layout can collapse to one column and expand again without custom structural CSS.">
                     <div class="@HeroSurfaceClass" data-testid="layout-composition-row-column-responsive">
-                        <Grid Rows="2"
-                              Columns="1"
+                        <Grid Columns="1"
                               ColumnsSm="1"
                               ColumnsMd="2"
-                              ColumnTemplateLg="max-content minmax(0,1fr)"
+                              ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
                               Gap="LayoutGap.XLarge"
                               Class="w-full">
                             <Row GapScale="LayoutGap.XLarge">
@@ -332,7 +332,7 @@
     private static readonly IReadOnlyList<int> WindowOptions = [7, 14, 30, 90, 180];
 
     private const string HeroSurfaceClass =
-        "rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(244,249,255,0.98)_56%,rgba(220,243,255,0.96)_100%)] p-5 shadow-[0_24px_60px_-34px_rgba(14,116,144,0.3)]";
+        "w-full min-w-0 rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(244,249,255,0.98)_56%,rgba(220,243,255,0.96)_100%)] p-5 shadow-[0_24px_60px_-34px_rgba(14,116,144,0.3)]";
 
     private string selectedMode = ModeOptions[0];
     private int selectedWindowDays = 30;

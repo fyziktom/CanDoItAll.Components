@@ -40,7 +40,12 @@ public sealed record SandboxGroupDefinition(
     string Route,
     string Summary,
     IReadOnlyList<string> FocusAreas,
-    IReadOnlyList<string> ProofNotes);
+    IReadOnlyList<string> ProofNotes)
+{
+    public bool IsStandardProofGroup => Key is not SandboxGroupKey.Canvas;
+
+    public string ProofScope => IsStandardProofGroup ? "Standard" : "Deferred";
+}
 
 public sealed record SandboxExampleDefinition(
     string Id,
@@ -135,6 +140,12 @@ public static class SandboxCatalogRegistry
             ["Canvas contracts stay typed.", "Runtime workbench stays distinct from sandbox previews.", "Desktop width should be used aggressively without losing orientation."])
     ];
 
+    public static IReadOnlyList<SandboxGroupDefinition> StandardGroups { get; }
+        = Groups.Where(group => group.IsStandardProofGroup).ToArray();
+
+    public static IReadOnlyList<SandboxGroupDefinition> DeferredGroups { get; }
+        = Groups.Where(group => !group.IsStandardProofGroup).ToArray();
+
     public static IReadOnlyList<SandboxExampleDefinition> Examples { get; } =
     [
         CreateExample("foundations-happy", SandboxGroupKey.Foundations, "Type scale", SandboxScenarioKey.HappyPath, "Baseline typography, surfaces, and icon alignment.", ["typography", "spacing"], "TextBlock", "Icon", "SummaryTiles"),
@@ -174,6 +185,12 @@ public static class SandboxCatalogRegistry
         CreateExample("canvas-dense", SandboxGroupKey.Canvas, "Dense workbench review", SandboxScenarioKey.DenseContent, "Deeper workbench, preview, and calendar density.", ["dense", "canvas"], "CanvasWorkbench", "CanvasSceneHostPreview", "LayerStackPreview"),
         CreateExample("canvas-empty", SandboxGroupKey.Canvas, "Empty canvas state", SandboxScenarioKey.EmptyState, "Canvas empty-state coverage across workbench and calendar.", ["empty", "canvas"], "CanvasWorkbench", "CanvasCalendar", "EmptyStateOverlay")
     ];
+
+    public static IReadOnlyList<SandboxExampleDefinition> StandardExamples { get; }
+        = Examples.Where(example => GetGroup(example.GroupKey).IsStandardProofGroup).ToArray();
+
+    public static IReadOnlyList<SandboxExampleDefinition> DeferredExamples { get; }
+        = Examples.Where(example => !GetGroup(example.GroupKey).IsStandardProofGroup).ToArray();
 
     public static IReadOnlyList<string> ValidationQuestions { get; } =
     [

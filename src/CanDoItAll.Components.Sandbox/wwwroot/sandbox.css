@@ -222,11 +222,11 @@
 }
 
 .sandbox-demo-grid--two {
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
 }
 
 .sandbox-demo-grid--three {
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
 }
 
 .sandbox-kv-list {
@@ -236,6 +236,9 @@
 
 .sandbox-kv-item {
     display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 1rem;
     border-bottom: 1px solid color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
@@ -248,7 +251,27 @@
 }
 
 .sandbox-kv-item strong {
+    min-width: 0;
     color: var(--cad-color-text-strong);
+    overflow-wrap: anywhere;
+}
+
+.sandbox-kv-item span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+@media (max-width: 640px) {
+    .sandbox-kv-item {
+        gap: 0.35rem;
+    }
+
+    .sandbox-kv-item strong,
+    .sandbox-kv-item span {
+        flex-basis: 100%;
+        text-align: left;
+    }
 }
 
 .sandbox-list {
@@ -280,6 +303,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    min-width: 0;
     border: 1px solid var(--cad-color-border-soft);
     border-radius: var(--cad-radius-surface);
     background: color-mix(in srgb, var(--cad-color-surface-soft) 88%, transparent);
