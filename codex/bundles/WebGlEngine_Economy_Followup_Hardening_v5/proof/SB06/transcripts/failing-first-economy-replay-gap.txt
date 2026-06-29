@@ -1,8 +1,0 @@
-﻿SB06 failing-first Economy replay gap
-Pattern: BuildDeterministicReplay|RequiresSceneReset = true|frame.Index <= currentFrame.Index|replayMode|frameReplayCount|lastStableFrameIndex|appliedFrameIndexes
-
-224:                ["appliedFrameIndexes"] = LastBrowserPlaybackApplyResult is null
-403:        WebGlRunPlaybackResult playback = BuildDeterministicReplay(Session);
-413:    private static WebGlRunPlaybackResult BuildDeterministicReplay(EconomySimulationSandboxSession session)
-419:            .Where(frame => frame.Index <= currentFrame.Index)
-426:            RequiresSceneReset = true,
