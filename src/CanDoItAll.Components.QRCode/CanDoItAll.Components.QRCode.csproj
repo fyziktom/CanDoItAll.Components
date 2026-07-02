@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>CanDoItAll.Components.QRCode</AssemblyName>
+    <RootNamespace>CanDoItAll.Components.QRCode</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <Description>Shared QR code generation, display, and scanner shell components for CanDoItAll Blazor applications.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
+    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="3.0.0" />
+    <PackageReference Include="ZXingBlazor" Version="1.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
+  </ItemGroup>
+
+</Project>

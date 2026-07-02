@@ -1,0 +1,43 @@
+@namespace CanDoItAll.Components.QRCode.Components
+@inject IQrCodeRenderer Renderer
+
+<figure class="@ResolveClass()" data-testid="@TestId">
+    @if (string.IsNullOrWhiteSpace(Payload))
+    {
+        <div class="cda-qr-view__empty">No QR payload</div>
+    }
+    else
+    {
+        <div class="cda-qr-view__svg" aria-label="@AriaLabel">
+            @((MarkupString)Renderer.RenderSvg(Payload, Options))
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Caption))
+    {
+        <figcaption>@Caption</figcaption>
+    }
+</figure>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Payload { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Caption { get; set; }
+
+    [Parameter]
+    public string AriaLabel { get; set; } = "QR code";
+
+    [Parameter]
+    public QrCodeRenderOptions? Options { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public string? TestId { get; set; } = "cda-qr-code-view";
+
+    private string ResolveClass()
+        => string.Join(" ", new[] { "cda-qr-view", Class }.Where(static value => !string.IsNullOrWhiteSpace(value)));
+}

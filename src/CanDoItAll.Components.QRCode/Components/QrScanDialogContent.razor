@@ -1,0 +1,91 @@
+@namespace CanDoItAll.Components.QRCode.Components
+@inject DialogService DialogService
+
+<DialogScaffold Dense="true"
+                Eyebrow="Scanner"
+                Title="@Title"
+                Description="@Description">
+    <ChildContent>
+        <div class="cda-qr-scan__layout">
+            @if (EnableCamera)
+            {
+                <div class="cda-qr-scan__camera" data-testid="cda-qr-scan-camera">
+                    <BarcodeReader ScanResult="HandleCameraScan" />
+                </div>
+            }
+
+            <label class="cda-qr-scan__manual">
+                <span>Decoded payload</span>
+                <textarea @bind="manualPayload"
+                          rows="5"
+                          placeholder="Paste a scanned address, hash, or verification payload"></textarea>
+            </label>
+
+            @if (lastResult is not null)
+            {
+                <div class="cda-qr-scan__result" data-valid="@lastResult.IsValid">
+                    <strong>@(lastResult.IsValid ? lastResult.Kind : "Invalid payload")</strong>
+                    <span>@(lastResult.Error ?? lastResult.Text)</span>
+                </div>
+            }
+        </div>
+    </ChildContent>
+    <Footer>
+        <Button Text="Use payload"
+                Icon="check"
+                ButtonStyle="ButtonStyle.Primary"
+                Size="ButtonSize.Small"
+                Disabled="@string.IsNullOrWhiteSpace(manualPayload)"
+                Click="@UseManualPayloadAsync" />
+        <Button Text="Cancel"
+                Icon="close"
+                ButtonStyle="ButtonStyle.Light"
+                Variant="Variant.Outlined"
+                Size="ButtonSize.Small"
+                Click="@CancelAsync" />
+    </Footer>
+</DialogScaffold>
+
+@code {
+    private string? manualPayload;
+    private QrScanResult? lastResult;
+
+    [Parameter]
+    public string Title { get; set; } = "Scan QR code";
+
+    [Parameter]
+    public string? Description { get; set; } = "Use the camera scanner or paste a decoded payload manually.";
+
+    [Parameter]
+    public bool EnableCamera { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<QrScanResult> Scanned { get; set; }
+
+    private async Task HandleCameraScan(string payload)
+    {
+        await CloseWithResultAsync(QrPayloadClassifier.BuildScanResult(payload, "camera"));
+    }
+
+    private async Task UseManualPayloadAsync()
+    {
+        var result = QrPayloadClassifier.BuildScanResult(manualPayload, "manual");
+        if (!result.IsValid)
+        {
+            lastResult = result;
+            return;
+        }
+
+        await CloseWithResultAsync(result);
+    }
+
+    private async Task CloseWithResultAsync(QrScanResult result)
+    {
+        lastResult = result;
+        await Scanned.InvokeAsync(result);
+        await DialogService.CloseAsync(result);
+    }
+
+    private Task CancelAsync()
+        => DialogService.CloseAsync();
+}

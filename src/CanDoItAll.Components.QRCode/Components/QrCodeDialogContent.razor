@@ -1,0 +1,48 @@
+@namespace CanDoItAll.Components.QRCode.Components
+@inject DialogService DialogService
+
+<DialogScaffold Dense="true"
+                Eyebrow="@Payload.Kind.ToString()"
+                Title="@ResolveTitle()"
+                Description="@Payload.Detail">
+    <HeaderActions>
+        <CopyButton Value="@Payload.Text"
+                    DisplayMode="CopyButtonDisplayMode.IconOnly"
+                    Size="CopyButtonSize.Small"
+                    AriaLabel="Copy QR payload"
+                    title="Copy QR payload" />
+    </HeaderActions>
+    <ChildContent>
+        <div class="cda-qr-dialog__layout">
+            <QrCodeView Payload="@Payload.Text"
+                        Caption="@Payload.DisplayLabel"
+                        TestId="cda-qr-dialog-view" />
+            <div class="cda-qr-dialog__payload">
+                <span>Payload</span>
+                <code>@Payload.Text</code>
+            </div>
+        </div>
+    </ChildContent>
+    <Footer>
+        <Button Text="Close"
+                Icon="close"
+                ButtonStyle="ButtonStyle.Light"
+                Variant="Variant.Outlined"
+                Size="ButtonSize.Small"
+                Click="@CloseAsync" />
+    </Footer>
+</DialogScaffold>
+
+@code {
+    [Parameter, EditorRequired]
+    public QrCodePayload Payload { get; set; } = new(string.Empty);
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    private string ResolveTitle()
+        => string.IsNullOrWhiteSpace(Title) ? Payload.DisplayLabel : Title;
+
+    private Task CloseAsync()
+        => DialogService.CloseAsync();
+}

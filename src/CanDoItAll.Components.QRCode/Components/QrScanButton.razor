@@ -1,0 +1,66 @@
+@namespace CanDoItAll.Components.QRCode.Components
+@inject DialogService DialogService
+
+<PageHeaderActionButton Icon="@Icon"
+                        Label="@Label"
+                        TooltipText="@TooltipText"
+                        ButtonStyle="@ButtonStyle"
+                        Variant="@Variant"
+                        Size="@Size"
+                        Disabled="@Disabled"
+                        Click="@OpenDialogAsync"
+                        TestId="@TestId" />
+
+@code {
+    [Parameter]
+    public string Icon { get; set; } = "qr_code_scanner";
+
+    [Parameter]
+    public string Label { get; set; } = "Scan QR code";
+
+    [Parameter]
+    public string? TooltipText { get; set; }
+
+    [Parameter]
+    public bool EnableCamera { get; set; } = true;
+
+    [Parameter]
+    public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Light;
+
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Outlined;
+
+    [Parameter]
+    public ButtonSize Size { get; set; } = ButtonSize.Small;
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public string? TestId { get; set; } = "cda-qr-scan-button";
+
+    [Parameter]
+    public EventCallback<QrScanResult> Scanned { get; set; }
+
+    private async Task OpenDialogAsync()
+    {
+        var result = await DialogService.OpenAsync<QrScanDialogContent>(
+            Label,
+            new Dictionary<string, object?>
+            {
+                [nameof(QrScanDialogContent.Title)] = Label,
+                [nameof(QrScanDialogContent.EnableCamera)] = EnableCamera
+            },
+            new DialogOptions
+            {
+                Size = ModalSize.Wide,
+                DenseChrome = true,
+                TestId = "cda-qr-scan-dialog"
+            });
+
+        if (result is QrScanResult scanResult)
+        {
+            await Scanned.InvokeAsync(scanResult);
+        }
+    }
+}
