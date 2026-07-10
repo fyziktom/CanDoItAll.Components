@@ -1,0 +1,130 @@
+@namespace CanDoItAll.Components.BaseLib
+@implements IDisposable
+
+@code {
+    internal const string PlacementCascadeName = "CanDoItAllSideMenuItemPlacement";
+
+    private int lastSignature;
+    private bool hasSignature;
+
+    [CascadingParameter]
+    private SideMenu? Parent { get; set; }
+
+    [CascadingParameter(Name = PlacementCascadeName)]
+    private SideMenuItemPlacement Placement { get; set; }
+
+    [Parameter]
+    public string Id { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Icon { get; set; } = "circle";
+
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+
+    [Parameter]
+    public string BadgeText { get; set; } = string.Empty;
+
+    [Parameter]
+    public string PanelTitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public bool Visible { get; set; } = true;
+
+    [Parameter]
+    public SideMenuOverflowBehavior OverflowBehavior { get; set; }
+
+    [Parameter]
+    public SideMenuItemActivation Activation { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<ISideMenuItem> Children { get; set; } = [];
+
+    [Parameter]
+    public RenderFragment? PanelContent { get; set; }
+
+    [Parameter]
+    public object? Payload { get; set; }
+
+    [Parameter]
+    public EventCallback<SideMenuSelection> Selected { get; set; }
+
+    internal int RegistrationVersion { get; private set; }
+
+    internal SideMenuItemPlacement RegisteredPlacement => Placement;
+
+    protected override void OnParametersSet()
+    {
+        var signature = BuildSignature();
+        if (hasSignature && signature == lastSignature)
+        {
+            return;
+        }
+
+        hasSignature = true;
+        lastSignature = signature;
+        RegistrationVersion++;
+        Parent?.RegisterDeclarativeItem(this);
+    }
+
+    internal SideMenuItemDefinition ToDefinition()
+    {
+        return new SideMenuItemDefinition
+        {
+            Id = Id,
+            Text = Text,
+            Icon = Icon,
+            Description = Description,
+            BadgeText = BadgeText,
+            PanelTitle = PanelTitle,
+            Disabled = Disabled,
+            Visible = Visible,
+            OverflowBehavior = OverflowBehavior,
+            Activation = Activation,
+            Children = Children,
+            PanelContent = PanelContent,
+            Payload = Payload
+        };
+    }
+
+    internal Task NotifySelectedAsync(SideMenuSelection selection)
+        => Selected.InvokeAsync(selection);
+
+    private int BuildSignature()
+    {
+        var hash = new HashCode();
+        hash.Add(Id, StringComparer.Ordinal);
+        hash.Add(Text, StringComparer.Ordinal);
+        hash.Add(Icon, StringComparer.Ordinal);
+        hash.Add(Description, StringComparer.Ordinal);
+        hash.Add(BadgeText, StringComparer.Ordinal);
+        hash.Add(PanelTitle, StringComparer.Ordinal);
+        hash.Add(Disabled);
+        hash.Add(Visible);
+        hash.Add(OverflowBehavior);
+        hash.Add(Activation);
+        hash.Add(Placement);
+        hash.Add(Payload);
+
+        foreach (var child in Children)
+        {
+            hash.Add(child.Id, StringComparer.Ordinal);
+            hash.Add(child.Text, StringComparer.Ordinal);
+            hash.Add(child.Disabled);
+            hash.Add(child.Visible);
+        }
+
+        return hash.ToHashCode();
+    }
+
+    public void Dispose()
+    {
+        Parent?.UnregisterDeclarativeItem(this);
+    }
+}

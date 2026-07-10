@@ -1,0 +1,529 @@
+@layer components {
+  .cad-side-menu {
+    --cad-side-menu-bg: #07111f;
+    --cad-side-menu-bg-soft: #0d1b2d;
+    --cad-side-menu-border: rgba(148, 163, 184, 0.18);
+    --cad-side-menu-fg: #e2e8f0;
+    --cad-side-menu-muted: #94a3b8;
+    --cad-side-menu-accent: #38bdf8;
+    --cad-side-menu-accent-soft: rgba(56, 189, 248, 0.14);
+    @apply relative isolate shrink-0 overflow-visible border text-sm;
+    z-index: 41;
+    width: 17rem;
+    min-height: 28rem;
+    max-height: calc(100dvh - 1.5rem);
+    border-color: var(--cad-side-menu-border);
+    border-radius: var(--cad-radius-panel);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(56, 189, 248, 0.16), transparent 28%),
+      linear-gradient(180deg, var(--cad-side-menu-bg-soft) 0%, var(--cad-side-menu-bg) 72%);
+    color: var(--cad-side-menu-fg);
+    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.24);
+    transition: width 180ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 180ms ease;
+  }
+
+  .cad-side-menu--fill-height {
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .cad-side-menu--collapsed {
+    width: 4.75rem;
+  }
+
+  .cad-side-menu__desktop-shell {
+    @apply flex h-full min-h-0 flex-col gap-2 p-2.5;
+  }
+
+  .cad-side-menu__header {
+    @apply flex shrink-0 items-center justify-between gap-2 border-b pb-2;
+    min-height: 3.25rem;
+    border-color: var(--cad-side-menu-border);
+  }
+
+  .cad-side-menu--collapsed .cad-side-menu__header {
+    @apply flex-col justify-center;
+  }
+
+  .cad-side-menu__identity {
+    @apply flex min-w-0 items-center gap-2;
+  }
+
+  .cad-side-menu--collapsed .cad-side-menu__identity {
+    @apply justify-center;
+  }
+
+  .cad-side-menu__brand-mark {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg;
+    border-color: rgba(125, 211, 252, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #bae6fd;
+  }
+
+  .cad-side-menu__identity-copy {
+    @apply flex min-w-0 flex-col;
+  }
+
+  .cad-side-menu__title {
+    @apply truncate text-sm font-semibold tracking-tight text-white;
+  }
+
+  .cad-side-menu__subtitle {
+    @apply mt-0.5 truncate text-[0.68rem] font-medium uppercase tracking-[0.12em];
+    color: var(--cad-side-menu-muted);
+  }
+
+  .cad-side-menu__collapse,
+  .cad-side-menu__popover-close {
+    @apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition;
+  }
+
+  .cad-side-menu__collapse {
+    border-color: rgba(148, 163, 184, 0.18);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--cad-side-menu-muted);
+  }
+
+  .cad-side-menu__collapse:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  .cad-side-menu__items-viewport {
+    @apply relative flex min-h-0 flex-1 flex-col;
+    row-gap: 0.375rem;
+  }
+
+  .cad-side-menu__items {
+    @apply flex min-h-0 flex-col;
+    gap: 0.375rem;
+  }
+
+  .cad-side-menu__item-anchor {
+    @apply relative w-full shrink-0;
+  }
+
+  .cad-side-menu--collapsed .cad-side-menu__item-anchor {
+    @apply flex justify-center;
+  }
+
+  .cad-side-menu__item {
+    @apply relative flex w-full items-center border border-transparent text-left transition;
+    min-height: 3rem;
+    border-radius: var(--cad-radius-control);
+    background: transparent;
+    color: var(--cad-side-menu-muted);
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .cad-side-menu__item--expanded {
+    @apply gap-2 px-2 py-1;
+  }
+
+  .cad-side-menu__item--collapsed {
+    @apply h-12 w-12 justify-center p-0;
+  }
+
+  .cad-side-menu__item:not(:disabled):hover {
+    border-color: rgba(148, 163, 184, 0.16);
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+    transform: translateX(2px);
+  }
+
+  .cad-side-menu__item.is-selected {
+    border-color: rgba(125, 211, 252, 0.28);
+    background: var(--cad-side-menu-accent-soft);
+    color: #ffffff;
+    box-shadow: inset 3px 0 0 var(--cad-side-menu-accent);
+  }
+
+  .cad-side-menu__item:disabled,
+  .cad-side-menu__item.is-disabled {
+    @apply cursor-not-allowed opacity-45;
+  }
+
+  .cad-side-menu__item-icon {
+    @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg;
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .cad-side-menu__item.is-selected .cad-side-menu__item-icon {
+    background: rgba(56, 189, 248, 0.16);
+    color: #bae6fd;
+  }
+
+  .cad-side-menu__item-label {
+    @apply min-w-0 flex-1 truncate text-sm font-semibold;
+  }
+
+  .cad-side-menu__badge,
+  .cad-side-menu__panel-badge {
+    @apply inline-flex shrink-0 items-center justify-center rounded-full font-bold leading-none;
+  }
+
+  .cad-side-menu__badge {
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding-inline: 0.35rem;
+    background: rgba(56, 189, 248, 0.16);
+    color: #bae6fd;
+    font-size: 0.62rem;
+  }
+
+  .cad-side-menu--collapsed .cad-side-menu__badge {
+    @apply absolute -right-0.5 -top-0.5;
+    min-width: 1rem;
+    height: 1rem;
+    padding-inline: 0.2rem;
+    background: #7dd3fc;
+    color: #082f49;
+    font-size: 0.52rem;
+  }
+
+  .cad-side-menu__measure-item {
+    @apply pointer-events-none invisible absolute left-0 top-0;
+  }
+
+  .cad-side-menu__empty {
+    @apply flex min-h-24 items-center justify-center rounded-xl border border-dashed px-3 text-center text-xs;
+    border-color: var(--cad-side-menu-border);
+    color: var(--cad-side-menu-muted);
+  }
+
+  .cad-side-menu__bottom {
+    @apply mt-auto flex shrink-0 flex-col gap-1.5 border-t pt-2;
+    border-color: var(--cad-side-menu-border);
+  }
+
+  .cad-side-menu__popover {
+    @apply absolute overflow-y-auto border;
+    z-index: 52;
+    top: 0;
+    left: calc(100% + 0.75rem);
+    width: min(23rem, calc(100vw - 7rem));
+    max-height: min(34rem, calc(100dvh - 2rem));
+    border-color: var(--cad-color-border-soft);
+    border-radius: var(--cad-radius-panel);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text);
+    box-shadow: var(--cad-shadow-strong);
+    animation: cad-side-menu-popover-in 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .cad-side-menu__popover::before {
+    @apply absolute bottom-0 right-full top-0 w-3 content-[''];
+  }
+
+  .cad-side-menu__popover--more,
+  .cad-side-menu__popover--bottom {
+    top: auto;
+    bottom: 0;
+  }
+
+  .cad-side-menu__popover-header {
+    @apply sticky top-0 z-10 flex items-start justify-between gap-3 border-b px-4 py-3;
+    border-color: var(--cad-color-border-soft);
+    background: color-mix(in srgb, var(--cad-color-surface) 94%, transparent);
+    backdrop-filter: blur(14px);
+  }
+
+  .cad-side-menu__popover-heading {
+    @apply flex min-w-0 items-start gap-3;
+  }
+
+  .cad-side-menu__popover-heading h3 {
+    @apply text-sm font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-side-menu__popover-heading p {
+    @apply mt-1 text-xs leading-5;
+    color: var(--cad-color-text-muted);
+  }
+
+  .cad-side-menu__popover-icon {
+    @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl;
+    background: var(--cad-tone-info-soft-bg);
+    color: var(--cad-tone-info-soft-fg);
+  }
+
+  .cad-side-menu__popover-close {
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text-soft);
+  }
+
+  .cad-side-menu__popover-close:hover {
+    border-color: var(--cad-color-border);
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-side-menu__panel-list {
+    @apply grid gap-1.5 p-2;
+  }
+
+  .cad-side-menu__panel-list--grid {
+    @apply sm:grid-cols-2;
+  }
+
+  .cad-side-menu__panel-item {
+    @apply relative flex min-w-0 items-center gap-2 rounded-xl border border-transparent px-2.5 py-2 text-left transition;
+    min-height: 3.5rem;
+    background: transparent;
+    color: var(--cad-color-text);
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .cad-side-menu__panel-item:not(:disabled):hover {
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cad-side-menu__panel-item.is-selected {
+    border-color: var(--cad-tone-info-soft-border);
+    background: var(--cad-tone-info-soft-bg);
+    color: var(--cad-tone-info-soft-fg);
+  }
+
+  .cad-side-menu__panel-item:disabled,
+  .cad-side-menu__panel-item.is-disabled {
+    @apply cursor-not-allowed opacity-45;
+  }
+
+  .cad-side-menu__panel-item-icon {
+    @apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base;
+    background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text-muted);
+  }
+
+  .cad-side-menu__panel-item-copy {
+    @apply flex min-w-0 flex-1 flex-col;
+  }
+
+  .cad-side-menu__panel-item-copy strong {
+    @apply truncate text-xs font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-side-menu__panel-item-copy small {
+    @apply mt-0.5 line-clamp-2 text-[0.68rem] leading-4;
+    color: var(--cad-color-text-muted);
+  }
+
+  .cad-side-menu__panel-badge {
+    min-width: 1.3rem;
+    height: 1.3rem;
+    padding-inline: 0.35rem;
+    background: var(--cad-tone-info-soft-bg);
+    color: var(--cad-tone-info-soft-fg);
+    font-size: 0.58rem;
+  }
+
+  .cad-side-menu__custom-panel-content {
+    @apply border-t p-3;
+    border-color: var(--cad-color-border-soft);
+    color: var(--cad-color-text);
+  }
+
+  .cad-side-menu__backdrop {
+    @apply fixed inset-0 m-0 border-0 bg-transparent p-0;
+    z-index: 40;
+    background: rgba(2, 6, 23, 0.08);
+    backdrop-filter: blur(1px);
+  }
+
+  .cad-side-menu__mobile-shell {
+    @apply hidden;
+  }
+
+  .cad-side-menu__mobile-toggle {
+    @apply flex w-full items-center gap-3 text-left;
+    min-height: 4rem;
+    padding: 0.65rem 0.75rem;
+    border: 0;
+    background: transparent;
+    color: var(--cad-side-menu-fg);
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .cad-side-menu__mobile-leading,
+  .cad-side-menu__mobile-chevron,
+  .cad-side-menu__mobile-item-icon {
+    @apply inline-flex shrink-0 items-center justify-center rounded-xl;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .cad-side-menu__mobile-leading {
+    @apply h-10 w-10 text-lg;
+    color: #bae6fd;
+  }
+
+  .cad-side-menu__mobile-chevron {
+    @apply h-9 w-9;
+    color: var(--cad-side-menu-muted);
+  }
+
+  .cad-side-menu__mobile-copy,
+  .cad-side-menu__mobile-item-copy {
+    @apply flex min-w-0 flex-1 flex-col;
+  }
+
+  .cad-side-menu__mobile-copy small {
+    @apply text-[0.62rem] font-semibold uppercase tracking-[0.16em];
+    color: var(--cad-side-menu-muted);
+  }
+
+  .cad-side-menu__mobile-copy strong {
+    @apply truncate text-sm font-semibold text-white;
+  }
+
+  .cad-side-menu__mobile-dropdown {
+    @apply absolute left-0 right-0 overflow-y-auto border p-2;
+    z-index: 52;
+    top: calc(100% + 0.5rem);
+    max-height: calc(100dvh - 6rem);
+    border-color: var(--cad-side-menu-border);
+    border-radius: var(--cad-radius-panel);
+    background:
+      radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.13), transparent 30%),
+      var(--cad-side-menu-bg);
+    box-shadow: 0 28px 64px rgba(2, 6, 23, 0.34);
+    animation: cad-side-menu-dropdown-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .cad-side-menu__mobile-list,
+  .cad-side-menu__mobile-bottom {
+    @apply grid gap-1.5;
+  }
+
+  .cad-side-menu__mobile-bottom {
+    @apply mt-2 border-t pt-2;
+    border-color: var(--cad-side-menu-border);
+  }
+
+  .cad-side-menu__mobile-item-shell {
+    @apply min-w-0;
+  }
+
+  .cad-side-menu__mobile-item {
+    @apply flex min-h-14 w-full items-center gap-2 rounded-xl border border-transparent px-2.5 py-2 text-left transition;
+    color: var(--cad-side-menu-muted);
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .cad-side-menu__mobile-item:not(:disabled):hover {
+    border-color: rgba(148, 163, 184, 0.18);
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+  }
+
+  .cad-side-menu__mobile-item.is-selected {
+    border-color: rgba(125, 211, 252, 0.26);
+    background: var(--cad-side-menu-accent-soft);
+    color: #ffffff;
+  }
+
+  .cad-side-menu__mobile-item:disabled,
+  .cad-side-menu__mobile-item.is-disabled {
+    @apply cursor-not-allowed opacity-45;
+  }
+
+  .cad-side-menu__mobile-item-icon {
+    @apply h-9 w-9 text-base;
+  }
+
+  .cad-side-menu__mobile-item-copy strong {
+    @apply truncate text-sm font-semibold;
+  }
+
+  .cad-side-menu__mobile-item-copy small {
+    @apply mt-0.5 line-clamp-2 text-[0.68rem] leading-4;
+    color: var(--cad-side-menu-muted);
+  }
+
+  .cad-side-menu__mobile-inline-panel {
+    @apply ml-3 grid gap-1.5 border-l py-1 pl-3;
+    border-color: rgba(125, 211, 252, 0.2);
+  }
+
+  .cad-side-menu__mobile-inline-panel .cad-side-menu__panel-item {
+    background: var(--cad-color-surface);
+  }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .cad-side-menu {
+      width: 15rem;
+    }
+
+    .cad-side-menu--collapsed {
+      width: 4.5rem;
+    }
+
+    .cad-side-menu__desktop-shell {
+      @apply p-2;
+    }
+
+    .cad-side-menu__popover {
+      width: min(21rem, calc(100vw - 6.25rem));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cad-side-menu,
+    .cad-side-menu--collapsed,
+    .cad-side-menu--expanded {
+      @apply w-full;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+      border-radius: 1.1rem;
+    }
+
+    .cad-side-menu__desktop-shell {
+      @apply hidden;
+    }
+
+    .cad-side-menu__mobile-shell {
+      @apply block;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cad-side-menu,
+    .cad-side-menu__item,
+    .cad-side-menu__popover,
+    .cad-side-menu__mobile-dropdown {
+      animation: none;
+      transition: none;
+    }
+  }
+}
+
+@keyframes cad-side-menu-popover-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.4rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes cad-side-menu-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

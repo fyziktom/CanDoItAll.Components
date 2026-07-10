@@ -1,0 +1,530 @@
+@namespace CanDoItAll.Components.BaseLib
+@inherits StyledComponentBase
+@using Microsoft.AspNetCore.Components.Web
+
+<CascadingValue Value="this" IsFixed="true">
+    <div class="hidden" aria-hidden="true">
+        <CascadingValue Name="@SideMenuItem.PlacementCascadeName"
+                        Value="@SideMenuItemPlacement.Primary"
+                        IsFixed="true">
+            @MenuItems
+        </CascadingValue>
+        <CascadingValue Name="@SideMenuItem.PlacementCascadeName"
+                        Value="@SideMenuItemPlacement.More"
+                        IsFixed="true">
+            @MoreMenuItems
+        </CascadingValue>
+        <CascadingValue Name="@SideMenuItem.PlacementCascadeName"
+                        Value="@SideMenuItemPlacement.Bottom"
+                        IsFixed="true">
+            @BottomMenuItems
+        </CascadingValue>
+    </div>
+</CascadingValue>
+
+@{
+    var snapshot = CurrentSnapshot;
+    var configuredMoreItems = GetItems(SideMenuItemPlacement.More);
+    var bottomItems = GetItems(SideMenuItemPlacement.Bottom).Where(item => item.Visible).ToArray();
+    var desktopItems = ResolveDesktopItems(snapshot.Items, configuredMoreItems, snapshot.SelectedItemId);
+    var mobilePrimaryItems = ResolveMobilePrimaryItems(snapshot.Items);
+    var mobileMoreItems = ResolveMobileMoreItems(snapshot.Items, configuredMoreItems);
+    var selectedItem = FindItem(snapshot.Items.Concat(configuredMoreItems).Concat(bottomItems), snapshot.SelectedItemId);
+    var hasOverlay = openPanelId is not null || snapshot.IsMobileMenuOpen;
+}
+
+<aside @ref="rootElement"
+       @attributes="BuildAttributes(ResolveRootCssClass(snapshot))"
+       aria-label="@AriaLabel"
+       data-menu-id="@MenuId"
+       data-display-mode="@layoutMetrics.DisplayMode.ToString().ToLowerInvariant()"
+       data-expanded="@snapshot.IsExpanded.ToString().ToLowerInvariant()"
+       data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}")"
+       @onkeydown="HandleKeyDownAsync">
+    <div class="cad-side-menu__desktop-shell">
+        <header class="cad-side-menu__header">
+            <div class="cad-side-menu__identity">
+                <span class="cad-side-menu__brand-mark" aria-hidden="true">
+                    <Icon Name="@Icon" />
+                </span>
+                @if (snapshot.IsExpanded)
+                {
+                    <div class="cad-side-menu__identity-copy">
+                        @if (HeaderContent is not null)
+                        {
+                            @HeaderContent
+                        }
+                        else
+                        {
+                            <span class="cad-side-menu__title">@Title</span>
+                            @if (!string.IsNullOrWhiteSpace(Subtitle))
+                            {
+                                <span class="cad-side-menu__subtitle">@Subtitle</span>
+                            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <span class="sr-only">@Title</span>
+                }
+            </div>
+
+            @if (AllowCollapse)
+            {
+                <button type="button"
+                        class="cad-side-menu__collapse"
+                        aria-label="@(snapshot.IsExpanded ? "Collapse menu" : "Expand menu")"
+                        aria-pressed="@snapshot.IsExpanded"
+                        data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-toggle")"
+                        @onclick="ToggleExpandedAsync">
+                    <Icon Name="@(snapshot.IsExpanded ? "chevron_left" : "chevron_right")" />
+                </button>
+            }
+        </header>
+
+        <div @ref="itemViewportElement"
+             class="cad-side-menu__items-viewport"
+             data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-primary-region")">
+            <nav class="cad-side-menu__items" aria-label="@AriaLabel">
+                @if (desktopItems.VisibleItems.Count == 0 && desktopItems.MoreItems.Count == 0 && MoreContent is null)
+                {
+                    <div class="cad-side-menu__empty">
+                        @if (EmptyContent is not null)
+                        {
+                            @EmptyContent
+                        }
+                        else
+                        {
+                            <span>No menu items</span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    @foreach (var item in desktopItems.VisibleItems)
+                    {
+                        <div @key="item.Id"
+                             class="cad-side-menu__item-anchor">
+                            <button type="button"
+                                    class="@ResolveItemCssClass(item, snapshot)"
+                                    disabled="@item.Disabled"
+                                    aria-current="@(string.Equals(snapshot.SelectedItemId, item.Id, StringComparison.Ordinal) ? "page" : null)"
+                                    aria-haspopup="@(HasPanel(item) ? "dialog" : null)"
+                                    aria-expanded="@(HasPanel(item) ? string.Equals(openPanelId, item.Id, StringComparison.Ordinal) : null)"
+                                    title="@(!snapshot.IsExpanded ? item.Text : item.Description)"
+                                    data-side-menu-item-id="@item.Id"
+                                    data-testid="@ResolveItemTestId(MenuId, item.Id)"
+                                    @onclick="@(() => ActivateItemAsync(item))">
+                                <span class="cad-side-menu__item-icon" aria-hidden="true">
+                                    <Icon Name="@ResolveIcon(item)" />
+                                </span>
+                                @if (snapshot.IsExpanded)
+                                {
+                                    <span class="cad-side-menu__item-label">@item.Text</span>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                                {
+                                    <span class="cad-side-menu__badge">@item.BadgeText</span>
+                                }
+                            </button>
+
+                            @if (string.Equals(openPanelId, item.Id, StringComparison.Ordinal))
+                            {
+                                <section @ref="openPanelElement"
+                                         class="cad-side-menu__popover"
+                                         role="dialog"
+                                         aria-label="@ResolvePanelTitle(item)"
+                                         data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-panel-{NormalizeForTestId(item.Id)}")">
+                                    <div class="cad-side-menu__popover-header">
+                                        <div class="cad-side-menu__popover-heading">
+                                            <span class="cad-side-menu__popover-icon" aria-hidden="true"><Icon Name="@ResolveIcon(item)" /></span>
+                                            <div>
+                                                <h3>@ResolvePanelTitle(item)</h3>
+                                                @if (!string.IsNullOrWhiteSpace(item.Description))
+                                                {
+                                                    <p>@item.Description</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <button type="button" class="cad-side-menu__popover-close" aria-label="Close panel" @onclick="CloseOverlaysAsync">
+                                            <Icon Name="close" />
+                                        </button>
+                                    </div>
+                                    @if (item.Children.Count > 0)
+                                    {
+                                        <div class="cad-side-menu__panel-list" role="menu">
+                                            @foreach (var child in item.Children.Where(child => child.Visible))
+                                            {
+                                                <button @key="child.Id"
+                                                        type="button"
+                                                        role="menuitem"
+                                                        class="@ResolvePanelItemCssClass(child, snapshot)"
+                                                        disabled="@child.Disabled"
+                                                        data-testid="@ResolveItemTestId(MenuId, child.Id)"
+                                                        @onclick="@(() => SelectPanelItemAsync(child))">
+                                                    <span class="cad-side-menu__panel-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(child)" /></span>
+                                                    <span class="cad-side-menu__panel-item-copy">
+                                                        <strong>@child.Text</strong>
+                                                        @if (!string.IsNullOrWhiteSpace(child.Description))
+                                                        {
+                                                            <small>@child.Description</small>
+                                                        }
+                                                    </span>
+                                                    @if (!string.IsNullOrWhiteSpace(child.BadgeText))
+                                                    {
+                                                        <span class="cad-side-menu__panel-badge">@child.BadgeText</span>
+                                                    }
+                                                </button>
+                                            }
+                                        </div>
+                                    }
+                                    @if (item.PanelContent is not null)
+                                    {
+                                        <div class="cad-side-menu__custom-panel-content">@item.PanelContent</div>
+                                    }
+                                </section>
+                            }
+                        </div>
+                    }
+
+                    @if (desktopItems.MoreItems.Count > 0 || MoreContent is not null)
+                    {
+                        <div class="cad-side-menu__item-anchor">
+                            <button type="button"
+                                    class="@CssClassBuilder.Join("cad-side-menu__item", snapshot.IsExpanded ? "cad-side-menu__item--expanded" : "cad-side-menu__item--collapsed", desktopItems.MoreItems.Any(item => string.Equals(item.Id, snapshot.SelectedItemId, StringComparison.Ordinal)) ? "is-selected" : null)"
+                                    aria-haspopup="dialog"
+                                    aria-expanded="@string.Equals(openPanelId, MorePanelId, StringComparison.Ordinal)"
+                                    title="@MoreText"
+                                    data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-more")"
+                                    @onclick="@(() => ToggleMorePanelAsync())">
+                                <span class="cad-side-menu__item-icon" aria-hidden="true"><Icon Name="more_horiz" /></span>
+                                @if (snapshot.IsExpanded)
+                                {
+                                    <span class="cad-side-menu__item-label">@MoreText</span>
+                                }
+                                @if (desktopItems.MoreItems.Count > 0)
+                                {
+                                    <span class="cad-side-menu__badge">@desktopItems.MoreItems.Count</span>
+                                }
+                            </button>
+
+                            @if (string.Equals(openPanelId, MorePanelId, StringComparison.Ordinal))
+                            {
+                                <section @ref="openPanelElement"
+                                         class="cad-side-menu__popover cad-side-menu__popover--more"
+                                         role="dialog"
+                                         aria-label="@MoreText"
+                                         data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-more-panel")">
+                                    <div class="cad-side-menu__popover-header">
+                                        <div class="cad-side-menu__popover-heading">
+                                            <span class="cad-side-menu__popover-icon" aria-hidden="true"><Icon Name="apps" /></span>
+                                            <div>
+                                                <h3>@MoreText</h3>
+                                                <p>Additional destinations and contextual tools</p>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="cad-side-menu__popover-close" aria-label="Close more menu" @onclick="CloseOverlaysAsync">
+                                            <Icon Name="close" />
+                                        </button>
+                                    </div>
+                                    @if (desktopItems.MoreItems.Count > 0)
+                                    {
+                                        <div class="cad-side-menu__panel-list cad-side-menu__panel-list--grid" role="menu">
+                                            @foreach (var item in desktopItems.MoreItems)
+                                            {
+                                                <button @key="item.Id"
+                                                        type="button"
+                                                        role="menuitem"
+                                                        class="@ResolvePanelItemCssClass(item, snapshot)"
+                                                        disabled="@item.Disabled"
+                                                        data-testid="@ResolveItemTestId(MenuId, item.Id)"
+                                                        @onclick="@(() => SelectPanelItemAsync(item))">
+                                                    <span class="cad-side-menu__panel-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(item)" /></span>
+                                                    <span class="cad-side-menu__panel-item-copy">
+                                                        <strong>@item.Text</strong>
+                                                        @if (!string.IsNullOrWhiteSpace(item.Description))
+                                                        {
+                                                            <small>@item.Description</small>
+                                                        }
+                                                    </span>
+                                                    @if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                                                    {
+                                                        <span class="cad-side-menu__panel-badge">@item.BadgeText</span>
+                                                    }
+                                                </button>
+                                            }
+                                        </div>
+                                    }
+                                    @if (MoreContent is not null)
+                                    {
+                                        <div class="cad-side-menu__custom-panel-content">@MoreContent</div>
+                                    }
+                                </section>
+                            }
+                        </div>
+                    }
+                }
+            </nav>
+
+            <button @ref="measureItemElement"
+                    type="button"
+                    class="cad-side-menu__item cad-side-menu__measure-item @(snapshot.IsExpanded ? "cad-side-menu__item--expanded" : "cad-side-menu__item--collapsed")"
+                    tabindex="-1"
+                    aria-hidden="true">
+                <span class="cad-side-menu__item-icon"><Icon Name="circle" /></span>
+                @if (snapshot.IsExpanded)
+                {
+                    <span class="cad-side-menu__item-label">Measure</span>
+                }
+            </button>
+        </div>
+
+        @if (bottomItems.Length > 0)
+        {
+            <div class="cad-side-menu__bottom"
+                 data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-bottom")">
+                @foreach (var item in bottomItems)
+                {
+                    <div @key="item.Id" class="cad-side-menu__item-anchor cad-side-menu__item-anchor--bottom">
+                        <button type="button"
+                                class="@ResolveItemCssClass(item, snapshot)"
+                                disabled="@item.Disabled"
+                                aria-current="@(string.Equals(snapshot.SelectedItemId, item.Id, StringComparison.Ordinal) ? "page" : null)"
+                                aria-haspopup="@(HasPanel(item) ? "dialog" : null)"
+                                aria-expanded="@(HasPanel(item) ? string.Equals(openPanelId, item.Id, StringComparison.Ordinal) : null)"
+                                title="@item.Text"
+                                data-testid="@ResolveItemTestId(MenuId, item.Id)"
+                                @onclick="@(() => ActivateItemAsync(item))">
+                            <span class="cad-side-menu__item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(item)" /></span>
+                            @if (snapshot.IsExpanded)
+                            {
+                                <span class="cad-side-menu__item-label">@item.Text</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                            {
+                                <span class="cad-side-menu__badge">@item.BadgeText</span>
+                            }
+                        </button>
+
+                        @if (string.Equals(openPanelId, item.Id, StringComparison.Ordinal))
+                        {
+                            <section @ref="openPanelElement"
+                                     class="cad-side-menu__popover cad-side-menu__popover--bottom"
+                                     role="dialog"
+                                     aria-label="@ResolvePanelTitle(item)"
+                                     data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-panel-{NormalizeForTestId(item.Id)}")">
+                                <div class="cad-side-menu__popover-header">
+                                    <div class="cad-side-menu__popover-heading">
+                                        <span class="cad-side-menu__popover-icon" aria-hidden="true"><Icon Name="@ResolveIcon(item)" /></span>
+                                        <div>
+                                            <h3>@ResolvePanelTitle(item)</h3>
+                                            @if (!string.IsNullOrWhiteSpace(item.Description))
+                                            {
+                                                <p>@item.Description</p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <button type="button" class="cad-side-menu__popover-close" aria-label="Close panel" @onclick="CloseOverlaysAsync">
+                                        <Icon Name="close" />
+                                    </button>
+                                </div>
+                                @if (item.Children.Count > 0)
+                                {
+                                    <div class="cad-side-menu__panel-list" role="menu">
+                                        @foreach (var child in item.Children.Where(child => child.Visible))
+                                        {
+                                            <button @key="child.Id"
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="@ResolvePanelItemCssClass(child, snapshot)"
+                                                    disabled="@child.Disabled"
+                                                    data-testid="@ResolveItemTestId(MenuId, child.Id)"
+                                                    @onclick="@(() => SelectPanelItemAsync(child))">
+                                                <span class="cad-side-menu__panel-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(child)" /></span>
+                                                <span class="cad-side-menu__panel-item-copy">
+                                                    <strong>@child.Text</strong>
+                                                    @if (!string.IsNullOrWhiteSpace(child.Description))
+                                                    {
+                                                        <small>@child.Description</small>
+                                                    }
+                                                </span>
+                                                @if (!string.IsNullOrWhiteSpace(child.BadgeText))
+                                                {
+                                                    <span class="cad-side-menu__panel-badge">@child.BadgeText</span>
+                                                }
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                                @if (item.PanelContent is not null)
+                                {
+                                    <div class="cad-side-menu__custom-panel-content">@item.PanelContent</div>
+                                }
+                            </section>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="cad-side-menu__mobile-shell">
+        <button type="button"
+                class="cad-side-menu__mobile-toggle"
+                aria-expanded="@snapshot.IsMobileMenuOpen"
+                aria-label="@(snapshot.IsMobileMenuOpen ? "Close navigation menu" : "Open navigation menu")"
+                data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-mobile-toggle")"
+                @onclick="ToggleMobileMenuAsync">
+            <span class="cad-side-menu__mobile-leading" aria-hidden="true"><Icon Name="@(selectedItem is null ? Icon : ResolveIcon(selectedItem))" /></span>
+            <span class="cad-side-menu__mobile-copy">
+                <small>@Title</small>
+                <strong>@(selectedItem?.Text ?? "Choose a destination")</strong>
+            </span>
+            <span class="cad-side-menu__mobile-chevron" aria-hidden="true"><Icon Name="@(snapshot.IsMobileMenuOpen ? "expand_less" : "expand_more")" /></span>
+        </button>
+
+        @if (snapshot.IsMobileMenuOpen)
+        {
+            <div class="cad-side-menu__mobile-dropdown"
+                 data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-mobile-dropdown")">
+                <nav class="cad-side-menu__mobile-list" aria-label="@AriaLabel">
+                    @foreach (var item in mobilePrimaryItems)
+                    {
+                        <div @key="item.Id" class="cad-side-menu__mobile-item-shell">
+                            <button type="button"
+                                    class="@ResolveMobileItemCssClass(item, snapshot)"
+                                    disabled="@item.Disabled"
+                                    aria-current="@(string.Equals(snapshot.SelectedItemId, item.Id, StringComparison.Ordinal) ? "page" : null)"
+                                    data-testid="@ResolveItemTestId(MenuId, item.Id)"
+                                    @onclick="@(() => ActivateItemAsync(item))">
+                                <span class="cad-side-menu__mobile-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(item)" /></span>
+                                <span class="cad-side-menu__mobile-item-copy">
+                                    <strong>@item.Text</strong>
+                                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                                    {
+                                        <small>@item.Description</small>
+                                    }
+                                </span>
+                                @if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                                {
+                                    <span class="cad-side-menu__panel-badge">@item.BadgeText</span>
+                                }
+                            </button>
+                            @if (string.Equals(openPanelId, item.Id, StringComparison.Ordinal))
+                            {
+                                <div class="cad-side-menu__mobile-inline-panel">
+                                    @if (item.Children.Count > 0)
+                                    {
+                                        @foreach (var child in item.Children.Where(child => child.Visible))
+                                        {
+                                            <button @key="child.Id"
+                                                    type="button"
+                                                    class="@ResolvePanelItemCssClass(child, snapshot)"
+                                                    disabled="@child.Disabled"
+                                                    data-testid="@ResolveItemTestId(MenuId, child.Id)"
+                                                    @onclick="@(() => SelectPanelItemAsync(child))">
+                                                <span class="cad-side-menu__panel-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(child)" /></span>
+                                                <span class="cad-side-menu__panel-item-copy"><strong>@child.Text</strong><small>@child.Description</small></span>
+                                            </button>
+                                        }
+                                    }
+                                    @item.PanelContent
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (mobileMoreItems.Count > 0 || MoreContent is not null)
+                    {
+                        <div class="cad-side-menu__mobile-item-shell">
+                            <button type="button"
+                                    class="cad-side-menu__mobile-item"
+                                    aria-expanded="@string.Equals(openPanelId, MobileMorePanelId, StringComparison.Ordinal)"
+                                    data-testid="@($"side-menu-{NormalizeForTestId(MenuId)}-mobile-more")"
+                                    @onclick="@(() => ToggleMorePanelAsync(mobile: true))">
+                                <span class="cad-side-menu__mobile-item-icon" aria-hidden="true"><Icon Name="more_horiz" /></span>
+                                <span class="cad-side-menu__mobile-item-copy"><strong>@MoreText</strong><small>Additional destinations and tools</small></span>
+                                @if (mobileMoreItems.Count > 0)
+                                {
+                                    <span class="cad-side-menu__panel-badge">@mobileMoreItems.Count</span>
+                                }
+                            </button>
+                            @if (string.Equals(openPanelId, MobileMorePanelId, StringComparison.Ordinal))
+                            {
+                                <div class="cad-side-menu__mobile-inline-panel">
+                                    @foreach (var item in mobileMoreItems)
+                                    {
+                                        <button @key="item.Id"
+                                                type="button"
+                                                class="@ResolvePanelItemCssClass(item, snapshot)"
+                                                disabled="@item.Disabled"
+                                                data-testid="@ResolveItemTestId(MenuId, item.Id)"
+                                                @onclick="@(() => SelectPanelItemAsync(item))">
+                                            <span class="cad-side-menu__panel-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(item)" /></span>
+                                            <span class="cad-side-menu__panel-item-copy"><strong>@item.Text</strong><small>@item.Description</small></span>
+                                        </button>
+                                    }
+                                    @if (MoreContent is not null)
+                                    {
+                                        <div class="cad-side-menu__custom-panel-content">@MoreContent</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </nav>
+
+                @if (bottomItems.Length > 0)
+                {
+                    <div class="cad-side-menu__mobile-bottom">
+                        @foreach (var item in bottomItems)
+                        {
+                            <div @key="item.Id" class="cad-side-menu__mobile-item-shell">
+                                <button type="button"
+                                        class="@ResolveMobileItemCssClass(item, snapshot)"
+                                        disabled="@item.Disabled"
+                                        data-testid="@ResolveItemTestId(MenuId, item.Id)"
+                                        @onclick="@(() => ActivateItemAsync(item))">
+                                    <span class="cad-side-menu__mobile-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(item)" /></span>
+                                    <span class="cad-side-menu__mobile-item-copy"><strong>@item.Text</strong><small>@item.Description</small></span>
+                                    @if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                                    {
+                                        <span class="cad-side-menu__panel-badge">@item.BadgeText</span>
+                                    }
+                                </button>
+                                @if (string.Equals(openPanelId, item.Id, StringComparison.Ordinal))
+                                {
+                                    <div class="cad-side-menu__mobile-inline-panel">
+                                        @foreach (var child in item.Children.Where(child => child.Visible))
+                                        {
+                                            <button @key="child.Id"
+                                                    type="button"
+                                                    class="@ResolvePanelItemCssClass(child, snapshot)"
+                                                    disabled="@child.Disabled"
+                                                    data-testid="@ResolveItemTestId(MenuId, child.Id)"
+                                                    @onclick="@(() => SelectPanelItemAsync(child))">
+                                                <span class="cad-side-menu__panel-item-icon" aria-hidden="true"><Icon Name="@ResolveIcon(child)" /></span>
+                                                <span class="cad-side-menu__panel-item-copy"><strong>@child.Text</strong><small>@child.Description</small></span>
+                                            </button>
+                                        }
+                                        @item.PanelContent
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</aside>
+
+@if (hasOverlay)
+{
+    <button type="button"
+            class="cad-side-menu__backdrop"
+            tabindex="-1"
+            aria-label="Close menu overlays"
+            @onclick="CloseOverlaysAsync"></button>
+}

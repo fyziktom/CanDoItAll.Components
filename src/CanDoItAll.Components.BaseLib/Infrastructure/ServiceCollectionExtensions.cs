@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<DialogService>();
         services.AddScoped<TooltipService>();
         services.AddScoped<NotificationService>();
+        services.AddScoped<SideMenuService>();
         return services;
     }
 }

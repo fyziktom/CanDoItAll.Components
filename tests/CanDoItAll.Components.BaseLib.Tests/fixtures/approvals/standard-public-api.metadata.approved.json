@@ -1444,6 +1444,28 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.ISideMenuItem",
+        "kind": "interface",
+        "isAbstract": true,
+        "isSealed": false,
+        "baseType": "",
+        "members": [
+          "property CanDoItAll.Components.BaseLib.SideMenuItemActivation Activation {get;}",
+          "property CanDoItAll.Components.BaseLib.SideMenuOverflowBehavior OverflowBehavior {get;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment PanelContent {get;}",
+          "property System.Boolean Disabled {get;}",
+          "property System.Boolean Visible {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E Children {get;}",
+          "property System.Object Payload {get;}",
+          "property System.String BadgeText {get;}",
+          "property System.String Description {get;}",
+          "property System.String Icon {get;}",
+          "property System.String Id {get;}",
+          "property System.String PanelTitle {get;}",
+          "property System.String Text {get;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.Icon",
         "kind": "class",
         "isAbstract": false,
@@ -2572,6 +2594,255 @@
         "members": [
           "ctor()",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenu",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Boolean SetExpanded(System.Boolean isExpanded)",
+          "method System.Boolean ToggleExpanded()",
+          "method System.Threading.Tasks.Task OnSideMenuLayoutChanged(CanDoItAll.Components.BaseLib.SideMenuLayoutMetrics metrics)",
+          "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E SelectAsync(System.String itemId)",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "method System.Void ResetItems()",
+          "method System.Void SetItems(System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E items)",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.BaseLib.SideMenuSelection\u003E ItemSelected {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Boolean\u003E ExpandedChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment BottomMenuItems {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment EmptyContent {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment HeaderContent {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment MenuItems {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment MoreContent {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment MoreMenuItems {get;set;}",
+          "property System.Boolean AllowCollapse {get;set;}",
+          "property System.Boolean Expanded {get;set;}",
+          "property System.Boolean FillHeight {get;set;}",
+          "property System.Boolean PersistExpandedState {get;set;}",
+          "property System.Boolean RestoreExpandedState {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E BottomItems {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E Items {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E MoreItems {get;set;}",
+          "property System.Nullable\u003CSystem.Int32\u003E VisibleItemCapacity {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String MenuId {get;set;}",
+          "property System.String MoreText {get;set;}",
+          "property System.String PersistenceKey {get;set;}",
+          "property System.String Subtitle {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuDisplayMode",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuDisplayMode Large",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuDisplayMode Medium",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuDisplayMode Small"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuItem",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Void Dispose()",
+          "property CanDoItAll.Components.BaseLib.SideMenuItemActivation Activation {get;set;}",
+          "property CanDoItAll.Components.BaseLib.SideMenuOverflowBehavior OverflowBehavior {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.BaseLib.SideMenuSelection\u003E Selected {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment PanelContent {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
+          "property System.Boolean Visible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E Children {get;set;}",
+          "property System.Object Payload {get;set;}",
+          "property System.String BadgeText {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String PanelTitle {get;set;}",
+          "property System.String Text {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuItemActivation",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuItemActivation Auto",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuItemActivation OpenPanel",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuItemActivation Select"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuItemDefinition",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.BaseLib.SideMenuItemDefinition \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.SideMenuItemDefinition other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.BaseLib.SideMenuItemActivation Activation {get;set;}",
+          "property CanDoItAll.Components.BaseLib.SideMenuOverflowBehavior OverflowBehavior {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment PanelContent {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
+          "property System.Boolean Visible {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E Children {get;set;}",
+          "property System.Object Payload {get;set;}",
+          "property System.String BadgeText {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String PanelTitle {get;set;}",
+          "property System.String Text {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuLayoutMetrics",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.BaseLib.SideMenuDisplayMode DisplayMode {get;set;}",
+          "property System.Int32 VisibleItemCapacity {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuOverflowBehavior",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuOverflowBehavior AlwaysInMore",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuOverflowBehavior Auto",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuOverflowBehavior PreferVisible"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuSelection",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String MenuId, System.String ItemId, CanDoItAll.Components.BaseLib.ISideMenuItem Item, CanDoItAll.Components.BaseLib.SideMenuSelectionSource Source, System.DateTimeOffset SelectedAtUtc)",
+          "method CanDoItAll.Components.BaseLib.SideMenuSelection \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.SideMenuSelection other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String MenuId, out System.String ItemId, out CanDoItAll.Components.BaseLib.ISideMenuItem Item, out CanDoItAll.Components.BaseLib.SideMenuSelectionSource Source, out System.DateTimeOffset SelectedAtUtc)",
+          "property CanDoItAll.Components.BaseLib.ISideMenuItem Item {get;set;}",
+          "property CanDoItAll.Components.BaseLib.SideMenuSelectionSource Source {get;set;}",
+          "property System.DateTimeOffset SelectedAtUtc {get;set;}",
+          "property System.String ItemId {get;set;}",
+          "property System.String MenuId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuSelectionSource",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuSelectionSource External",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuSelectionSource Keyboard",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuSelectionSource Pointer"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuService",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "event System.EventHandler\u003CCanDoItAll.Components.BaseLib.SideMenuStateChangedEventArgs\u003E Changed",
+          "method CanDoItAll.Components.BaseLib.SideMenuSnapshot GetSnapshot(System.String menuId)",
+          "method System.Boolean SetExpanded(System.String menuId, System.Boolean isExpanded)",
+          "method System.Boolean SetMobileMenuOpen(System.String menuId, System.Boolean isOpen)",
+          "method System.Boolean ToggleExpanded(System.String menuId)",
+          "method System.Boolean ToggleMobileMenu(System.String menuId)",
+          "method System.IDisposable Subscribe(System.String menuId, System.Func\u003CCanDoItAll.Components.BaseLib.SideMenuSelection,System.Threading.Tasks.ValueTask\u003E handler)",
+          "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E SelectAsync(System.String menuId, System.String itemId, CanDoItAll.Components.BaseLib.SideMenuSelectionSource source = optional)",
+          "method System.Void ResetItems(System.String menuId)",
+          "method System.Void SetItems(System.String menuId, System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E items)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuSnapshot",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.String MenuId, System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E Items, System.String SelectedItemId, System.Boolean IsExpanded, System.Boolean IsMobileMenuOpen, System.Boolean HasItemsOverride, System.Boolean HasExplicitExpandedState)",
+          "method CanDoItAll.Components.BaseLib.SideMenuSnapshot \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.SideMenuSnapshot other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String MenuId, out System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E Items, out System.String SelectedItemId, out System.Boolean IsExpanded, out System.Boolean IsMobileMenuOpen, out System.Boolean HasItemsOverride, out System.Boolean HasExplicitExpandedState)",
+          "property System.Boolean HasExplicitExpandedState {get;set;}",
+          "property System.Boolean HasItemsOverride {get;set;}",
+          "property System.Boolean IsExpanded {get;set;}",
+          "property System.Boolean IsMobileMenuOpen {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.ISideMenuItem\u003E Items {get;set;}",
+          "property System.String MenuId {get;set;}",
+          "property System.String SelectedItemId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuStateChangeKind",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuStateChangeKind Expanded",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuStateChangeKind Items",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuStateChangeKind MobileMenu",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuStateChangeKind None",
+          "field static const CanDoItAll.Components.BaseLib.SideMenuStateChangeKind Selection"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SideMenuStateChangedEventArgs",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.EventArgs",
+        "members": [
+          "ctor(System.String menuId, CanDoItAll.Components.BaseLib.SideMenuStateChangeKind changeKind)",
+          "property CanDoItAll.Components.BaseLib.SideMenuStateChangeKind ChangeKind {get;}",
+          "property System.String MenuId {get;}"
         ]
       },
       {

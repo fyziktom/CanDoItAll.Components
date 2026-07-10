@@ -8,7 +8,7 @@ Primary shared Razor component library with theme tokens, layout primitives, for
 
 ## Component Catalog
 
-BaseLib currently exposes 161 Razor components. Links point to the component source file.
+BaseLib currently exposes 163 Razor components. Links point to the component source file.
 
 ### Badges, Chips, And Status
 
@@ -182,6 +182,8 @@ BaseLib currently exposes 161 Razor components. Links point to the component sou
 - [PageHeaderCopy](Components/Navigation/Compatibility/PageHeaderCopy.razor)
 - [RibbonTabs](Components/Navigation/RibbonTabs.razor)
 - [SecondaryTabs](Components/Navigation/SecondaryTabs.razor)
+- [SideMenu](Components/Navigation/SideMenu.razor)
+- [SideMenuItem](Components/Navigation/SideMenuItem.razor)
 - [Steps](Components/Navigation/Steps.razor)
 - [StepsItem](Components/Navigation/StepsItem.razor)
 - [Tabs](Components/Navigation/Tabs.razor)
@@ -240,6 +242,60 @@ Direct package references:
 ## Architecture Notes
 
 Keep shared UI reusable and typed. Use BaseLib for ordinary product UI, CanvasLib for graph/canvas surfaces, OverlayLib for floating windows, WebGlLib for WebGL concepts, and sandbox projects only for demos or proof.
+
+## Side Menu
+
+`SideMenu` accepts typed items through `Items`, `MoreItems`, and `BottomItems`, and it also supports declarative `SideMenuItem` tags in the matching Razor regions. Both sources are composed into the same selection and overflow model:
+
+```razor
+<SideMenu MenuId="workspace"
+          Title="Workspace"
+          Items="@PinnedItems"
+          @bind-Expanded="menuExpanded"
+          ItemSelected="HandleSelection">
+    <MenuItems>
+        <SideMenuItem Id="timeline" Text="Timeline" Icon="timeline" />
+        <SideMenuItem Id="audit"
+                      Text="Audit archive"
+                      Icon="inventory"
+                      OverflowBehavior="SideMenuOverflowBehavior.AlwaysInMore" />
+    </MenuItems>
+    <MoreContent>
+        @* Optional custom content below the typed More items. *@
+    </MoreContent>
+    <BottomMenuItems>
+        <SideMenuItem Id="settings" Text="Settings" Icon="settings">
+            <PanelContent>@* Optional BaseLib subcard or menu. *@</PanelContent>
+        </SideMenuItem>
+    </BottomMenuItems>
+</SideMenu>
+```
+
+Use the scoped `SideMenuService` when a tab or another application feature needs to drive the menu without a component reference. `SetItems` temporarily replaces the declared primary items, `ResetItems` restores them, and external selection follows the same callback pipeline as pointer selection:
+
+```csharp
+@inject SideMenuService SideMenus
+@implements IDisposable
+
+@code {
+    private IDisposable? subscription;
+
+    protected override void OnInitialized()
+        => subscription = SideMenus.Subscribe(
+            "workspace",
+            selection => HandleSelectionAsync(selection));
+
+    private void ShowProjectMenu(IReadOnlyList<ISideMenuItem> items)
+        => SideMenus.SetItems("workspace", items);
+
+    private Task<bool> SelectTimelineAsync()
+        => SideMenus.SelectAsync("workspace", "timeline");
+
+    public void Dispose() => subscription?.Dispose();
+}
+```
+
+`SetExpanded` and `ToggleExpanded` provide external state control. The component also exposes two-way `Expanded` binding and, by default, remembers each `MenuId` under `localStorage`; set `PersistExpandedState="false"` when persistence belongs to application settings instead. Desktop item capacity is measured from the real available height, while the small breakpoint changes the rail into a top menu that opens downward.
 
 ## Overlay Services
 
