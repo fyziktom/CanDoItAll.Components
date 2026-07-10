@@ -1,19 +1,8 @@
-# CanvasLib Ownership
+# CanvasLib runtime assets
 
-`CanDoItAll.Components.CanvasLib` is the canonical shared canvas implementation for active CanDoItAll consumers.
+This note is for contributors who need to change CanvasLib's shipped browser assets. For application setup, workbench composition, and floating-window guidance, start with the [Canvas guide](../../../docs/canvas/README.md).
 
-Current direct project references:
-- `CanDoItAll.Components`
-- `CanDoItAll.Components.Sandbox`
-- `CanDoItAll.Mcp.Components`
-- `CanDoItAll.Modules.Factory`
-- `CanDoItAll.Modules.Workbench`
-- `CanDoItAll.Web`
-
-Rules:
-- Put new shared canvas runtime work here.
-- Keep public runtime behavior stable for ProjectStructure and PromptFactory.
-- Treat other canvas trees as compatibility-only until a measured consolidation plan is approved.
+CanvasLib is the shared runtime for canvas workbenches, canvas overlays, and interactive calendars. Keep shared browser behavior here and preserve its typed public contracts so consuming Blazor applications can upgrade without rebuilding their workspace infrastructure.
 
 ## Runtime Asset Map
 

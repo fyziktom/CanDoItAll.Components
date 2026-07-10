@@ -4,7 +4,11 @@ Package version: `0.1.0`.
 
 ## Purpose
 
-Generic run, frame, action, stage, planner, compiler, and playback contracts layered above `CanDoItAll.Components.WebGlLib`.
+WebGlRunLib adds deterministic, domain-neutral playback over WebGlLib scenes. Use it when a 3D surface must run a defined timeline of frames, actions, scene patches, motions, barriers, pause/resume, or proof snapshots. It models the playback language; a consuming application maps its own domain concepts into that language.
+
+## When to use it
+
+Use WebGlLib alone for an interactive scene that your page updates directly. Add WebGlRunLib when you need an ordered, inspectable run document and playback controls that can seek, step, pause, resume, reset, and prove what the browser observed. It intentionally does not define domain workflows, simulation engines, or persistence providers.
 
 ## Project Type
 
@@ -26,7 +30,7 @@ Direct package references:
 
 - None
 
-## Contracts
+## Key contracts
 
 - `WebGlRunDocument` is the generic run document. It contains a run id, initial `WebGlSceneDocument`, `WebGlRunTimeline`, and generic metadata.
 - `WebGlRunTimeline` owns ordered `WebGlRunFrame` entries with frame index and time.

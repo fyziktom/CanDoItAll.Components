@@ -4,7 +4,38 @@ Package version: `0.1.0`.
 
 ## Purpose
 
-Primary shared Razor component library with theme tokens, layout primitives, forms, buttons, cards, feedback, navigation, tabs, and CSS output.
+BaseLib is the everyday UI toolkit in CanDoItAll.Components: ready-made, Tailwind-styled Razor components for product pages, forms, navigation, feedback, layout, dialogs, and application chrome. Use it to establish a consistent Blazor UI quickly while keeping your page state and business behavior in the application.
+
+## Get started
+
+Add the namespace, register BaseLib services once, and include the shared stylesheet in the host document:
+
+```csharp
+// Program.cs
+builder.Services.AddCanDoItAllBaseLib();
+```
+
+```razor
+@* App.razor <head> *@
+<link rel="stylesheet" href="_content/CanDoItAll.Components.BaseLib/css/output.css" />
+```
+
+```razor
+@using CanDoItAll.Components.BaseLib
+
+<SectionCard Title="Release review" Description="A composed surface using shared spacing and Tailwind styling.">
+    <Stack GapScale="LayoutGap.Medium">
+        <StatusBadge Text="Ready" Tone="success" />
+        <Button Text="Open review" />
+    </Stack>
+</SectionCard>
+```
+
+Use BaseLib for ordinary, document-style product UI. Choose [OverlayLib](../CanDoItAll.Components.OverlayLib/README.md) for bounded floating tools, [CanvasLib](../CanDoItAll.Components.CanvasLib/README.md) for stateful workbenches, and the focused packages for charts, Mermaid, QR, or WebGL.
+
+## What is included
+
+The catalog is grouped by the way developers assemble pages: visual status and actions; cards and metric panels; forms and data display; layout and navigation; dialog, tooltip, and notification feedback; and supporting typography. Compatibility components remain listed so existing consumers can migrate intentionally.
 
 ## Component Catalog
 
@@ -337,5 +368,5 @@ For agent-driven changes, query the Components MCP metadata for `Notification`, 
 
 ## Related Docs
 
-- Repository overview: `README.md` at this repo root
-- Main repo shared component docs: `C:\repositories\CanDoItAll\docs\ui-shared-components\README.md`
+- [Repository overview](../../README.md)
+- [Canvas workspace guide](../../docs/canvas/README.md)

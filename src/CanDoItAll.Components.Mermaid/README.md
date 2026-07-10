@@ -4,7 +4,32 @@ Package version: `0.1.0`.
 
 ## Purpose
 
-Shared Razor Mermaid diagram component with source normalization, render result models, render error models, node-click event arguments, and Mermaid head assets.
+Mermaid renders authored flowcharts, sequence diagrams, and architecture maps inside a Blazor application. It wraps Mermaid with source normalization, pan/zoom controls, typed render errors, render results, node-click events, and the static assets a host needs.
+
+## Quick start
+
+Register the renderer, include its assets once in the document head, then provide Mermaid source to `MermaidDiagram`:
+
+```csharp
+// Program.cs
+builder.Services.AddCanDoItAllMermaid();
+```
+
+```razor
+@using CanDoItAll.Components.Mermaid
+
+@* App.razor <head> *@
+<MermaidHeadAssets />
+
+<MermaidDiagram Title="Approval flow"
+                Source="""
+                    flowchart LR
+                        Draft --> Review --> Approved
+                    """
+                NodeClicked="HandleNodeClicked" />
+```
+
+Use the `Rendered` and `Error` callbacks when a page needs to react to diagram lifecycle or explain syntax problems. The Sandbox `/groups/mermaid` route provides a live reference.
 
 ## Project Type
 
@@ -32,7 +57,7 @@ Direct package references:
 
 ## Architecture Notes
 
-Use this component for product-rendered Mermaid diagrams. Keep syntax guidance and authoring assistance in `CanDoItAll.Mcp.Mermaid`; this library should stay focused on rendering, options, normalization, and typed UI events.
+Use this component for product-rendered Mermaid diagrams. Keep syntax guidance and authoring assistance outside the renderer; this library stays focused on rendering, options, normalization, and typed UI events.
 
 ## Security defaults
 
@@ -40,5 +65,5 @@ Use this component for product-rendered Mermaid diagrams. Keep syntax guidance a
 
 ## Related Docs
 
-- Repository overview: `README.md` at this repo root
-- Main repo shared component docs: `C:\repositories\CanDoItAll\docs\ui-shared-components\README.md`
+- [Repository overview](../../README.md)
+- [Sandbox Mermaid examples](../CanDoItAll.Components.Sandbox/README.md)

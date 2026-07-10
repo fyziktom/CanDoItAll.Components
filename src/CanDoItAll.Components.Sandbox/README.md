@@ -4,7 +4,15 @@ Package version: `0.1.0`.
 
 ## Purpose
 
-Blazor sandbox for previewing, tuning, and regression-checking shared component behavior.
+The Sandbox is the living visual catalog for CanDoItAll.Components. It lets developers preview components in realistic compositions, compare happy/dense/empty scenarios, and capture browser-level regression evidence before taking a dependency into a product page.
+
+Run it locally with:
+
+```powershell
+dotnet run --project src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
+```
+
+Then open the local URL shown by ASP.NET Core. The home page links to the catalog groups; focused routes include `/groups/charts`, `/groups/mermaid`, `/groups/qr`, `/groups/overlays`, and `/groups/canvas`.
 
 ## Project Type
 
@@ -32,9 +40,12 @@ Direct package references:
 
 - None
 
-## Architecture Notes
+## Canvas and floating-window examples
 
-Keep shared UI reusable and typed. Use BaseLib for ordinary product UI, CanvasLib for graph/canvas surfaces, OverlayLib for floating windows, WebGlLib for WebGL concepts, and sandbox projects only for demos or proof.
+- `/groups/overlays` demonstrates `OverlayWindow` above a normal BaseLib review frame. The window is bounded by the frame and respects a safe-top toolbar.
+- `/groups/canvas` demonstrates `CanvasFloatingWindow` inside `CanvasWorkbench.OverlayContent`, where its geometry and visibility remain part of typed workbench state. It also includes an overlap scenario for activation-order proof.
+
+Use these routes to understand the difference between a page-local supporting tool and a canvas-owned inspector. The [Canvas guide](../../docs/canvas/README.md) explains the architecture behind the examples.
 
 ## Overlay Service Examples
 
@@ -52,5 +63,5 @@ The sandbox examples should stay aligned with the Components MCP guidance: choos
 
 ## Related Docs
 
-- Repository overview: `README.md` at this repo root
-- Main repo shared component docs: `C:\repositories\CanDoItAll\docs\ui-shared-components\README.md`
+- [Repository overview](../../README.md)
+- [Canvas workspace guide](../../docs/canvas/README.md)

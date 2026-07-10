@@ -1,70 +1,82 @@
 # CanDoItAll.Components.OverlayLib
 
-Package version: `0.1.0`.
+OverlayLib supplies floating, task-focused windows for Blazor pages. Use it when a user needs a supporting tool - an inspector, filter panel, live status, or preview - without navigating away from the current work.
 
-## Purpose
+`OverlayWindow` is deliberately bounded: it lives inside a host frame, can respect a toolbar/safe-top area, and provides consistent drag, resize, minimize, reset, hide, and show behavior. It complements normal page content; it should not become a replacement for page navigation or an unbounded desktop-window imitation.
 
-Floating overlay and window component library for workbench and tool surfaces.
+## Add it once
 
-OverlayLib owns generic floating-window behavior through `OverlayWindow`, `OverlayWindowState`, generated asset components, and a plain browser JavaScript runtime for bounded placement, drag, resize, minimize, reset, hide, and show behavior.
-
-## Project Type
-
-- SDK: `Microsoft.NET.Sdk.Razor`
-- Target framework(s): `net10.0`
-- Packable: `true`
-- Package readme: `README.md`
-
-## Package Usage
-
-Reference the package from a Blazor app or another Razor class library, then add the generated asset components once in the host shell:
+Import the namespace and include the generated assets in the host document. This has no npm runtime dependency.
 
 ```razor
-<OverlayLibHeadAssets />
-<OverlayLibBodyAssets IncludeRuntimeAssets="true" />
+@using CanDoItAll.Components.OverlayLib
+
+@* App.razor *@
+<head>
+    ...
+    <OverlayLibHeadAssets />
+</head>
+<body>
+    ...
+    <OverlayLibBodyAssets IncludeRuntimeAssets="true" />
+</body>
 ```
 
-`OverlayWindow` can be hosted inside any bounded container. Use `ContainerSelector` and `SafeTopSelector` when the window must stay inside a specific host frame and below a toolbar/safe-top region.
+## A bounded floating inspector
 
-## References
+The host frame must be positioned and have a meaningful size. Pass selectors for the container and, when present, the toolbar that the window must not cover. Store `OverlayWindowState` in the page or feature state; the `StateChanged` callback is where drag, resize, and visibility changes come back to your application.
 
-Project references:
+```razor
+<div class="relative min-h-[28rem] overflow-hidden rounded-2xl border"
+     data-testid="review-frame">
+    <header class="relative z-10 border-b p-3" data-testid="review-toolbar">
+        Review tools
+    </header>
 
-- `../CanDoItAll.Components.BaseLib/CanDoItAll.Components.BaseLib.csproj`
+    <section class="p-6">Your ordinary page content remains here.</section>
 
-Framework references:
+    @if (inspector.IsVisible)
+    {
+        <OverlayWindow WindowId="review-inspector"
+                       Title="Inspector"
+                       Summary="Supporting context for this review."
+                       State="@inspector"
+                       StateChanged="HandleInspectorChanged"
+                       DefaultPlacement="top-right"
+                       ContainerSelector="[data-testid='review-frame']"
+                       SafeTopSelector="[data-testid='review-toolbar']">
+            <TextBlock TextStyle="TextStyle.Body2"
+                       Value="This panel can move without taking the user away from the page." />
+        </OverlayWindow>
+    }
+</div>
 
-- None
+@code {
+    private OverlayWindowState inspector = new();
 
-Direct package references:
+    private Task HandleInspectorChanged(OverlayWindowState next)
+    {
+        inspector = OverlayWindowState.Normalize(next);
+        return Task.CompletedTask;
+    }
+}
+```
 
-- `Microsoft.AspNetCore.Components.Web (10.0.4)`
+![OverlayLib inspector over a bounded ordinary page frame](../../docs/assets/overlay-window-page.png)
 
-## Runtime Dependency Policy
+## OverlayLib and CanvasLib
 
-No npm runtime dependency is required for OverlayLib floating-window behavior. Runtime implementation is C#/Razor plus plain browser JavaScript loaded from package static web assets.
+OverlayLib owns the generic window lifecycle and browser runtime. `CanvasLib` uses it through `CanvasFloatingWindow`, adding a canvas-specific state type and default stage boundaries. Use `OverlayWindow` on ordinary pages; use `CanvasFloatingWindow` inside `CanvasWorkbench.OverlayContent` when the panel belongs to a workbench. See the [Canvas guide](../../docs/canvas/README.md) for that composition.
 
-Node/npm usage in this repository is tooling-only for asset generation/verification, Tailwind, Playwright proof, and related test automation.
+## See it running
 
-## Publishing Validation
+The Sandbox route `/groups/overlays` renders a standard BaseLib review frame with a real `OverlayWindow`. It is the visual reference for bounded placement, safe-top behavior, and hide/show/minimize flows. The companion Canvas example lives at `/groups/canvas`.
 
-Run these checks before publishing or transferring the package:
+## Development
 
 ```powershell
 dotnet build src/CanDoItAll.Components.OverlayLib/CanDoItAll.Components.OverlayLib.csproj --no-restore
 dotnet test tests/CanDoItAll.Components.BaseLib.Tests/CanDoItAll.Components.BaseLib.Tests.csproj --filter FullyQualifiedName~CanvasOverlayPublishingApprovalTests --no-restore
-dotnet pack src/CanDoItAll.Components.OverlayLib/CanDoItAll.Components.OverlayLib.csproj --configuration Release --no-restore --output artifacts/packages/sb09
 ```
 
-The focused publishing approval tests freeze CanvasLib/OverlayLib public API metadata, packability/readme metadata, and static web asset manifests.
-
-## Architecture Notes
-
-Keep shared UI reusable and typed. Use BaseLib for ordinary product UI, CanvasLib for graph/canvas surfaces, OverlayLib for floating windows, WebGlLib for WebGL concepts, and sandbox projects only for demos or proof.
-
-OverlayLib owns generic floating-window behavior. `OverlayWindow` and `OverlayWindowState` define visibility, minimized status, geometry normalization, container/safe-top placement, drag/resize lifecycle, reset/hide/show behavior, and the plain browser JavaScript runtime used by both OverlayLib and CanvasLib wrappers. Canvas-specific wrappers should adapt their own state into `OverlayWindowState` instead of duplicating generic window lifecycle logic.
-
-## Related Docs
-
-- Repository overview: `README.md` at this repo root
-- Canvas wrapper ownership note: `../CanDoItAll.Components.CanvasLib/Canvas/README.md`
+Targets `net10.0`. The package references BaseLib and `Microsoft.AspNetCore.Components.Web`; it requires no npm runtime package.

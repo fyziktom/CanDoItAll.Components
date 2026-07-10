@@ -4,7 +4,9 @@ Package version: `0.1.0`.
 
 ## Purpose
 
-Dependency-light shared component primitives and non-rendering contracts.
+Common is the small, dependency-light foundation beneath the rendering libraries. It contains CSS class helpers, component attribute helpers, and typed layout primitives such as orientation, alignment, justification, and wrapping. It is useful when a shared feature needs UI vocabulary without depending on Razor rendering or a browser runtime.
+
+Most Blazor applications should reference `BaseLib` rather than Common directly. Reference Common when authoring a reusable library that needs these neutral contracts but should remain independent of the visual component package.
 
 ## Project Type
 
@@ -32,9 +34,8 @@ Direct package references:
 
 ## Architecture Notes
 
-Keep shared UI reusable and typed. Use BaseLib for ordinary product UI, CanvasLib for graph/canvas surfaces, OverlayLib for floating windows, WebGlLib for WebGL concepts, and sandbox projects only for demos or proof.
+Common deliberately contains no components, JavaScript, or Tailwind output. Keep it generic and framework-light; move rendered UI to BaseLib or a specialised library. See the [main README](../../README.md) for the library map.
 
 ## Related Docs
 
-- Repository overview: `README.md` at this repo root
-- Main repo shared component docs: `C:\repositories\CanDoItAll\docs\ui-shared-components\README.md`
+- [Repository overview](../../README.md)

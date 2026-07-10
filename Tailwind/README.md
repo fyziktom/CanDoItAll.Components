@@ -1,6 +1,6 @@
 # CanDoItAll.Components Tailwind
 
-This workspace builds the shared component stylesheet shipped by `CanDoItAll.Components.BaseLib`.
+This workspace builds the shared Tailwind CSS shipped by `CanDoItAll.Components.BaseLib`. It is the styling source for the reusable Blazor UI library, not the place for product-specific page styling.
 
 Install dependencies:
 
@@ -22,4 +22,4 @@ npm run watch
 
 The output is written to `..\src\CanDoItAll.Components.BaseLib\wwwroot\css\output.css`.
 
-The main CanDoItAll repo has its own Tailwind workspace for app-specific styles. Keep reusable component CSS here; keep main-only selectors in `C:\repositories\CanDoItAll\Tailwind`.
+Keep reusable component selectors, tokens, and patterns here. Keep application-only selectors in the consuming application's Tailwind workspace. After changing the shared styles, build them and verify the relevant Sandbox route so a component's markup and CSS remain aligned.

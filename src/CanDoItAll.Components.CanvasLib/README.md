@@ -1,84 +1,133 @@
 # CanDoItAll.Components.CanvasLib
 
-Package version: `0.1.1`.
+CanvasLib is a small framework for building stateful, interactive workspace surfaces in Blazor. Use it when a normal document-style page is no longer enough: your users need to pan and zoom a node graph, inspect context without losing their place, compose work on a stage, or work through a rich calendar.
 
-## Purpose
+It is deliberately more than a collection of isolated controls. The library provides the contracts, workbench host, browser runtime, accessibility mirror, interaction callbacks, canvas-specific overlays, and host asset order that let an application own the business state while CanvasLib owns the interaction mechanics.
 
-Shared canvas, graph, workbench, calendar, preview, and accessibility components for CanDoItAll workbench-style interactive surfaces.
+![CanvasLib layered model](../../docs/assets/canvas-layered-model.png)
 
-CanvasLib owns the typed Canvas contracts and shipped browser runtime for:
+## Is CanvasLib the right fit?
 
-- `CanvasWorkbench` and its workbench state/contracts.
-- `CanvasCalendar` and calendar CRUD/export/request contracts.
-- graph primitive, composition, interaction, overlay, chrome, and diagnostic preview components.
-- `CanvasFloatingWindow`, which adapts Canvas state into OverlayLib's generic `OverlayWindow` runtime.
-- generated static asset components that load the runtime in a deterministic order.
+Use CanvasLib for an authoring workspace, graph, process map, planning board, visual inspector, or dense calendar where state and interaction belong together. Use `BaseLib` for standard forms, pages, and cards. Use `OverlayLib` directly when a floating tool belongs to a normal page rather than a canvas. CanvasLib already depends on and composes both libraries where appropriate.
 
-## Project Type
+## Core concepts
 
-- SDK: `Microsoft.NET.Sdk.Razor`
-- Target framework(s): `net10.0`
-- Packable: `true`
-- Package readme: `README.md`
+| Concept | Your application owns | CanvasLib owns |
+| --- | --- | --- |
+| `CanvasWorkbenchSurface` | Nodes, links, mode, chrome, and the current `CanvasWorkbenchUiState`. | Rendering a workbench from that typed surface. |
+| `CanvasWorkbench` | Handling selection, movement, context actions, editing, clipboard, and persistence callbacks. | Canvas lifecycle, pan/zoom interaction, toolbar, accessibility mirror, and runtime interop. |
+| `CanvasFloatingWindow` | `CanvasWorkbenchWindowState` and the inspector's content. | A canvas-bounded, draggable, resizable window backed by OverlayLib. |
+| `CanvasCalendar` | Events, commands, and save/export/search callbacks. | Interactive calendar surface and its browser-side behavior. |
 
-## Package Usage
+The boundary is intentional: do not place business rules in JavaScript, and do not rebuild the workbench shell in every consuming page.
 
-Reference the package from a Blazor app or another Razor class library, then add the generated asset components once in the host shell:
+## Add CanvasLib to a host
+
+Reference the package and add the namespace to `_Imports.razor` or the consuming component:
 
 ```razor
-<CanvasLibHeadAssets />
-<CanvasLibBodyAssets IncludeRuntimeAssets="true"
-                     IncludePreviewAssets="true"
-                     IncludeCalendarAssets="true" />
+@using CanDoItAll.Components.CanvasLib
 ```
 
-`CanvasLibHeadAssets` includes OverlayLib head assets first. `CanvasLibBodyAssets` includes OverlayLib runtime assets first, then Canvas service/runtime scripts, optional preview scripts, and optional calendar scripts. Do not hand-edit these generated asset components; update `tools/canvaslib/build-assets.cjs` and run the asset build if the verified order needs to change.
+Add generated assets once in the host document. The Canvas asset components include OverlayLib in the required order; do not add hand-maintained copies of their runtime scripts.
 
-## References
+```razor
+@* App.razor *@
+<head>
+    ...
+    <CanvasLibHeadAssets />
+</head>
+<body>
+    ...
+    <CanvasLibBodyAssets IncludeRuntimeAssets="true"
+                         IncludePreviewAssets="false"
+                         IncludeCalendarAssets="true" />
+</body>
+```
 
-Project references:
+## Minimal workbench
 
-- `../CanDoItAll.Components.BaseLib/CanDoItAll.Components.BaseLib.csproj`
-- `../CanDoItAll.Components.Common/CanDoItAll.Components.Common.csproj`
-- `../CanDoItAll.Components.OverlayLib/CanDoItAll.Components.OverlayLib.csproj`
+Create a `CanvasWorkbenchSurface` in application code, render it, and react to the typed events. Keep the surface in your page, feature state store, or domain layer so it can be saved and restored like any other application state.
 
-Framework references:
+```razor
+<CanvasWorkbench Surface="@surface"
+                 SelectionChanged="HandleSelectionChanged"
+                 NodesMoved="HandleNodesMoved"
+                 ContextActionRequested="HandleContextAction">
+    <ToolbarLeftContent>
+        <StatusBadge Text="Planning board" Tone="info" />
+    </ToolbarLeftContent>
+</CanvasWorkbench>
 
-- None
+@code {
+    private readonly CanvasWorkbenchSurface surface = new()
+    {
+        SurfaceId = "planning-board",
+        Nodes = [ /* map application records to CanvasWorkbenchNode */ ],
+        Links = [ /* map relationships to CanvasWorkbenchLink */ ],
+        UiState = new CanvasWorkbenchUiState()
+    };
 
-Direct package references:
+    private Task HandleSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs change)
+        => Task.CompletedTask;
 
-- `Microsoft.AspNetCore.Components.Web (10.0.4)`
+    private Task HandleNodesMoved(CanvasWorkbenchNodesMovedEventArgs change)
+        => Task.CompletedTask;
 
-## Runtime Dependency Policy
+    private Task HandleContextAction(CanvasWorkbenchContextActionRequest request)
+        => Task.CompletedTask;
+}
+```
 
-No npm runtime dependency is required for CanvasLib workbench, floating-window, preview, or calendar behavior. Runtime implementation is C#/Razor plus plain browser JavaScript loaded from package static web assets.
+## Floating inspector in a canvas
 
-Node/npm usage in this repository is tooling-only for asset generation/verification, Tailwind, Playwright proof, and related test automation.
+Render a `CanvasFloatingWindow` inside `OverlayContent`, and keep its state with the workbench UI state when you need persistence. The wrapper adapts `CanvasWorkbenchWindowState` to OverlayLib's generic window runtime; it does not create a competing window lifecycle.
 
-## Publishing Validation
+```razor
+<CanvasWorkbench Surface="@surface">
+    <OverlayContent>
+        @if (inspector.IsVisible)
+        {
+            <CanvasFloatingWindow WindowId="selection-inspector"
+                                  Title="Selection"
+                                  Kicker="Inspector"
+                                  Summary="Context for the selected node."
+                                  State="@inspector"
+                                  StateChanged="HandleInspectorChanged">
+                <TextBlock TextStyle="TextStyle.Body2"
+                           Value="Inspector content stays near the canvas." />
+            </CanvasFloatingWindow>
+        }
+    </OverlayContent>
+</CanvasWorkbench>
 
-Run these checks before publishing or transferring the package:
+@code {
+    private CanvasWorkbenchWindowState inspector = new();
+
+    private Task HandleInspectorChanged(CanvasWorkbenchWindowState next)
+    {
+        inspector = CanvasWorkbenchWindowState.Normalize(next);
+        return Task.CompletedTask;
+    }
+}
+```
+
+Use the `WindowStates` dictionary on `CanvasWorkbenchUiState` when several windows should survive a route change or a saved workspace. Give each window a stable `WindowId` and dictionary key.
+
+![Canvas floating inspector over the workbench stage](../../docs/assets/canvas-floating-window.png)
+
+## What to validate
+
+The [Sandbox Canvas route](../CanDoItAll.Components.Sandbox/README.md#canvas-and-floating-window-examples) demonstrates the real workbench, the selected-node inspector, and overlapping windows. Validate selection, drag/pan, keyboard interactions, geometry persistence, minimize/hide/show behavior, and an accessible representation of the important canvas content, not only how the stage first renders.
+
+## Development and package checks
+
+CanvasLib targets `net10.0` and has no npm runtime dependency. Node tooling is used only to generate or verify assets, style components, and run browser proof.
 
 ```powershell
 npm run canvaslib:verify-assets
 dotnet build src/CanDoItAll.Components.CanvasLib/CanDoItAll.Components.CanvasLib.csproj --no-restore
 dotnet test tests/CanDoItAll.Components.BaseLib.Tests/CanDoItAll.Components.BaseLib.Tests.csproj --filter FullyQualifiedName~CanvasOverlayPublishingApprovalTests --no-restore
-dotnet pack src/CanDoItAll.Components.CanvasLib/CanDoItAll.Components.CanvasLib.csproj --configuration Release --no-restore --output artifacts/packages/sb09
 ```
 
-The focused publishing approval tests freeze CanvasLib/OverlayLib public API metadata, packability/readme metadata, and static web asset manifests.
-
-## Architecture Notes
-
-Keep shared UI reusable and typed. Use BaseLib for ordinary product UI, CanvasLib for graph/canvas/calendar surfaces, OverlayLib for floating windows, WebGlLib for WebGL concepts, and sandbox projects only for demos or proof.
-
-CanvasLib must not duplicate generic floating-window lifecycle logic. `canvas-floating-window.js` is a compatibility shim; normal generated assets load OverlayLib first and alias Canvas floating-window behavior to OverlayLib's plain JavaScript runtime.
-
-The Canvas benchmark sandbox route is draw-cost and route-health evidence only. It is not renderer-migration approval and does not replace workbench, calendar, accessibility, export, or floating-window validation.
-
-## Related Docs
-
-- Repository overview: `README.md` at this repo root
-- Runtime asset map: `Canvas/README.md`
-- Change request notes: `Requests/README.md`
+For the static-runtime asset map and ownership notes, see [Canvas/README.md](Canvas/README.md). For the repository overview, see the [main README](../../README.md).

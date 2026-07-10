@@ -4,7 +4,24 @@ Package version: `0.1.0`.
 
 ## Purpose
 
-WebGL workbench concept runtime plus additive generic scene/component contracts for reusable 3D visualization.
+WebGlLib provides domain-neutral Blazor components and contracts for interactive 3D scenes. Use it when a product needs to display, select, move, inspect, or export scene objects and links, not merely embed a static model. Your application supplies the scene, assets, and domain behavior; WebGlLib supplies the browser rendering runtime and typed scene boundary.
+
+## Quick start
+
+Import the library, include its generated assets once, and render a `WebGlSceneModel` with `WebGlSceneView`:
+
+```razor
+@using CanDoItAll.Components.WebGlLib
+
+@* App.razor *@
+<head><WebGlLibHeadAssets /></head>
+<body>
+    <WebGlSceneView Scene="@scene" Options="@options" AriaLabel="Project scene" />
+    <WebGlLibBodyAssets IncludeRuntimeAssets="true" IncludeSceneRuntimeAssets="true" />
+</body>
+```
+
+Start with an application-owned `WebGlSceneModel` containing logical objects, links, and an asset catalog. The [WebGlLib-only sample](../../samples/CanDoItAll.Components.WebGlLibOnlyViewer/README.md) contains the smallest working primitive scene.
 
 ## Project Type
 
@@ -114,7 +131,6 @@ npm run webgllib:test-resource-ownership
 
 ## Related Docs
 
-- Repository overview: `README.md` at this repo root
-- Run-layer boundary: `docs/webgl/run-layer-boundary.md`
-- Playback hosting and troubleshooting: `docs/webgl/playback-hosting-and-troubleshooting.md`
-- Main repo shared component docs: `C:\repositories\CanDoItAll\docs\ui-shared-components\README.md`
+- [Repository overview](../../README.md)
+- [Run-layer boundary](../../docs/webgl/run-layer-boundary.md)
+- [Playback hosting and troubleshooting](../../docs/webgl/playback-hosting-and-troubleshooting.md)

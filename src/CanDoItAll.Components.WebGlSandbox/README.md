@@ -1,6 +1,6 @@
 # CanDoItAll.Components.WebGlSandbox
 
-Standalone Blazor Web App for validating generic WebGlLib scene rendering.
+The WebGl Sandbox is a standalone Blazor app for exploring and validating generic WebGlLib scenes. Use it to inspect runtime behavior, asset fallbacks, interaction, export/import, and visual proof without adding 3D concerns to the standard component Sandbox.
 
 ## Routes
 

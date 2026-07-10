@@ -1,26 +1,88 @@
 # CanDoItAll.Components
 
-Shared CanDoItAll component libraries isolated from the main app solution.
+CanDoItAll.Components is a practical UI component library for Blazor applications, styled with Tailwind CSS. It gives product teams a shared set of polished building blocks: forms, navigation, feedback, diagrams, canvas workbenches, floating tools, QR flows, and WebGL scenes, so they can spend their time on product behavior instead of rebuilding UI foundations.
 
-## Packages
+![Map of the component library families](docs/assets/component-library-map.png)
 
-All packages are currently versioned together from `CanDoItAllPackageBaseVersion`, which defaults to `0.1.0`.
-For package-consumer proof runs, append a unique prerelease suffix with `CanDoItAllPackageProofSuffix`, for example `-sb11.20260602.1`.
+## Start here
 
-| Package | Role |
+Choose the smallest library that fits the surface you are building. Most applications begin with `BaseLib`; add a specialised library only when the workflow calls for it.
+
+| Need | Start with | What it provides |
+| --- | --- | --- |
+| Product pages, forms, cards, navigation, dialogs, and notifications | `CanDoItAll.Components.BaseLib` | The everyday Blazor UI toolkit and shared Tailwind output. |
+| Reusable layout types and non-rendering helpers | `CanDoItAll.Components.Common` | Dependency-light primitives used by the component libraries. |
+| Draggable inspector panels or tool windows over ordinary UI | `CanDoItAll.Components.OverlayLib` | Bounded, draggable, resizable, minimizable floating windows. |
+| Node graphs, authoring workbenches, canvas overlays, or rich calendars | `CanDoItAll.Components.CanvasLib` | A small framework for stateful, interactive workspace surfaces. |
+| Charts and dashboards | `CanDoItAll.Components.Charts` | Typed chart models over Blazor ApexCharts. |
+| Rendered process, architecture, or flow diagrams | `CanDoItAll.Components.Mermaid` | A typed Mermaid renderer with pan, zoom, errors, and events. |
+| QR presentation and scanning flows | `CanDoItAll.Components.QRCode` | SVG QR rendering, dialogs, scan shell, and typed scan results. |
+| Interactive 3D scenes and run/playback workflows | `CanDoItAll.Components.WebGlLib`, `CanDoItAll.Components.WebGlRunLib` | Domain-neutral WebGL scene and playback building blocks. |
+
+## First Blazor page
+
+Reference `CanDoItAll.Components.BaseLib`, import its namespace, register its services, and include the shared stylesheet in the host document. The exact package version is controlled by your application's package policy.
+
+```csharp
+// Program.cs
+builder.Services.AddCanDoItAllBaseLib();
+```
+
+```razor
+@* App.razor <head> *@
+<link rel="stylesheet" href="_content/CanDoItAll.Components.BaseLib/css/output.css" />
+```
+
+```razor
+@* Any .razor file, or _Imports.razor *@
+@using CanDoItAll.Components.BaseLib
+
+<SectionCard Title="Release review"
+             Description="A ready-made surface with consistent spacing and Tailwind styling.">
+    <Stack GapScale="LayoutGap.Medium">
+        <StatusBadge Text="Ready for review" Tone="success" />
+        <Button Text="Open review" />
+    </Stack>
+</SectionCard>
+```
+
+See [BaseLib](src/CanDoItAll.Components.BaseLib/README.md) for setup, service-driven overlays, and the complete component catalog.
+
+## How the libraries work together
+
+`BaseLib` is the visual foundation. `OverlayLib` adds generic windows that stay within a frame. `CanvasLib` composes those windows into a workbench where they are tied to a typed canvas state. Charts, Mermaid, QR, and WebGL remain optional, focused libraries with their own dependencies and host assets.
+
+### Floating windows: ordinary UI vs. Canvas
+
+Use `OverlayWindow` when a supporting tool - an inspector, search panel, queue, or live preview - should float over a bounded part of a normal page. It owns the window mechanics: placement, drag, resize, minimize, hide/show, and safe-top boundaries.
+
+Use `CanvasFloatingWindow` inside `CanvasWorkbench.OverlayContent` when the panel belongs to a workbench. It uses the same reliable window runtime while translating the geometry and visibility into `CanvasWorkbenchWindowState`, so the application can persist or restore it beside selection, viewport, and layout state. It is not a separate window system.
+
+| Page-local supporting tool | Canvas-owned inspector |
 | --- | --- |
-| `CanDoItAll.Components.Common` | Dependency-light primitives and non-rendering contracts. |
-| `CanDoItAll.Components.BaseLib` | Primary reusable Razor component library, BaseLib services, theme tokens, and shared CSS output. |
-| `CanDoItAll.Components.CanvasLib` | Canvas, graph, and workbench components. |
-| `CanDoItAll.Components.Charts` | Typed CanDoItAll chart wrapper over Blazor ApexCharts. |
-| `CanDoItAll.Components.Mermaid` | Typed Mermaid diagram component and vendored Mermaid assets. |
-| `CanDoItAll.Components.OverlayLib` | Floating overlay and window components. |
-| `CanDoItAll.Components.WebGlLib` | WebGL workbench runtime plus generic scene, asset, symbol, interaction, and proof contracts. |
-| `CanDoItAll.Components.WebGlRunLib` | Generic run/playback/action/stage contracts layered over WebGlLib scene patches. |
-| `CanDoItAll.Components.Sandbox` | Component preview and regression host. |
-| `CanDoItAll.Components.WebGlSandbox` | Standalone WebGL proof host for generic scene demos such as the tycoon village. |
+| ![A bounded OverlayLib inspector over ordinary page content](docs/assets/overlay-window-page.png) | ![A CanvasFloatingWindow over a CanvasWorkbench stage](docs/assets/canvas-floating-window.png) |
+| `OverlayWindow` stays inside a normal page frame and respects its safe-top area. | `CanvasFloatingWindow` stays inside the workbench stage and participates in canvas UI state. |
 
-## Build
+The running Sandbox contains both reference examples:
+
+- `/groups/overlays` - `OverlayWindow` over an ordinary BaseLib page frame.
+- `/groups/canvas` - `CanvasFloatingWindow` over a real interactive workbench.
+
+For the Canvas lifecycle, composition rules, and a minimal implementation, read the [Canvas guide](docs/canvas/README.md).
+
+## Sandbox and examples
+
+The Sandbox is the visual catalog and regression host. It is the fastest way to see components in context before adopting them.
+
+```powershell
+dotnet run --project src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
+```
+
+Open the printed local URL and visit `/groups/overlays`, `/groups/canvas`, `/groups/charts`, `/groups/mermaid`, or `/groups/qr`. The focused WebGL sample is in [WebGlLib-Only Viewer](samples/CanDoItAll.Components.WebGlLibOnlyViewer/README.md).
+
+## Development
+
+The libraries target `.NET 10`. Shared component CSS is authored with Tailwind in [`Tailwind`](Tailwind/README.md) and emitted into BaseLib's static web assets.
 
 ```powershell
 npm install
@@ -29,51 +91,9 @@ npm run tailwind:build
 dotnet build CanDoItAll.Components.slnx --configuration Release
 ```
 
-## WebGL Sandbox
-
-Run the standalone WebGL proof host with:
+For package proof builds, all packages share the base version set by `CanDoItAllPackageBaseVersion`. Pass a unique prerelease suffix through `CanDoItAllPackageProofSuffix` when packaging a consumer-validation build.
 
 ```powershell
-dotnet run --project src/CanDoItAll.Components.WebGlSandbox/CanDoItAll.Components.WebGlSandbox.csproj
-```
-
-Useful routes:
-
-- `/tycoon-village` renders the generic village scene with primitive, mixed GLB, and high-detail GLB profiles, drag/move, motion, export/import, missing-asset fallback, status symbols, selection, and proof snapshots.
-- `/asset-catalog` lists logical asset ids, quality tiers, variants, and the GLB or primitive fallback that backs each one.
-
-Domain-specific repositories should map their own data into `WebGlSceneModel` outside this repository. Keep `CanDoItAll.Components.WebGlLib` domain-neutral.
-
-WebGlLib can also be consumed without WebGlRunLib through the minimal Razor sample at `samples/CanDoItAll.Components.WebGlLibOnlyViewer`. The sample supports project-reference mode by default and package mode with `UseComponentsWebGlLibPackage=true`.
-
-Current WebGL hardening proof is large-screen only by design; small-screen layout tuning is out of scope for this bundle.
-
-Playback host integration, Pause troubleshooting, deterministic replay modes, and package-mode proof rules are documented in `docs/webgl/playback-hosting-and-troubleshooting.md`.
-
-## Pack
-
-```powershell
-$proofSuffix = "-sb11.20260602.1"
+$proofSuffix = "-local.20260710.1"
 dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages /p:CanDoItAllPackageProofSuffix=$proofSuffix
 ```
-
-This emits all shared component packages at the version in `Directory.Build.props`, plus any proof suffix supplied at pack time. The WebGL integration packages are:
-
-- `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0.nupkg`
-- `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0.nupkg`
-- proof example: `artifacts\packages\CanDoItAll.Components.WebGlLib.0.1.0-sb11.20260602.1.nupkg`
-- proof example: `artifacts\packages\CanDoItAll.Components.WebGlRunLib.0.1.0-sb11.20260602.1.nupkg`
-
-When validating package consumers against freshly packed packages, use a proof/local NuGet.config that points at the fresh package output before any older private feed, set an isolated `NUGET_PACKAGES` cache, and pass the full proof version to consumer restore/build properties. A proof run must fail if the stale feed is used or if the consumer restores a project reference instead of the freshly packed package.
-
-Copy packages into the main repo private feed:
-
-```powershell
-Copy-Item artifacts\packages\*.0.1.0.nupkg C:\repositories\CanDoItAll\ExternalPackages -Force
-```
-
-The main repo must consume these packages through `PackageReference`; do not add project references from `C:\repositories\CanDoItAll` back to this repo.
-
-## Styling
-
-Component styles are built from `Tailwind\input.css` and emitted to `src\CanDoItAll.Components.BaseLib\wwwroot\css\output.css`. Main app-specific styles stay in `C:\repositories\CanDoItAll\Tailwind` and emit to `src\CanDoItAll.Web\wwwroot\css\output.css`.

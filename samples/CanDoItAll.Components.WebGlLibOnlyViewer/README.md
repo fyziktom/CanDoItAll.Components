@@ -1,16 +1,16 @@
 # WebGlLib-Only Viewer Sample
 
-This sample proves a consumer can build a minimal `WebGlSceneView` surface with only `CanDoItAll.Components.WebGlLib`.
+This is the smallest usable `WebGlSceneView` application: a generic `WebGlSceneModel` with one primitive asset, rendered with only `CanDoItAll.Components.WebGlLib`.
 
-It intentionally has no `CanDoItAll.Components.WebGlRunLib` reference and no domain package reference. The component renders one generic primitive asset from a `WebGlSceneModel`.
+Use it as a starting point when your Blazor app needs an interactive 3D scene but does not need timeline/run playback. It intentionally has no `CanDoItAll.Components.WebGlRunLib` or domain-package reference, so the scene model, its assets, and its behavior remain application-owned.
 
-Build proof:
+## Build from source
 
 ```powershell
 dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj
 ```
 
-Package-mode proof:
+## Validate package consumption
 
 ```powershell
 $proofVersion = "0.1.0-sb11.20260602.1"
