@@ -110,11 +110,11 @@ function removeMermaidRenderArtifacts(svgId, container) {
 function buildConfig(options) {
   const baseConfig = {
     startOnLoad: false,
-    securityLevel: options?.securityLevel ?? 'loose',
+    securityLevel: options?.securityLevel ?? 'strict',
     theme: options?.theme ?? 'default',
     flowchart: {
       useMaxWidth: options?.flowchartUseMaxWidth ?? true,
-      htmlLabels: options?.htmlLabels ?? true,
+      htmlLabels: options?.htmlLabels ?? false,
     },
     architecture: {
       randomize: options?.architectureRandomize ?? false,

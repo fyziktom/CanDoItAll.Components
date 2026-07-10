@@ -17,6 +17,7 @@
             <label class="cda-qr-scan__manual">
                 <span>Decoded payload</span>
                 <textarea @bind="manualPayload"
+                          @bind:event="oninput"
                           rows="5"
                           placeholder="Paste a scanned address, hash, or verification payload"></textarea>
             </label>

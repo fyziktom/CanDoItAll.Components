@@ -4,12 +4,16 @@
 <figure class="@ResolveClass()" data-testid="@TestId">
     @if (string.IsNullOrWhiteSpace(Payload))
     {
-        <div class="cda-qr-view__empty">No QR payload</div>
+        <div class="cda-qr-view__empty" role="status">No QR payload</div>
+    }
+    else if (!string.IsNullOrWhiteSpace(renderError))
+    {
+        <div class="cda-qr-view__empty" role="alert">Unable to render QR code: @renderError</div>
     }
     else
     {
-        <div class="cda-qr-view__svg" aria-label="@AriaLabel">
-            @((MarkupString)Renderer.RenderSvg(Payload, Options))
+        <div class="cda-qr-view__svg" role="img" aria-label="@AriaLabel">
+            @((MarkupString)renderedSvg!)
         </div>
     }
 
@@ -20,6 +24,9 @@
 </figure>
 
 @code {
+    private string? renderedSvg;
+    private string? renderError;
+
     [Parameter, EditorRequired]
     public string Payload { get; set; } = string.Empty;
 
@@ -37,6 +44,26 @@
 
     [Parameter]
     public string? TestId { get; set; } = "cda-qr-code-view";
+
+    protected override void OnParametersSet()
+    {
+        renderedSvg = null;
+        renderError = null;
+
+        if (string.IsNullOrWhiteSpace(Payload))
+        {
+            return;
+        }
+
+        try
+        {
+            renderedSvg = Renderer.RenderSvg(Payload, Options);
+        }
+        catch (Exception exception) when (exception is ArgumentException or InvalidOperationException)
+        {
+            renderError = exception.Message;
+        }
+    }
 
     private string ResolveClass()
         => string.Join(" ", new[] { "cda-qr-view", Class }.Where(static value => !string.IsNullOrWhiteSpace(value)));

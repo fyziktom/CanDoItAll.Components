@@ -1,5 +1,11 @@
-@import "tailwindcss" source(none);
-@source "../src";
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../src/CanDoItAll.Components.BaseLib";
+/* Temporary compatibility sources for packages that currently consume BaseLib's utility output. */
+@source "../src/CanDoItAll.Components.CanvasLib";
+@source "../src/CanDoItAll.Components.OverlayLib";
+@source "../src/CanDoItAll.Components.QRCode";
 @import "./foundation/theme.css";
 @import "./foundation/radzen-layout.css";
 @import "./layout/stacks.css";

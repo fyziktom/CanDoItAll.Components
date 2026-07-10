@@ -42,7 +42,6 @@
         }
 
         var next = args.Value is bool boolValue && boolValue;
-        Value = next;
         await ValueChanged.InvokeAsync(next);
         await Change.InvokeAsync(next);
     }

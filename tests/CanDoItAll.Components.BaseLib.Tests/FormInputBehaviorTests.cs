@@ -64,6 +64,34 @@ public sealed class FormInputBehaviorTests
     }
 
     [Fact]
+    public async Task ControlledTextBoxEmitsValueWithoutMutatingParameter()
+    {
+        string? emittedValue = null;
+        var textBox = new TextBox();
+        SetProperty(textBox, nameof(TextBox.Value), "before");
+        SetProperty(textBox, nameof(TextBox.ValueChanged), EventCallback.Factory.Create<string?>(this, value => emittedValue = value));
+
+        await InvokeChangeAsync(textBox, "OnChangedAsync", "after");
+
+        Assert.Equal("before", textBox.Value);
+        Assert.Equal("after", emittedValue);
+    }
+
+    [Fact]
+    public async Task ControlledCheckBoxEmitsValueWithoutMutatingParameter()
+    {
+        bool? emittedValue = null;
+        var checkBox = new CheckBox<bool>();
+        SetProperty(checkBox, nameof(CheckBox<bool>.Value), false);
+        SetProperty(checkBox, nameof(CheckBox<bool>.ValueChanged), EventCallback.Factory.Create<bool>(this, value => emittedValue = value));
+
+        await InvokePrivateAsync(checkBox, "OnChangedAsync", new ChangeEventArgs { Value = true });
+
+        Assert.False(checkBox.Value);
+        Assert.True(emittedValue);
+    }
+
+    [Fact]
     public async Task DisabledSliderDoesNotInvokeChangeCallbacks()
     {
         var callbackCount = 0;

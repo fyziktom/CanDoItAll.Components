@@ -1,92 +1,105 @@
 @namespace CanDoItAll.Components.BaseLib
+@using Microsoft.JSInterop
 @inherits StyledComponentBase
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
 @if (IsOpen)
 {
-    <Stack AlignItems="AlignItems.Center"
-           JustifyContent="JustifyContent.Center"
-           GapScale="LayoutGap.None"
-           Class="fixed inset-0 z-[70] p-3 sm:p-4 lg:p-5"
-           Style="z-index:1200;"
-           data-testid="@TestId">
-        <div class="absolute inset-0 bg-slate-950/55 backdrop-blur-sm"
-             @onclick="HandleBackdropCloseAsync"></div>
+    <dialog @ref="dialogElement"
+            @attributes='BuildAttributes("cda-dialog-root fixed inset-0 m-0 h-screen w-screen max-h-none max-w-none border-0 bg-transparent p-0", "z-index:1200")'
+            data-testid="@TestId"
+            aria-label="@ResolvedExplicitAriaLabel"
+            aria-labelledby="@ResolvedLabelledBy">
+        <Stack AlignItems="AlignItems.Center"
+               JustifyContent="JustifyContent.Center"
+               GapScale="LayoutGap.None"
+               Class="fixed inset-0 z-[70] p-3 sm:p-4 lg:p-5"
+               Style="z-index:1200;">
+            <div class="absolute inset-0 bg-slate-950/55 backdrop-blur-sm"
+                 aria-hidden="true"
+                 @onclick="HandleBackdropCloseAsync"></div>
 
-        <section class="@ResolveDialogCssClass()"
-                 style="@BuildStyle("z-index:1201")"
-                 role="dialog"
-                 aria-modal="true"
-                 aria-label="@ResolvedAriaLabel"
-                 @onclick:stopPropagation="true">
-            <header class="@ResolveHeaderCssClass()">
-                <Split Breakpoint="LayoutBreakpoint.None"
-                       Gap="LayoutGap.Medium"
-                       AlignItems="AlignItems.Start"
-                       JustifyContent="JustifyContent.SpaceBetween"
-                       Wrap="FlexWrap.Wrap">
-                    <Stack GapScale="LayoutGap.Tiny"
-                           Class="min-w-0">
-                        @if (!string.IsNullOrWhiteSpace(Eyebrow))
-                        {
-                            <div class="cda-eyebrow">@Eyebrow</div>
-                        }
-
-                        <div class="inline-flex min-w-0 items-center gap-2">
-                            <h2 class="text-xl font-semibold tracking-tight text-slate-950 xl:text-2xl">@Title</h2>
-                            @if (HasHelp)
+            <section class="@ResolveDialogCssClass()"
+                     style="@BuildStyle("z-index:1201")"
+                     @onclick:stopPropagation="true">
+                <header class="@ResolveHeaderCssClass()">
+                    <Split Breakpoint="LayoutBreakpoint.None"
+                           Gap="LayoutGap.Medium"
+                           AlignItems="AlignItems.Start"
+                           JustifyContent="JustifyContent.SpaceBetween"
+                           Wrap="FlexWrap.Wrap">
+                        <Stack GapScale="LayoutGap.Tiny"
+                               Class="min-w-0">
+                            @if (!string.IsNullOrWhiteSpace(Eyebrow))
                             {
-                                <HelpPopover RootClass="pf-help-popover inline-flex items-center"
-                                             ToggleClass="pf-help-popover__toggle pf-help-popover__toggle--compact"
-                                             OpenOnHover="true"
-                                             AriaLabel="@ResolvedHelpAriaLabel"
-                                             Title="@ResolvedHelpAriaLabel"
-                                             Heading="@ResolvedHelpHeading"
-                                             Body="@(HelpText!)" />
+                                <div class="cda-eyebrow">@Eyebrow</div>
                             }
-                        </div>
 
-                        @if (!string.IsNullOrWhiteSpace(Subtitle))
-                        {
-                            <p class="max-w-3xl text-sm leading-6 text-slate-600">@Subtitle</p>
-                        }
-                    </Stack>
+                            <div class="inline-flex min-w-0 items-center gap-2">
+                                <h2 id="@titleElementId" class="text-xl font-semibold tracking-tight text-slate-950 xl:text-2xl">@Title</h2>
+                                @if (HasHelp)
+                                {
+                                    <HelpPopover RootClass="pf-help-popover inline-flex items-center"
+                                                 ToggleClass="pf-help-popover__toggle pf-help-popover__toggle--compact"
+                                                 OpenOnHover="true"
+                                                 AriaLabel="@ResolvedHelpAriaLabel"
+                                                 Title="@ResolvedHelpAriaLabel"
+                                                 Heading="@ResolvedHelpHeading"
+                                                 Body="@(HelpText!)" />
+                                }
+                            </div>
 
-                    <Cluster Wrap="FlexWrap.NoWrap"
-                             Gap="LayoutGap.Small">
-                        @if (HeaderActions is not null)
-                        {
-                            @HeaderActions
-                        }
+                            @if (!string.IsNullOrWhiteSpace(Subtitle))
+                            {
+                                <p class="max-w-3xl text-sm leading-6 text-slate-600">@Subtitle</p>
+                            }
+                        </Stack>
 
-                        @if (ShowCloseButton)
-                        {
-                            <button type="button"
-                                    class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                                    aria-label="Close"
-                                    @onclick="HandleCloseAsync">
-                                <Icon Name="close" />
-                                <span>Close</span>
-                            </button>
-                        }
-                    </Cluster>
-                </Split>
-            </header>
+                        <Cluster Wrap="FlexWrap.NoWrap"
+                                 Gap="LayoutGap.Small">
+                            @if (HeaderActions is not null)
+                            {
+                                @HeaderActions
+                            }
 
-            <div class="@ResolveBodyCssClass()">
-                @ChildContent
-            </div>
+                            @if (ShowCloseButton)
+                            {
+                                <button type="button"
+                                        class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                                        aria-label="Close"
+                                        @onclick="HandleCloseAsync">
+                                    <Icon Name="close" />
+                                    <span>Close</span>
+                                </button>
+                            }
+                        </Cluster>
+                    </Split>
+                </header>
 
-            @if (Footer is not null)
-            {
-                <footer class="border-t border-slate-200 bg-slate-50/90 px-5 py-4 xl:px-6">
-                    @Footer
-                </footer>
-            }
-        </section>
-    </Stack>
+                <div class="@ResolveBodyCssClass()">
+                    @ChildContent
+                </div>
+
+                @if (Footer is not null)
+                {
+                    <footer class="border-t border-slate-200 bg-slate-50/90 px-5 py-4 xl:px-6">
+                        @Footer
+                    </footer>
+                }
+            </section>
+        </Stack>
+    </dialog>
 }
 
 @code {
+    private readonly string dialogInstanceId = $"cda-dialog-{Guid.NewGuid():N}";
+    private readonly string titleElementId = $"cda-dialog-title-{Guid.NewGuid():N}";
+    private ElementReference dialogElement;
+    private DialogInterop? dialogInterop;
+    private DotNetObjectReference<Dialog>? dotNetReference;
+    private bool browserDialogOpen;
+
     [Parameter]
     public bool IsOpen { get; set; }
 
@@ -135,13 +148,33 @@
     [Parameter]
     public EventCallback OnClose { get; set; }
 
-    private string ResolvedAriaLabel => string.IsNullOrWhiteSpace(AriaLabel) ? Title : AriaLabel;
+    private string? ResolvedExplicitAriaLabel => string.IsNullOrWhiteSpace(AriaLabel) ? null : AriaLabel;
+
+    private string? ResolvedLabelledBy => string.IsNullOrWhiteSpace(AriaLabel) ? titleElementId : null;
 
     private bool HasHelp => !string.IsNullOrWhiteSpace(HelpText);
 
     private string ResolvedHelpHeading => string.IsNullOrWhiteSpace(HelpHeading) ? Title : HelpHeading;
 
     private string ResolvedHelpAriaLabel => $"Show help for {Title}";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && !browserDialogOpen)
+        {
+            dialogInterop ??= new DialogInterop(JS);
+            dotNetReference ??= DotNetObjectReference.Create(this);
+            await dialogInterop.OpenAsync(dialogElement, dialogInstanceId, dotNetReference);
+            browserDialogOpen = true;
+            return;
+        }
+
+        if (!IsOpen && browserDialogOpen && dialogInterop is not null)
+        {
+            await dialogInterop.CloseAsync(dialogInstanceId);
+            browserDialogOpen = false;
+        }
+    }
 
     private string ResolveDialogCssClass()
     {
@@ -183,6 +216,23 @@
         return CloseOnBackdrop
             ? OnClose.InvokeAsync()
             : Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task OnDialogDismissRequested()
+    {
+        return OnClose.InvokeAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (dialogInterop is not null)
+        {
+            await dialogInterop.CloseAsync(dialogInstanceId);
+            await dialogInterop.DisposeAsync();
+        }
+
+        dotNetReference?.Dispose();
     }
 }
 

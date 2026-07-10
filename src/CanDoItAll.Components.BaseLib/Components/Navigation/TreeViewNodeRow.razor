@@ -2,15 +2,14 @@
 @using Microsoft.AspNetCore.Components.Web
 
 <li class="cda-treeview__item"
-    role="treeitem"
-    aria-expanded="@(Node.HasChildren ? Node.IsExpanded.ToString().ToLowerInvariant() : null)"
-    aria-selected="@(Node.IsSelectable ? Node.IsSelected.ToString().ToLowerInvariant() : null)"
+    role="none"
     style="@($"--cda-treeview-level:{Level};")">
     <div class="cda-treeview__row-shell">
         @if (Node.HasChildren)
         {
             <button type="button"
                     class="cda-treeview__toggle"
+                    tabindex="-1"
                     title="@(Node.IsExpanded ? "Collapse" : "Expand")"
                     aria-label="@(Node.IsExpanded ? $"Collapse {Node.Text}" : $"Expand {Node.Text}")"
                     @onclick="HandleToggleAsync">
@@ -22,15 +21,18 @@
             <span class="cda-treeview__toggle cda-treeview__toggle--placeholder" aria-hidden="true"></span>
         }
 
-        <button type="button"
-                class="@ResolveRowCssClass()"
-                title="@ResolveTooltip()"
-                data-testid="@ResolveDataTestId()"
-                disabled="@Node.IsDisabled"
-                @onclick="HandleRowClickAsync"
-                @onkeydown="HandleRowKeyDownAsync"
-                @oncontextmenu="HandleContextMenuAsync"
-                @oncontextmenu:preventDefault="true">
+        <div id="@ResolveElementId()"
+             role="treeitem"
+             class="@ResolveRowCssClass()"
+             title="@ResolveTooltip()"
+             data-testid="@ResolveDataTestId()"
+             aria-disabled="@(Node.IsDisabled ? "true" : null)"
+             aria-level="@(Level + 1)"
+             aria-expanded="@(Node.HasChildren ? Node.IsExpanded.ToString().ToLowerInvariant() : null)"
+             aria-selected="@(Node.IsSelectable ? Node.IsSelected.ToString().ToLowerInvariant() : null)"
+             @onclick="HandleRowClickAsync"
+             @oncontextmenu="HandleContextMenuAsync"
+             @oncontextmenu:preventDefault="true">
             @if (!string.IsNullOrWhiteSpace(Node.Icon))
             {
                 <span class="cda-treeview__icon" aria-hidden="true">
@@ -44,7 +46,7 @@
             {
                 <span class="cda-treeview__badge">@Node.BadgeText</span>
             }
-        </button>
+        </div>
     </div>
 
     @if (Node.HasChildren && Node.IsExpanded)
@@ -56,7 +58,10 @@
             {
                 <TreeViewNodeRow Node="@child"
                                  Level="@(Level + 1)"
+                                 TreeId="@TreeId"
                                  Style="@Style"
+                                 ActiveNodeId="@ActiveNodeId"
+                                 OnActivate="@OnActivate"
                                  OnSelect="OnSelect"
                                  OnToggle="OnToggle"
                                  OnContextMenu="OnContextMenu" />
@@ -72,8 +77,17 @@
     [Parameter]
     public int Level { get; set; }
 
+    [Parameter, EditorRequired]
+    public string TreeId { get; set; } = string.Empty;
+
     [Parameter]
     public TreeViewStyle Style { get; set; }
+
+    [Parameter]
+    public string? ActiveNodeId { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnActivate { get; set; }
 
     [Parameter]
     public EventCallback<string> OnSelect { get; set; }
@@ -94,34 +108,22 @@
         return OnToggle.InvokeAsync(Node.Id);
     }
 
-    private Task HandleRowClickAsync()
+    private async Task HandleRowClickAsync()
     {
         if (Node.IsDisabled)
         {
-            return Task.CompletedTask;
+            return;
         }
+
+        await OnActivate.InvokeAsync(Node.Id);
 
         if (Node.HasChildren && !Node.IsSelectable)
         {
-            return OnToggle.InvokeAsync(Node.Id);
+            await OnToggle.InvokeAsync(Node.Id);
+            return;
         }
 
-        return OnSelect.InvokeAsync(Node.Id);
-    }
-
-    private Task HandleRowKeyDownAsync(KeyboardEventArgs args)
-    {
-        if (Node.IsDisabled || !Node.HasChildren)
-        {
-            return Task.CompletedTask;
-        }
-
-        return args.Key switch
-        {
-            "ArrowRight" when !Node.IsExpanded => OnToggle.InvokeAsync(Node.Id),
-            "ArrowLeft" when Node.IsExpanded => OnToggle.InvokeAsync(Node.Id),
-            _ => Task.CompletedTask
-        };
+        await OnSelect.InvokeAsync(Node.Id);
     }
 
     private Task HandleContextMenuAsync(MouseEventArgs args)
@@ -131,10 +133,13 @@
             return Task.CompletedTask;
         }
 
-        return OnContextMenu.InvokeAsync(new TreeViewNodeContextMenuRequest(
-            Node.Id,
-            args.ClientX,
-            args.ClientY));
+        return ActivateAndOpenContextMenuAsync(args);
+    }
+
+    private async Task ActivateAndOpenContextMenuAsync(MouseEventArgs args)
+    {
+        await OnActivate.InvokeAsync(Node.Id);
+        await OnContextMenu.InvokeAsync(new TreeViewNodeContextMenuRequest(Node.Id, args.ClientX, args.ClientY));
     }
 
     private string ResolveRowCssClass()
@@ -148,6 +153,11 @@
         if (Node.IsSelected)
         {
             cssClass += " cda-treeview__row--selected";
+        }
+
+        if (Node.Id == ActiveNodeId)
+        {
+            cssClass += " cda-treeview__row--active";
         }
 
         if (Node.HasChildren)
@@ -182,5 +192,10 @@
         return string.IsNullOrWhiteSpace(Node.ChildrenDataTestId)
             ? null
             : Node.ChildrenDataTestId;
+    }
+
+    private string ResolveElementId()
+    {
+        return TreeView.ResolveNodeElementId(TreeId, Node.Id);
     }
 }

@@ -25,7 +25,7 @@
     "tailwind:build": "npm --prefix Tailwind run build",
     "tailwind:watch": "npm --prefix Tailwind run watch",
     "build": "dotnet build CanDoItAll.Components.slnx",
-    "pack": "dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages"
+    "pack": "powershell -ExecutionPolicy Bypass -File scripts/pack-release.ps1"
   },
   "type": "commonjs",
   "devDependencies": {

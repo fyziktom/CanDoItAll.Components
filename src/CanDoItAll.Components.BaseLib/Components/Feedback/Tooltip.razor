@@ -1,10 +1,14 @@
 @namespace CanDoItAll.Components.BaseLib
-@implements IDisposable
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
 @inject TooltipService TooltipService
+@inject IJSRuntime JS
 
 @if (TooltipService.Current is { } tooltip)
 {
-    <div class="@ResolveTooltipCssClass(tooltip)"
+    <div @ref="tooltipElement"
+         id="@tooltip.Options.Id"
+         class="@ResolveTooltipCssClass(tooltip)"
          style="@ResolveTooltipStyle(tooltip)"
          role="tooltip"
          data-testid="@tooltip.Options.TestId">
@@ -20,9 +24,21 @@
 }
 
 @code {
+    private ElementReference tooltipElement;
+    private TooltipInterop? tooltipInterop;
+
     protected override void OnInitialized()
     {
         TooltipService.Changed += HandleTooltipChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (TooltipService.Current is not null)
+        {
+            tooltipInterop ??= new TooltipInterop(JS);
+            await tooltipInterop.ClampToViewportAsync(tooltipElement);
+        }
     }
 
     private static string ResolveTooltipCssClass(TooltipState tooltip)
@@ -61,14 +77,26 @@
         };
     }
 
-    private void HandleTooltipChanged()
+    private async void HandleTooltipChanged()
     {
-        _ = InvokeAsync(StateHasChanged);
+        try
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception exception)
+        {
+            await DispatchExceptionAsync(exception);
+        }
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         TooltipService.Changed -= HandleTooltipChanged;
+
+        if (tooltipInterop is not null)
+        {
+            await tooltipInterop.DisposeAsync();
+        }
     }
 }
 

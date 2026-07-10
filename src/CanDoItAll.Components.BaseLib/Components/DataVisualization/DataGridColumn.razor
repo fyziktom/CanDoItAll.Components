@@ -4,6 +4,7 @@
 
 @code {
     private System.Reflection.PropertyInfo? cachedProperty;
+    private string? cachedPropertyName;
 
     [CascadingParameter]
     private DataGrid<TItem>? Parent { get; set; }
@@ -28,9 +29,12 @@
 
     protected override void OnParametersSet()
     {
-        if (cachedProperty is null && !string.IsNullOrWhiteSpace(Property))
+        if (!string.Equals(cachedPropertyName, Property, StringComparison.Ordinal))
         {
-            cachedProperty = typeof(TItem).GetProperty(Property);
+            cachedPropertyName = Property;
+            cachedProperty = string.IsNullOrWhiteSpace(Property)
+                ? null
+                : typeof(TItem).GetProperty(Property);
         }
 
         Parent?.RegisterColumn(this);

@@ -35,11 +35,46 @@ public sealed class ButtonBehaviorTests
         await Task.WhenAll(firstClick, secondClick);
     }
 
+    [Fact]
+    public async Task DisabledAnchorDoesNotInvokeClickCallback()
+    {
+        var clickCount = 0;
+        var button = new Button();
+        SetParameter(button, nameof(Button.Disabled), true);
+        SetParameter(button, nameof(Button.Href), "/should-not-open");
+        SetClickCallback(button, EventCallback.Factory.Create(this, () => clickCount++));
+
+        await InvokeClickAsync(button);
+
+        Assert.Equal(0, clickCount);
+    }
+
+    [Fact]
+    public void BlankTargetDefaultsToNoopenerAndNoreferrer()
+    {
+        var button = new Button();
+        SetParameter(button, nameof(Button.Href), "https://example.test");
+        SetParameter(button, nameof(Button.Target), "_blank");
+
+        var resolvedRel = (string?)typeof(Button)
+            .GetProperty("ResolvedRel", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .GetValue(button);
+
+        Assert.Equal("noopener noreferrer", resolvedRel);
+    }
+
     private static void SetClickCallback(Button button, EventCallback callback)
     {
         typeof(Button)
             .GetProperty(nameof(Button.Click), BindingFlags.Instance | BindingFlags.Public)!
             .SetValue(button, callback);
+    }
+
+    private static void SetParameter(Button button, string propertyName, object? value)
+    {
+        typeof(Button)
+            .GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public)!
+            .SetValue(button, value);
     }
 
     private static Task InvokeClickAsync(Button button)

@@ -1,5 +1,6 @@
 @namespace CanDoItAll.Components.BaseLib
 @typeparam TItem
+@using Microsoft.AspNetCore.Components.Web
 
 <CascadingValue Value="this" IsFixed="true">
     <div style="display:none">
@@ -14,50 +15,79 @@
     </div>
 </CascadingValue>
 
-<div @attributes='AdditionalAttributes.WithClass("rz-data-grid overflow-x-auto")'>
+<div @attributes='AdditionalAttributes.WithClass("rz-data-grid w-full min-w-0 overflow-x-auto")'
+     aria-busy="@(Loading ? "true" : null)">
     <table class="min-w-full border-collapse text-sm">
+        <caption class="sr-only">@Caption</caption>
         <thead>
             <tr class="border-b border-slate-200 text-left text-slate-600">
                 @foreach (var column in columns)
                 {
-                    <th class="px-3 py-2 font-semibold">@column.HeaderText</th>
+                    <th scope="col" class="px-3 py-2 font-semibold">@column.HeaderText</th>
                 }
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in VisibleItems)
+            @if (Loading)
             {
-                <tr class="border-b border-slate-100 hover:bg-slate-50"
-                    @onclick="() => OnRowSelectAsync(item)">
-                    @foreach (var column in columns)
-                    {
-                        <td class="px-3 py-2 align-top">@column.RenderCell(item)</td>
-                    }
+                <tr>
+                    <td colspan="@ColumnSpan" class="px-3 py-6 text-center text-slate-500" role="status">
+                        @LoadingText
+                    </td>
                 </tr>
+            }
+            else if (VisibleItems.Count == 0)
+            {
+                <tr>
+                    <td colspan="@ColumnSpan" class="px-3 py-6 text-center text-slate-500">
+                        @EmptyText
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in VisibleItems)
+                {
+                    <tr class="@ResolveRowCssClass()"
+                        tabindex="@(RowSelect.HasDelegate ? 0 : null)"
+                        @onclick="() => OnRowSelectAsync(item)"
+                        @onkeydown="args => OnRowKeyDownAsync(args, item)">
+                        @foreach (var column in columns)
+                        {
+                            <td class="px-3 py-2 align-top">@column.RenderCell(item)</td>
+                        }
+                    </tr>
+                }
             }
         </tbody>
     </table>
 
     @if (AllowPaging && TotalPages > 1)
     {
-        <Cluster JustifyContent="JustifyContent.End"
-                 Gap="LayoutGap.Small"
-                 Class="mt-3 text-xs text-slate-600">
+        <nav aria-label="Data grid pagination">
+            <Cluster JustifyContent="JustifyContent.End"
+                     Gap="LayoutGap.Small"
+                     Class="mt-3 text-xs text-slate-600">
             <button type="button"
                     class="rounded border border-slate-300 px-2 py-1 disabled:opacity-40"
                     disabled="@(currentPage == 0)"
+                    aria-label="Previous page"
                     @onclick="PreviousPageAsync">Prev</button>
-            <span>Page @(currentPage + 1) of @TotalPages</span>
+            <span aria-live="polite">Page @(currentPage + 1) of @TotalPages</span>
             <button type="button"
                     class="rounded border border-slate-300 px-2 py-1 disabled:opacity-40"
                     disabled="@(currentPage >= TotalPages - 1)"
+                    aria-label="Next page"
                     @onclick="NextPageAsync">Next</button>
-        </Cluster>
+            </Cluster>
+        </nav>
     }
 </div>
 
 @code {
     private readonly List<DataGridColumn<TItem>> columns = [];
+    private IReadOnlyList<TItem> dataList = [];
+    private IReadOnlyList<TItem> visibleItems = [];
     private int currentPage;
 
     [Parameter]
@@ -71,6 +101,18 @@
 
     [Parameter]
     public int PageSize { get; set; } = 10;
+
+    [Parameter]
+    public string Caption { get; set; } = "Data grid";
+
+    [Parameter]
+    public bool Loading { get; set; }
+
+    [Parameter]
+    public string LoadingText { get; set; } = "Loading data…";
+
+    [Parameter]
+    public string EmptyText { get; set; } = "No data to display.";
 
     [Parameter]
     public RenderFragment? Columns { get; set; }
@@ -98,22 +140,9 @@
         }
     }
 
-    private IReadOnlyList<TItem> DataList => Data?.ToList() ?? [];
+    private IReadOnlyList<TItem> VisibleItems => visibleItems;
 
-    private IEnumerable<TItem> VisibleItems
-    {
-        get
-        {
-            if (!AllowPaging)
-            {
-                return DataList;
-            }
-
-            var effectivePageSize = Math.Max(1, PageSize);
-            var skip = currentPage * effectivePageSize;
-            return DataList.Skip(skip).Take(effectivePageSize);
-        }
-    }
+    private int ColumnSpan => Math.Max(1, columns.Count);
 
     private int TotalPages
     {
@@ -125,12 +154,19 @@
             }
 
             var effectivePageSize = Math.Max(1, PageSize);
-            return Math.Max(1, (int)Math.Ceiling(DataList.Count / (double)effectivePageSize));
+            return Math.Max(1, (int)Math.Ceiling(dataList.Count / (double)effectivePageSize));
         }
     }
 
     protected override void OnParametersSet()
     {
+        dataList = Data switch
+        {
+            null => [],
+            IReadOnlyList<TItem> list => list,
+            _ => Data.ToList()
+        };
+
         if (AllowPaging && currentPage >= TotalPages)
         {
             currentPage = Math.Max(0, TotalPages - 1);
@@ -140,6 +176,8 @@
         {
             currentPage = 0;
         }
+
+        UpdateVisibleItems();
     }
 
     private async Task OnRowSelectAsync(TItem item)
@@ -147,11 +185,24 @@
         await RowSelect.InvokeAsync(item);
     }
 
+    private Task OnRowKeyDownAsync(KeyboardEventArgs args, TItem item)
+    {
+        return args.Key is "Enter" or " "
+            ? OnRowSelectAsync(item)
+            : Task.CompletedTask;
+    }
+
+    private string ResolveRowCssClass()
+        => RowSelect.HasDelegate
+            ? "border-b border-slate-100 hover:bg-slate-50 focus:outline-2 focus:outline-offset-[-2px] focus:outline-sky-500 cursor-pointer"
+            : "border-b border-slate-100";
+
     private Task PreviousPageAsync()
     {
         if (currentPage > 0)
         {
             currentPage--;
+            UpdateVisibleItems();
         }
 
         return Task.CompletedTask;
@@ -162,9 +213,17 @@
         if (currentPage < TotalPages - 1)
         {
             currentPage++;
+            UpdateVisibleItems();
         }
 
         return Task.CompletedTask;
+    }
+
+    private void UpdateVisibleItems()
+    {
+        visibleItems = AllowPaging
+            ? dataList.Skip(currentPage * Math.Max(1, PageSize)).Take(Math.Max(1, PageSize)).ToList()
+            : dataList;
     }
 }
 

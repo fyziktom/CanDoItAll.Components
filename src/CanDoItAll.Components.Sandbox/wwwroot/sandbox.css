@@ -28,7 +28,7 @@
 }
 
 .sandbox-sidebar {
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 1.25rem;
     border: 1px solid var(--cad-color-border-soft);
@@ -223,6 +223,27 @@
 
 .sandbox-demo-grid--two {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.sandbox-sidebar.is-open {
+    display: flex;
+}
+
+.sandbox-mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid var(--cad-color-border-soft);
+    border-radius: var(--cad-radius-panel);
+    background: color-mix(in srgb, var(--cad-color-surface) 88%, transparent);
+    padding: 1rem;
+    box-shadow: var(--cad-shadow-soft);
+    backdrop-filter: blur(18px);
+}
+
+.sandbox-mobile-header .sandbox-brand__title {
+    font-size: 1rem;
 }
 
 .sandbox-demo-grid--three {
@@ -455,8 +476,13 @@
     }
 
     .sandbox-sidebar {
+        display: flex;
         position: sticky;
         top: 1rem;
+    }
+
+    .sandbox-mobile-header {
+        display: none;
     }
 
     .sandbox-hero {

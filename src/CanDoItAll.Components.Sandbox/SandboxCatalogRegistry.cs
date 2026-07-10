@@ -13,6 +13,7 @@ public enum SandboxGroupKey
     DataDisplay,
     Charts,
     Mermaid,
+    QrCode,
     Overlays,
     Canvas
 }
@@ -125,6 +126,13 @@ public static class SandboxCatalogRegistry
             ["flowchart", "architecture-beta", "node clicks", "pan zoom", "syntax errors"],
             ["Diagrams must render from the vendored official Mermaid resource.", "Clickable nodes should raise .NET events with useful node text and id context.", "Syntax failures must show line, column, excerpt, and expected-token hints when Mermaid provides them."]),
         new(
+            SandboxGroupKey.QrCode,
+            "QR Code",
+            "/groups/qr",
+            "QR rendering, long payload, dialog, and manual scanner fallback coverage.",
+            ["SVG rendering", "payload length", "error correction", "manual scan fallback"],
+            ["Rendered codes must remain square and readable at narrow widths.", "Empty and long payloads need explicit states.", "Scanning must remain usable when camera access is unavailable or denied."]),
+        new(
             SandboxGroupKey.Overlays,
             "Overlays",
             "/groups/overlays",
@@ -178,6 +186,9 @@ public static class SandboxCatalogRegistry
         CreateExample("mermaid-flowchart", SandboxGroupKey.Mermaid, "Interactive flowchart", SandboxScenarioKey.HappyPath, "Flowchart proof with .NET node-click events and pan/zoom controls.", ["mermaid", "flowchart", "click", "pan-zoom"], "MermaidDiagram"),
         CreateExample("mermaid-architecture", SandboxGroupKey.Mermaid, "Architecture beta", SandboxScenarioKey.DenseContent, "architecture-beta sample using groups, services, junctions, icons, labels, and directional ports.", ["mermaid", "architecture-beta", "services"], "MermaidDiagram"),
         CreateExample("mermaid-error", SandboxGroupKey.Mermaid, "Syntax diagnostics", SandboxScenarioKey.EmptyState, "Intentional Mermaid syntax failure proving line, column, excerpt, and expected-token rendering.", ["mermaid", "syntax-error", "diagnostics"], "MermaidDiagram", "Alert"),
+        CreateExample("qr-happy", SandboxGroupKey.QrCode, "QR payload rendering", SandboxScenarioKey.HappyPath, "URL and verification payloads rendered through the shared SVG component.", ["qr", "svg", "payload"], "QrCodeView", "QrCodeButton"),
+        CreateExample("qr-long", SandboxGroupKey.QrCode, "Long QR payload", SandboxScenarioKey.LongText, "Long verification content with high error correction and constrained mobile width.", ["qr", "long-text", "error-correction"], "QrCodeView"),
+        CreateExample("qr-empty", SandboxGroupKey.QrCode, "Empty and scanner fallback", SandboxScenarioKey.EmptyState, "Empty renderer state plus a camera-disabled manual scan dialog.", ["qr", "empty", "scanner", "fallback"], "QrCodeView", "QrScanButton"),
         CreateExample("overlays-happy", SandboxGroupKey.Overlays, "Overlay services", SandboxScenarioKey.HappyPath, "DialogService, TooltipService, and NotificationService around contextual help and sticky actions.", ["overlay", "services"], "DialogService", "DialogHost", "TooltipService", "Tooltip", "NotificationService", "HelpPopover", "StickyActionFooter"),
         CreateExample("overlays-dense", SandboxGroupKey.Overlays, "Dense approval flow", SandboxScenarioKey.DenseContent, "Inline approval surface with secondary actions, modal affordance, and service-hosted overlays.", ["dense", "approval"], "DialogService", "TooltipService", "NotificationService", "StickyActionFooter", "Alert"),
         CreateExample("overlays-empty", SandboxGroupKey.Overlays, "No modal context", SandboxScenarioKey.EmptyState, "Overlay surface before the user selects a record.", ["empty"], "EmptyState", "HelpPopover", "DialogHost"),

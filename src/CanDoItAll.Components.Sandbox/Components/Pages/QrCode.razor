@@ -1,0 +1,81 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/qr"
+@inherits CatalogPageBase
+
+<PageTitle>QR Code</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Scenario="@CurrentScenario"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  HeroTitle="QR rendering and scanning that degrade safely."
+                  HeroSummary="This page proves square SVG output, long payload handling, dialog composition, and a manual scanner path that does not depend on camera permission."
+                  DemoTitle="QR component states"
+                  DemoSummary="Render, empty, long-content, and camera-disabled scanner scenarios."
+                  ScenarioChanged="NavigateScenario"
+                  FrameChanged="NavigateFrame">
+    <Notes>
+        <div class="sandbox-proof-list">
+            <p>The SVG stays square, labelled, and contained at desktop and mobile widths.</p>
+            <p>Long payloads increase QR density without leaking text or overflowing the card.</p>
+            <p>The scanner dialog always offers manual paste when camera access is disabled or unavailable.</p>
+        </div>
+    </Notes>
+
+    <ChildContent>
+        <Grid Gap="LayoutGap.Large" ColumnTemplate="repeat(auto-fit,minmax(min(100%,18rem),1fr))">
+            <SectionCard Title="Rendered payload" Description="Direct SVG output with a visible caption and accessible name.">
+                <QrCodeView Payload="@CurrentPayload"
+                            Caption="@CurrentCaption"
+                            AriaLabel="QR code for the sandbox verification payload"
+                            Options="@CurrentOptions"
+                            TestId="sandbox-qr-view" />
+            </SectionCard>
+
+            <SectionCard Title="Dialog actions" Description="Show and scan actions compose with BaseLib dialogs and preserve a manual fallback.">
+                <Stack GapScale="LayoutGap.Medium">
+                    <QrCodeButton Payload="@DialogPayload" Label="Show QR dialog" TestId="sandbox-qr-dialog-button" />
+                    <QrScanButton Label="Open manual scanner"
+                                  EnableCamera="false"
+                                  Scanned="HandleScanned"
+                                  TestId="sandbox-qr-scan-button" />
+                    <Alert AlertStyle="AlertStyle.Info">
+                        Last decoded payload: @(lastScan?.Text ?? "none")
+                    </Alert>
+                </Stack>
+            </SectionCard>
+        </Grid>
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.QrCode);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.QrCode);
+    private const string BaselinePayload = "https://github.com/fyziktom/CanDoItAll.Components";
+    private const string LongPayload = "candoitall://verify?package=CanDoItAll.Components.BaseLib&version=0.1.0&commit=0123456789abcdef0123456789abcdef01234567&scope=dialog,tooltip,context-menu,tree,data-grid,canvas,charts,mermaid,qr";
+    private QrScanResult? lastScan;
+
+    private string CurrentPayload => CurrentScenario == SandboxScenarioKey.EmptyState
+        ? string.Empty
+        : CurrentScenario == SandboxScenarioKey.LongText ? LongPayload : BaselinePayload;
+
+    private string CurrentCaption => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Long verification payload with high error correction"
+        : "CanDoItAll.Components repository";
+
+    private QrCodeRenderOptions CurrentOptions => new()
+    {
+        BorderModules = CurrentScenario == SandboxScenarioKey.DenseContent ? 2 : 4,
+        ErrorCorrectionLevel = CurrentScenario == SandboxScenarioKey.LongText
+            ? QrErrorCorrectionLevel.High
+            : QrErrorCorrectionLevel.Medium
+    };
+
+    private QrCodePayload DialogPayload => new(CurrentPayload, QrPayloadKind.Generic, "Component repository", CurrentCaption);
+
+    private Task HandleScanned(QrScanResult result)
+    {
+        lastScan = result;
+        return Task.CompletedTask;
+    }
+}

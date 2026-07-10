@@ -1,16 +1,25 @@
 @namespace CanDoItAll.Components.BaseLib
+@using Microsoft.AspNetCore.Components.Web
 
 @if (Items.Count > 0)
 {
     <div @attributes='AdditionalAttributes.WithClass(ResolveCssClass())'>
-        <ul class="cda-treeview__list"
+        <ul @ref="treeElement"
+            class="cda-treeview__list"
             role="tree"
-            aria-label="@AriaLabel">
+            tabindex="0"
+            aria-label="@AriaLabel"
+            aria-activedescendant="@ResolveActiveElementId()"
+            @onfocus="EnsureActiveItem"
+            @onkeydown="HandleTreeKeyDownAsync">
             @foreach (var item in Items)
             {
                 <TreeViewNodeRow Node="@item"
                                  Level="0"
+                                 TreeId="@treeInstanceId"
                                  Style="@Style"
+                                 ActiveNodeId="@activeNodeId"
+                                 OnActivate="ActivateNode"
                                  OnSelect="OnSelect"
                                  OnToggle="OnToggle"
                                  OnContextMenu="OnContextMenu" />
@@ -28,11 +37,16 @@ else
 }
 
 @code {
+    private readonly List<VisibleTreeNode> visibleNodes = [];
+    private readonly string treeInstanceId = $"cda-tree-{Guid.NewGuid():N}";
+    private ElementReference treeElement;
+    private string? activeNodeId;
+
     [Parameter, EditorRequired]
     public IReadOnlyList<TreeViewNode> Items { get; set; } = [];
 
     [Parameter]
-    public string? AriaLabel { get; set; }
+    public string AriaLabel { get; set; } = "Tree";
 
     [Parameter]
     public string EmptyText { get; set; } = "No items to display.";
@@ -52,6 +66,169 @@ else
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
+    protected override void OnParametersSet()
+    {
+        visibleNodes.Clear();
+        AddVisibleNodes(Items, parentId: null);
+
+        if (activeNodeId is null || visibleNodes.All(entry => entry.Node.Id != activeNodeId))
+        {
+            activeNodeId = visibleNodes.FirstOrDefault(entry => entry.Node.IsSelected)?.Node.Id
+                ?? visibleNodes.FirstOrDefault()?.Node.Id;
+        }
+    }
+
+    private async Task HandleTreeKeyDownAsync(KeyboardEventArgs args)
+    {
+        if (visibleNodes.Count == 0)
+        {
+            return;
+        }
+
+        switch (args.Key)
+        {
+            case "ArrowDown":
+                MoveActive(1);
+                break;
+            case "ArrowUp":
+                MoveActive(-1);
+                break;
+            case "Home":
+                activeNodeId = visibleNodes[0].Node.Id;
+                break;
+            case "End":
+                activeNodeId = visibleNodes[^1].Node.Id;
+                break;
+            case "ArrowRight":
+                await MoveIntoOrExpandAsync();
+                break;
+            case "ArrowLeft":
+                await CollapseOrMoveToParentAsync();
+                break;
+            case "Enter":
+            case " ":
+                await ActivateCurrentAsync();
+                break;
+            default:
+                ActivateByTypeAhead(args.Key);
+                break;
+        }
+    }
+
+    private void MoveActive(int delta)
+    {
+        var currentIndex = visibleNodes.FindIndex(entry => entry.Node.Id == activeNodeId);
+        currentIndex = currentIndex < 0 ? 0 : Math.Clamp(currentIndex + delta, 0, visibleNodes.Count - 1);
+        activeNodeId = visibleNodes[currentIndex].Node.Id;
+    }
+
+    private async Task MoveIntoOrExpandAsync()
+    {
+        if (FindActiveNode() is not { } active || active.Node.IsDisabled || !active.Node.HasChildren)
+        {
+            return;
+        }
+
+        if (!active.Node.IsExpanded)
+        {
+            await OnToggle.InvokeAsync(active.Node.Id);
+            return;
+        }
+
+        var child = visibleNodes.FirstOrDefault(entry => entry.ParentId == active.Node.Id);
+        if (child is not null)
+        {
+            activeNodeId = child.Node.Id;
+        }
+    }
+
+    private async Task CollapseOrMoveToParentAsync()
+    {
+        if (FindActiveNode() is not { } active || active.Node.IsDisabled)
+        {
+            return;
+        }
+
+        if (active.Node.HasChildren && active.Node.IsExpanded)
+        {
+            await OnToggle.InvokeAsync(active.Node.Id);
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(active.ParentId))
+        {
+            activeNodeId = active.ParentId;
+        }
+    }
+
+    private async Task ActivateCurrentAsync()
+    {
+        if (FindActiveNode() is not { } active || active.Node.IsDisabled)
+        {
+            return;
+        }
+
+        if (active.Node.IsSelectable)
+        {
+            await OnSelect.InvokeAsync(active.Node.Id);
+        }
+        else if (active.Node.HasChildren)
+        {
+            await OnToggle.InvokeAsync(active.Node.Id);
+        }
+    }
+
+    private void ActivateByTypeAhead(string key)
+    {
+        if (key.Length != 1 || char.IsControl(key[0]))
+        {
+            return;
+        }
+
+        var startIndex = Math.Max(0, visibleNodes.FindIndex(entry => entry.Node.Id == activeNodeId));
+        for (var offset = 1; offset <= visibleNodes.Count; offset++)
+        {
+            var candidate = visibleNodes[(startIndex + offset) % visibleNodes.Count].Node;
+            if (candidate.Text.StartsWith(key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                activeNodeId = candidate.Id;
+                return;
+            }
+        }
+    }
+
+    private void EnsureActiveItem()
+    {
+        activeNodeId ??= visibleNodes.FirstOrDefault()?.Node.Id;
+    }
+
+    private async Task ActivateNode(string nodeId)
+    {
+        activeNodeId = nodeId;
+        await treeElement.FocusAsync(preventScroll: true);
+    }
+
+    private VisibleTreeNode? FindActiveNode()
+        => visibleNodes.FirstOrDefault(entry => entry.Node.Id == activeNodeId);
+
+    private void AddVisibleNodes(IReadOnlyList<TreeViewNode> nodes, string? parentId)
+    {
+        foreach (var node in nodes)
+        {
+            visibleNodes.Add(new VisibleTreeNode(node, parentId));
+            if (node.HasChildren && node.IsExpanded)
+            {
+                AddVisibleNodes(node.Children, node.Id);
+            }
+        }
+    }
+
+    private string? ResolveActiveElementId()
+        => activeNodeId is null ? null : ResolveNodeElementId(treeInstanceId, activeNodeId);
+
+    internal static string ResolveNodeElementId(string treeId, string nodeId)
+        => $"{treeId}-item-{string.Concat(nodeId.Select(character => char.IsLetterOrDigit(character) || character is '-' or '_' ? character : '-'))}";
+
     private string ResolveCssClass()
     {
         return Style switch
@@ -60,4 +237,6 @@ else
             _ => "cda-treeview"
         };
     }
+
+    private sealed record VisibleTreeNode(TreeViewNode Node, string? ParentId);
 }

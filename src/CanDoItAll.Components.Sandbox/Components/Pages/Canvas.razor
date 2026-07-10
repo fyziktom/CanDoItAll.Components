@@ -36,13 +36,42 @@
                             Variant="@(Variant.Outlined)"
                             Click="@ResetInspectorWindow"
                             data-testid="reset-canvas-inspector" />
+                    <Button Text="Show activity"
+                            ButtonStyle="@(ButtonStyle.Light)"
+                            Variant="@(Variant.Outlined)"
+                            Click="@ShowActivityWindow"
+                            data-testid="show-canvas-activity" />
+                    <Button Text="Overlap windows"
+                            ButtonStyle="@(ButtonStyle.Light)"
+                            Variant="@(Variant.Outlined)"
+                            Click="@OverlapCanvasWindows"
+                            data-testid="overlap-canvas-windows" />
+                    <Button Text="Select three"
+                            ButtonStyle="@(ButtonStyle.Light)"
+                            Variant="@(Variant.Outlined)"
+                            Click="@SelectThreeWorkbenchNodes"
+                            data-testid="select-three-canvas-nodes" />
+                    <Button Text="Move selected"
+                            ButtonStyle="@(ButtonStyle.Light)"
+                            Variant="@(Variant.Outlined)"
+                            Click="@MoveSelectedWorkbenchNodes"
+                            data-testid="move-selected-canvas-nodes" />
                 </Cluster>
                 <StatusBadge Text="@InspectorWindowStateLabel" Tone="@InspectorWindowStateTone" />
             </div>
+            <Alert AlertStyle="AlertStyle.Info" data-testid="canvas-event-status">
+                @lastWorkbenchEvent
+            </Alert>
             <div class="sandbox-canvas-host">
                 <CanvasWorkbench Surface="@WorkbenchSurface"
-                                 SelectionChanged="HandleWorkbenchSelectionChanged"
-                                 StateChanged="HandleWorkbenchStateChanged">
+                                  SelectionChanged="HandleWorkbenchSelectionChanged"
+                                  NodesMoved="HandleWorkbenchNodesMoved"
+                                  ContextActionRequested="HandleWorkbenchContextActionRequested"
+                                  CreateActionInvoked="HandleWorkbenchCreateActionInvoked"
+                                  NodeEdited="HandleWorkbenchNodeEdited"
+                                  NodeOpened="HandleWorkbenchNodeOpened"
+                                  ClipboardRequested="HandleWorkbenchClipboardRequested"
+                                  StateChanged="HandleWorkbenchStateChanged">
                     <ToolbarLeftContent>
                         <div class="flex flex-wrap items-center gap-2">
                             <StatusBadge Text="Catalog demo" Tone="info" />
@@ -79,6 +108,27 @@
                                     <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SelectedWorkbenchNodeLabel" />
                                     <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Why this matters" />
                                     <TextBlock TextStyle="@(TextStyle.Body2)" Value="Floating context stays inside the shared canvas system, so runtime pages do not need to rebuild inspector chrome for every use case." />
+                                </div>
+                            </CanvasFloatingWindow>
+                        }
+                        @if (ActivityWindowState.IsVisible)
+                        {
+                            <CanvasFloatingWindow WindowId="sandbox-activity"
+                                                  TestId="sandbox-canvas-activity"
+                                                  AriaLabel="Sandbox canvas activity"
+                                                  Kicker="Event proof"
+                                                  Title="Interaction activity"
+                                                  Summary="A second shared window proves overlap, activation order, independent geometry, minimize, and close behavior."
+                                                  DefaultPlacement="bottom-left"
+                                                  DefaultWidth="340"
+                                                  DefaultHeight="300"
+                                                  MinWidth="280"
+                                                  MinHeight="200"
+                                                  State="@ActivityWindowState"
+                                                  StateChanged="HandleActivityWindowStateChanged">
+                                <div class="sandbox-floating-window-copy">
+                                    <StatusBadge Text="@(workbenchUiState.SelectedNodeIds.Count + " selected")" Tone="info" />
+                                    <TextBlock TextStyle="TextStyle.Body2" Value="@lastWorkbenchEvent" />
                                 </div>
                             </CanvasFloatingWindow>
                         }
@@ -139,12 +189,33 @@
     private SandboxScenarioKey? initializedScenario;
     private CanvasWorkbenchUiState workbenchUiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.HappyPath);
     private CanvasWorkbenchWindowState inspectorWindowState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.HappyPath);
+    private CanvasWorkbenchWindowState activityWindowState = CreateActivityWindowState(SandboxScenarioKey.HappyPath);
     private CanvasCalendarSurface currentCalendarSurface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.HappyPath);
+    private readonly Dictionary<string, CanvasWorkbenchNodePositionChange> nodePositionOverrides = new(StringComparer.Ordinal);
     private string calendarExportStatus = "No calendar export requested";
+    private string lastWorkbenchEvent = "No workbench interaction recorded yet.";
 
-    private CanvasWorkbenchSurface WorkbenchSurface => SandboxCanvasSamples.CreateWorkbenchSurface(CurrentScenario, workbenchUiState, inspectorWindowState);
+    private CanvasWorkbenchSurface WorkbenchSurface
+    {
+        get
+        {
+            var surface = SandboxCanvasSamples.CreateWorkbenchSurface(CurrentScenario, workbenchUiState, inspectorWindowState);
+            foreach (var node in surface.Nodes)
+            {
+                if (nodePositionOverrides.TryGetValue(node.Id, out var position))
+                {
+                    node.X = position.X;
+                    node.Y = position.Y;
+                }
+            }
+
+            return surface;
+        }
+    }
 
     private CanvasWorkbenchWindowState InspectorWindowState => inspectorWindowState;
+
+    private CanvasWorkbenchWindowState ActivityWindowState => activityWindowState;
 
     private CanvasCalendarSurface CurrentCalendarSurface => currentCalendarSurface;
 
@@ -212,19 +283,65 @@
         initializedScenario = CurrentScenario;
         workbenchUiState = SandboxCanvasSamples.CreateWorkbenchUiState(CurrentScenario);
         inspectorWindowState = SandboxCanvasSamples.CreateInspectorWindowState(CurrentScenario);
+        activityWindowState = CreateActivityWindowState(CurrentScenario);
         currentCalendarSurface = SandboxCanvasSamples.CreateCalendarSurface(CurrentScenario);
+        nodePositionOverrides.Clear();
         calendarExportStatus = "No calendar export requested";
+        lastWorkbenchEvent = "No workbench interaction recorded yet.";
     }
 
     private Task HandleWorkbenchSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)
     {
         workbenchUiState.SelectedNodeIds = [.. args.SelectedNodeIds];
+        lastWorkbenchEvent = $"Selection changed: {args.SelectedNodeIds.Count} node(s); primary {args.PrimaryNodeId ?? "none"}.";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleWorkbenchNodesMoved(CanvasWorkbenchNodesMovedEventArgs args)
+    {
+        foreach (var position in args.Positions)
+        {
+            nodePositionOverrides[position.NodeId] = position;
+        }
+
+        lastWorkbenchEvent = $"Moved {args.Positions.Count} node(s).";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleWorkbenchContextActionRequested(CanvasWorkbenchContextActionRequest request)
+    {
+        lastWorkbenchEvent = $"Context action '{request.ActionId}' on {request.TargetKind} {request.NodeId ?? "surface"}.";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleWorkbenchCreateActionInvoked(CanvasWorkbenchCreateActionRequest request)
+    {
+        lastWorkbenchEvent = $"Create action '{request.ActionId}' at {request.X:0}, {request.Y:0}.";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleWorkbenchNodeEdited(CanvasWorkbenchNodeEditRequest request)
+    {
+        lastWorkbenchEvent = $"Edited node {request.NodeId}.";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleWorkbenchNodeOpened(string nodeId)
+    {
+        lastWorkbenchEvent = $"Opened node {nodeId}.";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleWorkbenchClipboardRequested(CanvasWorkbenchClipboardRequest request)
+    {
+        lastWorkbenchEvent = $"Clipboard action '{request.ActionId}' requested.";
         return Task.CompletedTask;
     }
 
     private Task HandleWorkbenchStateChanged(string json)
     {
         workbenchUiState = CanvasWorkbenchUiState.Parse(json);
+        lastWorkbenchEvent = "Workbench viewport or persisted UI state changed.";
         return Task.CompletedTask;
     }
 
@@ -233,6 +350,72 @@
         inspectorWindowState = CanvasWorkbenchWindowState.Normalize(state);
         return Task.CompletedTask;
     }
+
+    private Task HandleActivityWindowStateChanged(CanvasWorkbenchWindowState state)
+    {
+        activityWindowState = CanvasWorkbenchWindowState.Normalize(state);
+        lastWorkbenchEvent = "Activity window geometry or visibility changed.";
+        return Task.CompletedTask;
+    }
+
+    private Task ShowActivityWindow()
+    {
+        activityWindowState.IsVisible = true;
+        activityWindowState.IsMinimized = false;
+        lastWorkbenchEvent = "Activity window shown.";
+        return Task.CompletedTask;
+    }
+
+    private Task OverlapCanvasWindows()
+    {
+        inspectorWindowState = CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState
+        {
+            IsVisible = true,
+            Left = 520,
+            Top = 120,
+            Width = 380,
+            Height = 420
+        });
+        activityWindowState = CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState
+        {
+            IsVisible = true,
+            Left = 600,
+            Top = 190,
+            Width = 340,
+            Height = 300
+        });
+        lastWorkbenchEvent = "Windows intentionally overlapped; click either title bar to verify activation order.";
+        return Task.CompletedTask;
+    }
+
+    private Task SelectThreeWorkbenchNodes()
+    {
+        workbenchUiState.SelectedNodeIds = WorkbenchSurface.Nodes.Take(3).Select(node => node.Id).ToList();
+        lastWorkbenchEvent = $"Deterministic stress control selected {workbenchUiState.SelectedNodeIds.Count} nodes.";
+        return Task.CompletedTask;
+    }
+
+    private Task MoveSelectedWorkbenchNodes()
+    {
+        var surface = WorkbenchSurface;
+        foreach (var node in surface.Nodes.Where(node => workbenchUiState.SelectedNodeIds.Contains(node.Id, StringComparer.Ordinal)))
+        {
+            nodePositionOverrides[node.Id] = new CanvasWorkbenchNodePositionChange(node.Id, node.X + 40, node.Y + 24);
+        }
+
+        lastWorkbenchEvent = $"Deterministic stress control moved {workbenchUiState.SelectedNodeIds.Count} selected nodes.";
+        return Task.CompletedTask;
+    }
+
+    private static CanvasWorkbenchWindowState CreateActivityWindowState(SandboxScenarioKey scenario)
+        => CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState
+        {
+            IsVisible = scenario == SandboxScenarioKey.DenseContent,
+            Left = 24,
+            Top = 360,
+            Width = 340,
+            Height = 300
+        });
 
     private Task ShowInspectorWindow()
     {

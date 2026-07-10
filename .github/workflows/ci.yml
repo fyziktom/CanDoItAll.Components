@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-pack:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            Tailwind/package-lock.json
+
+      - name: Restore JavaScript tools
+        run: |
+          npm ci
+          npm ci --prefix Tailwind
+
+      - name: Build generated styles and verify canvas assets
+        run: |
+          npm run tailwind:build
+          npm run canvaslib:verify-assets
+
+      - name: Restore .NET dependencies
+        run: dotnet restore CanDoItAll.Components.slnx
+
+      - name: Build
+        run: dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
+
+      - name: Test release-focus packages
+        run: |
+          dotnet test tests/CanDoItAll.Components.BaseLib.Tests/CanDoItAll.Components.BaseLib.Tests.csproj --configuration Release --no-build
+          dotnet test tests/CanDoItAll.Components.Common.Tests/CanDoItAll.Components.Common.Tests.csproj --configuration Release --no-build
+          dotnet test tests/CanDoItAll.Components.QRCode.Tests/CanDoItAll.Components.QRCode.Tests.csproj --configuration Release --no-build
+
+      - name: Report deferred WebGL freeze-suite status
+        continue-on-error: true
+        run: dotnet test tests/CanDoItAll.Components.WebGlLib.Tests/CanDoItAll.Components.WebGlLib.Tests.csproj --configuration Release --no-build
+
+      - name: Pack
+        run: powershell -ExecutionPolicy Bypass -File scripts/pack-release.ps1 -NoBuild
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: |
+            artifacts/packages/*.nupkg
+            artifacts/packages/*.snupkg
+          if-no-files-found: error

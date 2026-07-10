@@ -34,6 +34,10 @@ Direct package references:
 
 Use this component for product-rendered Mermaid diagrams. Keep syntax guidance and authoring assistance in `CanDoItAll.Mcp.Mermaid`; this library should stay focused on rendering, options, normalization, and typed UI events.
 
+## Security defaults
+
+`MermaidDiagramOptions` defaults to Mermaid's `strict` security level and disables HTML labels. Only opt into `SecurityLevel = "loose"` or `HtmlLabels = true` for diagram source that your application fully trusts; those options allow Mermaid to emit richer HTML and interactive content into the rendered SVG surface.
+
 ## Related Docs
 
 - Repository overview: `README.md` at this repo root

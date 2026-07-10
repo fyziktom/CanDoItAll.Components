@@ -1,16 +1,25 @@
 @namespace CanDoItAll.Components.BaseLib
+@using Microsoft.JSInterop
 @inject TooltipService TooltipService
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
-<span class="@ResolveTriggerCssClass()"
+<span @ref="triggerElement"
+      class="@ResolveTriggerCssClass()"
       tabindex="@TabIndex"
+      aria-describedby="@tooltipElementId"
       @onmouseenter="OpenFromMouse"
       @onmouseleave="CloseIfConfigured"
-      @onfocus="OpenFromFocus"
-      @onblur="CloseIfConfigured">
+      @onfocusin="OpenFromFocus"
+      @onfocusout="CloseFromFocusAsync">
     @ChildContent
 </span>
 
 @code {
+    private readonly string tooltipElementId = $"cda-tooltip-{Guid.NewGuid():N}";
+    private ElementReference triggerElement;
+    private TooltipInterop? tooltipInterop;
+
     [Parameter]
     public string? Text { get; set; }
 
@@ -42,22 +51,25 @@
     public string? TestId { get; set; }
 
     [Parameter]
-    public int TabIndex { get; set; } = 0;
+    public int? TabIndex { get; set; }
 
     private void OpenFromMouse(MouseEventArgs args)
     {
         Open(args.ClientX, args.ClientY);
     }
 
-    private void OpenFromFocus()
+    private async Task OpenFromFocus()
     {
-        Open(24, 24);
+        tooltipInterop ??= new TooltipInterop(JS);
+        var anchor = await tooltipInterop.GetAnchorPointAsync(triggerElement, tooltipElementId);
+        Open(anchor.X, anchor.Y);
     }
 
     private void Open(double clientX, double clientY)
     {
         var options = new TooltipOptions
         {
+            Id = tooltipElementId,
             Position = Position,
             Delay = Delay,
             Duration = Duration,
@@ -89,5 +101,28 @@
     private string ResolveTriggerCssClass()
     {
         return CssClassBuilder.Join("inline-flex min-w-0", TriggerClass);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (TooltipService.Current?.Options.Id == tooltipElementId)
+        {
+            TooltipService.Close();
+        }
+
+        if (tooltipInterop is not null)
+        {
+            await tooltipInterop.DisposeAsync();
+        }
+    }
+
+    private async Task CloseFromFocusAsync()
+    {
+        if (tooltipInterop is not null)
+        {
+            await tooltipInterop.ClearFocusedTargetAsync(triggerElement, tooltipElementId);
+        }
+
+        CloseIfConfigured();
     }
 }

@@ -6,12 +6,15 @@
 
 @if (IsAnchor)
 {
-    <a href="@Href"
+    <a href="@(IsDisabled ? null : Href)"
        target="@Target"
-       rel="@Rel"
+       rel="@ResolvedRel"
+       tabindex="@(IsDisabled ? -1 : null)"
        aria-disabled="@FormatBoolean(IsDisabled)"
+       aria-busy="@(IsBusy ? "true" : null)"
        @attributes="BuildAttributes(ResolveButtonCssClass())"
-       @onclick="OnClickAsync">
+       @onclick="OnClickAsync"
+       @onclick:preventDefault="@IsDisabled">
         @RenderButtonContent(iconName)
     </a>
 }
@@ -19,6 +22,7 @@ else
 {
     <button type="@Type"
             disabled="@IsDisabled"
+            aria-busy="@(IsBusy ? "true" : null)"
             @attributes="BuildAttributes(ResolveButtonCssClass())"
             @onclick="OnClickAsync">
         @RenderButtonContent(iconName)
@@ -79,6 +83,11 @@ else
     private bool IsDisabled => Disabled || IsBusy || isClickInFlight;
 
     private bool IsAnchor => !string.IsNullOrWhiteSpace(Href);
+
+    private string? ResolvedRel => string.Equals(Target, "_blank", StringComparison.OrdinalIgnoreCase)
+        && string.IsNullOrWhiteSpace(Rel)
+            ? "noopener noreferrer"
+            : Rel;
 
     private async Task OnClickAsync()
     {

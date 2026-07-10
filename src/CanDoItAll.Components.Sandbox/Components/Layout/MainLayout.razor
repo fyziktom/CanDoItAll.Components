@@ -8,7 +8,21 @@
         <div class="sandbox-layout">
             <div class="sandbox-layout__backdrop" aria-hidden="true"></div>
             <div class="sandbox-layout__shell">
-                <aside class="sandbox-sidebar">
+                <header class="sandbox-mobile-header">
+                    <a class="sandbox-brand" href="/">
+                        <span class="sandbox-brand__eyebrow">CanDoItAll</span>
+                        <span class="sandbox-brand__title">Components Sandbox</span>
+                    </a>
+                    <Button Text="@(mobileNavigationOpen ? "Close navigation" : "Open navigation")"
+                            Icon="@(mobileNavigationOpen ? "close" : "menu")"
+                            ButtonStyle="ButtonStyle.Light"
+                            Variant="Variant.Outlined"
+                            Click="ToggleMobileNavigationAsync"
+                            aria-controls="sandbox-navigation"
+                            aria-expanded="@(mobileNavigationOpen ? "true" : "false")" />
+                </header>
+
+                <aside id="sandbox-navigation" class="sandbox-sidebar @(mobileNavigationOpen ? "is-open" : null)">
                     <a class="sandbox-brand" href="/">
                         <span class="sandbox-brand__eyebrow">CanDoItAll</span>
                         <span class="sandbox-brand__title">Components Sandbox</span>
@@ -73,6 +87,7 @@
 
 @code {
     private readonly SandboxThemeState themeState = new();
+    private bool mobileNavigationOpen;
 
     protected override void OnInitialized()
     {
@@ -97,6 +112,12 @@
     private void HandleThemeChanged()
     {
         _ = InvokeAsync(StateHasChanged);
+    }
+
+    private Task ToggleMobileNavigationAsync()
+    {
+        mobileNavigationOpen = !mobileNavigationOpen;
+        return Task.CompletedTask;
     }
 
     public void Dispose()

@@ -4,7 +4,7 @@
 
 @if (!HasRenderableData)
 {
-    <div @attributes="AdditionalAttributes" data-cda-chart-state="empty" class="@ShellClass" style="@Style">
+    <div @attributes="AdditionalAttributes" data-cda-chart-state="empty" class="@ShellClass" style="@Style" role="figure" aria-label="@ResolvedAriaLabel">
         @RenderHeading()
 
         <div class="flex min-h-48 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50/70 p-6 text-center text-sm text-slate-500">
@@ -16,10 +16,10 @@
 }
 else
 {
-    <div @attributes="AdditionalAttributes" data-cda-chart-state="ready" class="@ShellClass" style="@Style">
+    <div @attributes="AdditionalAttributes" data-cda-chart-state="ready" class="@ShellClass" style="@Style" role="figure" aria-label="@ResolvedAriaLabel">
         @RenderHeading()
 
-        <div class="min-w-0 overflow-hidden">
+        <div class="min-w-0 overflow-hidden" aria-hidden="true">
             <ApexChart @ref="_chart"
                        TItem="CdaChartPoint"
                        Height="@Height"
@@ -40,6 +40,7 @@ else
                 }
             </ApexChart>
         </div>
+        <div class="sr-only">@ResolvedAccessibleSummary</div>
     </div>
 }
 
@@ -53,6 +54,12 @@ else
 
     [Parameter]
     public string? Description { get; set; }
+
+    [Parameter]
+    public string? AriaLabel { get; set; }
+
+    [Parameter]
+    public string? AccessibleSummary { get; set; }
 
     [Parameter]
     public IReadOnlyList<CdaChartSeries> Series { get; set; } = [];
@@ -76,6 +83,17 @@ else
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
     private bool HasRenderableData => _renderSeries.Any(series => series.Points.Count > 0);
+
+    private string ResolvedAriaLabel => !string.IsNullOrWhiteSpace(AriaLabel)
+        ? AriaLabel
+        : !string.IsNullOrWhiteSpace(Title) ? Title : "Chart";
+
+    private string ResolvedAccessibleSummary => !string.IsNullOrWhiteSpace(AccessibleSummary)
+        ? AccessibleSummary
+        : string.Join(
+            " ",
+            _renderSeries.Select(series =>
+                $"{series.Name}: {series.Points.Count} points, minimum {series.Points.Min(point => point.Value)}, maximum {series.Points.Max(point => point.Value)}."));
 
     private string ShellClass => string.Join(
         ' ',

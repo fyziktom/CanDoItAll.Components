@@ -146,6 +146,8 @@ public sealed record TooltipState(
 
 public sealed class TooltipOptions
 {
+    public string? Id { get; set; }
+
     public TooltipPosition Position { get; set; } = TooltipPosition.Top;
 
     public TimeSpan? Delay { get; set; }
@@ -164,6 +166,7 @@ public sealed class TooltipOptions
     {
         return new TooltipOptions
         {
+            Id = Id,
             Position = Position,
             Delay = Delay,
             Duration = Duration,

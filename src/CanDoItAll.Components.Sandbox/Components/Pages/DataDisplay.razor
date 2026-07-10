@@ -116,12 +116,37 @@
             </SectionCard>
             </div>
         }
+
+        <SectionCard Title="Data grid states" Description="The shared grid proves keyboard row activation, paging boundaries, captions, loading, empty, dense, and long-content behavior.">
+            <Stack GapScale="LayoutGap.Medium">
+                <DataGrid TItem="DisplayRowModel"
+                          Data="@GridRows"
+                          Caption="Component hardening records"
+                          Loading="@(CurrentScenario == SandboxScenarioKey.LoadingState)"
+                          LoadingText="Loading component hardening records…"
+                          EmptyText="No component hardening records match this scenario."
+                          AllowPaging="true"
+                          PageSize="2"
+                          RowSelect="SelectGridRow"
+                          data-testid="sandbox-data-grid">
+                    <Columns>
+                        <DataGridColumn TItem="DisplayRowModel" Property="Title" Title="Surface" />
+                        <DataGridColumn TItem="DisplayRowModel" Property="Meta" Title="Scope" />
+                        <DataGridColumn TItem="DisplayRowModel" Property="State" Title="State" />
+                    </Columns>
+                </DataGrid>
+                <Alert AlertStyle="AlertStyle.Info">
+                    Selected grid row: @(selectedGridRowTitle ?? "none — activate a row with click, Enter, or Space").
+                </Alert>
+            </Stack>
+        </SectionCard>
     </ChildContent>
 </CatalogPageFrame>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.DataDisplay);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataDisplay);
+    private string? selectedGridRowTitle;
 
     private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
 
@@ -145,6 +170,20 @@
         SandboxScenarioKey.LongText => LongRows,
         _ => BaseRows
     };
+
+    private IReadOnlyList<DisplayRowModel> GridRows => CurrentScenario switch
+    {
+        SandboxScenarioKey.EmptyState => [],
+        SandboxScenarioKey.DenseContent => DenseRows,
+        SandboxScenarioKey.LongText => LongRows,
+        _ => BaseRows
+    };
+
+    private Task SelectGridRow(DisplayRowModel row)
+    {
+        selectedGridRowTitle = row.Title;
+        return Task.CompletedTask;
+    }
 
     private static readonly IReadOnlyList<SummaryTileModel> BaseTiles =
     [

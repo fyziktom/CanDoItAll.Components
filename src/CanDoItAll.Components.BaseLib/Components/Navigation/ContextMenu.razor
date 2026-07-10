@@ -1,7 +1,237 @@
 @namespace CanDoItAll.Components.BaseLib
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
 @inherits StyledComponentBase
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
-<div @attributes='BuildAttributes("rz-context-menu-host hidden")' aria-hidden="true"></div>
+@if (IsOpen)
+{
+    <div class="fixed inset-0 z-[87]"
+         aria-hidden="true"
+         @onclick="HandleCloseAsync"></div>
+    <div @ref="menuElement"
+         @attributes='BuildAttributes("rz-context-menu fixed z-[88] w-[min(18rem,calc(100vw-2rem))] overflow-y-auto rounded-[1rem] border border-slate-200 bg-white p-2 text-sm shadow-[0_18px_48px_rgba(15,23,42,0.18)]", ResolveInitialStyle())'
+         role="menu"
+         tabindex="0"
+         aria-label="@AriaLabel"
+         aria-activedescendant="@ResolveActiveElementId()"
+         data-testid="@TestId"
+         @onclick:stopPropagation="true"
+         @onkeydown="HandleKeyDownAsync">
+        @if (!string.IsNullOrWhiteSpace(Heading))
+        {
+            <div class="border-b border-slate-100 px-2 py-2" role="presentation">
+                <div class="break-words text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">@Heading</div>
+                @if (!string.IsNullOrWhiteSpace(Description))
+                {
+                    <div class="mt-1 break-words text-xs leading-5 text-slate-600">@Description</div>
+                }
+            </div>
+        }
 
+        @foreach (var item in Items)
+        {
+            @if (item.SeparatorBefore)
+            {
+                <div class="my-1 border-t border-slate-200" role="separator"></div>
+            }
 
+            <button id="@ResolveItemElementId(item.Id)"
+                    @key="item.Id"
+                    type="button"
+                    role="menuitem"
+                    tabindex="-1"
+                    disabled="@item.Disabled"
+                    aria-disabled="@(item.Disabled ? "true" : null)"
+                    class="@ResolveItemCssClass(item)"
+                    @onclick="() => HandleItemSelectedAsync(item)">
+                @if (!string.IsNullOrWhiteSpace(item.Icon))
+                {
+                    <Icon Name="@item.Icon" />
+                }
+                <span class="min-w-0 flex-1">
+                    <span class="block break-words font-semibold">@item.Text</span>
+                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                    {
+                        <span class="mt-0.5 block break-words text-xs font-normal text-slate-500">@item.Description</span>
+                    }
+                </span>
+            </button>
+        }
+    </div>
+}
 
+@code {
+    private readonly string instanceId = $"cda-context-menu-{Guid.NewGuid():N}";
+    private ElementReference menuElement;
+    private ContextMenuInterop? interop;
+    private string? activeItemId;
+    private bool focusPending;
+    private bool wasOpen;
+    private bool browserMenuOpen;
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public double X { get; set; }
+
+    [Parameter]
+    public double Y { get; set; }
+
+    [Parameter]
+    public string AriaLabel { get; set; } = "Context menu";
+
+    [Parameter]
+    public string? Heading { get; set; }
+
+    [Parameter]
+    public string? Description { get; set; }
+
+    [Parameter]
+    public string? TestId { get; set; }
+
+    [Parameter]
+    public bool CloseOnSelect { get; set; } = true;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ContextMenuItem> Items { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<string> ItemSelected { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen && (!wasOpen || !IsAvailable(activeItemId)))
+        {
+            activeItemId = Items.FirstOrDefault(item => !item.Disabled)?.Id;
+            focusPending = true;
+        }
+
+        wasOpen = IsOpen;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!IsOpen)
+        {
+            if (browserMenuOpen && interop is not null)
+            {
+                await interop.CloseAsync(instanceId);
+                browserMenuOpen = false;
+            }
+
+            return;
+        }
+
+        interop ??= new ContextMenuInterop(JS);
+
+        if (focusPending)
+        {
+            focusPending = false;
+            await interop.OpenAsync(menuElement, instanceId, X, Y);
+            browserMenuOpen = true;
+            return;
+        }
+
+        await interop.PositionAsync(menuElement, X, Y);
+    }
+
+    private async Task HandleKeyDownAsync(KeyboardEventArgs args)
+    {
+        switch (args.Key)
+        {
+            case "ArrowDown":
+                MoveActive(1);
+                break;
+            case "ArrowUp":
+                MoveActive(-1);
+                break;
+            case "Home":
+                activeItemId = AvailableItems.FirstOrDefault()?.Id;
+                break;
+            case "End":
+                activeItemId = AvailableItems.LastOrDefault()?.Id;
+                break;
+            case "Enter":
+            case " ":
+                if (Items.FirstOrDefault(item => item.Id == activeItemId) is { } activeItem)
+                {
+                    await HandleItemSelectedAsync(activeItem);
+                }
+                break;
+            case "Escape":
+                await HandleCloseAsync();
+                break;
+        }
+    }
+
+    private void MoveActive(int delta)
+    {
+        var available = AvailableItems;
+        if (available.Count == 0)
+        {
+            activeItemId = null;
+            return;
+        }
+
+        var index = available.FindIndex(item => item.Id == activeItemId);
+        index = index < 0 ? 0 : (index + delta + available.Count) % available.Count;
+        activeItemId = available[index].Id;
+    }
+
+    private async Task HandleItemSelectedAsync(ContextMenuItem item)
+    {
+        if (item.Disabled)
+        {
+            return;
+        }
+
+        activeItemId = item.Id;
+        await ItemSelected.InvokeAsync(item.Id);
+
+        if (CloseOnSelect)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    private Task HandleCloseAsync()
+        => OnClose.InvokeAsync();
+
+    private List<ContextMenuItem> AvailableItems
+        => Items.Where(item => !item.Disabled).ToList();
+
+    private bool IsAvailable(string? itemId)
+        => itemId is not null && Items.Any(item => item.Id == itemId && !item.Disabled);
+
+    private string? ResolveActiveElementId()
+        => activeItemId is null ? null : ResolveItemElementId(activeItemId);
+
+    private string ResolveItemElementId(string itemId)
+        => $"{instanceId}-item-{SanitizeId(itemId)}";
+
+    private string ResolveInitialStyle()
+        => FormattableString.Invariant($"left:{Math.Max(16, X):0.##}px;top:{Math.Max(16, Y):0.##}px;max-height:calc(100vh - 2rem)");
+
+    private static string ResolveItemCssClass(ContextMenuItem item)
+        => CssClassBuilder.Join(
+            "flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-slate-700 transition hover:bg-slate-50 focus:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45",
+            item.Danger ? "text-rose-700 hover:bg-rose-50 focus:bg-rose-50" : null);
+
+    private static string SanitizeId(string value)
+        => string.Concat(value.Select(character => char.IsLetterOrDigit(character) || character is '-' or '_' ? character : '-'));
+
+    public async ValueTask DisposeAsync()
+    {
+        if (interop is not null)
+        {
+            await interop.CloseAsync(instanceId);
+            await interop.DisposeAsync();
+        }
+    }
+}

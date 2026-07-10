@@ -120,34 +120,16 @@
                                   OnToggle="ToggleTreeNode"
                                   OnContextMenu="OpenTreeContextMenu"
                                   data-testid="sandbox-navigation-tree" />
-                        <ContextMenu data-testid="sandbox-navigation-context-menu-host" />
-
-                        @if (treeContextMenuRequest is not null)
-                        {
-                            <div class="fixed z-[88] w-[min(18rem,calc(100vw-2rem))] rounded-[1rem] border border-slate-200 bg-white p-3 text-sm shadow-[0_18px_48px_rgba(15,23,42,0.18)]"
-                                 style="@ResolveTreeContextMenuStyle()"
-                                 data-testid="sandbox-navigation-tree-context-menu"
-                                 @onclick:stopPropagation="true">
-                                <div class="space-y-1">
-                                    <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Tree action</p>
-                                    <p class="break-words font-semibold text-slate-900">@ResolveTreeNodeLabel(treeContextMenuRequest.NodeId)</p>
-                                </div>
-                                <div class="mt-3 grid gap-2">
-                                    <button type="button"
-                                            class="rounded-lg border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700 transition hover:bg-slate-50"
-                                            @onclick="FocusTreeContextNode"
-                                            data-testid="sandbox-navigation-tree-context-focus">
-                                        Select node
-                                    </button>
-                                    <button type="button"
-                                            class="rounded-lg border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700 transition hover:bg-slate-50"
-                                            @onclick="CloseTreeContextMenu"
-                                            data-testid="sandbox-navigation-tree-context-close">
-                                        Close menu
-                                    </button>
-                                </div>
-                            </div>
-                        }
+                        <ContextMenu IsOpen="@(treeContextMenuRequest is not null)"
+                                     X="@(treeContextMenuRequest?.ClientX ?? 16)"
+                                     Y="@(treeContextMenuRequest?.ClientY ?? 16)"
+                                     Items="@TreeContextMenuItems"
+                                     Heading="Tree action"
+                                     Description="@(treeContextMenuRequest is null ? null : ResolveTreeNodeLabel(treeContextMenuRequest.NodeId))"
+                                     AriaLabel="Tree node actions"
+                                     ItemSelected="HandleTreeContextMenuItemSelected"
+                                     OnClose="CloseTreeContextMenu"
+                                     TestId="sandbox-navigation-tree-context-menu" />
                     </div>
 
                     <div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-4"
@@ -238,6 +220,12 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Navigation);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Navigation);
+    private static readonly IReadOnlyList<ContextMenuItem> TreeContextMenuItems =
+    [
+        new() { Id = "select", Text = "Select node", Icon = "check", Description = "Make this node the active detail target." },
+        new() { Id = "open-details", Text = "Open details", Icon = "open_in_new", Description = "Exercise a second keyboard-selectable action." },
+        new() { Id = "unavailable", Text = "Unavailable action", Icon = "block", Disabled = true, SeparatorBefore = true }
+    ];
     private int selectedTabIndex;
     private int advancedTabIndex = 1;
     private int stepIndex = 1;
@@ -370,16 +358,20 @@
         return Task.CompletedTask;
     }
 
-    private void CloseTreeContextMenu()
+    private Task HandleTreeContextMenuItemSelected(string itemId)
     {
-        treeContextMenuRequest = null;
+        return itemId switch
+        {
+            "select" => FocusTreeContextNode(),
+            "open-details" => FocusTreeContextNode(),
+            _ => Task.CompletedTask
+        };
     }
 
-    private string ResolveTreeContextMenuStyle()
+    private Task CloseTreeContextMenu()
     {
-        var x = Math.Max(16, treeContextMenuRequest?.ClientX ?? 16);
-        var y = Math.Max(16, treeContextMenuRequest?.ClientY ?? 16);
-        return FormattableString.Invariant($"left:clamp(1rem,{x}px,calc(100vw - 18rem));top:clamp(1rem,{y}px,calc(100vh - 12rem));");
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
     }
 
     private IReadOnlyList<TreeViewNode> ResolveScopedTreeNodes()

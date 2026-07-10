@@ -272,7 +272,7 @@
                             <Cluster AlignItems="AlignItems.Start"
                                      Wrap="FlexWrap.NoWrap"
                                      Gap="LayoutGap.Medium">
-                                <CheckBox TValue="bool" Value="@FormState.RequiresApproval" ValueChanged="HandleApprovalChanged" Disabled="@IsDisabled" />
+                                <CheckBox TValue="bool" Value="@FormState.RequiresApproval" ValueChanged="HandleApprovalChanged" Disabled="@IsDisabled" aria-label="Requires approval" />
                                 <div class="space-y-1">
                                     <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Requires approval" />
                                     <TextBlock TextStyle="@(TextStyle.Caption)" Value="Gate release until the designated reviewer signs off." />
@@ -284,7 +284,7 @@
                             <Cluster AlignItems="AlignItems.Start"
                                      Wrap="FlexWrap.NoWrap"
                                      Gap="LayoutGap.Medium">
-                                <CheckBox TValue="bool" Value="@FormState.PublishExternally" ValueChanged="HandlePublishChanged" Disabled="@IsDisabled" />
+                                <CheckBox TValue="bool" Value="@FormState.PublishExternally" ValueChanged="HandlePublishChanged" Disabled="@IsDisabled" aria-label="Publish externally" />
                                 <div class="space-y-1">
                                     <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Publish externally" />
                                     <TextBlock TextStyle="@(TextStyle.Caption)" Value="Expose the final draft to downstream reporting and partner tooling." />
