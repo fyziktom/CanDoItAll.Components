@@ -44,6 +44,15 @@
                                 <span class="sandbox-nav__title">@group.Title</span>
                                 <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
                             </a>
+
+                            @if (group.Key == SandboxGroupKey.Navigation)
+                            {
+                                <a href="/groups/navigation/side-menu"
+                                   class="sandbox-nav__link @(IsActiveRoute("/groups/navigation/side-menu") ? "is-active" : string.Empty)">
+                                    <span class="sandbox-nav__title">Side Menu Lab</span>
+                                    <span class="sandbox-nav__meta">collapse / overflow / responsive</span>
+                                </a>
+                            }
                         }
                     </nav>
 
