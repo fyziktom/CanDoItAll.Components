@@ -21,7 +21,7 @@ dotnet test tests/CanDoItAll.Components.FileBrowser.Core.Tests/CanDoItAll.Compon
 dotnet test tests/CanDoItAll.Components.FileBrowser.Providers.FileSystem.Tests/CanDoItAll.Components.FileBrowser.Providers.FileSystem.Tests.csproj -c Release --no-build --no-restore
 dotnet test tests/CanDoItAll.Components.FileBrowser.BaseLib.Tests/CanDoItAll.Components.FileBrowser.BaseLib.Tests.csproj -c Release --no-build --no-restore
 dotnet test tests/CanDoItAll.Components.BaseLib.Tests/CanDoItAll.Components.BaseLib.Tests.csproj -c Release --no-build --no-restore
-dotnet build src/CanDoItAll.Components.FileBrowser.Sandbox/CanDoItAll.Components.FileBrowser.Sandbox.csproj -c Release --no-restore -warnaserror
+dotnet build samples/CanDoItAll.Components.FileBrowser.Sandbox/CanDoItAll.Components.FileBrowser.Sandbox.csproj -c Release --no-restore -warnaserror
 powershell -ExecutionPolicy Bypass -File scripts/pack-release.ps1 -NoBuild
 ```
 

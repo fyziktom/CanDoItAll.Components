@@ -66,4 +66,4 @@ Use this component for product-rendered Mermaid diagrams. Keep syntax guidance a
 ## Related Docs
 
 - [Repository overview](../../README.md)
-- [Sandbox Mermaid examples](../CanDoItAll.Components.Sandbox/README.md)
+- [Sandbox Mermaid examples](../../samples/CanDoItAll.Components.Sandbox/README.md)

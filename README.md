@@ -76,7 +76,7 @@ For the Canvas lifecycle, composition rules, and a minimal implementation, read 
 The Sandbox is the visual catalog and regression host. It is the fastest way to see components in context before adopting them.
 
 ```powershell
-dotnet run --project src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
+dotnet run --project samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
 ```
 
 Open the printed local URL and visit `/groups/overlays`, `/groups/canvas`, `/groups/charts`, `/groups/mermaid`, or `/groups/qr`. The focused WebGL sample is in [WebGlLib-Only Viewer](samples/CanDoItAll.Components.WebGlLibOnlyViewer/README.md).
@@ -84,7 +84,7 @@ Open the printed local URL and visit `/groups/overlays`, `/groups/canvas`, `/gro
 The file browser has a dedicated proof host with project/subproject, IPFS-like, local filesystem, slow, empty, and error scenarios:
 
 ```powershell
-dotnet run --project src/CanDoItAll.Components.FileBrowser.Sandbox/CanDoItAll.Components.FileBrowser.Sandbox.csproj
+dotnet run --project samples/CanDoItAll.Components.FileBrowser.Sandbox/CanDoItAll.Components.FileBrowser.Sandbox.csproj
 ```
 
 Its architecture, user stories, and phased proof plan live in [docs/file-browser](docs/file-browser/README.md).

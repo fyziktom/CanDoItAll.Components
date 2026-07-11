@@ -9,7 +9,7 @@ The IPFS source is intentionally a mock of the required shallow/page-aware contr
 Run it from the repository root:
 
 ```powershell
-dotnet run --project src/CanDoItAll.Components.FileBrowser.Sandbox/CanDoItAll.Components.FileBrowser.Sandbox.csproj
+dotnet run --project samples/CanDoItAll.Components.FileBrowser.Sandbox/CanDoItAll.Components.FileBrowser.Sandbox.csproj
 ```
 
 Browser artifacts belong under `output/playwright/`.

@@ -46,8 +46,8 @@ Relevant source evidence includes:
 
 - `CanDoItAll.Components.slnx`
 - `src/CanDoItAll.Components.BaseLib/CanDoItAll.Components.BaseLib.csproj`
-- `src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj`
-- `src/CanDoItAll.Components.Sandbox/SandboxCatalogRegistry.cs`
+- `samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj`
+- `samples/CanDoItAll.Components.Sandbox/SandboxCatalogRegistry.cs`
 - `docs/standard-components-tailwind-policy.md`
 
 ## Responsibility inventory
