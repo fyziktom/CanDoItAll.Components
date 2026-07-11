@@ -1,6 +1,10 @@
 const VIEWPORT_PADDING = 16;
 
 export function getAnchorPoint(element, tooltipId) {
+    if (!element || !element.isConnected) {
+        return { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    }
+
     const focusedElement = element.contains(document.activeElement) ? document.activeElement : element;
     const describedBy = new Set((focusedElement.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean));
     describedBy.add(tooltipId);
@@ -14,6 +18,10 @@ export function getAnchorPoint(element, tooltipId) {
 }
 
 export function clearFocusedTarget(element, tooltipId) {
+    if (!element || !element.isConnected) {
+        return;
+    }
+
     for (const target of [element, ...element.querySelectorAll('[aria-describedby]')]) {
         const describedBy = (target.getAttribute('aria-describedby') ?? '')
             .split(/\s+/)
@@ -28,6 +36,10 @@ export function clearFocusedTarget(element, tooltipId) {
 }
 
 export function clampToViewport(element) {
+    if (!element || !element.isConnected) {
+        return;
+    }
+
     element.style.translate = '';
 
     const rect = element.getBoundingClientRect();

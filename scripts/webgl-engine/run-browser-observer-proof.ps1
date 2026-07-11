@@ -7,7 +7,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
-$sandboxProject = Join-Path $repoRoot "src\CanDoItAll.Components.WebGlSandbox\CanDoItAll.Components.WebGlSandbox.csproj"
+$sandboxProject = Join-Path $repoRoot "samples\CanDoItAll.Components.WebGlSandbox\CanDoItAll.Components.WebGlSandbox.csproj"
 $proofRoot = Join-Path $repoRoot $ProofDir
 $serverLogDir = Join-Path $proofRoot "server"
 $stdout = Join-Path $serverLogDir "sandbox.stdout.log"

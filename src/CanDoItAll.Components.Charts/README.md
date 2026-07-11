@@ -62,4 +62,4 @@ Use this library when product modules need charts instead of binding directly to
 ## Related Docs
 
 - [Repository overview](../../README.md)
-- [Sandbox chart examples](../CanDoItAll.Components.Sandbox/README.md)
+- [Sandbox chart examples](../../samples/CanDoItAll.Components.Sandbox/README.md)

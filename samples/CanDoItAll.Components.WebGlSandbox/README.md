@@ -11,7 +11,7 @@ The WebGl Sandbox is a standalone Blazor app for exploring and validating generi
 ## Run
 
 ```powershell
-dotnet run --project src/CanDoItAll.Components.WebGlSandbox/CanDoItAll.Components.WebGlSandbox.csproj
+dotnet run --project samples/CanDoItAll.Components.WebGlSandbox/CanDoItAll.Components.WebGlSandbox.csproj
 ```
 
 ## Adding A Demo

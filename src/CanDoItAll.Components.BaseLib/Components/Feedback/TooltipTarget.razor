@@ -19,6 +19,7 @@
     private readonly string tooltipElementId = $"cda-tooltip-{Guid.NewGuid():N}";
     private ElementReference triggerElement;
     private TooltipInterop? tooltipInterop;
+    private int disposalStarted;
 
     [Parameter]
     public string? Text { get; set; }
@@ -60,13 +61,33 @@
 
     private async Task OpenFromFocus()
     {
-        tooltipInterop ??= new TooltipInterop(JS);
-        var anchor = await tooltipInterop.GetAnchorPointAsync(triggerElement, tooltipElementId);
+        if (IsDisposalStarted)
+        {
+            return;
+        }
+
+        var interop = GetOrCreateInterop();
+        if (interop is null)
+        {
+            return;
+        }
+
+        var anchor = await interop.GetAnchorPointAsync(triggerElement, tooltipElementId);
+        if (IsDisposalStarted || anchor is null)
+        {
+            return;
+        }
+
         Open(anchor.X, anchor.Y);
     }
 
     private void Open(double clientX, double clientY)
     {
+        if (IsDisposalStarted)
+        {
+            return;
+        }
+
         var options = new TooltipOptions
         {
             Id = tooltipElementId,
@@ -105,24 +126,60 @@
 
     public async ValueTask DisposeAsync()
     {
+        if (Interlocked.Exchange(ref disposalStarted, 1) != 0)
+        {
+            return;
+        }
+
         if (TooltipService.Current?.Options.Id == tooltipElementId)
         {
             TooltipService.Close();
         }
 
-        if (tooltipInterop is not null)
+        var interop = Interlocked.Exchange(ref tooltipInterop, null);
+        if (interop is not null)
         {
-            await tooltipInterop.DisposeAsync();
+            await interop.DisposeAsync();
         }
     }
 
     private async Task CloseFromFocusAsync()
     {
-        if (tooltipInterop is not null)
+        if (IsDisposalStarted)
         {
-            await tooltipInterop.ClearFocusedTargetAsync(triggerElement, tooltipElementId);
+            return;
         }
 
-        CloseIfConfigured();
+        var interop = Volatile.Read(ref tooltipInterop);
+        if (interop is not null)
+        {
+            await interop.ClearFocusedTargetAsync(triggerElement, tooltipElementId);
+        }
+
+        if (!IsDisposalStarted)
+        {
+            CloseIfConfigured();
+        }
     }
+
+    private TooltipInterop? GetOrCreateInterop()
+    {
+        if (IsDisposalStarted)
+        {
+            return null;
+        }
+
+        var existing = Volatile.Read(ref tooltipInterop);
+        if (existing is not null)
+        {
+            return existing;
+        }
+
+        var candidate = new TooltipInterop(JS);
+        existing = Interlocked.CompareExchange(ref tooltipInterop, candidate, null);
+        var result = existing ?? candidate;
+        return IsDisposalStarted ? null : result;
+    }
+
+    private bool IsDisposalStarted => Volatile.Read(ref disposalStarted) != 0;
 }

@@ -52,6 +52,10 @@ See [BaseLib](src/CanDoItAll.Components.BaseLib/README.md) for setup, service-dr
 
 `BaseLib` is the visual foundation. `OverlayLib` adds generic windows that stay within a frame. `CanvasLib` composes those windows into a workbench where they are tied to a typed canvas state. Charts, Mermaid, QR, and WebGL remain optional, focused libraries with their own dependencies and host assets.
 
+### File tooling ownership
+
+File browsing, filesystem provider examples, and file viewing/editing now live in [CanDoItAll.FileTools](https://github.com/fyziktom/CanDoItAll.FileTools). Consumers of the former `CanDoItAll.Components.FileBrowser.*` packages should migrate to the corresponding FileTools packages. This repository intentionally has no dependency on FileTools and retains simple presentation wrappers such as Mermaid.
+
 ### Floating windows: ordinary UI vs. Canvas
 
 Use `OverlayWindow` when a supporting tool - an inspector, search panel, queue, or live preview - should float over a bounded part of a normal page. It owns the window mechanics: placement, drag, resize, minimize, hide/show, and safe-top boundaries.
@@ -75,7 +79,7 @@ For the Canvas lifecycle, composition rules, and a minimal implementation, read 
 The Sandbox is the visual catalog and regression host. It is the fastest way to see components in context before adopting them.
 
 ```powershell
-dotnet run --project src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
+dotnet run --project samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
 ```
 
 Open the printed local URL and visit `/groups/overlays`, `/groups/canvas`, `/groups/charts`, `/groups/mermaid`, or `/groups/qr`. The focused WebGL sample is in [WebGlLib-Only Viewer](samples/CanDoItAll.Components.WebGlLibOnlyViewer/README.md).

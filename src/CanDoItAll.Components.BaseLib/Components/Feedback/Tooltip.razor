@@ -26,6 +26,7 @@
 @code {
     private ElementReference tooltipElement;
     private TooltipInterop? tooltipInterop;
+    private int disposalStarted;
 
     protected override void OnInitialized()
     {
@@ -34,10 +35,13 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (TooltipService.Current is not null)
+        if (!IsDisposalStarted && TooltipService.Current is not null)
         {
-            tooltipInterop ??= new TooltipInterop(JS);
-            await tooltipInterop.ClampToViewportAsync(tooltipElement);
+            var interop = GetOrCreateInterop();
+            if (interop is not null)
+            {
+                await interop.ClampToViewportAsync(tooltipElement);
+            }
         }
     }
 
@@ -79,9 +83,23 @@
 
     private async void HandleTooltipChanged()
     {
+        if (IsDisposalStarted)
+        {
+            return;
+        }
+
         try
         {
-            await InvokeAsync(StateHasChanged);
+            await InvokeAsync(() =>
+            {
+                if (!IsDisposalStarted)
+                {
+                    StateHasChanged();
+                }
+            });
+        }
+        catch (ObjectDisposedException) when (IsDisposalStarted)
+        {
         }
         catch (Exception exception)
         {
@@ -91,13 +109,40 @@
 
     public async ValueTask DisposeAsync()
     {
+        if (Interlocked.Exchange(ref disposalStarted, 1) != 0)
+        {
+            return;
+        }
+
         TooltipService.Changed -= HandleTooltipChanged;
 
-        if (tooltipInterop is not null)
+        var interop = Interlocked.Exchange(ref tooltipInterop, null);
+        if (interop is not null)
         {
-            await tooltipInterop.DisposeAsync();
+            await interop.DisposeAsync();
         }
     }
+
+    private TooltipInterop? GetOrCreateInterop()
+    {
+        if (IsDisposalStarted)
+        {
+            return null;
+        }
+
+        var existing = Volatile.Read(ref tooltipInterop);
+        if (existing is not null)
+        {
+            return existing;
+        }
+
+        var candidate = new TooltipInterop(JS);
+        existing = Interlocked.CompareExchange(ref tooltipInterop, candidate, null);
+        var result = existing ?? candidate;
+        return IsDisposalStarted ? null : result;
+    }
+
+    private bool IsDisposalStarted => Volatile.Read(ref disposalStarted) != 0;
 }
 
 

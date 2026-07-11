@@ -15,7 +15,7 @@ dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
 dotnet test CanDoItAll.Components.slnx --configuration Release --no-build
 ```
 
-Use `src/CanDoItAll.Components.Sandbox` for component examples and stress scenarios. UI changes should include keyboard checks and Playwright screenshots at desktop, tablet, and mobile widths. Keep application-specific behavior out of the reusable libraries.
+Use `samples/CanDoItAll.Components.Sandbox` for component examples and stress scenarios. UI changes should include keyboard checks and Playwright screenshots at desktop, tablet, and mobile widths. Keep application-specific behavior out of the reusable libraries.
 
 ## Pull requests
 

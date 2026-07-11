@@ -118,7 +118,7 @@ Use the `WindowStates` dictionary on `CanvasWorkbenchUiState` when several windo
 
 ## What to validate
 
-The [Sandbox Canvas route](../CanDoItAll.Components.Sandbox/README.md#canvas-and-floating-window-examples) demonstrates the real workbench, the selected-node inspector, and overlapping windows. Validate selection, drag/pan, keyboard interactions, geometry persistence, minimize/hide/show behavior, and an accessible representation of the important canvas content, not only how the stage first renders.
+The [Sandbox Canvas route](../../samples/CanDoItAll.Components.Sandbox/README.md#canvas-and-floating-window-examples) demonstrates the real workbench, the selected-node inspector, and overlapping windows. Validate selection, drag/pan, keyboard interactions, geometry persistence, minimize/hide/show behavior, and an accessible representation of the important canvas content, not only how the stage first renders.
 
 ## Development and package checks
 

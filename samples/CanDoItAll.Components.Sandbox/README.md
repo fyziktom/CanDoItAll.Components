@@ -9,7 +9,7 @@ The Sandbox is the living visual catalog for CanDoItAll.Components. It lets deve
 Run it locally with:
 
 ```powershell
-dotnet run --project src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
+dotnet run --project samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
 ```
 
 Then open the local URL shown by ASP.NET Core. The home page links to the catalog groups; focused routes include `/groups/charts`, `/groups/mermaid`, `/groups/qr`, `/groups/overlays`, and `/groups/canvas`.
@@ -21,7 +21,7 @@ Then open the local URL shown by ASP.NET Core. The home page links to the catalo
 - Validation command:
 
 ```powershell
-dotnet build src/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
+dotnet build samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj
 ```
 
 ## References
