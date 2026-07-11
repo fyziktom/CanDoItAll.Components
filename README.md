@@ -11,7 +11,6 @@ Choose the smallest library that fits the surface you are building. Most applica
 | Need | Start with | What it provides |
 | --- | --- | --- |
 | Product pages, forms, cards, navigation, dialogs, and notifications | `CanDoItAll.Components.BaseLib` | The everyday Blazor UI toolkit and shared Tailwind output. |
-| Lazy project, filesystem, resource, or IPFS-style browsing | `CanDoItAll.Components.FileBrowser.Core`, `.FileBrowser.BaseLib` | Provider-neutral paged browsing/search state plus an enterprise BaseLib renderer. |
 | Reusable layout types and non-rendering helpers | `CanDoItAll.Components.Common` | Dependency-light primitives used by the component libraries. |
 | Draggable inspector panels or tool windows over ordinary UI | `CanDoItAll.Components.OverlayLib` | Bounded, draggable, resizable, minimizable floating windows. |
 | Node graphs, authoring workbenches, canvas overlays, or rich calendars | `CanDoItAll.Components.CanvasLib` | A small framework for stateful, interactive workspace surfaces. |
@@ -51,7 +50,11 @@ See [BaseLib](src/CanDoItAll.Components.BaseLib/README.md) for setup, service-dr
 
 ## How the libraries work together
 
-`BaseLib` is the visual foundation. `FileBrowser.Core` owns provider-neutral browsing state while `FileBrowser.BaseLib` renders it without leaking filesystem, project, or IPFS types. `OverlayLib` adds generic windows that stay within a frame. `CanvasLib` composes those windows into a workbench where they are tied to a typed canvas state. Charts, Mermaid, QR, and WebGL remain optional, focused libraries with their own dependencies and host assets.
+`BaseLib` is the visual foundation. `OverlayLib` adds generic windows that stay within a frame. `CanvasLib` composes those windows into a workbench where they are tied to a typed canvas state. Charts, Mermaid, QR, and WebGL remain optional, focused libraries with their own dependencies and host assets.
+
+### File tooling ownership
+
+File browsing, filesystem provider examples, and file viewing/editing now live in [CanDoItAll.FileTools](https://github.com/fyziktom/CanDoItAll.FileTools). Consumers of the former `CanDoItAll.Components.FileBrowser.*` packages should migrate to the corresponding FileTools packages. This repository intentionally has no dependency on FileTools and retains simple presentation wrappers such as Mermaid.
 
 ### Floating windows: ordinary UI vs. Canvas
 
@@ -80,14 +83,6 @@ dotnet run --project samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components
 ```
 
 Open the printed local URL and visit `/groups/overlays`, `/groups/canvas`, `/groups/charts`, `/groups/mermaid`, or `/groups/qr`. The focused WebGL sample is in [WebGlLib-Only Viewer](samples/CanDoItAll.Components.WebGlLibOnlyViewer/README.md).
-
-The file browser has a dedicated proof host with project/subproject, IPFS-like, local filesystem, slow, empty, and error scenarios:
-
-```powershell
-dotnet run --project samples/CanDoItAll.Components.FileBrowser.Sandbox/CanDoItAll.Components.FileBrowser.Sandbox.csproj
-```
-
-Its architecture, user stories, and phased proof plan live in [docs/file-browser](docs/file-browser/README.md).
 
 ## Development
 
