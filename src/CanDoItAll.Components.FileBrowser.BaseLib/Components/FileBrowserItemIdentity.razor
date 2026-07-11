@@ -1,0 +1,21 @@
+@namespace CanDoItAll.Components.FileBrowser.BaseLib
+
+<span class="cda-file-browser__item-icon cda-file-browser__item-icon--@Item.Category.ToString().ToLowerInvariant()">
+    <Icon Name="@FileBrowserIconResolver.Resolve(Item)" />
+</span>
+<span class="cda-file-browser__item-copy">
+    <span class="cda-file-browser__item-name">@Item.Name</span>
+    @if (ShowPath && !string.IsNullOrWhiteSpace(Item.DisplayPath))
+    {
+        <span class="cda-file-browser__item-path">@Item.DisplayPath</span>
+    }
+</span>
+
+@code {
+    [Parameter, EditorRequired]
+    public FileBrowserItem Item { get; set; } = default!;
+
+    [Parameter]
+    public bool ShowPath { get; set; }
+}
+

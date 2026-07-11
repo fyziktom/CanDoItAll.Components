@@ -1,0 +1,23 @@
+@namespace CanDoItAll.Components.FileBrowser.BaseLib
+
+<span class="cda-file-browser__card-icon cda-file-browser__item-icon--@Item.Category.ToString().ToLowerInvariant()">
+    <Icon Name="@FileBrowserIconResolver.Resolve(Item)" />
+</span>
+<span class="cda-file-browser__card-name">@Item.Name</span>
+<span class="cda-file-browser__card-meta">
+    @FileBrowserDisplayFormatter.FormatType(Item)
+    @if (!Item.IsContainer && Item.Size.HasValue)
+    {
+        <span> · @FileBrowserDisplayFormatter.FormatSize(Item.Size)</span>
+    }
+</span>
+@if (!string.IsNullOrWhiteSpace(Item.DisplayPath))
+{
+    <span class="cda-file-browser__card-path">@Item.DisplayPath</span>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public FileBrowserItem Item { get; set; } = default!;
+}
+

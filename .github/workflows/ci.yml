@@ -48,6 +48,9 @@ jobs:
         run: |
           dotnet test tests/CanDoItAll.Components.BaseLib.Tests/CanDoItAll.Components.BaseLib.Tests.csproj --configuration Release --no-build
           dotnet test tests/CanDoItAll.Components.Common.Tests/CanDoItAll.Components.Common.Tests.csproj --configuration Release --no-build
+          dotnet test tests/CanDoItAll.Components.FileBrowser.Core.Tests/CanDoItAll.Components.FileBrowser.Core.Tests.csproj --configuration Release --no-build
+          dotnet test tests/CanDoItAll.Components.FileBrowser.Providers.FileSystem.Tests/CanDoItAll.Components.FileBrowser.Providers.FileSystem.Tests.csproj --configuration Release --no-build
+          dotnet test tests/CanDoItAll.Components.FileBrowser.BaseLib.Tests/CanDoItAll.Components.FileBrowser.BaseLib.Tests.csproj --configuration Release --no-build
           dotnet test tests/CanDoItAll.Components.QRCode.Tests/CanDoItAll.Components.QRCode.Tests.csproj --configuration Release --no-build
 
       - name: Report deferred WebGL freeze-suite status

@@ -1,0 +1,51 @@
+@namespace CanDoItAll.Components.FileBrowser.BaseLib
+
+<footer class="cda-file-browser__status" aria-live="polite" data-testid="file-browser-status">
+    <span>
+        @if (Snapshot.TotalCount.HasValue)
+        {
+            @($"{Snapshot.Items.Count:N0} of {Snapshot.TotalCount.Value:N0} items")
+        }
+        else
+        {
+            @($"{Snapshot.Items.Count:N0} items")
+        }
+    </span>
+    @if (Snapshot.SelectedKeys.Count > 0)
+    {
+        <span class="cda-file-browser__status-selection">@Snapshot.SelectedKeys.Count selected</span>
+    }
+    @if (Snapshot.Search is not null)
+    {
+        <span class="cda-file-browser__status-scope">
+            @FormatScope(Snapshot.Search.Scope)
+            @if (Snapshot.Search.IsPartial)
+            {
+                <span> · partial</span>
+            }
+        </span>
+    }
+    else if (Snapshot.BrowseCompleteness == FileBrowserCompleteness.Partial)
+    {
+        <span class="cda-file-browser__status-scope">Partial folder result</span>
+    }
+    <span class="cda-file-browser__status-cache">
+        @Snapshot.Diagnostics.CachedContainerQueryCount loaded @(Snapshot.Diagnostics.CachedContainerQueryCount == 1 ? "folder" : "folders")
+        <span> · </span>
+        @Snapshot.Diagnostics.CachedItemCount cached @(Snapshot.Diagnostics.CachedItemCount == 1 ? "item" : "items")
+    </span>
+</footer>
+
+@code {
+    [Parameter, EditorRequired]
+    public FileBrowserSnapshot Snapshot { get; set; } = default!;
+
+    private static string FormatScope(FileBrowserSearchScope scope)
+        => scope switch
+        {
+            FileBrowserSearchScope.LoadedFolder => "Loaded folder search",
+            FileBrowserSearchScope.LoadedDescendants => "Loaded-tree search",
+            FileBrowserSearchScope.Provider => "Source search",
+            _ => "Progressive search"
+        };
+}
