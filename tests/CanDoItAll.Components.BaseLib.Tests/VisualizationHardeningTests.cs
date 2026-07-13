@@ -16,6 +16,19 @@ public sealed class VisualizationHardeningTests
     }
 
     [Fact]
+    public void MermaidJavascriptAppliesHtmlLabelPolicyToRootAndFlowchartConfiguration()
+    {
+        var source = File.ReadAllText(Path.Combine(
+            AppContext.BaseDirectory,
+            "TestAssets",
+            "mermaidDiagram.js"));
+
+        Assert.Equal(
+            2,
+            source.Split("htmlLabels: options?.htmlLabels ?? false", StringSplitOptions.None).Length - 1);
+    }
+
+    [Fact]
     public void ChartBuildsAccessibleSeriesAndRangeSummary()
     {
         var chart = new CdaChart();

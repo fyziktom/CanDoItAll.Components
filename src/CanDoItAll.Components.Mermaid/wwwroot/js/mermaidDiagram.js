@@ -112,6 +112,7 @@ function buildConfig(options) {
     startOnLoad: false,
     securityLevel: options?.securityLevel ?? 'strict',
     theme: options?.theme ?? 'default',
+    htmlLabels: options?.htmlLabels ?? false,
     flowchart: {
       useMaxWidth: options?.flowchartUseMaxWidth ?? true,
       htmlLabels: options?.htmlLabels ?? false,
