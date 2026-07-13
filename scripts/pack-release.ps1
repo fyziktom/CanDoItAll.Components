@@ -13,6 +13,7 @@ $projects = @(
     "src/CanDoItAll.Components.Mermaid/CanDoItAll.Components.Mermaid.csproj",
     "src/CanDoItAll.Components.OverlayLib/CanDoItAll.Components.OverlayLib.csproj",
     "src/CanDoItAll.Components.QRCode/CanDoItAll.Components.QRCode.csproj",
+    "samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj",
     "src/CanDoItAll.Components.WebGlLib/CanDoItAll.Components.WebGlLib.csproj",
     "src/CanDoItAll.Components.WebGlRunLib/CanDoItAll.Components.WebGlRunLib.csproj"
 )
@@ -25,7 +26,13 @@ if ($NoBuild)
 
 foreach ($project in $projects)
 {
-    & dotnet pack $project @arguments
+    $projectArguments = @($arguments)
+    if ($project -eq "samples/CanDoItAll.Components.Sandbox/CanDoItAll.Components.Sandbox.csproj")
+    {
+        $projectArguments += "-p:IsPackable=true"
+    }
+
+    & dotnet pack $project @projectArguments
     if ($LASTEXITCODE -ne 0)
     {
         exit $LASTEXITCODE
