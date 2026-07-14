@@ -83,6 +83,64 @@ public sealed partial class CanvasOverlayPublishingApprovalTests
         }
     }
 
+    [Fact]
+    public void CanvasRuntimeAssetExposesStableLowLevelContract()
+    {
+        string repoRoot = FindRepoRoot();
+        string runtimePath = Path.Combine(
+            repoRoot,
+            "src",
+            "CanDoItAll.Components.CanvasLib",
+            "wwwroot",
+            "js",
+            "runtime",
+            "canvas-runtime.js");
+        string runtime = File.ReadAllText(runtimePath);
+
+        string[] requiredContractMembers =
+        [
+            "root.canvasRuntime = Object.freeze",
+            "class CanvasSurface",
+            "class HitRegionRegistry",
+            "class PointerRouter",
+            "createSurface(options)",
+            "createHitRegionRegistry()",
+            "createPointerRouter(options)",
+            "renderToPngDataUrl",
+            "downloadDataUrl",
+            "setPointerCapture",
+            "ResizeObserver",
+            "requestAnimationFrame"
+        ];
+
+        foreach (string member in requiredContractMembers)
+        {
+            Assert.Contains(member, runtime, StringComparison.Ordinal);
+        }
+
+        Assert.DoesNotContain("window.addEventListener(\"pointermove\"", runtime, StringComparison.Ordinal);
+        Assert.DoesNotContain("window.addEventListener(\"pointerup\"", runtime, StringComparison.Ordinal);
+
+        using JsonDocument manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(
+            repoRoot,
+            "tools",
+            "canvaslib",
+            "asset-manifest.json")));
+        JsonElement[] runtimeScripts = manifest.RootElement
+            .GetProperty("runtimeScripts")
+            .EnumerateArray()
+            .ToArray();
+        int genericRuntimeIndex = Array.FindIndex(
+            runtimeScripts,
+            static entry => entry.GetProperty("source").GetString() == "js/runtime/canvas-runtime.js");
+        int workbenchRuntimeIndex = Array.FindIndex(
+            runtimeScripts,
+            static entry => entry.GetProperty("source").GetString() == "js/runtime/workbench/01-foundation.js");
+
+        Assert.True(genericRuntimeIndex >= 0, "Canvas runtime must be registered as a generated runtime asset.");
+        Assert.True(workbenchRuntimeIndex > genericRuntimeIndex, "Generic canvas mechanics must load before the retained Workbench runtime.");
+    }
+
     private static string BuildPublicApiMetadataSnapshot()
     {
         var snapshot = Projects

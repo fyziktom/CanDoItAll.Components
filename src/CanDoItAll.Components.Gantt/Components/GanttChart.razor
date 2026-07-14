@@ -1,0 +1,177 @@
+@namespace CanDoItAll.Components.Gantt
+
+<section @ref="hostElement"
+         class="cda-gantt @Class"
+         style="--cda-gantt-max-height: @MaxHeight;"
+         aria-label="@AriaLabel">
+    @if (ShowToolbar)
+    {
+        <Toolbar Class="cda-gantt__toolbar">
+            <ToolbarActions Class="cda-gantt__toolbar-primary">
+                <Button Text="@TaskTableButtonText"
+                        Size="ButtonSize.Small"
+                        Variant="Variant.Outlined"
+                        Disabled="@IsInteractionDisabled"
+                        Click="ToggleTaskTableAsync" />
+                <Button Text="Zoom out"
+                        Size="ButtonSize.Small"
+                        Variant="Variant.Outlined"
+                        Disabled="@IsZoomOutDisabled"
+                        Click="ZoomOutAsync" />
+                <Button Text="Zoom in"
+                        Size="ButtonSize.Small"
+                        Variant="Variant.Outlined"
+                        Disabled="@IsZoomInDisabled"
+                        Click="ZoomInAsync" />
+            </ToolbarActions>
+            <ToolbarActions Class="cda-gantt__toolbar-secondary">
+                <span class="cda-gantt__status" role="status">@ScheduleSummary</span>
+                <Button Text="Export PNG"
+                        Size="ButtonSize.Small"
+                        ButtonStyle="ButtonStyle.Info"
+                        Disabled="@IsInteractionDisabled"
+                        IsBusy="exportInFlight"
+                        Click="DownloadPngAsync" />
+            </ToolbarActions>
+        </Toolbar>
+    }
+
+    @if (validationError is not null)
+    {
+        <Alert AlertStyle="AlertStyle.Danger" Class="cda-gantt__error">
+            The chart model is invalid: @validationError
+        </Alert>
+    }
+
+    @if (runtimeError is not null)
+    {
+        <Alert AlertStyle="AlertStyle.Danger" Class="cda-gantt__error">
+            @runtimeError
+        </Alert>
+    }
+
+    <div class="cda-gantt__viewport" hidden="@(validationError is not null || interopFaulted)">
+        <div class="cda-gantt__content" style="width: @ContentWidthCss; height: @CanvasHeightCss;">
+            @if (tableVisible)
+            {
+                <div class="cda-gantt__table"
+                     style="width: @TaskTableWidthCss; height: @CanvasHeightCss;"
+                     role="table"
+                     aria-label="Gantt task dates and durations">
+                    <div class="cda-gantt__table-row cda-gantt__table-row--header"
+                         style="height: @HeaderHeightCss;"
+                         role="row">
+                        <div class="cda-gantt__cell" role="columnheader">Task</div>
+                        <div class="cda-gantt__cell" role="columnheader">Start UTC</div>
+                        <div class="cda-gantt__cell" role="columnheader">End UTC</div>
+                        <div class="cda-gantt__cell" role="columnheader">Length</div>
+                    </div>
+                    @for (var taskIndex = 0; taskIndex < Tasks.Count; taskIndex++)
+                    {
+                        var task = Tasks[taskIndex];
+                        <div class="cda-gantt__table-row"
+                             style="height: @RowHeightCss;"
+                             role="row"
+                             @key="task.Id.Value">
+                            <div class="cda-gantt__cell cda-gantt__cell--task" role="cell">
+                                <div class="cda-gantt__task-cell-content">
+                                    @if (editingTaskId == task.Id)
+                                    {
+                                        <input @ref="titleEditor"
+                                               class="cda-gantt__title-editor"
+                                               value="@editingTitle"
+                                               @oninput="UpdateEditingTitle"
+                                               @onkeydown="HandleTitleEditorKeyDownAsync"
+                                               @onblur="CommitTitleEditAsync"
+                                               aria-label="Edit title for @task.Title"
+                                               autofocus />
+                                    }
+                                    else
+                                    {
+                                        <button type="button"
+                                                class="cda-gantt__task-button"
+                                                disabled="@(!CanEditTitle(task))"
+                                                title="@task.Title"
+                                                @onclick="() => BeginTitleEditAsync(task.Id.Value)">
+                                            @task.Title
+                                        </button>
+                                    }
+
+                                    @if (task.Assignments.Count > 0)
+                                    {
+                                        <ul class="cda-gantt__assignment-list" aria-label="Assignments for @task.Title">
+                                            @for (var assignmentIndex = 0; assignmentIndex < task.Assignments.Count; assignmentIndex++)
+                                            {
+                                                var assignment = task.Assignments[assignmentIndex];
+                                                var tooltipId = $"{instructionsId}-assignment-{taskIndex}-{assignmentIndex}";
+                                                <li class="cda-gantt__assignment-item" @key="assignmentIndex">
+                                                    <span class="cda-gantt__assignment-indicator"
+                                                          role="img"
+                                                          tabindex="0"
+                                                          aria-label="@FormatAssignmentAriaLabel(assignment.Kind)"
+                                                          aria-describedby="@tooltipId">
+                                                        <span aria-hidden="true">@FormatAssignmentAbbreviation(assignment.Kind)</span>
+                                                    </span>
+                                                    <span id="@tooltipId"
+                                                          class="cda-gantt__assignment-tooltip"
+                                                          role="tooltip">
+                                                        @FormatAssignmentKind(assignment.Kind): @assignment.Name
+                                                    </span>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </div>
+                            <div class="cda-gantt__cell cda-gantt__cell--time" role="cell">@FormatDate(task.Start)</div>
+                            <div class="cda-gantt__cell cda-gantt__cell--time" role="cell">@FormatDate(task.End)</div>
+                            <div class="cda-gantt__cell cda-gantt__cell--duration" role="cell">@FormatDuration(task.Duration)</div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <canvas @ref="canvasElement"
+                    class="cda-gantt__canvas"
+                    style="left: @CanvasLeftCss;"
+                    width="1"
+                    height="1"
+                    role="img"
+                    tabindex="0"
+                    aria-label="Interactive Gantt timeline. Drag a bar to move it, drag green ends to resize it, or drag blue ports to change dependencies."
+                    aria-describedby="@instructionsId">
+            </canvas>
+
+            @if (Tasks.Count == 0)
+            {
+                <div class="cda-gantt__empty">No scheduled tasks to display.</div>
+            }
+        </div>
+    </div>
+
+    <div id="@instructionsId" class="cda-gantt__sr-only">
+        The task table and canvas rows are aligned. Assignment icons identify processes, workflows, agents, and people; hover or keyboard-focus an icon for its name.
+    </div>
+
+    <ul class="cda-gantt__sr-only" aria-label="Task dependencies">
+        @foreach (var dependency in Dependencies)
+        {
+            <li @key="dependency.Id.Value">
+                @ResolveTaskTitle(dependency.PredecessorId) must finish before @ResolveTaskTitle(dependency.SuccessorId) starts.
+            </li>
+        }
+    </ul>
+
+    <ul class="cda-gantt__sr-only" aria-label="Task assignments">
+        @foreach (var task in Tasks)
+        {
+            @for (var assignmentIndex = 0; assignmentIndex < task.Assignments.Count; assignmentIndex++)
+            {
+                var assignment = task.Assignments[assignmentIndex];
+                <li @key="(task.Id, assignmentIndex)">
+                    @task.Title: @assignment.Kind, @assignment.Name.
+                </li>
+            }
+        }
+    </ul>
+</section>

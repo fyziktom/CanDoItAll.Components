@@ -1,0 +1,13 @@
+@namespace CanDoItAll.Components.Gantt
+@using CanDoItAll.Components.CanvasLib
+
+@if (IncludeCanvasRuntimeAssets)
+{
+    <CanvasRuntimeBodyAssets />
+}
+<script src="@Assets["_content/CanDoItAll.Components.Gantt/js/gantt-chart.js"]"></script>
+
+@code {
+    [Parameter]
+    public bool IncludeCanvasRuntimeAssets { get; set; } = true;
+}

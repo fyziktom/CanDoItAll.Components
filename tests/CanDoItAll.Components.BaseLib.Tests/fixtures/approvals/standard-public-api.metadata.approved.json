@@ -4579,5 +4579,479 @@
         ]
       }
     ]
+  },
+  {
+    "packageId": "CanDoItAll.Components.Gantt",
+    "assemblyName": "CanDoItAll.Components.Gantt",
+    "types": [
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttAssignment",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttAssignmentKind kind, System.String name)",
+          "method CanDoItAll.Components.Gantt.GanttAssignment \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttAssignment other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttAssignmentKind Kind {get;}",
+          "property System.String Name {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttAssignmentKind",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.Gantt.GanttAssignmentKind Agent",
+          "field static const CanDoItAll.Components.Gantt.GanttAssignmentKind Person",
+          "field static const CanDoItAll.Components.Gantt.GanttAssignmentKind Process",
+          "field static const CanDoItAll.Components.Gantt.GanttAssignmentKind Workflow"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttChart",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.Task BeginTitleEditAsync(System.String taskId)",
+          "method System.Threading.Tasks.Task CommitDependencyChangeAsync(System.String mutation, System.String dependencyId, System.String predecessorId, System.String successorId)",
+          "method System.Threading.Tasks.Task CommitInsertionAsync(System.String payload, System.String dependencyId)",
+          "method System.Threading.Tasks.Task CommitScheduleChangeAsync(System.String taskId, System.Double proposedStartMs, System.Double proposedEndMs, System.String gesture)",
+          "method System.Threading.Tasks.Task DownloadPngAsync()",
+          "method System.Threading.Tasks.Task NotifyTaskSelectedAsync(System.String taskId)",
+          "method System.Threading.Tasks.Task ReportRenderErrorAsync(System.String message)",
+          "method System.Threading.Tasks.Task ReportRuntimeErrorAsync(System.String message)",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttDependencyMutationRequest\u003E DependencyMutationRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E TaskSelected {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskInsertionRequest\u003E TaskInsertionRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest\u003E TaskScheduleChangeRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskTitleChangeRequest\u003E TaskTitleChangeRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Boolean\u003E ShowTaskTableChanged {get;set;}",
+          "property System.Boolean AllowDependencyEditing {get;set;}",
+          "property System.Boolean AllowTaskEditing {get;set;}",
+          "property System.Boolean AllowTaskInsertion {get;set;}",
+          "property System.Boolean ShowTaskTable {get;set;}",
+          "property System.Boolean ShowToolbar {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E Dependencies {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTask\u003E Tasks {get;set;}",
+          "property System.DateTimeOffset SnapOrigin {get;set;}",
+          "property System.Double BarHeight {get;set;}",
+          "property System.Double HeaderHeight {get;set;}",
+          "property System.Double HoursPerManDay {get;set;}",
+          "property System.Double PixelsPerHour {get;set;}",
+          "property System.Double RowHeight {get;set;}",
+          "property System.Double TaskTableWidth {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.Boolean\u003E ProjectionOnlySelector {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.Boolean\u003E TaskDependencyReadOnlySelector {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.Boolean\u003E TaskReadOnlySelector {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.Boolean\u003E TaskScheduleReadOnlySelector {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.Boolean\u003E TaskTitleReadOnlySelector {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.String\u003E TaskAccentColorSelector {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTaskId,CanDoItAll.Components.Gantt.GanttTaskId,CanDoItAll.Components.Gantt.GanttDependencyId\u003E DependencyIdFactory {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String Class {get;set;}",
+          "property System.String DragDataFormat {get;set;}",
+          "property System.String ExportFileName {get;set;}",
+          "property System.String MaxHeight {get;set;}",
+          "property System.TimeSpan MinimumTaskDuration {get;set;}",
+          "property System.TimeSpan SnapInterval {get;set;}",
+          "property System.TimeSpan TimelinePadding {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttChartBodyAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeCanvasRuntimeAssets {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttChartHeadAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeBaseLibStyles {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttCriticalPathCalculator",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E Calculate(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDagValidationResult",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method CanDoItAll.Components.Gantt.GanttDagValidationResult \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttDagValidationResult other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E TopologicalOrder {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDagValidator",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.Gantt.GanttDagValidationResult Validate(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDependency",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttDependencyId id, CanDoItAll.Components.Gantt.GanttTaskId predecessorId, CanDoItAll.Components.Gantt.GanttTaskId successorId, CanDoItAll.Components.Gantt.GanttDependencyType type = optional)",
+          "method CanDoItAll.Components.Gantt.GanttDependency \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttDependency other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttDependencyId Id {get;}",
+          "property CanDoItAll.Components.Gantt.GanttDependencyType Type {get;}",
+          "property CanDoItAll.Components.Gantt.GanttTaskId PredecessorId {get;}",
+          "property CanDoItAll.Components.Gantt.GanttTaskId SuccessorId {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDependencyId",
+        "kind": "struct",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.ValueType",
+        "members": [
+          "ctor(System.String value)",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttDependencyId other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property System.String Value {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDependencyMutationKind",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.Gantt.GanttDependencyMutationKind Add",
+          "field static const CanDoItAll.Components.Gantt.GanttDependencyMutationKind Reconnect",
+          "field static const CanDoItAll.Components.Gantt.GanttDependencyMutationKind Remove"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDependencyMutationRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttDependencyMutationKind mutation, CanDoItAll.Components.Gantt.GanttDependency previousDependency, CanDoItAll.Components.Gantt.GanttDependency proposedDependency, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttTaskDateChange\u003E affectedTasks = optional, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E criticalTaskIds = optional)",
+          "method CanDoItAll.Components.Gantt.GanttDependencyMutationRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttDependencyMutationRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttDependency PreviousDependency {get;}",
+          "property CanDoItAll.Components.Gantt.GanttDependency ProposedDependency {get;}",
+          "property CanDoItAll.Components.Gantt.GanttDependencyMutationKind Mutation {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskDateChange\u003E AffectedTasks {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E CriticalTaskIds {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDependencyPlanner",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.Gantt.GanttDependencyMutationRequest PlanAdd(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttDependency dependency)",
+          "method static CanDoItAll.Components.Gantt.GanttDependencyMutationRequest PlanReconnect(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttDependencyId dependencyId, CanDoItAll.Components.Gantt.GanttTaskId predecessorId, CanDoItAll.Components.Gantt.GanttTaskId successorId)",
+          "method static CanDoItAll.Components.Gantt.GanttDependencyMutationRequest PlanRemove(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttDependencyId dependencyId)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttDependencyType",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.Gantt.GanttDependencyType FinishToStart"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttInsertionPlanner",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.Gantt.GanttTaskInsertionRequest Plan(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttTask insertedTask, CanDoItAll.Components.Gantt.GanttTaskId predecessorId, CanDoItAll.Components.Gantt.GanttTaskId successorId, CanDoItAll.Components.Gantt.GanttDependencyId predecessorToInsertedDependencyId, CanDoItAll.Components.Gantt.GanttDependencyId insertedToSuccessorDependencyId)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttScheduleErrorCode",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode CycleDetected",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode DependencyConstraintViolation",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode DependencyIdAlreadyExists",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode DependencyNotFound",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode DuplicateDependency",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode DuplicateDependencyId",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode DuplicateTaskId",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode InsertionEdgeNotFound",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode InsertionTaskAlreadyExists",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode InvalidSnapInterval",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode MissingPredecessor",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode MissingSuccessor",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleErrorCode TaskNotFound"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttScheduleException",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.InvalidOperationException",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttScheduleErrorCode code, System.String message)",
+          "property CanDoItAll.Components.Gantt.GanttScheduleErrorCode Code {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttScheduleGesture",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture Move",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture ResizeEnd",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture ResizeStart"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttSchedulePlanner",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest Plan(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttTaskId taskId, CanDoItAll.Components.Gantt.GanttScheduleGesture gesture, System.DateTimeOffset proposedDate, System.Nullable\u003CCanDoItAll.Components.Gantt.GanttSnapGrid\u003E snapGrid = optional, System.Nullable\u003CSystem.TimeSpan\u003E minimumTaskDuration = optional)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttSnapGrid",
+        "kind": "struct",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.ValueType",
+        "members": [
+          "ctor(System.DateTimeOffset origin, System.TimeSpan interval)",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttSnapGrid other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property System.DateTimeOffset Origin {get;}",
+          "property System.TimeSpan Interval {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttSnapper",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static System.DateTimeOffset Snap(System.DateTimeOffset value, CanDoItAll.Components.Gantt.GanttSnapGrid grid)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTask",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttTaskId id, System.String title, System.DateTimeOffset start, System.DateTimeOffset end)",
+          "ctor(CanDoItAll.Components.Gantt.GanttTaskId id, System.String title, System.DateTimeOffset start, System.DateTimeOffset end, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttAssignment\u003E assignments)",
+          "method CanDoItAll.Components.Gantt.GanttTask \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTask other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttTaskId Id {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttAssignment\u003E Assignments {get;}",
+          "property System.DateTimeOffset End {get;}",
+          "property System.DateTimeOffset Start {get;}",
+          "property System.String Title {get;}",
+          "property System.TimeSpan Duration {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskDateChange",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttTaskId taskId, System.DateTimeOffset previousStart, System.DateTimeOffset previousEnd, System.DateTimeOffset proposedStart, System.DateTimeOffset proposedEnd, System.Boolean isCritical)",
+          "method CanDoItAll.Components.Gantt.GanttTaskDateChange \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTaskDateChange other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttTaskId TaskId {get;}",
+          "property System.Boolean IsCritical {get;}",
+          "property System.DateTimeOffset PreviousEnd {get;}",
+          "property System.DateTimeOffset PreviousStart {get;}",
+          "property System.DateTimeOffset ProposedEnd {get;}",
+          "property System.DateTimeOffset ProposedStart {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskDragSource",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.Gantt.GanttTask Task {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String Class {get;set;}",
+          "property System.String DragDataFormat {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskId",
+        "kind": "struct",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.ValueType",
+        "members": [
+          "ctor(System.String value)",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTaskId other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property System.String Value {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskInsertionRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttTask insertedTask, CanDoItAll.Components.Gantt.GanttTaskId predecessorId, CanDoItAll.Components.Gantt.GanttTaskId successorId, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttDependencyMutationRequest\u003E dependencyChanges, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttTaskDateChange\u003E affectedTasks, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E criticalTaskIds)",
+          "method CanDoItAll.Components.Gantt.GanttTaskInsertionRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTaskInsertionRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttTask InsertedTask {get;}",
+          "property CanDoItAll.Components.Gantt.GanttTaskId PredecessorId {get;}",
+          "property CanDoItAll.Components.Gantt.GanttTaskId SuccessorId {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttDependencyMutationRequest\u003E DependencyChanges {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskDateChange\u003E AffectedTasks {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E CriticalTaskIds {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttTaskId taskId, CanDoItAll.Components.Gantt.GanttScheduleGesture gesture, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttTaskDateChange\u003E affectedTasks, System.Collections.Generic.IEnumerable\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E criticalTaskIds)",
+          "method CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttScheduleGesture Gesture {get;}",
+          "property CanDoItAll.Components.Gantt.GanttTaskId TaskId {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskDateChange\u003E AffectedTasks {get;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E CriticalTaskIds {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskTitleChangeRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttTaskId taskId, System.String currentTitle, System.String proposedTitle)",
+          "method CanDoItAll.Components.Gantt.GanttTaskTitleChangeRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTaskTitleChangeRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttTaskId TaskId {get;}",
+          "property System.String CurrentTitle {get;}",
+          "property System.String ProposedTitle {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt._Imports",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "",
+        "members": [
+          "ctor()"
+        ]
+      }
+    ]
   }
 ]

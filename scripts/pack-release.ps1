@@ -9,6 +9,7 @@ $projects = @(
     "src/CanDoItAll.Components.Common/CanDoItAll.Components.Common.csproj",
     "src/CanDoItAll.Components.BaseLib/CanDoItAll.Components.BaseLib.csproj",
     "src/CanDoItAll.Components.CanvasLib/CanDoItAll.Components.CanvasLib.csproj",
+    "src/CanDoItAll.Components.Gantt/CanDoItAll.Components.Gantt.csproj",
     "src/CanDoItAll.Components.Charts/CanDoItAll.Components.Charts.csproj",
     "src/CanDoItAll.Components.Mermaid/CanDoItAll.Components.Mermaid.csproj",
     "src/CanDoItAll.Components.OverlayLib/CanDoItAll.Components.OverlayLib.csproj",

@@ -16,6 +16,7 @@ Use CanvasLib for an authoring workspace, graph, process map, planning board, vi
 | --- | --- | --- |
 | `CanvasWorkbenchSurface` | Nodes, links, mode, chrome, and the current `CanvasWorkbenchUiState`. | Rendering a workbench from that typed surface. |
 | `CanvasWorkbench` | Handling selection, movement, context actions, editing, clipboard, and persistence callbacks. | Canvas lifecycle, pan/zoom interaction, toolbar, accessibility mirror, and runtime interop. |
+| `CanDoItAll.canvasRuntime` | Scene models, layout, hit-region metadata, gesture meaning, and persistence. | DPR-aware canvas sizing, render invalidation, pointer capture, hit testing, and PNG mechanics for reusable canvas components. |
 | `CanvasFloatingWindow` | `CanvasWorkbenchWindowState` and the inspector's content. | A canvas-bounded, draggable, resizable window backed by OverlayLib. |
 | `CanvasCalendar` | Events, commands, and save/export/search callbacks. | Interactive calendar surface and its browser-side behavior. |
 
@@ -39,11 +40,15 @@ Add generated assets once in the host document. The Canvas asset components incl
 </head>
 <body>
     ...
-    <CanvasLibBodyAssets IncludeRuntimeAssets="true"
+<CanvasLibBodyAssets IncludeRuntimeAssets="true"
                          IncludePreviewAssets="false"
                          IncludeCalendarAssets="true" />
 </body>
 ```
+
+`IncludeRuntimeAssets="true"` also loads the additive `window.CanDoItAll.canvasRuntime` API for reusable canvas components. It does not replace or alter the retained Workbench or Calendar runtimes. See the [runtime asset guide](Canvas/README.md#generic-canvas-runtime) for its factories and callback contract.
+
+If a reusable component needs only the low-level canvas surface, pointer router, hit regions, and PNG renderer, load `<CanvasRuntimeBodyAssets />` instead. That narrow wrapper does not load Workbench or Overlay assets.
 
 ## Minimal workbench
 

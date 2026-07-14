@@ -15,6 +15,7 @@ public enum SandboxGroupKey
     Mermaid,
     QrCode,
     Overlays,
+    Gantt,
     Canvas
 }
 
@@ -140,6 +141,13 @@ public static class SandboxCatalogRegistry
             ["dialog host", "help popover", "sticky footers", "modals"],
             ["Overlay triggers must read clearly.", "The page should keep context when overlays open.", "Sticky actions should not dominate the viewport."]),
         new(
+            SandboxGroupKey.Gantt,
+            "Gantt",
+            "/groups/gantt",
+            "Controlled interactive project scheduling with dense task metadata, dependency editing, insertion, and export.",
+            ["scheduling", "dependencies", "controlled events", "PNG export"],
+            ["Every gesture must raise a typed request instead of mutating caller state.", "Rows, task bars, and dependency ports must remain aligned at dense desktop widths.", "Insertion must replace a real bridge edge and visibly propagate the dependent schedule."]),
+        new(
             SandboxGroupKey.Canvas,
             "Canvas",
             "/groups/canvas",
@@ -193,6 +201,9 @@ public static class SandboxCatalogRegistry
         CreateExample("overlays-happy", SandboxGroupKey.Overlays, "Overlay services", SandboxScenarioKey.HappyPath, "DialogService, TooltipService, and NotificationService around contextual help and sticky actions.", ["overlay", "services"], "DialogService", "DialogHost", "TooltipService", "Tooltip", "NotificationService", "HelpPopover", "StickyActionFooter"),
         CreateExample("overlays-dense", SandboxGroupKey.Overlays, "Dense approval flow", SandboxScenarioKey.DenseContent, "Inline approval surface with secondary actions, modal affordance, and service-hosted overlays.", ["dense", "approval"], "DialogService", "TooltipService", "NotificationService", "StickyActionFooter", "Alert"),
         CreateExample("overlays-empty", SandboxGroupKey.Overlays, "No modal context", SandboxScenarioKey.EmptyState, "Overlay surface before the user selects a record.", ["empty"], "EmptyState", "HelpPopover", "DialogHost"),
+        CreateExample("gantt-happy", SandboxGroupKey.Gantt, "Controlled project schedule", SandboxScenarioKey.HappyPath, "Move and resize tasks, reconnect dependencies, insert work into a bridge edge, edit titles, and export the controlled projection.", ["gantt", "controlled", "interactive"], "GanttChart", "GanttTaskDragSource"),
+        CreateExample("gantt-dense", SandboxGroupKey.Gantt, "Dense dependency hub", SandboxScenarioKey.DenseContent, "Eight incoming and eight outgoing hub edges prove compact assignment indicators, endpoint lanes, and exact mouse reconnection under fan pressure.", ["dense", "dependencies", "assignments", "reconnection"], "GanttChart", "GanttAssignment"),
+        CreateExample("gantt-empty", SandboxGroupKey.Gantt, "Empty schedule", SandboxScenarioKey.EmptyState, "Explicit zero-task surface without synthetic schedule data.", ["empty", "gantt"], "GanttChart"),
         CreateExample("canvas-happy", SandboxGroupKey.Canvas, "Workbench surface", SandboxScenarioKey.HappyPath, "Shared workbench, floating windows, and calendar surface.", ["canvas", "workbench"], "CanvasWorkbench", "CanvasFloatingWindow", "CanvasCalendar"),
         CreateExample("canvas-dense", SandboxGroupKey.Canvas, "Dense workbench review", SandboxScenarioKey.DenseContent, "Deeper workbench, preview, and calendar density.", ["dense", "canvas"], "CanvasWorkbench", "CanvasSceneHostPreview", "LayerStackPreview"),
         CreateExample("canvas-empty", SandboxGroupKey.Canvas, "Empty canvas state", SandboxScenarioKey.EmptyState, "Canvas empty-state coverage across workbench and calendar.", ["empty", "canvas"], "CanvasWorkbench", "CanvasCalendar", "EmptyStateOverlay")
