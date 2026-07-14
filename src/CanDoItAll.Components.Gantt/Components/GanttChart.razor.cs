@@ -9,7 +9,7 @@ namespace CanDoItAll.Components.Gantt;
 public partial class GanttChart : ComponentBase, IAsyncDisposable
 {
     private const double ZoomFactor = 1.25;
-    private const double MinimumPixelsPerHour = 2;
+    private const double MinimumPixelsPerHour = 0.25;
     private const double MaximumPixelsPerHour = 96;
     private const double MinimumTimelineContentWidth = 800;
     private const double MaximumTimelineWidth = 12_000;
@@ -20,6 +20,19 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private const double DependencyEndpointVerticalSpacing = 11;
     private const double DependencyEndpointLaneSpacing = 12;
     private const double DependencyEndpointEdgeOffset = 6;
+    private const double DependencyRouteClearance = 4;
+    private const double QuarterHourPixelsPerHour = 96;
+    private const double HourPixelsPerHour = 32;
+    private const double DayPixelsPerHour = 4;
+    private const double WeekPixelsPerHour = 0.75;
+    private static readonly IReadOnlyList<GanttTimeScaleOption> TimeScaleOptions =
+    [
+        new(GanttTimeScale.QuarterHour, "0.25 h"),
+        new(GanttTimeScale.Hour, "1 h"),
+        new(GanttTimeScale.Day, "1 d"),
+        new(GanttTimeScale.Week, "1 w"),
+        new(GanttTimeScale.Custom, "Custom")
+    ];
     private readonly string instructionsId = $"cda-gantt-instructions-{Guid.NewGuid():N}";
     private readonly HashSet<GanttTaskId> criticalTaskIds = [];
     private ElementReference hostElement;
@@ -38,8 +51,11 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private bool mutationInFlight;
     private bool exportInFlight;
     private bool titleCommitInFlight;
+    private bool timeScaleInitialized;
     private double zoomedPixelsPerHour;
     private double lastPixelsPerHourParameter;
+    private GanttTimeScale selectedTimeScale;
+    private GanttTimeScale lastTimeScaleParameter;
 
     [Inject]
     private IJSRuntime JsRuntime { get; set; } = default!;
@@ -70,6 +86,12 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     [Parameter]
     public EventCallback<bool> ShowTaskTableChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<GanttTimeScale> TimeScaleChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<double> PixelsPerHourChanged { get; set; }
 
     [Parameter]
     public Func<GanttTaskId, GanttTaskId, GanttDependencyId>? DependencyIdFactory { get; set; }
@@ -106,6 +128,9 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     [Parameter]
     public bool ShowToolbar { get; set; } = true;
+
+    [Parameter]
+    public GanttTimeScale TimeScale { get; set; } = GanttTimeScale.Custom;
 
     [Parameter]
     public double PixelsPerHour { get; set; } = 12;
@@ -167,7 +192,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             var scaleStatus = validationError is null && CalculateTimeline().IsCompressed
                 ? " · fitted scale"
                 : string.Empty;
-            return $"{Tasks.Count} tasks · {Dependencies.Count} dependencies · UTC · {HoursPerManDay:0.#} h/man-day{scaleStatus}";
+            return $"{Tasks.Count} tasks · {Dependencies.Count} dependencies · {FormatTimeScale(selectedTimeScale)} · UTC · {HoursPerManDay:0.#} h/man-day{scaleStatus}";
         }
     }
 
@@ -190,11 +215,11 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         ArgumentNullException.ThrowIfNull(Tasks);
         ArgumentNullException.ThrowIfNull(Dependencies);
 
-        SynchronizeViewParameters();
         criticalTaskIds.Clear();
         try
         {
             ValidateOptions();
+            SynchronizeViewParameters();
             var graph = GanttScheduleGraph.Create(Tasks, Dependencies);
             GanttSchedulePropagation.ValidateConstraints(graph, graph.TasksById);
             criticalTaskIds.UnionWith(GanttCriticalPathCalculator.Calculate(Tasks, Dependencies));
@@ -464,16 +489,37 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         await ShowTaskTableChanged.InvokeAsync(tableVisible);
     }
 
-    private Task ZoomOutAsync()
+    private async Task ZoomOutAsync()
     {
-        zoomedPixelsPerHour = CalculateZoomOutScale();
-        return InvokeAsync(StateHasChanged);
+        var nextPixelsPerHour = CalculateZoomOutScale();
+        selectedTimeScale = GanttTimeScale.Custom;
+        zoomedPixelsPerHour = nextPixelsPerHour;
+        await TimeScaleChanged.InvokeAsync(GanttTimeScale.Custom);
+        await PixelsPerHourChanged.InvokeAsync(nextPixelsPerHour);
+        await InvokeAsync(StateHasChanged);
     }
 
-    private Task ZoomInAsync()
+    private async Task ZoomInAsync()
     {
-        zoomedPixelsPerHour = CalculateZoomInScale();
-        return InvokeAsync(StateHasChanged);
+        var nextPixelsPerHour = CalculateZoomInScale();
+        selectedTimeScale = GanttTimeScale.Custom;
+        zoomedPixelsPerHour = nextPixelsPerHour;
+        await TimeScaleChanged.InvokeAsync(GanttTimeScale.Custom);
+        await PixelsPerHourChanged.InvokeAsync(nextPixelsPerHour);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task HandleTimeScaleChangedAsync(GanttTimeScale scale)
+    {
+        if (!Enum.IsDefined(scale))
+        {
+            throw new ArgumentOutOfRangeException(nameof(scale), scale, "The Gantt time scale is not supported.");
+        }
+
+        selectedTimeScale = scale;
+        zoomedPixelsPerHour = ResolvePixelsPerHour(scale, PixelsPerHour);
+        await TimeScaleChanged.InvokeAsync(scale);
+        await InvokeAsync(StateHasChanged);
     }
 
     private double CalculateZoomOutScale()
@@ -642,6 +688,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             HeaderHeight,
             BarHeight,
             timeline.PixelsPerHour,
+            ResolveTickIntervalMilliseconds(timeline.IsCompressed ? GanttTimeScale.Custom : selectedTimeScale),
             SnapInterval.TotalMilliseconds,
             SnapOrigin.ToUnixTimeMilliseconds(),
             MinimumTaskDuration.TotalMilliseconds,
@@ -654,6 +701,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             DependencyEndpointVerticalSpacing,
             DependencyEndpointLaneSpacing,
             DependencyEndpointEdgeOffset,
+            DependencyRouteClearance,
             HeaderHeight + Tasks.Count * RowHeight,
             TaskTableWidth,
             HoursPerManDay,
@@ -684,15 +732,22 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         var timelineHours = (end - start).TotalHours;
         var gutter = CalculateDependencyEndpointGutter();
         var maximumContentWidth = MaximumTimelineWidth - (2 * gutter);
-        var requestedContentWidth = Math.Max(MinimumTimelineContentWidth, timelineHours * requestedPixelsPerHour);
-        var contentWidth = Math.Min(maximumContentWidth, requestedContentWidth);
+        var requestedContentWidth = timelineHours * requestedPixelsPerHour;
+        var isCompressed = requestedContentWidth > maximumContentWidth;
+        var renderedPixelsPerHour = isCompressed
+            ? maximumContentWidth / timelineHours
+            : requestedPixelsPerHour;
+        var contentWidth = Math.Max(
+            MinimumTimelineContentWidth,
+            Math.Min(maximumContentWidth, requestedContentWidth));
+        var renderedEnd = start.AddHours(contentWidth / renderedPixelsPerHour);
         return (
             start,
-            end,
+            renderedEnd,
             contentWidth + (2 * gutter),
-            contentWidth / timelineHours,
+            renderedPixelsPerHour,
             gutter,
-            requestedContentWidth > maximumContentWidth);
+            isCompressed);
     }
 
     private double CalculateDependencyEndpointGutter()
@@ -716,6 +771,39 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
                1;
     }
 
+    private static double ResolvePixelsPerHour(GanttTimeScale scale, double customPixelsPerHour)
+        => scale switch
+        {
+            GanttTimeScale.Custom => customPixelsPerHour,
+            GanttTimeScale.QuarterHour => QuarterHourPixelsPerHour,
+            GanttTimeScale.Hour => HourPixelsPerHour,
+            GanttTimeScale.Day => DayPixelsPerHour,
+            GanttTimeScale.Week => WeekPixelsPerHour,
+            _ => throw new ArgumentOutOfRangeException(nameof(scale), scale, "The Gantt time scale is not supported.")
+        };
+
+    private static double ResolveTickIntervalMilliseconds(GanttTimeScale scale)
+        => scale switch
+        {
+            GanttTimeScale.Custom => 0,
+            GanttTimeScale.QuarterHour => TimeSpan.FromMinutes(15).TotalMilliseconds,
+            GanttTimeScale.Hour => TimeSpan.FromHours(1).TotalMilliseconds,
+            GanttTimeScale.Day => TimeSpan.FromDays(1).TotalMilliseconds,
+            GanttTimeScale.Week => TimeSpan.FromDays(7).TotalMilliseconds,
+            _ => throw new ArgumentOutOfRangeException(nameof(scale), scale, "The Gantt time scale is not supported.")
+        };
+
+    private static string FormatTimeScale(GanttTimeScale scale)
+        => scale switch
+        {
+            GanttTimeScale.Custom => "custom scale",
+            GanttTimeScale.QuarterHour => "0.25 h scale",
+            GanttTimeScale.Hour => "1 h scale",
+            GanttTimeScale.Day => "1 d scale",
+            GanttTimeScale.Week => "1 w scale",
+            _ => throw new ArgumentOutOfRangeException(nameof(scale), scale, "The Gantt time scale is not supported.")
+        };
+
     private void SynchronizeViewParameters()
     {
         if (!tableVisibilityInitialized || ShowTaskTable != lastTableVisibilityParameter)
@@ -725,15 +813,31 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             tableVisibilityInitialized = true;
         }
 
+        if (!timeScaleInitialized || TimeScale != lastTimeScaleParameter)
+        {
+            selectedTimeScale = TimeScale;
+            lastTimeScaleParameter = TimeScale;
+            timeScaleInitialized = true;
+            zoomedPixelsPerHour = ResolvePixelsPerHour(selectedTimeScale, PixelsPerHour);
+        }
+
         if (lastPixelsPerHourParameter != PixelsPerHour)
         {
-            zoomedPixelsPerHour = PixelsPerHour;
             lastPixelsPerHourParameter = PixelsPerHour;
+            if (selectedTimeScale == GanttTimeScale.Custom)
+            {
+                zoomedPixelsPerHour = PixelsPerHour;
+            }
         }
     }
 
     private void ValidateOptions()
     {
+        if (!Enum.IsDefined(TimeScale))
+        {
+            throw new ArgumentOutOfRangeException(nameof(TimeScale), TimeScale, "The Gantt time scale is not supported.");
+        }
+
         if (!double.IsFinite(PixelsPerHour) ||
             !double.IsFinite(HoursPerManDay) ||
             !double.IsFinite(RowHeight) ||
@@ -947,11 +1051,14 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     private sealed record GanttInteropAssignment(string Id, string Label, string Kind);
 
+    private sealed record GanttTimeScaleOption(GanttTimeScale Value, string Label);
+
     private sealed record GanttInteropOptions(
         double RowHeight,
         double HeaderHeight,
         double BarHeight,
         double PixelsPerHour,
+        double TickIntervalMs,
         double SnapMs,
         long SnapOriginMs,
         double MinimumTaskDurationMs,
@@ -964,6 +1071,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         double DependencyEndpointVerticalSpacing,
         double DependencyEndpointLaneSpacing,
         double DependencyEndpointEdgeOffset,
+        double DependencyRouteClearance,
         double CanvasHeight,
         double TaskTableWidth,
         double HoursPerManDay,

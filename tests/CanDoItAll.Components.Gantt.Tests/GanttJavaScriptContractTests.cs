@@ -121,13 +121,70 @@ public sealed class GanttJavaScriptContractTests
 
         Assert.Contains("options.dependencyEndpointVerticalSpacing", runtime, StringComparison.Ordinal);
         Assert.Contains("lane * options.dependencyEndpointLaneSpacing", runtime, StringComparison.Ordinal);
-        Assert.Contains("geometry.sourceAttachmentX", runtime, StringComparison.Ordinal);
-        Assert.Contains("geometry.targetAttachmentX", runtime, StringComparison.Ordinal);
+        Assert.Contains("source.attachmentX", runtime, StringComparison.Ordinal);
+        Assert.Contains("target.attachmentX", runtime, StringComparison.Ordinal);
         Assert.Contains("state.hoverHit?.kind === kind", runtime, StringComparison.Ordinal);
         Assert.Contains("model.options.timelineGutter", runtime, StringComparison.Ordinal);
         Assert.Contains("calculateRequiredDependencyGutter", runtime, StringComparison.Ordinal);
         Assert.DoesNotContain("32 / (count - 1)", runtime, StringComparison.Ordinal);
         Assert.DoesNotContain("spreadDependencyEndpoint", runtime, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Gantt_dependency_routes_enforce_obstacle_clearance_and_share_final_segments_with_bridge_hits()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var geometry = ReadSection(
+            runtime,
+            "function resolveDependencyGeometry",
+            "function resolveDependencyEndpoint");
+        var validator = ReadSection(
+            runtime,
+            "function assertDependencyRouteAvoidsUnrelatedTasks",
+            "function routeSegmentIntersectsTaskRectangle");
+        var bridgeHitTest = ReadSection(
+            runtime,
+            "function resolveDependencyBridgeAtPoint",
+            "function distanceToSegment");
+
+        Assert.Contains("resolveObstacleSafeRoute", geometry, StringComparison.Ordinal);
+        Assert.Contains("assertDependencyRouteAvoidsUnrelatedTasks", geometry, StringComparison.Ordinal);
+        Assert.Contains("for (const rect of taskRects)", validator, StringComparison.Ordinal);
+        Assert.Contains("rect.taskId === predecessorId || rect.taskId === successorId", validator, StringComparison.Ordinal);
+        Assert.Contains("pointIndex < geometry.routePoints.length", validator, StringComparison.Ordinal);
+        Assert.Contains("routeSegmentIntersectsTaskRectangle", validator, StringComparison.Ordinal);
+        Assert.Contains("does not terminate at its successor edge", validator, StringComparison.Ordinal);
+        Assert.Contains("geometry.routePoints", bridgeHitTest, StringComparison.Ordinal);
+        Assert.DoesNotContain("resolveDependencyElbowX", bridgeHitTest, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Gantt_empty_timeline_drag_pans_the_horizontal_scroll_owner()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var pointerDown = ReadSection(
+            runtime,
+            "function handlePointerDown",
+            "function resolveRequiredStart");
+        var pointerMove = ReadSection(
+            runtime,
+            "function handlePointerMove",
+            "async function commitTaskInteraction");
+
+        Assert.Contains("kind: InteractionKind.Pan", pointerDown, StringComparison.Ordinal);
+        Assert.Contains("originScrollLeft: state.viewport.scrollLeft", pointerDown, StringComparison.Ordinal);
+        Assert.Contains("state.viewport.scrollLeft =", pointerMove, StringComparison.Ordinal);
+        Assert.Contains("interaction.originClientX", pointerMove, StringComparison.Ordinal);
     }
 
     private static string ReadSource(params string[] segments)

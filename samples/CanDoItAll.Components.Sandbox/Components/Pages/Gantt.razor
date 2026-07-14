@@ -16,7 +16,7 @@
                   FrameChanged="NavigateFrame">
     <Notes>
         <div class="sandbox-proof-list">
-            <p>Task rows and canvas bars share the same row-height contract, including horizontal and vertical scrolling.</p>
+            <p>Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale and drag empty timeline space to pan the horizontal overflow.</p>
             @if (CurrentScenario == SandboxScenarioKey.DenseContent)
             {
                 <p>The dense proof gives the Canvas runtime hub exactly eight incoming and eight outgoing edges, exercising non-overlapping endpoint lanes and exact mouse reconnection.</p>
@@ -73,6 +73,7 @@
                 <StatusBadge Text="Green handles · resize" Tone="success" />
                 <StatusBadge Text="Blue ports · dependencies" Tone="info" />
                 <StatusBadge Text="Red emphasis · critical path" Tone="warning" />
+                <StatusBadge Text="Empty canvas drag · horizontal pan" Tone="info" />
                 <StatusBadge Text="Assignment icons · hover for detail" Tone="neutral" />
             </div>
 
@@ -87,6 +88,9 @@
                             TaskSelected="HandleTaskSelected"
                             ShowTaskTable="@showTaskTable"
                             ShowTaskTableChanged="HandleTaskTableChanged"
+                            TimeScale="@timeScale"
+                            TimeScaleChanged="HandleTimeScaleChanged"
+                            PixelsPerHourChanged="HandlePixelsPerHourChanged"
                             DependencyIdFactory="CreateDependencyId"
                             AllowTaskEditing="@InteractionsEnabled"
                             AllowDependencyEditing="@InteractionsEnabled"
@@ -134,6 +138,8 @@
     private GanttTaskId? selectedTaskId;
     private SandboxScenarioKey? loadedScenario;
     private bool showTaskTable = true;
+    private GanttTimeScale timeScale = GanttTimeScale.Hour;
+    private double pixelsPerHour = 12;
     private string lastEventKind = "Ready";
     private string lastEventMessage = "The chart is rendering caller-owned records. Interact with it to inspect typed requests.";
 
@@ -141,7 +147,7 @@
 
     private bool InsertionAlreadyAccepted => tasks.Any(task => task.Id == InsertionCandidateId);
 
-    private double PixelsPerHour => CurrentScenario == SandboxScenarioKey.DenseContent ? 9 : 12;
+    private double PixelsPerHour => pixelsPerHour;
 
     private string SelectedTaskLabel => selectedTaskId is { } id
         ? tasks.FirstOrDefault(task => task.Id == id)?.Title ?? id.Value
@@ -162,6 +168,8 @@
     {
         selectedTaskId = null;
         showTaskTable = true;
+        timeScale = GanttTimeScale.Hour;
+        pixelsPerHour = 12;
         tasks = CurrentScenario == SandboxScenarioKey.EmptyState
             ? []
             : BuildTasks(CurrentScenario == SandboxScenarioKey.DenseContent);
@@ -241,6 +249,20 @@
         showTaskTable = visible;
         lastEventKind = "View state changed";
         lastEventMessage = visible ? "The aligned task table is visible." : "The task table is hidden; scheduling data is unchanged.";
+    }
+
+    private void HandleTimeScaleChanged(GanttTimeScale scale)
+    {
+        timeScale = scale;
+        lastEventKind = "Time scale changed";
+        lastEventMessage = $"The controlled horizontal scale is now {scale}. Fine scales overflow horizontally and empty-space dragging pans the timeline.";
+    }
+
+    private void HandlePixelsPerHourChanged(double value)
+    {
+        pixelsPerHour = value;
+        lastEventKind = "Custom scale changed";
+        lastEventMessage = $"The controlled custom scale is now {value:0.##} pixels per hour.";
     }
 
     private async Task ExportFromHostAsync()

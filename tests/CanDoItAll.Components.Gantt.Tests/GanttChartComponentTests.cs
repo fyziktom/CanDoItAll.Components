@@ -527,6 +527,84 @@ public sealed class GanttChartComponentTests
         Assert.Equal(896, GetProperty<double>(options, "TimelineWidth"));
     }
 
+    [Theory]
+    [InlineData(GanttTimeScale.QuarterHour, 96, 900_000)]
+    [InlineData(GanttTimeScale.Hour, 32, 3_600_000)]
+    [InlineData(GanttTimeScale.Day, 4, 86_400_000)]
+    [InlineData(GanttTimeScale.Week, 0.75, 604_800_000)]
+    public void Typed_time_scale_presets_change_timeline_geometry_and_tick_interval(
+        GanttTimeScale scale,
+        double expectedPixelsPerHour,
+        double expectedTickIntervalMs)
+    {
+        using var context = CreateContext();
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { Task("schedule", "Schedule", 0, 48) })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TimeScale, scale));
+
+        var options = GetProperty(GetCreateModel(context), "Options");
+        Assert.Equal(expectedPixelsPerHour, GetProperty<double>(options, "PixelsPerHour"));
+        Assert.Equal(expectedTickIntervalMs, GetProperty<double>(options, "TickIntervalMs"));
+        Assert.True(cut.Find(".cda-gantt__viewport").HasAttribute("data-gantt-viewport"));
+        Assert.Equal(
+            ["0.25 h", "1 h", "1 d", "1 w", "Custom"],
+            cut.FindAll(".cda-gantt__time-scale option").Select(option => option.TextContent.Trim()));
+    }
+
+    [Fact]
+    public void Fine_time_scale_creates_real_horizontal_overflow_without_changing_row_geometry()
+    {
+        using var context = CreateContext();
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[]
+            {
+                Task("first", "First", 0, 8),
+                Task("second", "Second", 8, 16)
+            })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TimeScale, GanttTimeScale.QuarterHour)
+            .Add(component => component.RowHeight, 52)
+            .Add(component => component.HeaderHeight, 42));
+
+        var options = GetProperty(GetCreateModel(context), "Options");
+        Assert.True(GetProperty<double>(options, "TimelineWidth") > 3_000);
+        Assert.Equal(146, GetProperty<double>(options, "CanvasHeight"));
+        Assert.All(
+            cut.FindAll(".cda-gantt__table-row").Skip(1),
+            row => Assert.Contains("height: 52px", row.GetAttribute("style"), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Time_scale_selection_and_zoom_raise_typed_controlled_view_state()
+    {
+        using var context = CreateContext();
+        GanttTimeScale? requestedScale = null;
+        double? requestedPixelsPerHour = null;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { Task("schedule", "Schedule", 0, 24) })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TimeScaleChanged, scale => requestedScale = scale)
+            .Add(component => component.PixelsPerHourChanged, value => requestedPixelsPerHour = value));
+
+        cut.Find(".cda-gantt__time-scale").Change("1");
+
+        Assert.Equal(GanttTimeScale.Hour, requestedScale);
+        var scaleUpdate = context.JSInterop.Invocations.Last(
+            invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
+        Assert.Equal(
+            32,
+            GetProperty<double>(GetProperty(Assert.IsAssignableFrom<object>(scaleUpdate.Arguments[1]), "Options"), "PixelsPerHour"));
+
+        cut.FindAll("button")
+            .Single(button => button.TextContent.Contains("Zoom in", StringComparison.Ordinal))
+            .Click();
+
+        Assert.Equal(GanttTimeScale.Custom, requestedScale);
+        Assert.NotNull(requestedPixelsPerHour);
+        Assert.True(requestedPixelsPerHour > 32);
+    }
+
     [Fact]
     public void Dependency_fan_that_cannot_fit_the_bounded_canvas_fails_explicitly()
     {

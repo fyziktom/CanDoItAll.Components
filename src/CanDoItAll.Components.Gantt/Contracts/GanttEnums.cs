@@ -26,3 +26,12 @@ public enum GanttDependencyType
 {
     FinishToStart
 }
+
+public enum GanttTimeScale
+{
+    Custom,
+    QuarterHour,
+    Hour,
+    Day,
+    Week
+}

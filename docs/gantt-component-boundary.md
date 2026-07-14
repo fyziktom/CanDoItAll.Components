@@ -46,11 +46,13 @@ Contracts and scheduling code remain free of product models, databases, browser 
 
 - Visual thesis: a dense engineering timeline with a quiet neutral grid, saturated task bars, cyan dependency handles, and one restrained critical-path accent.
 - Content plan: compact toolbar, aligned optional task columns, one shared scroll surface, timeline, and transient assignment detail.
-- Interaction thesis: direct manipulation of bar bodies and endpoints; dependency endpoints reconnect in place; assignment indicators expand only while hovered or focused.
+- Interaction thesis: direct manipulation of bar bodies and endpoints; empty-space dragging pans horizontal overflow; typed time-scale presets change timeline density; dependency endpoints reconnect in place; assignment indicators expand only while hovered or focused.
 
 ## Acceptance criteria
 
 - Multiple dependencies are rendered and validated without magic string identifiers.
+- Every dependency segment avoids unrelated task rectangles and terminates directly at its successor bar edge.
+- The timeline exposes typed `0.25 h`, `1 h`, `1 d`, and `1 w` scales plus horizontal scrollbar and empty-space panning.
 - Dragging either task edge emits normalized start/end/duration changes.
 - Dragging a dependency endpoint can add or reconnect a dependency and cyclic results are rejected predictably.
 - Insertion produces an explicit change set that rewires the selected chain and propagates dependent dates.
@@ -66,4 +68,3 @@ Contracts and scheduling code remain free of product models, databases, browser 
 - Product nodes can be unscheduled. Projection-only dates are visually distinguished and are persisted only after an explicit accepted mutation.
 - An additive CanvasLib seam could accidentally alter asset order. Asset verification and existing CanvasLib tests must pass unchanged.
 - Reusing package version `0.1.2` can resolve stale NuGet cache entries. Consumer validation uses a unique prerelease package version.
-

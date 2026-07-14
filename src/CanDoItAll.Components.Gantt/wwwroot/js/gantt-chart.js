@@ -12,6 +12,7 @@
     const maximumExportDimension = 12_000;
     const maximumExportPixels = 32_000_000;
     const dependencyArrowLength = 7;
+    const routeComparisonTolerance = 0.01;
 
     const HitKind = Object.freeze({
         TaskBody: "task-body",
@@ -25,6 +26,7 @@
     });
 
     const InteractionKind = Object.freeze({
+        Pan: "pan",
         Move: "move",
         ResizeStart: "resize-start",
         ResizeEnd: "resize-end",
@@ -229,6 +231,9 @@
             headerHeight: requirePositive(options.headerHeight, "header height"),
             barHeight: requirePositive(options.barHeight, "bar height"),
             pixelsPerHour: requirePositive(options.pixelsPerHour, "pixels per hour"),
+            tickIntervalMs: Number.isFinite(options.tickIntervalMs) && options.tickIntervalMs > 0
+                ? options.tickIntervalMs
+                : 0,
             snapMs: requirePositive(options.snapMs, "snap duration"),
             snapOriginMs: requireFinite(options.snapOriginMs, "snap origin"),
             minimumTaskDurationMs: requirePositive(options.minimumTaskDurationMs, "minimum task duration"),
@@ -241,6 +246,7 @@
             dependencyEndpointVerticalSpacing: requirePositive(options.dependencyEndpointVerticalSpacing, "dependency endpoint vertical spacing"),
             dependencyEndpointLaneSpacing: requirePositive(options.dependencyEndpointLaneSpacing, "dependency endpoint lane spacing"),
             dependencyEndpointEdgeOffset: requirePositive(options.dependencyEndpointEdgeOffset, "dependency endpoint edge offset"),
+            dependencyRouteClearance: requirePositive(options.dependencyRouteClearance, "dependency route clearance"),
             canvasHeight: requirePositive(options.canvasHeight, "canvas height"),
             taskTableWidth: requirePositive(options.taskTableWidth, "task table width"),
             hoursPerManDay: requirePositive(options.hoursPerManDay, "hours per man-day"),
@@ -365,6 +371,10 @@
     }
 
     function resolveTickInterval(model) {
+        if (model.options.tickIntervalMs > 0) {
+            return model.options.tickIntervalMs;
+        }
+
         const pixelsPerHour = model.options.pixelsPerHour;
         if (pixelsPerHour >= 48) {
             return hourMs;
@@ -376,6 +386,20 @@
             return dayMs;
         }
         return 7 * dayMs;
+    }
+
+    function resolveTickLabelInterval(model, tickInterval, measureLabelWidth) {
+        let labelInterval = tickInterval;
+        while (true) {
+            const label = formatTick(model.options.timelineStartMs, labelInterval);
+            const labelSpacing = measureLabelWidth(label) + 14;
+            const availableSpacing = model.options.pixelsPerHour * (labelInterval / hourMs);
+            if (availableSpacing >= labelSpacing) {
+                return labelInterval;
+            }
+
+            labelInterval *= 2;
+        }
     }
 
     function formatTick(timestamp, interval) {
@@ -418,10 +442,10 @@
             context.stroke();
         }
 
-        const tickInterval = resolveTickInterval(model);
-        const firstTick = Math.floor(options.timelineStartMs / tickInterval) * tickInterval;
         context.font = '600 11px "Segoe UI", sans-serif';
         context.textBaseline = "middle";
+        const tickInterval = resolveTickInterval(model);
+        const firstTick = Math.floor(options.timelineStartMs / tickInterval) * tickInterval;
         for (let tick = firstTick; tick <= options.timelineEndMs; tick += tickInterval) {
             const x = Math.round(timeToX(model, tick, originX)) + 0.5;
             if (x < originX) {
@@ -432,8 +456,21 @@
             context.moveTo(x, 0);
             context.lineTo(x, options.canvasHeight);
             context.stroke();
+        }
+
+        const labelInterval = resolveTickLabelInterval(
+            model,
+            tickInterval,
+            label => context.measureText(label).width);
+        const firstLabel = Math.floor(options.timelineStartMs / labelInterval) * labelInterval;
+        for (let tick = firstLabel; tick <= options.timelineEndMs; tick += labelInterval) {
+            const x = Math.round(timeToX(model, tick, originX)) + 0.5;
+            if (x < originX) {
+                continue;
+            }
+
             context.fillStyle = colors.textMuted;
-            context.fillText(formatTick(tick, tickInterval), x + 7, options.headerHeight / 2);
+            context.fillText(formatTick(tick, labelInterval), x + 7, options.headerHeight / 2);
         }
 
         const nowX = timeToX(model, Date.now(), originX);
@@ -460,18 +497,16 @@
     function drawDependencies(context, state, model, colors, originX) {
         for (const geometry of resolveDependencyGeometry(state, model, originX)) {
             const { dependency } = geometry;
-            const elbowX = resolveDependencyElbowX(geometry);
             const color = dependency.isCritical ? colors.critical : colors.accent;
 
             context.strokeStyle = color;
             context.lineWidth = dependency.isCritical ? 2.25 : 1.6;
             context.beginPath();
-            context.moveTo(geometry.sourceAttachmentX, geometry.sourceY);
-            context.lineTo(geometry.sourceHandleX, geometry.sourceY);
-            context.lineTo(elbowX, geometry.sourceY);
-            context.lineTo(elbowX, geometry.targetY);
-            context.lineTo(geometry.targetHandleX, geometry.targetY);
-            context.lineTo(geometry.targetAttachmentX - dependencyArrowLength, geometry.targetY);
+            context.moveTo(geometry.routePoints[0].x, geometry.routePoints[0].y);
+            for (let pointIndex = 1; pointIndex < geometry.routePoints.length; pointIndex += 1) {
+                const point = geometry.routePoints[pointIndex];
+                context.lineTo(point.x, point.y);
+            }
             context.stroke();
             drawArrow(context, geometry.targetAttachmentX, geometry.targetY, color);
 
@@ -516,6 +551,14 @@
 
     function resolveDependencyGeometry(state, model, originX) {
         const taskIndexes = new Map(model.tasks.map((task, index) => [task.id, index]));
+        const taskRects = model.tasks.map((task, index) => ({
+            taskId: task.id,
+            ...taskRect(
+                model,
+                state.previewTasks.get(task.id) || task,
+                index,
+                originX)
+        }));
         const outgoingCounts = new Map();
         const incomingCounts = new Map();
         for (const dependency of model.dependencies) {
@@ -528,8 +571,10 @@
         return model.dependencies.map(dependency => {
             const predecessor = state.previewTasks.get(dependency.predecessorId) || model.taskLookup.get(dependency.predecessorId);
             const successor = state.previewTasks.get(dependency.successorId) || model.taskLookup.get(dependency.successorId);
-            const predecessorRect = taskRect(model, predecessor, taskIndexes.get(dependency.predecessorId), originX);
-            const successorRect = taskRect(model, successor, taskIndexes.get(dependency.successorId), originX);
+            const predecessorIndex = taskIndexes.get(dependency.predecessorId);
+            const successorIndex = taskIndexes.get(dependency.successorId);
+            const predecessorRect = taskRects[predecessorIndex];
+            const successorRect = taskRects[successorIndex];
             const outgoingIndex = outgoingIndexes.get(dependency.predecessorId) || 0;
             const incomingIndex = incomingIndexes.get(dependency.successorId) || 0;
             outgoingIndexes.set(dependency.predecessorId, outgoingIndex + 1);
@@ -548,16 +593,205 @@
                 incomingCounts.get(dependency.successorId),
                 false);
 
-            return {
+            const geometry = {
                 dependency,
                 sourceAttachmentX: source.attachmentX,
                 sourceHandleX: source.handleX,
                 sourceY: source.y,
                 targetHandleX: target.handleX,
                 targetAttachmentX: target.attachmentX,
-                targetY: target.y
+                targetY: target.y,
+                routePoints: resolveObstacleSafeRoute(
+                    model.options,
+                    taskRects,
+                    predecessorIndex,
+                    successorIndex,
+                    source,
+                    target,
+                    originX)
             };
+            assertDependencyRouteAvoidsUnrelatedTasks(
+                geometry,
+                taskRects,
+                dependency.predecessorId,
+                dependency.successorId);
+            return geometry;
         });
+    }
+
+    function resolveObstacleSafeRoute(
+        options,
+        taskRects,
+        predecessorIndex,
+        successorIndex,
+        source,
+        target,
+        originX = 0) {
+        const arrowBase = {
+            x: target.attachmentX - dependencyArrowLength,
+            y: target.y
+        };
+        if (Math.abs(successorIndex - predecessorIndex) === 1) {
+            const boundaryY = successorIndex > predecessorIndex
+                ? options.headerHeight + ((predecessorIndex + 1) * options.rowHeight)
+                : options.headerHeight + (predecessorIndex * options.rowHeight);
+            return compactRoutePoints([
+                { x: source.attachmentX, y: source.y },
+                { x: source.handleX, y: source.y },
+                { x: source.handleX, y: boundaryY },
+                { x: target.handleX, y: boundaryY },
+                { x: target.handleX, y: target.y },
+                arrowBase
+            ]);
+        }
+
+        const directLaneX = resolveDirectDependencyLaneX(
+            options,
+            taskRects,
+            predecessorIndex,
+            successorIndex,
+            source,
+            target);
+        if (directLaneX !== null) {
+            return compactRoutePoints([
+                { x: source.attachmentX, y: source.y },
+                { x: source.handleX, y: source.y },
+                { x: directLaneX, y: source.y },
+                { x: directLaneX, y: target.y },
+                { x: target.handleX, y: target.y },
+                arrowBase
+            ]);
+        }
+
+        const firstIndex = Math.min(predecessorIndex, successorIndex);
+        const lastIndex = Math.max(predecessorIndex, successorIndex);
+        const traversedRects = taskRects.slice(firstIndex, lastIndex + 1);
+        const minimumLeft = Math.min(...traversedRects.map(rect => rect.x));
+        const maximumRight = Math.max(...traversedRects.map(rect => rect.x + rect.width));
+        const clearance = options.dependencyRouteClearance;
+        const minimumSpineX = originX + clearance;
+        const maximumSpineX = originX + options.timelineWidth - clearance;
+        const leftSpineX = Math.max(
+            minimumSpineX,
+            Math.min(minimumLeft - clearance, source.handleX - clearance, target.handleX - clearance));
+        const rightSpineX = Math.min(
+            maximumSpineX,
+            Math.max(maximumRight + clearance, source.handleX + clearance, target.handleX + clearance));
+        const sourceBoundaryY = successorIndex > predecessorIndex
+            ? options.headerHeight + ((predecessorIndex + 1) * options.rowHeight)
+            : options.headerHeight + (predecessorIndex * options.rowHeight);
+        const targetBoundaryY = successorIndex > predecessorIndex
+            ? options.headerHeight + (successorIndex * options.rowHeight)
+            : options.headerHeight + ((successorIndex + 1) * options.rowHeight);
+        const leftLength = Math.abs(source.handleX - leftSpineX) + Math.abs(target.handleX - leftSpineX);
+        const rightLength = Math.abs(source.handleX - rightSpineX) + Math.abs(target.handleX - rightSpineX);
+        const spineX = leftLength <= rightLength ? leftSpineX : rightSpineX;
+
+        return compactRoutePoints([
+            { x: source.attachmentX, y: source.y },
+            { x: source.handleX, y: source.y },
+            { x: source.handleX, y: sourceBoundaryY },
+            { x: spineX, y: sourceBoundaryY },
+            { x: spineX, y: targetBoundaryY },
+            { x: target.handleX, y: targetBoundaryY },
+            { x: target.handleX, y: target.y },
+            arrowBase
+        ]);
+    }
+
+    function resolveDirectDependencyLaneX(options, taskRects, predecessorIndex, successorIndex, source, target) {
+        if (source.handleX > target.handleX) {
+            return null;
+        }
+
+        const clearance = options.dependencyRouteClearance;
+        const firstIndex = Math.min(predecessorIndex, successorIndex) + 1;
+        const lastIndex = Math.max(predecessorIndex, successorIndex) - 1;
+        const desiredX = source.handleX + Math.max(18, (target.handleX - source.handleX) * 0.45);
+        const candidates = [desiredX, (source.handleX + target.handleX) / 2];
+        for (let index = firstIndex; index <= lastIndex; index += 1) {
+            const rect = taskRects[index];
+            candidates.push(rect.x - clearance, rect.x + rect.width + clearance);
+        }
+
+        return candidates
+            .filter(candidate => candidate >= source.handleX && candidate <= target.handleX)
+            .filter(candidate => isVerticalRouteLaneClear(
+                candidate,
+                taskRects,
+                firstIndex,
+                lastIndex,
+                clearance))
+            .sort((left, right) => Math.abs(left - desiredX) - Math.abs(right - desiredX))[0] ?? null;
+    }
+
+    function isVerticalRouteLaneClear(x, taskRects, firstIndex, lastIndex, clearance) {
+        for (let index = firstIndex; index <= lastIndex; index += 1) {
+            const rect = taskRects[index];
+            if (x > rect.x - clearance && x < rect.x + rect.width + clearance) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function compactRoutePoints(points) {
+        return points.filter((point, index) => index === 0 ||
+            Math.abs(point.x - points[index - 1].x) > routeComparisonTolerance ||
+            Math.abs(point.y - points[index - 1].y) > routeComparisonTolerance);
+    }
+
+    function assertDependencyRouteAvoidsUnrelatedTasks(
+        geometry,
+        taskRects,
+        predecessorId,
+        successorId) {
+        const terminalPoint = geometry.routePoints[geometry.routePoints.length - 1];
+        if (Math.abs(terminalPoint.x - (geometry.targetAttachmentX - dependencyArrowLength)) > routeComparisonTolerance ||
+            Math.abs(terminalPoint.y - geometry.targetY) > routeComparisonTolerance) {
+            throw new Error(`Gantt dependency '${geometry.dependency.id}' does not terminate at its successor edge.`);
+        }
+
+        for (const rect of taskRects) {
+            if (rect.taskId === predecessorId || rect.taskId === successorId) {
+                continue;
+            }
+
+            for (let pointIndex = 1; pointIndex < geometry.routePoints.length; pointIndex += 1) {
+                if (routeSegmentIntersectsTaskRectangle(
+                    geometry.routePoints[pointIndex - 1],
+                    geometry.routePoints[pointIndex],
+                    rect)) {
+                    throw new Error(
+                        `Gantt dependency '${geometry.dependency.id}' intersects unrelated task '${rect.taskId}'.`);
+                }
+            }
+        }
+    }
+
+    function routeSegmentIntersectsTaskRectangle(start, end, rect) {
+        const rectRight = rect.x + rect.width;
+        const rectBottom = rect.y + rect.height;
+        if (Math.abs(start.x - end.x) <= routeComparisonTolerance) {
+            const segmentTop = Math.min(start.y, end.y);
+            const segmentBottom = Math.max(start.y, end.y);
+            return start.x > rect.x + routeComparisonTolerance &&
+                start.x < rectRight - routeComparisonTolerance &&
+                segmentBottom > rect.y + routeComparisonTolerance &&
+                segmentTop < rectBottom - routeComparisonTolerance;
+        }
+
+        if (Math.abs(start.y - end.y) <= routeComparisonTolerance) {
+            const segmentLeft = Math.min(start.x, end.x);
+            const segmentRight = Math.max(start.x, end.x);
+            return start.y > rect.y + routeComparisonTolerance &&
+                start.y < rectBottom - routeComparisonTolerance &&
+                segmentRight > rect.x + routeComparisonTolerance &&
+                segmentLeft < rectRight - routeComparisonTolerance;
+        }
+
+        throw new Error("Gantt dependency routes must contain only orthogonal segments.");
     }
 
     function resolveDependencyEndpoint(model, rect, index, count, isSource) {
@@ -579,12 +813,6 @@
             y: rect.y + (rect.height / 2) +
                 (slot - ((laneItemCount - 1) / 2)) * options.dependencyEndpointVerticalSpacing
         };
-    }
-
-    function resolveDependencyElbowX(geometry) {
-        return geometry.sourceHandleX + Math.max(
-            18,
-            (geometry.targetHandleX - geometry.sourceHandleX) * 0.45);
     }
 
     function drawResizeHandle(context, x, y, height, isStart, colors) {
@@ -864,15 +1092,17 @@
                 continue;
             }
 
-            const elbowX = resolveDependencyElbowX(geometry);
-            const segments = [
-                [geometry.sourceAttachmentX, geometry.sourceY, geometry.sourceHandleX, geometry.sourceY],
-                [geometry.sourceHandleX, geometry.sourceY, elbowX, geometry.sourceY],
-                [elbowX, geometry.sourceY, elbowX, geometry.targetY],
-                [elbowX, geometry.targetY, geometry.targetHandleX, geometry.targetY],
-                [geometry.targetHandleX, geometry.targetY, geometry.targetAttachmentX, geometry.targetY]
-            ];
-            const distance = Math.min(...segments.map(segment => distanceToSegment(point, ...segment)));
+            const distance = Math.min(...geometry.routePoints
+                .slice(1)
+                .map((routePoint, pointIndex) => {
+                    const previousPoint = geometry.routePoints[pointIndex];
+                    return distanceToSegment(
+                        point,
+                        previousPoint.x,
+                        previousPoint.y,
+                        routePoint.x,
+                        routePoint.y);
+                }));
             if (distance <= 7 && (!closest || distance < closest.distance)) {
                 closest = { dependency: geometry.dependency, distance };
             }
@@ -965,7 +1195,7 @@
         return false;
     }
 
-    function handlePointerDown(state, pointer) {
+    function handlePointerDown(state, pointer, event = null) {
         if (state.renderErrorReported || state.commitInFlightToken !== null) {
             return false;
         }
@@ -973,7 +1203,17 @@
         const hit = state.hitRegistry.find(pointer.x, pointer.y);
         if (!hit) {
             state.selectedTaskId = null;
-            return false;
+            state.interaction = {
+                operationToken: ++state.nextOperationToken,
+                kind: InteractionKind.Pan,
+                originPoint: pointer,
+                currentPoint: pointer,
+                originClientX: Number.isFinite(event?.clientX) ? event.clientX : 0,
+                originScrollLeft: state.viewport.scrollLeft,
+                hasMoved: false
+            };
+            state.canvas.classList.add("cda-gantt__canvas--panning");
+            return true;
         }
 
         if ([HitKind.TaskBody, HitKind.ResizeStart, HitKind.ResizeEnd].includes(hit.kind)) {
@@ -1027,7 +1267,7 @@
         state.previewOwnerToken = interaction.operationToken;
     }
 
-    function handlePointerMove(state, pointer) {
+    function handlePointerMove(state, pointer, event = null) {
         if (state.renderErrorReported || state.commitInFlightToken !== null) {
             return;
         }
@@ -1048,6 +1288,11 @@
         interaction.currentPoint = pointer;
         interaction.hasMoved = interaction.hasMoved ||
             Math.hypot(pointer.x - interaction.originPoint.x, pointer.y - interaction.originPoint.y) >= minimumMovementPx;
+        if (interaction.kind === InteractionKind.Pan) {
+            const clientX = Number.isFinite(event?.clientX) ? event.clientX : interaction.originClientX;
+            state.viewport.scrollLeft = interaction.originScrollLeft - (clientX - interaction.originClientX);
+            return;
+        }
         if ([InteractionKind.Move, InteractionKind.ResizeStart, InteractionKind.ResizeEnd].includes(interaction.kind)) {
             updateTaskPreview(state, interaction, pointer);
         }
@@ -1135,6 +1380,7 @@
     async function handlePointerUp(state, pointer) {
         const interaction = state.interaction;
         state.interaction = null;
+        state.canvas.classList.remove("cda-gantt__canvas--panning");
         if (state.renderErrorReported) {
             state.previewTasks.clear();
             state.previewOwnerToken = null;
@@ -1172,7 +1418,7 @@
                     await state.dotNetRef.invokeMethodAsync("NotifyTaskSelectedAsync", interaction.task.id);
                 }
             }
-            else {
+            else if (interaction.kind !== InteractionKind.Pan) {
                 await commitDependencyInteraction(state, interaction, pointer);
             }
         }
@@ -1197,6 +1443,7 @@
         state.interaction = null;
         state.previewTasks.clear();
         state.previewOwnerToken = null;
+        state.canvas.classList.remove("cda-gantt__canvas--panning");
         state.surface.requestRender();
     }
 
@@ -1304,7 +1551,7 @@
         state.keyDownHandler = event => handleKeyDown(state, event);
         state.hoverMoveHandler = event => {
             if (!state.interaction) {
-                handlePointerMove(state, state.surface.pointFromEvent(event));
+                handlePointerMove(state, state.surface.pointFromEvent(event), event);
             }
         };
         state.pointerLeaveHandler = () => {
@@ -1338,6 +1585,7 @@
         }
 
         state.disposed = true;
+        state.canvas.classList.remove("cda-gantt__canvas--panning");
         try {
             detachDomEvents(state);
         }
@@ -1374,6 +1622,7 @@
             const runtime = requireCanvasRuntime();
             const host = requireElement(hostValue, "host");
             const canvas = requireCanvas(canvasValue);
+            const viewport = requireElement(host.querySelector("[data-gantt-viewport]"), "viewport");
             if (!dotNetRef) {
                 throw new Error("Gantt chart .NET callback reference is required.");
             }
@@ -1389,6 +1638,7 @@
             const state = {
                 host,
                 canvas,
+                viewport,
                 dotNetRef,
                 model,
                 colors: resolveColors(host),
@@ -1407,8 +1657,8 @@
             state.pointerRouter = runtime.createPointerRouter({
                 element: canvas,
                 coordinateElement: canvas,
-                onPointerDown: payload => handlePointerDown(state, payload.point),
-                onPointerMove: payload => handlePointerMove(state, payload.point),
+                onPointerDown: payload => handlePointerDown(state, payload.point, payload.event),
+                onPointerMove: payload => handlePointerMove(state, payload.point, payload.event),
                 onPointerUp: payload => {
                     handlePointerUp(state, payload.point).catch(error => reportInteropError(state, error));
                 },
@@ -1515,4 +1765,14 @@
             disposeState(chartStates.get(host));
         }
     };
+
+    if (typeof module === "object" && module.exports) {
+        module.exports = Object.freeze({
+            dependencyArrowLength,
+            resolveObstacleSafeRoute,
+            routeSegmentIntersectsTaskRectangle,
+            assertDependencyRouteAvoidsUnrelatedTasks,
+            resolveTickLabelInterval
+        });
+    }
 })();

@@ -13,6 +13,15 @@
                         Variant="Variant.Outlined"
                         Disabled="@IsInteractionDisabled"
                         Click="ToggleTaskTableAsync" />
+                <DropDown TValue="GanttTimeScale"
+                          Class="cda-gantt__time-scale"
+                          Data="@TimeScaleOptions"
+                          TextProperty="@nameof(GanttTimeScaleOption.Label)"
+                          ValueProperty="@nameof(GanttTimeScaleOption.Value)"
+                          Value="@selectedTimeScale"
+                          ValueChanged="HandleTimeScaleChangedAsync"
+                          Disabled="@IsInteractionDisabled"
+                          aria-label="Horizontal time scale" />
                 <Button Text="Zoom out"
                         Size="ButtonSize.Small"
                         Variant="Variant.Outlined"
@@ -50,7 +59,9 @@
         </Alert>
     }
 
-    <div class="cda-gantt__viewport" hidden="@(validationError is not null || interopFaulted)">
+    <div class="cda-gantt__viewport"
+         data-gantt-viewport
+         hidden="@(validationError is not null || interopFaulted)">
         <div class="cda-gantt__content" style="width: @ContentWidthCss; height: @CanvasHeightCss;">
             @if (tableVisible)
             {
@@ -150,7 +161,7 @@
     </div>
 
     <div id="@instructionsId" class="cda-gantt__sr-only">
-        The task table and canvas rows are aligned. Assignment icons identify processes, workflows, agents, and people; hover or keyboard-focus an icon for its name.
+        The task table and canvas rows are aligned. Drag empty timeline space left or right to pan. Choose a horizontal time scale from the toolbar. Assignment icons identify processes, workflows, agents, and people; hover or keyboard-focus an icon for its name.
     </div>
 
     <ul class="cda-gantt__sr-only" aria-label="Task dependencies">

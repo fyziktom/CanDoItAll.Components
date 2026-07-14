@@ -9,6 +9,8 @@
     --gantt-critical: #d97706;
     --gantt-handle: #4d9f38;
     --gantt-connector: #0ea5e9;
+    width: 100%;
+    max-width: 100%;
     min-width: 0;
     color: var(--gantt-text);
     background: var(--gantt-surface);
@@ -37,6 +39,12 @@
     gap: 0.5rem;
 }
 
+.cda-gantt ::deep .cda-gantt__time-scale {
+    width: 6.5rem;
+    min-height: 2rem;
+    padding-block: 0.25rem;
+}
+
 .cda-gantt__status {
     margin: 0;
     color: var(--gantt-text-muted);
@@ -51,8 +59,10 @@
 .cda-gantt__viewport {
     position: relative;
     max-height: var(--cda-gantt-max-height, 44rem);
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-gutter: stable;
     background: var(--gantt-surface);
 }
 
@@ -237,10 +247,11 @@
     top: 0;
     display: block;
     touch-action: none;
-    cursor: default;
+    cursor: grab;
 }
 
-.cda-gantt__canvas:active {
+.cda-gantt__canvas:active,
+.cda-gantt__canvas--panning {
     cursor: grabbing;
 }
 
