@@ -191,8 +191,8 @@
 
 .cda-gantt__assignment-tooltip {
     position: absolute;
-    right: 0;
-    bottom: calc(100% + 0.45rem);
+    left: calc(100% + 0.45rem);
+    top: 50%;
     z-index: 7;
     width: max-content;
     max-width: 18rem;
@@ -207,7 +207,7 @@
     line-height: 1.25;
     opacity: 0;
     pointer-events: none;
-    transform: translateY(0.2rem);
+    transform: translate(0.2rem, -50%);
     transition: opacity 120ms ease, transform 120ms ease;
 }
 
@@ -219,7 +219,7 @@
 .cda-gantt__assignment-indicator:hover + .cda-gantt__assignment-tooltip,
 .cda-gantt__assignment-indicator:focus + .cda-gantt__assignment-tooltip {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(0, -50%);
 }
 
 .cda-gantt__title-editor {

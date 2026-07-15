@@ -110,6 +110,35 @@ public sealed class GanttJavaScriptContractTests
     }
 
     [Fact]
+    public void Gantt_task_commit_retains_its_preview_until_the_controlled_model_reconciles()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var commitTaskInteraction = ReadSection(
+            runtime,
+            "async function commitTaskInteraction",
+            "function resolveDependencyDrop");
+        var handlePointerUp = ReadSection(
+            runtime,
+            "async function handlePointerUp",
+            "function cancelInteraction");
+        var update = ReadSection(
+            runtime,
+            "update(hostValue, modelValue)",
+            "async exportPngDataUrl");
+
+        Assert.Contains("return false;", commitTaskInteraction, StringComparison.Ordinal);
+        Assert.Contains("return true;", commitTaskInteraction, StringComparison.Ordinal);
+        Assert.Contains("retainTaskPreview = await commitTaskInteraction", handlePointerUp, StringComparison.Ordinal);
+        Assert.Contains("state.previewOwnerToken === commitToken && !retainTaskPreview", handlePointerUp, StringComparison.Ordinal);
+        Assert.Contains("clearTaskPreview(state);", update, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Gantt_dependency_endpoints_use_bounded_multi_lane_geometry()
     {
         var runtime = ReadSource(

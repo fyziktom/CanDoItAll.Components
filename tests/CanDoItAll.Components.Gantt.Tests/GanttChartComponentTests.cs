@@ -137,6 +137,31 @@ public sealed class GanttChartComponentTests
     }
 
     [Fact]
+    public void Assignment_tooltip_exposes_a_long_workflow_name_to_hover_and_keyboard_focus()
+    {
+        using var context = CreateContext();
+        const string workflowName = "Example: Office365 Category Email Summary To Project";
+        var task = new GanttTask(
+            TaskId("workflow-task"),
+            "Workflow task",
+            Start,
+            Start.AddHours(8),
+            [new GanttAssignment(GanttAssignmentKind.Workflow, workflowName)]);
+
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>()));
+
+        var indicator = cut.Find(".cda-gantt__assignment-indicator");
+        var tooltip = cut.Find(".cda-gantt__assignment-tooltip");
+
+        Assert.Equal("0", indicator.GetAttribute("tabindex"));
+        Assert.Equal(tooltip.Id, indicator.GetAttribute("aria-describedby"));
+        Assert.Equal("tooltip", tooltip.GetAttribute("role"));
+        Assert.Contains(workflowName, tooltip.TextContent, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Title_edit_emits_a_typed_request_without_mutating_the_controlled_task()
     {
         using var context = CreateContext();
@@ -226,6 +251,127 @@ public sealed class GanttChartComponentTests
         Assert.Equal(Start.AddMinutes(expectedStartMinutes), change.ProposedStart);
         Assert.Equal(Start.AddMinutes(expectedEndMinutes), change.ProposedEnd);
         Assert.Equal(TimeSpan.FromHours(1), change.ProposedEnd - change.ProposedStart);
+    }
+
+    [Fact]
+    public async Task Schedule_commit_suppresses_stale_interop_updates_until_authoritative_parameters_arrive()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        var savedTask = Task("analysis", "Analysis", 2, 10);
+        var callbackEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseCallback = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Func<Task> callback = async () =>
+        {
+            callbackEntered.SetResult();
+            await releaseCallback.Task;
+        };
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TaskScheduleChangeRequested, callback));
+
+        var commit = cut.InvokeAsync(() => cut.Instance.CommitScheduleChangeAsync(
+            task.Id.Value,
+            savedTask.Start.ToUnixTimeMilliseconds(),
+            savedTask.End.ToUnixTimeMilliseconds(),
+            "move"));
+        await callbackEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, new[] { task }));
+        Assert.DoesNotContain(
+            context.JSInterop.Invocations,
+            invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, new[] { savedTask }));
+        Assert.DoesNotContain(
+            context.JSInterop.Invocations,
+            invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
+
+        releaseCallback.SetResult();
+        await commit;
+
+        var update = Assert.Single(
+            context.JSInterop.Invocations,
+            invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
+        var interopTask = Assert.Single(GetItems(GetProperty(
+            Assert.IsAssignableFrom<object>(update.Arguments[1]),
+            "Tasks")));
+        Assert.Equal(savedTask.Start.ToUnixTimeMilliseconds(), GetProperty<long>(interopTask, "StartMs"));
+        Assert.Equal(savedTask.End.ToUnixTimeMilliseconds(), GetProperty<long>(interopTask, "EndMs"));
+        Assert.Contains("2026-07-14 10:00 UTC", cut.Markup, StringComparison.Ordinal);
+        Assert.Contains("2026-07-14 18:00 UTC", cut.Markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Schedule_commit_reconciles_to_the_unchanged_controlled_model_when_the_host_rejects_it()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        var callbackEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseCallback = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Func<Task> callback = async () =>
+        {
+            callbackEntered.SetResult();
+            await releaseCallback.Task;
+        };
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TaskScheduleChangeRequested, callback));
+
+        var commit = cut.InvokeAsync(() => cut.Instance.CommitScheduleChangeAsync(
+            task.Id.Value,
+            task.Start.AddHours(2).ToUnixTimeMilliseconds(),
+            task.End.AddHours(2).ToUnixTimeMilliseconds(),
+            "move"));
+        await callbackEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, new[] { task }));
+        releaseCallback.SetResult();
+        await commit;
+
+        var update = Assert.Single(
+            context.JSInterop.Invocations,
+            invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
+        var interopTask = Assert.Single(GetItems(GetProperty(
+            Assert.IsAssignableFrom<object>(update.Arguments[1]),
+            "Tasks")));
+        Assert.Equal(task.Start.ToUnixTimeMilliseconds(), GetProperty<long>(interopTask, "StartMs"));
+        Assert.Equal(task.End.ToUnixTimeMilliseconds(), GetProperty<long>(interopTask, "EndMs"));
+    }
+
+    [Fact]
+    public async Task Disposed_chart_does_not_publish_a_late_mutation_update()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        var callbackEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseCallback = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Func<Task> callback = async () =>
+        {
+            callbackEntered.SetResult();
+            await releaseCallback.Task;
+        };
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TaskScheduleChangeRequested, callback));
+
+        var commit = cut.InvokeAsync(() => cut.Instance.CommitScheduleChangeAsync(
+            task.Id.Value,
+            task.Start.AddHours(2).ToUnixTimeMilliseconds(),
+            task.End.AddHours(2).ToUnixTimeMilliseconds(),
+            "move"));
+        await callbackEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        await cut.Instance.DisposeAsync();
+        releaseCallback.SetResult();
+        await commit;
+
+        Assert.DoesNotContain(
+            context.JSInterop.Invocations,
+            invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
     }
 
     [Theory]

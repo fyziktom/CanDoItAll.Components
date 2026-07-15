@@ -1420,7 +1420,7 @@
             !interaction.hasMoved ||
             (preview.startMs === interaction.originalStartMs &&
                 preview.endMs === interaction.originalEndMs)) {
-            return;
+            return false;
         }
 
         await state.dotNetRef.invokeMethodAsync(
@@ -1429,6 +1429,7 @@
             preview.startMs,
             preview.endMs,
             interaction.kind);
+        return true;
     }
 
     function resolveDependencyDrop(state, interaction, point) {
@@ -1518,6 +1519,7 @@
         state.commitInFlightToken = commitToken;
         const isTaskGesture = [InteractionKind.Move, InteractionKind.ResizeStart, InteractionKind.ResizeEnd]
             .includes(interaction.kind);
+        let retainTaskPreview = false;
 
         try {
             await Promise.resolve();
@@ -1526,7 +1528,7 @@
             }
 
             if (isTaskGesture) {
-                await commitTaskInteraction(state, interaction);
+                retainTaskPreview = await commitTaskInteraction(state, interaction);
                 if (!state.disposed &&
                     state.commitInFlightToken === commitToken &&
                     state.model.taskLookup.has(interaction.task.id)) {
@@ -1541,7 +1543,7 @@
             await reportInteropError(state, error);
         }
         finally {
-            if (state.previewOwnerToken === commitToken) {
+            if (state.previewOwnerToken === commitToken && !retainTaskPreview) {
                 clearTaskPreview(state);
             }
             if (state.commitInFlightToken === commitToken) {

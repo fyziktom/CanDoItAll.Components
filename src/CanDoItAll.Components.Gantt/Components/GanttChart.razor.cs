@@ -49,6 +49,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private bool interopInitialized;
     private bool interopFaulted;
     private bool mutationInFlight;
+    private bool disposed;
     private bool exportInFlight;
     private bool titleCommitInFlight;
     private bool timeScaleInitialized;
@@ -252,6 +253,11 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (disposed || mutationInFlight)
+        {
+            return;
+        }
+
         if (validationError is not null)
         {
             await DisposeInteropAsync();
@@ -487,6 +493,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        disposed = true;
         try
         {
             await DisposeInteropAsync();
@@ -663,7 +670,10 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         {
             mutationInFlight = false;
             interopUpdateRequired = true;
-            await InvokeAsync(StateHasChanged);
+            if (!disposed)
+            {
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 
