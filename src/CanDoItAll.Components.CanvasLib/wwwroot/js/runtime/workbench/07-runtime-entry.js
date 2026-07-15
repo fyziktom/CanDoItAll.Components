@@ -467,6 +467,7 @@
     }
 
     function disposeWorkbenchStateCore(state, options) {
+        state.isDisposed = true;
         destroyCanvasSurfaceHost(state.frameSurface);
         destroyCanvasSurfaceHost(state.linkSurface);
         destroyCanvasSurfaceHost(state.nodeSurface);
@@ -477,6 +478,11 @@
 
         if (state.resizeObserver) {
             state.resizeObserver.disconnect();
+        }
+
+        if (state.resizeObserverFrame) {
+            window.cancelAnimationFrame(state.resizeObserverFrame);
+            state.resizeObserverFrame = 0;
         }
 
         if (state.measureLayoutFrame) {
@@ -504,7 +510,7 @@
         }
 
         removeWorkbenchEventHandlers(state);
-        workbenchInternals.runtime.setMaximized(state, false);
+        workbenchInternals.runtime.setMaximized(state, false, { render: false });
         clear(state.host);
         delete state.host.__canvasWorkbenchState;
     }
@@ -629,10 +635,6 @@
             return;
         }
 
-        if (typeof options.isMaximized === "boolean") {
-            workbenchInternals.runtime.setMaximized(state, options.isMaximized);
-        }
-
         if (options.fitView === true) {
             workbenchInternals.sceneLayout.fitView(state);
         }
@@ -640,6 +642,34 @@
         if (Array.isArray(options.selectedNodeIds) && options.selectedNodeIds.length > 0) {
             applyRequestedSelection(state, options.selectedNodeIds, options.primaryNodeId || options.selectedNodeIds[0]);
         }
+    }
+
+    function resolveMaximizedState(state, options) {
+        return typeof options?.isMaximized === "boolean"
+            ? options.isMaximized
+            : !!state.ui.isMaximized;
+    }
+
+    function scheduleResizeObserverRender(state) {
+        if (state.isDisposed || state.resizeObserverFrame) {
+            return;
+        }
+
+        if (typeof window.requestAnimationFrame !== "function") {
+            workbenchInternals.sceneLayout.resize(state);
+            render(state);
+            return;
+        }
+
+        state.resizeObserverFrame = window.requestAnimationFrame(() => {
+            state.resizeObserverFrame = 0;
+            if (state.isDisposed) {
+                return;
+            }
+
+            workbenchInternals.sceneLayout.resize(state);
+            render(state);
+        });
     }
 
     root.canvasWorkbench = {
@@ -661,12 +691,9 @@
                 stateDispatchSeed);
             workbenchInternals.runtime.buildWorkbench(state);
             workbenchInternals.runtime.attachEvents(state);
-            workbenchInternals.runtime.setMaximized(state, !!state.ui.isMaximized);
+            workbenchInternals.runtime.setMaximized(state, resolveMaximizedState(state, options));
             if (typeof window.ResizeObserver === "function") {
-                state.resizeObserver = new window.ResizeObserver(() => {
-                    workbenchInternals.sceneLayout.resize(state);
-                    render(state);
-                });
+                state.resizeObserver = new window.ResizeObserver(() => scheduleResizeObserverRender(state));
                 const resizeTargets = [host, state.shell, host.closest(".cw-stage-surface")]
                     .filter((target, index, collection) => !!target && collection.indexOf(target) === index);
                 for (const target of resizeTargets) {
@@ -685,7 +712,10 @@
                 return false;
             }
 
-            workbenchInternals.runtime.refresh(state, surface);
+            const requestedIsMaximized = typeof options?.isMaximized === "boolean"
+                ? options.isMaximized
+                : !!surface?.uiState?.isMaximized;
+            workbenchInternals.runtime.refresh(state, surface, requestedIsMaximized);
             applyRenderOptions(state, options);
             return true;
         },

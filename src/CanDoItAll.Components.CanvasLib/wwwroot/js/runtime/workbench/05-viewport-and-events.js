@@ -691,26 +691,37 @@
         });
     }
 
-    function setMaximized(state, isMaximized) {
+    function setMaximized(state, isMaximized, options) {
+        const nextIsMaximized = !!isMaximized;
+        state.ui.isMaximized = nextIsMaximized;
+        if (state.maximizedApplied === nextIsMaximized) {
+            return false;
+        }
+
+        state.maximizedApplied = nextIsMaximized;
         cancelViewportAnimation(state);
-        state.ui.isMaximized = !!isMaximized;
-        if (isMaximized) {
+        if (nextIsMaximized) {
             suspendContainingBlock(state);
         }
         else {
             restoreContainingBlock(state);
         }
 
-        state.document.body.classList.toggle("cw-body-lock", !!isMaximized);
-        state.document.documentElement.classList.toggle("cw-body-lock", !!isMaximized);
+        state.document.body.classList.toggle("cw-body-lock", nextIsMaximized);
+        state.document.documentElement.classList.toggle("cw-body-lock", nextIsMaximized);
         if (state.shell) {
-            state.shell.classList.toggle("is-maximized", !!isMaximized);
+            state.shell.classList.toggle("is-maximized", nextIsMaximized);
+        }
+
+        if (options?.render === false) {
+            return true;
         }
 
         const resizeSurface = workbenchInternals.sceneLayout?.resize || legacyResize;
         resizeSurface(state);
         render(state);
         schedulePostLayoutResize(state, resizeSurface);
+        return true;
     }
 
     function fitView(state) {
@@ -1339,7 +1350,10 @@
             pendingCreate: null,
             pendingFocusNodeId: null,
             containingBlockOverride: null,
+            maximizedApplied: null,
             resizeObserver: null,
+            resizeObserverFrame: 0,
+            isDisposed: false,
             lastPointerTarget: null,
             lastCreateSignature: "",
             lastCreateRequestedAt: 0,
@@ -1383,7 +1397,7 @@
         return state;
     }
 
-    function refresh(state, surface) {
+    function refresh(state, surface, isMaximized) {
         workbenchInternals.sceneLayout.cancelViewportAnimation(state);
         const previousNodeIds = new Set((state.surface?.nodes || []).map(node => node.id));
         const previousSelectedId = state.ui?.selectedNodeIds?.[0] || null;
@@ -1422,7 +1436,9 @@
             workbenchInternals.overlayRenderer.closeComposer(state, { focusHost: false });
         }
 
-        setMaximized(state, !!state.ui.isMaximized);
+        setMaximized(
+            state,
+            typeof isMaximized === "boolean" ? isMaximized : !!state.ui.isMaximized);
         workbenchInternals.sceneLayout.resize(state);
         const incomingViewportIsDefault = Math.abs(state.ui.panX - 90) <= 0.5 &&
             Math.abs(state.ui.panY - 110) <= 0.5 &&

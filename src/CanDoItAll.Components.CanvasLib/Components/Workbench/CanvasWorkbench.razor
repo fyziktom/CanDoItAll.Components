@@ -738,8 +738,10 @@
 
         var state = CanvasWorkbenchUiState.Parse(json);
         state.IsMaximized = isMaximized;
+        clientUiStateKey = state.ToJson();
+        awaitingParentUiStateCommit = true;
         zoomPercent = ClampZoomPercent(state.Zoom);
-        await StateChanged.InvokeAsync(state.ToJson());
+        await StateChanged.InvokeAsync(clientUiStateKey);
     }
 
     private T? Deserialize<T>(string json)
