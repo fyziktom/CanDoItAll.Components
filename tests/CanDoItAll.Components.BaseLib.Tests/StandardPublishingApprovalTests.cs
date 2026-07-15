@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Xml.Linq;
 using CanDoItAll.Components.Charts;
 using CanDoItAll.Components.Common;
+using CanDoItAll.Components.Gantt;
 using CanDoItAll.Components.Mermaid;
 using CanDoItAll.Components.OverlayLib;
 
@@ -45,7 +46,12 @@ public sealed class StandardPublishingApprovalTests
             "CanDoItAll.Components.Mermaid",
             "src/CanDoItAll.Components.Mermaid/CanDoItAll.Components.Mermaid.csproj",
             "src/CanDoItAll.Components.Mermaid",
-            typeof(MermaidDiagram).Assembly)
+            typeof(MermaidDiagram).Assembly),
+        new(
+            "CanDoItAll.Components.Gantt",
+            "src/CanDoItAll.Components.Gantt/CanDoItAll.Components.Gantt.csproj",
+            "src/CanDoItAll.Components.Gantt",
+            typeof(GanttChart).Assembly)
     ];
 
     [Fact]

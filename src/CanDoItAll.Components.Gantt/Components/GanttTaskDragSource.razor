@@ -1,0 +1,108 @@
+@namespace CanDoItAll.Components.Gantt
+@implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
+
+<div @ref="dragElement"
+     class="cda-gantt-drag-source @(Disabled ? "cda-gantt-drag-source--disabled" : null) @Class"
+     role="group"
+     aria-disabled="@Disabled"
+     aria-label="@ResolvedAriaLabel">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <Pill Text="@Task.Title" Tone="PillTone.Info" />
+    }
+</div>
+
+@code {
+    private ElementReference dragElement;
+    private IJSObjectReference? registration;
+    private string payload = string.Empty;
+    private (string Payload, string DataFormat)? registeredKey;
+
+    [Parameter, EditorRequired]
+    public GanttTask Task { get; set; } = default!;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public string DragDataFormat { get; set; } = GanttTaskDragSerialization.DataFormat;
+
+    [Parameter]
+    public string? AriaLabel { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    private string ResolvedAriaLabel => AriaLabel ?? $"Drag {Task.Title} into the Gantt chart";
+
+    protected override void OnParametersSet()
+    {
+        ArgumentNullException.ThrowIfNull(Task);
+        if (string.IsNullOrWhiteSpace(DragDataFormat))
+        {
+            throw new ArgumentException("A Gantt drag data format is required.", nameof(DragDataFormat));
+        }
+
+        payload = GanttTaskDragSerialization.Serialize(Task);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Disabled)
+        {
+            await DisposeRegistrationAsync();
+            return;
+        }
+
+        var registrationKey = (payload, DragDataFormat);
+        if (registeredKey == registrationKey)
+        {
+            return;
+        }
+
+        await DisposeRegistrationAsync();
+        registration = await JsRuntime.InvokeAsync<IJSObjectReference>(
+            "CanDoItAll.ganttChart.registerDragSource",
+            dragElement,
+            payload,
+            DragDataFormat);
+        registeredKey = registrationKey;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisposeRegistrationAsync();
+        GC.SuppressFinalize(this);
+    }
+
+    private async ValueTask DisposeRegistrationAsync()
+    {
+        if (registration is null)
+        {
+            registeredKey = null;
+            return;
+        }
+
+        try
+        {
+            await registration.InvokeVoidAsync("dispose");
+            await registration.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+        finally
+        {
+            registration = null;
+            registeredKey = null;
+        }
+    }
+}

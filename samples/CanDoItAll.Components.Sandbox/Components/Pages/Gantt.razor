@@ -1,0 +1,507 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/gantt"
+@inherits CatalogPageBase
+
+<PageTitle>Gantt</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Scenario="@CurrentScenario"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  HeroTitle="A dense scheduling surface that reports intent instead of owning data."
+                  HeroSummary="The chart projects caller-owned tasks and dependencies. Every title edit, time gesture, dependency change, or insertion returns a typed request which this page explicitly accepts into a replacement model."
+                  DemoTitle="Interactive controlled schedule"
+                  DemoSummary="Drag bars to move them, use green handles to resize, use blue ports to add or reconnect dependencies, hover assignment icons, and export the current projection as PNG."
+                  ScenarioChanged="NavigateScenario"
+                  FrameChanged="NavigateFrame">
+    <Notes>
+        <div class="sandbox-proof-list">
+            <p>Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale and drag empty timeline space to pan the horizontal overflow.</p>
+            @if (CurrentScenario == SandboxScenarioKey.DenseContent)
+            {
+                <p>The dense proof combines a Canvas runtime hub with exactly eight incoming and eight outgoing edges and a 43-task delivery chain, forcing both scroll axes while exercising endpoint lanes and exact mouse reconnection.</p>
+            }
+            else
+            {
+                <p>The implementation task has two predecessors, proving multiple dependencies without encoding them into task records.</p>
+            }
+            <p>Drop the staged security review onto the Canvas runtime → Host integration bridge to replace that edge and move the dependent path.</p>
+        </div>
+    </Notes>
+
+    <ChildContent>
+        <div class="sandbox-gantt-proof">
+            <SummaryTiles ColumnsLg="4" ColumnsXl="4">
+                <SummaryTile Label="Tasks" Value="@tasks.Count.ToString()" HelperText="Caller-owned immutable task records." Tone="info" />
+                <SummaryTile Label="Dependencies" Value="@dependencies.Count.ToString()" HelperText="Multiple finish-to-start edges are supported." Tone="success" />
+                <SummaryTile Label="Selected" Value="@SelectedTaskLabel" HelperText="Selection is raised to the host." />
+                <SummaryTile Label="Last event" Value="@lastEventKind" HelperText="No database or hidden store is mutated." Tone="warning" />
+            </SummaryTiles>
+
+            <div class="sandbox-gantt-control-row">
+                <div class="sandbox-gantt-insertion">
+                    <span class="sandbox-gantt-insertion__eyebrow">External task insertion</span>
+                    <GanttTaskDragSource Task="@InsertionCandidate"
+                                         Disabled="@InsertionAlreadyAccepted"
+                                         AriaLabel="Drag the staged security review onto a dependency bridge">
+                        <Pill Text="@(InsertionAlreadyAccepted ? "Security review inserted" : "Drag security review into bridge")"
+                              Tone="@(InsertionAlreadyAccepted ? PillTone.Ok : PillTone.Info)" />
+                    </GanttTaskDragSource>
+                    <span class="sandbox-gantt-insertion__hint">Target the Canvas runtime → Host integration dependency line.</span>
+                </div>
+
+                <Cluster Gap="LayoutGap.Small">
+                    <Button Text="Reset schedule"
+                            Icon="restart_alt"
+                            ButtonStyle="ButtonStyle.Light"
+                            Variant="Variant.Outlined"
+                            Click="ResetSchedule" />
+                    <Button Text="Export from host"
+                            Icon="image"
+                            ButtonStyle="ButtonStyle.Light"
+                            Variant="Variant.Outlined"
+                            Disabled="@(tasks.Count == 0)"
+                            Click="ExportFromHostAsync" />
+                </Cluster>
+            </div>
+
+            <Alert AlertStyle="AlertStyle.Info" data-testid="gantt-event-feedback">
+                <strong>@lastEventKind:</strong> @lastEventMessage
+            </Alert>
+
+            <div class="sandbox-gantt-legend" aria-label="Gantt interaction legend">
+                <StatusBadge Text="Green handles · resize" Tone="success" />
+                <StatusBadge Text="Blue ports · dependencies" Tone="info" />
+                <StatusBadge Text="Red emphasis · critical path" Tone="warning" />
+                <StatusBadge Text="Empty canvas drag · horizontal pan" Tone="info" />
+                <StatusBadge Text="Assignment icons · hover for detail" Tone="neutral" />
+            </div>
+
+            <div class="sandbox-gantt-host" data-testid="gantt-interactive-surface">
+                <GanttChart @ref="chart"
+                            Tasks="@tasks"
+                            Dependencies="@dependencies"
+                            TaskTitleChangeRequested="HandleTitleChange"
+                            TaskScheduleChangeRequested="HandleScheduleChange"
+                            DependencyMutationRequested="HandleDependencyMutation"
+                            TaskInsertionRequested="HandleInsertion"
+                            TaskSelected="HandleTaskSelected"
+                            ShowTaskTable="@showTaskTable"
+                            ShowTaskTableChanged="HandleTaskTableChanged"
+                            TimeScale="@timeScale"
+                            TimeScaleChanged="HandleTimeScaleChanged"
+                            PixelsPerHourChanged="HandlePixelsPerHourChanged"
+                            DependencyIdFactory="CreateDependencyId"
+                            AllowTaskEditing="@InteractionsEnabled"
+                            AllowDependencyEditing="@InteractionsEnabled"
+                            AllowTaskInsertion="@InteractionsEnabled"
+                            PixelsPerHour="@PixelsPerHour"
+                            RowHeight="52"
+                            HeaderHeight="42"
+                            BarHeight="28"
+                            TaskTableWidth="540"
+                            MaxHeight="42rem"
+                            ExportFileName="sandbox-controlled-gantt.png"
+                            AriaLabel="Sandbox controlled project schedule" />
+            </div>
+        </div>
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Gantt);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Gantt);
+    private static readonly DateTimeOffset ScheduleOrigin = new(2026, 7, 14, 8, 0, 0, TimeSpan.Zero);
+    private static readonly GanttTaskId ScopeId = new("scope");
+    private static readonly GanttTaskId ArchitectureId = new("architecture");
+    private static readonly GanttTaskId ExperienceId = new("experience");
+    private static readonly GanttTaskId CanvasRuntimeId = new("canvas-runtime");
+    private static readonly GanttTaskId HostIntegrationId = new("host-integration");
+    private static readonly GanttTaskId AcceptanceId = new("acceptance");
+    private static readonly GanttTaskId InsertionCandidateId = new("security-review");
+    private const int DenseFanSize = 8;
+    private const int DenseStressTaskCount = 43;
+    private const int ExistingCanvasPredecessorCount = 2;
+    private const int ExistingCanvasSuccessorCount = 1;
+    private static readonly GanttTask InsertionCandidate = new(
+        InsertionCandidateId,
+        "Security review",
+        ScheduleOrigin,
+        ScheduleOrigin.AddHours(3),
+        [
+            new(GanttAssignmentKind.Process, "Threat-model review"),
+            new(GanttAssignmentKind.Person, "Mara Chen")
+        ]);
+
+    private IReadOnlyList<GanttTask> tasks = [];
+    private IReadOnlyList<GanttDependency> dependencies = [];
+    private GanttChart? chart;
+    private GanttTaskId? selectedTaskId;
+    private SandboxScenarioKey? loadedScenario;
+    private bool showTaskTable = true;
+    private GanttTimeScale timeScale = GanttTimeScale.Hour;
+    private double pixelsPerHour = 12;
+    private string lastEventKind = "Ready";
+    private string lastEventMessage = "The chart is rendering caller-owned records. Interact with it to inspect typed requests.";
+
+    private bool InteractionsEnabled => CurrentScenario != SandboxScenarioKey.DisabledState;
+
+    private bool InsertionAlreadyAccepted => tasks.Any(task => task.Id == InsertionCandidateId);
+
+    private double PixelsPerHour => pixelsPerHour;
+
+    private string SelectedTaskLabel => selectedTaskId is { } id
+        ? tasks.FirstOrDefault(task => task.Id == id)?.Title ?? id.Value
+        : "None";
+
+    protected override void OnParametersSet()
+    {
+        if (loadedScenario == CurrentScenario)
+        {
+            return;
+        }
+
+        loadedScenario = CurrentScenario;
+        ResetSchedule();
+    }
+
+    private void ResetSchedule()
+    {
+        selectedTaskId = null;
+        showTaskTable = true;
+        timeScale = GanttTimeScale.Hour;
+        pixelsPerHour = 12;
+        tasks = CurrentScenario == SandboxScenarioKey.EmptyState
+            ? []
+            : BuildTasks(CurrentScenario == SandboxScenarioKey.DenseContent);
+        dependencies = CurrentScenario == SandboxScenarioKey.EmptyState
+            ? []
+            : BuildDependencies(CurrentScenario == SandboxScenarioKey.DenseContent);
+        lastEventKind = CurrentScenario == SandboxScenarioKey.EmptyState ? "Empty projection" : "Schedule reset";
+        lastEventMessage = CurrentScenario == SandboxScenarioKey.EmptyState
+            ? "No tasks were supplied; the component renders an explicit empty state."
+            : "The original controlled task and dependency arrays were restored.";
+    }
+
+    private void HandleTitleChange(GanttTaskTitleChangeRequest request)
+    {
+        tasks = tasks
+            .Select(task => task.Id == request.TaskId
+                ? CopyTask(task, request.ProposedTitle, task.Start, task.End)
+                : task)
+            .ToArray();
+        lastEventKind = "Title request accepted";
+        lastEventMessage = $"{request.TaskId}: “{request.CurrentTitle}” → “{request.ProposedTitle}”. The host replaced its task array.";
+    }
+
+    private void HandleScheduleChange(GanttTaskScheduleChangeRequest request)
+    {
+        tasks = ApplyDateChanges(tasks, request.AffectedTasks);
+        lastEventKind = "Schedule request accepted";
+        lastEventMessage = $"{request.Gesture} on {request.TaskId} changed {request.AffectedTasks.Count} task(s); {request.CriticalTaskIds.Count} task(s) now form the critical path.";
+    }
+
+    private void HandleDependencyMutation(GanttDependencyMutationRequest request)
+    {
+        dependencies = ApplyDependencyMutation(dependencies, request);
+        tasks = ApplyDateChanges(tasks, request.AffectedTasks);
+        var dependency = request.ProposedDependency ?? request.PreviousDependency
+            ?? throw new InvalidOperationException("A dependency mutation must identify a dependency.");
+        lastEventKind = "Dependency request accepted";
+        lastEventMessage = $"{request.Mutation}: {dependency.PredecessorId} → {dependency.SuccessorId}. The host replaced its dependency array and shifted {request.AffectedTasks.Count} constrained task(s).";
+    }
+
+    private void HandleInsertion(GanttTaskInsertionRequest request)
+    {
+        if (tasks.Any(task => task.Id == request.InsertedTask.Id))
+        {
+            throw new InvalidOperationException($"Task '{request.InsertedTask.Id}' has already been accepted by the sandbox host.");
+        }
+
+        var predecessorIndex = tasks
+            .Select((task, index) => (task, index))
+            .Single(pair => pair.task.Id == request.PredecessorId)
+            .index;
+        var insertedTasks = tasks.ToList();
+        insertedTasks.Insert(predecessorIndex + 1, request.InsertedTask);
+        tasks = ApplyDateChanges(insertedTasks, request.AffectedTasks);
+
+        var updatedDependencies = dependencies;
+        foreach (var dependencyChange in request.DependencyChanges)
+        {
+            updatedDependencies = ApplyDependencyMutation(updatedDependencies, dependencyChange);
+        }
+
+        dependencies = updatedDependencies;
+        selectedTaskId = request.InsertedTask.Id;
+        lastEventKind = "Insertion request accepted";
+        lastEventMessage = $"Inserted {request.InsertedTask.Title} between {request.PredecessorId} and {request.SuccessorId}; replaced {request.DependencyChanges.Count} edge(s) and shifted {request.AffectedTasks.Count} task(s).";
+    }
+
+    private void HandleTaskSelected(GanttTaskId taskId)
+    {
+        selectedTaskId = taskId;
+        lastEventKind = "Selection reported";
+        lastEventMessage = $"The chart selected {taskId}; selection remains owned by this page.";
+    }
+
+    private void HandleTaskTableChanged(bool visible)
+    {
+        showTaskTable = visible;
+        lastEventKind = "View state changed";
+        lastEventMessage = visible ? "The aligned task table is visible." : "The task table is hidden; scheduling data is unchanged.";
+    }
+
+    private void HandleTimeScaleChanged(GanttTimeScale scale)
+    {
+        timeScale = scale;
+        lastEventKind = "Time scale changed";
+        lastEventMessage = $"The controlled horizontal scale is now {scale}. Fine scales overflow horizontally and empty-space dragging pans the timeline.";
+    }
+
+    private void HandlePixelsPerHourChanged(double value)
+    {
+        pixelsPerHour = value;
+        lastEventKind = "Custom scale changed";
+        lastEventMessage = $"The controlled custom scale is now {value:0.##} pixels per hour.";
+    }
+
+    private async Task ExportFromHostAsync()
+    {
+        var resolvedChart = chart ?? throw new InvalidOperationException("The Gantt chart has not rendered yet.");
+        await resolvedChart.DownloadPngAsync();
+        lastEventKind = "PNG export requested";
+        lastEventMessage = "The reusable component composed the visible task table and canvas into sandbox-controlled-gantt.png.";
+    }
+
+    private static GanttDependencyId CreateDependencyId(GanttTaskId predecessorId, GanttTaskId successorId)
+    {
+        return new GanttDependencyId($"sandbox:{predecessorId.Value}->{successorId.Value}");
+    }
+
+    private static IReadOnlyList<GanttTask> ApplyDateChanges(
+        IEnumerable<GanttTask> source,
+        IReadOnlyCollection<GanttTaskDateChange> changes)
+    {
+        var changesByTask = changes.ToDictionary(change => change.TaskId);
+        return source
+            .Select(task => changesByTask.TryGetValue(task.Id, out var change)
+                ? CopyTask(task, task.Title, change.ProposedStart, change.ProposedEnd)
+                : task)
+            .ToArray();
+    }
+
+    private static IReadOnlyList<GanttDependency> ApplyDependencyMutation(
+        IReadOnlyList<GanttDependency> source,
+        GanttDependencyMutationRequest request)
+    {
+        return request.Mutation switch
+        {
+            GanttDependencyMutationKind.Add => source
+                .Append(request.ProposedDependency ?? throw new InvalidOperationException("Add requires a proposed dependency."))
+                .ToArray(),
+            GanttDependencyMutationKind.Remove => source
+                .Where(dependency => dependency.Id != (request.PreviousDependency ?? throw new InvalidOperationException("Remove requires a previous dependency.")).Id)
+                .ToArray(),
+            GanttDependencyMutationKind.Reconnect => source
+                .Select(dependency => dependency.Id == (request.PreviousDependency ?? throw new InvalidOperationException("Reconnect requires a previous dependency.")).Id
+                    ? request.ProposedDependency ?? throw new InvalidOperationException("Reconnect requires a proposed dependency.")
+                    : dependency)
+                .ToArray(),
+            _ => throw new ArgumentOutOfRangeException(nameof(request), request.Mutation, "Unsupported dependency mutation.")
+        };
+    }
+
+    private static GanttTask CopyTask(
+        GanttTask task,
+        string title,
+        DateTimeOffset start,
+        DateTimeOffset end)
+    {
+        return new GanttTask(task.Id, title, start, end, task.Assignments);
+    }
+
+    private static IReadOnlyList<GanttTask> BuildTasks(bool dense)
+    {
+        var result = new List<GanttTask>
+        {
+            new(
+                ScopeId,
+                "Frame scope and constraints",
+                ScheduleOrigin,
+                ScheduleOrigin.AddHours(4),
+                [new(GanttAssignmentKind.Person, "Joe Park")]),
+            new(
+                ArchitectureId,
+                "Define scheduling contracts",
+                ScheduleOrigin.AddHours(4),
+                ScheduleOrigin.AddHours(10),
+                [
+                    new(GanttAssignmentKind.Process, "Architecture gate"),
+                    new(GanttAssignmentKind.Agent, "Contract reviewer")
+                ]),
+            new(
+                ExperienceId,
+                "Prototype dense interaction",
+                ScheduleOrigin.AddHours(4),
+                ScheduleOrigin.AddHours(8),
+                [
+                    new(GanttAssignmentKind.Workflow, "UX review"),
+                    new(GanttAssignmentKind.Person, "Rina Sol")
+                ]),
+            new(
+                CanvasRuntimeId,
+                "Implement Canvas runtime",
+                ScheduleOrigin.AddHours(10),
+                ScheduleOrigin.AddHours(18),
+                [
+                    new(GanttAssignmentKind.Workflow, "Component delivery"),
+                    new(GanttAssignmentKind.Agent, "Canvas specialist")
+                ]),
+            new(
+                HostIntegrationId,
+                "Integrate controlled host",
+                ScheduleOrigin.AddHours(18),
+                ScheduleOrigin.AddHours(24),
+                [
+                    new(GanttAssignmentKind.Process, "Project projection"),
+                    new(GanttAssignmentKind.Person, "Avery Singh")
+                ]),
+            new(
+                AcceptanceId,
+                "Run sandbox acceptance",
+                ScheduleOrigin.AddHours(24),
+                ScheduleOrigin.AddHours(28),
+                [
+                    new(GanttAssignmentKind.Workflow, "Release verification"),
+                    new(GanttAssignmentKind.Person, "Noor Patel")
+                ])
+        };
+
+        if (dense)
+        {
+            var canvasIndex = result.FindIndex(task => task.Id == CanvasRuntimeId);
+            result.InsertRange(
+                canvasIndex,
+                Enumerable.Range(0, DenseFanSize - ExistingCanvasPredecessorCount)
+                    .Select(index => new GanttTask(
+                        DensePredecessorId(index),
+                        $"Prepare runtime input {index + 1}",
+                        ScheduleOrigin.AddHours(4),
+                        ScheduleOrigin.AddHours(10),
+                        [new(GanttAssignmentKind.Process, $"Runtime input {index + 1}")])));
+
+            var hostIndex = result.FindIndex(task => task.Id == HostIntegrationId);
+            result.InsertRange(
+                hostIndex + 1,
+                Enumerable.Range(0, DenseFanSize - ExistingCanvasSuccessorCount)
+                    .Select(index => new GanttTask(
+                        DenseSuccessorId(index),
+                        $"Verify runtime output {index + 1}",
+                        ScheduleOrigin.AddHours(18),
+                        ScheduleOrigin.AddHours(24),
+                        [new(GanttAssignmentKind.Agent, $"Output verifier {index + 1}")])));
+
+            result.AddRange(
+            [
+                new(
+                    new GanttTaskId("documentation"),
+                    "Document consumer contract",
+                    ScheduleOrigin.AddHours(24),
+                    ScheduleOrigin.AddHours(29),
+                    [new(GanttAssignmentKind.Agent, "Docs curator")]),
+                new(
+                    new GanttTaskId("release"),
+                    "Publish reusable package",
+                    ScheduleOrigin.AddHours(29),
+                    ScheduleOrigin.AddHours(33),
+                    [
+                        new(GanttAssignmentKind.Process, "Package release"),
+                        new(GanttAssignmentKind.Person, "Release owner")
+                    ])
+            ]);
+
+            for (var index = 0; index < DenseStressTaskCount; index++)
+            {
+                var start = ScheduleOrigin.AddHours(33 + (index * 2));
+                result.Add(new GanttTask(
+                    DenseStressTaskId(index),
+                    $"Dense delivery task {index + 1}",
+                    start,
+                    start.AddHours(2),
+                    [new(GanttAssignmentKind.Agent, $"Delivery verifier {index + 1}")]));
+            }
+        }
+
+        return result.ToArray();
+    }
+
+    private static IReadOnlyList<GanttDependency> BuildDependencies(bool dense)
+    {
+        var result = new List<GanttDependency>
+        {
+            Dependency("scope-architecture", ScopeId, ArchitectureId),
+            Dependency("scope-experience", ScopeId, ExperienceId),
+            Dependency("architecture-canvas", ArchitectureId, CanvasRuntimeId),
+            Dependency("experience-canvas", ExperienceId, CanvasRuntimeId),
+            Dependency("canvas-host", CanvasRuntimeId, HostIntegrationId),
+            Dependency("host-acceptance", HostIntegrationId, AcceptanceId),
+            Dependency("experience-acceptance", ExperienceId, AcceptanceId)
+        };
+
+        if (dense)
+        {
+            var documentationId = new GanttTaskId("documentation");
+            var releaseId = new GanttTaskId("release");
+            for (var index = 0; index < DenseFanSize - ExistingCanvasPredecessorCount; index++)
+            {
+                var predecessorId = DensePredecessorId(index);
+                result.Add(Dependency($"scope-dense-input-{index}", ScopeId, predecessorId));
+                result.Add(Dependency($"dense-input-{index}-canvas", predecessorId, CanvasRuntimeId));
+            }
+
+            for (var index = 0; index < DenseFanSize - ExistingCanvasSuccessorCount; index++)
+            {
+                var successorId = DenseSuccessorId(index);
+                result.Add(Dependency($"canvas-dense-output-{index}", CanvasRuntimeId, successorId));
+            }
+
+            result.Add(Dependency("host-documentation", HostIntegrationId, documentationId));
+            result.Add(Dependency("acceptance-release", AcceptanceId, releaseId));
+            result.Add(Dependency("documentation-release", documentationId, releaseId));
+
+            var chainPredecessorId = releaseId;
+            for (var index = 0; index < DenseStressTaskCount; index++)
+            {
+                var taskId = DenseStressTaskId(index);
+                result.Add(Dependency($"dense-delivery-{index}", chainPredecessorId, taskId));
+                chainPredecessorId = taskId;
+            }
+        }
+
+        return result.ToArray();
+    }
+
+    private static GanttTaskId DensePredecessorId(int index)
+    {
+        return new GanttTaskId($"dense-runtime-input-{index}");
+    }
+
+    private static GanttTaskId DenseSuccessorId(int index)
+    {
+        return new GanttTaskId($"dense-runtime-output-{index}");
+    }
+
+    private static GanttTaskId DenseStressTaskId(int index)
+    {
+        return new GanttTaskId($"dense-delivery-task-{index}");
+    }
+
+    private static GanttDependency Dependency(
+        string id,
+        GanttTaskId predecessorId,
+        GanttTaskId successorId)
+    {
+        return new GanttDependency(new GanttDependencyId(id), predecessorId, successorId);
+    }
+}
