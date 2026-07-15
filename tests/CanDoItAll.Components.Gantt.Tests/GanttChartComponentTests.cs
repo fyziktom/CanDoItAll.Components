@@ -190,6 +190,182 @@ public sealed class GanttChartComponentTests
     }
 
     [Fact]
+    public async Task Empty_timeline_double_click_emits_the_row_and_utc_time_without_mutating_tasks()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        var clickedAt = Start.AddHours(3.5);
+        GanttTimelineDoubleClickEventArgs? requestedCreation = null;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TimelineDoubleClicked, request => requestedCreation = request));
+
+        await cut.Instance.NotifyTimelineDoubleClickedAsync(
+            task.Id.Value,
+            clickedAt.ToUnixTimeMilliseconds());
+
+        Assert.NotNull(requestedCreation);
+        Assert.Equal(task.Id, requestedCreation.RowTaskId);
+        Assert.Equal(clickedAt, requestedCreation.ClickedAtUtc);
+        Assert.Equal(TimeSpan.Zero, requestedCreation.ClickedAtUtc.Offset);
+        Assert.Equal(Start, task.Start);
+        Assert.Equal(Start.AddHours(8), task.End);
+        var options = GetProperty(GetCreateModel(context), "Options");
+        Assert.True(GetProperty<bool>(options, "AllowTimelineTaskCreation"));
+    }
+
+    [Fact]
+    public async Task Timeline_task_creation_can_be_enabled_while_task_editing_is_disabled()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        GanttTimelineDoubleClickEventArgs? requestedCreation = null;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.AllowTaskEditing, false)
+            .Add(component => component.AllowTimelineTaskCreation, true)
+            .Add(component => component.TimelineDoubleClicked, request => requestedCreation = request));
+
+        await cut.Instance.NotifyTimelineDoubleClickedAsync(
+            task.Id.Value,
+            Start.AddHours(2).ToUnixTimeMilliseconds());
+
+        Assert.NotNull(requestedCreation);
+        Assert.True(cut.Find(".cda-gantt__task-button").HasAttribute("disabled"));
+        Assert.Contains("double-click empty row space", cut.Find("canvas").GetAttribute("aria-label"), StringComparison.Ordinal);
+        var options = GetProperty(GetCreateModel(context), "Options");
+        Assert.False(GetProperty<bool>(options, "AllowTaskEditing"));
+        Assert.True(GetProperty<bool>(options, "AllowTimelineTaskCreation"));
+    }
+
+    [Fact]
+    public async Task Explicitly_disabled_timeline_task_creation_suppresses_the_intent_when_editing_is_enabled()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        var callbackCount = 0;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.AllowTaskEditing, true)
+            .Add(component => component.AllowTimelineTaskCreation, false)
+            .Add(component => component.TaskScheduleChangeRequested, _ => { })
+            .Add(component => component.TimelineDoubleClicked, _ => callbackCount++));
+
+        await cut.Instance.NotifyTimelineDoubleClickedAsync(
+            task.Id.Value,
+            Start.AddHours(2).ToUnixTimeMilliseconds());
+
+        Assert.Equal(0, callbackCount);
+        Assert.DoesNotContain("double-click empty row space", cut.Find("canvas").GetAttribute("aria-label"), StringComparison.Ordinal);
+        var options = GetProperty(GetCreateModel(context), "Options");
+        Assert.True(GetProperty<bool>(options, "AllowTaskEditing"));
+        Assert.False(GetProperty<bool>(options, "AllowTimelineTaskCreation"));
+    }
+
+    [Fact]
+    public async Task Unset_timeline_task_creation_preserves_the_existing_task_editing_guard()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        var callbackCount = 0;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.AllowTaskEditing, false)
+            .Add(component => component.TimelineDoubleClicked, _ => callbackCount++));
+
+        await cut.Instance.NotifyTimelineDoubleClickedAsync(
+            task.Id.Value,
+            Start.AddHours(2).ToUnixTimeMilliseconds());
+
+        Assert.Equal(0, callbackCount);
+        var options = GetProperty(GetCreateModel(context), "Options");
+        Assert.False(GetProperty<bool>(options, "AllowTimelineTaskCreation"));
+    }
+
+    [Fact]
+    public async Task Empty_timeline_double_click_rejects_a_row_outside_the_controlled_model()
+    {
+        using var context = CreateContext();
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { Task("analysis", "Analysis", 0, 8) })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TimelineDoubleClicked, _ => { }));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => cut.Instance.NotifyTimelineDoubleClickedAsync(
+            "missing",
+            Start.ToUnixTimeMilliseconds()));
+    }
+
+    [Fact]
+    public void Task_order_actions_emit_relative_stable_ids_without_reordering_the_controlled_model()
+    {
+        using var context = CreateContext();
+        var tasks = new[]
+        {
+            Task("first", "First", 0, 2),
+            Task("review", "Review", 2, 4),
+            Task("last", "Last", 4, 6)
+        };
+        GanttTaskOrderChangeRequest? requestedOrder = null;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, tasks)
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TaskOrderChangeRequested, request => requestedOrder = request));
+
+        Assert.True(cut.Find("button[aria-label='Move First up']").HasAttribute("disabled"));
+        Assert.True(cut.Find("button[aria-label='Move Last down']").HasAttribute("disabled"));
+        Assert.False(cut.Find("button[aria-label='Move Review up']").HasAttribute("disabled"));
+        Assert.False(cut.Find("button[aria-label='Move Review down']").HasAttribute("disabled"));
+
+        cut.Find("button[aria-label='Move Review up']").Click();
+
+        Assert.NotNull(requestedOrder);
+        Assert.Equal(tasks[1].Id, requestedOrder.TaskId);
+        Assert.Equal(tasks[0].Id, requestedOrder.AnchorTaskId);
+        Assert.Equal(GanttTaskOrderPlacement.Before, requestedOrder.Placement);
+        Assert.Equal(
+            ["First", "Review", "Last"],
+            cut.FindAll(".cda-gantt__task-button").Select(button => button.TextContent.Trim()));
+
+        cut.Find("button[aria-label='Move Review down']").Click();
+
+        Assert.Equal(tasks[1].Id, requestedOrder.TaskId);
+        Assert.Equal(tasks[2].Id, requestedOrder.AnchorTaskId);
+        Assert.Equal(GanttTaskOrderPlacement.After, requestedOrder.Placement);
+        Assert.Equal(
+            ["First", "Review", "Last"],
+            cut.FindAll(".cda-gantt__task-button").Select(button => button.TextContent.Trim()));
+        Assert.Equal([tasks[0].Id, tasks[1].Id, tasks[2].Id], tasks.Select(task => task.Id));
+    }
+
+    [Fact]
+    public void Task_order_actions_respect_global_and_adjacent_read_only_guards()
+    {
+        using var context = CreateContext();
+        var first = Task("first", "First", 0, 2);
+        var review = Task("review", "Review", 2, 4);
+        var last = Task("last", "Last", 4, 6);
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { first, review, last })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TaskReadOnlySelector, task => task.Id == first.Id)
+            .Add(component => component.TaskOrderChangeRequested, _ => { }));
+
+        Assert.True(cut.Find("button[aria-label='Move Review up']").HasAttribute("disabled"));
+        Assert.False(cut.Find("button[aria-label='Move Review down']").HasAttribute("disabled"));
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.AllowTaskReordering, false));
+
+        Assert.All(
+            cut.FindAll(".cda-gantt__task-order-button"),
+            button => Assert.True(button.HasAttribute("disabled")));
+    }
+
+    [Fact]
     public void Parameter_change_that_revokes_title_permission_cancels_the_open_editor_without_a_callback()
     {
         using var context = CreateContext();

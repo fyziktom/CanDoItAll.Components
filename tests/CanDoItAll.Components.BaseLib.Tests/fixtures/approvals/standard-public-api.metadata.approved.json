@@ -4629,6 +4629,7 @@
           "method System.Threading.Tasks.Task CommitScheduleChangeAsync(System.String taskId, System.Double proposedStartMs, System.Double proposedEndMs, System.String gesture)",
           "method System.Threading.Tasks.Task DownloadPngAsync()",
           "method System.Threading.Tasks.Task NotifyTaskSelectedAsync(System.String taskId)",
+          "method System.Threading.Tasks.Task NotifyTimelineDoubleClickedAsync(System.String rowTaskId, System.Double clickedAtMs)",
           "method System.Threading.Tasks.Task ReportRenderErrorAsync(System.String message)",
           "method System.Threading.Tasks.Task ReportRuntimeErrorAsync(System.String message)",
           "method System.Threading.Tasks.ValueTask DisposeAsync()",
@@ -4636,14 +4637,17 @@
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttDependencyMutationRequest\u003E DependencyMutationRequested {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E TaskSelected {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskInsertionRequest\u003E TaskInsertionRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskOrderChangeRequest\u003E TaskOrderChangeRequested {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest\u003E TaskScheduleChangeRequested {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskTitleChangeRequest\u003E TaskTitleChangeRequested {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTimeScale\u003E TimeScaleChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTimelineDoubleClickEventArgs\u003E TimelineDoubleClicked {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Boolean\u003E ShowTaskTableChanged {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Double\u003E PixelsPerHourChanged {get;set;}",
           "property System.Boolean AllowDependencyEditing {get;set;}",
           "property System.Boolean AllowTaskEditing {get;set;}",
           "property System.Boolean AllowTaskInsertion {get;set;}",
+          "property System.Boolean AllowTaskReordering {get;set;}",
           "property System.Boolean ShowTaskTable {get;set;}",
           "property System.Boolean ShowToolbar {get;set;}",
           "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E Dependencies {get;set;}",
@@ -4662,6 +4666,7 @@
           "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.Boolean\u003E TaskTitleReadOnlySelector {get;set;}",
           "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTask,System.String\u003E TaskAccentColorSelector {get;set;}",
           "property System.Func\u003CCanDoItAll.Components.Gantt.GanttTaskId,CanDoItAll.Components.Gantt.GanttTaskId,CanDoItAll.Components.Gantt.GanttDependencyId\u003E DependencyIdFactory {get;set;}",
+          "property System.Nullable\u003CSystem.Boolean\u003E AllowTimelineTaskCreation {get;set;}",
           "property System.String AriaLabel {get;set;}",
           "property System.String Class {get;set;}",
           "property System.String DragDataFormat {get;set;}",
@@ -5009,6 +5014,36 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskOrderChangeRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttTaskId taskId, CanDoItAll.Components.Gantt.GanttTaskId anchorTaskId, CanDoItAll.Components.Gantt.GanttTaskOrderPlacement placement)",
+          "method CanDoItAll.Components.Gantt.GanttTaskOrderChangeRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTaskOrderChangeRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttTaskId AnchorTaskId {get;}",
+          "property CanDoItAll.Components.Gantt.GanttTaskId TaskId {get;}",
+          "property CanDoItAll.Components.Gantt.GanttTaskOrderPlacement Placement {get;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTaskOrderPlacement",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.Gantt.GanttTaskOrderPlacement After",
+          "field static const CanDoItAll.Components.Gantt.GanttTaskOrderPlacement Before"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest",
         "kind": "class",
         "isAbstract": false,
@@ -5058,6 +5093,23 @@
           "field static const CanDoItAll.Components.Gantt.GanttTimeScale Hour",
           "field static const CanDoItAll.Components.Gantt.GanttTimeScale QuarterHour",
           "field static const CanDoItAll.Components.Gantt.GanttTimeScale Week"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Gantt.GanttTimelineDoubleClickEventArgs",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.Gantt.GanttTaskId rowTaskId, System.DateTimeOffset clickedAtUtc)",
+          "method CanDoItAll.Components.Gantt.GanttTimelineDoubleClickEventArgs \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.Gantt.GanttTimelineDoubleClickEventArgs other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.Gantt.GanttTaskId RowTaskId {get;}",
+          "property System.DateTimeOffset ClickedAtUtc {get;}"
         ]
       },
       {

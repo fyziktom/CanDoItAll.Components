@@ -2,7 +2,7 @@
 
 Reusable controlled Gantt chart for Blazor, rendered through the generic CanvasLib runtime.
 
-The host owns persistence and supplies immutable tasks and dependencies. The chart never writes data or accepts an edit internally. Title, schedule, dependency, and insertion gestures are returned as typed requests; the host must commit or reject each request and then replace the input model.
+The host owns persistence and supplies immutable tasks and dependencies. The chart never writes data or accepts an edit internally. Title, schedule, dependency, insertion, and row-order gestures are returned as typed requests; empty-row double-clicks are returned as typed timeline events. The host must handle the intent and then replace the input model when data changes.
 
 ## Assets
 
@@ -29,12 +29,19 @@ The body wrapper loads only CanvasLib's generic canvas runtime, not its Workbenc
             TaskTitleChangeRequested="CommitTitleAsync"
             TaskScheduleChangeRequested="CommitScheduleAsync"
             DependencyMutationRequested="CommitDependencyAsync"
-            TaskInsertionRequested="CommitInsertionAsync" />
+            TaskInsertionRequested="CommitInsertionAsync"
+            TimelineDoubleClicked="OpenTaskDialogAsync"
+            AllowTimelineTaskCreation="true"
+            TaskOrderChangeRequested="CommitTaskOrderAsync" />
 ```
 
 `GanttSchedulePlanner`, `GanttDependencyPlanner`, and `GanttInsertionPlanner` validate the same typed request contracts without depending on Blazor. Finish-to-start dependencies use `PredecessorId -> SuccessorId`. Multiple dependencies are first-class records rather than fields encoded into a task. Dependency add/reconnect requests include the downstream schedule changes required to keep the proposed graph valid; the host still reloads and validates authoritative state before persistence. Snapping uses the stable `SnapOrigin` parameter (UTC Unix epoch by default), never a task-derived timeline boundary.
 
 Use `GanttTaskDragSource` to stage a caller-owned task, then drop it on the exact dependency line to replace. Insertion removes only that bridge, adds the two replacement dependencies, and returns all downstream date changes for host-side atomic persistence.
+
+When `TimelineDoubleClicked` is handled, double-clicking empty timeline content in a task row returns `GanttTimelineDoubleClickEventArgs` with the stable row task id and the clicked UTC time snapped to the configured `SnapOrigin` and `SnapInterval`. The chart does not choose a title, duration, parent, resource, or persistence operation. A host can use the row id as an insertion anchor and open its own creation dialog. Set `AllowTimelineTaskCreation="true"` to enable this independently from schedule/title editing, or `false` to suppress its cursor, browser listener, and event. Leaving the nullable capability unset preserves compatibility by inheriting `AllowTaskEditing`.
+
+When `TaskOrderChangeRequested` is handled, compact up/down actions appear beside task titles. They return `GanttTaskOrderChangeRequest` with the moving task id, an adjacent anchor task id, and a `Before` or `After` placement. Boundary and read-only moves are disabled, and the component does not reorder its controlled `Tasks` input. Set `AllowTaskReordering="false"` to disable the actions while preserving the supplied row order.
 
 The chart includes an aligned hideable task table, compact process/workflow/agent/person indicators, keyboard-accessible task titles, critical-path emphasis, dependency add/reconnect gestures, and PNG export. Dependency paths use obstacle-safe orthogonal routes, terminate directly at the successor edge, and fail explicitly if a safe route cannot be produced. Dates, canvas ticks, and PNG labels use an explicit UTC display contract. Synthetic or read-only data remains a host concern and can be marked through `ProjectionOnlySelector`, `TaskScheduleReadOnlySelector`, `TaskTitleReadOnlySelector`, `TaskDependencyReadOnlySelector`, or `TaskReadOnlySelector`.
 

@@ -88,6 +88,12 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     public EventCallback<GanttTaskInsertionRequest> TaskInsertionRequested { get; set; }
 
     [Parameter]
+    public EventCallback<GanttTimelineDoubleClickEventArgs> TimelineDoubleClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<GanttTaskOrderChangeRequest> TaskOrderChangeRequested { get; set; }
+
+    [Parameter]
     public EventCallback<GanttTaskId> TaskSelected { get; set; }
 
     [Parameter]
@@ -124,10 +130,16 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     public bool AllowTaskEditing { get; set; } = true;
 
     [Parameter]
+    public bool? AllowTimelineTaskCreation { get; set; }
+
+    [Parameter]
     public bool AllowDependencyEditing { get; set; } = true;
 
     [Parameter]
     public bool AllowTaskInsertion { get; set; } = true;
+
+    [Parameter]
+    public bool AllowTaskReordering { get; set; } = true;
 
     [Parameter]
     public bool ShowTaskTable { get; set; } = true;
@@ -209,6 +221,13 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private string TaskTableWidthCss => ToPixels(TaskTableWidth);
 
     private string CanvasLeftCss => tableVisible ? TaskTableWidthCss : "0px";
+
+    private string CanvasAriaLabel => IsTimelineTaskCreationEnabled
+        ? "Interactive Gantt timeline. Drag a bar to move it, drag green ends to resize it, drag blue ports to change dependencies, or double-click empty row space to request a task at that time."
+        : "Interactive Gantt timeline. Drag a bar to move it, drag green ends to resize it, or drag blue ports to change dependencies.";
+
+    private bool IsTimelineTaskCreationEnabled =>
+        (AllowTimelineTaskCreation ?? AllowTaskEditing) && TimelineDoubleClicked.HasDelegate;
 
     private string CanvasHeightCss => ToPixels(HeaderHeight + Tasks.Count * RowHeight);
 
@@ -313,6 +332,24 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         }
 
         await TaskSelected.InvokeAsync(id);
+    }
+
+    [JSInvokable]
+    public async Task NotifyTimelineDoubleClickedAsync(string rowTaskId, double clickedAtMs)
+    {
+        if (!IsTimelineTaskCreationEnabled || IsInteractionDisabled)
+        {
+            return;
+        }
+
+        var id = new GanttTaskId(rowTaskId);
+        if (!Tasks.Any(task => task.Id == id))
+        {
+            throw new InvalidOperationException($"Task '{id}' is not present in the controlled chart model.");
+        }
+
+        var request = new GanttTimelineDoubleClickEventArgs(id, FromUnixMilliseconds(clickedAtMs));
+        await TimelineDoubleClicked.InvokeAsync(request);
     }
 
     [JSInvokable]
@@ -511,6 +548,30 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         tableVisible = !tableVisible;
         interopUpdateRequired = true;
         await ShowTaskTableChanged.InvokeAsync(tableVisible);
+    }
+
+    private async Task RequestTaskOrderChangeAsync(
+        GanttTaskId taskId,
+        GanttTaskOrderPlacement placement)
+    {
+        var taskIndex = FindTaskIndex(taskId);
+        var anchorIndex = placement switch
+        {
+            GanttTaskOrderPlacement.Before => taskIndex - 1,
+            GanttTaskOrderPlacement.After => taskIndex + 1,
+            _ => throw new ArgumentOutOfRangeException(nameof(placement), placement, "The task order placement is not supported.")
+        };
+        if (!CanChangeTaskOrder(taskIndex, anchorIndex))
+        {
+            throw new InvalidOperationException($"Task '{taskId}' cannot move {placement.ToString().ToLowerInvariant()} an adjacent row.");
+        }
+
+        var request = new GanttTaskOrderChangeRequest(taskId, Tasks[anchorIndex].Id, placement);
+        await DispatchMutationAsync(
+            "task order",
+            taskId.Value,
+            TaskOrderChangeRequested,
+            request);
     }
 
     private async Task ZoomOutAsync()
@@ -741,6 +802,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             !mutationInFlight && AllowTaskEditing && TaskScheduleChangeRequested.HasDelegate,
             !mutationInFlight && AllowDependencyEditing && DependencyMutationRequested.HasDelegate,
             !mutationInFlight && AllowTaskInsertion && TaskInsertionRequested.HasDelegate,
+            !mutationInFlight && IsTimelineTaskCreationEnabled,
             DragDataFormat);
         return new GanttInteropModel(tasks, dependencies, options);
     }
@@ -992,6 +1054,36 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
            !interopFaulted &&
            TaskInsertionRequested.HasDelegate;
 
+    private bool CanChangeTaskOrder(int taskIndex, int anchorIndex)
+    {
+        if (!AllowTaskReordering ||
+            IsInteractionDisabled ||
+            !TaskOrderChangeRequested.HasDelegate ||
+            taskIndex < 0 ||
+            taskIndex >= Tasks.Count ||
+            anchorIndex < 0 ||
+            anchorIndex >= Tasks.Count)
+        {
+            return false;
+        }
+
+        return TaskReadOnlySelector?.Invoke(Tasks[taskIndex]) != true &&
+               TaskReadOnlySelector?.Invoke(Tasks[anchorIndex]) != true;
+    }
+
+    private int FindTaskIndex(GanttTaskId taskId)
+    {
+        for (var index = 0; index < Tasks.Count; index++)
+        {
+            if (Tasks[index].Id == taskId)
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
     private void RequireDependencyEditableTasks(
         GanttTaskId predecessorId,
         GanttTaskId successorId)
@@ -1149,6 +1241,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         bool AllowTaskEditing,
         bool AllowDependencyEditing,
         bool AllowTaskInsertion,
+        bool AllowTimelineTaskCreation,
         string DragDataFormat);
 
     private readonly record struct GanttTimeline(

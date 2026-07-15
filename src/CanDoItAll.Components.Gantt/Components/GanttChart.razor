@@ -108,6 +108,32 @@
                                         </button>
                                     }
 
+                                    @if (TaskOrderChangeRequested.HasDelegate)
+                                    {
+                                        <div class="cda-gantt__task-order-actions"
+                                             role="group"
+                                             aria-label="Change order of @task.Title">
+                                            <Button Icon="keyboard_arrow_up"
+                                                    Class="cda-gantt__task-order-button"
+                                                    Size="ButtonSize.Small"
+                                                    Variant="Variant.Text"
+                                                    ButtonStyle="ButtonStyle.Light"
+                                                    Disabled="@(!CanChangeTaskOrder(taskIndex, taskIndex - 1))"
+                                                    Click="() => RequestTaskOrderChangeAsync(task.Id, GanttTaskOrderPlacement.Before)"
+                                                    title="@($"Move {task.Title} up")"
+                                                    aria-label="@($"Move {task.Title} up")" />
+                                            <Button Icon="keyboard_arrow_down"
+                                                    Class="cda-gantt__task-order-button"
+                                                    Size="ButtonSize.Small"
+                                                    Variant="Variant.Text"
+                                                    ButtonStyle="ButtonStyle.Light"
+                                                    Disabled="@(!CanChangeTaskOrder(taskIndex, taskIndex + 1))"
+                                                    Click="() => RequestTaskOrderChangeAsync(task.Id, GanttTaskOrderPlacement.After)"
+                                                    title="@($"Move {task.Title} down")"
+                                                    aria-label="@($"Move {task.Title} down")" />
+                                        </div>
+                                    }
+
                                     @if (task.Assignments.Count > 0)
                                     {
                                         <ul class="cda-gantt__assignment-list" aria-label="Assignments for @task.Title">
@@ -149,7 +175,7 @@
                     height="1"
                     role="img"
                     tabindex="0"
-                    aria-label="Interactive Gantt timeline. Drag a bar to move it, drag green ends to resize it, or drag blue ports to change dependencies."
+                    aria-label="@CanvasAriaLabel"
                     aria-describedby="@instructionsId">
             </canvas>
 
@@ -162,6 +188,10 @@
 
     <div id="@instructionsId" class="cda-gantt__sr-only">
         The task table and canvas rows are aligned. Drag empty timeline space left or right to pan. Choose a horizontal time scale from the toolbar. Assignment icons identify processes, workflows, agents, and people; hover or keyboard-focus an icon for its name.
+        @if (IsTimelineTaskCreationEnabled)
+        {
+            <text> Double-click empty space in a task row to request a task at that UTC time.</text>
+        }
     </div>
 
     <ul class="cda-gantt__sr-only" aria-label="Task dependencies">

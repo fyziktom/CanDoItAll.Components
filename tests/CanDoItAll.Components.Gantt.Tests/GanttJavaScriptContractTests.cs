@@ -217,6 +217,64 @@ public sealed class GanttJavaScriptContractTests
     }
 
     [Fact]
+    public void Gantt_empty_timeline_double_click_ignores_action_hits_and_reports_a_snapped_row_datetime()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var resolver = ReadSection(
+            runtime,
+            "function resolveTimelineDoubleClick",
+            "function taskY");
+        var titleDoubleClick = ReadSection(
+            runtime,
+            "function handleDoubleClick",
+            "function handleTimelineTaskCreationDoubleClick");
+        var creationDoubleClick = ReadSection(
+            runtime,
+            "function handleTimelineTaskCreationDoubleClick",
+            "function handleKeyDown");
+
+        Assert.Contains("point.y < options.headerHeight", resolver, StringComparison.Ordinal);
+        Assert.Contains("point.y >= options.canvasHeight", resolver, StringComparison.Ordinal);
+        Assert.Contains("rowTaskId: rowTask.id", resolver, StringComparison.Ordinal);
+        Assert.Contains("snapTime(model, xToTime(model, point.x))", resolver, StringComparison.Ordinal);
+        Assert.Contains("if (hit?.task)", titleDoubleClick, StringComparison.Ordinal);
+        Assert.Contains("!state.model.options.allowTimelineTaskCreation", creationDoubleClick, StringComparison.Ordinal);
+        Assert.Contains("resolveTimelineTaskCreation(state, point)", creationDoubleClick, StringComparison.Ordinal);
+        Assert.Contains("NotifyTimelineDoubleClickedAsync", creationDoubleClick, StringComparison.Ordinal);
+        Assert.DoesNotContain("CommitScheduleChangeAsync", creationDoubleClick, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Gantt_timeline_task_creation_capability_controls_its_cursor_and_dom_listener()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var cursor = ReadSection(
+            runtime,
+            "function resolveCursor",
+            "function updateCursor");
+        var listener = ReadSection(
+            runtime,
+            "function syncTimelineTaskCreationListener",
+            "function attachDomEvents");
+
+        Assert.Contains("resolveTimelineTaskCreation(state, state.hoverPoint)", cursor, StringComparison.Ordinal);
+        Assert.Contains("return Cursor.Create", cursor, StringComparison.Ordinal);
+        Assert.Contains("state.model.options.allowTimelineTaskCreation", listener, StringComparison.Ordinal);
+        Assert.Contains("addEventListener(\"dblclick\", state.timelineTaskCreationDoubleClickHandler)", listener, StringComparison.Ordinal);
+        Assert.Contains("removeEventListener(\"dblclick\", state.timelineTaskCreationDoubleClickHandler)", listener, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Gantt_action_hits_publish_specific_cached_cursors()
     {
         var runtime = ReadSource(

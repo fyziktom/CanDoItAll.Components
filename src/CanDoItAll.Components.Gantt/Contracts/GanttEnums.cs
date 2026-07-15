@@ -35,3 +35,9 @@ public enum GanttTimeScale
     Day,
     Week
 }
+
+public enum GanttTaskOrderPlacement
+{
+    Before,
+    After
+}

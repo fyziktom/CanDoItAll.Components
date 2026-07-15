@@ -9,14 +9,14 @@
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
                   HeroTitle="A dense scheduling surface that reports intent instead of owning data."
-                  HeroSummary="The chart projects caller-owned tasks and dependencies. Every title edit, time gesture, dependency change, or insertion returns a typed request which this page explicitly accepts into a replacement model."
+                  HeroSummary="The chart projects caller-owned tasks and dependencies. Every title edit, time gesture, dependency change, timeline activation, insertion, or row-order change returns a typed request which this page explicitly accepts into a replacement model."
                   DemoTitle="Interactive controlled schedule"
                   DemoSummary="Drag bars to move them, use green handles to resize, use blue ports to add or reconnect dependencies, hover assignment icons, and export the current projection as PNG."
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <Notes>
         <div class="sandbox-proof-list">
-            <p>Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale and drag empty timeline space to pan the horizontal overflow.</p>
+            <p>Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale, drag empty timeline space to pan, and double-click an empty row point to request a new eight-hour task from the host.</p>
             @if (CurrentScenario == SandboxScenarioKey.DenseContent)
             {
                 <p>The dense proof combines a Canvas runtime hub with exactly eight incoming and eight outgoing edges and a 43-task delivery chain, forcing both scroll axes while exercising endpoint lanes and exact mouse reconnection.</p>
@@ -74,6 +74,8 @@
                 <StatusBadge Text="Blue ports · dependencies" Tone="info" />
                 <StatusBadge Text="Red emphasis · critical path" Tone="warning" />
                 <StatusBadge Text="Empty canvas drag · horizontal pan" Tone="info" />
+                <StatusBadge Text="Empty row double-click · task intent" Tone="success" />
+                <StatusBadge Text="Row arrows · controlled order" Tone="neutral" />
                 <StatusBadge Text="Assignment icons · hover for detail" Tone="neutral" />
             </div>
 
@@ -85,6 +87,8 @@
                             TaskScheduleChangeRequested="HandleScheduleChange"
                             DependencyMutationRequested="HandleDependencyMutation"
                             TaskInsertionRequested="HandleInsertion"
+                            TimelineDoubleClicked="HandleTimelineDoubleClick"
+                            TaskOrderChangeRequested="HandleTaskOrderChange"
                             TaskSelected="HandleTaskSelected"
                             ShowTaskTable="@showTaskTable"
                             ShowTaskTableChanged="HandleTaskTableChanged"
@@ -93,8 +97,10 @@
                             PixelsPerHourChanged="HandlePixelsPerHourChanged"
                             DependencyIdFactory="CreateDependencyId"
                             AllowTaskEditing="@InteractionsEnabled"
+                            AllowTimelineTaskCreation="@InteractionsEnabled"
                             AllowDependencyEditing="@InteractionsEnabled"
                             AllowTaskInsertion="@InteractionsEnabled"
+                            AllowTaskReordering="@InteractionsEnabled"
                             PixelsPerHour="@PixelsPerHour"
                             RowHeight="52"
                             HeaderHeight="42"
@@ -141,6 +147,7 @@
     private bool showTaskTable = true;
     private GanttTimeScale timeScale = GanttTimeScale.Hour;
     private double pixelsPerHour = 12;
+    private int nextCreatedTaskNumber = 1;
     private string lastEventKind = "Ready";
     private string lastEventMessage = "The chart is rendering caller-owned records. Interact with it to inspect typed requests.";
 
@@ -171,6 +178,7 @@
         showTaskTable = true;
         timeScale = GanttTimeScale.Hour;
         pixelsPerHour = 12;
+        nextCreatedTaskNumber = 1;
         tasks = CurrentScenario == SandboxScenarioKey.EmptyState
             ? []
             : BuildTasks(CurrentScenario == SandboxScenarioKey.DenseContent);
@@ -236,6 +244,49 @@
         selectedTaskId = request.InsertedTask.Id;
         lastEventKind = "Insertion request accepted";
         lastEventMessage = $"Inserted {request.InsertedTask.Title} between {request.PredecessorId} and {request.SuccessorId}; replaced {request.DependencyChanges.Count} edge(s) and shifted {request.AffectedTasks.Count} task(s).";
+    }
+
+    private void HandleTimelineDoubleClick(GanttTimelineDoubleClickEventArgs request)
+    {
+        var anchorIndex = tasks
+            .Select((task, index) => (task, index))
+            .Single(pair => pair.task.Id == request.RowTaskId)
+            .index;
+        var taskNumber = nextCreatedTaskNumber++;
+        var createdTask = new GanttTask(
+            new GanttTaskId($"sandbox-created-{taskNumber}"),
+            $"Created task {taskNumber}",
+            request.ClickedAtUtc,
+            request.ClickedAtUtc.AddHours(8));
+        var updatedTasks = tasks.ToList();
+        updatedTasks.Insert(anchorIndex + 1, createdTask);
+        tasks = updatedTasks;
+        selectedTaskId = createdTask.Id;
+        lastEventKind = "Timeline request accepted";
+        lastEventMessage = $"The host inserted {createdTask.Title} after {request.RowTaskId} at {request.ClickedAtUtc:yyyy-MM-dd HH:mm} UTC; the component did not create or persist it.";
+    }
+
+    private void HandleTaskOrderChange(GanttTaskOrderChangeRequest request)
+    {
+        var reorderedTasks = tasks.ToList();
+        var movingTask = reorderedTasks.Single(task => task.Id == request.TaskId);
+        reorderedTasks.Remove(movingTask);
+        var anchorIndex = reorderedTasks.FindIndex(task => task.Id == request.AnchorTaskId);
+        if (anchorIndex < 0)
+        {
+            throw new InvalidOperationException($"Task order anchor '{request.AnchorTaskId}' is not present in the sandbox model.");
+        }
+
+        var insertionIndex = request.Placement switch
+        {
+            GanttTaskOrderPlacement.Before => anchorIndex,
+            GanttTaskOrderPlacement.After => anchorIndex + 1,
+            _ => throw new ArgumentOutOfRangeException(nameof(request.Placement), request.Placement, "The task order placement is not supported.")
+        };
+        reorderedTasks.Insert(insertionIndex, movingTask);
+        tasks = reorderedTasks;
+        lastEventKind = "Task order request accepted";
+        lastEventMessage = $"The host moved {request.TaskId} {request.Placement.ToString().ToLowerInvariant()} {request.AnchorTaskId} by replacing its task array.";
     }
 
     private void HandleTaskSelected(GanttTaskId taskId)

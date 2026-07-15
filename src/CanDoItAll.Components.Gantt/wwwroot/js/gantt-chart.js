@@ -45,6 +45,7 @@
         Grab: "grab",
         Grabbing: "grabbing",
         Move: "move",
+        Create: "copy",
         ResizeHorizontal: "ew-resize",
         Connect: "crosshair",
         Help: "help"
@@ -264,6 +265,7 @@
             allowTaskEditing: options.allowTaskEditing !== false,
             allowDependencyEditing: options.allowDependencyEditing !== false,
             allowTaskInsertion: options.allowTaskInsertion === true,
+            allowTimelineTaskCreation: options.allowTimelineTaskCreation === true,
             dragDataFormat: requireText(options.dragDataFormat, "drag data format")
         };
         if (normalizedOptions.timelineWidth <= normalizedOptions.timelineGutter * 2) {
@@ -330,6 +332,48 @@
     function xToTime(model, x) {
         return model.options.timelineStartMs +
             ((x - model.options.timelineGutter) / model.options.pixelsPerHour) * hourMs;
+    }
+
+    function resolveTimelineDoubleClick(model, point) {
+        const { options, tasks } = model;
+        if (point.y < options.headerHeight || point.y >= options.canvasHeight) {
+            return null;
+        }
+
+        const rowIndex = Math.floor((point.y - options.headerHeight) / options.rowHeight);
+        const rowTask = tasks[rowIndex];
+        if (!rowTask) {
+            return null;
+        }
+
+        const contentStartX = options.timelineGutter;
+        const contentEndX = options.timelineWidth - options.timelineGutter;
+        if (point.x < contentStartX || point.x > contentEndX) {
+            return null;
+        }
+
+        const clickedAtMs = Math.min(
+            options.timelineEndMs,
+            Math.max(options.timelineStartMs, snapTime(model, xToTime(model, point.x))));
+        return {
+            rowTaskId: rowTask.id,
+            clickedAtMs
+        };
+    }
+
+    function resolveTimelineTaskCreation(state, point) {
+        if (!state.model.options.allowTimelineTaskCreation || !point) {
+            return null;
+        }
+
+        const timelineClick = resolveTimelineDoubleClick(state.model, point);
+        if (!timelineClick ||
+            state.hitRegistry.find(point.x, point.y) ||
+            resolveDependencyBridgeAtPoint(state, point, false)) {
+            return null;
+        }
+
+        return timelineClick;
     }
 
     function taskY(model, index) {
@@ -404,6 +448,10 @@
                 return Cursor.Connect;
             default:
                 break;
+        }
+
+        if (resolveTimelineTaskCreation(state, state.hoverPoint)) {
+            return Cursor.Create;
         }
 
         switch (state.hoverHit?.kind) {
@@ -1187,12 +1235,12 @@
         }
     }
 
-    function resolveDependencyBridgeAtPoint(state, point) {
+    function resolveDependencyBridgeAtPoint(state, point, requireEditable = true) {
         let closest = null;
         for (const geometry of getDependencyGeometry(state, state.model, 0)) {
             const predecessor = state.model.taskLookup.get(geometry.dependency.predecessorId);
             const successor = state.model.taskLookup.get(geometry.dependency.successorId);
-            if (predecessor.isDependencyReadOnly || successor.isDependencyReadOnly) {
+            if (requireEditable && (predecessor.isDependencyReadOnly || successor.isDependencyReadOnly)) {
                 continue;
             }
 
@@ -1305,6 +1353,7 @@
         }
 
         const hit = state.hitRegistry.find(pointer.x, pointer.y);
+        state.hoverPoint = pointer;
         state.hoverHit = hit;
         if (!hit) {
             state.selectedTaskId = null;
@@ -1389,6 +1438,7 @@
             const changed = nextHover?.kind !== state.hoverHit?.kind ||
                 nextHover?.assignment?.id !== state.hoverHit?.assignment?.id ||
                 nextHover?.dependency?.id !== state.hoverHit?.dependency?.id;
+            state.hoverPoint = pointer;
             state.hoverHit = nextHover;
             updateCursor(state);
             if (changed) {
@@ -1497,6 +1547,7 @@
         const interaction = state.interaction;
         state.interaction = null;
         state.canvas.classList.remove("cda-gantt__canvas--panning");
+        state.hoverPoint = pointer;
         state.hoverHit = state.hitRegistry.find(pointer.x, pointer.y);
         updateCursor(state);
         if (state.renderErrorReported) {
@@ -1584,9 +1635,31 @@
 
         const point = state.surface.pointFromEvent(event);
         const hit = state.hitRegistry.find(point.x, point.y);
-        if (hit?.task && !hit.task.isTitleReadOnly) {
-            state.dotNetRef.invokeMethodAsync("BeginTitleEditAsync", hit.task.id).catch(error => reportInteropError(state, error));
+        if (hit?.task) {
+            if (!hit.task.isTitleReadOnly) {
+                state.dotNetRef.invokeMethodAsync("BeginTitleEditAsync", hit.task.id).catch(error => reportInteropError(state, error));
+            }
         }
+    }
+
+    function handleTimelineTaskCreationDoubleClick(state, event) {
+        if (state.renderErrorReported ||
+            state.commitInFlightToken !== null ||
+            !state.model.options.allowTimelineTaskCreation) {
+            return;
+        }
+
+        const point = state.surface.pointFromEvent(event);
+        const timelineClick = resolveTimelineTaskCreation(state, point);
+        if (!timelineClick) {
+            return;
+        }
+
+        event.preventDefault();
+        state.dotNetRef.invokeMethodAsync(
+            "NotifyTimelineDoubleClickedAsync",
+            timelineClick.rowTaskId,
+            timelineClick.clickedAtMs).catch(error => reportInteropError(state, error));
     }
 
     function handleKeyDown(state, event) {
@@ -1662,8 +1735,24 @@
         commitInsertion(state, payload, dependency.id, commitToken);
     }
 
+    function syncTimelineTaskCreationListener(state) {
+        const shouldListen = state.model.options.allowTimelineTaskCreation && !state.disposed;
+        if (shouldListen === state.timelineTaskCreationListenerAttached) {
+            return;
+        }
+
+        if (shouldListen) {
+            state.canvas.addEventListener("dblclick", state.timelineTaskCreationDoubleClickHandler);
+        }
+        else {
+            state.canvas.removeEventListener("dblclick", state.timelineTaskCreationDoubleClickHandler);
+        }
+        state.timelineTaskCreationListenerAttached = shouldListen;
+    }
+
     function attachDomEvents(state) {
         state.doubleClickHandler = event => handleDoubleClick(state, event);
+        state.timelineTaskCreationDoubleClickHandler = event => handleTimelineTaskCreationDoubleClick(state, event);
         state.keyDownHandler = event => handleKeyDown(state, event);
         state.hoverMoveHandler = event => {
             if (!state.interaction) {
@@ -1671,8 +1760,9 @@
             }
         };
         state.pointerLeaveHandler = () => {
-            if (!state.interaction && state.hoverHit) {
+            if (!state.interaction && (state.hoverPoint || state.hoverHit)) {
                 const redrawRequired = hoverAffectsDrawing(state.hoverHit);
+                state.hoverPoint = null;
                 state.hoverHit = null;
                 updateCursor(state);
                 if (redrawRequired) {
@@ -1688,10 +1778,15 @@
         state.canvas.addEventListener("pointerleave", state.pointerLeaveHandler);
         state.canvas.addEventListener("dragover", state.dragOverHandler);
         state.canvas.addEventListener("drop", state.dropHandler);
+        syncTimelineTaskCreationListener(state);
     }
 
     function detachDomEvents(state) {
         state.canvas.removeEventListener("dblclick", state.doubleClickHandler);
+        if (state.timelineTaskCreationListenerAttached) {
+            state.canvas.removeEventListener("dblclick", state.timelineTaskCreationDoubleClickHandler);
+            state.timelineTaskCreationListenerAttached = false;
+        }
         state.canvas.removeEventListener("keydown", state.keyDownHandler);
         state.canvas.removeEventListener("pointermove", state.hoverMoveHandler);
         state.canvas.removeEventListener("pointerleave", state.pointerLeaveHandler);
@@ -1769,8 +1864,10 @@
                 interaction: null,
                 nextOperationToken: 0,
                 commitInFlightToken: null,
+                hoverPoint: null,
                 hoverHit: null,
                 cursor: null,
+                timelineTaskCreationListenerAttached: false,
                 renderErrorReported: false,
                 selectedTaskId: null,
                 disposed: false
@@ -1797,9 +1894,11 @@
             const host = requireElement(hostValue, "host");
             const state = resolveState(host);
             state.model = normalizeModel(modelValue);
+            syncTimelineTaskCreationListener(state);
             state.colors = resolveColors(state.host);
             state.interaction = null;
             clearTaskPreview(state);
+            state.hoverPoint = null;
             state.hoverHit = null;
             updateCursor(state);
             state.canvas.style.width = `${state.model.options.timelineWidth}px`;
@@ -1897,7 +1996,8 @@
             resolveObstacleSafeRoute,
             routeSegmentIntersectsTaskRectangle,
             assertDependencyRouteAvoidsUnrelatedTasks,
-            resolveTickLabelInterval
+            resolveTickLabelInterval,
+            resolveTimelineDoubleClick
         });
     }
 })();
