@@ -19,7 +19,7 @@
             <p>Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale and drag empty timeline space to pan the horizontal overflow.</p>
             @if (CurrentScenario == SandboxScenarioKey.DenseContent)
             {
-                <p>The dense proof gives the Canvas runtime hub exactly eight incoming and eight outgoing edges, exercising non-overlapping endpoint lanes and exact mouse reconnection.</p>
+                <p>The dense proof combines a Canvas runtime hub with exactly eight incoming and eight outgoing edges and a 43-task delivery chain, forcing both scroll axes while exercising endpoint lanes and exact mouse reconnection.</p>
             }
             else
             {
@@ -120,6 +120,7 @@
     private static readonly GanttTaskId AcceptanceId = new("acceptance");
     private static readonly GanttTaskId InsertionCandidateId = new("security-review");
     private const int DenseFanSize = 8;
+    private const int DenseStressTaskCount = 43;
     private const int ExistingCanvasPredecessorCount = 2;
     private const int ExistingCanvasSuccessorCount = 1;
     private static readonly GanttTask InsertionCandidate = new(
@@ -419,6 +420,17 @@
                         new(GanttAssignmentKind.Person, "Release owner")
                     ])
             ]);
+
+            for (var index = 0; index < DenseStressTaskCount; index++)
+            {
+                var start = ScheduleOrigin.AddHours(33 + (index * 2));
+                result.Add(new GanttTask(
+                    DenseStressTaskId(index),
+                    $"Dense delivery task {index + 1}",
+                    start,
+                    start.AddHours(2),
+                    [new(GanttAssignmentKind.Agent, $"Delivery verifier {index + 1}")]));
+            }
         }
 
         return result.ToArray();
@@ -457,6 +469,14 @@
             result.Add(Dependency("host-documentation", HostIntegrationId, documentationId));
             result.Add(Dependency("acceptance-release", AcceptanceId, releaseId));
             result.Add(Dependency("documentation-release", documentationId, releaseId));
+
+            var chainPredecessorId = releaseId;
+            for (var index = 0; index < DenseStressTaskCount; index++)
+            {
+                var taskId = DenseStressTaskId(index);
+                result.Add(Dependency($"dense-delivery-{index}", chainPredecessorId, taskId));
+                chainPredecessorId = taskId;
+            }
         }
 
         return result.ToArray();
@@ -470,6 +490,11 @@
     private static GanttTaskId DenseSuccessorId(int index)
     {
         return new GanttTaskId($"dense-runtime-output-{index}");
+    }
+
+    private static GanttTaskId DenseStressTaskId(int index)
+    {
+        return new GanttTaskId($"dense-delivery-task-{index}");
     }
 
     private static GanttDependency Dependency(

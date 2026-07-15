@@ -82,6 +82,22 @@ assert.ok(
     spanningRoute.some(point => point.x <= 246),
     "The forward route must move its vertical lane outside the intervening bar.");
 
+const fullyBlockedRects = [
+    taskRect("blocked-source", 0, 100, 100),
+    taskRect("blocked-intervening", 1, 80, 420),
+    taskRect("blocked-target", 2, 420, 120)
+];
+const fullyBlockedRoute = assertSafeRoute(
+    "fully-blocked",
+    fullyBlockedRects,
+    0,
+    2,
+    endpoint(200, 206, 64),
+    endpoint(420, 414, 160));
+assert.ok(
+    fullyBlockedRoute.some(point => point.x <= 76 || point.x >= 504),
+    "A bar covering every direct lane must force an outer-spine route.");
+
 const touchingRects = [
     taskRect("touching-source", 0, 100, 100),
     taskRect("touching-intervening", 1, 140, 160),

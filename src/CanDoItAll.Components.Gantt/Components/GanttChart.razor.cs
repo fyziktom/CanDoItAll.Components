@@ -52,8 +52,13 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private bool exportInFlight;
     private bool titleCommitInFlight;
     private bool timeScaleInitialized;
+    private bool interopUpdateRequired = true;
     private double zoomedPixelsPerHour;
     private double lastPixelsPerHourParameter;
+    private double dependencyEndpointGutter;
+    private DateTimeOffset timelineStart;
+    private DateTimeOffset timelineEnd;
+    private GanttTimeline? cachedTimeline;
     private GanttTimeScale selectedTimeScale;
     private GanttTimeScale lastTimeScaleParameter;
 
@@ -215,14 +220,17 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         ArgumentNullException.ThrowIfNull(Tasks);
         ArgumentNullException.ThrowIfNull(Dependencies);
 
+        interopUpdateRequired = true;
+        cachedTimeline = null;
         criticalTaskIds.Clear();
         try
         {
-            ValidateOptions();
             SynchronizeViewParameters();
+            ValidateOptions();
+            CacheTimelineBounds();
             var graph = GanttScheduleGraph.Create(Tasks, Dependencies);
             GanttSchedulePropagation.ValidateConstraints(graph, graph.TasksById);
-            criticalTaskIds.UnionWith(GanttCriticalPathCalculator.Calculate(Tasks, Dependencies));
+            criticalTaskIds.UnionWith(GanttCriticalPathCalculator.Calculate(graph));
             validationError = null;
         }
         catch (Exception exception) when (exception is ArgumentException or GanttScheduleException or OverflowException)
@@ -255,6 +263,11 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             return;
         }
 
+        if (interopInitialized && !interopUpdateRequired)
+        {
+            return;
+        }
+
         try
         {
             var model = BuildInteropModel();
@@ -268,10 +281,12 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
                     dotNetReference,
                     model);
                 interopInitialized = true;
+                interopUpdateRequired = false;
                 return;
             }
 
             await JsRuntime.InvokeVoidAsync("CanDoItAll.ganttChart.update", hostElement, model);
+            interopUpdateRequired = false;
         }
         catch (JSException exception)
         {
@@ -413,6 +428,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         if (!tableVisible)
         {
             tableVisible = true;
+            interopUpdateRequired = true;
             await ShowTaskTableChanged.InvokeAsync(true);
         }
 
@@ -486,6 +502,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private async Task ToggleTaskTableAsync()
     {
         tableVisible = !tableVisible;
+        interopUpdateRequired = true;
         await ShowTaskTableChanged.InvokeAsync(tableVisible);
     }
 
@@ -494,6 +511,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         var nextPixelsPerHour = CalculateZoomOutScale();
         selectedTimeScale = GanttTimeScale.Custom;
         zoomedPixelsPerHour = nextPixelsPerHour;
+        InvalidateTimeline();
         await TimeScaleChanged.InvokeAsync(GanttTimeScale.Custom);
         await PixelsPerHourChanged.InvokeAsync(nextPixelsPerHour);
         await InvokeAsync(StateHasChanged);
@@ -504,6 +522,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         var nextPixelsPerHour = CalculateZoomInScale();
         selectedTimeScale = GanttTimeScale.Custom;
         zoomedPixelsPerHour = nextPixelsPerHour;
+        InvalidateTimeline();
         await TimeScaleChanged.InvokeAsync(GanttTimeScale.Custom);
         await PixelsPerHourChanged.InvokeAsync(nextPixelsPerHour);
         await InvokeAsync(StateHasChanged);
@@ -518,6 +537,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
         selectedTimeScale = scale;
         zoomedPixelsPerHour = ResolvePixelsPerHour(scale, PixelsPerHour);
+        InvalidateTimeline();
         await TimeScaleChanged.InvokeAsync(scale);
         await InvokeAsync(StateHasChanged);
     }
@@ -627,6 +647,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         }
 
         mutationInFlight = true;
+        interopUpdateRequired = true;
         runtimeError = null;
         await InvokeAsync(StateHasChanged);
         try
@@ -641,6 +662,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         finally
         {
             mutationInFlight = false;
+            interopUpdateRequired = true;
             await InvokeAsync(StateHasChanged);
         }
     }
@@ -713,25 +735,14 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         return new GanttInteropModel(tasks, dependencies, options);
     }
 
-    private (DateTimeOffset Start, DateTimeOffset End, double Width, double PixelsPerHour, double Gutter, bool IsCompressed) CalculateTimeline()
-        => CalculateTimeline(zoomedPixelsPerHour);
+    private GanttTimeline CalculateTimeline()
+        => cachedTimeline ??= CalculateTimeline(zoomedPixelsPerHour);
 
-    private (DateTimeOffset Start, DateTimeOffset End, double Width, double PixelsPerHour, double Gutter, bool IsCompressed) CalculateTimeline(
+    private GanttTimeline CalculateTimeline(
         double requestedPixelsPerHour)
     {
-        var now = DateTimeOffset.UtcNow;
-        var start = Tasks.Count == 0 ? now : Tasks.Min(static task => task.Start);
-        var end = Tasks.Count == 0 ? now.AddDays(1) : Tasks.Max(static task => task.End);
-        start -= TimelinePadding;
-        end += TimelinePadding;
-        if (end - start < TimeSpan.FromHours(24))
-        {
-            end = start.AddHours(24);
-        }
-
-        var timelineHours = (end - start).TotalHours;
-        var gutter = CalculateDependencyEndpointGutter();
-        var maximumContentWidth = MaximumTimelineWidth - (2 * gutter);
+        var timelineHours = (timelineEnd - timelineStart).TotalHours;
+        var maximumContentWidth = MaximumTimelineWidth - (2 * dependencyEndpointGutter);
         var requestedContentWidth = timelineHours * requestedPixelsPerHour;
         var isCompressed = requestedContentWidth > maximumContentWidth;
         var renderedPixelsPerHour = isCompressed
@@ -740,28 +751,31 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         var contentWidth = Math.Max(
             MinimumTimelineContentWidth,
             Math.Min(maximumContentWidth, requestedContentWidth));
-        var renderedEnd = start.AddHours(contentWidth / renderedPixelsPerHour);
-        return (
-            start,
+        var renderedEnd = timelineStart.AddHours(contentWidth / renderedPixelsPerHour);
+        return new GanttTimeline(
+            timelineStart,
             renderedEnd,
-            contentWidth + (2 * gutter),
+            contentWidth + (2 * dependencyEndpointGutter),
             renderedPixelsPerHour,
-            gutter,
+            dependencyEndpointGutter,
             isCompressed);
     }
 
     private double CalculateDependencyEndpointGutter()
     {
-        var maximumFanSize = Dependencies
-            .SelectMany(dependency => new[]
-            {
-                (TaskId: dependency.PredecessorId, IsOutgoing: true),
-                (TaskId: dependency.SuccessorId, IsOutgoing: false)
-            })
-            .GroupBy(endpoint => endpoint)
-            .Select(group => group.Count())
-            .DefaultIfEmpty()
-            .Max();
+        var outgoingCounts = new Dictionary<GanttTaskId, int>();
+        var incomingCounts = new Dictionary<GanttTaskId, int>();
+        var maximumFanSize = 0;
+        foreach (var dependency in Dependencies)
+        {
+            maximumFanSize = Math.Max(
+                maximumFanSize,
+                IncrementCount(outgoingCounts, dependency.PredecessorId));
+            maximumFanSize = Math.Max(
+                maximumFanSize,
+                IncrementCount(incomingCounts, dependency.SuccessorId));
+        }
+
         var availableSlotHeight = Math.Max(0, BarHeight - (2 * DependencyEndpointRadius));
         var slotsPerLane = Math.Max(1, (int)Math.Floor(availableSlotHeight / DependencyEndpointVerticalSpacing) + 1);
         var laneCount = Math.Max(1, (int)Math.Ceiling((double)maximumFanSize / slotsPerLane));
@@ -769,6 +783,52 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
                ((laneCount - 1) * DependencyEndpointLaneSpacing) +
                (DependencyEndpointHitSize / 2) +
                1;
+    }
+
+    private static int IncrementCount(
+        IDictionary<GanttTaskId, int> counts,
+        GanttTaskId taskId)
+    {
+        counts.TryGetValue(taskId, out var count);
+        count++;
+        counts[taskId] = count;
+        return count;
+    }
+
+    private void CacheTimelineBounds()
+    {
+        if (Tasks.Count == 0)
+        {
+            timelineStart = DateTimeOffset.UtcNow;
+            timelineEnd = timelineStart.AddDays(1);
+        }
+        else
+        {
+            timelineStart = Tasks[0].Start;
+            timelineEnd = Tasks[0].End;
+            for (var index = 1; index < Tasks.Count; index++)
+            {
+                timelineStart = timelineStart <= Tasks[index].Start
+                    ? timelineStart
+                    : Tasks[index].Start;
+                timelineEnd = timelineEnd >= Tasks[index].End
+                    ? timelineEnd
+                    : Tasks[index].End;
+            }
+        }
+
+        timelineStart -= TimelinePadding;
+        timelineEnd += TimelinePadding;
+        if (timelineEnd - timelineStart < TimeSpan.FromHours(24))
+        {
+            timelineEnd = timelineStart.AddHours(24);
+        }
+    }
+
+    private void InvalidateTimeline()
+    {
+        cachedTimeline = null;
+        interopUpdateRequired = true;
     }
 
     private static double ResolvePixelsPerHour(GanttTimeScale scale, double customPixelsPerHour)
@@ -863,7 +923,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             throw new ArgumentOutOfRangeException(nameof(BarHeight), "The task bar height must be smaller than the row height.");
         }
 
-        var dependencyEndpointGutter = CalculateDependencyEndpointGutter();
+        dependencyEndpointGutter = CalculateDependencyEndpointGutter();
         if (MaximumTimelineWidth - (2 * dependencyEndpointGutter) < MinimumTimelineContentWidth)
         {
             throw new ArgumentOutOfRangeException(
@@ -1080,4 +1140,12 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         bool AllowDependencyEditing,
         bool AllowTaskInsertion,
         string DragDataFormat);
+
+    private readonly record struct GanttTimeline(
+        DateTimeOffset Start,
+        DateTimeOffset End,
+        double Width,
+        double PixelsPerHour,
+        double Gutter,
+        bool IsCompressed);
 }

@@ -150,6 +150,9 @@ public sealed class GanttChartComponentTests
         cut.Find(".cda-gantt__task-button").Click();
         var editor = cut.Find(".cda-gantt__title-editor");
         editor.Input("Renamed task");
+        Assert.DoesNotContain(
+            context.JSInterop.Invocations,
+            invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
         editor.Blur();
 
         Assert.NotNull(requestedChange);
@@ -573,6 +576,36 @@ public sealed class GanttChartComponentTests
         Assert.All(
             cut.FindAll(".cda-gantt__table-row").Skip(1),
             row => Assert.Contains("height: 52px", row.GetAttribute("style"), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Dense_schedule_stays_valid_and_exposes_internal_two_axis_overflow_geometry()
+    {
+        using var context = CreateContext();
+        var tasks = Enumerable.Range(0, 64)
+            .Select(index => Task($"dense-{index}", $"Dense task {index + 1}", index * 2, (index * 2) + 2))
+            .ToArray();
+        var dependencies = tasks
+            .Skip(1)
+            .Select((task, index) => new GanttDependency(
+                new GanttDependencyId($"dense-edge-{index}"),
+                tasks[index].Id,
+                task.Id))
+            .ToArray();
+
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, tasks)
+            .Add(component => component.Dependencies, dependencies)
+            .Add(component => component.TimeScale, GanttTimeScale.Hour)
+            .Add(component => component.RowHeight, 52)
+            .Add(component => component.HeaderHeight, 42)
+            .Add(component => component.MaxHeight, "42rem"));
+
+        var options = GetProperty(GetCreateModel(context), "Options");
+        Assert.Equal(3_370, GetProperty<double>(options, "CanvasHeight"));
+        Assert.True(GetProperty<double>(options, "TimelineWidth") > 4_000);
+        Assert.DoesNotContain("chart model is invalid", cut.Markup, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("--cda-gantt-max-height: 42rem", cut.Find(".cda-gantt").GetAttribute("style"), StringComparison.Ordinal);
     }
 
     [Fact]

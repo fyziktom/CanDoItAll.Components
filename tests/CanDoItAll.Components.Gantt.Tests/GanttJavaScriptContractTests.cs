@@ -187,6 +187,59 @@ public sealed class GanttJavaScriptContractTests
         Assert.Contains("interaction.originClientX", pointerMove, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Gantt_action_hits_publish_specific_cached_cursors()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var cursorResolver = ReadSection(
+            runtime,
+            "function resolveCursor",
+            "function updateCursor");
+        var hoverHandler = ReadSection(
+            runtime,
+            "function handlePointerMove",
+            "async function commitTaskInteraction");
+
+        Assert.Contains("Cursor.ResizeHorizontal", cursorResolver, StringComparison.Ordinal);
+        Assert.Contains("Cursor.Connect", cursorResolver, StringComparison.Ordinal);
+        Assert.Contains("Cursor.Move", cursorResolver, StringComparison.Ordinal);
+        Assert.Contains("Cursor.Help", cursorResolver, StringComparison.Ordinal);
+        Assert.Contains("cursor === state.cursor", runtime, StringComparison.Ordinal);
+        Assert.Contains("hoverAffectsDrawing(previousHover)", hoverHandler, StringComparison.Ordinal);
+        Assert.Contains("updateCursor(state);", hoverHandler, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Gantt_render_reuses_one_dependency_geometry_for_drawing_and_hits()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var renderState = ReadSection(
+            runtime,
+            "function renderState(state)",
+            "function registerDependencyEndpointHits");
+        var routeResolver = ReadSection(
+            runtime,
+            "function resolveDirectDependencyLaneX",
+            "function compactRoutePoints");
+
+        Assert.Equal(1, CountOccurrences(renderState, "getDependencyGeometry("));
+        Assert.Contains("drawDependencies(context, state, model, state.colors, dependencyGeometry);", renderState, StringComparison.Ordinal);
+        Assert.Contains("registerDependencyEndpointHits(state, model, dependencyGeometry);", renderState, StringComparison.Ordinal);
+        Assert.Contains("blockedIntervals.sort", routeResolver, StringComparison.Ordinal);
+        Assert.Contains("mergedIntervals", routeResolver, StringComparison.Ordinal);
+        Assert.DoesNotContain("isVerticalRouteLaneClear", routeResolver, StringComparison.Ordinal);
+    }
+
     private static string ReadSource(params string[] segments)
         => File.ReadAllText(Path.Combine([FindRepoRoot(), .. segments]));
 
@@ -198,6 +251,9 @@ public sealed class GanttJavaScriptContractTests
         Assert.True(end > start, $"Could not find JavaScript section end '{endMarker}'.");
         return source[start..end];
     }
+
+    private static int CountOccurrences(string source, string value)
+        => (source.Length - source.Replace(value, string.Empty, StringComparison.Ordinal).Length) / value.Length;
 
     private static string FindRepoRoot()
     {

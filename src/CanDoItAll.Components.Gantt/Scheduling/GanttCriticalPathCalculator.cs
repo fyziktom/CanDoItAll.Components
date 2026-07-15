@@ -5,8 +5,10 @@ public static class GanttCriticalPathCalculator
     public static IReadOnlyList<GanttTaskId> Calculate(
         IReadOnlyCollection<GanttTask> tasks,
         IReadOnlyCollection<GanttDependency> dependencies)
+        => Calculate(GanttScheduleGraph.Create(tasks, dependencies));
+
+    internal static IReadOnlyList<GanttTaskId> Calculate(GanttScheduleGraph graph)
     {
-        var graph = GanttScheduleGraph.Create(tasks, dependencies);
         if (graph.Tasks.Count == 0)
         {
             return Array.Empty<GanttTaskId>();
