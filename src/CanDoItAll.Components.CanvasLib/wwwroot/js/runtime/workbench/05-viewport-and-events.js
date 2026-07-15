@@ -1397,7 +1397,7 @@
         return state;
     }
 
-    function refresh(state, surface, isMaximized) {
+    function refresh(state, surface, isMaximized, preserveViewport) {
         workbenchInternals.sceneLayout.cancelViewportAnimation(state);
         const previousNodeIds = new Set((state.surface?.nodes || []).map(node => node.id));
         const previousSelectedId = state.ui?.selectedNodeIds?.[0] || null;
@@ -1416,6 +1416,17 @@
         state.surface = workbenchInternals.stateStore.normalizeSurface(surface);
         state.lookups = workbenchInternals.stateStore.buildNodeLookup(state.surface.nodes);
         state.ui = state.surface.uiState;
+        const incomingViewport = {
+            panX: state.ui.panX,
+            panY: state.ui.panY,
+            zoom: state.ui.zoom
+        };
+        if (preserveViewport) {
+            state.ui.zoom = previousViewport.zoom;
+            state.ui.panX = previousViewport.panX;
+            state.ui.panY = previousViewport.panY;
+        }
+
         workbenchInternals.stateStore.reconcileSelection(state);
         state.highlightedIds = new Set((state.ui.highlightedNodeIds || []).filter(Boolean));
         state.collapsedIds = toCollapsedSet(state.ui.collapsedNodeIds);
@@ -1440,12 +1451,12 @@
             state,
             typeof isMaximized === "boolean" ? isMaximized : !!state.ui.isMaximized);
         workbenchInternals.sceneLayout.resize(state);
-        const incomingViewportIsDefault = Math.abs(state.ui.panX - 90) <= 0.5 &&
-            Math.abs(state.ui.panY - 110) <= 0.5 &&
-            Math.abs(state.ui.zoom - 1) <= 0.001;
-        const shouldPreserveViewport = incomingViewportIsDefault || (Math.abs(state.ui.panX - previousViewport.panX) <= 0.5 &&
-            Math.abs(state.ui.panY - previousViewport.panY) <= 0.5 &&
-            Math.abs(state.ui.zoom - previousViewport.zoom) <= 0.001);
+        const incomingViewportIsDefault = Math.abs(incomingViewport.panX - 90) <= 0.5 &&
+            Math.abs(incomingViewport.panY - 110) <= 0.5 &&
+            Math.abs(incomingViewport.zoom - 1) <= 0.001;
+        const shouldPreserveViewport = preserveViewport || incomingViewportIsDefault || (Math.abs(incomingViewport.panX - previousViewport.panX) <= 0.5 &&
+            Math.abs(incomingViewport.panY - previousViewport.panY) <= 0.5 &&
+            Math.abs(incomingViewport.zoom - previousViewport.zoom) <= 0.001);
         if (shouldPreserveViewport) {
             state.ui.zoom = previousViewport.zoom;
             state.ui.panX = previousViewport.panX;
@@ -1456,9 +1467,11 @@
         const selectedNodeId = state.ui.selectedNodeIds[0] || null;
         const selectedNode = selectedNodeId ? state.lookups.byId.get(selectedNodeId) : null;
         const selectionChanged = !!selectedNodeId && selectedNodeId !== previousSelectedId;
-        const shouldRevealSelection = !!selectedNodeId &&
+        const shouldRevealSelection = !preserveViewport &&
+            !!selectedNodeId &&
             (!!pendingCreate || selectionChanged);
-        const shouldRestoreVisibleSelection = !!selectedNodeId &&
+        const shouldRestoreVisibleSelection = !preserveViewport &&
+            !!selectedNodeId &&
             !!selectedNode &&
             (!!pendingCreate || selectionChanged) &&
             !workbenchInternals.sceneLayout.isNodeVisibleInViewport(state, selectedNode, 72);
@@ -1468,7 +1481,8 @@
         }
 
         render(state);
-        if (selectedNodeId &&
+        if (!preserveViewport &&
+            selectedNodeId &&
             state.lookups.byId.has(selectedNodeId) &&
             (!!pendingCreate || selectionChanged) &&
             !workbenchInternals.sceneLayout.isNodeVisibleInViewport(state, state.lookups.byId.get(selectedNodeId), 72)) {

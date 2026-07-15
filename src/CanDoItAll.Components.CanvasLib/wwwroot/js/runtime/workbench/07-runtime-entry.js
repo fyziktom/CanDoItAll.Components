@@ -715,7 +715,11 @@
             const requestedIsMaximized = typeof options?.isMaximized === "boolean"
                 ? options.isMaximized
                 : !!surface?.uiState?.isMaximized;
-            workbenchInternals.runtime.refresh(state, surface, requestedIsMaximized);
+            workbenchInternals.runtime.refresh(
+                state,
+                surface,
+                requestedIsMaximized,
+                options?.preserveViewport === true);
             applyRenderOptions(state, options);
             return true;
         },

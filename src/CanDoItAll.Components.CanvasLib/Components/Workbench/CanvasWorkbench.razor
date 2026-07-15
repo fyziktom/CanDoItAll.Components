@@ -383,12 +383,15 @@
     private bool isMaximized;
     private int zoomPercent = 100;
     private int menuScalePercent = 100;
+    private string? appliedSurfaceId;
     private string? pendingDataKey;
     private string? pendingUiStateKey;
     private string? clientUiStateKey;
+    private string? processedUiStateKey;
     private long lastSelectionDispatchId;
     private long lastStateDispatchId;
     private bool awaitingParentUiStateCommit;
+    private bool preserveViewportOnNextUpdate;
 
     [Parameter, EditorRequired]
     public CanvasWorkbenchSurface Surface { get; set; } = default!;
@@ -432,13 +435,17 @@
         pendingUiStateKey = Surface.UiState.ToJson();
 
         var dataChanged = !string.Equals(sceneHost.AppliedStateKey, pendingDataKey, StringComparison.Ordinal);
-        var uiChangedOutsideClient = !string.Equals(clientUiStateKey, pendingUiStateKey, StringComparison.Ordinal);
-        if (!uiChangedOutsideClient)
+        var parentCommittedClientState = string.Equals(clientUiStateKey, pendingUiStateKey, StringComparison.Ordinal);
+        if (parentCommittedClientState)
         {
             awaitingParentUiStateCommit = false;
         }
 
-        var shouldSyncUiState = uiChangedOutsideClient && !awaitingParentUiStateCommit;
+        var uiStateNotProcessed = !string.Equals(processedUiStateKey, pendingUiStateKey, StringComparison.Ordinal);
+        var shouldSyncUiState = uiStateNotProcessed && !awaitingParentUiStateCommit;
+        preserveViewportOnNextUpdate = dataChanged &&
+            sceneHost.IsInitialized &&
+            string.Equals(appliedSurfaceId, Surface.SurfaceId, StringComparison.Ordinal);
         sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState);
     }
 
@@ -551,6 +558,7 @@
         var state = CanvasWorkbenchUiState.Parse(stateJson);
         state.IsMaximized = isMaximized;
         clientUiStateKey = state.ToJson();
+        processedUiStateKey = clientUiStateKey;
         awaitingParentUiStateCommit = true;
         zoomPercent = ClampZoomPercent(state.Zoom);
         menuScalePercent = ClampMenuScalePercent(state.MenuActionScale);
@@ -739,6 +747,7 @@
         var state = CanvasWorkbenchUiState.Parse(json);
         state.IsMaximized = isMaximized;
         clientUiStateKey = state.ToJson();
+        processedUiStateKey = clientUiStateKey;
         awaitingParentUiStateCommit = true;
         zoomPercent = ClampZoomPercent(state.Zoom);
         await StateChanged.InvokeAsync(clientUiStateKey);
@@ -836,7 +845,11 @@
     }
 
     private void MarkSurfaceApplied()
-        => sceneHost.MarkApplied();
+    {
+        sceneHost.MarkApplied();
+        appliedSurfaceId = Surface.SurfaceId;
+        processedUiStateKey = pendingUiStateKey;
+    }
 
     private static bool IsExpectedJsInteropCancellation(Exception exception)
         => exception is OperationCanceledException or JSDisconnectedException;
@@ -845,6 +858,7 @@
         => new(
             isMaximized,
             includeAutoFit && ShouldAutoFitInitialView(),
+            !includeAutoFit && preserveViewportOnNextUpdate,
             [.. Surface.UiState.SelectedNodeIds],
             Surface.UiState.SelectedNodeIds.FirstOrDefault());
 
@@ -961,6 +975,7 @@
     private sealed record CanvasWorkbenchRenderOptions(
         bool IsMaximized,
         bool FitView,
+        bool PreserveViewport,
         IReadOnlyList<string> SelectedNodeIds,
         string? PrimaryNodeId);
 }
