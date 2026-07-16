@@ -68,14 +68,15 @@
                 <div class="cda-gantt__table"
                      style="width: @TaskTableWidthCss; height: @CanvasHeightCss;"
                      role="table"
-                     aria-label="Gantt task dates and durations">
+                     aria-label="Gantt task delivery dates, delivery durations, and expected pure effort">
                     <div class="cda-gantt__table-row cda-gantt__table-row--header"
                          style="height: @HeaderHeightCss;"
                          role="row">
                         <div class="cda-gantt__cell" role="columnheader">Task</div>
                         <div class="cda-gantt__cell" role="columnheader">Start UTC</div>
                         <div class="cda-gantt__cell" role="columnheader">End UTC</div>
-                        <div class="cda-gantt__cell" role="columnheader">Length</div>
+                        <div class="cda-gantt__cell" role="columnheader">Delivery</div>
+                        <div class="cda-gantt__cell" role="columnheader">Pure</div>
                     </div>
                     @for (var taskIndex = 0; taskIndex < Tasks.Count; taskIndex++)
                     {
@@ -163,6 +164,11 @@
                             <div class="cda-gantt__cell cda-gantt__cell--time" role="cell">@FormatDate(task.Start)</div>
                             <div class="cda-gantt__cell cda-gantt__cell--time" role="cell">@FormatDate(task.End)</div>
                             <div class="cda-gantt__cell cda-gantt__cell--duration" role="cell">@FormatDuration(task.Duration)</div>
+                            <div class="cda-gantt__cell cda-gantt__cell--duration"
+                                 role="cell"
+                                 title="@FormatExpectedEffortDescription(task.ExpectedEffort)">
+                                @FormatExpectedEffort(task.ExpectedEffort)
+                            </div>
                         </div>
                     }
                 </div>
@@ -192,6 +198,10 @@
         {
             <text> Double-click empty space in a task row to request a task at that UTC time.</text>
         }
+        @if (TaskDoubleClicked.HasDelegate)
+        {
+            <text> Double-click a task bar to request its details from the host.</text>
+        }
     </div>
 
     <ul class="cda-gantt__sr-only" aria-label="Task dependencies">
@@ -213,6 +223,15 @@
                     @task.Title: @assignment.Kind, @assignment.Name.
                 </li>
             }
+        }
+    </ul>
+
+    <ul class="cda-gantt__sr-only" aria-label="Task delivery, effort, and progress">
+        @foreach (var task in Tasks)
+        {
+            <li @key="task.Id">
+                @task.Title: delivery @FormatDuration(task.Duration); expected pure effort @FormatExpectedEffortDescription(task.ExpectedEffort); progress @FormatProgress(task.ProgressPercent).
+            </li>
         }
     </ul>
 </section>

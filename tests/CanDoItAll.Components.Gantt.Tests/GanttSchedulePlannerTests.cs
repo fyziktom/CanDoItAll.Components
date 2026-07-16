@@ -73,6 +73,40 @@ public sealed class GanttSchedulePlannerTests
     }
 
     [Fact]
+    public void Set_interval_changes_both_dates_and_propagates_the_dependent_path()
+    {
+        var (tasks, dependencies) = CreateBranchedSchedule();
+
+        var request = GanttSchedulePlanner.PlanInterval(
+            tasks,
+            dependencies,
+            TaskId("security"),
+            Start.AddHours(1),
+            Start.AddHours(5));
+
+        Assert.Equal(GanttScheduleGesture.SetInterval, request.Gesture);
+        AssertChange(request, "security", 1, 5);
+        AssertChange(request, "build", 6, 8);
+        AssertChange(request, "ship", 8, 9);
+    }
+
+    [Fact]
+    public void Set_interval_rejects_an_interval_below_the_minimum_duration_after_snapping()
+    {
+        GanttTask[] tasks = [Task("task", 0, 2)];
+        var grid = new GanttSnapGrid(Start, TimeSpan.FromHours(1));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => GanttSchedulePlanner.PlanInterval(
+            tasks,
+            [],
+            TaskId("task"),
+            Start.AddMinutes(20),
+            Start.AddMinutes(29),
+            grid,
+            TimeSpan.FromHours(1)));
+    }
+
+    [Fact]
     public void Proposed_dates_snap_to_the_explicit_grid()
     {
         GanttTask[] tasks = [Task("task", 0, 2)];

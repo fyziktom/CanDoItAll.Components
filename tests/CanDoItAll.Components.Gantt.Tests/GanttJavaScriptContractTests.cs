@@ -63,6 +63,11 @@ public sealed class GanttJavaScriptContractTests
         Assert.Contains("await Promise.resolve();", handlePointerUp, StringComparison.Ordinal);
         Assert.Contains("await commitTaskInteraction(state, interaction);", handlePointerUp, StringComparison.Ordinal);
         Assert.Contains("NotifyTaskSelectedAsync", handlePointerUp, StringComparison.Ordinal);
+        Assert.Contains("if (isTaskGesture && !interaction.hasMoved)", handlePointerUp, StringComparison.Ordinal);
+        Assert.True(
+            handlePointerUp.IndexOf("if (isTaskGesture && !interaction.hasMoved)", StringComparison.Ordinal) <
+            handlePointerUp.IndexOf("state.commitInFlightToken = commitToken;", StringComparison.Ordinal),
+            "A stationary task click must not take the mutation latch and block the browser dblclick event.");
     }
 
     [Fact]
@@ -242,11 +247,46 @@ public sealed class GanttJavaScriptContractTests
         Assert.Contains("point.y >= options.canvasHeight", resolver, StringComparison.Ordinal);
         Assert.Contains("rowTaskId: rowTask.id", resolver, StringComparison.Ordinal);
         Assert.Contains("snapTime(model, xToTime(model, point.x))", resolver, StringComparison.Ordinal);
-        Assert.Contains("if (hit?.task)", titleDoubleClick, StringComparison.Ordinal);
+        Assert.Contains("hit?.kind === HitKind.TaskBody", titleDoubleClick, StringComparison.Ordinal);
+        Assert.Contains("NotifyTaskDoubleClickedAsync", titleDoubleClick, StringComparison.Ordinal);
+        Assert.DoesNotContain("BeginTitleEditAsync", titleDoubleClick, StringComparison.Ordinal);
         Assert.Contains("!state.model.options.allowTimelineTaskCreation", creationDoubleClick, StringComparison.Ordinal);
         Assert.Contains("resolveTimelineTaskCreation(state, point)", creationDoubleClick, StringComparison.Ordinal);
         Assert.Contains("NotifyTimelineDoubleClickedAsync", creationDoubleClick, StringComparison.Ordinal);
         Assert.DoesNotContain("CommitScheduleChangeAsync", creationDoubleClick, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Gantt_task_metrics_are_validated_and_rendered_independently_from_delivery_width()
+    {
+        var runtime = ReadSource(
+            "src",
+            "CanDoItAll.Components.Gantt",
+            "wwwroot",
+            "js",
+            "gantt-chart.js");
+        var normalization = ReadSection(
+            runtime,
+            "function normalizeTask",
+            "function normalizeDependency");
+        var metrics = ReadSection(
+            runtime,
+            "function drawTaskMetrics",
+            "function drawTasks");
+        var taskDrawing = ReadSection(
+            runtime,
+            "function drawTasks",
+            "function drawAssignmentPopover");
+
+        Assert.Contains("normalizeProgressPercent", normalization, StringComparison.Ordinal);
+        Assert.Contains("normalizeExpectedEffort", normalization, StringComparison.Ordinal);
+        Assert.Contains("task.progressPercent / 100", metrics, StringComparison.Ordinal);
+        Assert.Contains("task.expectedEffortMs / deliveryDurationMs", metrics, StringComparison.Ordinal);
+        Assert.Contains("Math.min(", metrics, StringComparison.Ordinal);
+        Assert.Contains("colors.progressComplete", metrics, StringComparison.Ordinal);
+        Assert.Contains("colors.progressRemaining", metrics, StringComparison.Ordinal);
+        Assert.Contains("colors.effort", metrics, StringComparison.Ordinal);
+        Assert.Contains("drawTaskMetrics(context, model, task, rect, colors);", taskDrawing, StringComparison.Ordinal);
     }
 
     [Fact]

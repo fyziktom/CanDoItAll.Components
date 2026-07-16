@@ -11,12 +11,16 @@ public sealed class GanttChartComponentTests
     private static readonly DateTimeOffset Start = new(2026, 7, 14, 8, 0, 0, TimeSpan.Zero);
 
     [Fact]
-    public void Task_table_rows_share_the_canvas_row_contract_and_render_man_days()
+    public void Task_table_rows_share_the_canvas_row_contract_and_separate_delivery_from_pure_effort()
     {
         using var context = CreateContext();
         var tasks = new[]
         {
-            Task("analysis", "Analysis", 0, 16),
+            Task("analysis", "Analysis", 0, 16) with
+            {
+                ProgressPercent = 40,
+                ExpectedEffort = TimeSpan.FromHours(8)
+            },
             Task("delivery", "Delivery", 16, 20)
         };
 
@@ -35,9 +39,16 @@ public sealed class GanttChartComponentTests
         Assert.All(taskRows, row => Assert.Contains("height: 54px", row.GetAttribute("style"), StringComparison.Ordinal));
         Assert.Contains("height: 150px", cut.Find(".cda-gantt__content").GetAttribute("style"), StringComparison.Ordinal);
         Assert.Contains("16 h · 2 md", cut.Markup, StringComparison.Ordinal);
+        Assert.Contains("8 h · 1 md", cut.Markup, StringComparison.Ordinal);
         Assert.Contains($"4 h · {0.5.ToString("0.##", CultureInfo.CurrentCulture)} md", cut.Markup, StringComparison.Ordinal);
+        Assert.Contains("Not estimated", cut.Markup, StringComparison.Ordinal);
+        Assert.Contains("expected pure effort 8 h · 1 md; progress 40%", cut.Markup, StringComparison.Ordinal);
 
         var model = GetCreateModel(context);
+        var interopTasks = GetItems(GetProperty(model, "Tasks"));
+        var analysis = Assert.Single(interopTasks, task => GetProperty<string>(task, "Id") == tasks[0].Id.Value);
+        Assert.Equal(40, GetProperty(analysis, "ProgressPercent"));
+        Assert.Equal(TimeSpan.FromHours(8).TotalMilliseconds, GetProperty<double>(analysis, "ExpectedEffortMs"));
         var options = GetProperty(model, "Options");
         Assert.Equal(54, GetProperty<double>(options, "RowHeight"));
         Assert.Equal(42, GetProperty<double>(options, "HeaderHeight"));
@@ -62,7 +73,11 @@ public sealed class GanttChartComponentTests
                     new GanttAssignment(GanttAssignmentKind.Workflow, "Approval"),
                     new GanttAssignment(GanttAssignmentKind.Agent, "Planner"),
                     new GanttAssignment(GanttAssignmentKind.Person, "Alex")
-                ]),
+                ])
+            {
+                ProgressPercent = 25,
+                ExpectedEffort = TimeSpan.FromHours(3)
+            },
             new GanttTask(secondId, "Build", Start.AddHours(4), Start.AddHours(10))
         };
         var dependencies = new[]
@@ -92,6 +107,8 @@ public sealed class GanttChartComponentTests
         Assert.True(GetProperty<bool>(design, "IsProjectionOnly"));
         Assert.True(GetProperty<bool>(design, "IsCritical"));
         Assert.Equal("#2457c5", GetProperty<string>(design, "AccentColor"));
+        Assert.Equal(25, GetProperty(design, "ProgressPercent"));
+        Assert.Equal(TimeSpan.FromHours(3).TotalMilliseconds, GetProperty<double>(design, "ExpectedEffortMs"));
 
         var assignmentIndicators = cut.FindAll(".cda-gantt__assignment-indicator");
         Assert.Equal(4, assignmentIndicators.Count);
@@ -113,7 +130,11 @@ public sealed class GanttChartComponentTests
 
         var updatedTasks = new[]
         {
-            new GanttTask(firstId, "Design reviewed", Start, Start.AddHours(4), tasks[0].Assignments),
+            new GanttTask(firstId, "Design reviewed", Start, Start.AddHours(4), tasks[0].Assignments)
+            {
+                ProgressPercent = tasks[0].ProgressPercent,
+                ExpectedEffort = tasks[0].ExpectedEffort
+            },
             tasks[1]
         };
         cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, updatedTasks));
@@ -134,6 +155,8 @@ public sealed class GanttChartComponentTests
         Assert.True(GetProperty<bool>(updatedDesign, "IsReadOnly"));
         Assert.True(GetProperty<bool>(updatedDesign, "IsProjectionOnly"));
         Assert.True(GetProperty<bool>(updatedDesign, "IsCritical"));
+        Assert.Equal(25, GetProperty(updatedDesign, "ProgressPercent"));
+        Assert.Equal(TimeSpan.FromHours(3).TotalMilliseconds, GetProperty<double>(updatedDesign, "ExpectedEffortMs"));
     }
 
     [Fact]
@@ -187,6 +210,38 @@ public sealed class GanttChartComponentTests
         Assert.Equal("Original title", task.Title);
         Assert.Equal("Original title", cut.Find(".cda-gantt__task-button").TextContent.Trim());
         Assert.DoesNotContain("Renamed task", cut.Markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Task_body_double_click_emits_the_typed_task_identifier()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        GanttTaskId? doubleClickedTaskId = null;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TaskDoubleClicked, taskId => doubleClickedTaskId = taskId));
+
+        await cut.Instance.NotifyTaskDoubleClickedAsync(task.Id.Value);
+
+        Assert.Equal(task.Id, doubleClickedTaskId);
+        Assert.Empty(cut.FindAll(".cda-gantt__title-editor"));
+    }
+
+    [Fact]
+    public async Task Task_body_double_click_falls_back_to_title_edit_when_the_host_does_not_handle_it()
+    {
+        using var context = CreateContext();
+        var task = Task("analysis", "Analysis", 0, 8);
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { task })
+            .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
+            .Add(component => component.TaskTitleChangeRequested, _ => { }));
+
+        await cut.Instance.NotifyTaskDoubleClickedAsync(task.Id.Value);
+
+        Assert.Equal("Analysis", cut.Find(".cda-gantt__title-editor").GetAttribute("value"));
     }
 
     [Fact]
@@ -643,6 +698,34 @@ public sealed class GanttChartComponentTests
     }
 
     [Fact]
+    public async Task Drag_insertion_preserves_progress_and_expected_effort()
+    {
+        using var context = CreateContext();
+        var predecessor = Task("predecessor", "Predecessor", 0, 2);
+        var successor = Task("successor", "Successor", 2, 4);
+        var bridge = new GanttDependency(
+            new GanttDependencyId("predecessor-successor"),
+            predecessor.Id,
+            successor.Id);
+        var inserted = Task("inserted", "Inserted", -2, 0) with
+        {
+            ProgressPercent = 35,
+            ExpectedEffort = TimeSpan.FromHours(1)
+        };
+        GanttTaskInsertionRequest? requestedInsertion = null;
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, new[] { predecessor, successor })
+            .Add(component => component.Dependencies, new[] { bridge })
+            .Add(component => component.TaskInsertionRequested, request => requestedInsertion = request));
+
+        await cut.Instance.CommitInsertionAsync(SerializeDragTask(inserted), bridge.Id.Value);
+
+        Assert.NotNull(requestedInsertion);
+        Assert.Equal(35, requestedInsertion.InsertedTask.ProgressPercent);
+        Assert.Equal(TimeSpan.FromHours(1), requestedInsertion.InsertedTask.ExpectedEffort);
+    }
+
+    [Fact]
     public void Task_table_toggle_emits_the_requested_visibility()
     {
         using var context = CreateContext();
@@ -1078,7 +1161,11 @@ public sealed class GanttChartComponentTests
             "Queued task",
             Start,
             Start.AddHours(3),
-            [new GanttAssignment(GanttAssignmentKind.Agent, "Planner")]);
+            [new GanttAssignment(GanttAssignmentKind.Agent, "Planner")])
+        {
+            ProgressPercent = 20,
+            ExpectedEffort = TimeSpan.FromHours(2)
+        };
 
         context.RenderComponent<GanttTaskDragSource>(parameters => parameters
             .Add(component => component.Task, task)
@@ -1092,6 +1179,8 @@ public sealed class GanttChartComponentTests
         using var payload = JsonDocument.Parse(Assert.IsType<string>(registration.Arguments[1]));
         Assert.Equal(task.Id.Value, payload.RootElement.GetProperty("id").GetString());
         Assert.Equal(task.Title, payload.RootElement.GetProperty("title").GetString());
+        Assert.Equal(20, payload.RootElement.GetProperty("progressPercent").GetInt32());
+        Assert.Equal("02:00:00", payload.RootElement.GetProperty("expectedEffort").GetString());
         Assert.Single(payload.RootElement.GetProperty("assignments").EnumerateArray());
     }
 
@@ -1131,6 +1220,8 @@ public sealed class GanttChartComponentTests
                 task.Title,
                 task.Start,
                 task.End,
+                task.ProgressPercent,
+                task.ExpectedEffort,
                 Assignments = Array.Empty<object>()
             },
             new JsonSerializerOptions(JsonSerializerDefaults.Web));

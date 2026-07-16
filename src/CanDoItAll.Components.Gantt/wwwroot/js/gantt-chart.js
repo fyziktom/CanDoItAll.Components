@@ -159,6 +159,8 @@
             startMs,
             endMs,
             order: Number.isInteger(value?.order) ? value.order : index,
+            progressPercent: normalizeProgressPercent(value?.progressPercent, index),
+            expectedEffortMs: normalizeExpectedEffort(value?.expectedEffortMs, index),
             accentColor: typeof value?.accentColor === "string" ? value.accentColor.trim() : "",
             isReadOnly: value?.isReadOnly === true,
             isScheduleReadOnly: value?.isReadOnly === true || value?.isScheduleReadOnly === true,
@@ -168,6 +170,31 @@
             isCritical: value?.isCritical === true,
             assignments: Array.isArray(value?.assignments) ? value.assignments.map(normalizeAssignment) : []
         };
+    }
+
+    function normalizeProgressPercent(value, index) {
+        if (value === null || value === undefined) {
+            return null;
+        }
+
+        if (!Number.isInteger(value) || value < 0 || value > 100) {
+            throw new Error(`Gantt task ${index} progress must be an integer between 0 and 100.`);
+        }
+
+        return value;
+    }
+
+    function normalizeExpectedEffort(value, index) {
+        if (value === null || value === undefined) {
+            return null;
+        }
+
+        const effort = requireFinite(value, `task ${index} expected effort`);
+        if (effort <= 0) {
+            throw new Error(`Gantt task ${index} expected effort must be greater than zero.`);
+        }
+
+        return effort;
     }
 
     function normalizeDependency(value, index) {
@@ -309,7 +336,10 @@
             accent: read("--gantt-accent", "#236887"),
             critical: read("--gantt-critical", "#d97706"),
             handle: read("--gantt-handle", "#4d9f38"),
-            connector: read("--gantt-connector", "#0ea5e9")
+            connector: read("--gantt-connector", "#0ea5e9"),
+            progressComplete: read("--gantt-progress-complete", "#4d9f38"),
+            progressRemaining: read("--gantt-progress-remaining", "#dc2626"),
+            effort: read("--gantt-effort", "#a02b93")
         };
     }
 
@@ -991,6 +1021,37 @@
         }
     }
 
+    function drawTaskMetrics(context, model, task, rect, colors) {
+        const rowSideGap = (model.options.rowHeight - model.options.barHeight) / 2;
+        const metricHeight = Math.min(4, Math.max(1, Math.floor(rowSideGap - 2)));
+        const renderOutsideTask = rowSideGap >= metricHeight + 2;
+        const topY = renderOutsideTask
+            ? rect.y - metricHeight - 2
+            : rect.y;
+        const bottomY = renderOutsideTask
+            ? rect.y + rect.height + 2
+            : rect.y + rect.height - metricHeight;
+
+        if (task.progressPercent !== null) {
+            context.fillStyle = colors.progressRemaining;
+            fillRoundedRect(context, rect.x, topY, rect.width, metricHeight, metricHeight / 2);
+            const completedWidth = rect.width * (task.progressPercent / 100);
+            if (completedWidth > 0) {
+                context.fillStyle = colors.progressComplete;
+                fillRoundedRect(context, rect.x, topY, completedWidth, metricHeight, metricHeight / 2);
+            }
+        }
+
+        if (task.expectedEffortMs !== null) {
+            const deliveryDurationMs = task.endMs - task.startMs;
+            const effortWidth = Math.min(
+                rect.width,
+                Math.max(1, rect.width * (task.expectedEffortMs / deliveryDurationMs)));
+            context.fillStyle = colors.effort;
+            fillRoundedRect(context, rect.x, bottomY, effortWidth, metricHeight, metricHeight / 2);
+        }
+    }
+
     function drawTasks(context, state, model, colors, originX, registerHits) {
         context.textBaseline = "middle";
         for (let index = 0; index < model.tasks.length; index += 1) {
@@ -1008,6 +1069,7 @@
             }
             strokeRoundedRect(context, rect.x, rect.y, rect.width, rect.height, 6);
             context.setLineDash([]);
+            drawTaskMetrics(context, model, task, rect, colors);
 
             if (registerHits) {
                 addHit(state.hitRegistry, rect, { kind: HitKind.TaskBody, task });
@@ -1566,10 +1628,26 @@
             return;
         }
 
-        const commitToken = interaction.operationToken;
-        state.commitInFlightToken = commitToken;
         const isTaskGesture = [InteractionKind.Move, InteractionKind.ResizeStart, InteractionKind.ResizeEnd]
             .includes(interaction.kind);
+        if (isTaskGesture && !interaction.hasMoved) {
+            clearTaskPreview(state);
+            try {
+                await state.dotNetRef.invokeMethodAsync("NotifyTaskSelectedAsync", interaction.task.id);
+            }
+            catch (error) {
+                await reportInteropError(state, error);
+            }
+            finally {
+                if (!state.disposed) {
+                    state.surface.requestRender();
+                }
+            }
+            return;
+        }
+
+        const commitToken = interaction.operationToken;
+        state.commitInFlightToken = commitToken;
         let retainTaskPreview = false;
 
         try {
@@ -1635,10 +1713,9 @@
 
         const point = state.surface.pointFromEvent(event);
         const hit = state.hitRegistry.find(point.x, point.y);
-        if (hit?.task) {
-            if (!hit.task.isTitleReadOnly) {
-                state.dotNetRef.invokeMethodAsync("BeginTitleEditAsync", hit.task.id).catch(error => reportInteropError(state, error));
-            }
+        if (hit?.kind === HitKind.TaskBody) {
+            event.preventDefault();
+            state.dotNetRef.invokeMethodAsync("NotifyTaskDoubleClickedAsync", hit.task.id).catch(error => reportInteropError(state, error));
         }
     }
 

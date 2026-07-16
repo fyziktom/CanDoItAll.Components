@@ -66,11 +66,7 @@ public static class GanttSchedulePlanner
         }
 
         var adjustedDate = snapGrid is { } grid ? GanttSnapper.Snap(proposedDate, grid) : proposedDate;
-        var minimumDuration = minimumTaskDuration ?? TimeSpan.Zero;
-        if (minimumDuration < TimeSpan.Zero)
-        {
-            throw new ArgumentOutOfRangeException(nameof(minimumTaskDuration), minimumTaskDuration, "The minimum task duration cannot be negative.");
-        }
+        var minimumDuration = ResolveMinimumTaskDuration(minimumTaskDuration);
 
         var proposedTask = gesture switch
         {
@@ -94,14 +90,73 @@ public static class GanttSchedulePlanner
         return BuildRequest(graph, updatedTasks, taskId, gesture);
     }
 
+    public static GanttTaskScheduleChangeRequest PlanInterval(
+        IReadOnlyCollection<GanttTask> tasks,
+        IReadOnlyCollection<GanttDependency> dependencies,
+        GanttTaskId taskId,
+        DateTimeOffset proposedStart,
+        DateTimeOffset proposedEnd,
+        GanttSnapGrid? snapGrid = null,
+        TimeSpan? minimumTaskDuration = null)
+    {
+        GanttIdentifierGuard.Ensure(taskId, nameof(taskId));
+        var graph = GanttScheduleGraph.Create(tasks, dependencies);
+        GanttSchedulePropagation.ValidateConstraints(graph, graph.TasksById);
+        if (!graph.TasksById.TryGetValue(taskId, out var task))
+        {
+            throw new GanttScheduleException(
+                GanttScheduleErrorCode.TaskNotFound,
+                $"Task '{taskId}' does not exist.");
+        }
+
+        var minimumDuration = ResolveMinimumTaskDuration(minimumTaskDuration);
+
+        var adjustedStart = snapGrid is { } startGrid
+            ? GanttSnapper.Snap(proposedStart, startGrid)
+            : proposedStart;
+        var adjustedEnd = snapGrid is { } endGrid
+            ? GanttSnapper.Snap(proposedEnd, endGrid)
+            : proposedEnd;
+        if (adjustedEnd <= adjustedStart || adjustedEnd - adjustedStart < minimumDuration)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(proposedEnd),
+                proposedEnd,
+                $"The proposed task interval must be at least {minimumDuration} and end after it starts.");
+        }
+
+        var proposedTask = CopyWithDates(task, adjustedStart, adjustedEnd);
+        GanttSchedulePropagation.ValidateTaskConstraint(graph, proposedTask, graph.TasksById);
+        var updatedTasks = graph.TasksById.ToDictionary(static pair => pair.Key, static pair => pair.Value);
+        updatedTasks[taskId] = proposedTask;
+        GanttSchedulePropagation.Propagate(graph, graph, updatedTasks, taskId);
+
+        return BuildRequest(graph, updatedTasks, taskId, GanttScheduleGesture.SetInterval);
+    }
+
     internal static GanttTask CopyWithDates(GanttTask task, DateTimeOffset start, DateTimeOffset end)
-        => new(task.Id, task.Title, start, end, task.Assignments);
+        => new(task.Id, task.Title, start, end, task.Assignments)
+        {
+            ProgressPercent = task.ProgressPercent,
+            ExpectedEffort = task.ExpectedEffort
+        };
 
     private static DateTimeOffset Min(DateTimeOffset left, DateTimeOffset right)
         => left <= right ? left : right;
 
     private static DateTimeOffset Max(DateTimeOffset left, DateTimeOffset right)
         => left >= right ? left : right;
+
+    private static TimeSpan ResolveMinimumTaskDuration(TimeSpan? minimumTaskDuration)
+    {
+        var resolved = minimumTaskDuration ?? TimeSpan.Zero;
+        if (resolved < TimeSpan.Zero)
+        {
+            throw new ArgumentOutOfRangeException(nameof(minimumTaskDuration), minimumTaskDuration, "The minimum task duration cannot be negative.");
+        }
+
+        return resolved;
+    }
 
     internal static GanttTaskScheduleChangeRequest BuildRequest(
         GanttScheduleGraph originalGraph,

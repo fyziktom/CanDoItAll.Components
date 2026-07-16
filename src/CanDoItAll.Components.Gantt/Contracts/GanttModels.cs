@@ -25,6 +25,9 @@ public sealed record GanttAssignment
 
 public sealed record GanttTask
 {
+    private int? progressPercent;
+    private TimeSpan? expectedEffort;
+
     public GanttTask(GanttTaskId id, string title, DateTimeOffset start, DateTimeOffset end)
         : this(id, title, start, end, [])
     {
@@ -73,6 +76,34 @@ public sealed record GanttTask
     public TimeSpan Duration => End - Start;
 
     public IReadOnlyList<GanttAssignment> Assignments { get; }
+
+    public int? ProgressPercent
+    {
+        get => progressPercent;
+        init
+        {
+            if (value is < 0 or > 100)
+            {
+                throw new ArgumentOutOfRangeException(nameof(ProgressPercent), value, "Task progress must be between 0 and 100 percent.");
+            }
+
+            progressPercent = value;
+        }
+    }
+
+    public TimeSpan? ExpectedEffort
+    {
+        get => expectedEffort;
+        init
+        {
+            if (value is { } effort && effort <= TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException(nameof(ExpectedEffort), value, "Expected task effort must be greater than zero.");
+            }
+
+            expectedEffort = value;
+        }
+    }
 }
 
 public sealed record GanttDependency

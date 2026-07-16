@@ -15,6 +15,8 @@ internal static class GanttTaskDragSerialization
             task.Title,
             task.Start,
             task.End,
+            task.ProgressPercent,
+            task.ExpectedEffort,
             task.Assignments.Select(static assignment => new DragAssignmentPayload(assignment.Kind, assignment.Name)).ToArray());
         return JsonSerializer.Serialize(payload, SerializerOptions);
     }
@@ -33,7 +35,11 @@ internal static class GanttTaskDragSerialization
             task.Title,
             task.Start,
             task.End,
-            task.Assignments.Select(static assignment => new GanttAssignment(assignment.Kind, assignment.Name)));
+            task.Assignments.Select(static assignment => new GanttAssignment(assignment.Kind, assignment.Name)))
+        {
+            ProgressPercent = task.ProgressPercent,
+            ExpectedEffort = task.ExpectedEffort
+        };
     }
 
     private sealed record DragTaskPayload(
@@ -41,6 +47,8 @@ internal static class GanttTaskDragSerialization
         string Title,
         DateTimeOffset Start,
         DateTimeOffset End,
+        int? ProgressPercent,
+        TimeSpan? ExpectedEffort,
         IReadOnlyList<DragAssignmentPayload> Assignments);
 
     private sealed record DragAssignmentPayload(GanttAssignmentKind Kind, string Name);

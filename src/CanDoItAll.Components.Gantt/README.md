@@ -2,7 +2,7 @@
 
 Reusable controlled Gantt chart for Blazor, rendered through the generic CanvasLib runtime.
 
-The host owns persistence and supplies immutable tasks and dependencies. The chart never writes data or accepts an edit internally. Title, schedule, dependency, insertion, and row-order gestures are returned as typed requests; empty-row double-clicks are returned as typed timeline events. The host must handle the intent and then replace the input model when data changes.
+The host owns persistence and supplies immutable tasks and dependencies. The chart never writes data or accepts an edit internally. Title, schedule, dependency, insertion, and row-order gestures are returned as typed requests; task and empty-row double-clicks are returned as typed events. The host must handle the intent and then replace the input model when data changes.
 
 ## Assets
 
@@ -31,15 +31,20 @@ The body wrapper loads only CanvasLib's generic canvas runtime, not its Workbenc
             DependencyMutationRequested="CommitDependencyAsync"
             TaskInsertionRequested="CommitInsertionAsync"
             TimelineDoubleClicked="OpenTaskDialogAsync"
+            TaskDoubleClicked="OpenTaskDetailsAsync"
             AllowTimelineTaskCreation="true"
             TaskOrderChangeRequested="CommitTaskOrderAsync" />
 ```
 
-`GanttSchedulePlanner`, `GanttDependencyPlanner`, and `GanttInsertionPlanner` validate the same typed request contracts without depending on Blazor. Finish-to-start dependencies use `PredecessorId -> SuccessorId`. Multiple dependencies are first-class records rather than fields encoded into a task. Dependency add/reconnect requests include the downstream schedule changes required to keep the proposed graph valid; the host still reloads and validates authoritative state before persistence. Snapping uses the stable `SnapOrigin` parameter (UTC Unix epoch by default), never a task-derived timeline boundary.
+`GanttSchedulePlanner`, `GanttDependencyPlanner`, and `GanttInsertionPlanner` validate the same typed request contracts without depending on Blazor. `GanttSchedulePlanner.PlanInterval` lets a host validate an edited start/end pair and calculate its dependent path as one `SetInterval` request. Finish-to-start dependencies use `PredecessorId -> SuccessorId`. Multiple dependencies are first-class records rather than fields encoded into a task. Dependency add/reconnect requests include the downstream schedule changes required to keep the proposed graph valid; the host still reloads and validates authoritative state before persistence. Snapping uses the stable `SnapOrigin` parameter (UTC Unix epoch by default), never a task-derived timeline boundary.
+
+`GanttTask.Start` and `End` define elapsed delivery time and therefore the rendered bar width. Optional `ExpectedEffort` is independent pure work time; the chart renders it as a purple bottom indicator on the delivery scale and caps only its drawing at the delivery width. Optional `ProgressPercent` is an integer from 0 through 100 and renders as a green completed/red remaining indicator above the task. Missing metrics are rendered as unknown rather than inferred. The aligned table labels delivery and pure effort separately.
 
 Use `GanttTaskDragSource` to stage a caller-owned task, then drop it on the exact dependency line to replace. Insertion removes only that bridge, adds the two replacement dependencies, and returns all downstream date changes for host-side atomic persistence.
 
 When `TimelineDoubleClicked` is handled, double-clicking empty timeline content in a task row returns `GanttTimelineDoubleClickEventArgs` with the stable row task id and the clicked UTC time snapped to the configured `SnapOrigin` and `SnapInterval`. The chart does not choose a title, duration, parent, resource, or persistence operation. A host can use the row id as an insertion anchor and open its own creation dialog. Set `AllowTimelineTaskCreation="true"` to enable this independently from schedule/title editing, or `false` to suppress its cursor, browser listener, and event. Leaving the nullable capability unset preserves compatibility by inheriting `AllowTaskEditing`.
+
+When `TaskDoubleClicked` is handled, double-clicking only the task body returns its `GanttTaskId`; resize handles, dependency ports, assignment indicators, and dependency endpoints do not trigger it. The host can open its authoritative detail editor without coupling that dialog to the reusable chart. If no task-double-click handler is supplied, the existing inline title-edit behavior remains the fallback.
 
 When `TaskOrderChangeRequested` is handled, compact up/down actions appear beside task titles. They return `GanttTaskOrderChangeRequest` with the moving task id, an adjacent anchor task id, and a `Before` or `After` placement. Boundary and read-only moves are disabled, and the component does not reorder its controlled `Tasks` input. Set `AllowTaskReordering="false"` to disable the actions while preserving the supplied row order.
 

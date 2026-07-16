@@ -102,6 +102,27 @@ public sealed class GanttDagValidatorTests
             Start.AddHours(2)));
     }
 
+    [Fact]
+    public void Invalid_task_metrics_are_rejected_at_the_contract_boundary()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new GanttTask(
+            TaskId("progress"),
+            "Invalid progress",
+            Start,
+            Start.AddHours(1))
+        {
+            ProgressPercent = 101
+        });
+        Assert.Throws<ArgumentOutOfRangeException>(() => new GanttTask(
+            TaskId("effort"),
+            "Invalid effort",
+            Start,
+            Start.AddHours(1))
+        {
+            ExpectedEffort = TimeSpan.Zero
+        });
+    }
+
     private static readonly DateTimeOffset Start = new(2026, 7, 14, 8, 0, 0, TimeSpan.Zero);
 
     private static GanttTask Task(string id, int startHour, int endHour)

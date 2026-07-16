@@ -73,6 +73,8 @@
                 <StatusBadge Text="Green handles · resize" Tone="success" />
                 <StatusBadge Text="Blue ports · dependencies" Tone="info" />
                 <StatusBadge Text="Red emphasis · critical path" Tone="warning" />
+                <StatusBadge Text="Green/red top · actual progress" Tone="success" />
+                <StatusBadge Text="Purple bottom · pure effort" Tone="neutral" />
                 <StatusBadge Text="Empty canvas drag · horizontal pan" Tone="info" />
                 <StatusBadge Text="Empty row double-click · task intent" Tone="success" />
                 <StatusBadge Text="Row arrows · controlled order" Tone="neutral" />
@@ -88,6 +90,7 @@
                             DependencyMutationRequested="HandleDependencyMutation"
                             TaskInsertionRequested="HandleInsertion"
                             TimelineDoubleClicked="HandleTimelineDoubleClick"
+                            TaskDoubleClicked="HandleTaskDoubleClick"
                             TaskOrderChangeRequested="HandleTaskOrderChange"
                             TaskSelected="HandleTaskSelected"
                             ShowTaskTable="@showTaskTable"
@@ -137,7 +140,11 @@
         [
             new(GanttAssignmentKind.Process, "Threat-model review"),
             new(GanttAssignmentKind.Person, "Mara Chen")
-        ]);
+        ])
+    {
+        ProgressPercent = 10,
+        ExpectedEffort = TimeSpan.FromHours(2)
+    };
 
     private IReadOnlyList<GanttTask> tasks = [];
     private IReadOnlyList<GanttDependency> dependencies = [];
@@ -257,13 +264,24 @@
             new GanttTaskId($"sandbox-created-{taskNumber}"),
             $"Created task {taskNumber}",
             request.ClickedAtUtc,
-            request.ClickedAtUtc.AddHours(8));
+            request.ClickedAtUtc.AddHours(8))
+        {
+            ProgressPercent = 0,
+            ExpectedEffort = TimeSpan.FromHours(8)
+        };
         var updatedTasks = tasks.ToList();
         updatedTasks.Insert(anchorIndex + 1, createdTask);
         tasks = updatedTasks;
         selectedTaskId = createdTask.Id;
         lastEventKind = "Timeline request accepted";
         lastEventMessage = $"The host inserted {createdTask.Title} after {request.RowTaskId} at {request.ClickedAtUtc:yyyy-MM-dd HH:mm} UTC; the component did not create or persist it.";
+    }
+
+    private void HandleTaskDoubleClick(GanttTaskId taskId)
+    {
+        selectedTaskId = taskId;
+        lastEventKind = "Task details requested";
+        lastEventMessage = $"The host received a typed double-click for {taskId} and would open its task details dialog.";
     }
 
     private void HandleTaskOrderChange(GanttTaskOrderChangeRequest request)
@@ -369,7 +387,11 @@
         DateTimeOffset start,
         DateTimeOffset end)
     {
-        return new GanttTask(task.Id, title, start, end, task.Assignments);
+        return new GanttTask(task.Id, title, start, end, task.Assignments)
+        {
+            ProgressPercent = task.ProgressPercent,
+            ExpectedEffort = task.ExpectedEffort
+        };
     }
 
     private static IReadOnlyList<GanttTask> BuildTasks(bool dense)
@@ -381,7 +403,11 @@
                 "Frame scope and constraints",
                 ScheduleOrigin,
                 ScheduleOrigin.AddHours(4),
-                [new(GanttAssignmentKind.Person, "Joe Park")]),
+                [new(GanttAssignmentKind.Person, "Joe Park")])
+            {
+                ProgressPercent = 100,
+                ExpectedEffort = TimeSpan.FromHours(3)
+            },
             new(
                 ArchitectureId,
                 "Define scheduling contracts",
@@ -390,7 +416,11 @@
                 [
                     new(GanttAssignmentKind.Process, "Architecture gate"),
                     new(GanttAssignmentKind.Agent, "Contract reviewer")
-                ]),
+                ])
+            {
+                ProgressPercent = 70,
+                ExpectedEffort = TimeSpan.FromHours(4)
+            },
             new(
                 ExperienceId,
                 "Prototype dense interaction",
@@ -399,7 +429,11 @@
                 [
                     new(GanttAssignmentKind.Workflow, "UX review"),
                     new(GanttAssignmentKind.Person, "Rina Sol")
-                ]),
+                ])
+            {
+                ProgressPercent = 45,
+                ExpectedEffort = TimeSpan.FromHours(2)
+            },
             new(
                 CanvasRuntimeId,
                 "Implement Canvas runtime",
@@ -408,7 +442,11 @@
                 [
                     new(GanttAssignmentKind.Workflow, "Component delivery"),
                     new(GanttAssignmentKind.Agent, "Canvas specialist")
-                ]),
+                ])
+            {
+                ProgressPercent = 25,
+                ExpectedEffort = TimeSpan.FromHours(6)
+            },
             new(
                 HostIntegrationId,
                 "Integrate controlled host",
@@ -417,7 +455,11 @@
                 [
                     new(GanttAssignmentKind.Process, "Project projection"),
                     new(GanttAssignmentKind.Person, "Avery Singh")
-                ]),
+                ])
+            {
+                ProgressPercent = 0,
+                ExpectedEffort = TimeSpan.FromHours(3)
+            },
             new(
                 AcceptanceId,
                 "Run sandbox acceptance",
@@ -427,6 +469,9 @@
                     new(GanttAssignmentKind.Workflow, "Release verification"),
                     new(GanttAssignmentKind.Person, "Noor Patel")
                 ])
+            {
+                ExpectedEffort = TimeSpan.FromHours(2)
+            }
         };
 
         if (dense)

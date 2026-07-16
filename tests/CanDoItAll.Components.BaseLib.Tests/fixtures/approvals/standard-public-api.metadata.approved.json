@@ -4628,6 +4628,7 @@
           "method System.Threading.Tasks.Task CommitInsertionAsync(System.String payload, System.String dependencyId)",
           "method System.Threading.Tasks.Task CommitScheduleChangeAsync(System.String taskId, System.Double proposedStartMs, System.Double proposedEndMs, System.String gesture)",
           "method System.Threading.Tasks.Task DownloadPngAsync()",
+          "method System.Threading.Tasks.Task NotifyTaskDoubleClickedAsync(System.String taskId)",
           "method System.Threading.Tasks.Task NotifyTaskSelectedAsync(System.String taskId)",
           "method System.Threading.Tasks.Task NotifyTimelineDoubleClickedAsync(System.String rowTaskId, System.Double clickedAtMs)",
           "method System.Threading.Tasks.Task ReportRenderErrorAsync(System.String message)",
@@ -4635,6 +4636,7 @@
           "method System.Threading.Tasks.ValueTask DisposeAsync()",
           "property CanDoItAll.Components.Gantt.GanttTimeScale TimeScale {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttDependencyMutationRequest\u003E DependencyMutationRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E TaskDoubleClicked {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskId\u003E TaskSelected {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskInsertionRequest\u003E TaskInsertionRequested {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Gantt.GanttTaskOrderChangeRequest\u003E TaskOrderChangeRequested {get;set;}",
@@ -4878,7 +4880,8 @@
           "field System.Int32 value__",
           "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture Move",
           "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture ResizeEnd",
-          "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture ResizeStart"
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture ResizeStart",
+          "field static const CanDoItAll.Components.Gantt.GanttScheduleGesture SetInterval"
         ]
       },
       {
@@ -4888,7 +4891,8 @@
         "isSealed": true,
         "baseType": "",
         "members": [
-          "method static CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest Plan(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttTaskId taskId, CanDoItAll.Components.Gantt.GanttScheduleGesture gesture, System.DateTimeOffset proposedDate, System.Nullable\u003CCanDoItAll.Components.Gantt.GanttSnapGrid\u003E snapGrid = optional, System.Nullable\u003CSystem.TimeSpan\u003E minimumTaskDuration = optional)"
+          "method static CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest Plan(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttTaskId taskId, CanDoItAll.Components.Gantt.GanttScheduleGesture gesture, System.DateTimeOffset proposedDate, System.Nullable\u003CCanDoItAll.Components.Gantt.GanttSnapGrid\u003E snapGrid = optional, System.Nullable\u003CSystem.TimeSpan\u003E minimumTaskDuration = optional)",
+          "method static CanDoItAll.Components.Gantt.GanttTaskScheduleChangeRequest PlanInterval(System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttTask\u003E tasks, System.Collections.Generic.IReadOnlyCollection\u003CCanDoItAll.Components.Gantt.GanttDependency\u003E dependencies, CanDoItAll.Components.Gantt.GanttTaskId taskId, System.DateTimeOffset proposedStart, System.DateTimeOffset proposedEnd, System.Nullable\u003CCanDoItAll.Components.Gantt.GanttSnapGrid\u003E snapGrid = optional, System.Nullable\u003CSystem.TimeSpan\u003E minimumTaskDuration = optional)"
         ]
       },
       {
@@ -4935,6 +4939,8 @@
           "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Gantt.GanttAssignment\u003E Assignments {get;}",
           "property System.DateTimeOffset End {get;}",
           "property System.DateTimeOffset Start {get;}",
+          "property System.Nullable\u003CSystem.Int32\u003E ProgressPercent {get;set;}",
+          "property System.Nullable\u003CSystem.TimeSpan\u003E ExpectedEffort {get;set;}",
           "property System.String Title {get;}",
           "property System.TimeSpan Duration {get;}"
         ]

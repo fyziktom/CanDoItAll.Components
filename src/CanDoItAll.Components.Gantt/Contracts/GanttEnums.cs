@@ -12,7 +12,8 @@ public enum GanttScheduleGesture
 {
     Move,
     ResizeStart,
-    ResizeEnd
+    ResizeEnd,
+    SetInterval
 }
 
 public enum GanttDependencyMutationKind

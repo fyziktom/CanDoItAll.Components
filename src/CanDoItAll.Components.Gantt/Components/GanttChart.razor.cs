@@ -91,6 +91,9 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     public EventCallback<GanttTimelineDoubleClickEventArgs> TimelineDoubleClicked { get; set; }
 
     [Parameter]
+    public EventCallback<GanttTaskId> TaskDoubleClicked { get; set; }
+
+    [Parameter]
     public EventCallback<GanttTaskOrderChangeRequest> TaskOrderChangeRequested { get; set; }
 
     [Parameter]
@@ -350,6 +353,29 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
         var request = new GanttTimelineDoubleClickEventArgs(id, FromUnixMilliseconds(clickedAtMs));
         await TimelineDoubleClicked.InvokeAsync(request);
+    }
+
+    [JSInvokable]
+    public async Task NotifyTaskDoubleClickedAsync(string taskId)
+    {
+        var id = new GanttTaskId(taskId);
+        if (!Tasks.Any(task => task.Id == id))
+        {
+            throw new InvalidOperationException($"Task '{id}' is not present in the controlled chart model.");
+        }
+
+        if (IsInteractionDisabled)
+        {
+            return;
+        }
+
+        if (TaskDoubleClicked.HasDelegate)
+        {
+            await TaskDoubleClicked.InvokeAsync(id);
+            return;
+        }
+
+        await BeginTitleEditAsync(taskId);
     }
 
     [JSInvokable]
@@ -758,6 +784,8 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
                 task.Start.ToUnixTimeMilliseconds(),
                 task.End.ToUnixTimeMilliseconds(),
                 index,
+                task.ProgressPercent,
+                task.ExpectedEffort?.TotalMilliseconds,
                 TaskAccentColorSelector?.Invoke(task),
                 taskReadOnly,
                 taskReadOnly || TaskScheduleReadOnlySelector?.Invoke(task) == true,
@@ -1108,6 +1136,21 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private string FormatDuration(TimeSpan duration)
         => $"{duration.TotalHours:0.#} h · {duration.TotalHours / HoursPerManDay:0.##} md";
 
+    private string FormatExpectedEffort(TimeSpan? effort)
+        => effort is { } value
+            ? FormatDuration(value)
+            : "—";
+
+    private string FormatExpectedEffortDescription(TimeSpan? effort)
+        => effort is { } value
+            ? FormatDuration(value)
+            : "Not estimated";
+
+    private static string FormatProgress(int? progressPercent)
+        => progressPercent is { } value
+            ? $"{value}%"
+            : "Not reported";
+
     private static string FormatAssignmentAriaLabel(GanttAssignmentKind kind)
         => $"{FormatAssignmentKind(kind)} assignment";
 
@@ -1195,6 +1238,8 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         long StartMs,
         long EndMs,
         int Order,
+        int? ProgressPercent,
+        double? ExpectedEffortMs,
         string? AccentColor,
         bool IsReadOnly,
         bool IsScheduleReadOnly,
