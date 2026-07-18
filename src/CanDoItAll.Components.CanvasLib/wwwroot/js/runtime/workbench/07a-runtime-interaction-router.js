@@ -698,11 +698,10 @@
             keyDown: event => {
                 const target = event.target;
                 const tagName = target?.tagName?.toLowerCase?.() || "";
-                const isWorkbenchKeyTarget = !target ||
-                    target === state.document.body ||
-                    target === state.document.documentElement ||
-                    state.host.contains(target) ||
-                    !!target?.closest?.(".cw-workbench-shell");
+                const isWorkbenchKeyTarget = target === state.host || state.host.contains(target);
+                if (!isWorkbenchKeyTarget) {
+                    return;
+                }
 
                 const isEditable = tagName === "input" || tagName === "textarea" || target?.isContentEditable;
                 if (isEditable) {
@@ -728,33 +727,40 @@
                     return;
                 }
 
-                if (!isWorkbenchKeyTarget) {
-                    return;
-                }
-
                 if (shared.routeContextMenuShortcut?.(state, event)) {
                     return;
                 }
 
                 const lowerKey = (event.key || "").toLowerCase();
                 const usesCommandModifier = event.ctrlKey || event.metaKey;
-                if (usesCommandModifier && !event.altKey) {
+                const isClipboardShortcut = lowerKey === "x" || lowerKey === "c" || lowerKey === "v" || lowerKey === "d";
+                if (usesCommandModifier && !event.altKey && isClipboardShortcut) {
+                    const shouldDispatch = !event.repeat;
+
                     switch (lowerKey) {
                         case "x":
-                            event.preventDefault();
-                            requestClipboardCut(state);
+                            if (requestClipboardCut(state, shouldDispatch)) {
+                                event.preventDefault();
+                            }
+
                             return;
                         case "c":
-                            event.preventDefault();
-                            copySelectionToClipboard(state);
+                            if (copySelectionToClipboard(state, shouldDispatch)) {
+                                event.preventDefault();
+                            }
+
                             return;
                         case "v":
-                            event.preventDefault();
-                            void requestClipboardPaste(state);
+                            if (requestClipboardPaste(state, shouldDispatch)) {
+                                event.preventDefault();
+                            }
+
                             return;
                         case "d":
-                            event.preventDefault();
-                            requestClipboardDuplicate(state);
+                            if (requestClipboardDuplicate(state, shouldDispatch)) {
+                                event.preventDefault();
+                            }
+
                             return;
                     }
                 }

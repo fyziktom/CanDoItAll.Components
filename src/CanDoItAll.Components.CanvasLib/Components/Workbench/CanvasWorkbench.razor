@@ -392,6 +392,7 @@
     private long lastStateDispatchId;
     private bool awaitingParentUiStateCommit;
     private bool preserveViewportOnNextUpdate;
+    private bool? appliedHasClipboardHandler;
 
     [Parameter, EditorRequired]
     public CanvasWorkbenchSurface Surface { get; set; } = default!;
@@ -443,10 +444,11 @@
 
         var uiStateNotProcessed = !string.Equals(processedUiStateKey, pendingUiStateKey, StringComparison.Ordinal);
         var shouldSyncUiState = uiStateNotProcessed && !awaitingParentUiStateCommit;
+        var clipboardHandlerChanged = appliedHasClipboardHandler != ClipboardRequested.HasDelegate;
         preserveViewportOnNextUpdate = dataChanged &&
             sceneHost.IsInitialized &&
             string.Equals(appliedSurfaceId, Surface.SurfaceId, StringComparison.Ordinal);
-        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState);
+        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -567,8 +569,13 @@
     }
 
     [JSInvokable]
-    public Task OnClipboardAction(string actionId, string payloadJson)
-        => ClipboardRequested.InvokeAsync(new CanvasWorkbenchClipboardRequest(actionId, payloadJson));
+    public Task OnClipboardAction(string requestJson)
+    {
+        var request = Deserialize<CanvasWorkbenchClipboardRequest>(requestJson);
+        return request is null
+            ? Task.CompletedTask
+            : ClipboardRequested.InvokeAsync(request);
+    }
 
     [JSInvokable]
     public async Task OnHelpToggled(bool isOpen)
@@ -849,6 +856,7 @@
         sceneHost.MarkApplied();
         appliedSurfaceId = Surface.SurfaceId;
         processedUiStateKey = pendingUiStateKey;
+        appliedHasClipboardHandler = ClipboardRequested.HasDelegate;
     }
 
     private static bool IsExpectedJsInteropCancellation(Exception exception)
@@ -860,7 +868,8 @@
             includeAutoFit && ShouldAutoFitInitialView(),
             !includeAutoFit && preserveViewportOnNextUpdate,
             [.. Surface.UiState.SelectedNodeIds],
-            Surface.UiState.SelectedNodeIds.FirstOrDefault());
+            Surface.UiState.SelectedNodeIds.FirstOrDefault(),
+            ClipboardRequested.HasDelegate);
 
     private bool ShouldAutoFitInitialView()
     {
@@ -977,7 +986,8 @@
         bool FitView,
         bool PreserveViewport,
         IReadOnlyList<string> SelectedNodeIds,
-        string? PrimaryNodeId);
+        string? PrimaryNodeId,
+        bool HasClipboardHandler);
 }
 
 

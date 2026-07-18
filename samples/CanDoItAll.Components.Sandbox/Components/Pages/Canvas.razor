@@ -334,7 +334,7 @@
 
     private Task HandleWorkbenchClipboardRequested(CanvasWorkbenchClipboardRequest request)
     {
-        lastWorkbenchEvent = $"Clipboard action '{request.ActionId}' requested.";
+        lastWorkbenchEvent = $"Clipboard action '{request.Action}' requested for {request.SelectedNodeIds.Count} node(s).";
         return Task.CompletedTask;
     }
 

@@ -1906,114 +1906,74 @@
         }
     }
 
-    async function readClipboardText() {
-        if (typeof window.__canvasClipboardRead === "function") {
-            try {
-                return await window.__canvasClipboardRead();
-            }
-            catch {
-            }
-        }
-
-        if (!navigator?.clipboard?.readText) {
-            return "";
-        }
-
-        try {
-            return await navigator.clipboard.readText();
-        }
-        catch {
-            return "";
-        }
-    }
-
     function resolveClipboardAnchor(state) {
         const rect = state.host.getBoundingClientRect();
         return getWorldPoint(state, rect.left + (rect.width / 2), rect.top + (rect.height / 2));
     }
 
-    function buildClipboardPayload(state, operation = "copy") {
-        const selectedNodeIds = [...state.selectedIds];
-        const selectedNodes = selectedNodeIds
-            .map(nodeId => state.lookups.byId.get(nodeId))
-            .filter(Boolean)
-            .map(node => ({
-                id: node.id,
-                title: node.title || "",
-                kind: node.kind || "",
-                family: node.family || "",
-                position: getNodePosition(state, node)
-            }));
-
+    function buildClipboardPayload(state, action) {
+        const selectedNodeIds = Array.isArray(state.ui?.selectedNodeIds)
+            ? state.ui.selectedNodeIds.filter(Boolean)
+            : [...state.selectedIds];
         return {
-            operation,
-            format: state.surface.chrome.clipboard.format,
+            action,
             surfaceId: state.surface.surfaceId,
-            capturedAtUtc: new Date().toISOString(),
+            primaryNodeId: state.ui?.primaryNodeId || selectedNodeIds[0] || null,
             selectedNodeIds,
-            selectedNodes
+            anchorWorld: action === "Paste" || action === "Duplicate"
+                ? resolveClipboardAnchor(state)
+                : null
         };
     }
 
-    function copySelectionToClipboard(state) {
+    function requestClipboardAction(state, action, shouldDispatch = true) {
         const clipboard = state.surface.chrome.clipboard || {};
-        if (!clipboard.isEnabled || !clipboard.allowCopy || state.selectedIds.size === 0) {
-            return;
+        if (!state.hasClipboardHandler || !clipboard.isEnabled) {
+            return false;
         }
 
-        const payload = JSON.stringify(buildClipboardPayload(state, "copy"));
-        state.localClipboard = payload;
-        void writeClipboardText(payload);
-        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "copy", payload);
-        showStatusNotice(state, `Copied ${state.selectedIds.size} node(s)`, "accent");
+        const hasSourceSelection = state.selectedIds.size > 0;
+        const isAllowed = (() => {
+            switch (action) {
+                case "Copy":
+                    return clipboard.allowCopy && hasSourceSelection;
+                case "Cut":
+                    return clipboard.allowCut && hasSourceSelection;
+                case "Paste":
+                    return clipboard.allowPaste;
+                case "Duplicate":
+                    return clipboard.allowDuplicate && hasSourceSelection;
+                default:
+                    return false;
+            }
+        })();
+        if (!isAllowed) {
+            return false;
+        }
+
+        if (shouldDispatch) {
+            void state.dotNetRef.invokeMethodAsync(
+                "OnClipboardAction",
+                JSON.stringify(buildClipboardPayload(state, action)));
+        }
+
+        return true;
     }
 
-    function requestClipboardCut(state) {
-        const clipboard = state.surface.chrome.clipboard || {};
-        if (!clipboard.isEnabled || !clipboard.allowCopy || !clipboard.allowPaste || state.selectedIds.size === 0) {
-            return;
-        }
-
-        const payload = JSON.stringify(buildClipboardPayload(state, "cut"));
-        state.localClipboard = payload;
-        void writeClipboardText(payload);
-        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "cut", payload);
-        showStatusNotice(state, `Cut ${state.selectedIds.size} node(s)`, "warn");
+    function copySelectionToClipboard(state, shouldDispatch = true) {
+        return requestClipboardAction(state, "Copy", shouldDispatch);
     }
 
-    async function requestClipboardPaste(state) {
-        const clipboard = state.surface.chrome.clipboard || {};
-        if (!clipboard.isEnabled || !clipboard.allowPaste) {
-            return;
-        }
-
-        let payload = state.localClipboard || "";
-        if (!payload) {
-            payload = await readClipboardText();
-        }
-
-        if (!payload) {
-            showStatusNotice(state, "Clipboard is empty", "warn");
-            return;
-        }
-
-        const envelope = JSON.stringify({
-            payloadJson: payload,
-            anchorWorld: resolveClipboardAnchor(state),
-            surfaceId: state.surface.surfaceId
-        });
-        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "paste", envelope);
-        showStatusNotice(state, "Paste routed through the shared canvas bridge", "success");
+    function requestClipboardCut(state, shouldDispatch = true) {
+        return requestClipboardAction(state, "Cut", shouldDispatch);
     }
 
-    function requestClipboardDuplicate(state) {
-        const clipboard = state.surface.chrome.clipboard || {};
-        if (!clipboard.isEnabled || !clipboard.allowDuplicate || state.selectedIds.size === 0) {
-            return;
-        }
+    function requestClipboardPaste(state, shouldDispatch = true) {
+        return requestClipboardAction(state, "Paste", shouldDispatch);
+    }
 
-        state.dotNetRef.invokeMethodAsync("OnClipboardAction", "duplicate", JSON.stringify(buildClipboardPayload(state, "duplicate")));
-        showStatusNotice(state, "Duplicate request sent to the workspace", "accent");
+    function requestClipboardDuplicate(state, shouldDispatch = true) {
+        return requestClipboardAction(state, "Duplicate", shouldDispatch);
     }
 
     function toggleMinimap(state) {
@@ -2152,5 +2112,5 @@
         };
     }
 
-    Object.assign(shared, { getLinkAnchorPoint, resolveLinkAnchorSides, resolveCollapseAnchorInfo, getLinkRetainedKey, getLinkPathData, updateLinkElement, shouldRenderArrow, getExpandedFrameNodeIds, getFrameRetainedKey, createFrameElement, updateFrameElement, getFrameBounds, legacyRenderGroupFrames, resolveChipToneClass, createProgressMarker, resolveProgressDisplay, createProgressBadge, resolveProgressPresetBadgeOptions, resolveMarkerGlyph, resolveNodeMarkers, createMarkerBadge, createMarkerBadges, createPriorityBadge, appendNodeIndicators, renderInlineTextNode, createNodeMedia, createCompactPathButton, renderStandardNode, createRetainedNodeElement, getNodeRetainedContentKey, updateNodeElementChrome, renderNodeElementContent, buildActiveDragContext, positionFloatingOverlayWithinHost, hidePopover, legacyShowPopover, invokeAnnotationAction, renderNodeAnnotations, updateConnectorAnchorHover, getConnectorAnchorPoints, hideStatusNotice, showStatusNotice, renderEmptyStateOverlay, clearSnapGuides, legacyRenderSnapGuides, legacyRenderConnectorAnchorOverlay, getSelectionBounds, legacyRenderTransformHandlesOverlay, resolveSnapAdjustment, legacyRenderDebugDecorations, legacyBuildDiagnosticsSnapshot, renderDiagnosticsOverlay, navigateViaMinimap, resolveClipboardAnchor, buildClipboardPayload, writeClipboardText, readClipboardText, copySelectionToClipboard, requestClipboardCut, requestClipboardDuplicate, toggleMinimap, toggleDiagnostics, invalidateMeasuredLayout, legacyMeasureRenderedNodeSizes, legacyScheduleNodeMeasurement, getHostPoint, worldToHostPoint, getWorldPoint });
+    Object.assign(shared, { getLinkAnchorPoint, resolveLinkAnchorSides, resolveCollapseAnchorInfo, getLinkRetainedKey, getLinkPathData, updateLinkElement, shouldRenderArrow, getExpandedFrameNodeIds, getFrameRetainedKey, createFrameElement, updateFrameElement, getFrameBounds, legacyRenderGroupFrames, resolveChipToneClass, createProgressMarker, resolveProgressDisplay, createProgressBadge, resolveProgressPresetBadgeOptions, resolveMarkerGlyph, resolveNodeMarkers, createMarkerBadge, createMarkerBadges, createPriorityBadge, appendNodeIndicators, renderInlineTextNode, createNodeMedia, createCompactPathButton, renderStandardNode, createRetainedNodeElement, getNodeRetainedContentKey, updateNodeElementChrome, renderNodeElementContent, buildActiveDragContext, positionFloatingOverlayWithinHost, hidePopover, legacyShowPopover, invokeAnnotationAction, renderNodeAnnotations, updateConnectorAnchorHover, getConnectorAnchorPoints, hideStatusNotice, showStatusNotice, renderEmptyStateOverlay, clearSnapGuides, legacyRenderSnapGuides, legacyRenderConnectorAnchorOverlay, getSelectionBounds, legacyRenderTransformHandlesOverlay, resolveSnapAdjustment, legacyRenderDebugDecorations, legacyBuildDiagnosticsSnapshot, renderDiagnosticsOverlay, navigateViaMinimap, resolveClipboardAnchor, buildClipboardPayload, writeClipboardText, copySelectionToClipboard, requestClipboardCut, requestClipboardPaste, requestClipboardDuplicate, toggleMinimap, toggleDiagnostics, invalidateMeasuredLayout, legacyMeasureRenderedNodeSizes, legacyScheduleNodeMeasurement, getHostPoint, worldToHostPoint, getWorldPoint });
 })();

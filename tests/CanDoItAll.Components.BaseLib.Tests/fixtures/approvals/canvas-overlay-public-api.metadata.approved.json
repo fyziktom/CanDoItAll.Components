@@ -1058,7 +1058,7 @@
         "members": [
           "ctor()",
           "method System.Threading.Tasks.Task FitViewToSceneAsync()",
-          "method System.Threading.Tasks.Task OnClipboardAction(System.String actionId, System.String payloadJson)",
+          "method System.Threading.Tasks.Task OnClipboardAction(System.String requestJson)",
           "method System.Threading.Tasks.Task OnContextAction(System.String nodeId, System.String actionId, System.Double x, System.Double y)",
           "method System.Threading.Tasks.Task OnContextActionRequest(System.String requestJson)",
           "method System.Threading.Tasks.Task OnCreateAction(System.String requestJson)",
@@ -1202,6 +1202,20 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction Copy",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction Cut",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction Duplicate",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction Paste"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardOptions",
         "kind": "class",
         "isAbstract": false,
@@ -1210,6 +1224,7 @@
         "members": [
           "ctor()",
           "property System.Boolean AllowCopy {get;set;}",
+          "property System.Boolean AllowCut {get;set;}",
           "property System.Boolean AllowDuplicate {get;set;}",
           "property System.Boolean AllowPaste {get;set;}",
           "property System.Boolean IsEnabled {get;set;}",
@@ -1223,15 +1238,18 @@
         "isSealed": true,
         "baseType": "",
         "members": [
-          "ctor(System.String ActionId, System.String PayloadJson)",
+          "ctor(CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction Action, System.String SurfaceId, System.String PrimaryNodeId, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds, CanDoItAll.Components.CanvasLib.CanvasWorkbenchPoint AnchorWorld = optional)",
           "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardRequest \u003CClone\u003E$()",
           "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardRequest other)",
           "method System.Boolean Equals(System.Object obj)",
           "method System.Int32 GetHashCode()",
           "method System.String ToString()",
-          "method System.Void Deconstruct(out System.String ActionId, out System.String PayloadJson)",
-          "property System.String ActionId {get;set;}",
-          "property System.String PayloadJson {get;set;}"
+          "method System.Void Deconstruct(out CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction Action, out System.String SurfaceId, out System.String PrimaryNodeId, out System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchPoint AnchorWorld)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardAction Action {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchPoint AnchorWorld {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E SelectedNodeIds {get;set;}",
+          "property System.String PrimaryNodeId {get;set;}",
+          "property System.String SurfaceId {get;set;}"
         ]
       },
       {

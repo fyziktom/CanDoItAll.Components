@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace CanDoItAll.Components.CanvasLib;
 
 public sealed record CanvasWorkbenchSelectionChangedEventArgs(
@@ -44,6 +46,18 @@ public sealed record CanvasWorkbenchNodePositionChange(
 public sealed record CanvasWorkbenchNodesMovedEventArgs(
     IReadOnlyList<CanvasWorkbenchNodePositionChange> Positions);
 
+[JsonConverter(typeof(JsonStringEnumConverter<CanvasWorkbenchClipboardAction>))]
+public enum CanvasWorkbenchClipboardAction
+{
+    Copy,
+    Cut,
+    Paste,
+    Duplicate
+}
+
 public sealed record CanvasWorkbenchClipboardRequest(
-    string ActionId,
-    string PayloadJson);
+    CanvasWorkbenchClipboardAction Action,
+    string SurfaceId,
+    string? PrimaryNodeId,
+    IReadOnlyList<string> SelectedNodeIds,
+    CanvasWorkbenchPoint? AnchorWorld = null);

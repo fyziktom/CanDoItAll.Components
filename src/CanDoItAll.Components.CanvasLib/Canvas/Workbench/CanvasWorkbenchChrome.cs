@@ -181,6 +181,8 @@ public sealed class CanvasWorkbenchClipboardOptions
 
     public bool AllowCopy { get; set; } = true;
 
+    public bool AllowCut { get; set; } = true;
+
     public bool AllowPaste { get; set; } = true;
 
     public bool AllowDuplicate { get; set; } = true;

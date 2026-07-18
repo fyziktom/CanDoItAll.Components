@@ -631,7 +631,12 @@
     }
 
     function applyRenderOptions(state, options) {
-        if (!state || !options) {
+        if (!state) {
+            return;
+        }
+
+        state.hasClipboardHandler = options?.hasClipboardHandler === true;
+        if (!options) {
             return;
         }
 
@@ -689,6 +694,7 @@
                 surface,
                 selectionDispatchSeed,
                 stateDispatchSeed);
+            state.hasClipboardHandler = options?.hasClipboardHandler === true;
             workbenchInternals.runtime.buildWorkbench(state);
             workbenchInternals.runtime.attachEvents(state);
             workbenchInternals.runtime.setMaximized(state, resolveMaximizedState(state, options));

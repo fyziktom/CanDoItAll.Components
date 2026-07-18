@@ -300,6 +300,7 @@
         return {
             isEnabled: options?.isEnabled !== false,
             allowCopy: options?.allowCopy !== false,
+            allowCut: options?.allowCut !== false,
             allowPaste: options?.allowPaste !== false,
             allowDuplicate: options?.allowDuplicate !== false,
             format: options?.format || "application/vnd.candoitall.canvas+json"
