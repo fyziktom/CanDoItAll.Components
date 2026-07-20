@@ -1,4 +1,5 @@
 @namespace CanDoItAll.Components.BaseLib
+@using System.Globalization
 @using Microsoft.AspNetCore.Components.Web
 
 <li class="cda-treeview__item"
@@ -21,32 +22,41 @@
             <span class="cda-treeview__toggle cda-treeview__toggle--placeholder" aria-hidden="true"></span>
         }
 
-        <div id="@ResolveElementId()"
-             role="treeitem"
-             class="@ResolveRowCssClass()"
-             title="@ResolveTooltip()"
-             data-testid="@ResolveDataTestId()"
-             aria-disabled="@(Node.IsDisabled ? "true" : null)"
-             aria-level="@(Level + 1)"
-             aria-expanded="@(Node.HasChildren ? Node.IsExpanded.ToString().ToLowerInvariant() : null)"
-             aria-selected="@(Node.IsSelectable ? Node.IsSelected.ToString().ToLowerInvariant() : null)"
-             @onclick="HandleRowClickAsync"
-             @oncontextmenu="HandleContextMenuAsync"
-             @oncontextmenu:preventDefault="true">
-            @if (!string.IsNullOrWhiteSpace(Node.Icon))
-            {
-                <span class="cda-treeview__icon" aria-hidden="true">
-                    <Icon Name="@Node.Icon" />
-                </span>
-            }
+        <TooltipTarget Text="@ResolveTooltipDetails()"
+                       Position="@(TooltipPosition.Right)"
+                       Duration="@((TimeSpan?)null)"
+                       TriggerClass="cda-treeview__tooltip-target">
+            <span id="@ResolveElementId()"
+                 role="treeitem"
+                 class="@ResolveRowCssClass()"
+                 data-testid="@ResolveDataTestId()"
+                 aria-label="@ResolveAccessibleLabel()"
+                 aria-description="@ResolveAccessibleDescription()"
+                 aria-disabled="@(Node.IsDisabled ? "true" : null)"
+                 aria-level="@(Level + 1)"
+                 aria-expanded="@(Node.HasChildren ? Node.IsExpanded.ToString().ToLowerInvariant() : null)"
+                 aria-selected="@(Node.IsSelectable ? Node.IsSelected.ToString().ToLowerInvariant() : null)"
+                 @onclick="HandleRowClickAsync"
+                 @oncontextmenu="HandleContextMenuAsync"
+                 @oncontextmenu:preventDefault="true">
+                @if (!string.IsNullOrWhiteSpace(Node.Icon))
+                {
+                    <span class="cda-treeview__icon" aria-hidden="true">
+                        <Icon Name="@Node.Icon" />
+                    </span>
+                }
 
-            <span class="cda-treeview__text">@Node.Text</span>
+                <span class="cda-treeview__text">@Node.Text</span>
 
-            @if (!string.IsNullOrWhiteSpace(Node.BadgeText))
-            {
-                <span class="cda-treeview__badge">@Node.BadgeText</span>
-            }
-        </div>
+                @if (!string.IsNullOrWhiteSpace(Node.BadgeText))
+                {
+                    <span class="cda-treeview__badge" aria-hidden="true">
+                        <span class="cda-treeview__badge-full">@Node.BadgeText</span>
+                        <span class="cda-treeview__badge-compact">@ResolveCompactBadgeText()</span>
+                    </span>
+                }
+            </span>
+        </TooltipTarget>
     </div>
 
     @if (Node.HasChildren && Node.IsExpanded)
@@ -173,11 +183,41 @@
         return cssClass;
     }
 
-    private string ResolveTooltip()
+    private string ResolveTooltipDetails()
     {
-        return string.IsNullOrWhiteSpace(Node.Tooltip)
-            ? Node.Text
-            : Node.Tooltip;
+        if (!string.IsNullOrWhiteSpace(Node.Tooltip))
+        {
+            return Node.Tooltip.Trim();
+        }
+
+        return string.Join(
+            " · ",
+            new[] { Node.Text, Node.BadgeText }
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase));
+    }
+
+    private string ResolveAccessibleLabel()
+        => string.Join(
+            " ",
+            new[] { Node.Text, Node.BadgeText }
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase));
+
+    private string? ResolveAccessibleDescription()
+        => string.IsNullOrWhiteSpace(Node.Tooltip)
+            ? null
+            : Node.Tooltip.Trim();
+
+    private string ResolveCompactBadgeText()
+    {
+        var badgeText = Node.BadgeText.Trim();
+        var textElementIndexes = StringInfo.ParseCombiningCharacters(badgeText);
+        return textElementIndexes.Length <= 3
+            ? badgeText
+            : badgeText[..textElementIndexes[3]] + "...";
     }
 
     private string? ResolveDataTestId()

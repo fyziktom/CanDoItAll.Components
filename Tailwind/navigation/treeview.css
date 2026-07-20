@@ -5,11 +5,11 @@
 
   .cda-treeview__list,
   .cda-treeview__children {
-    @apply flex min-w-0 w-full max-w-full flex-col gap-1;
+    @apply m-0 flex min-w-0 w-full max-w-full list-none flex-col gap-1 p-0;
   }
 
   .cda-treeview__item {
-    @apply min-w-0 w-full max-w-full;
+    @apply min-w-0 w-full max-w-full list-none;
   }
 
   .cda-treeview__row-shell {
@@ -32,8 +32,13 @@
     @apply opacity-0;
   }
 
+  .cda-treeview__tooltip-target {
+    @apply flex min-w-0 w-full max-w-full flex-1;
+    container: cda-treeview-row / inline-size;
+  }
+
   .cda-treeview__row {
-    @apply flex min-w-0 w-full max-w-full flex-1 items-start gap-2 overflow-hidden border px-2.5 py-2 text-left text-sm transition;
+    @apply flex min-w-0 w-full max-w-full flex-1 items-center gap-2 overflow-hidden border px-2.5 py-2 text-left text-sm transition;
     border-radius: var(--cad-radius-control);
     border-color: transparent;
     color: var(--cad-color-text);
@@ -64,7 +69,10 @@
   }
 
   .cda-treeview__text {
-    @apply min-w-0 flex-1 whitespace-normal break-words leading-5;
+    @apply min-w-0 flex-1 overflow-hidden whitespace-nowrap leading-5;
+    font-size: 0.875rem;
+    font-size: clamp(0.75rem, 5cqi, 0.875rem);
+    text-overflow: ellipsis;
   }
 
   .cda-treeview__row--active {
@@ -73,10 +81,31 @@
   }
 
   .cda-treeview__badge {
-    @apply mt-0.5 shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em];
+    @apply min-w-0 shrink-0 overflow-hidden whitespace-nowrap px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em];
+    max-width: 45%;
+    text-overflow: ellipsis;
     border-radius: 9999px;
     background: var(--cad-tone-base-soft-bg);
     color: var(--cad-tone-base-soft-fg);
+  }
+
+  .cda-treeview__badge-full {
+    @apply block min-w-0 overflow-hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cda-treeview__badge-compact {
+    @apply hidden;
+  }
+
+  @container cda-treeview-row (max-width: 32rem) {
+    .cda-treeview__badge-full {
+      @apply hidden;
+    }
+
+    .cda-treeview__badge-compact {
+      @apply inline;
+    }
   }
 
   .cda-treeview--workbench .cda-treeview__toggle {

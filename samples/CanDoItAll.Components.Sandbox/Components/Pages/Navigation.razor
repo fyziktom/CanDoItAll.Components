@@ -237,7 +237,8 @@
     private readonly HashSet<string> expandedTreeNodeIds = new(StringComparer.Ordinal)
     {
         "navigation-foundations",
-        "navigation-controls"
+        "navigation-controls",
+        "navigation-adaptive-rows"
     };
 
     private const string ToolbarScopeAll = "All standard groups";
@@ -399,7 +400,23 @@
                 CreateLeaf("navigation-tabs", LongTabText, "Workspace tabs with wrapping and active-state proof.", "tab", "sandbox-navigation-tree-tabs"),
                 CreateLeaf("navigation-steps", "Steps", "Linear and selectable step movement.", "timeline", "sandbox-navigation-tree-steps"),
                 CreateLeaf("navigation-toolbar", "Toolbar", "Shared sheet toolbar structure for filters and actions.", "tune", "sandbox-navigation-tree-toolbar"),
-                CreateLeaf("navigation-tree", "Tree view", "Hierarchical navigation with context-menu requests.", "account_tree", "sandbox-navigation-tree-treeview")
+                CreateLeaf("navigation-tree", "Tree view", "Hierarchical navigation with context-menu requests.", "account_tree", "sandbox-navigation-tree-treeview"),
+                CreateBranch(
+                    "navigation-adaptive-rows",
+                    CurrentScenario == SandboxScenarioKey.LongText ? "Adaptive rows with constrained labels and badges" : "Adaptive tree rows",
+                    "width",
+                    "Tree rows preserve their hierarchy while labels and badges adapt to the available inline space.",
+                    "sandbox-navigation-tree-adaptive",
+                    "sandbox-navigation-tree-adaptive-children",
+                    [
+                        CreateLeaf(
+                            "navigation-adaptive-leaf",
+                            CurrentScenario == SandboxScenarioKey.LongText ? "Third-level project configuration details remain readable" : "Third-level adaptive row",
+                            "Full label, badge, and supporting details remain available from the right-side service tooltip.",
+                            "description",
+                            "sandbox-navigation-tree-adaptive-leaf",
+                            "DocumentationReviewRequired")
+                    ])
             ]);
 
         var overlayNode = CreateBranch(
@@ -483,13 +500,20 @@
             IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal)
         };
 
-    private TreeViewNode CreateLeaf(string id, string text, string tooltip, string icon, string dataTestId)
+    private TreeViewNode CreateLeaf(
+        string id,
+        string text,
+        string tooltip,
+        string icon,
+        string dataTestId,
+        string badgeText = "")
         => new()
         {
             Id = id,
             Text = text,
             Icon = icon,
             Tooltip = tooltip,
+            BadgeText = badgeText,
             DataTestId = dataTestId,
             IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal),
             IsDisabled = CurrentScenario == SandboxScenarioKey.DisabledState && string.Equals(id, "navigation-context-menu", StringComparison.Ordinal)
