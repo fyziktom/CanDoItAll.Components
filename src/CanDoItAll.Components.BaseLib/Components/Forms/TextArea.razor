@@ -8,7 +8,7 @@
               placeholder="@Placeholder"
               readonly="@ReadOnly"
               disabled="@Disabled"
-              rows="@Rows"
+              rows="@ResolveRows()"
               @oninput="OnChangedAsync">@Value</textarea>
 }
 else
@@ -18,7 +18,7 @@ else
               placeholder="@Placeholder"
               readonly="@ReadOnly"
               disabled="@Disabled"
-              rows="@Rows"
+              rows="@ResolveRows()"
               @onchange="OnChangedAsync">@Value</textarea>
 }
 
@@ -39,7 +39,10 @@ else
     public bool ReadOnly { get; set; }
 
     [Parameter]
-    public int Rows { get; set; } = 6;
+    public int Rows { get; set; }
+
+    [Parameter]
+    public TextAreaSize Size { get; set; } = TextAreaSize.Standard;
 
     [Parameter]
     public bool Disabled { get; set; }
@@ -71,6 +74,27 @@ else
         {
             InputLook.Plain => string.Empty,
             _ => "cda-input cda-input--textarea"
+        };
+    }
+
+    private int ResolveRows()
+    {
+        if (Rows < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(Rows), Rows, "Text area rows cannot be negative.");
+        }
+
+        if (Rows > 0)
+        {
+            return Rows;
+        }
+
+        return Size switch
+        {
+            TextAreaSize.Compact => 3,
+            TextAreaSize.Standard => 5,
+            TextAreaSize.Extended => 10,
+            _ => throw new ArgumentOutOfRangeException(nameof(Size), Size, "Unsupported text area size.")
         };
     }
 

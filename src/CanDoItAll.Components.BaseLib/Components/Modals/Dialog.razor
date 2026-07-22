@@ -7,16 +7,16 @@
 @if (IsOpen)
 {
     <dialog @ref="dialogElement"
-            @attributes='BuildAttributes("cda-dialog-root fixed inset-0 m-0 h-screen w-screen max-h-none max-w-none border-0 bg-transparent p-0", "z-index:1200")'
+            @attributes='ResolveRootAttributes()'
             data-testid="@TestId"
             aria-label="@ResolvedExplicitAriaLabel"
             aria-labelledby="@ResolvedLabelledBy">
         <Stack AlignItems="AlignItems.Center"
                JustifyContent="JustifyContent.Center"
                GapScale="LayoutGap.None"
-               Class="fixed inset-0 z-[70] p-3 sm:p-4 lg:p-5"
+               Class="cda-dialog-layer"
                Style="z-index:1200;">
-            <div class="absolute inset-0 bg-slate-950/55 backdrop-blur-sm"
+            <div class="cda-dialog__backdrop"
                  aria-hidden="true"
                  @onclick="HandleBackdropCloseAsync"></div>
 
@@ -30,14 +30,14 @@
                            JustifyContent="JustifyContent.SpaceBetween"
                            Wrap="FlexWrap.Wrap">
                         <Stack GapScale="LayoutGap.Tiny"
-                               Class="min-w-0">
+                               Class="cda-dialog__copy">
                             @if (!string.IsNullOrWhiteSpace(Eyebrow))
                             {
                                 <div class="cda-eyebrow">@Eyebrow</div>
                             }
 
                             <div class="inline-flex min-w-0 items-center gap-2">
-                                <h2 id="@titleElementId" class="text-xl font-semibold tracking-tight text-slate-950 xl:text-2xl">@Title</h2>
+                                <h2 id="@titleElementId" class="cda-dialog__title">@Title</h2>
                                 @if (HasHelp)
                                 {
                                     <HelpPopover RootClass="pf-help-popover inline-flex items-center"
@@ -52,12 +52,12 @@
 
                             @if (!string.IsNullOrWhiteSpace(Subtitle))
                             {
-                                <p class="max-w-3xl text-sm leading-6 text-slate-600">@Subtitle</p>
+                                <p class="cda-dialog__subtitle">@Subtitle</p>
                             }
                         </Stack>
 
-                        <Cluster Wrap="FlexWrap.NoWrap"
-                                 Gap="LayoutGap.Small">
+                        <Cluster Gap="LayoutGap.Small"
+                                 Class="cda-dialog__header-actions">
                             @if (HeaderActions is not null)
                             {
                                 @HeaderActions
@@ -66,7 +66,7 @@
                             @if (ShowCloseButton)
                             {
                                 <button type="button"
-                                        class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                                        class="cda-dialog__close"
                                         aria-label="Close"
                                         @onclick="HandleCloseAsync">
                                     <Icon Name="close" />
@@ -83,7 +83,7 @@
 
                 @if (Footer is not null)
                 {
-                    <footer class="border-t border-slate-200 bg-slate-50/90 px-5 py-4 xl:px-6">
+                    <footer class="@ResolveFooterCssClass()">
                         @Footer
                     </footer>
                 }
@@ -180,14 +180,15 @@
     {
         var sizeCss = Size switch
         {
-            ModalSize.Compact => "max-w-2xl",
-            ModalSize.Wide => "max-w-[min(88rem,100%)]",
-            ModalSize.Full => "h-[94vh] max-w-[min(112rem,100%)]",
-            _ => "max-w-[min(72rem,100%)]"
+            ModalSize.Compact => "cda-dialog--compact",
+            ModalSize.Medium => "cda-dialog--medium",
+            ModalSize.Wide => "cda-dialog--wide",
+            ModalSize.Full => "cda-dialog--full",
+            _ => throw new ArgumentOutOfRangeException(nameof(Size), Size, "Unsupported dialog size.")
         };
 
         return CssClassBuilder.Join(
-            "relative z-[71] flex max-h-[94vh] w-full flex-col overflow-hidden rounded-[1.85rem] border border-white/70 bg-white shadow-2xl shadow-slate-950/25",
+            "cda-dialog",
             sizeCss,
             Class);
     }
@@ -195,15 +196,32 @@
     private string ResolveHeaderCssClass()
     {
         return DenseChrome
-            ? "flex flex-col gap-2.5 border-b border-slate-200 px-3.5 py-3 xl:px-4 xl:py-3.5"
-            : "flex flex-col gap-4 border-b border-slate-200 px-5 py-4 xl:px-6 xl:py-5";
+            ? "cda-dialog__header cda-dialog__header--dense"
+            : "cda-dialog__header";
     }
 
     private string ResolveBodyCssClass()
     {
         return DenseChrome
-            ? "flex-1 overflow-y-auto px-3.5 py-3.5 xl:px-4 xl:py-4"
-            : "flex-1 overflow-y-auto px-5 py-5 xl:px-6 xl:py-6";
+            ? "cda-dialog__body cda-dialog__body--dense"
+            : "cda-dialog__body";
+    }
+
+    private string ResolveFooterCssClass()
+    {
+        return DenseChrome
+            ? "cda-dialog__footer cda-dialog__footer--dense"
+            : "cda-dialog__footer";
+    }
+
+    private IReadOnlyDictionary<string, object>? ResolveRootAttributes()
+    {
+        return ComponentAttributes.WithClassAndStyle(
+            AdditionalAttributes,
+            CssClassBuilder.Join(
+                "cda-dialog-root fixed inset-0 m-0 h-screen w-screen max-h-none max-w-none border-0 bg-transparent p-0",
+                Class),
+            CssClassBuilder.JoinStyles("z-index:1200", Style));
     }
 
     private Task HandleCloseAsync()

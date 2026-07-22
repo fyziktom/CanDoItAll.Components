@@ -4,9 +4,9 @@
 }
 
 <Stack Section="true"
-       GapScale="LayoutGap.Large"
+       GapScale="LayoutGap.Medium"
        AlignItems="AlignItems.Stretch"
-       Class="w-full rounded-[1.5rem] border border-slate-200 bg-slate-50/80 p-5">
+       Class="cda-form-section">
     <Split Breakpoint="LayoutBreakpoint.Md"
            Gap="LayoutGap.Medium"
            AlignItems="AlignItems.Start"
@@ -15,11 +15,11 @@
             <div class="inline-flex min-w-0 items-center gap-2">
                 @if (iconName is not null)
                 {
-                    <span class="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-sky-200 bg-sky-50 text-sky-700">
+                    <span class="cda-form-section__icon">
                         <span class="rz-icon cda-material-icon material-icons text-base" aria-hidden="true">@iconName</span>
                     </span>
                 }
-                <h2 class="text-base font-semibold text-slate-950">@Title</h2>
+                <h2 class="cda-form-section__title">@Title</h2>
                 @if (HasHelp)
                 {
                     <HelpPopover RootClass="pf-help-popover inline-flex items-center"
@@ -33,7 +33,7 @@
             </div>
             @if (!string.IsNullOrWhiteSpace(Description))
             {
-                <p class="text-sm leading-6 text-slate-600">@Description</p>
+                <p class="cda-form-section__description">@Description</p>
             }
         </Stack>
 

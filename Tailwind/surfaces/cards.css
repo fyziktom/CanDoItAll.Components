@@ -1,11 +1,48 @@
 @layer components {
   .cda-card {
-    @apply border p-4;
+    @apply min-w-0 border;
+    padding: var(--cad-space-surface-padding);
     border-radius: var(--cad-radius-surface);
     border-color: var(--cad-color-border-soft);
     background: var(--cad-color-surface);
     color: var(--cad-color-text);
     box-shadow: var(--cad-shadow-soft);
+  }
+
+  .cda-card--structured {
+    @apply flex h-full flex-col overflow-hidden p-0;
+  }
+
+  .cda-card__media {
+    @apply flex min-h-28 w-full shrink-0 items-center justify-center border-b p-3;
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cda-card__media :where(img, picture, svg) {
+    @apply mx-auto max-h-36 w-auto max-w-full object-contain;
+  }
+
+  .cda-card__body {
+    @apply flex min-w-0 flex-1 flex-col;
+    gap: var(--cad-space-content-gap);
+    padding: var(--cad-space-surface-padding);
+  }
+
+  .cda-card__header,
+  .cda-card__content {
+    @apply min-w-0;
+  }
+
+  .cda-card__tags {
+    @apply flex min-w-0 flex-wrap items-center;
+    gap: var(--cad-space-compact-gap);
+  }
+
+  .cda-card__actions {
+    @apply mt-auto flex min-w-0 flex-wrap items-center justify-end border-t pt-3;
+    gap: var(--cad-space-compact-gap);
+    border-color: var(--cad-color-border-soft);
   }
 
   .cda-board-card {
@@ -31,7 +68,8 @@
   }
 
   .cda-panel-card {
-    @apply border p-4;
+    @apply border;
+    padding: var(--cad-space-surface-padding);
     border-radius: var(--cad-radius-surface);
     border-color: var(--cad-color-border-soft);
     background: var(--cad-color-surface);
@@ -39,7 +77,8 @@
   }
 
   .cda-panel-card--soft {
-    @apply border p-4;
+    @apply border;
+    padding: var(--cad-space-surface-padding);
     border-radius: var(--cad-radius-surface);
     border-color: var(--cad-color-border-soft);
     background: var(--cad-color-surface-soft);
@@ -61,7 +100,8 @@
   }
 
   .cda-surface-card {
-    @apply min-w-0 w-full border p-5;
+    @apply min-w-0 w-full border;
+    padding: var(--cad-space-surface-padding);
     border-radius: var(--cad-radius-panel);
     border-color: var(--cad-color-border-soft);
     background: var(--cad-color-surface);
@@ -70,7 +110,8 @@
   }
 
   .cda-surface-card--soft {
-    @apply min-w-0 w-full border p-5;
+    @apply min-w-0 w-full border;
+    padding: var(--cad-space-surface-padding);
     border-radius: var(--cad-radius-panel);
     border-color: var(--cad-color-border-soft);
     background: var(--cad-color-surface-soft);
@@ -79,7 +120,8 @@
   }
 
   .cda-section-card {
-    @apply h-full border p-5;
+    @apply h-full border;
+    padding: var(--cad-space-surface-padding);
     border-radius: var(--cad-radius-panel);
     border-color: var(--cad-color-border-soft);
     background: color-mix(in srgb, var(--cad-color-surface) 92%, transparent);
@@ -88,17 +130,17 @@
   }
 
   .cda-section-card__title {
-    @apply text-lg font-semibold;
+    @apply m-0 text-base font-semibold;
     color: var(--cad-color-text-strong);
   }
 
   .cda-section-card__description {
-    @apply text-sm;
+    @apply m-0 text-sm leading-5;
     color: var(--cad-color-text-muted);
   }
 
   .cda-summary-tile {
-    @apply min-w-0 max-w-full border p-5;
+    @apply min-w-0 max-w-full border p-4;
     border-radius: var(--cad-radius-panel);
     border-color: var(--cad-color-border-soft);
     background: color-mix(in srgb, var(--cad-color-surface) 94%, transparent);
@@ -107,7 +149,7 @@
   }
 
   .cda-summary-tile--compact {
-    @apply p-4;
+    @apply p-3;
   }
 
   .cda-summary-tile__row {
@@ -163,12 +205,12 @@
   }
 
   .cda-summary-tile__value {
-    @apply mt-3 shrink-0 text-2xl font-semibold tracking-normal;
+    @apply m-0 mt-1.5 shrink-0 text-xl font-semibold tracking-normal;
     color: var(--cad-color-text-strong);
   }
 
   .cda-summary-tile--compact .cda-summary-tile__value {
-    @apply mt-2 text-xl;
+    @apply mt-1 text-lg;
   }
 
   .cda-summary-tile--badge .cda-summary-tile__value {
@@ -176,7 +218,7 @@
   }
 
   .cda-summary-tile__helper {
-    @apply mt-2 text-sm leading-6;
+    @apply m-0 mt-1.5 text-sm leading-5;
     color: var(--cad-color-text-muted);
   }
 

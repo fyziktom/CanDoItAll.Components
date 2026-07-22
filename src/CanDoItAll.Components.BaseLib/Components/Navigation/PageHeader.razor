@@ -4,9 +4,9 @@
         <div class="@(Compact ? "cda-page-header__copy cda-page-header__copy--compact" : "cda-page-header__copy")">
             <p class="@(Compact ? "cda-page-header__eyebrow cda-page-header__eyebrow--compact" : "cda-page-header__eyebrow")">@Eyebrow</p>
             <h1 class="@(Compact ? "cda-page-header__title cda-page-header__title--compact" : "cda-page-header__title")">@Title</h1>
-            @if (!string.IsNullOrWhiteSpace(Description) && !Compact)
+            @if (!string.IsNullOrWhiteSpace(Description))
             {
-                <p class="cda-page-header__description">@Description</p>
+                <p class="@(Compact ? "cda-page-header__description cda-page-header__description--compact" : "cda-page-header__description")">@Description</p>
             }
         </div>
 

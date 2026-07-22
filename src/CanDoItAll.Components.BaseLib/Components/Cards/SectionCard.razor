@@ -1,5 +1,6 @@
 @namespace CanDoItAll.Components.BaseLib
-<Stack GapScale="LayoutGap.Large"
+<Stack GapScale="LayoutGap.Medium"
+       AlignItems="AlignItems.Stretch"
        Class="cda-section-card w-full">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
@@ -7,9 +8,9 @@
                Gap="LayoutGap.Medium"
                AlignItems="AlignItems.Start"
                JustifyContent="JustifyContent.SpaceBetween"
-               Wrap="FlexWrap.Wrap"
-               Class="mb-4">
-            <Stack GapScale="LayoutGap.Tiny">
+               Wrap="FlexWrap.Wrap">
+            <Stack GapScale="LayoutGap.Tiny"
+                   Class="min-w-0 flex-1">
                 <div class="inline-flex min-w-0 items-center gap-2">
                     <h2 class="cda-section-card__title">@Title</h2>
                     @if (HasHelp)

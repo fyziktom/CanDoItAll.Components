@@ -261,7 +261,7 @@
                     <FormField Text="Notes">
                         <TextArea Value="@FormState.Notes"
                                   ValueChanged="HandleNotesChanged"
-                                  Rows="@(CurrentScenario == SandboxScenarioKey.DenseContent ? 5 : 7)"
+                                  Size="@(CurrentScenario == SandboxScenarioKey.DenseContent ? TextAreaSize.Extended : TextAreaSize.Standard)"
                                   Placeholder="@NotesPlaceholder"
                                   Disabled="@IsDisabled" />
                     </FormField>
