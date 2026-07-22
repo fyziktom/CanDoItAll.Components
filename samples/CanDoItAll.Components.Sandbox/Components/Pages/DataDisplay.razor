@@ -37,84 +37,105 @@
         else
         {
             <div data-testid="data-display-summary-strip">
-            <SectionCard Title="Summary strip" Description="High-signal metrics should lead the page without becoming a dashboard wallpaper.">
-                <SummaryTiles>
-                    @foreach (var tile in Tiles)
-                    {
-                        <SummaryTile Label="@tile.Label"
-                                     Value="@tile.Value"
-                                     HelperText="@tile.HelperText"
-                                     Tone="@tile.Tone" />
-                    }
-                </SummaryTiles>
-            </SectionCard>
+                <SectionCard Title="Supporting metrics" Description="Simple counts stay inline so the record list remains the dominant surface.">
+                    <CompactStatStrip>
+                        @foreach (var tile in Tiles)
+                        {
+                            <CompactStat Label="@tile.Label"
+                                         Value="@tile.Value"
+                                         HelperText="@tile.HelperText"
+                                         Tone="@tile.Tone" />
+                        }
+                    </CompactStatStrip>
+                </SectionCard>
             </div>
-
-            <Grid Gap="LayoutGap.Large"
-                  ColumnTemplate="repeat(auto-fit,minmax(min(100%,16rem),1fr))"
-                  data-testid="data-display-card-grid">
-                @foreach (var card in Cards)
-                {
-                    <Card>
-                        <div class="space-y-4">
-                            <Split Breakpoint="LayoutBreakpoint.None"
-                                   Gap="LayoutGap.Medium"
-                                   AlignItems="AlignItems.Start"
-                                   JustifyContent="JustifyContent.SpaceBetween"
-                                   Wrap="FlexWrap.Wrap">
-                                <div class="space-y-1">
-                                    <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@card.Eyebrow" />
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@card.Title" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@card.Summary" />
-                                </div>
-                                <StatusBadge Text="@card.State" Tone="@card.Tone" />
-                            </Split>
-
-                            <div class="sandbox-kv-list">
-                                @foreach (var fact in card.Facts)
-                                {
-                                    <div class="sandbox-kv-item">
-                                        <strong>@fact.Label</strong>
-                                        <span>@fact.Value</span>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </Card>
-                }
-            </Grid>
 
             <div data-testid="data-display-selection-rows">
-            <SectionCard Title="Selection rows" Description="List-style display surfaces should preserve scanability and action clarity.">
-                <div class="sandbox-list">
-                    @foreach (var row in Rows)
-                    {
-                        <SelectionListItem Title="@row.Title"
-                                           Eyebrow="@row.Eyebrow"
-                                           Meta="@row.Meta"
-                                           Summary="@row.Summary">
-                            <Status>
-                                <StatusBadge Text="@row.State" Tone="@row.Tone" />
-                            </Status>
-                            <Actions>
-                                <Button Text="Open"
-                                        ButtonStyle="@(ButtonStyle.Light)"
-                                        Variant="@(Variant.Outlined)"
-                                        Disabled="@IsDisabled" />
-                            </Actions>
-                            <ChildContent>
-                                <Cluster Gap="LayoutGap.Small">
-                                    @foreach (var chip in row.Chips)
-                                    {
-                                        <StatusBadge Text="@chip.Text" Tone="@chip.Tone" />
-                                    }
-                                </Cluster>
-                            </ChildContent>
-                        </SelectionListItem>
-                    }
-                </div>
-            </SectionCard>
+                <SectionCard Title="Records" Description="The primary list owns the useful first viewport; editing opens only when requested.">
+                    <HeaderActions>
+                        <Button Text="Add record"
+                                Icon="add"
+                                ButtonStyle="@(ButtonStyle.Primary)"
+                                Disabled="@IsDisabled"
+                                Click="OpenNewItemEditor" />
+                    </HeaderActions>
+                    <ChildContent>
+                        <div class="sandbox-list">
+                            @foreach (var row in Rows)
+                            {
+                                <SelectionListItem Title="@row.Title"
+                                                   Eyebrow="@row.Eyebrow"
+                                                   Meta="@row.Meta"
+                                                   Summary="@row.Summary"
+                                                   Dense="true"
+                                                   Disabled="@IsDisabled"
+                                                   OnSelect="@(() => OpenItemEditor(row))">
+                                    <Status>
+                                        <StatusBadge Text="@row.State" Tone="@row.Tone" />
+                                    </Status>
+                                    <Actions>
+                                        <Button Text="Edit"
+                                                ButtonStyle="@(ButtonStyle.Light)"
+                                                Variant="@(Variant.Outlined)"
+                                                Disabled="@IsDisabled"
+                                                Click="@(() => OpenItemEditor(row))" />
+                                    </Actions>
+                                    <ChildContent>
+                                        <Cluster Gap="LayoutGap.Small">
+                                            @foreach (var chip in row.Chips)
+                                            {
+                                                <StatusBadge Text="@chip.Text" Tone="@chip.Tone" />
+                                            }
+                                        </Cluster>
+                                    </ChildContent>
+                                </SelectionListItem>
+                            }
+                        </div>
+                    </ChildContent>
+                </SectionCard>
             </div>
+
+            <SectionCard Title="Visual collection" Description="Use cards only when media and independent item actions improve recognition.">
+                <CardGrid data-testid="data-display-card-grid">
+                    @foreach (var card in Cards)
+                    {
+                        <Card>
+                            <Media>
+                                <img src="@card.ImageSource" alt="" />
+                            </Media>
+                            <Header>
+                                <Split Breakpoint="LayoutBreakpoint.None"
+                                       Gap="LayoutGap.Small"
+                                       AlignItems="AlignItems.Start"
+                                       JustifyContent="JustifyContent.SpaceBetween"
+                                       Wrap="FlexWrap.Wrap">
+                                    <Stack GapScale="LayoutGap.Tiny">
+                                        <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@card.Eyebrow" />
+                                        <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@card.Title" />
+                                    </Stack>
+                                    <StatusBadge Text="@card.State" Tone="@card.Tone" />
+                                </Split>
+                            </Header>
+                            <Tags>
+                                @foreach (var fact in card.Facts.Take(2))
+                                {
+                                    <StatusBadge Text="@($"{fact.Label}: {fact.Value}")" Tone="neutral" />
+                                }
+                            </Tags>
+                            <ChildContent>
+                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@card.Summary" />
+                            </ChildContent>
+                            <Actions>
+                                <Button Text="Edit"
+                                        Icon="edit"
+                                        ButtonStyle="@(ButtonStyle.Primary)"
+                                        Disabled="@IsDisabled"
+                                        Click="@(() => OpenItemEditor(card))" />
+                            </Actions>
+                        </Card>
+                    }
+                </CardGrid>
+            </SectionCard>
         }
 
         <SectionCard Title="Data grid states" Description="The shared grid proves keyboard row activation, paging boundaries, captions, loading, empty, dense, and long-content behavior.">
@@ -143,12 +164,67 @@
     </ChildContent>
 </CatalogPageFrame>
 
+<Dialog IsOpen="@(editorState is not null)"
+        Title="@EditorDialogTitle"
+        Subtitle="@EditorDialogSubtitle"
+        Size="ModalSize.Compact"
+        DenseChrome="true"
+        OnClose="CloseCardEditor">
+    <ChildContent>
+        @if (editorState is not null)
+        {
+            <FormStack>
+                <FormField Text="Title">
+                    <TextBox Value="@editorState.Title"
+                             ValueChanged="UpdateEditorTitle" />
+                </FormField>
+                <FormField Text="Review notes">
+                    <TextArea Value="@editorState.Notes"
+                              ValueChanged="UpdateEditorNotes"
+                              Size="@(CurrentScenario == SandboxScenarioKey.LongText ? TextAreaSize.Extended : TextAreaSize.Standard)" />
+                </FormField>
+            </FormStack>
+        }
+    </ChildContent>
+    <Footer>
+        <Button Text="Cancel"
+                ButtonStyle="@(ButtonStyle.Light)"
+                Variant="@(Variant.Outlined)"
+                Click="CloseCardEditor" />
+        <Button Text="@EditorPrimaryActionText"
+                Icon="save"
+                ButtonStyle="@(ButtonStyle.Primary)"
+                Disabled="@IsEditorSaveDisabled"
+                Click="SaveItemEditor" />
+    </Footer>
+</Dialog>
+
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.DataDisplay);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataDisplay);
+    private const string PrimaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-01.jpg";
+    private const string SecondaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-02.jpg";
     private string? selectedGridRowTitle;
+    private ItemEditorState? editorState;
+    private SandboxScenarioKey? workingScenario;
+    private IReadOnlyList<DisplayRowModel>? editedRows;
+    private IReadOnlyList<DisplayCardModel>? editedCards;
 
     private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
+    private string EditorDialogTitle => editorState?.Mode switch
+    {
+        ItemEditorMode.Create => "Add record",
+        ItemEditorMode.Edit => $"Edit {editorState.Title}",
+        _ => "Edit record"
+    };
+    private string EditorDialogSubtitle => editorState?.Mode switch
+    {
+        ItemEditorMode.Create => "Create the record on demand without reserving permanent page space for an empty form.",
+        ItemEditorMode.Edit => "Edit details without displacing the record list. Dialog-only state is initialized when this opens.",
+        _ => string.Empty
+    };
+    private string EditorPrimaryActionText => editorState?.Mode == ItemEditorMode.Create ? "Create" : "Save";
+    private bool IsEditorSaveDisabled => editorState is null || string.IsNullOrWhiteSpace(editorState.Title);
 
     private IReadOnlyList<SummaryTileModel> Tiles => CurrentScenario switch
     {
@@ -157,32 +233,159 @@
         _ => BaseTiles
     };
 
-    private IReadOnlyList<DisplayCardModel> Cards => CurrentScenario switch
+    private IReadOnlyList<DisplayCardModel> Cards => editedCards ?? ScenarioCards;
+
+    private IReadOnlyList<DisplayCardModel> ScenarioCards => CurrentScenario switch
     {
         SandboxScenarioKey.DenseContent => DenseCards,
         SandboxScenarioKey.LongText => LongCards,
         _ => BaseCards
     };
 
-    private IReadOnlyList<DisplayRowModel> Rows => CurrentScenario switch
+    private IReadOnlyList<DisplayRowModel> Rows => editedRows ?? ScenarioRows;
+
+    private IReadOnlyList<DisplayRowModel> ScenarioRows => CurrentScenario switch
     {
         SandboxScenarioKey.DenseContent => DenseRows,
         SandboxScenarioKey.LongText => LongRows,
         _ => BaseRows
     };
 
-    private IReadOnlyList<DisplayRowModel> GridRows => CurrentScenario switch
+    private IReadOnlyList<DisplayRowModel> GridRows => CurrentScenario == SandboxScenarioKey.EmptyState
+        ? []
+        : Rows;
+
+    protected override void OnParametersSet()
     {
-        SandboxScenarioKey.EmptyState => [],
-        SandboxScenarioKey.DenseContent => DenseRows,
-        SandboxScenarioKey.LongText => LongRows,
-        _ => BaseRows
-    };
+        if (workingScenario == CurrentScenario)
+        {
+            return;
+        }
+
+        workingScenario = CurrentScenario;
+        editedRows = null;
+        editedCards = null;
+        editorState = null;
+    }
 
     private Task SelectGridRow(DisplayRowModel row)
     {
         selectedGridRowTitle = row.Title;
         return Task.CompletedTask;
+    }
+
+    private Task OpenNewItemEditor()
+    {
+        editorState = ItemEditorState.CreateRecord();
+        return Task.CompletedTask;
+    }
+
+    private Task OpenItemEditor(DisplayRowModel row)
+    {
+        editorState = ItemEditorState.EditRecord(row);
+        return Task.CompletedTask;
+    }
+
+    private Task OpenItemEditor(DisplayCardModel card)
+    {
+        editorState = ItemEditorState.EditCard(card);
+        return Task.CompletedTask;
+    }
+
+    private Task CloseCardEditor()
+    {
+        editorState = null;
+        return Task.CompletedTask;
+    }
+
+    private Task UpdateEditorTitle(string? title)
+    {
+        ItemEditorState current = editorState ?? throw new InvalidOperationException("The item editor must be open before its title can change.");
+        editorState = current with { Title = title ?? string.Empty };
+        return Task.CompletedTask;
+    }
+
+    private Task UpdateEditorNotes(string? notes)
+    {
+        ItemEditorState current = editorState ?? throw new InvalidOperationException("The item editor must be open before its notes can change.");
+        editorState = current with { Notes = notes ?? string.Empty };
+        return Task.CompletedTask;
+    }
+
+    private Task SaveItemEditor()
+    {
+        ItemEditorState current = editorState ?? throw new InvalidOperationException("The item editor must be open before it can be saved.");
+        var title = current.Title.Trim();
+
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            throw new InvalidOperationException("A record title is required before saving.");
+        }
+
+        switch (current)
+        {
+            case { Mode: ItemEditorMode.Create, Target: ItemEditorTarget.Record }:
+                editedRows =
+                [
+                    .. Rows,
+                    new DisplayRowModel(
+                        DisplayItemId.New(),
+                        title,
+                        "Added",
+                        "local / draft",
+                        current.Notes,
+                        "Draft",
+                        "neutral",
+                        [])
+                ];
+                break;
+            case { Mode: ItemEditorMode.Edit, Target: ItemEditorTarget.Record, ItemId: not null }:
+                editedRows = ReplaceById(
+                    Rows,
+                    current.ItemId.Value,
+                    static row => row.Id,
+                    row => row with
+                    {
+                        Title = title,
+                        Summary = current.Notes
+                    });
+                break;
+            case { Mode: ItemEditorMode.Edit, Target: ItemEditorTarget.Card, ItemId: not null }:
+                editedCards = ReplaceById(
+                    Cards,
+                    current.ItemId.Value,
+                    static card => card.Id,
+                    card => card with
+                    {
+                        Title = title,
+                        Summary = current.Notes
+                    });
+                break;
+            default:
+                throw new InvalidOperationException("The item editor state is not valid for saving.");
+        }
+
+        editorState = null;
+        return Task.CompletedTask;
+    }
+
+    private static IReadOnlyList<T> ReplaceById<T>(
+        IReadOnlyList<T> source,
+        DisplayItemId itemId,
+        Func<T, DisplayItemId> idSelector,
+        Func<T, T> update)
+        where T : notnull
+    {
+        var items = source.ToArray();
+        var index = Array.FindIndex(items, item => idSelector(item) == itemId);
+
+        if (index < 0)
+        {
+            throw new InvalidOperationException("The edited item is no longer present in the current collection.");
+        }
+
+        items[index] = update(items[index]);
+        return items;
     }
 
     private static readonly IReadOnlyList<SummaryTileModel> BaseTiles =
@@ -212,22 +415,26 @@
     private static readonly IReadOnlyList<DisplayCardModel> BaseCards =
     [
         new(
+            DisplayItemId.New(),
             "Summary card",
             "Migration review",
             "Shared component uptake stays visible through a stable card shell and supporting metadata.",
             "Healthy",
             "success",
+            PrimaryCardImageSource,
             [
                 new("Owner", "Architecture"),
                 new("Scope", "Base + canvas"),
                 new("Updated", "Today")
             ]),
         new(
+            DisplayItemId.New(),
             "Fact card",
             "Canvas acceptance",
             "Calendar and workbench boundaries keep their state model, chrome, and preview evidence readable inside the same display system.",
             "Review",
             "warning",
+            SecondaryCardImageSource,
             [
                 new("Workbench", "Ready"),
                 new("Calendar", "Ready"),
@@ -238,11 +445,13 @@
     private static readonly IReadOnlyList<DisplayCardModel> DenseCards =
     [
         new(
+            DisplayItemId.New(),
             "Summary card",
             "Migration review",
             "Shared component uptake stays visible through a stable card shell and supporting metadata.",
             "Healthy",
             "success",
+            PrimaryCardImageSource,
             [
                 new("Owner", "Architecture"),
                 new("Scope", "Base + canvas"),
@@ -250,11 +459,13 @@
                 new("Packages", "5")
             ]),
         new(
+            DisplayItemId.New(),
             "Fact card",
             "Canvas acceptance",
             "Calendar and workbench boundaries keep their state model, chrome, and preview evidence readable inside the same display system.",
             "Review",
             "warning",
+            SecondaryCardImageSource,
             [
                 new("Workbench", "Ready"),
                 new("Calendar", "Ready"),
@@ -266,22 +477,26 @@
     private static readonly IReadOnlyList<DisplayCardModel> LongCards =
     [
         new(
+            DisplayItemId.New(),
             "Summary card",
             "Migration review with extended ownership and rollout notes",
             "Longer descriptions should stay readable inside the same card shell and keep their supporting metadata nearby instead of forcing separate explanatory panels.",
             "Healthy",
             "success",
+            PrimaryCardImageSource,
             [
                 new("Owner", "Architecture working group"),
                 new("Scope", "Base library and canvas extraction"),
                 new("Updated", "Today")
             ]),
         new(
+            DisplayItemId.New(),
             "Fact card",
             "Canvas acceptance for workbench, floating windows, and calendar surfaces",
             "The second card proves that longer titles and summaries still preserve card rhythm, status placement, and scanning order.",
             "Review",
             "warning",
+            SecondaryCardImageSource,
             [
                 new("Workbench", "Ready"),
                 new("Calendar", "Ready"),
@@ -291,38 +506,75 @@
 
     private static readonly IReadOnlyList<DisplayRowModel> BaseRows =
     [
-        new("Shell registry", "Catalog", "groups / routes", "Each shared group page feeds both the sandbox navigation and the future MCP search index.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
-        new("Canvas contract", "Canvas", "surface / state", "Workbench and calendar contracts keep typed surfaces and reusable preview evidence.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")])
+        new(DisplayItemId.New(), "Shell registry", "Catalog", "groups / routes", "Each shared group page feeds both the sandbox navigation and the future MCP search index.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
+        new(DisplayItemId.New(), "Canvas contract", "Canvas", "surface / state", "Workbench and calendar contracts keep typed surfaces and reusable preview evidence.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")])
     ];
 
     private static readonly IReadOnlyList<DisplayRowModel> DenseRows =
     [
-        new("Shell registry", "Catalog", "groups / routes", "Each shared group page feeds both the sandbox navigation and the future MCP search index.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
-        new("Canvas contract", "Canvas", "surface / state", "Workbench and calendar contracts keep typed surfaces and reusable preview evidence.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")]),
-        new("Screenshot proof", "Validation", "desktop / mobile", "Dense and empty proof captures stay attached to the same shared group model.", "Pending", "warning", [new("Dense", "warning"), new("Empty", "success")])
+        new(DisplayItemId.New(), "Shell registry", "Catalog", "groups / routes", "Each shared group page feeds both the sandbox navigation and the future MCP search index.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
+        new(DisplayItemId.New(), "Canvas contract", "Canvas", "surface / state", "Workbench and calendar contracts keep typed surfaces and reusable preview evidence.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")]),
+        new(DisplayItemId.New(), "Screenshot proof", "Validation", "desktop / mobile", "Dense and empty proof captures stay attached to the same shared group model.", "Pending", "warning", [new("Dense", "warning"), new("Empty", "success")])
     ];
 
     private static readonly IReadOnlyList<DisplayRowModel> LongRows =
     [
-        new("Shell registry with extended explanatory summary", "Catalog", "groups / routes", "Longer row summaries still need clear separation between the title, metadata, supporting chips, and the open action.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
-        new("Canvas contract and boundary previews", "Canvas", "surface / state", "Longer row labels should not break the right edge or hide the state treatment on narrower frames.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")])
+        new(DisplayItemId.New(), "Shell registry with extended explanatory summary", "Catalog", "groups / routes", "Longer row summaries still need clear separation between the title, metadata, supporting chips, and the open action.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
+        new(DisplayItemId.New(), "Canvas contract and boundary previews", "Canvas", "surface / state", "Longer row labels should not break the right edge or hide the state treatment on narrower frames.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")])
     ];
 
     private sealed record SummaryTileModel(string Label, string Value, string HelperText, string Tone);
 
+    private enum ItemEditorMode
+    {
+        Create,
+        Edit
+    }
+
+    private enum ItemEditorTarget
+    {
+        Record,
+        Card
+    }
+
+    private sealed record ItemEditorState(
+        ItemEditorMode Mode,
+        ItemEditorTarget Target,
+        string Title,
+        string Notes,
+        DisplayItemId? ItemId)
+    {
+        public static ItemEditorState CreateRecord()
+            => new(ItemEditorMode.Create, ItemEditorTarget.Record, string.Empty, string.Empty, null);
+
+        public static ItemEditorState EditRecord(DisplayRowModel row)
+            => new(ItemEditorMode.Edit, ItemEditorTarget.Record, row.Title, row.Summary, row.Id);
+
+        public static ItemEditorState EditCard(DisplayCardModel card)
+            => new(ItemEditorMode.Edit, ItemEditorTarget.Card, card.Title, card.Summary, card.Id);
+    }
+
+    private readonly record struct DisplayItemId(Guid Value)
+    {
+        public static DisplayItemId New() => new(Guid.NewGuid());
+    }
+
     private sealed record DisplayCardFact(string Label, string Value);
 
     private sealed record DisplayCardModel(
+        DisplayItemId Id,
         string Eyebrow,
         string Title,
         string Summary,
         string State,
         string Tone,
+        string ImageSource,
         IReadOnlyList<DisplayCardFact> Facts);
 
     private sealed record DisplayRowChip(string Text, string Tone);
 
     private sealed record DisplayRowModel(
+        DisplayItemId Id,
         string Title,
         string Eyebrow,
         string Meta,

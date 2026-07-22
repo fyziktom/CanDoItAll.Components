@@ -13,7 +13,7 @@
 
     @if (Lead is not null)
     {
-        <Stack GapScale="LayoutGap.Large"
+        <Stack GapScale="LayoutGap.Medium"
                AlignItems="AlignItems.Stretch"
                Class="@ResolveLeadClass()">
             @Lead
@@ -22,17 +22,17 @@
 
     @if (SecondaryRail is not null)
     {
-        <Grid Gap="LayoutGap.XXLarge"
+        <Grid Gap="LayoutGap.Large"
               Class="@ResolveScaffoldGridClass()"
               ColumnTemplate2Xl="minmax(0,1fr) 18rem">
-            <Stack GapScale="LayoutGap.XXLarge"
+            <Stack GapScale="LayoutGap.Large"
                    AlignItems="AlignItems.Stretch"
                    Class="@ResolvePrimaryContentClass()">
                 @ChildContent
             </Stack>
 
             <Stack Section="true"
-                   GapScale="LayoutGap.Large"
+                   GapScale="LayoutGap.Medium"
                    Class="@ResolveSecondaryRailClass()">
                 @SecondaryRail
             </Stack>
@@ -40,7 +40,7 @@
     }
     else if (ChildContent is not null)
     {
-        <Stack GapScale="LayoutGap.XXLarge"
+        <Stack GapScale="LayoutGap.Large"
                AlignItems="AlignItems.Stretch"
                Class="@ResolvePrimaryContentClass()">
             @ChildContent

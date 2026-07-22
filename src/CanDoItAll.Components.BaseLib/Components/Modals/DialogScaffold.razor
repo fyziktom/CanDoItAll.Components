@@ -25,7 +25,7 @@
         }
     </header>
 
-    <div class="cda-dialog-scaffold__body">
+    <div class="@ResolveBodyClass()">
         @if (ContextRail is not null)
         {
             <aside class="cda-dialog-scaffold__rail">
@@ -96,4 +96,12 @@
 
     private string ResolveClass()
         => Dense ? "cda-dialog-scaffold cda-dialog-scaffold--dense" : "cda-dialog-scaffold";
+
+    private string ResolveBodyClass()
+    {
+        return CssClassBuilder.Join(
+            "cda-dialog-scaffold__body",
+            ContextRail is not null ? "cda-dialog-scaffold__body--rail" : null,
+            ReviewPanel is not null ? "cda-dialog-scaffold__body--review" : null);
+    }
 }

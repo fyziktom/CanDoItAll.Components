@@ -1,7 +1,7 @@
 @namespace CanDoItAll.Components.BaseLib
 @inherits StyledComponentBase
 
-<div @attributes='BuildAttributes("sticky bottom-0 z-10 -mx-5 mt-6 max-w-[calc(100%+2.5rem)] border-t border-slate-200 bg-white/95 px-5 py-4 backdrop-blur")'>
+<div @attributes='BuildAttributes("cda-sticky-action-footer")'>
     <Split Breakpoint="LayoutBreakpoint.Xl"
            Gap="LayoutGap.Medium"
            AlignItems="AlignItems.Center"
@@ -63,14 +63,14 @@
     {
         var toneClass = StatusTone.ToLowerInvariant() switch
         {
-            "success" => "text-emerald-700",
-            "warning" => "text-amber-700",
-            "danger" => "text-rose-700",
-            "info" => "text-sky-700",
-            _ => "text-slate-600"
+            "success" => "cda-sticky-action-footer__status--success",
+            "warning" => "cda-sticky-action-footer__status--warning",
+            "danger" => "cda-sticky-action-footer__status--danger",
+            "info" => "cda-sticky-action-footer__status--info",
+            _ => string.Empty
         };
 
-        return $"text-sm {toneClass}";
+        return CssClassBuilder.Join("cda-sticky-action-footer__status", toneClass);
     }
 }
 

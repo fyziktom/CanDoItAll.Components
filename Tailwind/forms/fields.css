@@ -1,6 +1,6 @@
 @layer components {
   .cda-form-field {
-    @apply flex flex-col gap-2 !w-full !max-w-full;
+    @apply flex flex-col gap-1.5 !w-full !max-w-full;
   }
 
   .cda-prefixed-field {
@@ -42,7 +42,7 @@
   }
 
   .cda-form-field__label {
-    @apply w-full break-words text-xs font-semibold uppercase tracking-[0.18em];
+    @apply m-0 w-full break-words text-xs font-semibold uppercase tracking-[0.18em];
     color: var(--cad-color-text-soft);
   }
 
@@ -78,7 +78,53 @@
 
   :where(.cda-input--textarea) {
     @apply block w-full resize-y leading-6;
-    min-height: var(--cda-textarea-min-height, 9rem);
+  }
+
+  .cda-secret-field {
+    @apply flex w-full min-w-0 flex-wrap items-center gap-2;
+  }
+
+  .cda-secret-field__control {
+    @apply flex min-w-0 flex-1 items-center gap-2;
+    flex-basis: 18rem;
+    min-width: min(14rem, 100%);
+  }
+
+  .cda-secret-field__actions {
+    @apply max-w-full shrink-0;
+  }
+
+  .cda-secret-field__reveal {
+    @apply shrink-0 whitespace-nowrap;
+  }
+
+  .cda-form-stack {
+    @apply flex flex-col gap-3;
+  }
+
+  .cda-form-section {
+    @apply w-full border p-4;
+    border-radius: var(--cad-radius-panel);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cda-form-section__icon {
+    @apply inline-flex size-7 shrink-0 items-center justify-center border;
+    border-radius: var(--cad-radius-control);
+    border-color: var(--cad-tone-info-soft-border);
+    background: var(--cad-tone-info-soft-bg);
+    color: var(--cad-tone-info-soft-fg);
+  }
+
+  .cda-form-section__title {
+    @apply m-0 text-base font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-form-section__description {
+    @apply m-0 text-sm leading-5;
+    color: var(--cad-color-text-muted);
   }
 
   .cda-input--mono {

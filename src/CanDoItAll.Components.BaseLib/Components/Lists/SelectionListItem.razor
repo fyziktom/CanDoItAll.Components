@@ -5,51 +5,23 @@
     <Cluster AlignItems="AlignItems.Start"
              Wrap="FlexWrap.Wrap"
              Gap="@(Dense ? LayoutGap.Small : LayoutGap.Medium)">
-        <button type="button"
-                class="cda-selection-list-item__button min-w-0 flex-1 text-left"
-                data-testid="@DataTestId"
-                @onclick="HandleSelectAsync">
-            <Split Breakpoint="LayoutBreakpoint.None"
-                   Gap="@(Dense ? LayoutGap.Small : LayoutGap.Medium)"
-                   AlignItems="AlignItems.Start"
-                   JustifyContent="JustifyContent.SpaceBetween"
-                   Wrap="FlexWrap.Wrap">
-                <Stack GapScale="LayoutGap.Tiny"
-                       Class="min-w-0">
-                    <Cluster>
-                        <p class="cda-selection-list-item__title text-sm font-semibold leading-5 text-slate-950">@Title</p>
-                        @if (!string.IsNullOrWhiteSpace(Eyebrow))
-                        {
-                            <Pill Tone="PillTone.Label" Text="@Eyebrow" />
-                        }
-                    </Cluster>
-
-                    @if (!string.IsNullOrWhiteSpace(Meta))
-                    {
-                        <p class="cda-selection-list-item__meta text-xs text-slate-500">@Meta</p>
-                    }
-                </Stack>
-
-                @if (Status is not null)
-                {
-                    <div class="shrink-0">
-                        @Status
-                    </div>
-                }
-            </Split>
-
-            @if (!string.IsNullOrWhiteSpace(Summary))
-            {
-                <p class="@ResolveSummaryClass()">@Summary</p>
-            }
-
-            @if (ChildContent is not null)
-            {
-                <div class="@(Dense ? "mt-2" : "mt-3")">
-                    @ChildContent
-                </div>
-            }
-        </button>
+        @if (OnSelect.HasDelegate)
+        {
+            <button type="button"
+                    class="@ResolveSelectionSurfaceClass()"
+                    data-testid="@DataTestId"
+                    disabled="@Disabled"
+                    @onclick="HandleSelectAsync">
+                @SelectionContent
+            </button>
+        }
+        else
+        {
+            <div class="@ResolveSelectionSurfaceClass()"
+                 data-testid="@DataTestId">
+                @SelectionContent
+            </div>
+        }
 
         @if (Actions is not null)
         {
@@ -83,6 +55,9 @@
     public bool Dense { get; set; }
 
     [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
     public RenderFragment? Status { get; set; }
 
     [Parameter]
@@ -94,21 +69,76 @@
     [Parameter]
     public EventCallback OnSelect { get; set; }
 
-    private Task HandleSelectAsync() => OnSelect.InvokeAsync();
+    private RenderFragment SelectionContent => @<text>
+        <Split Breakpoint="LayoutBreakpoint.None"
+               Gap="@(Dense ? LayoutGap.Small : LayoutGap.Medium)"
+               AlignItems="AlignItems.Start"
+               JustifyContent="JustifyContent.SpaceBetween"
+               Wrap="FlexWrap.Wrap">
+            <Stack GapScale="LayoutGap.Tiny"
+                   Class="min-w-0">
+                <Cluster>
+                    <p class="cda-selection-list-item__title m-0 text-sm font-semibold leading-5 text-slate-950">@Title</p>
+                    @if (!string.IsNullOrWhiteSpace(Eyebrow))
+                    {
+                        <Pill Tone="PillTone.Label" Text="@Eyebrow" />
+                    }
+                </Cluster>
+
+                @if (!string.IsNullOrWhiteSpace(Meta))
+                {
+                    <p class="cda-selection-list-item__meta m-0 text-xs text-slate-500">@Meta</p>
+                }
+            </Stack>
+
+            @if (Status is not null)
+            {
+                <div class="shrink-0">
+                    @Status
+                </div>
+            }
+        </Split>
+
+        @if (!string.IsNullOrWhiteSpace(Summary))
+        {
+            <p class="@ResolveSummaryClass()">@Summary</p>
+        }
+
+        @if (ChildContent is not null)
+        {
+            <div class="@(Dense ? "mt-2" : "mt-3")">
+                @ChildContent
+            </div>
+        }
+    </text>;
+
+    private string ResolveSelectionSurfaceClass()
+    {
+        return Disabled
+            ? "cda-selection-list-item__button cda-selection-list-item__button--disabled min-w-0 flex-1 text-left"
+            : "cda-selection-list-item__button min-w-0 flex-1 text-left";
+    }
+
+    private Task HandleSelectAsync()
+    {
+        return Disabled
+            ? Task.CompletedTask
+            : OnSelect.InvokeAsync();
+    }
 
     private string ResolveContainerClass()
         => IsSelected
             ? (Dense
-                ? "cda-selection-list-item rounded-[1.25rem] border border-sky-300 bg-sky-50/80 p-3.5 shadow-sm shadow-sky-100"
-                : "cda-selection-list-item rounded-[1.4rem] border border-sky-300 bg-sky-50/80 p-4 shadow-sm shadow-sky-100")
+                ? "cda-selection-list-item rounded-xl border border-sky-300 bg-sky-50/80 p-3 shadow-sm shadow-sky-100"
+                : "cda-selection-list-item rounded-2xl border border-sky-300 bg-sky-50/80 p-3.5 shadow-sm shadow-sky-100")
             : (Dense
-                ? "cda-selection-list-item rounded-[1.25rem] border border-slate-200 bg-slate-50/90 p-3.5 transition hover:border-slate-300 hover:bg-slate-50"
-                : "cda-selection-list-item rounded-[1.4rem] border border-slate-200 bg-slate-50/90 p-4 transition hover:border-slate-300 hover:bg-slate-50");
+                ? "cda-selection-list-item rounded-xl border border-slate-200 bg-slate-50/90 p-3 transition hover:border-slate-300 hover:bg-slate-50"
+                : "cda-selection-list-item rounded-2xl border border-slate-200 bg-slate-50/90 p-3.5 transition hover:border-slate-300 hover:bg-slate-50");
 
     private string ResolveSummaryClass()
         => Dense
-            ? "cda-selection-list-item__summary mt-2 text-sm leading-5 text-slate-600"
-            : "cda-selection-list-item__summary mt-3 text-sm leading-6 text-slate-600";
+            ? "cda-selection-list-item__summary mb-0 mt-2 text-sm leading-5 text-slate-600"
+            : "cda-selection-list-item__summary mb-0 mt-2.5 text-sm leading-6 text-slate-600";
 }
 
 

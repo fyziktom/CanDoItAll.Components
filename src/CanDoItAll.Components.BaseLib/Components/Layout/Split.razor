@@ -28,8 +28,8 @@
     {
         return BuildClass(
             Breakpoint == LayoutBreakpoint.None
-                ? "flex min-w-0 flex-row [gap:var(--cda-split-gap)]"
-                : "flex min-w-0 flex-col [gap:var(--cda-split-gap)]",
+                ? "flex min-w-0 w-full flex-row [gap:var(--cda-split-gap)]"
+                : "flex min-w-0 w-full flex-col [gap:var(--cda-split-gap)]",
             LayoutValueResolver.PrefixUtility(Breakpoint, "flex-row"),
             LayoutValueResolver.PrefixUtility(Breakpoint, ResolveAlignClass()),
             LayoutValueResolver.PrefixUtility(Breakpoint, ResolveJustifyClass()),

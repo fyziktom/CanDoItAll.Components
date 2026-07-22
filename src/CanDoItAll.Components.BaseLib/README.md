@@ -1,6 +1,6 @@
 # CanDoItAll.Components.BaseLib
 
-Package version: `0.1.0`.
+Package version: `0.1.2`.
 
 ## Purpose
 
@@ -36,6 +36,39 @@ Use BaseLib for ordinary, document-style product UI. Choose [OverlayLib](../CanD
 ## What is included
 
 The catalog is grouped by the way developers assemble pages: visual status and actions; cards and metric panels; forms and data display; layout and navigation; dialog, tooltip, and notification feedback; and supporting typography. Compatibility components remain listed so existing consumers can migrate intentionally.
+
+## Compact, task-first composition
+
+Compact UI means spending the first viewport on the user's primary task, not removing useful whitespace. Start with `PageHeader Compact="true"`, keep page and section gaps at `LayoutGap.Medium`, and let one list, table, canvas, or form own the available space.
+
+| Need | Prefer | Avoid |
+| --- | --- | --- |
+| Supporting counts beside a working surface | `CompactStatStrip` with `CompactStat` | A row of tall summary cards |
+| Sparse metric-first dashboard | `SummaryTiles` or `MetricCard` | Tiny badges floating in an otherwise empty page |
+| Add or edit an item from a list | Dense `SelectionListItem` rows plus a dialog opened on demand | A permanent editor stacked below the list |
+| Related secondary views | `SecondaryTabs Dense="true"` | Several always-visible cards with equal prominence |
+| Visual collection card | Structured `Card` slots: `Media`, `Header`, `Tags`, content, then `Actions` | Ad hoc image and action alignment in every consumer |
+
+Choose input and overlay sizes from expected content:
+
+- `TextAreaSize.Compact` is three rows for short explanations, `Standard` is five rows for ordinary notes, and `Extended` is ten rows for long-form content. Set `Rows` only when the domain has a more precise requirement.
+- `ModalSize.Compact` fits a focused form or confirmation, `Medium` fits a multi-section form, `Wide` fits a dense editor or simple two-pane comparison, and `Full` is reserved for workspace-like flows. `DenseChrome="true"` reduces dialog chrome without shrinking the working content.
+- Load dialog-only data when the dialog opens; keep loading and error state explicit inside it.
+- `CardGrid` uses container-aware tracks, so a short collection fills its surface without reserving empty fixed columns.
+- Give `SelectionListItem` an `OnSelect` callback only when its content is actionable. Without it, the item body is passive; `Disabled` applies to row selection only, and slotted actions must receive their own disabled state.
+- Compound fields such as `SecretField` wrap from their actual container width. Validate them inside realistic narrow grid, card, and dialog columns even when the browser viewport itself is wide.
+
+`Card` remains compatible with child-only content. Use its structured slots for collection items so media is centered, content stretches consistently, tags stay grouped, and actions align at the bottom:
+
+```razor
+<Card>
+    <Media><Avatar Name="Ada Lovelace" /></Media>
+    <Header><TextBlock TextStyle="TextStyle.Subtitle1" Value="Analysis record" /></Header>
+    <Tags><StatusBadge Text="Ready" Tone="success" /></Tags>
+    <ChildContent><SmallText Text="Updated today" /></ChildContent>
+    <Actions><Button Text="Edit" Variant="Variant.Outlined" /></Actions>
+</Card>
+```
 
 ## Component Catalog
 

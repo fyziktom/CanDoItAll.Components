@@ -6,6 +6,13 @@ public enum InputLook
     Plain
 }
 
+public enum TextAreaSize
+{
+    Compact,
+    Standard,
+    Extended
+}
+
 public enum ModalSize
 {
     Compact,

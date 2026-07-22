@@ -466,7 +466,11 @@
         "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
         "members": [
           "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
+          "property Microsoft.AspNetCore.Components.RenderFragment Actions {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Header {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Media {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Tags {get;set;}"
         ]
       },
       {
@@ -2456,6 +2460,7 @@
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment Status {get;set;}",
           "property System.Boolean Dense {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
           "property System.Boolean IsSelected {get;set;}",
           "property System.String DataTestId {get;set;}",
           "property System.String Eyebrow {get;set;}",
@@ -3440,6 +3445,7 @@
         "members": [
           "ctor()",
           "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
+          "property CanDoItAll.Components.BaseLib.TextAreaSize Size {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Change {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ValueChanged {get;set;}",
           "property System.Boolean Disabled {get;set;}",
@@ -3449,6 +3455,19 @@
           "property System.String FormFieldLabelId {get;set;}",
           "property System.String Placeholder {get;set;}",
           "property System.String Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.TextAreaSize",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.TextAreaSize Compact",
+          "field static const CanDoItAll.Components.BaseLib.TextAreaSize Extended",
+          "field static const CanDoItAll.Components.BaseLib.TextAreaSize Standard"
         ]
       },
       {

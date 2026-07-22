@@ -1,19 +1,19 @@
 @namespace CanDoItAll.Components.BaseLib
-<div class="rounded-[1.5rem] border border-dashed border-slate-300 bg-slate-50/80 px-5 py-8 text-center">
+<div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50/80 px-4 py-5 text-center">
     @if (!string.IsNullOrWhiteSpace(Eyebrow))
     {
-        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">@Eyebrow</p>
+        <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">@Eyebrow</p>
     }
 
-    <h3 class="mt-2 text-lg font-semibold text-slate-950">@Title</h3>
-    <p class="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-600">@Description</p>
+    <h3 class="mb-0 mt-1.5 text-base font-semibold text-slate-950">@Title</h3>
+    <p class="mx-auto mb-0 mt-1 max-w-2xl text-sm leading-5 text-slate-600">@Description</p>
 
     @if (Actions is not null)
     {
         <Cluster AlignItems="AlignItems.Center"
                  JustifyContent="JustifyContent.Center"
                  Gap="LayoutGap.Small"
-                 Class="mt-5">
+                 Class="mt-4">
             @Actions
         </Cluster>
     }
