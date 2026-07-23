@@ -1,0 +1,1 @@
+Models was downloaded from https://quaternius.com/ as fbx and converted to gbl with tools/convert_fbx_to_glb.py script
