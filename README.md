@@ -8,6 +8,8 @@
 
 CanDoItAll.Components is a practical UI component library for Blazor applications, styled with Tailwind CSS. It gives product teams a shared set of polished building blocks: forms, navigation, feedback, diagrams, canvas workbenches, floating tools, QR flows, and WebGL scenes, so they can spend their time on product behavior instead of rebuilding UI foundations.
 
+Project website: [aicandoitall.com](https://aicandoitall.com)
+
 ![Map of the component library families](docs/assets/component-library-map.png)
 
 ## Ownership
