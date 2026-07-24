@@ -1,5 +1,11 @@
 # CanDoItAll.Components
 
+[![CI](https://github.com/fyziktom/CanDoItAll.Components/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/fyziktom/CanDoItAll.Components/actions/workflows/ci.yml)
+[![NuGet version](https://img.shields.io/nuget/v/CanDoItAll.Components.BaseLib.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/CanDoItAll.Components.BaseLib)
+[![NuGet downloads](https://img.shields.io/nuget/dt/CanDoItAll.Components.BaseLib.svg?logo=nuget&label=BaseLib%20downloads)](https://www.nuget.org/packages/CanDoItAll.Components.BaseLib)
+[![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/10.0)
+[![License](https://img.shields.io/badge/license-MIT--derived%20with%20source%20link-blue.svg)](LICENSE)
+
 CanDoItAll.Components is a practical UI component library for Blazor applications, styled with Tailwind CSS. It gives product teams a shared set of polished building blocks: forms, navigation, feedback, diagrams, canvas workbenches, floating tools, QR flows, and WebGL scenes, so they can spend their time on product behavior instead of rebuilding UI foundations.
 
 ![Map of the component library families](docs/assets/component-library-map.png)

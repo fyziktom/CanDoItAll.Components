@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 on:
   push:
@@ -54,6 +54,6 @@ jobs:
         with:
           name: nuget-packages
           path: |
-            artifacts/packages/*.nupkg
-            artifacts/packages/*.snupkg
+            artifacts/packages/**/*.nupkg
+            artifacts/packages/**/*.snupkg
           if-no-files-found: error
