@@ -18,7 +18,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       - uses: actions/setup-node@v4
         with:
@@ -39,7 +39,7 @@ jobs:
           npm run canvaslib:verify-assets
 
       - name: Restore .NET dependencies
-        run: dotnet restore CanDoItAll.Components.slnx
+        run: dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
 
       - name: Build
         run: dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
@@ -48,7 +48,7 @@ jobs:
         run: dotnet test CanDoItAll.Components.slnx --configuration Release --no-build --no-restore
 
       - name: Pack
-        run: powershell -ExecutionPolicy Bypass -File tools/pack-packages.ps1 -NoBuild
+        run: powershell -ExecutionPolicy Bypass -File tools/deployment/nugets/Build-NuGets.ps1 -NoBuild -NoRestore
 
       - uses: actions/upload-artifact@v4
         with:

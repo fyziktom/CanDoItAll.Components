@@ -28,7 +28,7 @@ def convert_file(input_path: Path, output_path: Path) -> None:
 
 
 def get_default_paths() -> tuple[Path, Path]:
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = Path(__file__).resolve().parent.parent.parent
     models_root = repo_root / "3DModels"
     return models_root / "fbx", models_root / "glb"
 
@@ -43,7 +43,10 @@ def main() -> int:
     elif len(script_args) == 0:
         input_dir, output_dir = get_default_paths()
     else:
-        print("Usage: blender -b --python tools/convert_fbx_to_glb.py -- [input_dir output_dir]")
+        print(
+            "Usage: blender -b --python tools/webgllib/convert_fbx_to_glb.py "
+            "-- [input_dir output_dir]"
+        )
         return 2
 
     if not input_dir.exists():

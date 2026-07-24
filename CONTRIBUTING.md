@@ -10,18 +10,24 @@ opening a pull request.
 
 ## Development setup
 
-Install the .NET 10 SDK and a current Node.js LTS release, then run:
+Install the .NET SDK selected by `global.json` and a current Node.js LTS
+release, then run:
 
 ```powershell
 npm ci
 npm ci --prefix Tailwind
 npm run tailwind:build
-dotnet restore CanDoItAll.Components.slnx
+dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
 dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
 dotnet test CanDoItAll.Components.slnx --configuration Release --no-build
 ```
 
-Use `samples/CanDoItAll.Components.Sandbox` for component examples and stress scenarios. UI changes should include keyboard checks and Playwright screenshots at desktop, tablet, and mobile widths. Keep application-specific behavior out of the reusable libraries.
+Use `samples/CanDoItAll.Components.Sandbox` for component examples and stress
+scenarios. Viewport-sensitive `BaseLib` changes should include keyboard checks
+and Playwright screenshots at small, medium, and large widths. Other libraries
+target large-screen application use by default; preserve their existing
+responsive behavior unless cross-viewport work is explicitly in scope. Keep
+application-specific behavior out of the reusable libraries.
 
 ## Pull requests
 

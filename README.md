@@ -10,6 +10,13 @@ CanDoItAll.Components is a practical UI component library for Blazor application
 
 ![Map of the component library families](docs/assets/component-library-map.png)
 
+## Ownership
+
+This repository owns reusable Blazor component packages, their static assets,
+package metadata, tests, and maintained visual samples. It does not own
+application-specific workflows or the file-provider and editor packages maintained by
+[CanDoItAll.FileTools](https://github.com/fyziktom/CanDoItAll.FileTools).
+
 ## Start here
 
 Choose the smallest library that fits the surface you are building. Most applications begin with `BaseLib`; add a specialised library only when the workflow calls for it.
@@ -60,7 +67,11 @@ See [BaseLib](src/CanDoItAll.Components.BaseLib/README.md) for setup, service-dr
 
 ### File tooling ownership
 
-File browsing, filesystem provider examples, and file viewing/editing now live in [CanDoItAll.FileTools](https://github.com/fyziktom/CanDoItAll.FileTools). Consumers of the former `CanDoItAll.Components.FileBrowser.*` packages should migrate to the corresponding FileTools packages. This repository intentionally has no dependency on FileTools and retains simple presentation wrappers such as Mermaid.
+File browsing, filesystem provider examples, and file viewing/editing now live in
+CanDoItAll.FileTools. Consumers of the former
+`CanDoItAll.Components.FileBrowser.*` packages should migrate to the corresponding
+FileTools packages. This repository intentionally has no dependency on FileTools and
+retains simple presentation wrappers such as Mermaid.
 
 ### Floating windows: ordinary UI vs. Canvas
 
@@ -80,6 +91,16 @@ The running Sandbox contains both reference examples:
 
 For the Canvas lifecycle, composition rules, and a minimal implementation, read the [Canvas guide](docs/canvas/README.md).
 
+## Documentation
+
+- [Foundation ownership](docs/standard-components-foundation-ownership.md)
+- [Compatibility policy](docs/standard-components-compatibility-policy.md)
+- [Tailwind policy](docs/standard-components-tailwind-policy.md)
+- [Open-source release checklist](docs/open-source-release-checklist.md)
+- [WebGL external-consumer quickstart](docs/webgl/external-consumer-quickstart.md)
+- [Contribution policy](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+
 ## Sandbox and examples
 
 The Sandbox is the visual catalog and regression host. It is the fastest way to see components in context before adopting them.
@@ -92,13 +113,17 @@ Open the printed local URL and visit `/groups/overlays`, `/groups/canvas`, `/gro
 
 ## Development
 
-The libraries target `.NET 10`. Shared component CSS is authored with Tailwind in [`Tailwind`](Tailwind/README.md) and emitted into BaseLib's static web assets.
+The libraries target `.NET 10`; `global.json` selects the supported SDK feature
+band. Shared component CSS is authored with Tailwind in
+[`Tailwind`](Tailwind/README.md) and emitted into BaseLib's static web assets.
 
 ```powershell
-npm install
-npm install --prefix Tailwind
+npm ci
+npm ci --prefix Tailwind
 npm run tailwind:build
-dotnet build CanDoItAll.Components.slnx --configuration Release
+dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
+dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
+dotnet test CanDoItAll.Components.slnx --configuration Release --no-build
 ```
 
 ### Package version
@@ -110,7 +135,7 @@ need to be updated. For an official release, change
 pack:
 
 ```powershell
-.\tools\pack-packages.ps1
+.\tools\deployment\nugets\Build-NuGets.ps1
 ```
 
 The script prints the effective version before packing. You can also override
@@ -118,7 +143,7 @@ the shared base version for one invocation without editing
 `Directory.Build.props`:
 
 ```powershell
-.\tools\pack-packages.ps1 -Version "0.2.0"
+.\tools\deployment\nugets\Build-NuGets.ps1 -Version "0.2.0"
 ```
 
 Use the committed `Directory.Build.props` value for public releases so the
@@ -127,28 +152,31 @@ useful for local or validation packages.
 
 ### Pack all packages
 
-The packaging tool builds every packable project under `src` into one clean
-folder and never packages samples or tests. It first runs
-`npm run tailwind:build` so BaseLib's packaged `output.css` is current.
+The packaging tool restores, builds, and tests the solution, then packs every
+packable project under `src`; samples and tests are never packaged. It first
+runs `npm run tailwind:build` so BaseLib's packaged `output.css` is current.
 
 Every invocation creates a new run folder under `artifacts/packages`. Its name
 contains the effective version and local date and time, for example
 `artifacts/packages/0.2.0_20260724-153045123`. Previous package runs are kept.
 The resulting `.nupkg` and `.snupkg` files are ready for manual upload through
 the [fyziktom NuGet profile](https://www.nuget.org/profiles/fyziktom).
+When cross-repository automation supplies `-OutputDirectory`, packages are
+written directly to that exact directory. `-NoRestore` and `-NoBuild` are for
+callers, such as CI, that have already completed those gates.
 
 For a prerelease, append a suffix to either the committed base version or a
 temporary `-Version` override:
 
 ```powershell
-.\tools\pack-packages.ps1 -Version "0.2.0" -PrereleaseSuffix "-preview.1"
+.\tools\deployment\nugets\Build-NuGets.ps1 -Version "0.2.0" -PrereleaseSuffix "-preview.1"
 ```
 
 For a consumer-validation build using the committed base version, pass a
 unique prerelease suffix:
 
 ```powershell
-.\tools\pack-packages.ps1 -PrereleaseSuffix "-local.20260724.1"
+.\tools\deployment\nugets\Build-NuGets.ps1 -PrereleaseSuffix "-local.20260724.1"
 ```
 
 ## License

@@ -2,7 +2,19 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <DefaultItemExcludes>
+      $(DefaultItemExcludes);
+      .artifacts/**;
+      .mcp-state/**;
+      output/**;
+      playwright-report/**;
+      test-results/**;
+      TestResults/**;
+      coverage/**;
+    </DefaultItemExcludes>
     <IsPackable>false</IsPackable>
     <CanDoItAllPackageBaseVersion Condition="'$(CanDoItAllPackageBaseVersion)' == ''">0.1.2</CanDoItAllPackageBaseVersion>
     <CanDoItAllPackageProofSuffix Condition="'$(CanDoItAllPackageProofSuffix)' == ''"></CanDoItAllPackageProofSuffix>
