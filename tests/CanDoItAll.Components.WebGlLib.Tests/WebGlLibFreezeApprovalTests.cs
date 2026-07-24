@@ -8,6 +8,8 @@ namespace CanDoItAll.Components.WebGlLib.Tests;
 
 public sealed partial class WebGlLibFreezeApprovalTests
 {
+    private const string UpdateApprovalsVariable = "CDA_UPDATE_WEBGLLIB_APPROVALS";
+
     private static readonly JsonSerializerOptions MetadataJsonOptions = new(JsonSerializerDefaults.Web)
     {
         WriteIndented = true
@@ -16,19 +18,17 @@ public sealed partial class WebGlLibFreezeApprovalTests
     [Fact]
     public void Public_api_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webgllib-public-api.approved.txt");
         string actual = BuildPublicApiSnapshot("src/CanDoItAll.Components.WebGlLib");
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webgllib-public-api.approved.txt", actual);
     }
 
     [Fact]
     public void Public_api_metadata_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webgllib-public-api.metadata.approved.json");
         string actual = BuildPublicApiMetadataSnapshot(typeof(WebGlSceneModel).Assembly);
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webgllib-public-api.metadata.approved.json", actual);
     }
 
     [Fact]
@@ -38,9 +38,7 @@ public sealed partial class WebGlLibFreezeApprovalTests
         string sceneEntry = Path.Combine(repoRoot, "src", "CanDoItAll.Components.WebGlLib", "wwwroot", "js", "runtime", "scene", "01-webgl-scene.js");
         string[] methods = ReadWebGlSceneMethodNames(sceneEntry);
         string actual = string.Join(Environment.NewLine, methods) + Environment.NewLine;
-        string approved = ReadApproval("webgllib-webglscene-js-surface.approved.txt");
-
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webgllib-webglscene-js-surface.approved.txt", actual);
     }
 
     [Fact]
@@ -116,10 +114,9 @@ public sealed partial class WebGlLibFreezeApprovalTests
     [Fact]
     public void Package_content_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webgllib-package-content.approved.txt");
         string actual = BuildPackageContentSnapshot("src/CanDoItAll.Components.WebGlLib");
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webgllib-package-content.approved.txt", actual);
     }
 
     private static string BuildPublicApiSnapshot(string sourceRoot)
@@ -276,6 +273,25 @@ public sealed partial class WebGlLibFreezeApprovalTests
 
     private static string ReadApproval(string fileName)
         => File.ReadAllText(Path.Combine(FindRepoRoot(), "tests", "CanDoItAll.Components.WebGlLib.Tests", "fixtures", "approvals", fileName));
+
+    private static void AssertApproved(string fileName, string actual)
+    {
+        string approvalPath = Path.Combine(
+            FindRepoRoot(),
+            "tests",
+            "CanDoItAll.Components.WebGlLib.Tests",
+            "fixtures",
+            "approvals",
+            fileName);
+
+        if (string.Equals(Environment.GetEnvironmentVariable(UpdateApprovalsVariable), "1", StringComparison.Ordinal))
+        {
+            File.WriteAllText(approvalPath, actual);
+        }
+
+        string approved = File.ReadAllText(approvalPath);
+        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+    }
 
     private static string BuildPackageContentSnapshot(string sourceRoot)
     {

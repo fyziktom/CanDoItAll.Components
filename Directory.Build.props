@@ -8,12 +8,15 @@
     <CanDoItAllPackageProofSuffix Condition="'$(CanDoItAllPackageProofSuffix)' == ''"></CanDoItAllPackageProofSuffix>
     <Version>$(CanDoItAllPackageBaseVersion)$(CanDoItAllPackageProofSuffix)</Version>
     <PackageVersion>$(Version)</PackageVersion>
-    <Authors>CanDoItAll</Authors>
+    <Authors>fyziktom</Authors>
+    <PackageOwners>fyziktom</PackageOwners>
     <Company>CanDoItAll</Company>
+    <Copyright>Copyright © 2026 fyziktom</Copyright>
     <PackageProjectUrl>https://github.com/fyziktom/CanDoItAll.Components</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fyziktom/CanDoItAll.Components</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <DebugType>portable</DebugType>
@@ -25,5 +28,6 @@
 
   <ItemGroup>
     <None Include="$(MSBuildProjectDirectory)\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,12 @@
 # Contributing
 
-Thank you for helping improve CanDoItAll.Components.
+CanDoItAll.Components accepts code contributions only from partners who have
+been explicitly approved by the maintainer. Unsolicited pull requests are not
+accepted.
+
+To discuss becoming an approved partner, contact the maintainer on LinkedIn
+using the handle `fyziktom`. Please wait for approval before preparing or
+opening a pull request.
 
 ## Development setup
 
@@ -19,6 +25,7 @@ Use `samples/CanDoItAll.Components.Sandbox` for component examples and stress sc
 
 ## Pull requests
 
+- Open a pull request only after partner approval.
 - Keep changes focused and explain public API changes.
 - Add or update unit tests and sandbox scenarios for behavior changes.
 - Regenerate Tailwind output with `npm run tailwind:build`.

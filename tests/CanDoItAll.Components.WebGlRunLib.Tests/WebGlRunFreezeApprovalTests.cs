@@ -9,6 +9,8 @@ namespace CanDoItAll.Components.WebGlRunLib.Tests;
 
 public sealed class WebGlRunFreezeApprovalTests
 {
+    private const string UpdateApprovalsVariable = "CDA_UPDATE_WEBGLRUNLIB_APPROVALS";
+
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -23,28 +25,25 @@ public sealed class WebGlRunFreezeApprovalTests
     [Fact]
     public void Public_api_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webglrunlib-public-api.approved.txt");
         string actual = BuildPublicApiSnapshot("src/CanDoItAll.Components.WebGlRunLib");
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webglrunlib-public-api.approved.txt", actual);
     }
 
     [Fact]
     public void Public_api_metadata_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webglrunlib-public-api.metadata.approved.json");
         string actual = BuildPublicApiMetadataSnapshot(typeof(WebGlRunDocument).Assembly);
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webglrunlib-public-api.metadata.approved.json", actual);
     }
 
     [Fact]
     public void Action_kind_vocabulary_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webglrunlib-action-kinds.approved.txt");
         string actual = string.Join(Environment.NewLine, WebGlRunActionKinds.All.Order(StringComparer.Ordinal)) + Environment.NewLine;
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webglrunlib-action-kinds.approved.txt", actual);
     }
 
     [Fact]
@@ -60,7 +59,6 @@ public sealed class WebGlRunFreezeApprovalTests
     [Fact]
     public void Domain_driver_manifest_schema_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webglrunlib-domain-driver-manifest-schema.approved.txt");
         var shape = new
         {
             WebGlRunDomainMappingDriverManifest.CurrentSchemaVersion,
@@ -73,7 +71,7 @@ public sealed class WebGlRunFreezeApprovalTests
         };
         string actual = JsonSerializer.Serialize(shape, JsonOptions) + Environment.NewLine;
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webglrunlib-domain-driver-manifest-schema.approved.txt", actual);
     }
 
     [Fact]
@@ -89,10 +87,9 @@ public sealed class WebGlRunFreezeApprovalTests
     [Fact]
     public void Package_content_matches_freeze_snapshot()
     {
-        string approved = ReadApproval("webglrunlib-package-content.approved.txt");
         string actual = BuildPackageContentSnapshot("src/CanDoItAll.Components.WebGlRunLib");
 
-        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+        AssertApproved("webglrunlib-package-content.approved.txt", actual);
     }
 
     private static string BuildPublicApiSnapshot(string sourceRoot)
@@ -190,6 +187,25 @@ public sealed class WebGlRunFreezeApprovalTests
 
     private static string ReadApproval(string fileName)
         => File.ReadAllText(Path.Combine(FindRepoRoot(), "tests", "CanDoItAll.Components.WebGlRunLib.Tests", "fixtures", "approvals", fileName));
+
+    private static void AssertApproved(string fileName, string actual)
+    {
+        string approvalPath = Path.Combine(
+            FindRepoRoot(),
+            "tests",
+            "CanDoItAll.Components.WebGlRunLib.Tests",
+            "fixtures",
+            "approvals",
+            fileName);
+
+        if (string.Equals(Environment.GetEnvironmentVariable(UpdateApprovalsVariable), "1", StringComparison.Ordinal))
+        {
+            File.WriteAllText(approvalPath, actual);
+        }
+
+        string approved = File.ReadAllText(approvalPath);
+        Assert.Equal(NormalizeNewLines(approved), NormalizeNewLines(actual));
+    }
 
     private static string BuildPackageContentSnapshot(string sourceRoot)
     {

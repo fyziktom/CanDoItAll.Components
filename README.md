@@ -95,9 +95,32 @@ npm run tailwind:build
 dotnet build CanDoItAll.Components.slnx --configuration Release
 ```
 
-For package proof builds, all packages share the base version set by `CanDoItAllPackageBaseVersion`. Pass a unique prerelease suffix through `CanDoItAllPackageProofSuffix` when packaging a consumer-validation build.
+All library packages share the base version set by
+`CanDoItAllPackageBaseVersion`. The packaging tool builds every packable
+project under `src` into one clean folder and never packages samples or tests:
 
 ```powershell
-$proofSuffix = "-local.20260710.1"
-dotnet pack CanDoItAll.Components.slnx --configuration Release --output artifacts/packages /p:CanDoItAllPackageProofSuffix=$proofSuffix
+.\tools\pack-packages.ps1
 ```
+
+The `.nupkg` and `.snupkg` files are written to `artifacts/packages` for
+manual upload through the
+[fyziktom NuGet profile](https://www.nuget.org/profiles/fyziktom). For a
+consumer-validation build, pass a unique prerelease suffix:
+
+```powershell
+.\tools\pack-packages.ps1 -PrereleaseSuffix "-local.20260724.1"
+```
+
+## License
+
+This repository uses an MIT-derived license with an additional requirement
+that redistributions link to the original source repository. Because that is
+an extra condition, this is not the unmodified SPDX MIT license. See
+[LICENSE](LICENSE) for the complete terms.
+
+## Contributions
+
+Code contributions are limited to partners approved by the maintainer. See
+[CONTRIBUTING.md](CONTRIBUTING.md) and contact the `fyziktom` account on
+LinkedIn before opening a pull request.

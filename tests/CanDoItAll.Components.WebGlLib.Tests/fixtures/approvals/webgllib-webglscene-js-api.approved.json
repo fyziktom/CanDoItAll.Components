@@ -225,6 +225,15 @@
     "failureBehavior": "Missing runtime is ignored."
   },
   {
+    "method": "setLinkVisibility",
+    "parameterShape": "host, isVisible",
+    "resultShape": "boolean",
+    "missingRuntimeResult": "false",
+    "lifecycleBehavior": "Updates link visibility in runtime options and scene UI state, rebuilds the scene, and schedules a render.",
+    "idleSettledBehavior": "Applies link visibility without waiting for selected idle policy completion.",
+    "failureBehavior": "Returns false when runtime is missing."
+  },
+  {
     "method": "setObjectTransform",
     "parameterShape": "host, objectId, transform",
     "resultShape": "boolean",

@@ -1,7 +1,5 @@
 # CanDoItAll.Components.Common
 
-Package version: `0.1.0`.
-
 ## Purpose
 
 Common is the small, dependency-light foundation beneath the rendering libraries. It contains CSS class helpers, component attribute helpers, and typed layout primitives such as orientation, alignment, justification, and wrapping. It is useful when a shared feature needs UI vocabulary without depending on Razor rendering or a browser runtime.

@@ -1,7 +1,5 @@
 # CanDoItAll.Components.Mermaid
 
-Package version: `0.1.0`.
-
 ## Purpose
 
 Mermaid renders authored flowcharts, sequence diagrams, and architecture maps inside a Blazor application. It wraps Mermaid with source normalization, pan/zoom controls, typed render errors, render results, node-click events, and the static assets a host needs.

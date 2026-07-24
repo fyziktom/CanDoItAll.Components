@@ -174,7 +174,7 @@ public sealed partial class CanvasOverlayPublishingApprovalTests
         var directoryBuild = XDocument.Load(Path.Combine(repoRoot, "Directory.Build.props"));
         string inheritedBaseVersion = ReadFirstProperty(directoryBuild, "CanDoItAllPackageBaseVersion");
         string inheritedReadme = ReadFirstProperty(directoryBuild, "PackageReadmeFile");
-        string inheritedLicense = ReadFirstProperty(directoryBuild, "PackageLicenseExpression");
+        string inheritedLicense = ReadFirstProperty(directoryBuild, "PackageLicenseFile");
         string inheritedTags = ReadFirstProperty(directoryBuild, "PackageTags");
         string inheritedDescription = ReadFirstProperty(directoryBuild, "Description");
 
@@ -184,7 +184,7 @@ public sealed partial class CanvasOverlayPublishingApprovalTests
             {
                 packageBaseVersion = inheritedBaseVersion,
                 packageReadmeFile = inheritedReadme,
-                packageLicenseExpression = inheritedLicense,
+                packageLicenseFile = inheritedLicense,
                 packageTags = inheritedTags,
                 defaultDescription = inheritedDescription
             },

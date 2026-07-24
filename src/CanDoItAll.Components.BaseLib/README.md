@@ -1,7 +1,5 @@
 # CanDoItAll.Components.BaseLib
 
-Package version: `0.1.2`.
-
 ## Purpose
 
 BaseLib is the everyday UI toolkit in CanDoItAll.Components: ready-made, Tailwind-styled Razor components for product pages, forms, navigation, feedback, layout, dialogs, and application chrome. Use it to establish a consistent Blazor UI quickly while keeping your page state and business behavior in the application.

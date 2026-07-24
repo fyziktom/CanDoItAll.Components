@@ -1,7 +1,5 @@
 # CanDoItAll.Components.WebGlLib
 
-Package version: `0.1.0`.
-
 ## Purpose
 
 WebGlLib provides domain-neutral Blazor components and contracts for interactive 3D scenes. Use it when a product needs to display, select, move, inspect, or export scene objects and links, not merely embed a static model. Your application supplies the scene, assets, and domain behavior; WebGlLib supplies the browser rendering runtime and typed scene boundary.

@@ -1,7 +1,5 @@
 # CanDoItAll.Components.Charts
 
-Package version: `0.1.0`.
-
 ## Purpose
 
 Charts provides a friendly, typed Blazor boundary around ApexCharts. Use it for product dashboards and reports when you want consistent chart containers, accessible summaries, application-owned data models, and palette/options that do not leak a third-party chart API throughout the codebase.

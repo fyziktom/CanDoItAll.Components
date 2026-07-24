@@ -44,19 +44,11 @@ jobs:
       - name: Build
         run: dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
 
-      - name: Test release-focus packages
-        run: |
-          dotnet test tests/CanDoItAll.Components.BaseLib.Tests/CanDoItAll.Components.BaseLib.Tests.csproj --configuration Release --no-build
-          dotnet test tests/CanDoItAll.Components.Common.Tests/CanDoItAll.Components.Common.Tests.csproj --configuration Release --no-build
-          dotnet test tests/CanDoItAll.Components.Gantt.Tests/CanDoItAll.Components.Gantt.Tests.csproj --configuration Release --no-build
-          dotnet test tests/CanDoItAll.Components.QRCode.Tests/CanDoItAll.Components.QRCode.Tests.csproj --configuration Release --no-build
-
-      - name: Report deferred WebGL freeze-suite status
-        continue-on-error: true
-        run: dotnet test tests/CanDoItAll.Components.WebGlLib.Tests/CanDoItAll.Components.WebGlLib.Tests.csproj --configuration Release --no-build
+      - name: Run unit tests
+        run: dotnet test CanDoItAll.Components.slnx --configuration Release --no-build --no-restore
 
       - name: Pack
-        run: powershell -ExecutionPolicy Bypass -File scripts/pack-release.ps1 -NoBuild
+        run: powershell -ExecutionPolicy Bypass -File tools/pack-packages.ps1 -NoBuild
 
       - uses: actions/upload-artifact@v4
         with:

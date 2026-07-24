@@ -1,7 +1,5 @@
 # CanDoItAll.Components.WebGlRunLib
 
-Package version: `0.1.0`.
-
 ## Purpose
 
 WebGlRunLib adds deterministic, domain-neutral playback over WebGlLib scenes. Use it when a 3D surface must run a defined timeline of frames, actions, scene patches, motions, barriers, pause/resume, or proof snapshots. It models the playback language; a consuming application maps its own domain concepts into that language.
