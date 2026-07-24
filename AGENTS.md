@@ -23,7 +23,7 @@ developer profile or repositories directory.
 - Restore: `dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config`
 - Build: `dotnet build CanDoItAll.Components.slnx --configuration Release`
 - Test: `dotnet test CanDoItAll.Components.slnx --configuration Release`
-- Validate assets: `npm run tailwind:build; npm run canvaslib:verify-assets`
+- Validate assets: `npm run tailwind:build; npm run assets:verify`
 - Package: `.\tools\deployment\nugets\Build-NuGets.ps1`
 
 ## Component Proof

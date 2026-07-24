@@ -4,6 +4,8 @@
   "private": true,
   "description": "Shared CanDoItAll Blazor component libraries, sandbox, assets, and package build scripts.",
   "scripts": {
+    "assets:test-generated-text": "node --test tools/assets/generated-text.test.cjs",
+    "assets:verify": "npm run assets:test-generated-text && npm run canvaslib:verify-assets && npm run webgllib:verify-assets",
     "canvaslib:build-assets": "node tools/canvaslib/build-assets.cjs",
     "canvaslib:verify-assets": "node tools/canvaslib/verify-assets.cjs",
     "gantt:test-routing": "node tools/gantt/test-routing.cjs",

@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { renderGeneratedText } = require("../assets/generated-text.cjs");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
 const manifestPath = path.join(__dirname, "asset-manifest.json");
@@ -79,7 +80,7 @@ function buildHeadComponent(manifest) {
     lines.push(`<link rel="stylesheet" href="@Assets["${style.output}"]" />`);
   }
 
-  return `${lines.join("\r\n")}\r\n`;
+  return renderGeneratedText(lines);
 }
 
 function buildBodyComponent(manifest) {
@@ -127,7 +128,7 @@ function buildBodyComponent(manifest) {
   lines.push("    [Parameter]");
   lines.push("    public bool IncludeSceneRuntimeAssets { get; set; }");
   lines.push("}");
-  return `${lines.join("\r\n")}\r\n`;
+  return renderGeneratedText(lines);
 }
 
 function stringEmptyLine() {

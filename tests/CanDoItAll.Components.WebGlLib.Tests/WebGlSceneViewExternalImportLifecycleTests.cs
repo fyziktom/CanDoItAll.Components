@@ -81,13 +81,8 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
     public async Task Scene_create_keeps_runtime_callbacks_when_handlers_are_attached()
     {
         var jsRuntime = new RecordingJsRuntime();
-        var view = new TestableWebGlSceneView(jsRuntime)
-        {
-            StateChanged = EventCallback.Factory.Create<string>(new object(), static _ => { }),
-            MotionCompleted = EventCallback.Factory.Create<WebGlSceneCommandResult>(new object(), static _ => { }),
-            CommandCompleted = EventCallback.Factory.Create<WebGlSceneCommandResult>(new object(), static _ => { }),
-            CommandFailed = EventCallback.Factory.Create<WebGlSceneCommandResult>(new object(), static _ => { })
-        };
+        var view = new TestableWebGlSceneView(jsRuntime);
+        view.AttachRuntimeCallbacks();
 
         await view.RenderWithParametersAsync(Scene("scene.callbacks.on", "object.callbacks.on", revision: 1), new WebGlRuntimeOptions(), firstRender: true);
 
@@ -229,6 +224,14 @@ public sealed class WebGlSceneViewExternalImportLifecycleTests
             SetJsRuntime();
             OnParametersSet();
             await OnAfterRenderAsync(firstRender);
+        }
+
+        public void AttachRuntimeCallbacks()
+        {
+            StateChanged = EventCallback.Factory.Create<string>(this, static _ => { });
+            MotionCompleted = EventCallback.Factory.Create<WebGlSceneCommandResult>(this, static _ => { });
+            CommandCompleted = EventCallback.Factory.Create<WebGlSceneCommandResult>(this, static _ => { });
+            CommandFailed = EventCallback.Factory.Create<WebGlSceneCommandResult>(this, static _ => { });
         }
 
         private void SetJsRuntime()

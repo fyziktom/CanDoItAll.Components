@@ -4,7 +4,7 @@
 [![NuGet version](https://img.shields.io/nuget/v/CanDoItAll.Components.BaseLib.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/CanDoItAll.Components.BaseLib)
 [![NuGet downloads](https://img.shields.io/nuget/dt/CanDoItAll.Components.BaseLib.svg?logo=nuget&label=BaseLib%20downloads)](https://www.nuget.org/packages/CanDoItAll.Components.BaseLib)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/10.0)
-[![License](https://img.shields.io/badge/license-MIT--derived%20with%20source%20link-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT--derived%20with%20website%20link-blue.svg)](LICENSE)
 
 CanDoItAll.Components is a practical UI component library for Blazor applications, styled with Tailwind CSS. It gives product teams a shared set of polished building blocks: forms, navigation, feedback, diagrams, canvas workbenches, floating tools, QR flows, and WebGL scenes, so they can spend their time on product behavior instead of rebuilding UI foundations.
 
@@ -123,6 +123,7 @@ band. Shared component CSS is authored with Tailwind in
 npm ci
 npm ci --prefix Tailwind
 npm run tailwind:build
+npm run assets:verify
 dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
 dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
 dotnet test CanDoItAll.Components.slnx --configuration Release --no-build
@@ -183,10 +184,13 @@ unique prerelease suffix:
 
 ## License
 
-This repository uses an MIT-derived license with an additional requirement
-that redistributions link to the original source repository. Because that is
-an extra condition, this is not the unmodified SPDX MIT license. See
-[LICENSE](LICENSE) for the complete terms.
+This repository uses the
+[MIT-Derived License with CanDoItAll Website Link Requirement](LICENSE).
+Redistributions of the software or a substantial portion of it in source or
+binary form must include at least one link to
+[aicandoitall.com](https://aicandoitall.com). One such link satisfies the
+added condition for a distribution containing multiple covered CanDoItAll
+libraries.
 
 ## Contributions
 

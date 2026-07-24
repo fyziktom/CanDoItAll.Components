@@ -33,10 +33,10 @@ jobs:
           npm ci
           npm ci --prefix Tailwind
 
-      - name: Build generated styles and verify canvas assets
+      - name: Build generated styles and verify component assets
         run: |
           npm run tailwind:build
-          npm run canvaslib:verify-assets
+          npm run assets:verify
 
       - name: Restore .NET dependencies
         run: dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
