@@ -6,7 +6,12 @@ Packs all publishable component projects into one folder.
 By default, the package version comes from CanDoItAllPackageBaseVersion in
 Directory.Build.props. Use -Version to override that base version for this
 invocation without modifying the repository. Use -PrereleaseSuffix to append
-a suffix such as "-preview.1".
+a suffix such as "-preview.1". The script rebuilds the Tailwind assets before
+packing, then creates a versioned and timestamped folder for the run.
+
+.PARAMETER OutputPath
+Parent directory for package runs. Each invocation creates a child directory
+named from the effective package version and the local date and time.
 
 .PARAMETER Version
 Temporarily overrides the shared base package version from
@@ -42,7 +47,7 @@ $ErrorActionPreference = "Stop"
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $sourceRoot = Join-Path $repositoryRoot "src"
 $directoryBuildPropsPath = Join-Path $repositoryRoot "Directory.Build.props"
-$outputDirectory = if ([System.IO.Path]::IsPathRooted($OutputPath))
+$outputRootDirectory = if ([System.IO.Path]::IsPathRooted($OutputPath))
 {
     [System.IO.Path]::GetFullPath($OutputPath)
 }
@@ -51,9 +56,9 @@ else
     [System.IO.Path]::GetFullPath((Join-Path $repositoryRoot $OutputPath))
 }
 
-if ($outputDirectory.TrimEnd("\", "/") -eq $repositoryRoot.TrimEnd("\", "/"))
+if ($outputRootDirectory.TrimEnd("\", "/") -eq $repositoryRoot.TrimEnd("\", "/"))
 {
-    throw "The package output directory cannot be the repository root."
+    throw "The package output root cannot be the repository root."
 }
 
 [xml]$directoryBuildProps = Get-Content -LiteralPath $directoryBuildPropsPath -Raw
@@ -102,12 +107,34 @@ Write-Host "Package version: $effectiveVersion"
 Write-Host "Version source: $versionSource"
 Write-Host ""
 
-New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
+Write-Host "Building Tailwind assets..."
+$tailwindExitCode = 0
+Push-Location $repositoryRoot
+try
+{
+    & npm run tailwind:build
+    $tailwindExitCode = $LASTEXITCODE
+}
+finally
+{
+    Pop-Location
+}
 
-# Keep the upload folder deterministic without touching unrelated artifacts.
-Get-ChildItem -LiteralPath $outputDirectory -File |
-    Where-Object { $_.Name -match '^CanDoItAll\.Components\..+\.(?:nupkg|snupkg)$' } |
-    Remove-Item -Force
+if ($tailwindExitCode -ne 0)
+{
+    exit $tailwindExitCode
+}
+
+$runTimestamp = Get-Date -Format "yyyyMMdd-HHmmssfff"
+$runDirectoryName = "${effectiveVersion}_$runTimestamp"
+$outputDirectory = Join-Path $outputRootDirectory $runDirectoryName
+
+New-Item -ItemType Directory -Force -Path $outputRootDirectory | Out-Null
+New-Item -ItemType Directory -Path $outputDirectory | Out-Null
+
+Write-Host ""
+Write-Host "Package run folder: $outputDirectory"
+Write-Host ""
 
 $projectFiles = @(
     Get-ChildItem -LiteralPath $sourceRoot -Filter "*.csproj" -Recurse |

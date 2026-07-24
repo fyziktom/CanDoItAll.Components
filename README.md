@@ -122,9 +122,14 @@ useful for local or validation packages.
 ### Pack all packages
 
 The packaging tool builds every packable project under `src` into one clean
-folder and never packages samples or tests. The `.nupkg` and `.snupkg` files
-are written to `artifacts/packages` for manual upload through the
-[fyziktom NuGet profile](https://www.nuget.org/profiles/fyziktom).
+folder and never packages samples or tests. It first runs
+`npm run tailwind:build` so BaseLib's packaged `output.css` is current.
+
+Every invocation creates a new run folder under `artifacts/packages`. Its name
+contains the effective version and local date and time, for example
+`artifacts/packages/0.2.0_20260724-153045123`. Previous package runs are kept.
+The resulting `.nupkg` and `.snupkg` files are ready for manual upload through
+the [fyziktom NuGet profile](https://www.nuget.org/profiles/fyziktom).
 
 For a prerelease, append a suffix to either the committed base version or a
 temporary `-Version` override:
