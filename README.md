@@ -95,18 +95,46 @@ npm run tailwind:build
 dotnet build CanDoItAll.Components.slnx --configuration Release
 ```
 
-All library packages share the base version set by
-`CanDoItAllPackageBaseVersion`. The packaging tool builds every packable
-project under `src` into one clean folder and never packages samples or tests:
+### Package version
+
+All library packages use one shared version; individual project files do not
+need to be updated. For an official release, change
+`CanDoItAllPackageBaseVersion` in
+[`Directory.Build.props`](Directory.Build.props), commit that change, and then
+pack:
 
 ```powershell
 .\tools\pack-packages.ps1
 ```
 
-The `.nupkg` and `.snupkg` files are written to `artifacts/packages` for
-manual upload through the
-[fyziktom NuGet profile](https://www.nuget.org/profiles/fyziktom). For a
-consumer-validation build, pass a unique prerelease suffix:
+The script prints the effective version before packing. You can also override
+the shared base version for one invocation without editing
+`Directory.Build.props`:
+
+```powershell
+.\tools\pack-packages.ps1 -Version "0.2.0"
+```
+
+Use the committed `Directory.Build.props` value for public releases so the
+repository records the version that was published. The `-Version` override is
+useful for local or validation packages.
+
+### Pack all packages
+
+The packaging tool builds every packable project under `src` into one clean
+folder and never packages samples or tests. The `.nupkg` and `.snupkg` files
+are written to `artifacts/packages` for manual upload through the
+[fyziktom NuGet profile](https://www.nuget.org/profiles/fyziktom).
+
+For a prerelease, append a suffix to either the committed base version or a
+temporary `-Version` override:
+
+```powershell
+.\tools\pack-packages.ps1 -Version "0.2.0" -PrereleaseSuffix "-preview.1"
+```
+
+For a consumer-validation build using the committed base version, pass a
+unique prerelease suffix:
 
 ```powershell
 .\tools\pack-packages.ps1 -PrereleaseSuffix "-local.20260724.1"
