@@ -16,11 +16,9 @@ public sealed class MermaidSourceNormalizerTests
         var normalized = MermaidSourceNormalizer.Normalize(source);
 
         Assert.Equal(
-            """
-            flowchart LR
-            start[Start]
-            start --> done[Done]
-            """,
+            "flowchart LR\n" +
+            "start[Start]\n" +
+            "start --> done[Done]",
             normalized);
     }
 
@@ -37,12 +35,10 @@ public sealed class MermaidSourceNormalizerTests
         var normalized = MermaidSourceNormalizer.Normalize(source);
 
         Assert.Equal(
-            """
-            mindmap
-            root((Mermaid wrapper))
-                Render
-                Interact
-            """,
+            "mindmap\n" +
+            "root((Mermaid wrapper))\n" +
+            "    Render\n" +
+            "    Interact",
             normalized);
     }
 }

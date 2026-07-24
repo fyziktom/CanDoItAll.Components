@@ -393,7 +393,7 @@ public sealed class StandardPublishingApprovalTests
     private static bool IsTextSnapshotFile(string path)
         => Path.GetExtension(path).ToLowerInvariant() switch
         {
-            ".cs" or ".razor" or ".csproj" or ".props" or ".targets" or ".json" or ".js" or ".css" or ".md" or ".txt" or ".xml" or ".mjs" => true,
+            ".cs" or ".razor" or ".csproj" or ".props" or ".targets" or ".json" or ".js" or ".css" or ".md" or ".txt" or ".xml" or ".mjs" or ".mermaid" => true,
             _ => false
         };
 
