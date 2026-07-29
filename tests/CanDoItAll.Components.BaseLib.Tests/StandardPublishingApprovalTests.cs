@@ -134,8 +134,9 @@ public sealed class StandardPublishingApprovalTests
     {
         string repoRoot = FindRepoRoot();
         var directoryBuild = XDocument.Load(Path.Combine(repoRoot, "Directory.Build.props"));
+        var directoryBuildTargets = XDocument.Load(Path.Combine(repoRoot, "Directory.Build.targets"));
         string inheritedReadme = ReadFirstProperty(directoryBuild, "PackageReadmeFile");
-        string inheritedLicense = ReadFirstProperty(directoryBuild, "PackageLicenseFile");
+        string inheritedLicenseExpression = ReadFirstProperty(directoryBuildTargets, "PackageLicenseExpression");
         string inheritedTags = ReadFirstProperty(directoryBuild, "PackageTags");
         string inheritedDescription = ReadFirstProperty(directoryBuild, "Description");
 
@@ -145,7 +146,7 @@ public sealed class StandardPublishingApprovalTests
             {
                 isPackableDefault = ReadFirstProperty(directoryBuild, "IsPackable"),
                 packageReadmeFile = inheritedReadme,
-                packageLicenseFile = inheritedLicense,
+                packageLicenseExpression = inheritedLicenseExpression,
                 packageTags = inheritedTags,
                 defaultDescription = inheritedDescription
             },

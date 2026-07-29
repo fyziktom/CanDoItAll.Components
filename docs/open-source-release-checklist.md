@@ -2,10 +2,10 @@
 
 ## Blocking decisions
 
-- [x] Adopt the MIT-derived license with the CanDoItAll website-link requirement, and describe it as a custom license rather than plain SPDX MIT.
-- [x] Add the final `LICENSE` file and make NuGet package metadata reference the packaged license file.
+- [x] Adopt the unmodified MIT License and declare it with the SPDX `MIT` expression.
+- [x] Add the final `LICENSE` file and make NuGet package metadata use `PackageLicenseExpression=MIT`.
 - [ ] Confirm redistribution rights and provenance for the bundled avatar images and Material Icons font.
-- [ ] Include the complete required third-party license and notice text in every package that redistributes third-party assets, including Mermaid.
+- [x] Include the required third-party license and notice text in every package that redistributes third-party assets, including Mermaid and three.js.
 
 ## Engineering gates
 
