@@ -66,10 +66,15 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = [System.IO.Path]::GetFullPath(
     (Join-Path $PSScriptRoot '..\..\..')
 )
+$globalJsonPath = Join-Path $repositoryRoot 'global.json'
 $sourceRoot = Join-Path $repositoryRoot 'src'
 $solutionPath = Join-Path $repositoryRoot 'CanDoItAll.Components.slnx'
 $directoryBuildPropsPath = Join-Path $repositoryRoot 'Directory.Build.props'
 $nugetConfigPath = Join-Path $repositoryRoot 'NuGet.config'
+
+if (-not (Test-Path -LiteralPath $globalJsonPath -PathType Leaf)) {
+    throw "global.json was not found at '$globalJsonPath'."
+}
 
 if (-not (Test-Path -LiteralPath $solutionPath -PathType Leaf)) {
     throw "The canonical solution was not found at '$solutionPath'."
@@ -81,6 +86,27 @@ if (-not (Test-Path -LiteralPath $directoryBuildPropsPath -PathType Leaf)) {
 
 if (-not (Test-Path -LiteralPath $nugetConfigPath -PathType Leaf)) {
     throw "NuGet.config was not found at '$nugetConfigPath'."
+}
+
+function Invoke-DotNet {
+    param(
+        [Parameter(Mandatory)]
+        [string[]]$Arguments,
+
+        [Parameter(Mandatory)]
+        [string]$FailureMessage
+    )
+
+    Push-Location -LiteralPath $repositoryRoot
+    try {
+        & dotnet @Arguments
+        if ($LASTEXITCODE -ne 0) {
+            throw "$FailureMessage Exit code: $LASTEXITCODE."
+        }
+    }
+    finally {
+        Pop-Location
+    }
 }
 
 [xml]$directoryBuildProps = Get-Content -LiteralPath $directoryBuildPropsPath -Raw
@@ -268,10 +294,9 @@ if (-not $NoRestore) {
         '--configfile',
         $nugetConfigPath
     ) + $msbuildProperties
-    & dotnet @restoreArguments
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet restore failed with exit code $LASTEXITCODE."
-    }
+    Invoke-DotNet `
+        -Arguments $restoreArguments `
+        -FailureMessage 'dotnet restore failed.'
 }
 
 if (-not $NoBuild) {
@@ -284,10 +309,9 @@ if (-not $NoBuild) {
         $Configuration,
         '--no-restore'
     ) + $msbuildProperties
-    & dotnet @buildArguments
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet build failed with exit code $LASTEXITCODE."
-    }
+    Invoke-DotNet `
+        -Arguments $buildArguments `
+        -FailureMessage 'dotnet build failed.'
 
     Write-Host ''
     Write-Host 'Testing solution...'
@@ -299,10 +323,9 @@ if (-not $NoBuild) {
         '--no-build',
         '--no-restore'
     ) + $msbuildProperties
-    & dotnet @testArguments
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet test failed with exit code $LASTEXITCODE."
-    }
+    Invoke-DotNet `
+        -Arguments $testArguments `
+        -FailureMessage 'dotnet test failed.'
 }
 
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
@@ -321,10 +344,9 @@ foreach ($project in $packableProjects) {
         $OutputDirectory
     ) + $msbuildProperties
 
-    & dotnet @packArguments
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet pack failed for '$($project.ProjectFile.Name)' with exit code $LASTEXITCODE."
-    }
+    Invoke-DotNet `
+        -Arguments $packArguments `
+        -FailureMessage "dotnet pack failed for '$($project.ProjectFile.Name)'."
 }
 
 $packagePaths = @(
