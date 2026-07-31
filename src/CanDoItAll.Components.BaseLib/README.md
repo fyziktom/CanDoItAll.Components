@@ -16,6 +16,7 @@ builder.Services.AddCanDoItAllBaseLib();
 ```razor
 @* App.razor <head> *@
 <link rel="stylesheet" href="_content/CanDoItAll.Components.BaseLib/css/output.css" />
+<link rel="stylesheet" href="_content/CanDoItAll.Components.BaseLib/CanDoItAll.Components.BaseLib.bundle.scp.css" />
 ```
 
 ```razor
@@ -70,7 +71,7 @@ Choose input and overlay sizes from expected content:
 
 ## Component Catalog
 
-BaseLib currently exposes 163 Razor components. Links point to the component source file.
+BaseLib currently exposes 164 Razor components. Links point to the component source file.
 
 ### Badges, Chips, And Status
 
@@ -208,6 +209,7 @@ BaseLib currently exposes 163 Razor components. Links point to the component sou
 - [ThemeHost](Components/Layout/ThemeHost.razor)
 - [WorkspacePanel](Components/Layout/WorkspacePanel.razor)
 - [WorkspaceSplit](Components/Layout/WorkspaceSplit.razor)
+- [ZoomPanFrame](Components/Layout/ZoomPanFrame.razor)
 
 ### Lists And Selection
 
@@ -394,6 +396,29 @@ Notification placement should protect the current workflow first. Use `TopRight`
 Notification alerts intentionally use only the compact X close control so the message width stays available for useful summary and detail text. Keep copy short, set `Duration` deliberately, and use per-message `Position` when one notification needs to appear somewhere other than the host default.
 
 Tooltip placement should keep the bubble visible and away from the next likely action. Use `Top` or `Right` when there is room, `Bottom` for triggers near the top edge, `Top` for triggers near lower toolbars or footers, and `Left` or `Right` for dense inline controls. Use corner or edge placements such as `TopLeft`, `BottomRight`, `LeftTop`, or `RightBottom` near viewport, card, toolbar, or panel corners so the tooltip does not cover neighboring controls.
+
+## Zoom And Pan Frame
+
+`ZoomPanFrame` provides one reusable interaction boundary for images, inline SVG, rendered diagrams, and other bounded preview surfaces. Pointer movement, touch pinch, wheel zoom, and keyboard commands stay in the browser; Blazor is involved only for the optional toolbar commands and explicit public method calls.
+
+```razor
+<ZoomPanFrame AriaLabel="Architecture preview"
+              ResetKey="@previewIdentity"
+              SuppressContentInteraction="true"
+              Style="block-size: 28rem;">
+    <img src="@previewUrl"
+         alt="Architecture preview"
+         style="max-block-size: 100%; max-inline-size: 100%;" />
+</ZoomPanFrame>
+```
+
+- `MinimumZoom`, `MaximumZoom`, `ZoomFactor`, and `KeyboardPanStep` define finite interaction bounds and fail fast on invalid values.
+- `WheelMode="ZoomPanWheelMode.Zoom"` zooms on ordinary wheel input and releases scrolling when a zoom limit is reached. Choose `ControlKey` when the surrounding page should retain ordinary wheel scrolling, or `Disabled` to turn wheel zoom off.
+- `SuppressContentInteraction` makes the content plane inert when a preview must not expose links or SVG actions. Leave it `false` for interactive diagrams; descendants can opt out of pan initiation with `data-cda-zoom-pan-interactive`.
+- `ResetKey` uses normal .NET value equality, so a record or record struct containing file identity and content/edit revisions resets the view only when that identity changes.
+- `ZoomInAsync`, `ZoomOutAsync`, and `ResetAsync` support an external toolbar through `@ref`. Built-in controls are available through `ShowControls`.
+
+The frame fills the block and inline size offered by its parent. Give the parent a definite height (or set one through `Style`) and keep raster/SVG content bounded to the content plane when its intrinsic dimensions may exceed the viewport.
 
 For agent-driven changes, query the Components MCP metadata for `Notification`, `Tooltip`, or `TooltipTarget` before choosing non-default positions, then validate unusual placements in the sandbox with Playwright at the viewport sizes used by the target page.
 

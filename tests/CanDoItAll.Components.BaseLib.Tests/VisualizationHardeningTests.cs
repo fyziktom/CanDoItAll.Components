@@ -29,6 +29,20 @@ public sealed class VisualizationHardeningTests
     }
 
     [Fact]
+    public void MermaidJavascriptKeepsNodeInteractionButDelegatesPanZoomToBaseLib()
+    {
+        var source = File.ReadAllText(Path.Combine(
+            AppContext.BaseDirectory,
+            "TestAssets",
+            "mermaidDiagram.js"));
+
+        Assert.Contains("data-cda-zoom-pan-interactive", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("function attachPanZoom", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("export function zoom", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("export function reset", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ChartBuildsAccessibleSeriesAndRangeSummary()
     {
         var chart = new CdaChart();

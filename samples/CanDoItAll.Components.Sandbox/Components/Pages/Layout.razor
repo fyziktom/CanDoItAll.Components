@@ -102,6 +102,25 @@
                         </SectionCard>
                     </div>
 
+                    <SectionCard Title="Zoom and pan frame" Description="A standalone raster preview proves the shared interaction boundary without relying on Mermaid rendering.">
+                        <Stack GapScale="LayoutGap.Medium">
+                            <ZoomPanFrame AriaLabel="Packaged raster zoom and pan preview"
+                                          ResetKey="@CurrentScenario"
+                                          Style="block-size: clamp(14rem, 42vw, 24rem); --cda-zoom-pan-min-height: 14rem;"
+                                          data-testid="sandbox-zoom-pan-frame">
+                                <img src="@ZoomPanImageSource"
+                                     alt="Portrait preview used to validate zoom and pan"
+                                     draggable="false"
+                                     data-testid="sandbox-zoom-pan-image"
+                                     style="block-size: 100%; inline-size: 100%; object-fit: contain;" />
+                            </ZoomPanFrame>
+
+                            <Alert AlertStyle="AlertStyle.Info">
+                                Use the toolbar or wheel to zoom, drag or press the arrow keys after zooming, pinch on touch, and choose Reset or press 0 to restore the view.
+                            </Alert>
+                        </Stack>
+                    </SectionCard>
+
                     <ListDetailShell ListPaneWidth="22rem"
                                      data-testid="sandbox-layout-list-detail">
                         <ListHeader>
@@ -165,6 +184,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Layout);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Layout);
+    private const string ZoomPanImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-06.jpg";
 
     private string WorkspaceTitle => CurrentScenario == SandboxScenarioKey.LongText
         ? "Migration acceptance workspace with extended release notes and validation guidance"
@@ -209,7 +229,7 @@
 
     private int RegionCount => 3;
 
-    private int SectionCount => CurrentScenario == SandboxScenarioKey.DenseContent ? 5 : 4;
+    private int SectionCount => CurrentScenario == SandboxScenarioKey.DenseContent ? 6 : 5;
 
     private bool IsActionDisabled => CurrentScenario == SandboxScenarioKey.EmptyState;
 

@@ -41,8 +41,6 @@ async function renderCore(container, dotNetReference, request) {
       cleanupCallbacks: [],
       guardObserver: null,
       guardTimers: [],
-      panZoom: null,
-      request,
       dotNetReference,
       diagramId,
       svgMarkup: renderResult.svg,
@@ -71,14 +69,6 @@ async function renderCore(container, dotNetReference, request) {
     removeMermaidRenderArtifacts(`${diagramId}-svg`, container);
     return failure(diagramId, normalizeMermaidError(error, source));
   }
-}
-
-export function zoom(container, factor) {
-  states.get(container)?.panZoom?.zoom(Number(factor) || 1);
-}
-
-export function reset(container) {
-  states.get(container)?.panZoom?.reset();
 }
 
 export function hasRenderedSvg(container) {
@@ -151,18 +141,22 @@ function attachNodeClicks(svg, diagramId, dotNetReference, cleanupCallbacks) {
     'g[class*="service"]',
     'g[class*="junction"]',
   ];
-  const nodes = Array.from(new Set([...svg.querySelectorAll(selectors.join(','))]))
+  const candidates = Array.from(new Set([...svg.querySelectorAll(selectors.join(','))]))
     .filter(isNodeCandidate);
+  const nodes = candidates.filter(candidate => !candidates.some(
+    descendant => descendant !== candidate && candidate.contains(descendant)));
 
   for (const node of nodes) {
     node.style.cursor = 'pointer';
     node.setAttribute('tabindex', node.getAttribute('tabindex') ?? '0');
     node.setAttribute('role', node.getAttribute('role') ?? 'button');
     node.setAttribute('data-cda-mermaid-node', 'true');
+    node.setAttribute('data-cda-zoom-pan-interactive', 'true');
     const clickTargets = getNodeClickTargets(node);
 
     for (const target of clickTargets) {
       target.setAttribute('data-cda-mermaid-node-target', 'true');
+      target.setAttribute('data-cda-zoom-pan-interactive', 'true');
     }
 
     const onClick = (event) => {
@@ -208,7 +202,6 @@ function installRenderedSvg(container, state) {
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
   const nodes = attachNodeClicks(svg, state.diagramId, state.dotNetReference, state.cleanupCallbacks);
-  state.panZoom = state.request?.panZoomEnabled === false ? null : attachPanZoom(svg, state.cleanupCallbacks);
   return { svg, nodes };
 }
 
@@ -245,7 +238,6 @@ function runCleanupCallbacks(state) {
   }
 
   state.cleanupCallbacks = [];
-  state.panZoom = null;
 }
 
 function clearGuardTimers(state) {
@@ -306,148 +298,6 @@ function normalizeNodeId(value) {
 function normalizeText(value) {
   const text = (value ?? '').replace(/\s+/g, ' ').trim();
   return text.length > 0 ? text : null;
-}
-
-function attachPanZoom(svg, cleanupCallbacks) {
-  const original = readViewBox(svg);
-  let current = { ...original };
-  let activePointerId = null;
-  let lastPointer = null;
-
-  applyViewBox();
-
-  const api = {
-    zoom: (factor) => zoomAt(factor, null),
-    reset: () => {
-      current = { ...original };
-      applyViewBox();
-    },
-  };
-
-  const onWheel = (event) => {
-    event.preventDefault();
-    const factor = event.deltaY < 0 ? 0.88 : 1.12;
-    zoomAt(factor, { x: event.clientX, y: event.clientY });
-  };
-
-  const onPointerDown = (event) => {
-    if (event.button !== 0) {
-      return;
-    }
-
-    if (isNodeInteractionEvent(event)) {
-      return;
-    }
-
-    activePointerId = event.pointerId;
-    lastPointer = { x: event.clientX, y: event.clientY };
-    svg.classList.add('is-panning');
-    svg.setPointerCapture?.(event.pointerId);
-  };
-
-  const onPointerMove = (event) => {
-    if (activePointerId !== event.pointerId || !lastPointer) {
-      return;
-    }
-
-    const rect = svg.getBoundingClientRect();
-    const dx = rect.width > 0 ? ((event.clientX - lastPointer.x) / rect.width) * current.width : 0;
-    const dy = rect.height > 0 ? ((event.clientY - lastPointer.y) / rect.height) * current.height : 0;
-    current.x -= dx;
-    current.y -= dy;
-    lastPointer = { x: event.clientX, y: event.clientY };
-    applyViewBox();
-  };
-
-  const finishPan = (event) => {
-    if (activePointerId !== event.pointerId) {
-      return;
-    }
-
-    activePointerId = null;
-    lastPointer = null;
-    svg.classList.remove('is-panning');
-    svg.releasePointerCapture?.(event.pointerId);
-  };
-
-  svg.addEventListener('wheel', onWheel, { passive: false });
-  svg.addEventListener('pointerdown', onPointerDown);
-  svg.addEventListener('pointermove', onPointerMove);
-  svg.addEventListener('pointerup', finishPan);
-  svg.addEventListener('pointercancel', finishPan);
-
-  cleanupCallbacks.push(() => {
-    svg.removeEventListener('wheel', onWheel);
-    svg.removeEventListener('pointerdown', onPointerDown);
-    svg.removeEventListener('pointermove', onPointerMove);
-    svg.removeEventListener('pointerup', finishPan);
-    svg.removeEventListener('pointercancel', finishPan);
-  });
-
-  return api;
-
-  function zoomAt(factor, origin) {
-    const point = origin ? clientToSvgPoint(origin.x, origin.y) : centerPoint();
-    const nextWidth = Math.max(original.width * 0.15, Math.min(original.width * 8, current.width * factor));
-    const nextHeight = Math.max(original.height * 0.15, Math.min(original.height * 8, current.height * factor));
-    current.x = point.x - ((point.x - current.x) / current.width) * nextWidth;
-    current.y = point.y - ((point.y - current.y) / current.height) * nextHeight;
-    current.width = nextWidth;
-    current.height = nextHeight;
-    applyViewBox();
-  }
-
-  function centerPoint() {
-    return {
-      x: current.x + current.width / 2,
-      y: current.y + current.height / 2,
-    };
-  }
-
-  function clientToSvgPoint(clientX, clientY) {
-    const rect = svg.getBoundingClientRect();
-    return {
-      x: current.x + ((clientX - rect.left) / Math.max(rect.width, 1)) * current.width,
-      y: current.y + ((clientY - rect.top) / Math.max(rect.height, 1)) * current.height,
-    };
-  }
-
-  function applyViewBox() {
-    svg.setAttribute(
-      'viewBox',
-      `${current.x} ${current.y} ${current.width} ${current.height}`);
-    svg.setAttribute('data-cda-panzoom-viewbox', svg.getAttribute('viewBox'));
-  }
-}
-
-function isNodeInteractionEvent(event) {
-  const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
-  return path.some((target) => target instanceof Element
-    && (target.hasAttribute('data-cda-mermaid-node') || target.hasAttribute('data-cda-mermaid-node-target')));
-}
-
-function readViewBox(svg) {
-  const viewBox = svg.getAttribute('viewBox');
-  if (viewBox) {
-    const values = viewBox.split(/[\s,]+/).map(Number).filter(Number.isFinite);
-    if (values.length === 4 && values[2] > 0 && values[3] > 0) {
-      return {
-        x: values[0],
-        y: values[1],
-        width: values[2],
-        height: values[3],
-      };
-    }
-  }
-
-  const width = parseFloat(svg.getAttribute('width')) || 800;
-  const height = parseFloat(svg.getAttribute('height')) || 600;
-  return {
-    x: 0,
-    y: 0,
-    width,
-    height,
-  };
 }
 
 function failure(diagramId, error) {

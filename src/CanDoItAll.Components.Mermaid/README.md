@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Mermaid renders authored flowcharts, sequence diagrams, and architecture maps inside a Blazor application. It wraps Mermaid with source normalization, pan/zoom controls, typed render errors, render results, node-click events, and the static assets a host needs.
+Mermaid renders authored flowcharts, sequence diagrams, and architecture maps inside a Blazor application. It wraps Mermaid with source normalization, the shared BaseLib zoom/pan frame, typed render errors, render results, node-click events, and the static assets a host needs.
 
 ## Quick start
 
-Register the renderer, include its assets once in the document head, then provide Mermaid source to `MermaidDiagram`:
+Register the renderer, include its assets once in the document head, then provide Mermaid source to `MermaidDiagram`. `MermaidHeadAssets` includes both the Mermaid styles and the shared BaseLib frame styles:
 
 ```csharp
 // Program.cs
@@ -43,7 +43,7 @@ dotnet build src/CanDoItAll.Components.Mermaid/CanDoItAll.Components.Mermaid.csp
 
 Project references:
 
-- None
+- `../CanDoItAll.Components.BaseLib/CanDoItAll.Components.BaseLib.csproj`
 
 Framework references:
 
@@ -51,11 +51,11 @@ Framework references:
 
 Direct package references:
 
-- `Microsoft.AspNetCore.Components.Web (10.0.4)`
+- `Microsoft.AspNetCore.Components.Web (10.0.10)`
 
 ## Architecture Notes
 
-Use this component for product-rendered Mermaid diagrams. Keep syntax guidance and authoring assistance outside the renderer; this library stays focused on rendering, options, normalization, and typed UI events.
+Use this component for product-rendered Mermaid diagrams. `MermaidDiagram` keeps its established header controls and delegates viewport interaction to BaseLib's `ZoomPanFrame`; changing Mermaid source or options resets that shared frame through a value-equality reset key. Keep syntax guidance and authoring assistance outside the renderer; this library stays focused on rendering, options, normalization, and typed UI events.
 
 ## Security defaults
 

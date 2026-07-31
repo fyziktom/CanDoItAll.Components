@@ -1,0 +1,321 @@
+@namespace CanDoItAll.Components.BaseLib
+@inherits StyledComponentBase
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<div data-cda-zoom-pan-frame
+     @attributes="BuildAttributes(RootClass)">
+    @if (ShowControls && Enabled)
+    {
+        <div class="cda-zoom-pan-frame__toolbar" role="toolbar" aria-label="Zoom and pan controls">
+            <button type="button"
+                    class="cda-zoom-pan-frame__tool"
+                    title="Zoom out"
+                    aria-label="Zoom out"
+                    @onclick="ZoomOutAsync">−</button>
+            <button type="button"
+                    class="cda-zoom-pan-frame__tool cda-zoom-pan-frame__tool--reset"
+                    title="Reset zoom and position"
+                    aria-label="Reset zoom and position"
+                    @onclick="ResetAsync">Reset</button>
+            <button type="button"
+                    class="cda-zoom-pan-frame__tool"
+                    title="Zoom in"
+                    aria-label="Zoom in"
+                    @onclick="ZoomInAsync">+</button>
+        </div>
+    }
+
+    <div @ref="viewport"
+         class="cda-zoom-pan-frame__viewport"
+         tabindex="@ViewportTabIndex"
+         role="group"
+         aria-label="@ResolvedAriaLabel"
+         data-cda-zoom-pan-viewport>
+        <div @ref="content"
+             class="cda-zoom-pan-frame__content"
+             inert="@SuppressContentInteraction">
+            @ChildContent
+        </div>
+    </div>
+</div>
+
+@code {
+    private const string ModulePath =
+        "./_content/CanDoItAll.Components.BaseLib/Components/Layout/ZoomPanFrame.razor.js";
+
+    private ElementReference viewport;
+    private ElementReference content;
+    private readonly SemaphoreSlim lifecycleGate = new(1, 1);
+    private IJSObjectReference? module;
+    private ZoomPanOptionsSnapshot? appliedOptions;
+    private object? previousResetKey;
+    private bool hasResetKey;
+    private bool resetRequested;
+    private bool initialized;
+    private bool disposed;
+
+    [Parameter, EditorRequired]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    [Parameter]
+    public bool Enabled { get; set; } = true;
+
+    [Parameter]
+    public bool ShowControls { get; set; } = true;
+
+    [Parameter]
+    public bool SuppressContentInteraction { get; set; }
+
+    [Parameter]
+    public ZoomPanWheelMode WheelMode { get; set; } = ZoomPanWheelMode.Zoom;
+
+    [Parameter]
+    public double MinimumZoom { get; set; } = 0.25;
+
+    [Parameter]
+    public double MaximumZoom { get; set; } = 8;
+
+    [Parameter]
+    public double ZoomFactor { get; set; } = 1.2;
+
+    [Parameter]
+    public double KeyboardPanStep { get; set; } = 48;
+
+    [Parameter]
+    public string? AriaLabel { get; set; }
+
+    [Parameter]
+    public object? ResetKey { get; set; }
+
+    private string RootClass => string.Join(
+        ' ',
+        new[]
+        {
+            "cda-zoom-pan-frame",
+            ShowControls && Enabled ? "has-controls" : null,
+            Enabled ? "is-enabled" : null,
+            SuppressContentInteraction ? "is-content-suppressed" : null
+        }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+    private string ResolvedAriaLabel => string.IsNullOrWhiteSpace(AriaLabel)
+        ? "Zoomable and pannable content"
+        : AriaLabel;
+
+    private string? ViewportTabIndex => Enabled ? "0" : null;
+
+    protected override void OnParametersSet()
+    {
+        ValidateParameters();
+
+        if (!hasResetKey)
+        {
+            previousResetKey = ResetKey;
+            hasResetKey = true;
+            return;
+        }
+
+        if (!Equals(previousResetKey, ResetKey))
+        {
+            previousResetKey = ResetKey;
+            resetRequested = true;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await lifecycleGate.WaitAsync();
+        try
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            ZoomPanOptionsSnapshot options = CurrentOptions();
+            if (!initialized)
+            {
+                var importedModule = await JS.InvokeAsync<IJSObjectReference>("import", ModulePath);
+                if (disposed)
+                {
+                    await DisposeModuleAsync(importedModule);
+                    return;
+                }
+
+                module = importedModule;
+                await module.InvokeVoidAsync("initialize", viewport, content, ToInteropOptions(options));
+                appliedOptions = options;
+                initialized = true;
+                resetRequested = false;
+                return;
+            }
+
+            if (appliedOptions != options)
+            {
+                await module!.InvokeVoidAsync("configure", viewport, ToInteropOptions(options));
+                appliedOptions = options;
+            }
+
+            if (resetRequested)
+            {
+                resetRequested = false;
+                await module!.InvokeVoidAsync("reset", viewport);
+            }
+        }
+        finally
+        {
+            lifecycleGate.Release();
+        }
+    }
+
+    public Task ZoomInAsync()
+        => ZoomByAsync(ZoomFactor);
+
+    public Task ZoomOutAsync()
+        => ZoomByAsync(1 / ZoomFactor);
+
+    public async Task ResetAsync()
+    {
+        await InvokeModuleAsync("reset");
+    }
+
+    private async Task ZoomByAsync(double factor)
+    {
+        await InvokeModuleAsync("zoomBy", factor);
+    }
+
+    private async Task InvokeModuleAsync(string identifier, params object?[] arguments)
+    {
+        await lifecycleGate.WaitAsync();
+        try
+        {
+            if (!Enabled || module is null || disposed)
+            {
+                return;
+            }
+
+            object?[] invocationArguments = [viewport, .. arguments];
+            await module.InvokeVoidAsync(identifier, invocationArguments);
+        }
+        finally
+        {
+            lifecycleGate.Release();
+        }
+    }
+
+    private void ValidateParameters()
+    {
+        if (!Enum.IsDefined(WheelMode))
+        {
+            throw new ArgumentOutOfRangeException(nameof(WheelMode));
+        }
+
+        if (!double.IsFinite(MinimumZoom) || MinimumZoom <= 0 || MinimumZoom > 1)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(MinimumZoom),
+                "Minimum zoom must be finite, greater than zero, and no greater than one.");
+        }
+
+        if (!double.IsFinite(MaximumZoom) || MaximumZoom < 1 || MaximumZoom < MinimumZoom)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(MaximumZoom),
+                "Maximum zoom must be finite, at least one, and no less than minimum zoom.");
+        }
+
+        if (!double.IsFinite(ZoomFactor) || ZoomFactor <= 1)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(ZoomFactor),
+                "Zoom factor must be finite and greater than one.");
+        }
+
+        if (!double.IsFinite(KeyboardPanStep) || KeyboardPanStep <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(KeyboardPanStep),
+                "Keyboard pan step must be finite and greater than zero.");
+        }
+    }
+
+    private ZoomPanOptionsSnapshot CurrentOptions()
+        => new(
+            Enabled,
+            SuppressContentInteraction,
+            WheelMode,
+            MinimumZoom,
+            MaximumZoom,
+            ZoomFactor,
+            KeyboardPanStep);
+
+    private static object ToInteropOptions(ZoomPanOptionsSnapshot options)
+        => new
+        {
+            enabled = options.Enabled,
+            suppressContentInteraction = options.SuppressContentInteraction,
+            wheelMode = (int)options.WheelMode,
+            minimumZoom = options.MinimumZoom,
+            maximumZoom = options.MaximumZoom,
+            zoomFactor = options.ZoomFactor,
+            keyboardPanStep = options.KeyboardPanStep
+        };
+
+    public async ValueTask DisposeAsync()
+    {
+        disposed = true;
+        await lifecycleGate.WaitAsync();
+        try
+        {
+            var currentModule = module;
+            module = null;
+            if (currentModule is null)
+            {
+                return;
+            }
+
+            if (initialized)
+            {
+                try
+                {
+                    await currentModule.InvokeVoidAsync("destroy", viewport);
+                }
+                catch (Exception exception) when (IsLifecycleException(exception))
+                {
+                }
+            }
+
+            await DisposeModuleAsync(currentModule);
+        }
+        finally
+        {
+            lifecycleGate.Release();
+        }
+    }
+
+    private static async ValueTask DisposeModuleAsync(IJSObjectReference currentModule)
+    {
+        try
+        {
+            await currentModule.DisposeAsync();
+        }
+        catch (Exception exception) when (IsLifecycleException(exception))
+        {
+        }
+    }
+
+    private static bool IsLifecycleException(Exception exception)
+        => exception is JSDisconnectedException
+            or InvalidOperationException
+            or ObjectDisposedException;
+
+    private readonly record struct ZoomPanOptionsSnapshot(
+        bool Enabled,
+        bool SuppressContentInteraction,
+        ZoomPanWheelMode WheelMode,
+        double MinimumZoom,
+        double MaximumZoom,
+        double ZoomFactor,
+        double KeyboardPanStep);
+}
