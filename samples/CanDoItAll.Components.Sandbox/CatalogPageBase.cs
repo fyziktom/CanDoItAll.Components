@@ -19,35 +19,11 @@ public abstract class CatalogPageBase : ComponentBase
 
     protected void NavigateScenario(SandboxScenarioKey scenario)
     {
-        NavigationManager.NavigateTo(BuildUri(scenario, CurrentFrame));
+        NavigationManager.NavigateTo(SandboxQueryLinks.WithScenario(NavigationManager, scenario));
     }
 
     protected void NavigateFrame(SandboxFramePreset frame)
     {
-        NavigationManager.NavigateTo(BuildUri(CurrentScenario, frame));
-    }
-
-    protected string BuildUri(SandboxScenarioKey scenario, SandboxFramePreset frame)
-    {
-        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        var route = relativePath.Split('?', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
-        var path = string.IsNullOrWhiteSpace(route)
-            ? "/"
-            : $"/{route.TrimStart('/')}";
-        var query = new List<string>();
-
-        if (scenario != SandboxScenarioKey.HappyPath)
-        {
-            query.Add($"scenario={Uri.EscapeDataString(scenario.ToSlug())}");
-        }
-
-        if (frame != SandboxFramePreset.LiveViewport)
-        {
-            query.Add($"frame={Uri.EscapeDataString(frame.ToSlug())}");
-        }
-
-        return query.Count == 0
-            ? path
-            : $"{path}?{string.Join("&", query)}";
+        NavigationManager.NavigateTo(SandboxQueryLinks.WithFrame(NavigationManager, frame));
     }
 }
