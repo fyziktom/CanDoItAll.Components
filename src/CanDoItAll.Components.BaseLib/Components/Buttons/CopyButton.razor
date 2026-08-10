@@ -45,54 +45,71 @@ else
     private bool isCopied;
     private string statusMessage = string.Empty;
 
+    /// <summary>Literal text to copy. Takes precedence over the target element and selector.</summary>
     [Parameter]
     public string? Value { get; set; }
 
+    /// <summary>Id of the element to copy from. A partial selection inside that element wins over its full value.</summary>
     [Parameter]
     public string? TargetElementId { get; set; }
 
+    /// <summary>CSS selector for the element to copy from, used when no id is available.</summary>
     [Parameter]
     public string? TargetSelector { get; set; }
 
+    /// <summary>Label shown in the text display modes. Defaults to <c>Copy</c>.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Label swapped in while the success state is showing.</summary>
     [Parameter]
     public string? CopiedText { get; set; }
 
+    /// <summary>Material icon token shown in the idle state.</summary>
     [Parameter]
     public string Icon { get; set; } = "content_copy";
 
+    /// <summary>Material icon token shown while the success state is active.</summary>
     [Parameter]
     public string SuccessIcon { get; set; } = "check";
 
+    /// <summary>Accessible name for the icon-only modes. Falls back to <see cref="Text"/>, then to a default.</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>Announced to screen readers through a polite live region after a successful copy.</summary>
     [Parameter]
     public string SuccessMessage { get; set; } = DefaultSuccessMessage;
 
+    /// <summary>Announced instead when the clipboard call fails, for example without a secure context.</summary>
     [Parameter]
     public string FailureMessage { get; set; } = DefaultFailureMessage;
 
+    /// <summary>How long the success state stays visible before reverting. Clamped to a minimum of 400 ms.</summary>
     [Parameter]
     public int SuccessDurationMs { get; set; } = 2500;
 
+    /// <summary>Chooses between text, text with icon, a square icon button, and a bare icon.</summary>
     [Parameter]
     public CopyButtonDisplayMode DisplayMode { get; set; } = CopyButtonDisplayMode.TextWithIcon;
 
+    /// <summary>Control scale. Mapped onto the underlying button size in the non-icon-only modes.</summary>
     [Parameter]
     public CopyButtonSize Size { get; set; } = CopyButtonSize.Medium;
 
+    /// <summary>Semantic tone forwarded to the underlying button. Copy is a utility action, so this defaults to <c>Light</c>.</summary>
     [Parameter]
     public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Light;
 
+    /// <summary>Emphasis treatment forwarded to the underlying button.</summary>
     [Parameter]
     public Variant Variant { get; set; } = Variant.Outlined;
 
+    /// <summary>Blocks interaction. The control is also disabled automatically when no copy source is configured.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Invoked with the text that was actually placed on the clipboard.</summary>
     [Parameter]
     public EventCallback<string> Copied { get; set; }
 
