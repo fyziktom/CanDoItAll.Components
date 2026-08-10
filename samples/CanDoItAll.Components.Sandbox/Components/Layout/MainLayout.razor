@@ -101,6 +101,23 @@
     protected override void OnInitialized()
     {
         themeState.Changed += HandleThemeChanged;
+        NavigationManager.LocationChanged += HandleLocationChanged;
+        SyncThemeFromQuery();
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        SyncThemeFromQuery();
+    }
+
+    private void SyncThemeFromQuery()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+        var isDark = query.TryGetValue("dark", out var value)
+            && string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+
+        themeState.SetTheme(isDark ? CadThemes.Dark : CadThemes.Light);
     }
 
     private bool IsActive(SandboxGroupDefinition group)
@@ -132,5 +149,6 @@
     public void Dispose()
     {
         themeState.Changed -= HandleThemeChanged;
+        NavigationManager.LocationChanged -= HandleLocationChanged;
     }
 }

@@ -8,6 +8,8 @@ public sealed class SandboxThemeState
 
     public string ThemeKey => themeKey;
 
+    public bool IsDark => string.Equals(themeKey, CadThemes.Dark, StringComparison.Ordinal);
+
     public event Action? Changed;
 
     public void SetTheme(string value)
