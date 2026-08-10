@@ -1,0 +1,94 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@using CanDoItAll.Components.Sandbox.Documentation
+
+<section class="sandbox-example" data-testid="@TestId">
+    <header class="sandbox-example__header">
+        <div class="sandbox-example__heading">
+            <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@Title" />
+            @if (!string.IsNullOrWhiteSpace(Description))
+            {
+                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@Description" />
+            }
+        </div>
+
+        <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.NoWrap">
+            @if (HasSource)
+            {
+                <Button Text="@(isSourceVisible ? "Hide code" : "Show code")"
+                        Icon="@(isSourceVisible ? "expand_less" : "code")"
+                        ButtonStyle="@(ButtonStyle.Light)"
+                        Variant="@(Variant.Outlined)"
+                        Size="@(ButtonSize.Small)"
+                        Click="ToggleSource"
+                        aria-expanded="@(isSourceVisible ? "true" : "false")"
+                        data-testid="@($"{TestId}-toggle")" />
+
+                <CopyButton Value="@Source"
+                            Text="Copy"
+                            CopiedText="Copied"
+                            Size="CopyButtonSize.Small"
+                            data-testid="@($"{TestId}-copy")" />
+            }
+        </Cluster>
+    </header>
+
+    <div class="sandbox-example__demo">
+        @ChildContent
+    </div>
+
+    @if (HasSource && isSourceVisible)
+    {
+        <div class="sandbox-example__source" data-testid="@($"{TestId}-source")">
+            <pre class="sandbox-example__code"><code>@Source</code></pre>
+        </div>
+    }
+    else if (!HasSource)
+    {
+        <p class="sandbox-example__missing" data-testid="@($"{TestId}-missing")">
+            No embedded source found for <code>@SourceId</code>.
+        </p>
+    }
+</section>
+
+@code {
+    private bool isSourceVisible;
+
+    /// <summary>Heading shown above the live demo.</summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>Optional sentence explaining what the example is demonstrating.</summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Logical name of the embedded example resource, for example
+    /// <c>examples/Actions/PrimaryHierarchy.razor</c>.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string SourceId { get; set; } = string.Empty;
+
+    /// <summary>The live rendering of the example, normally the example component itself.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Starts with the source panel already expanded.</summary>
+    [Parameter]
+    public bool SourceExpanded { get; set; }
+
+    private string? Source => ExampleSource.TryGet(SourceId);
+
+    private bool HasSource => !string.IsNullOrEmpty(Source);
+
+    private string TestId => $"sandbox-example-{SourceId.Replace('/', '-').Replace(".razor", string.Empty, StringComparison.OrdinalIgnoreCase).ToLowerInvariant()}";
+
+    protected override void OnInitialized()
+    {
+        isSourceVisible = SourceExpanded;
+    }
+
+    private void ToggleSource()
+    {
+        isSourceVisible = !isSourceVisible;
+    }
+}

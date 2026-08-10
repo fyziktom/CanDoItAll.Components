@@ -100,6 +100,32 @@
                         </div>
                     </SectionCard>
                 </div>
+
+                @* Examples and API tables sit outside the demo frame so the Desktop/Mobile
+                   presets constrain only the proof surface, not the reference material. *@
+                @if (Examples is not null)
+                {
+                    <div class="sandbox-page-section">
+                        <SectionCard Title="Examples"
+                                     Description="Copy-ready markup. Each snippet is the embedded source of the component rendering above it.">
+                            <div class="sandbox-example-list" data-testid="sandbox-examples">
+                                @Examples
+                            </div>
+                        </SectionCard>
+                    </div>
+                }
+
+                @if (Api is not null)
+                {
+                    <div class="sandbox-page-section">
+                        <SectionCard Title="Component API"
+                                     Description="Parameters reflected from the compiled assembly; descriptions come from the /// comments on each component.">
+                            <div class="sandbox-api-list" data-testid="sandbox-api">
+                                @Api
+                            </div>
+                        </SectionCard>
+                    </div>
+                }
             </ChildContent>
     </PageScaffold>
 
@@ -228,6 +254,14 @@
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Copy-ready examples rendered below the scenario proof surface.</summary>
+    [Parameter]
+    public RenderFragment? Examples { get; set; }
+
+    /// <summary>Component API tables rendered below the examples.</summary>
+    [Parameter]
+    public RenderFragment? Api { get; set; }
 
     [CascadingParameter]
     public SandboxThemeState? ThemeState { get; set; }

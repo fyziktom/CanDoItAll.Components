@@ -2,13 +2,14 @@
 @page "/groups/actions"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Actions
 
 <PageTitle>Actions</PageTitle>
 
 <CatalogPageFrame Group="@Group"
                   Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
-                  ExampleCount="@Examples.Count"
+                  ExampleCount="@RegisteredExamples.Count"
                   HeroTitle="Action hierarchy that stays obvious under pressure."
                   HeroSummary="The actions page checks primary, secondary, inline, copy, busy, disabled, and long-label states without relying on app-local styling."
                   DemoTitle="Action treatment"
@@ -210,12 +211,46 @@
             </SectionCard>
         }
     </ChildContent>
+
+    <Examples>
+        <ExampleBlock Title="Primary hierarchy"
+                      Description="One filled primary action carries the page; everything else steps down through outlined and text variants."
+                      SourceId="examples/Actions/PrimaryHierarchy.razor">
+            <PrimaryHierarchy />
+        </ExampleBlock>
+
+        <ExampleBlock Title="Icon actions, badges, and chips"
+                      Description="Icon-only buttons derive their accessible name from the icon token when no text is supplied."
+                      SourceId="examples/Actions/IconAndBadgeActions.razor">
+            <IconAndBadgeActions />
+        </ExampleBlock>
+
+        <ExampleBlock Title="Copy affordances"
+                      Description="All four display modes read from the same target element and confirm success in place."
+                      SourceId="examples/Actions/CopyAffordances.razor">
+            <CopyAffordances />
+        </ExampleBlock>
+    </Examples>
+
+    <Api>
+        <ComponentApiTable Types="@ActionComponents" />
+    </Api>
 </CatalogPageFrame>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Actions);
-    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Actions);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> RegisteredExamples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Actions);
     private const string CopySourceId = "sandbox-actions-copy-source-input";
+
+    // Button and CopyButton carry /// comments; Badge and Chip do not yet, which is what the
+    // "undocumented" markers in the table are there to make visible.
+    private static readonly IReadOnlyList<Type> ActionComponents =
+    [
+        typeof(Button),
+        typeof(CopyButton),
+        typeof(Badge),
+        typeof(Chip)
+    ];
 
     private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
 

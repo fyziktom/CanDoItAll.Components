@@ -8,6 +8,16 @@
     <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
   </PropertyGroup>
 
+  <!--
+    The catalog shows the original markup of each example next to the live demo. Razor compiles to
+    BuildRenderTree calls, so the authored source cannot be recovered by reflection - it is embedded
+    here instead, which makes the displayed snippet the exact bytes that rendered the demo.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="Components\Examples\**\*.razor"
+                      LogicalName="examples/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
     <ProjectReference Include="..\..\src\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj" />
