@@ -35,7 +35,7 @@
                         <p class="sandbox-brand__summary">A calm validation lab for standard shared surfaces, route coverage, and future MCP examples.</p>
 
                         <nav class="sandbox-nav" aria-label="Standard proof groups">
-                            <a href="/groups/coverage"
+                            <a href="@BuildSidebarLink("/groups/coverage")"
                                class="sandbox-nav__link @(IsActiveRoute("/groups/coverage") ? "is-active" : string.Empty)">
                                 <span class="sandbox-nav__title">Coverage Index</span>
                                 <span class="sandbox-nav__meta">standard / routes / exceptions</span>
@@ -43,15 +43,32 @@
 
                             @foreach (var group in SandboxCatalogRegistry.StandardGroups)
                             {
-                                <a href="@group.Route"
+                                <a href="@BuildSidebarLink(group.Route)"
                                    class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
                                     <span class="sandbox-nav__title">@group.Title</span>
                                     <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
                                 </a>
 
+                                @if (IsActive(group))
+                                {
+                                    var sections = SandboxCatalogRegistry.GetSections(group.Route);
+                                    if (sections.Count > 0)
+                                    {
+                                        <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
+                                            @foreach (var section in sections)
+                                            {
+                                                <a href="@BuildSectionLink(group.Route, section.Anchor)"
+                                                   class="sandbox-nav__link sandbox-nav__link--sub">
+                                                    <span class="sandbox-nav__title">@section.ComponentName</span>
+                                                </a>
+                                            }
+                                        </nav>
+                                    }
+                                }
+
                                 @if (group.Key == SandboxGroupKey.Navigation)
                                 {
-                                    <a href="/groups/navigation/side-menu"
+                                    <a href="@BuildSidebarLink("/groups/navigation/side-menu")"
                                        class="sandbox-nav__link @(IsActiveRoute("/groups/navigation/side-menu") ? "is-active" : string.Empty)">
                                         <span class="sandbox-nav__title">Side Menu Lab</span>
                                         <span class="sandbox-nav__meta">collapse / overflow / responsive</span>
@@ -67,7 +84,7 @@
                                 <nav class="sandbox-nav" aria-label="Deferred proof groups">
                                     @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
                                     {
-                                        <a href="@group.Route"
+                                        <a href="@BuildSidebarLink(group.Route)"
                                            class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
                                             <span class="sandbox-nav__title">@group.Title</span>
                                             <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
@@ -149,6 +166,23 @@
         }
 
         return string.Equals($"/{currentPath.TrimStart('/')}", route, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private string BuildSidebarLink(string route)
+    {
+        return SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            route,
+            toolbarState.HasContext ? toolbarState.Scenario : null,
+            toolbarState.HasContext ? toolbarState.Frame : null,
+            themeState.IsDark);
+    }
+
+    private string BuildSectionLink(string route, string anchor)
+    {
+        return IsActiveRoute(route)
+            ? SandboxQueryLinks.WithFragment(NavigationManager, anchor)
+            : $"{BuildSidebarLink(route)}#{anchor}";
     }
 
     private void HandleThemeChanged()

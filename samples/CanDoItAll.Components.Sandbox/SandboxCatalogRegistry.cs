@@ -49,6 +49,9 @@ public sealed record SandboxGroupDefinition(
     public string ProofScope => IsStandardProofGroup ? "Standard" : "Deferred";
 }
 
+/// <summary>A named, anchored component section within a catalog page (e.g. the &lt;Button&gt; section on Actions).</summary>
+public sealed record SandboxPageSection(string Anchor, string ComponentName, Type ComponentType);
+
 public sealed record SandboxExampleDefinition(
     string Id,
     SandboxGroupKey GroupKey,
@@ -229,6 +232,17 @@ public static class SandboxCatalogRegistry
         "On mobile, does the first viewport orient the user quickly?",
         "On desktop, are we avoiding dead horizontal space and accidental narrow columns?"
     ];
+
+    /// <summary>
+    /// Named component sections rendered within a catalog page, keyed by route. Both the page
+    /// itself (for anchors/headings/API types) and the sidebar sub-nav read from this list so
+    /// they can't drift out of sync. Populated per-page as each page migrates to this pattern.
+    /// </summary>
+    public static IReadOnlyDictionary<string, IReadOnlyList<SandboxPageSection>> PageSections { get; } =
+        new Dictionary<string, IReadOnlyList<SandboxPageSection>>(StringComparer.OrdinalIgnoreCase);
+
+    public static IReadOnlyList<SandboxPageSection> GetSections(string route)
+        => PageSections.TryGetValue(route, out var sections) ? sections : [];
 
     public static SandboxGroupDefinition GetGroup(SandboxGroupKey key)
         => Groups.First(group => group.Key == key);
