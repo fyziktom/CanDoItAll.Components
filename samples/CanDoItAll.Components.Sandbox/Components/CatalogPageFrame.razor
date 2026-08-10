@@ -6,25 +6,7 @@
                 <PageHeader Eyebrow="Components Sandbox"
                             Title="@Group.Title"
                             Description="@Group.Summary"
-                            Compact="true">
-                    <Actions>
-                        <div class="cad-theme-switcher" data-testid="theme-switcher">
-                            <Button Text="Light"
-                                    ButtonStyle="@(IsTheme(CadThemes.Light) ? ButtonStyle.Primary : ButtonStyle.Light)"
-                                    Variant="@(IsTheme(CadThemes.Light) ? Variant.Filled : Variant.Outlined)"
-                                    Click="@(() => SetTheme(CadThemes.Light))"
-                                    data-testid="theme-switch-light"
-                                    aria-pressed="@IsTheme(CadThemes.Light)" />
-                            <Button Text="Dark"
-                                    ButtonStyle="@(IsTheme(CadThemes.Dark) ? ButtonStyle.Primary : ButtonStyle.Light)"
-                                    Variant="@(IsTheme(CadThemes.Dark) ? Variant.Filled : Variant.Outlined)"
-                                    Click="@(() => SetTheme(CadThemes.Dark))"
-                                    data-testid="theme-switch-dark"
-                                    aria-pressed="@IsTheme(CadThemes.Dark)" />
-                            <Button Text="Catalog index" ButtonStyle="@(ButtonStyle.Light)" Href="/" />
-                        </div>
-                    </Actions>
-                </PageHeader>
+                            Compact="true" />
             </Header>
 
             <Lead>
@@ -73,24 +55,6 @@
             <ChildContent>
                 <div class="sandbox-page-section">
                     <SectionCard Title="@DemoTitle" Description="@DemoSummary">
-                        <div class="sandbox-demo-toolbar">
-                            <SecondaryTabs Items="@ScenarioTabs"
-                                           SelectedKey="@Scenario.ToSlug()"
-                                           SelectedKeyChanged="HandleScenarioChanged"
-                                           Dense="true"
-                                           ShowActiveDescription="false" />
-
-                            <div class="sandbox-frame-toggle">
-                                @foreach (var preset in FramePresets)
-                                {
-                                    <Button Text="@preset.ToLabel()"
-                                            ButtonStyle="@(preset == Frame ? ButtonStyle.Primary : ButtonStyle.Light)"
-                                            Variant="@(preset == Frame ? Variant.Filled : Variant.Outlined)"
-                                            Click="@(() => FrameChanged.InvokeAsync(preset))" />
-                                }
-                            </div>
-                        </div>
-
                         <SmallText Text="@Scenario.ToSummary()" Paragraph="true" />
 
                         <div class="sandbox-demo-frame @Frame.ToSurfaceClass()" data-testid="sandbox-demo-surface">
@@ -212,8 +176,6 @@
 </div>
 
 @code {
-    private static readonly IReadOnlyList<SecondaryTabItem> ScenarioTabs = SandboxScenarioKeyExtensions.BuildTabs();
-    private static readonly IReadOnlyList<SandboxFramePreset> FramePresets = Enum.GetValues<SandboxFramePreset>();
     private bool isProofDialogOpen;
 
     [Parameter, EditorRequired]
@@ -243,6 +205,10 @@
     [Parameter]
     public int ExampleCount { get; set; }
 
+    // No longer invoked by this component — scenario/frame changes are now driven by the
+    // fixed top toolbar via SandboxToolbarState, wired through CatalogPageBase.SetParametersAsync.
+    // Kept as parameters so existing <CatalogPageFrame ScenarioChanged="NavigateScenario" ...>
+    // markup on the other catalog pages keeps compiling unchanged.
     [Parameter]
     public EventCallback<SandboxScenarioKey> ScenarioChanged { get; set; }
 
@@ -267,21 +233,6 @@
     public SandboxThemeState? ThemeState { get; set; }
 
     private SandboxThemeState ResolvedThemeState => ThemeState ?? throw new InvalidOperationException("CatalogPageFrame requires a cascading SandboxThemeState.");
-
-    private bool IsTheme(string themeKey)
-    {
-        return string.Equals(ResolvedThemeState.ThemeKey, themeKey, StringComparison.Ordinal);
-    }
-
-    private void SetTheme(string themeKey)
-    {
-        ResolvedThemeState.SetTheme(themeKey);
-    }
-
-    private Task HandleScenarioChanged(string key)
-    {
-        return ScenarioChanged.InvokeAsync(SandboxScenarioKeyExtensions.Parse(key));
-    }
 
     private void OpenProofDialog()
     {

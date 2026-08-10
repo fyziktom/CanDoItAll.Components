@@ -1,0 +1,66 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@inject NavigationManager NavigationManager
+
+<div class="sandbox-toolbar" data-testid="sandbox-toolbar">
+    <div class="sandbox-toolbar__controls">
+        @if (ToolbarState is { HasContext: true } toolbarState)
+        {
+            <div class="sandbox-toolbar__scenario">
+                <DropDown TValue="SandboxScenarioKey"
+                          Data="@ScenarioOptions"
+                          TextProperty="Text"
+                          ValueProperty="Value"
+                          Value="@toolbarState.Scenario"
+                          ValueChanged="HandleScenarioChanged"
+                          aria-label="Scenario"
+                          data-testid="sandbox-toolbar-scenario" />
+            </div>
+
+            <div class="sandbox-toolbar__frame-group" role="group" aria-label="Frame preset">
+                @foreach (var preset in FramePresets)
+                {
+                    <Button Text="@preset.ToLabel()"
+                            ButtonStyle="@(preset == toolbarState.Frame ? ButtonStyle.Primary : ButtonStyle.Light)"
+                            Variant="@(preset == toolbarState.Frame ? Variant.Filled : Variant.Outlined)"
+                            Size="ButtonSize.Small"
+                            Click="@(() => toolbarState.FrameChanged.InvokeAsync(preset))"
+                            data-testid="@($"sandbox-toolbar-frame-{preset.ToSlug()}")" />
+                }
+            </div>
+        }
+
+        @if (ThemeState is not null)
+        {
+            <Button Text="@(ThemeState.IsDark ? "Dark" : "Light")"
+                    Icon="@(ThemeState.IsDark ? "dark_mode" : "light_mode")"
+                    ButtonStyle="ButtonStyle.Light"
+                    Variant="Variant.Outlined"
+                    Size="ButtonSize.Small"
+                    Click="ToggleDarkMode"
+                    aria-pressed="@(ThemeState.IsDark ? "true" : "false")"
+                    data-testid="sandbox-toolbar-dark-toggle" />
+        }
+    </div>
+</div>
+
+@code {
+    private static readonly IReadOnlyList<SandboxFramePreset> FramePresets = Enum.GetValues<SandboxFramePreset>();
+
+    private static readonly IReadOnlyList<ScenarioOption> ScenarioOptions = Enum.GetValues<SandboxScenarioKey>()
+        .Select(value => new ScenarioOption(value.ToLabel(), value))
+        .ToArray();
+
+    [CascadingParameter]
+    public SandboxToolbarState? ToolbarState { get; set; }
+
+    [CascadingParameter]
+    public SandboxThemeState? ThemeState { get; set; }
+
+    private Task HandleScenarioChanged(SandboxScenarioKey scenario)
+        => ToolbarState!.ScenarioChanged.InvokeAsync(scenario);
+
+    private void ToggleDarkMode()
+        => NavigationManager.NavigateTo(SandboxQueryLinks.WithDark(NavigationManager, !ThemeState!.IsDark));
+
+    private sealed record ScenarioOption(string Text, SandboxScenarioKey Value);
+}

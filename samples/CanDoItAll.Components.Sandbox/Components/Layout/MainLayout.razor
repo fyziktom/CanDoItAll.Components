@@ -1,108 +1,124 @@
 @namespace CanDoItAll.Components.Sandbox.Components
+@using Microsoft.JSInterop
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @inherits LayoutComponentBase
 @implements IDisposable
 
 <ThemeHost ThemeKey="@themeState.ThemeKey">
     <CascadingValue Value="@themeState">
-        <div class="sandbox-layout">
-            <div class="sandbox-layout__backdrop" aria-hidden="true"></div>
-            <div class="sandbox-layout__shell">
-                <header class="sandbox-mobile-header">
-                    <a class="sandbox-brand" href="/">
-                        <span class="sandbox-brand__eyebrow">CanDoItAll</span>
-                        <span class="sandbox-brand__title">Components Sandbox</span>
-                    </a>
-                    <Button Text="@(mobileNavigationOpen ? "Close navigation" : "Open navigation")"
-                            Icon="@(mobileNavigationOpen ? "close" : "menu")"
-                            ButtonStyle="ButtonStyle.Light"
-                            Variant="Variant.Outlined"
-                            Click="ToggleMobileNavigationAsync"
-                            aria-controls="sandbox-navigation"
-                            aria-expanded="@(mobileNavigationOpen ? "true" : "false")" />
-                </header>
+        <CascadingValue Value="@toolbarState">
+            <div class="sandbox-layout">
+                <SandboxToolbar />
+                <div class="sandbox-layout__backdrop" aria-hidden="true"></div>
+                <div class="sandbox-layout__shell">
+                    <header class="sandbox-mobile-header">
+                        <a class="sandbox-brand" href="/">
+                            <span class="sandbox-brand__eyebrow">CanDoItAll</span>
+                            <span class="sandbox-brand__title">Components Sandbox</span>
+                        </a>
+                        <Button Text="@(mobileNavigationOpen ? "Close navigation" : "Open navigation")"
+                                Icon="@(mobileNavigationOpen ? "close" : "menu")"
+                                ButtonStyle="ButtonStyle.Light"
+                                Variant="Variant.Outlined"
+                                Click="ToggleMobileNavigationAsync"
+                                aria-controls="sandbox-navigation"
+                                aria-expanded="@(mobileNavigationOpen ? "true" : "false")" />
+                    </header>
 
-                <aside id="sandbox-navigation" class="sandbox-sidebar @(mobileNavigationOpen ? "is-open" : null)">
-                    <a class="sandbox-brand" href="/">
-                        <span class="sandbox-brand__eyebrow">CanDoItAll</span>
-                        <span class="sandbox-brand__title">Components Sandbox</span>
-                    </a>
-
-                    <p class="sandbox-brand__summary">A calm validation lab for standard shared surfaces, route coverage, and future MCP examples.</p>
-
-                    <nav class="sandbox-nav" aria-label="Standard proof groups">
-                        <a href="/groups/coverage"
-                           class="sandbox-nav__link @(IsActiveRoute("/groups/coverage") ? "is-active" : string.Empty)">
-                            <span class="sandbox-nav__title">Coverage Index</span>
-                            <span class="sandbox-nav__meta">standard / routes / exceptions</span>
+                    <aside id="sandbox-navigation" class="sandbox-sidebar @(mobileNavigationOpen ? "is-open" : null)">
+                        <a class="sandbox-brand" href="/">
+                            <span class="sandbox-brand__eyebrow">CanDoItAll</span>
+                            <span class="sandbox-brand__title">Components Sandbox</span>
                         </a>
 
-                        @foreach (var group in SandboxCatalogRegistry.StandardGroups)
-                        {
-                            <a href="@group.Route"
-                               class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
-                                <span class="sandbox-nav__title">@group.Title</span>
-                                <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
+                        <p class="sandbox-brand__summary">A calm validation lab for standard shared surfaces, route coverage, and future MCP examples.</p>
+
+                        <nav class="sandbox-nav" aria-label="Standard proof groups">
+                            <a href="/groups/coverage"
+                               class="sandbox-nav__link @(IsActiveRoute("/groups/coverage") ? "is-active" : string.Empty)">
+                                <span class="sandbox-nav__title">Coverage Index</span>
+                                <span class="sandbox-nav__meta">standard / routes / exceptions</span>
                             </a>
 
-                            @if (group.Key == SandboxGroupKey.Navigation)
+                            @foreach (var group in SandboxCatalogRegistry.StandardGroups)
                             {
-                                <a href="/groups/navigation/side-menu"
-                                   class="sandbox-nav__link @(IsActiveRoute("/groups/navigation/side-menu") ? "is-active" : string.Empty)">
-                                    <span class="sandbox-nav__title">Side Menu Lab</span>
-                                    <span class="sandbox-nav__meta">collapse / overflow / responsive</span>
+                                <a href="@group.Route"
+                                   class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
+                                    <span class="sandbox-nav__title">@group.Title</span>
+                                    <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
                                 </a>
-                            }
-                        }
-                    </nav>
 
-                    @if (SandboxCatalogRegistry.DeferredGroups.Count > 0)
-                    {
-                        <div class="space-y-2">
-                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Deferred proof scope" />
-                            <nav class="sandbox-nav" aria-label="Deferred proof groups">
-                                @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
+                                @if (group.Key == SandboxGroupKey.Navigation)
                                 {
-                                    <a href="@group.Route"
-                                       class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
-                                        <span class="sandbox-nav__title">@group.Title</span>
-                                        <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
+                                    <a href="/groups/navigation/side-menu"
+                                       class="sandbox-nav__link @(IsActiveRoute("/groups/navigation/side-menu") ? "is-active" : string.Empty)">
+                                        <span class="sandbox-nav__title">Side Menu Lab</span>
+                                        <span class="sandbox-nav__meta">collapse / overflow / responsive</span>
                                     </a>
                                 }
-                            </nav>
-                        </div>
-                    }
-
-                    <SectionCard Title="Validation Gate" Description="Each page needs happy, dense, and empty proof before sign-off.">
-                        <div class="space-y-2">
-                            @foreach (var question in SandboxCatalogRegistry.ValidationQuestions.Take(4))
-                            {
-                                <p class="cda-body-muted">@question</p>
                             }
-                        </div>
-                    </SectionCard>
-                </aside>
+                        </nav>
 
-                <main class="sandbox-main">
-                    <DialogHost />
-                    <Tooltip />
-                    <Notification />
-                    @Body
-                </main>
+                        @if (SandboxCatalogRegistry.DeferredGroups.Count > 0)
+                        {
+                            <div class="space-y-2">
+                                <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Deferred proof scope" />
+                                <nav class="sandbox-nav" aria-label="Deferred proof groups">
+                                    @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
+                                    {
+                                        <a href="@group.Route"
+                                           class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
+                                            <span class="sandbox-nav__title">@group.Title</span>
+                                            <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
+                                        </a>
+                                    }
+                                </nav>
+                            </div>
+                        }
+
+                        <SectionCard Title="Validation Gate" Description="Each page needs happy, dense, and empty proof before sign-off.">
+                            <div class="space-y-2">
+                                @foreach (var question in SandboxCatalogRegistry.ValidationQuestions.Take(4))
+                                {
+                                    <p class="cda-body-muted">@question</p>
+                                }
+                            </div>
+                        </SectionCard>
+                    </aside>
+
+                    <main class="sandbox-main">
+                        <DialogHost />
+                        <Tooltip />
+                        <Notification />
+                        @Body
+                    </main>
+                </div>
             </div>
-        </div>
+        </CascadingValue>
     </CascadingValue>
 </ThemeHost>
 
 @code {
     private readonly SandboxThemeState themeState = new();
+    private readonly SandboxToolbarState toolbarState = new();
     private bool mobileNavigationOpen;
 
     protected override void OnInitialized()
     {
         themeState.Changed += HandleThemeChanged;
+        toolbarState.Changed += HandleToolbarChanged;
         NavigationManager.LocationChanged += HandleLocationChanged;
         SyncThemeFromQuery();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/sandbox-toolbar.js");
+            await module.InvokeVoidAsync("observeToolbarHeight", ".sandbox-toolbar");
+        }
     }
 
     private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -140,6 +156,11 @@
         _ = InvokeAsync(StateHasChanged);
     }
 
+    private void HandleToolbarChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
     private Task ToggleMobileNavigationAsync()
     {
         mobileNavigationOpen = !mobileNavigationOpen;
@@ -149,6 +170,7 @@
     public void Dispose()
     {
         themeState.Changed -= HandleThemeChanged;
+        toolbarState.Changed -= HandleToolbarChanged;
         NavigationManager.LocationChanged -= HandleLocationChanged;
     }
 }

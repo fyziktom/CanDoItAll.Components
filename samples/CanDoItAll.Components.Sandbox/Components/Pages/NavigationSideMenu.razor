@@ -1,7 +1,6 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 @page "/groups/navigation/side-menu"
 @inherits CatalogPageBase
-@implements IDisposable
 @inject SideMenuService SideMenus
 
 <PageTitle>Side Menu Lab</PageTitle>
@@ -399,8 +398,9 @@
         });
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         serviceSubscription?.Dispose();
+        base.Dispose();
     }
 }
