@@ -12,33 +12,43 @@
                         TestId="@TestId" />
 
 @code {
+    /// <summary>Material icon token rendered on the button.</summary>
     [Parameter]
     public string Icon { get; set; } = "qr_code_scanner";
 
+    /// <summary>Visible label and dialog title.</summary>
     [Parameter]
     public string Label { get; set; } = "Scan QR code";
 
+    /// <summary>Optional tooltip text shown on hover.</summary>
     [Parameter]
     public string? TooltipText { get; set; }
 
+    /// <summary>Enables the camera-based scan path inside the dialog. When <c>false</c>, only the manual paste fallback is offered.</summary>
     [Parameter]
     public bool EnableCamera { get; set; } = true;
 
+    /// <summary>Semantic tone of the trigger button.</summary>
     [Parameter]
     public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Light;
 
+    /// <summary>Emphasis treatment of the trigger button.</summary>
     [Parameter]
     public Variant Variant { get; set; } = Variant.Outlined;
 
+    /// <summary>Control height and padding scale of the trigger button.</summary>
     [Parameter]
     public ButtonSize Size { get; set; } = ButtonSize.Small;
 
+    /// <summary>Blocks interaction with the trigger button.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Value applied to <c>data-testid</c> on the trigger button, for test targeting.</summary>
     [Parameter]
     public string? TestId { get; set; } = "cda-qr-scan-button";
 
+    /// <summary>Invoked with the decoded result when a scan (camera or manual paste) succeeds.</summary>
     [Parameter]
     public EventCallback<QrScanResult> Scanned { get; set; }
 
