@@ -156,7 +156,7 @@ public static class ComponentApiReflector
         {
             null => null,
             string text when text.Length == 0 => "\"\"",
-            string text => $"\"{text}\"",
+            string text => Shorten($"\"{text}\""),
             bool flag => flag ? "true" : "false",
             Enum enumValue => $"{FriendlyTypeName(enumValue.GetType())}.{enumValue}",
             IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),

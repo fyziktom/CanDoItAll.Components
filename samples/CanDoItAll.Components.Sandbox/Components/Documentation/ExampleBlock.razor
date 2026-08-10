@@ -80,7 +80,11 @@
 
     private bool HasSource => !string.IsNullOrEmpty(Source);
 
-    private string TestId => $"sandbox-example-{SourceId.Replace('/', '-').Replace(".razor", string.Empty, StringComparison.OrdinalIgnoreCase).ToLowerInvariant()}";
+    private string TestId => "sandbox-example-" + SourceId
+        .Replace("examples/", string.Empty, StringComparison.OrdinalIgnoreCase)
+        .Replace(".razor", string.Empty, StringComparison.OrdinalIgnoreCase)
+        .Replace('/', '-')
+        .ToLowerInvariant();
 
     protected override void OnInitialized()
     {
