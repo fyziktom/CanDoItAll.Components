@@ -29,6 +29,18 @@
                             Size="CopyButtonSize.Small"
                             data-testid="@($"{TestId}-copy")" />
             }
+
+            @if (ApiTypes is { Count: > 0 })
+            {
+                <Button Text="@(isApiVisible ? "Hide API" : "Show API")"
+                        Icon="@(isApiVisible ? "expand_less" : "api")"
+                        ButtonStyle="@(ButtonStyle.Light)"
+                        Variant="@(Variant.Outlined)"
+                        Size="@(ButtonSize.Small)"
+                        Click="ToggleApi"
+                        aria-expanded="@(isApiVisible ? "true" : "false")"
+                        data-testid="@($"{TestId}-api-toggle")" />
+            }
         </Cluster>
     </header>
 
@@ -48,10 +60,18 @@
             No embedded source found for <code>@SourceId</code>.
         </p>
     }
+
+    @if (ApiTypes is { Count: > 0 } && isApiVisible)
+    {
+        <div class="sandbox-example__api" data-testid="@($"{TestId}-api")">
+            <ComponentApiTable Types="@ApiTypes" />
+        </div>
+    }
 </section>
 
 @code {
     private bool isSourceVisible;
+    private bool isApiVisible;
 
     /// <summary>Heading shown above the live demo.</summary>
     [Parameter, EditorRequired]
@@ -76,6 +96,10 @@
     [Parameter]
     public bool SourceExpanded { get; set; }
 
+    /// <summary>When set, shows a "Show API" toggle that expands a ComponentApiTable scoped to these types under the example.</summary>
+    [Parameter]
+    public IReadOnlyList<Type>? ApiTypes { get; set; }
+
     private string? Source => ExampleSource.TryGet(SourceId);
 
     private bool HasSource => !string.IsNullOrEmpty(Source);
@@ -94,5 +118,10 @@
     private void ToggleSource()
     {
         isSourceVisible = !isSourceVisible;
+    }
+
+    private void ToggleApi()
+    {
+        isApiVisible = !isApiVisible;
     }
 }

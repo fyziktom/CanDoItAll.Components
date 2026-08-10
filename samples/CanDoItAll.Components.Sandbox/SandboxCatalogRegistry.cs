@@ -236,10 +236,20 @@ public static class SandboxCatalogRegistry
     /// <summary>
     /// Named component sections rendered within a catalog page, keyed by route. Both the page
     /// itself (for anchors/headings/API types) and the sidebar sub-nav read from this list so
-    /// they can't drift out of sync. Populated per-page as each page migrates to this pattern.
+    /// they can't drift out of sync. Only Actions is populated today; other pages migrate later.
     /// </summary>
     public static IReadOnlyDictionary<string, IReadOnlyList<SandboxPageSection>> PageSections { get; } =
-        new Dictionary<string, IReadOnlyList<SandboxPageSection>>(StringComparer.OrdinalIgnoreCase);
+        new Dictionary<string, IReadOnlyList<SandboxPageSection>>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["/groups/actions"] =
+            [
+                new("button", "Button", typeof(Button)),
+                new("copy-button", "CopyButton", typeof(CopyButton)),
+                new("badge", "Badge", typeof(Badge)),
+                new("chip", "Chip", typeof(Chip)),
+                new("selection-list-item", "SelectionListItem", typeof(SelectionListItem))
+            ]
+        };
 
     public static IReadOnlyList<SandboxPageSection> GetSections(string route)
         => PageSections.TryGetValue(route, out var sections) ? sections : [];
