@@ -80,6 +80,23 @@
                                             <span class="sandbox-nav__title">@group.Title</span>
                                             <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
                                         </a>
+
+                                        @if (IsActive(group))
+                                        {
+                                            var deferredSections = SandboxCatalogRegistry.GetSections(group.Route);
+                                            if (deferredSections.Count > 0)
+                                            {
+                                                <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
+                                                    @foreach (var section in deferredSections)
+                                                    {
+                                                        <a href="@BuildSectionLink(group.Route, section.Anchor)"
+                                                           class="sandbox-nav__link sandbox-nav__link--sub">
+                                                            <span class="sandbox-nav__title">@section.ComponentName</span>
+                                                        </a>
+                                                    }
+                                                </nav>
+                                            }
+                                        }
                                     }
                                 </nav>
                             </div>
