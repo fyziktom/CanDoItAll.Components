@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Inputs
+
+<FormField Text="Title">
+    <TextBox Value="@title"
+             ValueChanged="@(value => title = value ?? string.Empty)"
+             Placeholder="Short, clear summary" />
+</FormField>
+
+@code {
+    private string title = "Component validation pass";
+}

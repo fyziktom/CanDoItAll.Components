@@ -14,30 +14,39 @@
         />
 
 @code {
+    /// <summary>The numeric value.</summary>
     [Parameter]
     public TValue? Value { get; set; }
 
+    /// <summary>Raised whenever <see cref="Value"/> changes.</summary>
     [Parameter]
     public EventCallback<TValue?> ValueChanged { get; set; }
 
+    /// <summary>Raised after the value changes, with the new value.</summary>
     [Parameter]
     public EventCallback<TValue?> Change { get; set; }
 
+    /// <summary>The smallest value accepted; out-of-range input is clamped.</summary>
     [Parameter]
     public object? Min { get; set; }
 
+    /// <summary>The largest value accepted; out-of-range input is clamped.</summary>
     [Parameter]
     public object? Max { get; set; }
 
+    /// <summary>The increment used by the input's built-in step controls.</summary>
     [Parameter]
     public object? Step { get; set; }
 
+    /// <summary>A standard numeric format string applied when displaying <see cref="Value"/>.</summary>
     [Parameter]
     public string? Format { get; set; }
 
+    /// <summary>When <c>true</c>, the input cannot be interacted with.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>The visual style applied to the input element.</summary>
     [Parameter]
     public InputLook Look { get; set; } = InputLook.Default;
 

@@ -1,0 +1,27 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Inputs
+
+<FormField Text="Priority threshold">
+    <div class="space-y-3">
+        <Slider TValue="int"
+                Value="@priority"
+                ValueChanged="@(value => priority = value)"
+                Min="0"
+                Max="100"
+                Step="5" />
+        <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+            <span>@PriorityLabel</span>
+            <StatusBadge Text="@($"{priority}%")" Tone="info" />
+        </div>
+    </div>
+</FormField>
+
+@code {
+    private int priority = 70;
+
+    private string PriorityLabel => priority switch
+    {
+        >= 85 => "High review priority",
+        >= 55 => "Standard review priority",
+        _ => "Low review priority"
+    };
+}

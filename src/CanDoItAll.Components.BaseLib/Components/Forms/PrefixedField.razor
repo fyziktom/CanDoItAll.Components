@@ -17,21 +17,27 @@
 </label>
 
 @code {
+    /// <summary>Text shown before the field's content.</summary>
     [Parameter]
     public string? Prefix { get; set; }
 
+    /// <summary>Text shown after the field's content.</summary>
     [Parameter]
     public string? Suffix { get; set; }
 
+    /// <summary>Overrides the auto-computed left padding reserved for <see cref="Prefix"/>.</summary>
     [Parameter]
     public double? PrefixPaddingRem { get; set; }
 
+    /// <summary>Overrides the auto-computed right padding reserved for <see cref="Suffix"/>.</summary>
     [Parameter]
     public double? SuffixPaddingRem { get; set; }
 
+    /// <summary>When <c>true</c>, the prefix/suffix stack above and below the field on narrow viewports instead of staying inline.</summary>
     [Parameter]
     public bool StackOnMobile { get; set; }
 
+    /// <summary>The wrapped input.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

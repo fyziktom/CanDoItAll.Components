@@ -25,24 +25,31 @@ else
 }
 
 @code {
+    /// <summary>When <c>true</c>, renders as a collapsible <c>&lt;details&gt;</c> element instead of a plain <c>&lt;fieldset&gt;</c>.</summary>
     [Parameter]
     public bool AllowCollapse { get; set; }
 
+    /// <summary>Accessible label for the summary control while expanded (currently unused; reserved for a future collapse toggle).</summary>
     [Parameter]
     public string? CollapseAriaLabel { get; set; }
 
+    /// <summary>Title/tooltip for the summary control while expanded.</summary>
     [Parameter]
     public string? CollapseTitle { get; set; }
 
+    /// <summary>Accessible label for the summary control while collapsed (currently unused; reserved for a future collapse toggle).</summary>
     [Parameter]
     public string? ExpandAriaLabel { get; set; }
 
+    /// <summary>Title/tooltip for the summary control while collapsed (currently unused; reserved for a future collapse toggle).</summary>
     [Parameter]
     public string? ExpandTitle { get; set; }
 
+    /// <summary>The fieldset's heading, rendered in the <c>&lt;legend&gt;</c> or <c>&lt;summary&gt;</c>.</summary>
     [Parameter]
     public RenderFragment? HeaderTemplate { get; set; }
 
+    /// <summary>The fieldset's grouped fields.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 }

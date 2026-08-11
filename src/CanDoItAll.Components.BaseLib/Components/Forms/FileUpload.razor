@@ -57,45 +57,59 @@
     private ElementReference rootElement;
     private IJSObjectReference? module;
 
+    /// <summary>Primary heading shown inside the drop zone.</summary>
     [Parameter]
     public string PrimaryText { get; set; } = "Drag and drop files here";
 
+    /// <summary>Supporting text shown below <see cref="PrimaryText"/>.</summary>
     [Parameter]
     public string SecondaryText { get; set; } = "or browse from disk.";
 
+    /// <summary>Label for the file-picker button.</summary>
     [Parameter]
     public string ButtonText { get; set; } = "Choose file";
 
+    /// <summary>Value applied to the underlying file input's <c>accept</c> attribute, restricting selectable file types.</summary>
     [Parameter]
     public string? Accept { get; set; }
 
+    /// <summary>When <c>true</c>, more than one file can be selected at once.</summary>
     [Parameter]
     public bool Multiple { get; set; }
 
+    /// <summary>When <c>true</c>, browsing and drag-and-drop are disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>When <c>true</c>, reduces the drop zone's height and padding.</summary>
     [Parameter]
     public bool Compact { get; set; }
 
+    /// <summary>Material icon token shown above <see cref="PrimaryText"/>.</summary>
     [Parameter]
     public string Icon { get; set; } = "upload_file";
 
+    /// <summary>Accessible label for the file input; defaults to <see cref="PrimaryText"/> or <see cref="ButtonText"/>.</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>Value applied as the root element's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? RootTestHookId { get; set; }
 
+    /// <summary>Value applied as the drop zone's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? DropZoneTestHookId { get; set; }
 
+    /// <summary>Value applied as the button wrapper's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? ButtonTestHookId { get; set; }
 
+    /// <summary>Value applied as the underlying file input's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? InputTestHookId { get; set; }
 
+    /// <summary>Raised with the selected files, whether chosen via the picker or dropped.</summary>
     [Parameter]
     public EventCallback<InputFileChangeEventArgs> Change { get; set; }
 

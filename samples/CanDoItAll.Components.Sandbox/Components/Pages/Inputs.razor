@@ -2,6 +2,7 @@
 @page "/groups/inputs"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Inputs
 @using Microsoft.AspNetCore.Components.Forms
 
 <PageTitle>Inputs</PageTitle>
@@ -35,331 +36,450 @@
         }
         else
         {
-            <FormSection Title="Review intake" Description="A realistic form with text, numeric, selection, and boolean inputs.">
-                <Grid Gap="LayoutGap.Large"
-                      ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
-                    <FormField Text="Title">
-                        <TextBox Value="@FormState.Title"
-                                 ValueChanged="HandleTitleChanged"
-                                 Placeholder="@TitlePlaceholder"
-                                 Disabled="@IsDisabled" />
-                    </FormField>
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
 
-                    <FormField Text="Owner">
-                        <TextBox Value="@FormState.Owner"
-                                 ValueChanged="HandleOwnerChanged"
-                                 Placeholder="Owner or reviewer"
-                                 Disabled="@IsDisabled" />
-                    </FormField>
-
-                    <FormField Text="Status">
-                        <DropDown TValue="string"
-                                  Data="@StatusOptions"
-                                  TextProperty="@nameof(SelectOption.Text)"
-                                  ValueProperty="@nameof(SelectOption.Value)"
-                                  Value="@FormState.Status"
-                                  ValueChanged="HandleStatusChanged"
-                                  Placeholder="Select status"
-                                  Disabled="@IsDisabled" />
-                    </FormField>
-
-                    <FormField Text="Confidence">
-                        <Numeric TValue="int"
-                                 Value="@FormState.Confidence"
-                                 ValueChanged="HandleConfidenceChanged"
-                                 Min="0"
-                                 Max="100"
-                                 Step="5"
-                                 Disabled="@IsDisabled" />
-                    </FormField>
-
-                    <FormField Text="Password">
-                        <Password Value="@FormState.Secret"
-                                  ValueChanged="HandleSecretChanged"
-                                  Placeholder="Shared secret"
-                                  Disabled="@IsDisabled" />
-                    </FormField>
-
-                    <FormField Text="Timed secret">
-                        <SecretField Value="@FormState.Secret"
-                                     ValueChanged="HandleSecretChanged"
-                                     SecretName="sandbox-api-key"
-                                     ShowNameCopy="true"
-                                     ShowValueCopy="true"
-                                     RevealDurationSeconds="30"
-                                     Placeholder="Managed secret"
-                                     Disabled="@IsDisabled"
-                                     data-testid="sandbox-secret-field" />
-                    </FormField>
-
-                    <FormField Text="Reminders">
-                        <Split Breakpoint="LayoutBreakpoint.None"
-                               Gap="LayoutGap.Medium"
-                               AlignItems="AlignItems.Center"
-                               JustifyContent="JustifyContent.SpaceBetween"
-                               Class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
-                            <div class="space-y-1">
-                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Send daily reminders" />
-                                <TextBlock TextStyle="@(TextStyle.Caption)" Value="Keep reviewers aligned before the approval window closes." />
-                            </div>
-                            <Switch Value="@FormState.RemindersEnabled"
-                                    ValueChanged="HandleReminderChanged"
-                                    Disabled="@IsDisabled" />
-                        </Split>
-                    </FormField>
-                </Grid>
-            </FormSection>
-
-            <SectionCard Title="Specialized inputs" Description="Composite form helpers prove that wrapping, generated labels, and inline actions stay stable around real controls.">
-                <FormStack data-testid="sandbox-inputs-specialized">
-                    <Fieldset>
-                        <HeaderTemplate>
-                            <span>Scoring and reference fields</span>
-                        </HeaderTemplate>
-                        <ChildContent>
-                            <FormRow Split="true">
-                                <FormField Text="Priority threshold">
-                                    <div class="space-y-3" data-testid="sandbox-inputs-slider">
-                                        <Slider TValue="int"
-                                                Value="@AdvancedState.Priority"
-                                                ValueChanged="HandlePriorityChanged"
-                                                Min="0"
-                                                Max="100"
-                                                Step="5"
-                                                Disabled="@IsDisabled"
-                                                data-testid="sandbox-inputs-slider-control" />
-                                        <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
-                                            <span>@PriorityLabel</span>
-                                            <StatusBadge Text="@($"{AdvancedState.Priority}%")" Tone="info" />
-                                        </div>
+                    @if (section.ComponentName == "TextBox")
+                    {
+                        <ExampleBlock Title="Title field"
+                                      Description="A standard text field with placeholder guidance."
+                                      SourceId="examples/Inputs/TitleField.razor"
+                                      ApiTypes="@TextBoxApiTypes">
+                            <FormField Text="Title">
+                                <TextBox Value="@FormState.Title"
+                                         ValueChanged="HandleTitleChanged"
+                                         Placeholder="@TitlePlaceholder"
+                                         Disabled="@IsDisabled" />
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "DropDown")
+                    {
+                        <ExampleBlock Title="Status field"
+                                      Description="A typed dropdown backed by a data source, text property, and value property."
+                                      SourceId="examples/Inputs/StatusField.razor"
+                                      ApiTypes="@DropDownApiTypes">
+                            <FormField Text="Status">
+                                <DropDown TValue="string"
+                                          Data="@StatusOptions"
+                                          TextProperty="@nameof(SelectOption.Text)"
+                                          ValueProperty="@nameof(SelectOption.Value)"
+                                          Value="@FormState.Status"
+                                          ValueChanged="HandleStatusChanged"
+                                          Placeholder="Select status"
+                                          Disabled="@IsDisabled" />
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Numeric")
+                    {
+                        <ExampleBlock Title="Confidence field"
+                                      Description="A numeric input with clamped min/max and a step increment."
+                                      SourceId="examples/Inputs/ConfidenceField.razor"
+                                      ApiTypes="@NumericApiTypes">
+                            <FormField Text="Confidence">
+                                <Numeric TValue="int"
+                                         Value="@FormState.Confidence"
+                                         ValueChanged="HandleConfidenceChanged"
+                                         Min="0"
+                                         Max="100"
+                                         Step="5"
+                                         Disabled="@IsDisabled" />
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Password")
+                    {
+                        <ExampleBlock Title="Password field"
+                                      Description="A masked text input for short-lived credentials."
+                                      SourceId="examples/Inputs/PasswordField.razor"
+                                      ApiTypes="@PasswordApiTypes">
+                            <FormField Text="Password">
+                                <Password Value="@FormState.Secret"
+                                          ValueChanged="HandleSecretChanged"
+                                          Placeholder="Shared secret"
+                                          Disabled="@IsDisabled" />
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SecretField")
+                    {
+                        <ExampleBlock Title="Timed secret"
+                                      Description="A managed secret with copy actions and a timed reveal."
+                                      SourceId="examples/Inputs/TimedSecretField.razor"
+                                      ApiTypes="@SecretFieldApiTypes">
+                            <FormField Text="Timed secret">
+                                <SecretField Value="@FormState.Secret"
+                                             ValueChanged="HandleSecretChanged"
+                                             SecretName="sandbox-api-key"
+                                             ShowNameCopy="true"
+                                             ShowValueCopy="true"
+                                             RevealDurationSeconds="30"
+                                             Placeholder="Managed secret"
+                                             Disabled="@IsDisabled"
+                                             data-testid="sandbox-secret-field" />
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Switch")
+                    {
+                        <ExampleBlock Title="Reminders toggle"
+                                      Description="A boolean switch paired with supporting copy."
+                                      SourceId="examples/Inputs/ReminderSwitch.razor"
+                                      ApiTypes="@SwitchApiTypes">
+                            <FormField Text="Reminders">
+                                <Split Breakpoint="LayoutBreakpoint.None"
+                                       Gap="LayoutGap.Medium"
+                                       AlignItems="AlignItems.Center"
+                                       JustifyContent="JustifyContent.SpaceBetween"
+                                       Class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+                                    <div class="space-y-1">
+                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Send daily reminders" />
+                                        <TextBlock TextStyle="@(TextStyle.Caption)" Value="Keep reviewers aligned before the approval window closes." />
                                     </div>
-                                </FormField>
-
-                                <FormField Text="Budget reference">
-                                    <PrefixedField Prefix="@BudgetPrefix"
-                                                   Suffix="@BudgetSuffix"
-                                                   StackOnMobile="true"
-                                                   data-testid="sandbox-inputs-prefixed-field">
-                                        <TextBox Value="@AdvancedState.BudgetCode"
-                                                 ValueChanged="HandleBudgetCodeChanged"
-                                                 Immediate="true"
-                                                 Placeholder="@BudgetCodePlaceholder"
-                                                 Disabled="@IsDisabled"
-                                                 Class="cda-input"
-                                                 data-testid="sandbox-inputs-prefixed-field-input" />
-                                    </PrefixedField>
-                                </FormField>
-                            </FormRow>
-                        </ChildContent>
-                    </Fieldset>
-
-                    <Grid Gap="LayoutGap.Large"
-                          ColumnTemplate="repeat(auto-fit,minmax(min(100%,18rem),1fr))">
-                        <FormField Text="Tags">
-                            <TagEditor Value="@AdvancedState.Tags"
-                                       ValueChanged="HandleTagsChanged"
-                                       Suggestions="@TagSuggestions"
-                                       Placeholder="Add review tag"
-                                       Hint="Press comma or Enter to add a tag. Suggestions appear while the field is focused."
-                                       Disabled="@IsDisabled"
-                                       TestId="sandbox-inputs-tag-editor"
-                                       InputTestId="sandbox-inputs-tag-editor-input"
-                                       MaxTags="8"
-                                       MaxLength="36" />
-                        </FormField>
-
-                        <EntityPicker Title="Reviewer lane"
-                                      Description="@ReviewerPickerDescription"
-                                      Items="@ReviewerOptions"
-                                      SelectedId="@AdvancedState.ReviewerId"
-                                      SelectedIdChanged="HandleReviewerChanged"
-                                      Disabled="@IsDisabled"
-                                      data-testid="sandbox-inputs-entity-picker" />
-                    </Grid>
-
-                    <SettingsSwitchRow data-testid="sandbox-inputs-settings-switch">
-                        <div class="min-w-0 space-y-1">
-                            <SettingsSwitchLabel Text="Notify reviewer leads" />
-                            <TextBlock TextStyle="@(TextStyle.Caption)"
-                                       Value="Send a compact summary whenever priority, tags, or selected lane changes." />
-                        </div>
-                        <Switch Value="@AdvancedState.NotifyLeads"
-                                ValueChanged="HandleNotifyLeadsChanged"
-                                AriaLabel="Notify reviewer leads"
-                                Disabled="@IsDisabled"
-                                data-testid="sandbox-inputs-settings-switch-control" />
-                    </SettingsSwitchRow>
-
-                    <InlineActions data-testid="sandbox-inputs-inline-actions">
-                        <Button Text="Reset"
-                                Icon="refresh"
-                                Variant="Variant.Outlined"
-                                Size="ButtonSize.Small"
-                                Disabled="@IsDisabled"
-                                Click="HandleAdvancedReset" />
-                        <StatusBadge Text="@AdvancedSummary" Tone="success" />
-                        <StatusBadge Text="@($"Changes {advancedChangeCount}")" Tone="neutral" />
-                    </InlineActions>
-                </FormStack>
-            </SectionCard>
-
-            <SectionCard Title="Inline editable values" Description="Editable switches a displayed property into a shared BaseLib input, then saves the value back to the source item.">
-                <Stack GapScale="LayoutGap.Large" data-testid="sandbox-editable-values">
-                    <Grid Gap="LayoutGap.Large"
-                          ColumnTemplate="repeat(auto-fit,minmax(14rem,1fr))">
-                        <FormField Text="Title">
-                            <Editable TItem="EditableReviewItem"
-                                      Item="@EditableState"
-                                      ItemChanged="HandleEditableChanged"
-                                      ParameterName="@nameof(EditableReviewItem.Title)"
-                                      Placeholder="Review title"
-                                      Disabled="@IsDisabled"
-                                      data-testid="editable-title" />
-                        </FormField>
-
-                        <FormField Text="Confidence">
-                            <Editable TItem="EditableReviewItem"
-                                      Item="@EditableState"
-                                      ItemChanged="HandleEditableChanged"
-                                      ParameterName="@nameof(EditableReviewItem.Confidence)"
-                                      Extension="%"
-                                      Disabled="@IsDisabled"
-                                      data-testid="editable-confidence" />
-                        </FormField>
-
-                        <FormField Text="Effort">
-                            <Editable TItem="EditableReviewItem"
-                                      Item="@EditableState"
-                                      ItemChanged="HandleEditableChanged"
-                                      ParameterName="@nameof(EditableReviewItem.EffortHours)"
-                                      Format="0.0"
-                                      Extension=" h"
-                                      Disabled="@IsDisabled"
-                                      data-testid="editable-effort" />
-                        </FormField>
-
-                        <FormField Text="Approval">
-                            <Editable TItem="EditableReviewItem"
-                                      Item="@EditableState"
-                                      ItemChanged="HandleEditableChanged"
-                                      ParameterName="@nameof(EditableReviewItem.RequiresApproval)"
-                                      TrueText="Approval required"
-                                      FalseText="Self review"
-                                      Disabled="@IsDisabled"
-                                      data-testid="editable-approval" />
-                        </FormField>
-                    </Grid>
-
-                    <Alert AlertStyle="@(AlertStyle.Info)">
-                        Latest editable state: @EditableSummary. Saves: @editableSaveCount.
-                    </Alert>
-                </Stack>
-            </SectionCard>
-
-            <SectionCard Title="Notes and toggles" Description="Longer text and binary settings should remain stable when the surface gets denser.">
-                <div class="space-y-4">
-                    <FormField Text="Notes">
-                        <TextArea Value="@FormState.Notes"
-                                  ValueChanged="HandleNotesChanged"
-                                  Size="@(CurrentScenario == SandboxScenarioKey.DenseContent ? TextAreaSize.Extended : TextAreaSize.Standard)"
-                                  Placeholder="@NotesPlaceholder"
-                                  Disabled="@IsDisabled" />
-                    </FormField>
-
-                    <Grid Gap="LayoutGap.Large"
-                          ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
-                        <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
-                            <Cluster AlignItems="AlignItems.Start"
-                                     Wrap="FlexWrap.NoWrap"
-                                     Gap="LayoutGap.Medium">
-                                <CheckBox TValue="bool" Value="@FormState.RequiresApproval" ValueChanged="HandleApprovalChanged" Disabled="@IsDisabled" aria-label="Requires approval" />
-                                <div class="space-y-1">
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Requires approval" />
-                                    <TextBlock TextStyle="@(TextStyle.Caption)" Value="Gate release until the designated reviewer signs off." />
+                                    <Switch Value="@FormState.RemindersEnabled"
+                                            ValueChanged="HandleReminderChanged"
+                                            Disabled="@IsDisabled" />
+                                </Split>
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Slider")
+                    {
+                        <ExampleBlock Title="Priority threshold"
+                                      Description="A range slider paired with a derived label and status badge."
+                                      SourceId="examples/Inputs/PriorityThreshold.razor"
+                                      ApiTypes="@SliderApiTypes">
+                            <FormField Text="Priority threshold">
+                                <div class="space-y-3" data-testid="sandbox-inputs-slider">
+                                    <Slider TValue="int"
+                                            Value="@AdvancedState.Priority"
+                                            ValueChanged="HandlePriorityChanged"
+                                            Min="0"
+                                            Max="100"
+                                            Step="5"
+                                            Disabled="@IsDisabled"
+                                            data-testid="sandbox-inputs-slider-control" />
+                                    <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+                                        <span>@PriorityLabel</span>
+                                        <StatusBadge Text="@($"{AdvancedState.Priority}%")" Tone="info" />
+                                    </div>
                                 </div>
-                            </Cluster>
-                        </div>
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "PrefixedField")
+                    {
+                        <ExampleBlock Title="Budget reference"
+                                      Description="A prefixed/suffixed field wrapping a plain text input."
+                                      SourceId="examples/Inputs/BudgetReference.razor"
+                                      ApiTypes="@PrefixedFieldApiTypes">
+                            <FormField Text="Budget reference">
+                                <PrefixedField Prefix="@BudgetPrefix"
+                                               Suffix="@BudgetSuffix"
+                                               StackOnMobile="true"
+                                               data-testid="sandbox-inputs-prefixed-field">
+                                    <TextBox Value="@AdvancedState.BudgetCode"
+                                             ValueChanged="HandleBudgetCodeChanged"
+                                             Immediate="true"
+                                             Placeholder="@BudgetCodePlaceholder"
+                                             Disabled="@IsDisabled"
+                                             Class="cda-input"
+                                             data-testid="sandbox-inputs-prefixed-field-input" />
+                                </PrefixedField>
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "TagEditor")
+                    {
+                        <ExampleBlock Title="Review tags"
+                                      Description="Free-form tag entry with suggestions and a maximum count."
+                                      SourceId="examples/Inputs/ReviewTags.razor"
+                                      ApiTypes="@TagEditorApiTypes">
+                            <FormField Text="Tags">
+                                <TagEditor Value="@AdvancedState.Tags"
+                                           ValueChanged="HandleTagsChanged"
+                                           Suggestions="@TagSuggestions"
+                                           Placeholder="Add review tag"
+                                           Hint="Press comma or Enter to add a tag. Suggestions appear while the field is focused."
+                                           Disabled="@IsDisabled"
+                                           TestId="sandbox-inputs-tag-editor"
+                                           InputTestId="sandbox-inputs-tag-editor-input"
+                                           MaxTags="8"
+                                           MaxLength="36" />
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "EntityPicker")
+                    {
+                        <ExampleBlock Title="Reviewer lane picker"
+                                      Description="A selectable list of entities with icon, description, and meta."
+                                      SourceId="examples/Inputs/ReviewerLanePicker.razor"
+                                      ApiTypes="@EntityPickerApiTypes">
+                            <EntityPicker Title="Reviewer lane"
+                                          Description="@ReviewerPickerDescription"
+                                          Items="@ReviewerOptions"
+                                          SelectedId="@AdvancedState.ReviewerId"
+                                          SelectedIdChanged="HandleReviewerChanged"
+                                          Disabled="@IsDisabled"
+                                          data-testid="sandbox-inputs-entity-picker" />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SettingsSwitchRow")
+                    {
+                        <ExampleBlock Title="Notify reviewer leads"
+                                      Description="A labeled settings row pairing a switch with an inline reset action and change summary."
+                                      SourceId="examples/Inputs/NotifyLeadsRow.razor"
+                                      ApiTypes="@SettingsSwitchRowApiTypes">
+                            <Stack GapScale="LayoutGap.Medium">
+                                <SettingsSwitchRow data-testid="sandbox-inputs-settings-switch">
+                                    <div class="min-w-0 space-y-1">
+                                        <SettingsSwitchLabel Text="Notify reviewer leads" />
+                                        <TextBlock TextStyle="@(TextStyle.Caption)"
+                                                   Value="Send a compact summary whenever priority, tags, or selected lane changes." />
+                                    </div>
+                                    <Switch Value="@AdvancedState.NotifyLeads"
+                                            ValueChanged="HandleNotifyLeadsChanged"
+                                            AriaLabel="Notify reviewer leads"
+                                            Disabled="@IsDisabled"
+                                            data-testid="sandbox-inputs-settings-switch-control" />
+                                </SettingsSwitchRow>
 
-                        <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
-                            <Cluster AlignItems="AlignItems.Start"
-                                     Wrap="FlexWrap.NoWrap"
-                                     Gap="LayoutGap.Medium">
-                                <CheckBox TValue="bool" Value="@FormState.PublishExternally" ValueChanged="HandlePublishChanged" Disabled="@IsDisabled" aria-label="Publish externally" />
-                                <div class="space-y-1">
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Publish externally" />
-                                    <TextBlock TextStyle="@(TextStyle.Caption)" Value="Expose the final draft to downstream reporting and partner tooling." />
+                                <InlineActions data-testid="sandbox-inputs-inline-actions">
+                                    <Button Text="Reset"
+                                            Icon="refresh"
+                                            Variant="Variant.Outlined"
+                                            Size="ButtonSize.Small"
+                                            Disabled="@IsDisabled"
+                                            Click="HandleAdvancedReset" />
+                                    <StatusBadge Text="@AdvancedSummary" Tone="success" />
+                                    <StatusBadge Text="@($"Changes {advancedChangeCount}")" Tone="neutral" />
+                                </InlineActions>
+                            </Stack>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Editable")
+                    {
+                        <ExampleBlock Title="Inline editable values"
+                                      Description="Editable switches a displayed property into a shared BaseLib input, then saves the value back to the source item."
+                                      SourceId="examples/Inputs/EditableReviewFields.razor"
+                                      ApiTypes="@EditableApiTypes">
+                            <Stack GapScale="LayoutGap.Large" data-testid="sandbox-editable-values">
+                                <Grid Gap="LayoutGap.Large"
+                                      ColumnTemplate="repeat(auto-fit,minmax(14rem,1fr))">
+                                    <FormField Text="Title">
+                                        <Editable TItem="EditableReviewItem"
+                                                  Item="@EditableState"
+                                                  ItemChanged="HandleEditableChanged"
+                                                  ParameterName="@nameof(EditableReviewItem.Title)"
+                                                  Placeholder="Review title"
+                                                  Disabled="@IsDisabled"
+                                                  data-testid="editable-title" />
+                                    </FormField>
+
+                                    <FormField Text="Confidence">
+                                        <Editable TItem="EditableReviewItem"
+                                                  Item="@EditableState"
+                                                  ItemChanged="HandleEditableChanged"
+                                                  ParameterName="@nameof(EditableReviewItem.Confidence)"
+                                                  Extension="%"
+                                                  Disabled="@IsDisabled"
+                                                  data-testid="editable-confidence" />
+                                    </FormField>
+
+                                    <FormField Text="Effort">
+                                        <Editable TItem="EditableReviewItem"
+                                                  Item="@EditableState"
+                                                  ItemChanged="HandleEditableChanged"
+                                                  ParameterName="@nameof(EditableReviewItem.EffortHours)"
+                                                  Format="0.0"
+                                                  Extension=" h"
+                                                  Disabled="@IsDisabled"
+                                                  data-testid="editable-effort" />
+                                    </FormField>
+
+                                    <FormField Text="Approval">
+                                        <Editable TItem="EditableReviewItem"
+                                                  Item="@EditableState"
+                                                  ItemChanged="HandleEditableChanged"
+                                                  ParameterName="@nameof(EditableReviewItem.RequiresApproval)"
+                                                  TrueText="Approval required"
+                                                  FalseText="Self review"
+                                                  Disabled="@IsDisabled"
+                                                  data-testid="editable-approval" />
+                                    </FormField>
+                                </Grid>
+
+                                <Alert AlertStyle="@(AlertStyle.Info)">
+                                    Latest editable state: @EditableSummary. Saves: @editableSaveCount.
+                                </Alert>
+                            </Stack>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "TextArea")
+                    {
+                        <ExampleBlock Title="Review notes"
+                                      Description="A multi-line text field whose height scales with the dense scenario."
+                                      SourceId="examples/Inputs/ReviewNotes.razor"
+                                      ApiTypes="@TextAreaApiTypes">
+                            <FormField Text="Notes">
+                                <TextArea Value="@FormState.Notes"
+                                          ValueChanged="HandleNotesChanged"
+                                          Size="@(CurrentScenario == SandboxScenarioKey.DenseContent ? TextAreaSize.Extended : TextAreaSize.Standard)"
+                                          Placeholder="@NotesPlaceholder"
+                                          Disabled="@IsDisabled" />
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CheckBox")
+                    {
+                        <ExampleBlock Title="Approval toggles"
+                                      Description="Boolean checkboxes paired with supporting copy in bordered rows."
+                                      SourceId="examples/Inputs/ApprovalCheckboxes.razor"
+                                      ApiTypes="@CheckBoxApiTypes">
+                            <Grid Gap="LayoutGap.Large"
+                                  ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
+                                <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+                                    <Cluster AlignItems="AlignItems.Start"
+                                             Wrap="FlexWrap.NoWrap"
+                                             Gap="LayoutGap.Medium">
+                                        <CheckBox TValue="bool" Value="@FormState.RequiresApproval" ValueChanged="HandleApprovalChanged" Disabled="@IsDisabled" aria-label="Requires approval" />
+                                        <div class="space-y-1">
+                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Requires approval" />
+                                            <TextBlock TextStyle="@(TextStyle.Caption)" Value="Gate release until the designated reviewer signs off." />
+                                        </div>
+                                    </Cluster>
                                 </div>
-                            </Cluster>
-                        </div>
-                    </Grid>
-                </div>
-            </SectionCard>
 
-            <SectionCard Title="File upload"
-                         Description="The picker stays native while drag and drop route through the same shared change callback.">
-                <Grid Gap="LayoutGap.Large"
-                      Columns="1"
-                      ColumnsLg="2">
-                    <div class="space-y-4">
-                        <FileUpload PrimaryText="@UploadPrimaryText"
-                                    SecondaryText="@UploadSecondaryText"
-                                    ButtonText="@UploadButtonText"
-                                    Accept=".musicxml,.xml,text/xml,application/xml"
-                                    Disabled="@IsDisabled"
-                                    Change="HandleUploadChanged"
-                                    RootTestHookId="sandbox-inputs-file-upload"
-                                    DropZoneTestHookId="sandbox-inputs-file-upload-zone"
-                                    ButtonTestHookId="sandbox-inputs-file-upload-button"
-                                    InputTestHookId="sandbox-inputs-file-upload-input" />
+                                <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+                                    <Cluster AlignItems="AlignItems.Start"
+                                             Wrap="FlexWrap.NoWrap"
+                                             Gap="LayoutGap.Medium">
+                                        <CheckBox TValue="bool" Value="@FormState.PublishExternally" ValueChanged="HandlePublishChanged" Disabled="@IsDisabled" aria-label="Publish externally" />
+                                        <div class="space-y-1">
+                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Publish externally" />
+                                            <TextBlock TextStyle="@(TextStyle.Caption)" Value="Expose the final draft to downstream reporting and partner tooling." />
+                                        </div>
+                                    </Cluster>
+                                </div>
+                            </Grid>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FileUpload")
+                    {
+                        <ExampleBlock Title="MusicXML upload"
+                                      Description="The picker stays native while drag and drop route through the same shared change callback."
+                                      SourceId="examples/Inputs/MusicXmlUpload.razor"
+                                      ApiTypes="@FileUploadApiTypes">
+                            <Grid Gap="LayoutGap.Large"
+                                  Columns="1"
+                                  ColumnsLg="2">
+                                <div class="space-y-4">
+                                    <FileUpload PrimaryText="@UploadPrimaryText"
+                                                SecondaryText="@UploadSecondaryText"
+                                                ButtonText="@UploadButtonText"
+                                                Accept=".musicxml,.xml,text/xml,application/xml"
+                                                Disabled="@IsDisabled"
+                                                Change="HandleUploadChanged"
+                                                RootTestHookId="sandbox-inputs-file-upload"
+                                                DropZoneTestHookId="sandbox-inputs-file-upload-zone"
+                                                ButtonTestHookId="sandbox-inputs-file-upload-button"
+                                                InputTestHookId="sandbox-inputs-file-upload-input" />
 
-                        <div class="flex flex-wrap gap-2" data-testid="sandbox-inputs-file-upload-modes">
-                            <StatusBadge Text="Native picker" Tone="info" />
-                            <StatusBadge Text="Drag and drop" Tone="success" />
-                            <StatusBadge Text="@(IsDisabled ? "Disabled state" : "Live state")"
-                                         Tone="@(IsDisabled ? "neutral" : "warning")" />
-                        </div>
-                    </div>
+                                    <div class="flex flex-wrap gap-2" data-testid="sandbox-inputs-file-upload-modes">
+                                        <StatusBadge Text="Native picker" Tone="info" />
+                                        <StatusBadge Text="Drag and drop" Tone="success" />
+                                        <StatusBadge Text="@(IsDisabled ? "Disabled state" : "Live state")"
+                                                     Tone="@(IsDisabled ? "neutral" : "warning")" />
+                                    </div>
+                                </div>
 
-                    <div class="space-y-4" data-testid="sandbox-inputs-file-upload-summary">
-                        <SummaryTiles>
-                            <SummaryTile Label="Selections"
-                                         Value="@uploadSelectionCount.ToString()"
-                                         HelperText="How many successful file selections reached the shared callback."
-                                         Tone="info" />
-                            <SummaryTile Label="Files"
-                                         Value="@uploadedFileCount.ToString()"
-                                         HelperText="Current file count in the latest selection."
-                                         Tone="success" />
-                            <SummaryTile Label="Payload"
-                                         Value="@UploadedTotalSizeLabel"
-                                         HelperText="Combined size of the latest accepted files."
-                                         Tone="warning" />
-                        </SummaryTiles>
+                                <div class="space-y-4" data-testid="sandbox-inputs-file-upload-summary">
+                                    <SummaryTiles>
+                                        <SummaryTile Label="Selections"
+                                                     Value="@uploadSelectionCount.ToString()"
+                                                     HelperText="How many successful file selections reached the shared callback."
+                                                     Tone="info" />
+                                        <SummaryTile Label="Files"
+                                                     Value="@uploadedFileCount.ToString()"
+                                                     HelperText="Current file count in the latest selection."
+                                                     Tone="success" />
+                                        <SummaryTile Label="Payload"
+                                                     Value="@UploadedTotalSizeLabel"
+                                                     HelperText="Combined size of the latest accepted files."
+                                                     Tone="warning" />
+                                    </SummaryTiles>
 
-                        <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-4">
-                            <div class="space-y-1">
-                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Latest selection" />
-                                <TextBlock TextStyle="@(TextStyle.Caption)"
-                                           Value="Use this panel to confirm that browse and drop both resolve through the same stable callback." />
-                            </div>
+                                    <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-4">
+                                        <div class="space-y-1">
+                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Latest selection" />
+                                            <TextBlock TextStyle="@(TextStyle.Caption)"
+                                                       Value="Use this panel to confirm that browse and drop both resolve through the same stable callback." />
+                                        </div>
 
-                            @if (uploadedFileNames.Count == 0)
-                            {
-                                <p class="mt-3 text-sm leading-6 text-slate-500">No files selected yet.</p>
-                            }
-                            else
-                            {
-                                <ul class="mt-3 space-y-2 text-sm text-slate-700" data-testid="sandbox-inputs-file-upload-files">
-                                    @foreach (var fileName in uploadedFileNames)
-                                    {
-                                        <li class="rounded-[0.85rem] bg-slate-50 px-3 py-2">@fileName</li>
-                                    }
-                                </ul>
-                            }
-                        </div>
-                    </div>
-                </Grid>
-            </SectionCard>
+                                        @if (uploadedFileNames.Count == 0)
+                                        {
+                                            <p class="mt-3 text-sm leading-6 text-slate-500">No files selected yet.</p>
+                                        }
+                                        else
+                                        {
+                                            <ul class="mt-3 space-y-2 text-sm text-slate-700" data-testid="sandbox-inputs-file-upload-files">
+                                                @foreach (var fileName in uploadedFileNames)
+                                                {
+                                                    <li class="rounded-[0.85rem] bg-slate-50 px-3 py-2">@fileName</li>
+                                                }
+                                            </ul>
+                                        }
+                                    </div>
+                                </div>
+                            </Grid>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Fieldset")
+                    {
+                        <ExampleBlock Title="Scoring and reference fields"
+                                      Description="A collapsible group heading wraps related fields without inventing custom page structure."
+                                      SourceId="examples/Inputs/ScoringFieldset.razor"
+                                      ApiTypes="@FieldsetApiTypes">
+                            <FormStack data-testid="sandbox-inputs-specialized">
+                                <Fieldset>
+                                    <HeaderTemplate>
+                                        <span>Scoring and reference fields</span>
+                                    </HeaderTemplate>
+                                    <ChildContent>
+                                        <FormRow Split="true">
+                                            <FormField Text="Priority threshold">
+                                                <Slider TValue="int"
+                                                        Value="@AdvancedState.Priority"
+                                                        ValueChanged="HandlePriorityChanged"
+                                                        Min="0"
+                                                        Max="100"
+                                                        Step="5"
+                                                        Disabled="@IsDisabled" />
+                                            </FormField>
+
+                                            <FormField Text="Budget reference">
+                                                <PrefixedField Prefix="@BudgetPrefix"
+                                                               Suffix="@BudgetSuffix"
+                                                               StackOnMobile="true">
+                                                    <TextBox Value="@AdvancedState.BudgetCode"
+                                                             ValueChanged="HandleBudgetCodeChanged"
+                                                             Immediate="true"
+                                                             Placeholder="@BudgetCodePlaceholder"
+                                                             Disabled="@IsDisabled"
+                                                             Class="cda-input" />
+                                                </PrefixedField>
+                                            </FormField>
+                                        </FormRow>
+                                    </ChildContent>
+                                </Fieldset>
+                            </FormStack>
+                        </ExampleBlock>
+                    }
+                </section>
+            }
         }
     </ChildContent>
 </CatalogPageFrame>
@@ -367,6 +487,25 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Inputs);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Inputs);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/inputs");
+
+    private static readonly IReadOnlyList<Type> TextBoxApiTypes = [typeof(TextBox)];
+    private static readonly IReadOnlyList<Type> DropDownApiTypes = [typeof(DropDown<string>)];
+    private static readonly IReadOnlyList<Type> NumericApiTypes = [typeof(Numeric<int>)];
+    private static readonly IReadOnlyList<Type> PasswordApiTypes = [typeof(Password)];
+    private static readonly IReadOnlyList<Type> SecretFieldApiTypes = [typeof(SecretField)];
+    private static readonly IReadOnlyList<Type> SwitchApiTypes = [typeof(Switch)];
+    private static readonly IReadOnlyList<Type> SliderApiTypes = [typeof(Slider<int>)];
+    private static readonly IReadOnlyList<Type> PrefixedFieldApiTypes = [typeof(PrefixedField)];
+    private static readonly IReadOnlyList<Type> TagEditorApiTypes = [typeof(TagEditor)];
+    private static readonly IReadOnlyList<Type> EntityPickerApiTypes = [typeof(EntityPicker)];
+    private static readonly IReadOnlyList<Type> SettingsSwitchRowApiTypes = [typeof(SettingsSwitchRow), typeof(SettingsSwitchLabel)];
+    private static readonly IReadOnlyList<Type> EditableApiTypes = [typeof(Editable<EditableReviewItem>)];
+    private static readonly IReadOnlyList<Type> TextAreaApiTypes = [typeof(TextArea)];
+    private static readonly IReadOnlyList<Type> CheckBoxApiTypes = [typeof(CheckBox<bool>)];
+    private static readonly IReadOnlyList<Type> FileUploadApiTypes = [typeof(FileUpload)];
+    private static readonly IReadOnlyList<Type> FieldsetApiTypes = [typeof(Fieldset)];
+
     private static readonly IReadOnlyList<SelectOption> StatusOptions =
     [
         new("Draft", "Draft"),

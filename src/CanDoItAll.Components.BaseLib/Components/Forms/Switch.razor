@@ -13,21 +13,27 @@
 </label>
 
 @code {
+    /// <summary>Whether the switch is on.</summary>
     [Parameter]
     public bool Value { get; set; }
 
+    /// <summary>Raised whenever <see cref="Value"/> changes.</summary>
     [Parameter]
     public EventCallback<bool> ValueChanged { get; set; }
 
+    /// <summary>Raised after the value changes, with the new value.</summary>
     [Parameter]
     public EventCallback<bool> Change { get; set; }
 
+    /// <summary>When <c>true</c>, the switch cannot be toggled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Accessible label for the switch. Takes precedence over <see cref="AriaLabelledBy"/> and the enclosing FormField's label.</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>Id of an element that labels the switch. Used when <see cref="AriaLabel"/> is unset.</summary>
     [Parameter]
     public string? AriaLabelledBy { get; set; }
 

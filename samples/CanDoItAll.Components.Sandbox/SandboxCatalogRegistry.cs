@@ -326,6 +326,25 @@ public static class SandboxCatalogRegistry
                 new("stack", "Stack", typeof(Stack)),
                 new("grid", "Grid", typeof(Grid)),
                 new("row-column", "Row", typeof(Row))
+            ],
+            ["/groups/inputs"] =
+            [
+                new("textbox", "TextBox", typeof(TextBox)),
+                new("dropdown", "DropDown", typeof(DropDown<>)),
+                new("numeric", "Numeric", typeof(Numeric<>)),
+                new("password", "Password", typeof(Password)),
+                new("secret-field", "SecretField", typeof(SecretField)),
+                new("switch", "Switch", typeof(Switch)),
+                new("slider", "Slider", typeof(Slider<>)),
+                new("prefixed-field", "PrefixedField", typeof(PrefixedField)),
+                new("tag-editor", "TagEditor", typeof(TagEditor)),
+                new("entity-picker", "EntityPicker", typeof(EntityPicker)),
+                new("settings-switch-row", "SettingsSwitchRow", typeof(SettingsSwitchRow)),
+                new("editable", "Editable", typeof(Editable<>)),
+                new("text-area", "TextArea", typeof(TextArea)),
+                new("checkbox", "CheckBox", typeof(CheckBox<>)),
+                new("file-upload", "FileUpload", typeof(FileUpload)),
+                new("fieldset", "Fieldset", typeof(Fieldset))
             ]
         };
 
