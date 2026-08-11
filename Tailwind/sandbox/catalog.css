@@ -1,0 +1,91 @@
+.sandbox-page-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Flatten the shared SectionCard when it's used as sandbox chrome (wrapping the
+   Demo/Examples/API/Coverage sections). Demo-content SectionCards shown as the
+   component under test live deeper inside .sandbox-demo-stage and are never a
+   direct child of .sandbox-page-section, so they're unaffected. */
+.sandbox-page-section > .cda-section-card {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.sandbox-page-section > .cda-section-card > .cda-section-card__title {
+    font-size: 1.05rem;
+}
+
+.sandbox-demo-frame {
+    overflow: hidden;
+    background: var(--cad-color-surface);
+    padding: 1rem 0;
+}
+
+.sandbox-demo-frame--live {
+    width: 100%;
+}
+
+.sandbox-demo-frame--desktop {
+    margin-inline: auto;
+    width: min(100%, 1180px);
+    border: 1px solid var(--cad-color-border-soft);
+    border-radius: var(--cad-radius-control);
+    padding: 1rem;
+}
+
+.sandbox-demo-frame--mobile {
+    margin-inline: auto;
+    width: min(100%, 390px);
+    border: 1px solid var(--cad-color-border-soft);
+    border-radius: var(--cad-radius-control);
+    padding: 1rem;
+}
+
+.sandbox-demo-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: sandbox-fade-in 180ms ease-out;
+}
+
+@keyframes sandbox-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sandbox-demo-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.sandbox-demo-grid--two {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.sandbox-demo-grid--three {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.sandbox-component-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scroll-margin-top: calc(var(--sandbox-toolbar-height, 0px) + 1rem);
+}
+
+.sandbox-component-section__heading {
+    @apply m-0 text-[1.1rem] font-black font-mono;
+    color: var(--cad-color-text-strong);
+}
