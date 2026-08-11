@@ -282,6 +282,12 @@ public static class SandboxCatalogRegistry
                 new("status-check-list", "StatusCheckList", typeof(StatusCheckList)),
                 new("verification-list", "VerificationList", typeof(VerificationList)),
                 new("notification", "NotificationService", typeof(NotificationService))
+            ],
+            ["/groups/foundations"] =
+            [
+                new("typeblock", "TextBlock", typeof(TextBlock)),
+                new("summary-tiles", "SummaryTiles", typeof(SummaryTiles)),
+                new("icon", "Icon", typeof(Icon))
             ]
         };
 

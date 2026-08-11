@@ -33,47 +33,68 @@
         }
         else
         {
-            <FormSection Title="Type scale" Description="Shared text styles should stay calm, readable, and easy to scan in sequence.">
-                <div class="space-y-4">
-                    @foreach (var specimen in TypeSpecimens)
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "TextBlock")
                     {
-                        <div class="space-y-1">
-                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@specimen.Label" />
-                            <TextBlock TextStyle="@specimen.Style" Value="@specimen.Value" />
-                        </div>
-                    }
-                </div>
-            </FormSection>
-
-            <div class="sandbox-demo-grid sandbox-demo-grid--two">
-                <SectionCard Title="Surface rhythm" Description="Spacing, copy length, and support metrics need to feel deliberate without additional chrome.">
-                    <div class="space-y-4">
-                        <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Workspace review cadence" />
-                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SurfaceParagraph" />
-                        <SummaryTiles>
-                            <SummaryTile Label="Desktop cadence" Value="24px" HelperText="Default section spacing for the generous pass." Tone="info" />
-                            <SummaryTile Label="Dense cadence" Value="16px" HelperText="Compact variant used when the page carries more metadata." Tone="success" />
-                            <SummaryTile Label="Reading line" Value="66 ch" HelperText="Long copy still needs a controlled reading width." />
-                            <SummaryTile Label="Icon offset" Value="12px" HelperText="Support icons should align to the text rhythm." Tone="warning" />
-                        </SummaryTiles>
-                    </div>
-                </SectionCard>
-
-                <SectionCard Title="Icon language" Description="Icons should support scanning rather than act like decoration.">
-                    <div class="sandbox-demo-grid sandbox-demo-grid--three">
-                        @foreach (var icon in IconTokens)
-                        {
-                            <div class="sandbox-icon-tile">
-                                <Icon Name="@icon.Token" />
-                                <div class="space-y-1">
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@icon.Label" />
-                                    <TextBlock TextStyle="@(TextStyle.Caption)" Value="@icon.Token" />
-                                </div>
+                        <ExampleBlock Title="Type scale"
+                                      Description="Shared text styles should stay calm, readable, and easy to scan in sequence."
+                                      SourceId="examples/Foundations/TypeScale.razor"
+                                      ApiTypes="@TextBlockApiTypes">
+                            <div class="space-y-4">
+                                @foreach (var specimen in TypeSpecimens)
+                                {
+                                    <div class="space-y-1">
+                                        <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@specimen.Label" />
+                                        <TextBlock TextStyle="@specimen.Style" Value="@specimen.Value" />
+                                    </div>
+                                }
                             </div>
-                        }
-                    </div>
-                </SectionCard>
-            </div>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SummaryTiles")
+                    {
+                        <ExampleBlock Title="Surface rhythm"
+                                      Description="Spacing, copy length, and support metrics need to feel deliberate without additional chrome."
+                                      SourceId="examples/Foundations/SurfaceRhythm.razor"
+                                      ApiTypes="@SummaryTilesApiTypes">
+                            <div class="space-y-4">
+                                <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Workspace review cadence" />
+                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SurfaceParagraph" />
+                                <SummaryTiles>
+                                    <SummaryTile Label="Desktop cadence" Value="24px" HelperText="Default section spacing for the generous pass." Tone="info" />
+                                    <SummaryTile Label="Dense cadence" Value="16px" HelperText="Compact variant used when the page carries more metadata." Tone="success" />
+                                    <SummaryTile Label="Reading line" Value="66 ch" HelperText="Long copy still needs a controlled reading width." />
+                                    <SummaryTile Label="Icon offset" Value="12px" HelperText="Support icons should align to the text rhythm." Tone="warning" />
+                                </SummaryTiles>
+                            </div>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Icon")
+                    {
+                        <ExampleBlock Title="Icon language"
+                                      Description="Icons should support scanning rather than act like decoration."
+                                      SourceId="examples/Foundations/IconLanguage.razor"
+                                      ApiTypes="@IconApiTypes">
+                            <div class="sandbox-demo-grid sandbox-demo-grid--three">
+                                @foreach (var icon in IconTokens)
+                                {
+                                    <div class="sandbox-icon-tile">
+                                        <Icon Name="@icon.Token" />
+                                        <div class="space-y-1">
+                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@icon.Label" />
+                                            <TextBlock TextStyle="@(TextStyle.Caption)" Value="@icon.Token" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </ExampleBlock>
+                    }
+                </section>
+            }
         }
     </ChildContent>
 </CatalogPageFrame>
@@ -81,6 +102,11 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Foundations);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Foundations);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/foundations");
+
+    private static readonly IReadOnlyList<Type> TextBlockApiTypes = [typeof(TextBlock)];
+    private static readonly IReadOnlyList<Type> SummaryTilesApiTypes = [typeof(SummaryTiles), typeof(SummaryTile)];
+    private static readonly IReadOnlyList<Type> IconApiTypes = [typeof(Icon)];
 
     private IReadOnlyList<TypeSpecimen> TypeSpecimens => CurrentScenario == SandboxScenarioKey.DenseContent
         ? DenseTypeSpecimens

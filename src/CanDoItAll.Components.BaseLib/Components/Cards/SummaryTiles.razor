@@ -8,21 +8,27 @@
 </Grid>
 
 @code {
+    /// <summary>Gap between tiles.</summary>
     [Parameter]
     public LayoutGap GapScale { get; set; } = LayoutGap.Medium;
 
+    /// <summary>Column count at the small breakpoint.</summary>
     [Parameter]
     public int? ColumnsSm { get; set; } = 2;
 
+    /// <summary>Column count at the medium breakpoint. Falls back to <see cref="ColumnsSm"/> when unset.</summary>
     [Parameter]
     public int? ColumnsMd { get; set; }
 
+    /// <summary>Column count at the large breakpoint. Falls back to <see cref="ColumnsMd"/> when unset.</summary>
     [Parameter]
     public int? ColumnsLg { get; set; }
 
+    /// <summary>Column count at the extra-large breakpoint.</summary>
     [Parameter]
     public int? ColumnsXl { get; set; } = 4;
 
+    /// <summary>The <c>SummaryTile</c> elements to lay out in the grid.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 }
