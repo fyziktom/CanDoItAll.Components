@@ -29,8 +29,8 @@
                     <aside id="sandbox-navigation" class="sandbox-sidebar @(mobileNavigationOpen ? "is-open" : null)">
                         <a href="@BuildSidebarLink("/")"
                            class="sandbox-nav__link @(IsActiveRoute("/") ? "is-active" : string.Empty)">
-                            <span class="sandbox-nav__title">CanDoItAll Components Sandbox</span>
-                            <span class="sandbox-nav__meta">Home</span>
+                            <span class="sandbox-nav__title">Components Sandbox</span>
+                            @* <span class="sandbox-nav__meta">Home</span> *@
                         </a>
 
                         <nav class="sandbox-nav" aria-label="Standard proof groups">
@@ -64,7 +64,7 @@
                         @if (SandboxCatalogRegistry.DeferredGroups.Count > 0)
                         {
                             <div class="space-y-2">
-                                <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Deferred proof scope" />
+                                @* <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Deferred proof scope" /> *@
                                 <nav class="sandbox-nav" aria-label="Deferred proof groups">
                                     @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
                                     {
