@@ -1,6 +1,10 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 @page "/groups/canvas"
 @inherits CatalogPageBase
+@implements IAsyncDisposable
+@using System.Globalization
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
 
 <PageTitle>Canvas</PageTitle>
 
@@ -23,168 +27,336 @@
     </Notes>
 
     <ChildContent>
-        <SectionCard Title="Workbench runtime" Description="The extracted workbench remains real and interactive while the proof content lives alongside it.">
-            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <Cluster Gap="LayoutGap.Small">
-                    <Button Text="Show inspector"
-                            ButtonStyle="@(ButtonStyle.Light)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@ShowInspectorWindow"
-                            data-testid="show-canvas-inspector" />
-                    <Button Text="Reset inspector"
-                            ButtonStyle="@(ButtonStyle.Light)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@ResetInspectorWindow"
-                            data-testid="reset-canvas-inspector" />
-                    <Button Text="Show activity"
-                            ButtonStyle="@(ButtonStyle.Light)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@ShowActivityWindow"
-                            data-testid="show-canvas-activity" />
-                    <Button Text="Overlap windows"
-                            ButtonStyle="@(ButtonStyle.Light)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@OverlapCanvasWindows"
-                            data-testid="overlap-canvas-windows" />
-                    <Button Text="Select three"
-                            ButtonStyle="@(ButtonStyle.Light)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@SelectThreeWorkbenchNodes"
-                            data-testid="select-three-canvas-nodes" />
-                    <Button Text="Move selected"
-                            ButtonStyle="@(ButtonStyle.Light)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@MoveSelectedWorkbenchNodes"
-                            data-testid="move-selected-canvas-nodes" />
-                </Cluster>
-                <StatusBadge Text="@InspectorWindowStateLabel" Tone="@InspectorWindowStateTone" />
-            </div>
-            <Alert AlertStyle="AlertStyle.Info" data-testid="canvas-event-status">
-                @lastWorkbenchEvent
-            </Alert>
-            <div class="sandbox-canvas-host">
-                <CanvasWorkbench Surface="@WorkbenchSurface"
-                                  SelectionChanged="HandleWorkbenchSelectionChanged"
-                                  NodesMoved="HandleWorkbenchNodesMoved"
-                                  ContextActionRequested="HandleWorkbenchContextActionRequested"
-                                  CreateActionInvoked="HandleWorkbenchCreateActionInvoked"
-                                  NodeEdited="HandleWorkbenchNodeEdited"
-                                  NodeOpened="HandleWorkbenchNodeOpened"
-                                  ClipboardRequested="HandleWorkbenchClipboardRequested"
-                                  StateChanged="HandleWorkbenchStateChanged">
-                    <ToolbarLeftContent>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <StatusBadge Text="Catalog demo" Tone="info" />
-                            @if (CurrentScenario == SandboxScenarioKey.DenseContent)
+        @foreach (var section in Sections)
+        {
+            <section id="@section.Anchor" class="sandbox-component-section">
+                <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                @if (section.ComponentName == "CanvasWorkbench")
+                {
+                    <ExampleBlock Title="Interactive workbench with floating windows"
+                                  Description="The extracted workbench remains real and interactive while inspector and activity windows float above the stage."
+                                  SourceId="examples/Canvas/WorkbenchWithFloatingWindows.razor"
+                                  ApiTypes="@CanvasWorkbenchApiTypes">
+                        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                            <Cluster Gap="LayoutGap.Small">
+                                <Button Text="Show inspector"
+                                        ButtonStyle="@(ButtonStyle.Light)"
+                                        Variant="@(Variant.Outlined)"
+                                        Click="@ShowInspectorWindow"
+                                        data-testid="show-canvas-inspector" />
+                                <Button Text="Reset inspector"
+                                        ButtonStyle="@(ButtonStyle.Light)"
+                                        Variant="@(Variant.Outlined)"
+                                        Click="@ResetInspectorWindow"
+                                        data-testid="reset-canvas-inspector" />
+                                <Button Text="Show activity"
+                                        ButtonStyle="@(ButtonStyle.Light)"
+                                        Variant="@(Variant.Outlined)"
+                                        Click="@ShowActivityWindow"
+                                        data-testid="show-canvas-activity" />
+                                <Button Text="Overlap windows"
+                                        ButtonStyle="@(ButtonStyle.Light)"
+                                        Variant="@(Variant.Outlined)"
+                                        Click="@OverlapCanvasWindows"
+                                        data-testid="overlap-canvas-windows" />
+                                <Button Text="Select three"
+                                        ButtonStyle="@(ButtonStyle.Light)"
+                                        Variant="@(Variant.Outlined)"
+                                        Click="@SelectThreeWorkbenchNodes"
+                                        data-testid="select-three-canvas-nodes" />
+                                <Button Text="Move selected"
+                                        ButtonStyle="@(ButtonStyle.Light)"
+                                        Variant="@(Variant.Outlined)"
+                                        Click="@MoveSelectedWorkbenchNodes"
+                                        data-testid="move-selected-canvas-nodes" />
+                            </Cluster>
+                            <StatusBadge Text="@InspectorWindowStateLabel" Tone="@InspectorWindowStateTone" />
+                        </div>
+                        <Alert AlertStyle="AlertStyle.Info" data-testid="canvas-event-status">
+                            @lastWorkbenchEvent
+                        </Alert>
+                        <div class="sandbox-canvas-host">
+                            <CanvasWorkbench Surface="@WorkbenchSurface"
+                                              SelectionChanged="HandleWorkbenchSelectionChanged"
+                                              NodesMoved="HandleWorkbenchNodesMoved"
+                                              ContextActionRequested="HandleWorkbenchContextActionRequested"
+                                              CreateActionInvoked="HandleWorkbenchCreateActionInvoked"
+                                              NodeEdited="HandleWorkbenchNodeEdited"
+                                              NodeOpened="HandleWorkbenchNodeOpened"
+                                              ClipboardRequested="HandleWorkbenchClipboardRequested"
+                                              StateChanged="HandleWorkbenchStateChanged">
+                                <ToolbarLeftContent>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <StatusBadge Text="Catalog demo" Tone="info" />
+                                        @if (CurrentScenario == SandboxScenarioKey.DenseContent)
+                                        {
+                                            <StatusBadge Text="Dense review" Tone="warning" />
+                                        }
+                                        @if (CurrentScenario == SandboxScenarioKey.DisabledState)
+                                        {
+                                            <StatusBadge Text="Read only" Tone="warning" />
+                                        }
+                                    </div>
+                                </ToolbarLeftContent>
+
+                                <OverlayContent>
+                                    @if (InspectorWindowState.IsVisible)
+                                    {
+                                        <CanvasFloatingWindow WindowId="@SandboxCanvasSamples.InspectorWindowId"
+                                                              TestId="sandbox-canvas-inspector"
+                                                              AriaLabel="Sandbox canvas inspector"
+                                                              Kicker="Sandbox overlay"
+                                                              Title="Selection context"
+                                                              Summary="@InspectorSummary"
+                                                              DefaultPlacement="top-right"
+                                                              DefaultWidth="380"
+                                                              DefaultHeight="420"
+                                                              MinWidth="300"
+                                                              MinHeight="220"
+                                                              State="@InspectorWindowState"
+                                                              StateChanged="HandleInspectorWindowStateChanged">
+                                            <div class="sandbox-floating-window-copy">
+                                                <StatusBadge Text="@ScenarioBadgeText" Tone="@ScenarioBadgeTone" />
+                                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Selected node" />
+                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SelectedWorkbenchNodeLabel" />
+                                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Why this matters" />
+                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Floating context stays inside the shared canvas system, so runtime pages do not need to rebuild inspector chrome for every use case." />
+                                            </div>
+                                        </CanvasFloatingWindow>
+                                    }
+                                    @if (ActivityWindowState.IsVisible)
+                                    {
+                                        <CanvasFloatingWindow WindowId="sandbox-activity"
+                                                              TestId="sandbox-canvas-activity"
+                                                              AriaLabel="Sandbox canvas activity"
+                                                              Kicker="Event proof"
+                                                              Title="Interaction activity"
+                                                              Summary="A second shared window proves overlap, activation order, independent geometry, minimize, and close behavior."
+                                                              DefaultPlacement="bottom-left"
+                                                              DefaultWidth="340"
+                                                              DefaultHeight="300"
+                                                              MinWidth="280"
+                                                              MinHeight="200"
+                                                              State="@ActivityWindowState"
+                                                              StateChanged="HandleActivityWindowStateChanged">
+                                            <div class="sandbox-floating-window-copy">
+                                                <StatusBadge Text="@(workbenchUiState.SelectedNodeIds.Count + " selected")" Tone="info" />
+                                                <TextBlock TextStyle="TextStyle.Body2" Value="@lastWorkbenchEvent" />
+                                            </div>
+                                        </CanvasFloatingWindow>
+                                    }
+                                </OverlayContent>
+                            </CanvasWorkbench>
+                        </div>
+                    </ExampleBlock>
+
+                    <ExampleBlock Title="Benchmark tiers and shipped preview"
+                                  Description="P3-01 stays isolated here: compare the shipped workbench create path against a narrow standalone canvas prototype before making any renderer decisions."
+                                  SourceId="examples/Canvas/BenchmarkTierPreview.razor"
+                                  ApiTypes="@CanvasWorkbenchApiTypes">
+                        <div class="space-y-4">
+                            <div class="flex flex-wrap items-center gap-3">
+                                @foreach (var definition in benchmarkDefinitions)
+                                {
+                                    <Button Text="@definition.Label"
+                                            ButtonStyle="@(definition.Key == selectedTierKey ? ButtonStyle.Primary : ButtonStyle.Light)"
+                                            Variant="@(definition.Key == selectedTierKey ? Variant.Filled : Variant.Outlined)"
+                                            Click="@(() => SelectTier(definition.Key))"
+                                            data-testid="@($"canvas-benchmark-tier-{definition.Key}")" />
+                                }
+
+                                <Button Text="Run benchmark"
+                                        ButtonStyle="@(ButtonStyle.Success)"
+                                        IsBusy="@isBenchmarkRunning"
+                                        Click="RunBenchmarkAsync"
+                                        data-testid="canvas-benchmark-run" />
+
+                                @if (!string.IsNullOrWhiteSpace(lastMeasuredLabel))
+                                {
+                                    <StatusBadge Text="@lastMeasuredLabel" Tone="success" />
+                                }
+                            </div>
+
+                            <SummaryTiles>
+                                <SummaryTile Label="Nodes" Value="@SelectedBenchmarkDefinition.NodeCount.ToString(CultureInfo.InvariantCulture)" HelperText="Typed workbench nodes rendered by both paths." Tone="info" />
+                                <SummaryTile Label="Links" Value="@SelectedBenchmarkDefinition.LinkCount.ToString(CultureInfo.InvariantCulture)" HelperText="Connector count used by the shipped and prototype scenes." Tone="success" />
+                            </SummaryTiles>
+
+                            <div class="min-h-[26rem] w-full min-w-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-50/80 p-3" data-testid="canvas-benchmark-retained-preview">
+                                <CanvasWorkbench Surface="@SelectedBenchmarkDefinition.Surface" />
+                            </div>
+                        </div>
+                    </ExampleBlock>
+
+                    <ExampleBlock Title="Standalone prototype and measured results"
+                                  Description="A deliberately narrow 2D draw pass with the same typed nodes and links, measured against the shipped workbench create path."
+                                  SourceId="examples/Canvas/BenchmarkPrototypeResults.razor">
+                        <div class="w-full min-w-0 space-y-4">
+                            <canvas @ref="prototypeCanvas"
+                                    class="h-[26rem] w-full rounded-[1.75rem] border border-slate-200 bg-slate-950"
+                                    data-testid="canvas-benchmark-prototype-canvas"></canvas>
+                            <Alert AlertStyle="@(AlertStyle.Light)">
+                                The prototype draws node rectangles, titles, links, and group frames. It intentionally omits selection mirrors, floating overlays, export, and semantic accessibility layers.
+                            </Alert>
+
+                            @if (benchmarkResult is null)
                             {
-                                <StatusBadge Text="Dense review" Tone="warning" />
+                                <Alert AlertStyle="@(AlertStyle.Light)">
+                                    Run the benchmark above to capture workbench-versus-prototype materialization timings and the explicit go or no-go recommendation.
+                                </Alert>
                             }
-                            @if (CurrentScenario == SandboxScenarioKey.DisabledState)
+                            else
                             {
-                                <StatusBadge Text="Read only" Tone="warning" />
+                                <div class="overflow-x-auto" data-testid="canvas-benchmark-results">
+                                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                                            <tr>
+                                                <th class="px-4 py-3">Tier</th>
+                                                <th class="px-4 py-3">Scene</th>
+                                                <th class="px-4 py-3">Workbench Avg</th>
+                                                <th class="px-4 py-3">Prototype Avg</th>
+                                                <th class="px-4 py-3">Delta</th>
+                                                <th class="px-4 py-3">Workbench DOM</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100 bg-white">
+                                            @foreach (var measurement in benchmarkResult.Tiers)
+                                            {
+                                                <tr>
+                                                    <td class="px-4 py-3 font-semibold text-slate-900">@measurement.Label</td>
+                                                    <td class="px-4 py-3 text-slate-600">@($"{measurement.NodeCount} nodes / {measurement.LinkCount} links")</td>
+                                                    <td class="px-4 py-3 text-slate-900">@FormatDuration(measurement.RetainedAverageMs)</td>
+                                                    <td class="px-4 py-3 text-slate-900">@FormatDuration(measurement.CanvasAverageMs)</td>
+                                                    <td class="px-4 py-3">
+                                                        <StatusBadge Text="@FormatDelta(measurement.ImprovementRatio)" Tone="@(measurement.ImprovementRatio >= 0 ? "success" : "warning")" />
+                                                    </td>
+                                                    <td class="px-4 py-3 text-slate-600">@measurement.RetainedDomNodeCount.ToString(CultureInfo.InvariantCulture)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <Alert AlertStyle="@(AlertStyle.Warning)" data-testid="canvas-benchmark-decision">
+                                    <strong class="font-semibold">@benchmarkResult.Recommendation:</strong>
+                                    <span class="ml-2">@benchmarkResult.Summary</span>
+                                </Alert>
                             }
                         </div>
-                    </ToolbarLeftContent>
-
-                    <OverlayContent>
-                        @if (InspectorWindowState.IsVisible)
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "CanvasCalendar")
+                {
+                    <ExampleBlock Title="Calendar runtime"
+                                  Description="The shared calendar surface stays typed and keeps its state model outside the JavaScript widget."
+                                  SourceId="examples/Canvas/CalendarRuntime.razor"
+                                  ApiTypes="@CanvasCalendarApiTypes">
+                        <CanvasCalendar Surface="@CurrentCalendarSurface"
+                                        HostClass="min-h-[36rem] overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50/80"
+                                        SelectionChanged="HandleCalendarSelectionChanged"
+                                        StateChanged="HandleCalendarStateChanged"
+                                        SaveEventAsync="HandleCalendarEventSaveAsync"
+                                        DeleteEventAsync="HandleCalendarEventDeleteAsync"
+                                        SearchPlaylistsAsync="HandleCalendarPlaylistSearchAsync"
+                                        LinkPlaylistAsync="HandleCalendarPlaylistLinkAsync"
+                                        ClonePlaylistAsync="HandleCalendarPlaylistCloneAsync"
+                                        UnlinkPlaylistAsync="HandleCalendarPlaylistUnlinkAsync"
+                                        ExportAsync="HandleCalendarExportAsync" />
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "CalendarSelectionPanel")
+                {
+                    <ExampleBlock Title="Selection boundary card"
+                                  Description="Selected-event, linked playlist, and checklist context is reviewable without entering the runtime page."
+                                  SourceId="examples/Canvas/SelectionPanelPreview.razor"
+                                  ApiTypes="@CalendarSelectionPanelApiTypes">
+                        <CalendarSelectionPanel Snapshot="@CalendarSelectionSnapshot" />
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "CalendarExportMenu")
+                {
+                    <ExampleBlock Title="Export boundary card"
+                                  Description="Available export formats and the last requested export stay reviewable in isolation."
+                                  SourceId="examples/Canvas/ExportMenuPreview.razor"
+                                  ApiTypes="@CalendarExportMenuApiTypes">
+                        <div class="space-y-4">
+                            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500" data-testid="calendar-export-status">@calendarExportStatus</p>
+                            <CalendarExportMenu Snapshot="@CalendarExportSnapshot" />
+                        </div>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "CalendarMiniMonthNavigator")
+                {
+                    <ExampleBlock Title="Mini month boundary card"
+                                  Description="The compact month navigator mirrors the same typed calendar surface used by the runtime widget."
+                                  SourceId="examples/Canvas/MiniMonthNavigatorPreview.razor"
+                                  ApiTypes="@CalendarMiniMonthNavigatorApiTypes">
+                        <CalendarMiniMonthNavigator Snapshot="@CalendarMiniMonthSnapshot" />
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "CalendarTimeGridRenderer")
+                {
+                    <ExampleBlock Title="Time grid boundary card"
+                                  Description="Scheduled events render on the shared time-grid boundary card whenever the current scenario has events."
+                                  SourceId="examples/Canvas/TimeGridRendererPreview.razor"
+                                  ApiTypes="@CalendarTimeGridRendererApiTypes">
+                        @if (CurrentCalendarSurface.Events.Count > 0)
                         {
-                            <CanvasFloatingWindow WindowId="@SandboxCanvasSamples.InspectorWindowId"
-                                                  TestId="sandbox-canvas-inspector"
-                                                  AriaLabel="Sandbox canvas inspector"
-                                                  Kicker="Sandbox overlay"
-                                                  Title="Selection context"
-                                                  Summary="@InspectorSummary"
-                                                  DefaultPlacement="top-right"
-                                                  DefaultWidth="380"
-                                                  DefaultHeight="420"
-                                                  MinWidth="300"
-                                                  MinHeight="220"
-                                                  State="@InspectorWindowState"
-                                                  StateChanged="HandleInspectorWindowStateChanged">
-                                <div class="sandbox-floating-window-copy">
-                                    <StatusBadge Text="@ScenarioBadgeText" Tone="@ScenarioBadgeTone" />
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Selected node" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SelectedWorkbenchNodeLabel" />
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Why this matters" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Floating context stays inside the shared canvas system, so runtime pages do not need to rebuild inspector chrome for every use case." />
-                                </div>
-                            </CanvasFloatingWindow>
+                            <CalendarTimeGridRenderer Snapshot="@CalendarTimeGridSnapshot" />
                         }
-                        @if (ActivityWindowState.IsVisible)
+                        else
                         {
-                            <CanvasFloatingWindow WindowId="sandbox-activity"
-                                                  TestId="sandbox-canvas-activity"
-                                                  AriaLabel="Sandbox canvas activity"
-                                                  Kicker="Event proof"
-                                                  Title="Interaction activity"
-                                                  Summary="A second shared window proves overlap, activation order, independent geometry, minimize, and close behavior."
-                                                  DefaultPlacement="bottom-left"
-                                                  DefaultWidth="340"
-                                                  DefaultHeight="300"
-                                                  MinWidth="280"
-                                                  MinHeight="200"
-                                                  State="@ActivityWindowState"
-                                                  StateChanged="HandleActivityWindowStateChanged">
-                                <div class="sandbox-floating-window-copy">
-                                    <StatusBadge Text="@(workbenchUiState.SelectedNodeIds.Count + " selected")" Tone="info" />
-                                    <TextBlock TextStyle="TextStyle.Body2" Value="@lastWorkbenchEvent" />
-                                </div>
-                            </CanvasFloatingWindow>
+                            <EmptyState Eyebrow="Canvas" Title="No scheduled events" Description="The time grid boundary card has nothing to render until the calendar surface has events." />
                         }
-                    </OverlayContent>
-                </CanvasWorkbench>
-            </div>
-        </SectionCard>
-
-        <div class="sandbox-demo-grid sandbox-demo-grid--two">
-            <SectionCard Title="Calendar runtime" Description="The shared calendar surface stays typed and keeps its state model outside the JavaScript widget.">
-                <CanvasCalendar Surface="@CurrentCalendarSurface"
-                                HostClass="min-h-[36rem] overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50/80"
-                                SelectionChanged="HandleCalendarSelectionChanged"
-                                StateChanged="HandleCalendarStateChanged"
-                                SaveEventAsync="HandleCalendarEventSaveAsync"
-                                DeleteEventAsync="HandleCalendarEventDeleteAsync"
-                                SearchPlaylistsAsync="HandleCalendarPlaylistSearchAsync"
-                                LinkPlaylistAsync="HandleCalendarPlaylistLinkAsync"
-                                ClonePlaylistAsync="HandleCalendarPlaylistCloneAsync"
-                                UnlinkPlaylistAsync="HandleCalendarPlaylistUnlinkAsync"
-                                ExportAsync="HandleCalendarExportAsync" />
-            </SectionCard>
-
-            <SectionCard Title="Calendar boundary cards" Description="Selection, export, mini-month, and time-grid previews are reviewable without entering the runtime page.">
-                <div class="space-y-4">
-                    <p class="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500" data-testid="calendar-export-status">@calendarExportStatus</p>
-                    <CalendarSelectionPanel Snapshot="@CalendarSelectionSnapshot" />
-                    <CalendarExportMenu Snapshot="@CalendarExportSnapshot" />
-                    <CalendarMiniMonthNavigator Snapshot="@CalendarMiniMonthSnapshot" />
-                    @if (CurrentCalendarSurface.Events.Count > 0)
-                    {
-                        <CalendarTimeGridRenderer Snapshot="@CalendarTimeGridSnapshot" />
-                    }
-                </div>
-            </SectionCard>
-        </div>
-
-        <SectionCard Title="Canvas preview assets" Description="Core workbench boundaries remain inspectable inside the sandbox rather than the runtime workbench.">
-            <div class="sandbox-demo-grid sandbox-demo-grid--three">
-                <CanvasSceneHostPreview Snapshot="@SceneHostSnapshot" />
-                <LayerStackPreview Snapshot="@LayerStackSnapshot" />
-                <ViewportControllerPreview Snapshot="@ViewportSnapshot" />
-                <SerializationPersistencePackPreview Snapshot="@SerializationSnapshot" />
-                <TextMeasureServicePreview Snapshot="@TextMeasureSnapshot" />
-                <JsInteropBridgePreview Snapshot="@InteropSnapshot" />
-                <CommandHistoryStorePreview Snapshot="@CommandHistorySnapshot" />
-                <AnimationTimelinePreview Snapshot="@AnimationSnapshot" />
-            </div>
-        </SectionCard>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "CanvasSceneHostPreview")
+                {
+                    <ExampleBlock Title="Canvas preview assets"
+                                  Description="Core workbench boundaries (scene host, layer stack, viewport, serialization, text measurement, JS interop, command history, and animation timeline) remain inspectable inside the sandbox rather than the runtime workbench."
+                                  SourceId="examples/Canvas/PreviewAssetsGrid.razor"
+                                  ApiTypes="@PreviewAssetsApiTypes">
+                        <div class="sandbox-demo-grid sandbox-demo-grid--three">
+                            <CanvasSceneHostPreview Snapshot="@SceneHostSnapshot" />
+                            <LayerStackPreview Snapshot="@LayerStackSnapshot" />
+                            <ViewportControllerPreview Snapshot="@ViewportSnapshot" />
+                            <SerializationPersistencePackPreview Snapshot="@SerializationSnapshot" />
+                            <TextMeasureServicePreview Snapshot="@TextMeasureSnapshot" />
+                            <JsInteropBridgePreview Snapshot="@InteropSnapshot" />
+                            <CommandHistoryStorePreview Snapshot="@CommandHistorySnapshot" />
+                            <AnimationTimelinePreview Snapshot="@AnimationSnapshot" />
+                        </div>
+                    </ExampleBlock>
+                }
+            </section>
+        }
     </ChildContent>
 </CatalogPageFrame>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Canvas);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Canvas);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/canvas");
     private static readonly DateTimeOffset CalendarProofTimestamp = new(2026, 4, 6, 8, 0, 0, TimeSpan.Zero);
+
+    private static readonly IReadOnlyList<Type> CanvasWorkbenchApiTypes = [typeof(CanvasWorkbench), typeof(CanvasFloatingWindow)];
+    private static readonly IReadOnlyList<Type> CanvasCalendarApiTypes = [typeof(CanvasCalendar)];
+    private static readonly IReadOnlyList<Type> CalendarSelectionPanelApiTypes = [typeof(CalendarSelectionPanel)];
+    private static readonly IReadOnlyList<Type> CalendarExportMenuApiTypes = [typeof(CalendarExportMenu)];
+    private static readonly IReadOnlyList<Type> CalendarMiniMonthNavigatorApiTypes = [typeof(CalendarMiniMonthNavigator)];
+    private static readonly IReadOnlyList<Type> CalendarTimeGridRendererApiTypes = [typeof(CalendarTimeGridRenderer)];
+    private static readonly IReadOnlyList<Type> PreviewAssetsApiTypes =
+    [
+        typeof(CanvasSceneHostPreview),
+        typeof(LayerStackPreview),
+        typeof(ViewportControllerPreview),
+        typeof(SerializationPersistencePackPreview),
+        typeof(TextMeasureServicePreview),
+        typeof(JsInteropBridgePreview),
+        typeof(CommandHistoryStorePreview),
+        typeof(AnimationTimelinePreview)
+    ];
 
     private SandboxScenarioKey? initializedScenario;
     private CanvasWorkbenchUiState workbenchUiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.HappyPath);
@@ -194,6 +366,17 @@
     private readonly Dictionary<string, CanvasWorkbenchNodePositionChange> nodePositionOverrides = new(StringComparer.Ordinal);
     private string calendarExportStatus = "No calendar export requested";
     private string lastWorkbenchEvent = "No workbench interaction recorded yet.";
+
+    private readonly IReadOnlyList<CanvasBenchmarkSurfaceDefinition> benchmarkDefinitions = CanvasBenchmarkSamples.CreateDefinitions();
+    private string selectedTierKey = CanvasBenchmarkSamples.DefaultTierKey;
+    private bool benchmarkPreviewNeedsRender = true;
+    private bool isBenchmarkRunning;
+    private string? lastMeasuredLabel;
+    private ElementReference prototypeCanvas;
+    private IJSObjectReference? benchmarkModule;
+    private CanvasBenchmarkRunResult? benchmarkResult;
+
+    private CanvasBenchmarkSurfaceDefinition SelectedBenchmarkDefinition => CanvasBenchmarkSamples.GetDefinition(selectedTierKey);
 
     private CanvasWorkbenchSurface WorkbenchSurface
     {
@@ -288,6 +471,74 @@
         nodePositionOverrides.Clear();
         calendarExportStatus = "No calendar export requested";
         lastWorkbenchEvent = "No workbench interaction recorded yet.";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            benchmarkModule = await JS.InvokeAsync<IJSObjectReference>("import", "/js/canvasBenchmarkPage.js");
+            benchmarkPreviewNeedsRender = true;
+        }
+
+        if (!benchmarkPreviewNeedsRender || benchmarkModule is null)
+        {
+            return;
+        }
+
+        benchmarkPreviewNeedsRender = false;
+        await benchmarkModule.InvokeVoidAsync("renderPrototype", prototypeCanvas, SelectedBenchmarkDefinition);
+    }
+
+    private void SelectTier(string key)
+    {
+        if (string.Equals(selectedTierKey, key, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        selectedTierKey = key;
+        benchmarkPreviewNeedsRender = true;
+    }
+
+    private async Task RunBenchmarkAsync()
+    {
+        if (isBenchmarkRunning || benchmarkModule is null)
+        {
+            return;
+        }
+
+        isBenchmarkRunning = true;
+        StateHasChanged();
+
+        try
+        {
+            benchmarkResult = await benchmarkModule.InvokeAsync<CanvasBenchmarkRunResult>(
+                "runBenchmarkSuite",
+                prototypeCanvas,
+                benchmarkDefinitions,
+                4);
+            lastMeasuredLabel = $"Measured {DateTimeOffset.UtcNow:yyyy-MM-dd HH:mm} UTC";
+        }
+        finally
+        {
+            isBenchmarkRunning = false;
+            benchmarkPreviewNeedsRender = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private static string FormatDuration(double value)
+    {
+        return $"{value:F2} ms";
+    }
+
+    private static string FormatDelta(double value)
+    {
+        var percent = value * 100d;
+        return percent >= 0
+            ? $"{percent:F1}% faster"
+            : $"{Math.Abs(percent):F1}% slower";
     }
 
     private Task HandleWorkbenchSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)
@@ -658,4 +909,50 @@
             BuilderUrl = playlist.BuilderUrl,
             ConnectedEvents = [.. playlist.ConnectedEvents]
         };
+
+    public async ValueTask DisposeAsync()
+    {
+        Dispose();
+
+        if (benchmarkModule is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await benchmarkModule.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+    }
+
+    public sealed class CanvasBenchmarkRunResult
+    {
+        public List<CanvasBenchmarkMeasurement> Tiers { get; set; } = [];
+
+        public string Recommendation { get; set; } = string.Empty;
+
+        public string Summary { get; set; } = string.Empty;
+    }
+
+    public sealed class CanvasBenchmarkMeasurement
+    {
+        public string Key { get; set; } = string.Empty;
+
+        public string Label { get; set; } = string.Empty;
+
+        public int NodeCount { get; set; }
+
+        public int LinkCount { get; set; }
+
+        public double RetainedAverageMs { get; set; }
+
+        public double CanvasAverageMs { get; set; }
+
+        public double ImprovementRatio { get; set; }
+
+        public int RetainedDomNodeCount { get; set; }
+    }
 }

@@ -1,0 +1,25 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
+
+<div class="space-y-4">
+    <div class="flex flex-wrap items-center gap-3">
+        @foreach (var definition in Definitions)
+        {
+            <Button Text="@definition.Label"
+                    ButtonStyle="@(definition.Key == selectedTierKey ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Variant="@(definition.Key == selectedTierKey ? Variant.Filled : Variant.Outlined)"
+                    Click="@(() => selectedTierKey = definition.Key)"
+                    data-testid="@($"canvas-example-tier-{definition.Key}")" />
+        }
+    </div>
+
+    <div class="min-h-[24rem] w-full min-w-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-50/80 p-3">
+        <CanvasWorkbench Surface="@SelectedDefinition.Surface" />
+    </div>
+</div>
+
+@code {
+    private readonly IReadOnlyList<CanvasBenchmarkSurfaceDefinition> Definitions = CanvasBenchmarkSamples.CreateDefinitions();
+    private string selectedTierKey = CanvasBenchmarkSamples.DefaultTierKey;
+
+    private CanvasBenchmarkSurfaceDefinition SelectedDefinition => CanvasBenchmarkSamples.GetDefinition(selectedTierKey);
+}

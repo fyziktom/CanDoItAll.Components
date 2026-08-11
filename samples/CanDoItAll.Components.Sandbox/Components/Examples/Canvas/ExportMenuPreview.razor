@@ -1,0 +1,9 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
+
+<CalendarExportMenu Snapshot="@Snapshot" />
+
+@code {
+    private static readonly CanvasCalendarSurface Surface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.HappyPath);
+
+    private CalendarExportMenuSnapshot Snapshot => CalendarExportMenuFactory.Create(Surface);
+}

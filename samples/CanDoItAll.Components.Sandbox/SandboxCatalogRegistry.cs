@@ -1,9 +1,11 @@
 using CanDoItAll.Components.BaseLib;
+using CanDoItAll.Components.CanvasLib;
 using CanDoItAll.Components.Charts;
 using CanDoItAll.Components.Gantt;
 using CanDoItAll.Components.Mermaid;
 using CanDoItAll.Components.OverlayLib;
 using CanDoItAll.Components.QRCode.Components;
+using CanDoItAll.Components.Sandbox.Components;
 
 namespace CanDoItAll.Components.Sandbox;
 
@@ -345,6 +347,16 @@ public static class SandboxCatalogRegistry
                 new("checkbox", "CheckBox", typeof(CheckBox<>)),
                 new("file-upload", "FileUpload", typeof(FileUpload)),
                 new("fieldset", "Fieldset", typeof(Fieldset))
+            ],
+            ["/groups/canvas"] =
+            [
+                new("canvas-workbench", "CanvasWorkbench", typeof(CanvasWorkbench)),
+                new("canvas-calendar", "CanvasCalendar", typeof(CanvasCalendar)),
+                new("calendar-selection-panel", "CalendarSelectionPanel", typeof(CalendarSelectionPanel)),
+                new("calendar-export-menu", "CalendarExportMenu", typeof(CalendarExportMenu)),
+                new("calendar-mini-month-navigator", "CalendarMiniMonthNavigator", typeof(CalendarMiniMonthNavigator)),
+                new("calendar-time-grid-renderer", "CalendarTimeGridRenderer", typeof(CalendarTimeGridRenderer)),
+                new("preview-assets", "CanvasSceneHostPreview", typeof(CanvasSceneHostPreview))
             ]
         };
 

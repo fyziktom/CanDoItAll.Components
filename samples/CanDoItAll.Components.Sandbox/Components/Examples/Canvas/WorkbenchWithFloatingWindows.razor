@@ -1,0 +1,58 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
+
+<div class="sandbox-canvas-host">
+    <CanvasWorkbench Surface="@Surface"
+                      SelectionChanged="HandleSelectionChanged"
+                      StateChanged="HandleStateChanged">
+        <OverlayContent>
+            @if (inspectorState.IsVisible)
+            {
+                <CanvasFloatingWindow WindowId="inspector"
+                                      TestId="canvas-example-inspector"
+                                      AriaLabel="Selection inspector"
+                                      Kicker="Overlay window"
+                                      Title="Selection context"
+                                      Summary="Floating windows layer above the canvas stage and share the same drag, resize, and minimize chrome."
+                                      DefaultPlacement="top-right"
+                                      DefaultWidth="360"
+                                      DefaultHeight="320"
+                                      MinWidth="280"
+                                      MinHeight="220"
+                                      State="@inspectorState"
+                                      StateChanged="HandleInspectorStateChanged">
+                        <div class="sandbox-floating-window-copy">
+                            <TextBlock TextStyle="TextStyle.Subtitle2" Value="Selected node" />
+                            <TextBlock TextStyle="TextStyle.Body2" Value="@selectedLabel" />
+                        </div>
+                    </CanvasFloatingWindow>
+            }
+        </OverlayContent>
+    </CanvasWorkbench>
+</div>
+
+@code {
+    private CanvasWorkbenchUiState uiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.HappyPath);
+    private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.HappyPath);
+    private string selectedLabel = "Nothing selected";
+
+    private CanvasWorkbenchSurface Surface => SandboxCanvasSamples.CreateWorkbenchSurface(SandboxScenarioKey.HappyPath, uiState, inspectorState);
+
+    private Task HandleSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)
+    {
+        uiState.SelectedNodeIds = [.. args.SelectedNodeIds];
+        selectedLabel = Surface.Nodes.FirstOrDefault(node => node.Id == args.PrimaryNodeId)?.Title ?? "Nothing selected";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleStateChanged(string json)
+    {
+        uiState = CanvasWorkbenchUiState.Parse(json);
+        return Task.CompletedTask;
+    }
+
+    private Task HandleInspectorStateChanged(CanvasWorkbenchWindowState state)
+    {
+        inspectorState = CanvasWorkbenchWindowState.Normalize(state);
+        return Task.CompletedTask;
+    }
+}

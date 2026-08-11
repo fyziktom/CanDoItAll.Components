@@ -1,0 +1,15 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
+
+<CanvasCalendar Surface="@surface"
+                HostClass="min-h-[28rem] overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50/80"
+                SelectionChanged="HandleSelectionChanged" />
+
+@code {
+    private readonly CanvasCalendarSurface surface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.HappyPath);
+
+    private Task HandleSelectionChanged(CanvasCalendarSelectionChangedEventArgs args)
+    {
+        surface.SelectedEventId = args.SelectedEvent?.EventId ?? args.SelectedEvent?.Id ?? string.Empty;
+        return Task.CompletedTask;
+    }
+}

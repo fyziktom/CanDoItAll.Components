@@ -1,0 +1,9 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
+
+<CalendarSelectionPanel Snapshot="@Snapshot" />
+
+@code {
+    private static readonly CanvasCalendarSurface Surface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.HappyPath);
+
+    private CalendarSelectionPanelSnapshot Snapshot => CalendarSelectionPanelFactory.Create(Surface);
+}

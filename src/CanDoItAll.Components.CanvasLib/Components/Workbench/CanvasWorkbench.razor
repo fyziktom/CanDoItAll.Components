@@ -394,36 +394,47 @@
     private bool preserveViewportOnNextUpdate;
     private bool? appliedHasClipboardHandler;
 
+    /// <summary>The nodes, links, chrome, and UI state that drive the live JS-hosted canvas scene.</summary>
     [Parameter, EditorRequired]
     public CanvasWorkbenchSurface Surface { get; set; } = default!;
 
+    /// <summary>Raised when the primary or multi-selected node set changes.</summary>
     [Parameter]
     public EventCallback<CanvasWorkbenchSelectionChangedEventArgs> SelectionChanged { get; set; }
 
+    /// <summary>Raised when one or more nodes are dragged to a new position.</summary>
     [Parameter]
     public EventCallback<CanvasWorkbenchNodesMovedEventArgs> NodesMoved { get; set; }
 
+    /// <summary>Raised when a right-click context menu action is invoked on a node or empty space.</summary>
     [Parameter]
     public EventCallback<CanvasWorkbenchContextActionRequest> ContextActionRequested { get; set; }
 
+    /// <summary>Raised when a quick-create action is chosen from the toolbar or context menu.</summary>
     [Parameter]
     public EventCallback<CanvasWorkbenchCreateActionRequest> CreateActionInvoked { get; set; }
 
+    /// <summary>Raised when a node's inline text or title is edited.</summary>
     [Parameter]
     public EventCallback<CanvasWorkbenchNodeEditRequest> NodeEdited { get; set; }
 
+    /// <summary>Raised when a node is opened (e.g. double-clicked) with its id.</summary>
     [Parameter]
     public EventCallback<string> NodeOpened { get; set; }
 
+    /// <summary>Raised with the serialized <see cref="CanvasWorkbenchUiState"/> whenever the client-side view state changes.</summary>
     [Parameter]
     public EventCallback<string> StateChanged { get; set; }
 
+    /// <summary>Raised when a clipboard cut/copy/paste action is requested from the canvas. Providing a handler opts the host into clipboard support.</summary>
     [Parameter]
     public EventCallback<CanvasWorkbenchClipboardRequest> ClipboardRequested { get; set; }
 
+    /// <summary>Extra content rendered in the left group of the toolbar, alongside the quick-create and focus actions.</summary>
     [Parameter]
     public RenderFragment? ToolbarLeftContent { get; set; }
 
+    /// <summary>Content rendered above the canvas stage surface, typically floating windows or panels.</summary>
     [Parameter]
     public RenderFragment? OverlayContent { get; set; }
 

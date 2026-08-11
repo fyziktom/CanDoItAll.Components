@@ -30,78 +30,103 @@
 </OverlayWindow>
 
 @code {
+    /// <summary>Unique id for this window within the hosting <see cref="CanvasWorkbench"/>'s overlay content.</summary>
     [Parameter, EditorRequired]
     public string WindowId { get; set; } = string.Empty;
 
+    /// <summary>Window title shown in the header.</summary>
     [Parameter, EditorRequired]
     public string Title { get; set; } = string.Empty;
 
+    /// <summary>Small eyebrow label shown above the title.</summary>
     [Parameter]
     public string Kicker { get; set; } = string.Empty;
 
+    /// <summary>Short descriptive text shown near the title.</summary>
     [Parameter]
     public string Summary { get; set; } = string.Empty;
 
+    /// <summary>Accessible label for the window's dialog role.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Canvas window";
 
+    /// <summary>Additional CSS class applied to the window body.</summary>
     [Parameter]
     public string BodyClass { get; set; } = string.Empty;
 
+    /// <summary>Value used for the <c>data-testid</c> attribute on the window root.</summary>
     [Parameter]
     public string TestId { get; set; } = string.Empty;
 
+    /// <summary>Named corner or edge the window is initially placed at (e.g. <c>"top-right"</c>).</summary>
     [Parameter]
     public string DefaultPlacement { get; set; } = "top-right";
 
+    /// <summary>CSS selector for the element the window is positioned and clamped relative to.</summary>
     [Parameter]
     public string ContainerSelector { get; set; } = ".cw-stage-surface";
 
+    /// <summary>CSS selector for an element the window must not overlap at the top (e.g. the canvas toolbar).</summary>
     [Parameter]
     public string SafeTopSelector { get; set; } = ".cw-toolbar";
 
+    /// <summary>Initial window width in pixels.</summary>
     [Parameter]
     public double DefaultWidth { get; set; } = 360;
 
+    /// <summary>Initial window height in pixels.</summary>
     [Parameter]
     public double DefaultHeight { get; set; } = 480;
 
+    /// <summary>Minimum width the window can be resized to, in pixels.</summary>
     [Parameter]
     public double MinWidth { get; set; } = 280;
 
+    /// <summary>Minimum height the window can be resized to, in pixels.</summary>
     [Parameter]
     public double MinHeight { get; set; } = 180;
 
+    /// <summary>Maximum width the window can be resized to, in pixels, or <see langword="null"/> for no limit.</summary>
     [Parameter]
     public double? MaxWidth { get; set; }
 
+    /// <summary>Maximum height the window can be resized to, in pixels, or <see langword="null"/> for no limit.</summary>
     [Parameter]
     public double? MaxHeight { get; set; }
 
+    /// <summary>Whether the window edges/corners can be dragged to resize it.</summary>
     [Parameter]
     public bool AllowResize { get; set; } = true;
 
+    /// <summary>Accessible label for the action that restores a minimized window.</summary>
     [Parameter]
     public string RestoreLabel { get; set; } = "Expand window";
 
+    /// <summary>Accessible label for the action that minimizes the window.</summary>
     [Parameter]
     public string MinimizeLabel { get; set; } = "Minimize window";
 
+    /// <summary>Accessible label for the action that resets window position and size to their defaults.</summary>
     [Parameter]
     public string NormalizeLabel { get; set; } = "Restart window position and size";
 
+    /// <summary>Accessible label for the action that hides the window.</summary>
     [Parameter]
     public string HideLabel { get; set; } = "Hide window";
 
+    /// <summary>Whether the window header (title, kicker, summary, and window controls) is rendered.</summary>
     [Parameter]
     public bool ShowHeader { get; set; } = true;
 
+    /// <summary>Current visibility, minimized flag, position, and size of the window.</summary>
     [Parameter, EditorRequired]
     public CanvasWorkbenchWindowState State { get; set; } = new();
 
+    /// <summary>Raised when the window is moved, resized, minimized, restored, or hidden.</summary>
     [Parameter]
     public EventCallback<CanvasWorkbenchWindowState> StateChanged { get; set; }
 
+    /// <summary>Content rendered in the window body.</summary>
     [Parameter, EditorRequired]
     public RenderFragment ChildContent { get; set; } = default!;
 

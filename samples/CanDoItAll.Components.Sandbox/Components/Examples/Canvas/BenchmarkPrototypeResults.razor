@@ -1,0 +1,120 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="w-full min-w-0 space-y-4">
+    <div class="flex flex-wrap items-center gap-3">
+        <Button Text="Run benchmark"
+                ButtonStyle="@(ButtonStyle.Success)"
+                IsBusy="@isRunning"
+                Click="RunBenchmarkAsync"
+                data-testid="canvas-example-benchmark-run" />
+    </div>
+
+    <canvas @ref="prototypeCanvas"
+            class="h-[20rem] w-full rounded-[1.75rem] border border-slate-200 bg-slate-950"
+            data-testid="canvas-example-prototype-canvas"></canvas>
+
+    @if (runResult is not null)
+    {
+        <div class="overflow-x-auto" data-testid="canvas-example-results">
+            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    <tr>
+                        <th class="px-4 py-3">Tier</th>
+                        <th class="px-4 py-3">Workbench Avg</th>
+                        <th class="px-4 py-3">Prototype Avg</th>
+                        <th class="px-4 py-3">Delta</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 bg-white">
+                    @foreach (var measurement in runResult.Tiers)
+                    {
+                        <tr>
+                            <td class="px-4 py-3 font-semibold text-slate-900">@measurement.Label</td>
+                            <td class="px-4 py-3 text-slate-900">@($"{measurement.RetainedAverageMs:F2} ms")</td>
+                            <td class="px-4 py-3 text-slate-900">@($"{measurement.CanvasAverageMs:F2} ms")</td>
+                            <td class="px-4 py-3">
+                                <StatusBadge Text="@FormatDelta(measurement.ImprovementRatio)" Tone="@(measurement.ImprovementRatio >= 0 ? "success" : "warning")" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private readonly IReadOnlyList<CanvasBenchmarkSurfaceDefinition> definitions = CanvasBenchmarkSamples.CreateDefinitions();
+    private bool isRunning;
+    private ElementReference prototypeCanvas;
+    private IJSObjectReference? module;
+    private CanvasBenchmarkRunResult? runResult;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "/js/canvasBenchmarkPage.js");
+            await module.InvokeVoidAsync("renderPrototype", prototypeCanvas, CanvasBenchmarkSamples.GetDefinition(CanvasBenchmarkSamples.DefaultTierKey));
+        }
+    }
+
+    private async Task RunBenchmarkAsync()
+    {
+        if (isRunning || module is null)
+        {
+            return;
+        }
+
+        isRunning = true;
+        try
+        {
+            runResult = await module.InvokeAsync<CanvasBenchmarkRunResult>("runBenchmarkSuite", prototypeCanvas, definitions, 4);
+        }
+        finally
+        {
+            isRunning = false;
+        }
+    }
+
+    private static string FormatDelta(double value)
+    {
+        var percent = value * 100d;
+        return percent >= 0 ? $"{percent:F1}% faster" : $"{Math.Abs(percent):F1}% slower";
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (module is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await module.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+    }
+
+    private sealed class CanvasBenchmarkRunResult
+    {
+        public List<CanvasBenchmarkMeasurement> Tiers { get; set; } = [];
+    }
+
+    private sealed class CanvasBenchmarkMeasurement
+    {
+        public string Label { get; set; } = string.Empty;
+
+        public double RetainedAverageMs { get; set; }
+
+        public double CanvasAverageMs { get; set; }
+
+        public double ImprovementRatio { get; set; }
+    }
+}
