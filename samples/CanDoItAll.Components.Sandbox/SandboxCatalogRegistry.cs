@@ -1,5 +1,6 @@
 using CanDoItAll.Components.BaseLib;
 using CanDoItAll.Components.Charts;
+using CanDoItAll.Components.Gantt;
 using CanDoItAll.Components.Mermaid;
 using CanDoItAll.Components.QRCode.Components;
 
@@ -265,6 +266,10 @@ public static class SandboxCatalogRegistry
             ["/groups/mermaid"] =
             [
                 new("mermaid-diagram", "MermaidDiagram", typeof(MermaidDiagram))
+            ],
+            ["/groups/gantt"] =
+            [
+                new("gantt-chart", "GanttChart", typeof(GanttChart))
             ]
         };
 

@@ -69,132 +69,175 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     [Inject]
     private ILogger<GanttChart> Logger { get; set; } = default!;
 
+    /// <summary>The caller-owned, immutable task records to project. The chart never mutates this list; every gesture instead raises a typed request.</summary>
     [Parameter, EditorRequired]
     public IReadOnlyList<GanttTask> Tasks { get; set; } = [];
 
+    /// <summary>The caller-owned finish-to-start dependency edges between <see cref="Tasks"/>.</summary>
     [Parameter, EditorRequired]
     public IReadOnlyList<GanttDependency> Dependencies { get; set; } = [];
 
+    /// <summary>Invoked when an inline title edit is committed. The host must accept or reject the proposed title and replace its task array.</summary>
     [Parameter]
     public EventCallback<GanttTaskTitleChangeRequest> TaskTitleChangeRequested { get; set; }
 
+    /// <summary>Invoked after a drag or resize gesture changes one or more task start/end times, including any dependency-driven ripple.</summary>
     [Parameter]
     public EventCallback<GanttTaskScheduleChangeRequest> TaskScheduleChangeRequested { get; set; }
 
+    /// <summary>Invoked when a dependency is added, removed, or reconnected via the port handles.</summary>
     [Parameter]
     public EventCallback<GanttDependencyMutationRequest> DependencyMutationRequested { get; set; }
 
+    /// <summary>Invoked when an externally dragged task (see <see cref="GanttTaskDragSource"/>) is dropped onto a dependency bridge.</summary>
     [Parameter]
     public EventCallback<GanttTaskInsertionRequest> TaskInsertionRequested { get; set; }
 
+    /// <summary>Invoked when the timeline is double-clicked on an empty row point, proposing a new task at that time.</summary>
     [Parameter]
     public EventCallback<GanttTimelineDoubleClickEventArgs> TimelineDoubleClicked { get; set; }
 
+    /// <summary>Invoked when a task bar or row is double-clicked.</summary>
     [Parameter]
     public EventCallback<GanttTaskId> TaskDoubleClicked { get; set; }
 
+    /// <summary>Invoked when a row is dragged to a new position, proposing a placement relative to an anchor task.</summary>
     [Parameter]
     public EventCallback<GanttTaskOrderChangeRequest> TaskOrderChangeRequested { get; set; }
 
+    /// <summary>Invoked when a task is selected. Selection is not tracked internally; the host owns and reflects it back via row/bar styling.</summary>
     [Parameter]
     public EventCallback<GanttTaskId> TaskSelected { get; set; }
 
+    /// <summary>Invoked when the task table's visibility is toggled from the toolbar.</summary>
     [Parameter]
     public EventCallback<bool> ShowTaskTableChanged { get; set; }
 
+    /// <summary>Invoked when the horizontal time scale changes from the toolbar.</summary>
     [Parameter]
     public EventCallback<GanttTimeScale> TimeScaleChanged { get; set; }
 
+    /// <summary>Invoked when the custom pixels-per-hour zoom level changes.</summary>
     [Parameter]
     public EventCallback<double> PixelsPerHourChanged { get; set; }
 
+    /// <summary>Builds the id assigned to a newly proposed dependency. Defaults to an internal generator when omitted.</summary>
     [Parameter]
     public Func<GanttTaskId, GanttTaskId, GanttDependencyId>? DependencyIdFactory { get; set; }
 
+    /// <summary>Marks individual tasks as fully read-only, disabling title, schedule, and dependency editing for them regardless of the other <c>Allow*</c> flags.</summary>
     [Parameter]
     public Func<GanttTask, bool>? TaskReadOnlySelector { get; set; }
 
+    /// <summary>Marks individual tasks' schedule (drag/resize) as read-only.</summary>
     [Parameter]
     public Func<GanttTask, bool>? TaskScheduleReadOnlySelector { get; set; }
 
+    /// <summary>Marks individual tasks' title as read-only.</summary>
     [Parameter]
     public Func<GanttTask, bool>? TaskTitleReadOnlySelector { get; set; }
 
+    /// <summary>Marks individual tasks' dependency ports as read-only.</summary>
     [Parameter]
     public Func<GanttTask, bool>? TaskDependencyReadOnlySelector { get; set; }
 
+    /// <summary>Marks individual tasks as projection-only (rendered for context but excluded from direct interaction).</summary>
     [Parameter]
     public Func<GanttTask, bool>? ProjectionOnlySelector { get; set; }
 
+    /// <summary>Supplies a per-task accent color for the bar, overriding the default palette.</summary>
     [Parameter]
     public Func<GanttTask, string?>? TaskAccentColorSelector { get; set; }
 
+    /// <summary>Enables inline title editing across the chart. Individual tasks can still be excluded via <see cref="TaskTitleReadOnlySelector"/>.</summary>
     [Parameter]
     public bool AllowTaskEditing { get; set; } = true;
 
+    /// <summary>Enables creating a task by double-clicking empty timeline space. Defaults to the value of <see cref="AllowTaskEditing"/> when unset.</summary>
     [Parameter]
     public bool? AllowTimelineTaskCreation { get; set; }
 
+    /// <summary>Enables adding, removing, and reconnecting dependencies via the port handles.</summary>
     [Parameter]
     public bool AllowDependencyEditing { get; set; } = true;
 
+    /// <summary>Enables accepting externally dragged tasks onto a dependency bridge (see <see cref="GanttTaskDragSource"/>).</summary>
     [Parameter]
     public bool AllowTaskInsertion { get; set; } = true;
 
+    /// <summary>Enables reordering rows by dragging them to a new position.</summary>
     [Parameter]
     public bool AllowTaskReordering { get; set; } = true;
 
+    /// <summary>Shows the aligned task table alongside the timeline canvas. Controlled: pair with <see cref="ShowTaskTableChanged"/> to persist toolbar toggles.</summary>
     [Parameter]
     public bool ShowTaskTable { get; set; } = true;
 
+    /// <summary>Shows the built-in toolbar (time scale, task table toggle, export).</summary>
     [Parameter]
     public bool ShowToolbar { get; set; } = true;
 
+    /// <summary>The controlled horizontal time scale. Use <see cref="GanttTimeScale.Custom"/> together with <see cref="PixelsPerHour"/> for a caller-driven zoom level.</summary>
     [Parameter]
     public GanttTimeScale TimeScale { get; set; } = GanttTimeScale.Custom;
 
+    /// <summary>Horizontal zoom level in pixels per hour, used when <see cref="TimeScale"/> is <see cref="GanttTimeScale.Custom"/>.</summary>
     [Parameter]
     public double PixelsPerHour { get; set; } = 12;
 
+    /// <summary>Hours treated as one working day when converting <see cref="GanttTask.ExpectedEffort"/> into the man-day figure shown in the schedule summary.</summary>
     [Parameter]
     public double HoursPerManDay { get; set; } = 8;
 
+    /// <summary>Row height in pixels, shared by the timeline canvas and the task table.</summary>
     [Parameter]
     public double RowHeight { get; set; } = 48;
 
+    /// <summary>Header row height in pixels.</summary>
     [Parameter]
     public double HeaderHeight { get; set; } = 40;
 
+    /// <summary>Task bar height in pixels, must be less than or equal to <see cref="RowHeight"/>.</summary>
     [Parameter]
     public double BarHeight { get; set; } = 28;
 
+    /// <summary>Width in pixels of the aligned task table column.</summary>
     [Parameter]
     public double TaskTableWidth { get; set; } = 600;
 
+    /// <summary>Granularity that drag and resize gestures snap to.</summary>
     [Parameter]
     public TimeSpan SnapInterval { get; set; } = TimeSpan.FromHours(1);
 
+    /// <summary>Reference instant that <see cref="SnapInterval"/> boundaries are calculated from.</summary>
     [Parameter]
     public DateTimeOffset SnapOrigin { get; set; } = DateTimeOffset.UnixEpoch;
 
+    /// <summary>Shortest duration a task can be resized to.</summary>
     [Parameter]
     public TimeSpan MinimumTaskDuration { get; set; } = TimeSpan.FromHours(1);
 
+    /// <summary>Extra time rendered before the first task and after the last, so bars at the edges are not flush against the viewport.</summary>
     [Parameter]
     public TimeSpan TimelinePadding { get; set; } = TimeSpan.FromHours(8);
 
+    /// <summary>Custom HTML5 drag-and-drop data format string used to recognize a <see cref="GanttTaskDragSource"/> payload. Only change this if hosting multiple independent chart instances that must not accept each other's drags.</summary>
     [Parameter]
     public string DragDataFormat { get; set; } = GanttTaskDragSerialization.DataFormat;
 
+    /// <summary>File name used when the chart's PNG export is downloaded.</summary>
     [Parameter]
     public string ExportFileName { get; set; } = "gantt-chart.png";
 
+    /// <summary>Accessible name applied to the chart's root region.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Interactive Gantt chart";
 
+    /// <summary>Maximum height of the chart before its own internal scroll region takes over.</summary>
     [Parameter]
     public string MaxHeight { get; set; } = "44rem";
 
+    /// <summary>Additional CSS class merged onto the root element.</summary>
     [Parameter]
     public string? Class { get; set; }
 

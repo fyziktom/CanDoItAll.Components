@@ -1,0 +1,35 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Gantt
+
+<GanttTaskDragSource Task="@(new GanttTask(
+                             new GanttTaskId("security-review"),
+                             "Security review",
+                             new DateTimeOffset(2026, 7, 14, 8, 0, 0, TimeSpan.Zero),
+                             new DateTimeOffset(2026, 7, 14, 11, 0, 0, TimeSpan.Zero),
+                             [new(GanttAssignmentKind.Person, "Mara Chen")]))">
+    <Pill Text="Drag security review into bridge" Tone="PillTone.Info" />
+</GanttTaskDragSource>
+
+<GanttChart Tasks="@(new List<GanttTask>
+                    {
+                        new(new GanttTaskId("scope"), "Frame scope and constraints",
+                            new DateTimeOffset(2026, 7, 14, 8, 0, 0, TimeSpan.Zero),
+                            new DateTimeOffset(2026, 7, 14, 12, 0, 0, TimeSpan.Zero)),
+                        new(new GanttTaskId("architecture"), "Define scheduling contracts",
+                            new DateTimeOffset(2026, 7, 14, 12, 0, 0, TimeSpan.Zero),
+                            new DateTimeOffset(2026, 7, 14, 18, 0, 0, TimeSpan.Zero)),
+                        new(new GanttTaskId("host-integration"), "Integrate controlled host",
+                            new DateTimeOffset(2026, 7, 14, 18, 0, 0, TimeSpan.Zero),
+                            new DateTimeOffset(2026, 7, 15, 0, 0, 0, TimeSpan.Zero))
+                    })"
+            Dependencies="@(new List<GanttDependency>
+                           {
+                               new(new GanttDependencyId("scope-architecture"), new GanttTaskId("scope"), new GanttTaskId("architecture")),
+                               new(new GanttDependencyId("architecture-host"), new GanttTaskId("architecture"), new GanttTaskId("host-integration"))
+                           })"
+            RowHeight="52"
+            HeaderHeight="42"
+            BarHeight="28"
+            TaskTableWidth="540"
+            MaxHeight="42rem"
+            ExportFileName="controlled-gantt.png"
+            AriaLabel="Controlled project schedule" />

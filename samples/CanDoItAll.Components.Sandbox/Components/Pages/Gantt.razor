@@ -30,96 +30,113 @@
     </Notes>
 
     <ChildContent>
-        <div class="sandbox-gantt-proof">
-            <SummaryTiles ColumnsLg="4" ColumnsXl="4">
-                <SummaryTile Label="Tasks" Value="@tasks.Count.ToString()" HelperText="Caller-owned immutable task records." Tone="info" />
-                <SummaryTile Label="Dependencies" Value="@dependencies.Count.ToString()" HelperText="Multiple finish-to-start edges are supported." Tone="success" />
-                <SummaryTile Label="Selected" Value="@SelectedTaskLabel" HelperText="Selection is raised to the host." />
-                <SummaryTile Label="Last event" Value="@lastEventKind" HelperText="No database or hidden store is mutated." Tone="warning" />
-            </SummaryTiles>
+        @foreach (var section in Sections)
+        {
+            <section id="@section.Anchor" class="sandbox-component-section">
+                <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
 
-            <div class="sandbox-gantt-control-row">
-                <div class="sandbox-gantt-insertion">
-                    <span class="sandbox-gantt-insertion__eyebrow">External task insertion</span>
-                    <GanttTaskDragSource Task="@InsertionCandidate"
-                                         Disabled="@InsertionAlreadyAccepted"
-                                         AriaLabel="Drag the staged security review onto a dependency bridge">
-                        <Pill Text="@(InsertionAlreadyAccepted ? "Security review inserted" : "Drag security review into bridge")"
-                              Tone="@(InsertionAlreadyAccepted ? PillTone.Ok : PillTone.Info)" />
-                    </GanttTaskDragSource>
-                    <span class="sandbox-gantt-insertion__hint">Target the Canvas runtime → Host integration dependency line.</span>
-                </div>
+                @if (section.ComponentName == "GanttChart")
+                {
+                    <ExampleBlock Title="Interactive controlled schedule"
+                                  Description="Drag bars to move them, resize with green handles, reconnect dependencies with blue ports, drag the staged task onto a bridge, and export the projection as PNG. Every gesture returns a typed request that this page accepts into a replacement model."
+                                  SourceId="examples/Gantt/ControlledSchedule.razor"
+                                  ApiTypes="@GanttChartApiTypes">
+                        <div class="sandbox-gantt-proof">
+                            <SummaryTiles ColumnsLg="4" ColumnsXl="4">
+                                <SummaryTile Label="Tasks" Value="@tasks.Count.ToString()" HelperText="Caller-owned immutable task records." Tone="info" />
+                                <SummaryTile Label="Dependencies" Value="@dependencies.Count.ToString()" HelperText="Multiple finish-to-start edges are supported." Tone="success" />
+                                <SummaryTile Label="Selected" Value="@SelectedTaskLabel" HelperText="Selection is raised to the host." />
+                                <SummaryTile Label="Last event" Value="@lastEventKind" HelperText="No database or hidden store is mutated." Tone="warning" />
+                            </SummaryTiles>
 
-                <Cluster Gap="LayoutGap.Small">
-                    <Button Text="Reset schedule"
-                            Icon="restart_alt"
-                            ButtonStyle="ButtonStyle.Light"
-                            Variant="Variant.Outlined"
-                            Click="ResetSchedule" />
-                    <Button Text="Export from host"
-                            Icon="image"
-                            ButtonStyle="ButtonStyle.Light"
-                            Variant="Variant.Outlined"
-                            Disabled="@(tasks.Count == 0)"
-                            Click="ExportFromHostAsync" />
-                </Cluster>
-            </div>
+                            <div class="sandbox-gantt-control-row">
+                                <div class="sandbox-gantt-insertion">
+                                    <span class="sandbox-gantt-insertion__eyebrow">External task insertion</span>
+                                    <GanttTaskDragSource Task="@InsertionCandidate"
+                                                         Disabled="@InsertionAlreadyAccepted"
+                                                         AriaLabel="Drag the staged security review onto a dependency bridge">
+                                        <Pill Text="@(InsertionAlreadyAccepted ? "Security review inserted" : "Drag security review into bridge")"
+                                              Tone="@(InsertionAlreadyAccepted ? PillTone.Ok : PillTone.Info)" />
+                                    </GanttTaskDragSource>
+                                    <span class="sandbox-gantt-insertion__hint">Target the Canvas runtime → Host integration dependency line.</span>
+                                </div>
 
-            <Alert AlertStyle="AlertStyle.Info" data-testid="gantt-event-feedback">
-                <strong>@lastEventKind:</strong> @lastEventMessage
-            </Alert>
+                                <Cluster Gap="LayoutGap.Small">
+                                    <Button Text="Reset schedule"
+                                            Icon="restart_alt"
+                                            ButtonStyle="ButtonStyle.Light"
+                                            Variant="Variant.Outlined"
+                                            Click="ResetSchedule" />
+                                    <Button Text="Export from host"
+                                            Icon="image"
+                                            ButtonStyle="ButtonStyle.Light"
+                                            Variant="Variant.Outlined"
+                                            Disabled="@(tasks.Count == 0)"
+                                            Click="ExportFromHostAsync" />
+                                </Cluster>
+                            </div>
 
-            <div class="sandbox-gantt-legend" aria-label="Gantt interaction legend">
-                <StatusBadge Text="Green handles · resize" Tone="success" />
-                <StatusBadge Text="Blue ports · dependencies" Tone="info" />
-                <StatusBadge Text="Red emphasis · critical path" Tone="warning" />
-                <StatusBadge Text="Green/red top · actual progress" Tone="success" />
-                <StatusBadge Text="Purple bottom · pure effort" Tone="neutral" />
-                <StatusBadge Text="Empty canvas drag · horizontal pan" Tone="info" />
-                <StatusBadge Text="Empty row double-click · task intent" Tone="success" />
-                <StatusBadge Text="Row arrows · controlled order" Tone="neutral" />
-                <StatusBadge Text="Assignment icons · hover for detail" Tone="neutral" />
-            </div>
+                            <Alert AlertStyle="AlertStyle.Info" data-testid="gantt-event-feedback">
+                                <strong>@lastEventKind:</strong> @lastEventMessage
+                            </Alert>
 
-            <div class="sandbox-gantt-host" data-testid="gantt-interactive-surface">
-                <GanttChart @ref="chart"
-                            Tasks="@tasks"
-                            Dependencies="@dependencies"
-                            TaskTitleChangeRequested="HandleTitleChange"
-                            TaskScheduleChangeRequested="HandleScheduleChange"
-                            DependencyMutationRequested="HandleDependencyMutation"
-                            TaskInsertionRequested="HandleInsertion"
-                            TimelineDoubleClicked="HandleTimelineDoubleClick"
-                            TaskDoubleClicked="HandleTaskDoubleClick"
-                            TaskOrderChangeRequested="HandleTaskOrderChange"
-                            TaskSelected="HandleTaskSelected"
-                            ShowTaskTable="@showTaskTable"
-                            ShowTaskTableChanged="HandleTaskTableChanged"
-                            TimeScale="@timeScale"
-                            TimeScaleChanged="HandleTimeScaleChanged"
-                            PixelsPerHourChanged="HandlePixelsPerHourChanged"
-                            DependencyIdFactory="CreateDependencyId"
-                            AllowTaskEditing="@InteractionsEnabled"
-                            AllowTimelineTaskCreation="@InteractionsEnabled"
-                            AllowDependencyEditing="@InteractionsEnabled"
-                            AllowTaskInsertion="@InteractionsEnabled"
-                            AllowTaskReordering="@InteractionsEnabled"
-                            PixelsPerHour="@PixelsPerHour"
-                            RowHeight="52"
-                            HeaderHeight="42"
-                            BarHeight="28"
-                            TaskTableWidth="540"
-                            MaxHeight="42rem"
-                            ExportFileName="sandbox-controlled-gantt.png"
-                            AriaLabel="Sandbox controlled project schedule" />
-            </div>
-        </div>
+                            <div class="sandbox-gantt-legend" aria-label="Gantt interaction legend">
+                                <StatusBadge Text="Green handles · resize" Tone="success" />
+                                <StatusBadge Text="Blue ports · dependencies" Tone="info" />
+                                <StatusBadge Text="Red emphasis · critical path" Tone="warning" />
+                                <StatusBadge Text="Green/red top · actual progress" Tone="success" />
+                                <StatusBadge Text="Purple bottom · pure effort" Tone="neutral" />
+                                <StatusBadge Text="Empty canvas drag · horizontal pan" Tone="info" />
+                                <StatusBadge Text="Empty row double-click · task intent" Tone="success" />
+                                <StatusBadge Text="Row arrows · controlled order" Tone="neutral" />
+                                <StatusBadge Text="Assignment icons · hover for detail" Tone="neutral" />
+                            </div>
+
+                            <div class="sandbox-gantt-host" data-testid="gantt-interactive-surface">
+                                <GanttChart @ref="chart"
+                                            Tasks="@tasks"
+                                            Dependencies="@dependencies"
+                                            TaskTitleChangeRequested="HandleTitleChange"
+                                            TaskScheduleChangeRequested="HandleScheduleChange"
+                                            DependencyMutationRequested="HandleDependencyMutation"
+                                            TaskInsertionRequested="HandleInsertion"
+                                            TimelineDoubleClicked="HandleTimelineDoubleClick"
+                                            TaskDoubleClicked="HandleTaskDoubleClick"
+                                            TaskOrderChangeRequested="HandleTaskOrderChange"
+                                            TaskSelected="HandleTaskSelected"
+                                            ShowTaskTable="@showTaskTable"
+                                            ShowTaskTableChanged="HandleTaskTableChanged"
+                                            TimeScale="@timeScale"
+                                            TimeScaleChanged="HandleTimeScaleChanged"
+                                            PixelsPerHourChanged="HandlePixelsPerHourChanged"
+                                            DependencyIdFactory="CreateDependencyId"
+                                            AllowTaskEditing="@InteractionsEnabled"
+                                            AllowTimelineTaskCreation="@InteractionsEnabled"
+                                            AllowDependencyEditing="@InteractionsEnabled"
+                                            AllowTaskInsertion="@InteractionsEnabled"
+                                            AllowTaskReordering="@InteractionsEnabled"
+                                            PixelsPerHour="@PixelsPerHour"
+                                            RowHeight="52"
+                                            HeaderHeight="42"
+                                            BarHeight="28"
+                                            TaskTableWidth="540"
+                                            MaxHeight="42rem"
+                                            ExportFileName="sandbox-controlled-gantt.png"
+                                            AriaLabel="Sandbox controlled project schedule" />
+                            </div>
+                        </div>
+                    </ExampleBlock>
+                }
+            </section>
+        }
     </ChildContent>
 </CatalogPageFrame>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Gantt);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Gantt);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/gantt");
+    private static readonly IReadOnlyList<Type> GanttChartApiTypes = [typeof(GanttChart), typeof(GanttTaskDragSource)];
     private static readonly DateTimeOffset ScheduleOrigin = new(2026, 7, 14, 8, 0, 0, TimeSpan.Zero);
     private static readonly GanttTaskId ScopeId = new("scope");
     private static readonly GanttTaskId ArchitectureId = new("architecture");
