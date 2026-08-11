@@ -53,42 +53,55 @@
     private bool pointerInside;
     private CancellationTokenSource? closeDelayCts;
 
+    /// <summary>CSS class applied to the root element.</summary>
     [Parameter]
     public string RootClass { get; set; } = "pf-help-popover";
 
+    /// <summary>CSS class applied to the toggle button.</summary>
     [Parameter]
     public string ToggleClass { get; set; } = "pf-help-popover__toggle";
 
+    /// <summary>CSS class applied to the open panel.</summary>
     [Parameter]
     public string PanelClass { get; set; } = "pf-help-popover__panel";
 
+    /// <summary>Value applied to <c>data-testid</c> on the open panel, for test targeting.</summary>
     [Parameter]
     public string? PanelTestId { get; set; }
 
+    /// <summary>Glyph rendered inside the toggle button.</summary>
     [Parameter]
     public string Glyph { get; set; } = "?";
 
+    /// <summary>Accessible name and default panel label for the toggle button.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Show help";
 
+    /// <summary>Native <c>title</c> tooltip shown on hover over the toggle button.</summary>
     [Parameter]
     public string Title { get; set; } = "Show help";
 
+    /// <summary>Bold heading shown at the top of the panel. Falls back to <see cref="AriaLabel"/> for the panel's accessible label when set.</summary>
     [Parameter]
     public string Heading { get; set; } = string.Empty;
 
+    /// <summary>Main explanatory text shown in the panel.</summary>
     [Parameter]
     public string Body { get; set; } = string.Empty;
 
+    /// <summary>Small supplementary hint shown below <see cref="Body"/>.</summary>
     [Parameter]
     public string Tip { get; set; } = string.Empty;
 
+    /// <summary>Delay before the panel closes after the pointer leaves, giving the user time to move onto the panel itself.</summary>
     [Parameter]
     public int CloseDelayMs { get; set; } = 220;
 
+    /// <summary>Opens the panel on hover in addition to click. Hover-opened panels are not pinned and close automatically when the pointer leaves.</summary>
     [Parameter]
     public bool OpenOnHover { get; set; }
 
+    /// <summary>Additional custom content rendered after <see cref="Heading"/>, <see cref="Body"/>, and <see cref="Tip"/>.</summary>
     [Parameter]
     public RenderFragment? PanelContent { get; set; }
 

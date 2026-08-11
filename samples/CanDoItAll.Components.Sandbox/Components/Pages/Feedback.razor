@@ -35,51 +35,92 @@
         }
         else
         {
-            <SectionCard Title="Alert stack" Description="Operational feedback should stay readable in sequence.">
-                <div class="space-y-3">
-                    <Alert AlertStyle="@(AlertStyle.Info)">The sandbox route loaded the shared assets and the page scaffold is ready for proof review.</Alert>
-                    <Alert AlertStyle="@(AlertStyle.Warning)">Dense scenarios still need a screenshot review before the migration can be accepted.</Alert>
-                    @if (CurrentScenario == SandboxScenarioKey.LongText)
+            <SummaryTiles>
+                <SummaryTile Label="Checks" Value="18" HelperText="Total review questions in the screenshot pass." Tone="info" />
+                <SummaryTile Label="Warnings" Value="2" HelperText="Dense and mobile variants still need a closer look." Tone="warning" />
+                <SummaryTile Label="Ready" Value="5" HelperText="Routes already verified for desktop and mobile." Tone="success" />
+            </SummaryTiles>
+
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "Alert")
                     {
-                        <Alert AlertStyle="@(AlertStyle.Danger)">Longer explanatory alerts should still remain readable without forcing the user to decode an oversized block of red text or lose the rest of the page hierarchy.</Alert>
+                        <ExampleBlock Title="Alert stack"
+                                      Description="Operational feedback should stay readable in sequence."
+                                      SourceId="examples/Feedback/AlertStack.razor"
+                                      ApiTypes="@AlertApiTypes">
+                            <div class="space-y-3">
+                                <Alert AlertStyle="@(AlertStyle.Info)">The sandbox route loaded the shared assets and the page scaffold is ready for proof review.</Alert>
+                                <Alert AlertStyle="@(AlertStyle.Warning)">Dense scenarios still need a screenshot review before the migration can be accepted.</Alert>
+                                @if (CurrentScenario == SandboxScenarioKey.LongText)
+                                {
+                                    <Alert AlertStyle="@(AlertStyle.Danger)">Longer explanatory alerts should still remain readable without forcing the user to decode an oversized block of red text or lose the rest of the page hierarchy.</Alert>
+                                }
+                                else
+                                {
+                                    <Alert AlertStyle="@(AlertStyle.Success)">The happy-path pass is stable enough to move on to dense and empty-state proof.</Alert>
+                                }
+                            </div>
+                        </ExampleBlock>
                     }
-                    else
+                    else if (section.ComponentName == "Badge")
                     {
-                        <Alert AlertStyle="@(AlertStyle.Success)">The happy-path pass is stable enough to move on to dense and empty-state proof.</Alert>
+                        <ExampleBlock Title="Badges and status"
+                                      Description="Small feedback tokens need to wrap and stay distinct."
+                                      SourceId="examples/Feedback/BadgesAndStatus.razor"
+                                      ApiTypes="@BadgeApiTypes">
+                            <div class="space-y-3">
+                                <BadgesGroup>
+                                    <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
+                                    <Badge Text="@LongFeedbackBadgeText" Tone="@(BadgeTone.Warn)" />
+                                    <StatusBadge Text="@LongFeedbackStatusText" Tone="danger" />
+                                </BadgesGroup>
+                                <Cluster Gap="LayoutGap.Small">
+                                    <StatusBadge Text="Healthy" Tone="success" />
+                                    <StatusBadge Text="Waiting proof" Tone="warning" />
+                                    <StatusBadge Text="Blocked" Tone="danger" />
+                                    <StatusBadge Text="Info" Tone="info" />
+                                </Cluster>
+                            </div>
+                        </ExampleBlock>
                     }
-                </div>
-            </SectionCard>
-
-            <SectionCard Title="Badges, chips, and contextual help" Description="Small feedback tokens need to wrap, stay distinct, and support tooltip/help affordances.">
-                <Grid Gap="LayoutGap.Large"
-                      ColumnTemplate="repeat(auto-fit,minmax(min(100%,16rem),1fr))"
-                      data-testid="sandbox-feedback-badge-chip-surface">
-                    <div class="space-y-3">
-                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Badges and chips" />
-                        <BadgesGroup>
-                            <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
-                            <Badge Text="@LongFeedbackBadgeText" Tone="@(BadgeTone.Warn)" />
-                            <StatusBadge Text="@LongFeedbackStatusText" Tone="danger" />
-                        </BadgesGroup>
-                        <ChipRow>
-                            <Chip Text="Toast proof" />
-                            <Chip Text="@LongFeedbackChipText" />
-                        </ChipRow>
-                    </div>
-
-                    <div class="space-y-3">
-                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Callouts" />
-                        <Callout Tone="@(CalloutTone.Ok)" data-testid="sandbox-feedback-callout-ok">
-                            Shared feedback primitives keep positive status calm and readable.
-                        </Callout>
-                        <Callout data-testid="sandbox-feedback-callout-default">
-                            @LongCalloutText
-                        </Callout>
-                    </div>
-
-                    <div class="space-y-3">
-                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Tooltip and help" />
-                        <div class="flex flex-wrap items-center gap-3">
+                    else if (section.ComponentName == "Chip")
+                    {
+                        <ExampleBlock Title="Chips"
+                                      Description="Compact tag-style affordances for lightweight labeling."
+                                      SourceId="examples/Feedback/ChipRowExample.razor"
+                                      ApiTypes="@ChipApiTypes">
+                            <ChipRow>
+                                <Chip Text="Toast proof" />
+                                <Chip Text="@LongFeedbackChipText" />
+                            </ChipRow>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Callout")
+                    {
+                        <ExampleBlock Title="Callouts"
+                                      Description="Inline guidance that stays calmer than a full alert."
+                                      SourceId="examples/Feedback/Callouts.razor"
+                                      ApiTypes="@CalloutApiTypes">
+                            <div class="space-y-3">
+                                <Callout Tone="@(CalloutTone.Ok)" data-testid="sandbox-feedback-callout-ok">
+                                    Shared feedback primitives keep positive status calm and readable.
+                                </Callout>
+                                <Callout data-testid="sandbox-feedback-callout-default">
+                                    @LongCalloutText
+                                </Callout>
+                            </div>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "TooltipTarget")
+                    {
+                        <ExampleBlock Title="Tooltip"
+                                      Description="Tooltip text stays compact and viewport constrained."
+                                      SourceId="examples/Feedback/TooltipTargetExample.razor"
+                                      ApiTypes="@TooltipTargetApiTypes">
                             <span data-testid="sandbox-feedback-tooltip-trigger">
                                 <TooltipTarget Text="@TooltipText"
                                                Position="@(TooltipPosition.Bottom)"
@@ -90,6 +131,14 @@
                                             Variant="@(Variant.Outlined)" />
                                 </TooltipTarget>
                             </span>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "HelpPopover")
+                    {
+                        <ExampleBlock Title="Help popover"
+                                      Description="A pinned popover for longer contextual explanations."
+                                      SourceId="examples/Feedback/HelpPopoverExample.razor"
+                                      ApiTypes="@HelpPopoverApiTypes">
                             <span data-testid="sandbox-feedback-help-popover">
                                 <HelpPopover AriaLabel="Show feedback help"
                                              Title="Show feedback help"
@@ -98,54 +147,50 @@
                                              PanelTestId="sandbox-feedback-help-popover-panel"
                                              Tip="Use Escape or blur to close." />
                             </span>
-                        </div>
-                    </div>
-                </Grid>
-            </SectionCard>
-
-            <Grid Gap="LayoutGap.Large"
-                  ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
-                <SectionCard Title="Status and summaries" Description="Small status surfaces should still scan well next to denser content.">
-                    <div class="space-y-4">
-                        <Cluster Gap="LayoutGap.Small">
-                            <StatusBadge Text="Healthy" Tone="success" />
-                            <StatusBadge Text="Waiting proof" Tone="warning" />
-                            <StatusBadge Text="Blocked" Tone="danger" />
-                            <StatusBadge Text="Info" Tone="info" />
-                        </Cluster>
-
-                        <SummaryTiles>
-                            <SummaryTile Label="Checks" Value="18" HelperText="Total review questions in the screenshot pass." Tone="info" />
-                            <SummaryTile Label="Warnings" Value="2" HelperText="Dense and mobile variants still need a closer look." Tone="warning" />
-                            <SummaryTile Label="Ready" Value="5" HelperText="Routes already verified for desktop and mobile." Tone="success" />
-                        </SummaryTiles>
-
-                        <StatusCheckList Title="Validation checks"
-                                         Description="Status lists prove icon, label, description, and badge rhythm."
-                                         Items="@StatusItems"
-                                         EmptyText="No validation checks are waiting."
-                                         data-testid="sandbox-feedback-status-check-list" />
-
-                        <VerificationList Title="Verification"
-                                          Description="Compatibility wrapper around the same status list surface."
-                                          Items="@VerificationItems"
-                                          TestId="sandbox-feedback-verification-list" />
-                    </div>
-                </SectionCard>
-
-                <SectionCard Title="Notifications" Description="Toasts should be short, specific, and easy to dismiss mentally.">
-                    <div class="space-y-4">
-                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Use the buttons below to verify informational, success, warning, persistent, and clear notification service behavior." />
-                        <Cluster Gap="LayoutGap.Medium">
-                            <Button Text="Info toast" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@SendInfoToast" data-testid="feedback-info-toast" />
-                            <Button Text="Success toast" Click="@SendSuccessToast" data-testid="feedback-success-toast" />
-                            <Button Text="Warning toast" ButtonStyle="@(ButtonStyle.Warning)" Variant="@(Variant.Outlined)" Click="@SendWarningToast" data-testid="feedback-warning-toast" />
-                            <Button Text="Persistent toast" ButtonStyle="@(ButtonStyle.Info)" Variant="@(Variant.Outlined)" Click="@SendPersistentToast" data-testid="feedback-persistent-toast" />
-                            <Button Text="Clear toasts" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Text)" Click="@ClearToasts" data-testid="feedback-clear-toasts" />
-                        </Cluster>
-                    </div>
-                </SectionCard>
-            </Grid>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "StatusCheckList")
+                    {
+                        <ExampleBlock Title="Validation checks"
+                                      Description="Status lists prove icon, label, description, and badge rhythm."
+                                      SourceId="examples/Feedback/ValidationChecks.razor"
+                                      ApiTypes="@StatusCheckListApiTypes">
+                            <StatusCheckList Title="Validation checks"
+                                             Description="Status lists prove icon, label, description, and badge rhythm."
+                                             Items="@StatusItems"
+                                             EmptyText="No validation checks are waiting."
+                                             data-testid="sandbox-feedback-status-check-list" />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "VerificationList")
+                    {
+                        <ExampleBlock Title="Verification"
+                                      Description="Compatibility wrapper around the same status list surface."
+                                      SourceId="examples/Feedback/Verification.razor"
+                                      ApiTypes="@VerificationListApiTypes">
+                            <VerificationList Title="Verification"
+                                              Description="Compatibility wrapper around the same status list surface."
+                                              Items="@VerificationItems"
+                                              TestId="sandbox-feedback-verification-list" />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "NotificationService")
+                    {
+                        <ExampleBlock Title="Notifications"
+                                      Description="Toasts should be short, specific, and easy to dismiss mentally. Use the buttons below to verify informational, success, warning, persistent, and clear notification service behavior."
+                                      SourceId="examples/Feedback/NotificationTriggers.razor"
+                                      ApiTypes="@NotificationServiceApiTypes">
+                            <Cluster Gap="LayoutGap.Medium">
+                                <Button Text="Info toast" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@SendInfoToast" data-testid="feedback-info-toast" />
+                                <Button Text="Success toast" Click="@SendSuccessToast" data-testid="feedback-success-toast" />
+                                <Button Text="Warning toast" ButtonStyle="@(ButtonStyle.Warning)" Variant="@(Variant.Outlined)" Click="@SendWarningToast" data-testid="feedback-warning-toast" />
+                                <Button Text="Persistent toast" ButtonStyle="@(ButtonStyle.Info)" Variant="@(Variant.Outlined)" Click="@SendPersistentToast" data-testid="feedback-persistent-toast" />
+                                <Button Text="Clear toasts" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Text)" Click="@ClearToasts" data-testid="feedback-clear-toasts" />
+                            </Cluster>
+                        </ExampleBlock>
+                    }
+                </section>
+            }
         }
     </ChildContent>
 </CatalogPageFrame>
@@ -153,6 +198,17 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Feedback);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Feedback);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/feedback");
+
+    private static readonly IReadOnlyList<Type> AlertApiTypes = [typeof(Alert)];
+    private static readonly IReadOnlyList<Type> BadgeApiTypes = [typeof(Badge), typeof(StatusBadge)];
+    private static readonly IReadOnlyList<Type> ChipApiTypes = [typeof(Chip)];
+    private static readonly IReadOnlyList<Type> CalloutApiTypes = [typeof(Callout)];
+    private static readonly IReadOnlyList<Type> TooltipTargetApiTypes = [typeof(TooltipTarget)];
+    private static readonly IReadOnlyList<Type> HelpPopoverApiTypes = [typeof(HelpPopover)];
+    private static readonly IReadOnlyList<Type> StatusCheckListApiTypes = [typeof(StatusCheckList)];
+    private static readonly IReadOnlyList<Type> VerificationListApiTypes = [typeof(VerificationList)];
+    private static readonly IReadOnlyList<Type> NotificationServiceApiTypes = [typeof(NotificationService)];
 
     private string LongFeedbackBadgeText => CurrentScenario == SandboxScenarioKey.LongText
         ? "mobile warning requires screenshot confirmation"

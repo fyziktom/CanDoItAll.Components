@@ -13,12 +13,15 @@
 </div>
 
 @code {
+    /// <summary>Semantic tone driving the callout's coloring.</summary>
     [Parameter]
     public CalloutTone Tone { get; set; } = CalloutTone.Default;
 
+    /// <summary>Text content. Ignored when <see cref="ChildContent"/> is supplied.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Custom callout content. Takes precedence over <see cref="Text"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

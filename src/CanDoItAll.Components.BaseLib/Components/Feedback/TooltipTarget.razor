@@ -21,36 +21,47 @@
     private TooltipInterop? tooltipInterop;
     private int disposalStarted;
 
+    /// <summary>Plain-text tooltip content. Ignored when <see cref="TooltipContent"/> is supplied.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Custom tooltip content, rendered with the injected <see cref="TooltipService"/> as context. Takes precedence over <see cref="Text"/>.</summary>
     [Parameter]
     public RenderFragment<TooltipService>? TooltipContent { get; set; }
 
+    /// <summary>The trigger element's content.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Preferred side the tooltip opens on.</summary>
     [Parameter]
     public TooltipPosition Position { get; set; } = TooltipPosition.Top;
 
+    /// <summary>Delay before the tooltip opens after hover or focus. Uses the service default when unset.</summary>
     [Parameter]
     public TimeSpan? Delay { get; set; }
 
+    /// <summary>How long the tooltip stays open once shown. <c>null</c> keeps it open until dismissed.</summary>
     [Parameter]
     public TimeSpan? Duration { get; set; } = TimeSpan.FromSeconds(4);
 
+    /// <summary>Closes the tooltip when the pointer leaves the trigger. Set <c>false</c> to require an explicit dismiss instead.</summary>
     [Parameter]
     public bool CloseOnMouseLeave { get; set; } = true;
 
+    /// <summary>Additional CSS class merged onto the trigger element.</summary>
     [Parameter]
     public string? TriggerClass { get; set; }
 
+    /// <summary>Additional CSS class merged onto the tooltip panel.</summary>
     [Parameter]
     public string? TooltipClass { get; set; }
 
+    /// <summary>Value applied to <c>data-testid</c> on the tooltip panel, for test targeting.</summary>
     [Parameter]
     public string? TestId { get; set; }
 
+    /// <summary>Tab index on the trigger element. Defaults to the browser's natural tab order when unset.</summary>
     [Parameter]
     public int? TabIndex { get; set; }
 

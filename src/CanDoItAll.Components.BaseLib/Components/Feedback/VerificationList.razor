@@ -7,18 +7,23 @@
                  data-testid="@TestId" />
 
 @code {
+    /// <summary>Heading shown above the list.</summary>
     [Parameter]
     public string? Title { get; set; } = "Verification";
 
+    /// <summary>Supporting sentence rendered under <see cref="Title"/>.</summary>
     [Parameter]
     public string? Description { get; set; }
 
+    /// <summary>The rows to render, each with a label, optional description, status text, and completion/tone state.</summary>
     [Parameter]
     public IReadOnlyList<StatusCheckItem> Items { get; set; } = [];
 
+    /// <summary>Message shown in place of the list when <see cref="Items"/> is empty.</summary>
     [Parameter]
     public string EmptyText { get; set; } = "No verification checks are available.";
 
+    /// <summary>Value applied to <c>data-testid</c> on the root element, for test targeting.</summary>
     [Parameter]
     public string? TestId { get; set; }
 }

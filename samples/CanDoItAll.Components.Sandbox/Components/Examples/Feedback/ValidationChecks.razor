@@ -1,0 +1,24 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Feedback
+
+<StatusCheckList Title="Validation checks"
+                 Description="Status lists prove icon, label, description, and badge rhythm."
+                 EmptyText="No validation checks are waiting."
+                 Items="@(new List<StatusCheckItem>
+                        {
+                            new()
+                            {
+                                Label = "Alert hierarchy",
+                                Description = "Info, success, warning, and danger treatments remain distinct.",
+                                Status = "Ready",
+                                Tone = "success",
+                                Complete = true
+                            },
+                            new()
+                            {
+                                Label = "Toast open state",
+                                Description = "Notification host renders service messages without clipping.",
+                                Status = "Needs proof",
+                                Tone = "warning",
+                                Complete = false
+                            }
+                        })" />

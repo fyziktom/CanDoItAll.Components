@@ -270,6 +270,18 @@ public static class SandboxCatalogRegistry
             ["/groups/gantt"] =
             [
                 new("gantt-chart", "GanttChart", typeof(GanttChart))
+            ],
+            ["/groups/feedback"] =
+            [
+                new("alert", "Alert", typeof(Alert)),
+                new("badge", "Badge", typeof(Badge)),
+                new("chip", "Chip", typeof(Chip)),
+                new("callout", "Callout", typeof(Callout)),
+                new("tooltip-target", "TooltipTarget", typeof(TooltipTarget)),
+                new("help-popover", "HelpPopover", typeof(HelpPopover)),
+                new("status-check-list", "StatusCheckList", typeof(StatusCheckList)),
+                new("verification-list", "VerificationList", typeof(VerificationList)),
+                new("notification", "NotificationService", typeof(NotificationService))
             ]
         };
 
