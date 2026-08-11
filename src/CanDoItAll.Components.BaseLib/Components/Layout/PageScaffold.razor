@@ -49,24 +49,31 @@
 </div>
 
 @code {
+    /// <summary>The scaffold's overall density and max-width behavior.</summary>
     [Parameter]
     public PageScaffoldMode Mode { get; set; } = PageScaffoldMode.Standard;
 
+    /// <summary>Overrides the max-width CSS class derived from <see cref="Mode"/>.</summary>
     [Parameter]
     public string? MaxWidthClass { get; set; }
 
+    /// <summary>When <c>true</c>, the scaffold fills its parent's height and scrolls internally instead of the page scrolling.</summary>
     [Parameter]
     public bool FillHeight { get; set; }
 
+    /// <summary>The page header, rendered above <see cref="Lead"/>.</summary>
     [Parameter]
     public RenderFragment? Header { get; set; }
 
+    /// <summary>Lead content rendered above the primary/secondary region split, such as summary tiles.</summary>
     [Parameter]
     public RenderFragment? Lead { get; set; }
 
+    /// <summary>Supporting rail content rendered alongside <see cref="ChildContent"/>; when set, the primary region and rail share a grid.</summary>
     [Parameter]
     public RenderFragment? SecondaryRail { get; set; }
 
+    /// <summary>The scaffold's primary content region.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

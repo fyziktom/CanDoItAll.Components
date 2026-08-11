@@ -1,0 +1,50 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
+
+<PageScaffold MaxWidthClass="max-w-[1280px]">
+    <Header>
+        <PageHeader Eyebrow="Shared layout"
+                    Title="Migration acceptance workspace"
+                    Description="Shared page shells should make hierarchy, supporting context, and final actions obvious without inventing custom page structure.">
+            <Actions>
+                <Button Text="Share view" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" />
+                <Button Text="Open checklist" />
+            </Actions>
+        </PageHeader>
+    </Header>
+
+    <Lead>
+        <SummaryTiles>
+            <SummaryTile Label="Regions" Value="3" HelperText="Primary content, supporting rail, and action footer stay structurally distinct." Tone="info" />
+            <SummaryTile Label="Sections" Value="5" HelperText="Grouped sections should read clearly without extra chrome." Tone="success" />
+            <SummaryTile Label="Viewport" Value="Live" HelperText="Frame changes should preserve orientation and hierarchy." Tone="warning" />
+        </SummaryTiles>
+    </Lead>
+
+    <SecondaryRail>
+        <SectionCard Title="Review rail" Description="The supporting rail should stay concise and useful.">
+            <div class="sandbox-proof-list">
+                <p>Use the right rail for compact context, not for duplicate content.</p>
+                <p>Headings should make the page understandable before the user reads paragraphs.</p>
+            </div>
+        </SectionCard>
+    </SecondaryRail>
+
+    <ChildContent>
+        <div class="sandbox-demo-grid sandbox-demo-grid--two">
+            <FormSection Title="Primary workspace" Description="The main region should be able to hold operational content without collapsing the reading rhythm.">
+                <div class="space-y-4">
+                    <TextBlock TextStyle="TextStyle.Subtitle1" Value="Release acceptance workspace" />
+                    <TextBlock TextStyle="TextStyle.Body2" Value="The default layout keeps the main work in the primary region, keeps support context in the rail, and uses the sticky footer to close the flow cleanly." />
+                </div>
+            </FormSection>
+
+            <SectionCard Title="Secondary workspace" Description="The supporting column still needs enough substance to justify its width.">
+                <div class="sandbox-kv-list">
+                    <div class="sandbox-kv-item"><strong>Main width</strong><span>Intentional</span></div>
+                    <div class="sandbox-kv-item"><strong>Rail content</strong><span>Concise</span></div>
+                    <div class="sandbox-kv-item"><strong>Action placement</strong><span>Footer</span></div>
+                </div>
+            </SectionCard>
+        </div>
+    </ChildContent>
+</PageScaffold>

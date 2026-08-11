@@ -15,99 +15,131 @@ else
 }
 
 @code {
+    /// <summary>Number of equal-width columns at the base breakpoint; ignored when <see cref="ColumnTemplate"/> is set.</summary>
     [Parameter]
     public int? Columns { get; set; }
 
+    /// <summary>Number of equal-width columns at the <c>sm</c> breakpoint and up.</summary>
     [Parameter]
     public int? ColumnsSm { get; set; }
 
+    /// <summary>Number of equal-width columns at the <c>md</c> breakpoint and up.</summary>
     [Parameter]
     public int? ColumnsMd { get; set; }
 
+    /// <summary>Number of equal-width columns at the <c>lg</c> breakpoint and up.</summary>
     [Parameter]
     public int? ColumnsLg { get; set; }
 
+    /// <summary>Number of equal-width columns at the <c>xl</c> breakpoint and up.</summary>
     [Parameter]
     public int? ColumnsXl { get; set; }
 
+    /// <summary>Number of equal-width columns at the <c>2xl</c> breakpoint and up.</summary>
     [Parameter]
     public int? Columns2Xl { get; set; }
 
+    /// <summary>Number of equal-height rows at the base breakpoint; ignored when <see cref="RowTemplate"/> is set.</summary>
     [Parameter]
     public int? Rows { get; set; }
 
+    /// <summary>Number of equal-height rows at the <c>sm</c> breakpoint and up.</summary>
     [Parameter]
     public int? RowsSm { get; set; }
 
+    /// <summary>Number of equal-height rows at the <c>md</c> breakpoint and up.</summary>
     [Parameter]
     public int? RowsMd { get; set; }
 
+    /// <summary>Number of equal-height rows at the <c>lg</c> breakpoint and up.</summary>
     [Parameter]
     public int? RowsLg { get; set; }
 
+    /// <summary>Number of equal-height rows at the <c>xl</c> breakpoint and up.</summary>
     [Parameter]
     public int? RowsXl { get; set; }
 
+    /// <summary>Number of equal-height rows at the <c>2xl</c> breakpoint and up.</summary>
     [Parameter]
     public int? Rows2Xl { get; set; }
 
+    /// <summary>Raw <c>grid-template-columns</c> value at the base breakpoint. Takes precedence over <see cref="Columns"/>.</summary>
     [Parameter]
     public string? ColumnTemplate { get; set; }
 
+    /// <summary>Raw <c>grid-template-columns</c> value at the <c>sm</c> breakpoint and up.</summary>
     [Parameter]
     public string? ColumnTemplateSm { get; set; }
 
+    /// <summary>Raw <c>grid-template-columns</c> value at the <c>md</c> breakpoint and up.</summary>
     [Parameter]
     public string? ColumnTemplateMd { get; set; }
 
+    /// <summary>Raw <c>grid-template-columns</c> value at the <c>lg</c> breakpoint and up.</summary>
     [Parameter]
     public string? ColumnTemplateLg { get; set; }
 
+    /// <summary>Raw <c>grid-template-columns</c> value at the <c>xl</c> breakpoint and up.</summary>
     [Parameter]
     public string? ColumnTemplateXl { get; set; }
 
+    /// <summary>Raw <c>grid-template-columns</c> value at the <c>2xl</c> breakpoint and up.</summary>
     [Parameter]
     public string? ColumnTemplate2Xl { get; set; }
 
+    /// <summary>Raw <c>grid-template-rows</c> value at the base breakpoint. Takes precedence over <see cref="Rows"/>.</summary>
     [Parameter]
     public string? RowTemplate { get; set; }
 
+    /// <summary>Raw <c>grid-template-rows</c> value at the <c>sm</c> breakpoint and up.</summary>
     [Parameter]
     public string? RowTemplateSm { get; set; }
 
+    /// <summary>Raw <c>grid-template-rows</c> value at the <c>md</c> breakpoint and up.</summary>
     [Parameter]
     public string? RowTemplateMd { get; set; }
 
+    /// <summary>Raw <c>grid-template-rows</c> value at the <c>lg</c> breakpoint and up.</summary>
     [Parameter]
     public string? RowTemplateLg { get; set; }
 
+    /// <summary>Raw <c>grid-template-rows</c> value at the <c>xl</c> breakpoint and up.</summary>
     [Parameter]
     public string? RowTemplateXl { get; set; }
 
+    /// <summary>Raw <c>grid-template-rows</c> value at the <c>2xl</c> breakpoint and up.</summary>
     [Parameter]
     public string? RowTemplate2Xl { get; set; }
 
+    /// <summary>Default gap applied to both rows and columns; overridden individually by <see cref="ColumnGap"/>/<see cref="RowGap"/>.</summary>
     [Parameter]
     public LayoutGap Gap { get; set; } = LayoutGap.Medium;
 
+    /// <summary>Gap between columns. Overrides <see cref="Gap"/> for the column axis.</summary>
     [Parameter]
     public LayoutGap? ColumnGap { get; set; }
 
+    /// <summary>Gap between rows. Overrides <see cref="Gap"/> for the row axis.</summary>
     [Parameter]
     public LayoutGap? RowGap { get; set; }
 
+    /// <summary>Cross-axis (row) alignment of grid items.</summary>
     [Parameter]
     public AlignItems AlignItems { get; set; } = AlignItems.Stretch;
 
+    /// <summary>Main-axis (column) alignment of grid items.</summary>
     [Parameter]
     public JustifyContent JustifyContent { get; set; } = JustifyContent.Start;
 
+    /// <summary>When <c>true</c>, renders as a <c>&lt;section&gt;</c> element instead of a <c>&lt;div&gt;</c>.</summary>
     [Parameter]
     public bool Section { get; set; }
 
+    /// <summary>When <c>true</c>, the grid fills the height of its parent.</summary>
     [Parameter]
     public bool FillHeight { get; set; }
 
+    /// <summary>The grid's items.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

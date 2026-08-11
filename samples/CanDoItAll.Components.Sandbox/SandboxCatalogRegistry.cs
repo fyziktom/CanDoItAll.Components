@@ -194,7 +194,7 @@ public static class SandboxCatalogRegistry
         CreateExample("layout-happy", SandboxGroupKey.Layout, "Page scaffold", SandboxScenarioKey.HappyPath, "Page-level composition with header, lead, rail, section blocks, and a standalone zoom/pan preview.", ["page", "zoom-pan"], "PageScaffold", "PageHeader", "SectionCard", "ZoomPanFrame"),
         CreateExample("layout-dense", SandboxGroupKey.Layout, "Dense workspace layout", SandboxScenarioKey.DenseContent, "Split layout that uses wider desktop space deliberately.", ["dense"], "PageScaffold", "FormSection", "StickyActionFooter"),
         CreateExample("layout-empty", SandboxGroupKey.Layout, "No records in view", SandboxScenarioKey.EmptyState, "Layout shell with an empty workspace region.", ["empty"], "PageScaffold", "EmptyState"),
-        CreateCustomExample("layout-composition", SandboxGroupKey.Layout, "Layout composition lab", "/groups/layout/composition", SandboxScenarioKey.HappyPath, "Compare Stack, Grid, and Row/Column versions of the same analytics control panel.", ["comparison", "responsive", "layout"], "Stack", "Grid", "Row", "Column", "FormRow"),
+        CreateCustomExample("layout-composition", SandboxGroupKey.Layout, "Layout composition lab", "/groups/layout#stack", SandboxScenarioKey.HappyPath, "Compare Stack, Grid, and Row/Column versions of the same analytics control panel.", ["comparison", "responsive", "layout"], "Stack", "Grid", "Row", "Column", "FormRow"),
         CreateExample("data-display-happy", SandboxGroupKey.DataDisplay, "Summary and list views", SandboxScenarioKey.HappyPath, "Cards, summaries, and list rows for stable data display.", ["lists"], "Card", "SelectionListItem", "SummaryTiles"),
         CreateExample("data-display-dense", SandboxGroupKey.DataDisplay, "Dense data review", SandboxScenarioKey.DenseContent, "Metadata-heavy summaries and compact item rows.", ["dense", "metadata"], "SelectionListItem", "StatusBadge"),
         CreateExample("data-display-empty", SandboxGroupKey.DataDisplay, "No results", SandboxScenarioKey.EmptyState, "Shared empty display state for list-style data.", ["empty"], "EmptyState"),
@@ -315,6 +315,17 @@ public static class SandboxCatalogRegistry
                 new("steps", "Steps", typeof(Steps)),
                 new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell)),
                 new("side-menu", "SideMenu", typeof(SideMenu))
+            ],
+            ["/groups/layout"] =
+            [
+                new("page-scaffold", "PageScaffold", typeof(PageScaffold)),
+                new("page-header", "PageHeader", typeof(PageHeader)),
+                new("zoom-pan-frame", "ZoomPanFrame", typeof(ZoomPanFrame)),
+                new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell)),
+                new("sticky-action-footer", "StickyActionFooter", typeof(StickyActionFooter)),
+                new("stack", "Stack", typeof(Stack)),
+                new("grid", "Grid", typeof(Grid)),
+                new("row-column", "Row", typeof(Row))
             ]
         };
 
