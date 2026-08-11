@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Mermaid
+
+<MermaidDiagram Title="Change-delivery flow"
+                 Description="Click nodes, use the toolbar buttons, scroll to zoom, or drag the SVG to pan."
+                 Source="@("""
+                 flowchart LR
+                     A[Source] --> B{Valid?}
+                     B -- yes --> C[Render SVG]
+                     B -- no --> D[Show error]
+                 """)"
+                 Options="@(new MermaidDiagramOptions { Theme = "default", SecurityLevel = "loose" })" />

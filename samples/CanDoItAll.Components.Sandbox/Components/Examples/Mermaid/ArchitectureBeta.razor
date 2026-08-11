@@ -1,0 +1,16 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Mermaid
+
+<MermaidDiagram Title="Sandbox architecture"
+                 Description="Groups, services, icons, junctions, and directional ports from architecture-beta."
+                 Source="@("""
+                 architecture-beta
+                     group browser(cloud)[Browser]
+                     group app(cloud)[Blazor host]
+                     service user(internet)[User] in browser
+                     service sandbox(server)[Components sandbox] in app
+                     service wrapper(server)[MermaidDiagram] in app
+
+                     user:R --> L:sandbox
+                     sandbox:R --> L:wrapper
+                 """)"
+                 Options="@(new MermaidDiagramOptions { Theme = "default", SecurityLevel = "loose", ArchitectureRandomize = false })" />

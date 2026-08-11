@@ -1,0 +1,40 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Mermaid
+
+<Grid ColumnsLg="2" Columns2Xl="3" Gap="LayoutGap.Medium">
+    <MermaidDiagram Title="Flowchart"
+                     Description="Directional process graph with a decision node."
+                     Source="@("""
+                     flowchart LR
+                         A[Source] --> B{Valid?}
+                         B -- yes --> C[Render SVG]
+                         B -- no --> D[Show error]
+                     """)"
+                     PanZoomEnabled="true"
+                     ShowControls="false" />
+
+    <MermaidDiagram Title="Sequence diagram"
+                     Description="Participants, messages, and response ordering."
+                     Source="@("""
+                     sequenceDiagram
+                         actor User
+                         participant Sandbox
+                         participant MermaidDiagram
+                         User->>Sandbox: Edit source
+                         Sandbox->>MermaidDiagram: Render
+                         MermaidDiagram-->>User: SVG and events
+                     """)"
+                     PanZoomEnabled="true"
+                     ShowControls="false" />
+
+    <MermaidDiagram Title="Pie"
+                     Description="Share-of-effort chart."
+                     Source="@("""
+                     pie title Mermaid proof mix
+                         "Wrapper" : 35
+                         "Sandbox" : 35
+                         "MCP" : 20
+                         "Validation" : 10
+                     """)"
+                     PanZoomEnabled="true"
+                     ShowControls="false" />
+</Grid>

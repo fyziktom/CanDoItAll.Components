@@ -60,88 +60,105 @@
                 <SummaryTile Label="Scenario" Value="@CurrentScenario.ToLabel()" HelperText="@CurrentScenario.ToSummary()" />
             </SummaryTiles>
 
-            <Grid ColumnsLg="2" Gap="@(LayoutGap.Large)" Class="sandbox-mermaid-workspace">
-                <SectionCard Title="Clickable flowchart" Description="Flowchart nodes raise EventCallback payloads from the JavaScript wrapper back into Blazor.">
-                    <div class="sandbox-mermaid-stack">
-                        <MermaidDiagram Title="Change-delivery flow"
-                                        Description="Click nodes, use the toolbar buttons, scroll to zoom, or drag the SVG to pan."
-                                        Source="@FlowchartSource"
-                                        Options="@DefaultOptions"
-                                        NodeClicked="HandleNodeClicked"
-                                        Rendered="HandlePrimaryRendered"
-                                        Error="HandleError"
-                                        data-testid="mermaid-flowchart" />
-
-                        <div class="sandbox-mermaid-event" data-testid="mermaid-click-result">
-                            <div>
-                                <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Last node event" />
-                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@ClickedNodeLabel" />
-                            </div>
-                            <div class="sandbox-mermaid-event__meta">
-                                <span>Id: @(_lastClick?.NodeId ?? "none")</span>
-                                <span>SVG: @(_lastClick?.SvgElementId ?? "none")</span>
-                                <span>Nodes: @(_primaryRender?.NodeCount.ToString() ?? "pending")</span>
-                            </div>
-                        </div>
-                    </div>
-                </SectionCard>
-
-                <SectionCard Title="architecture-beta" Description="Newer Mermaid diagram types render through the same wrapper and share node events plus pan/zoom support.">
-                    <div class="sandbox-mermaid-stack">
-                        <MermaidDiagram Title="Sandbox architecture"
-                                        Description="Groups, services, icons, junctions, and directional ports from architecture-beta."
-                                        Source="@ArchitectureSource"
-                                        Options="@ArchitectureOptions"
-                                        NodeClicked="HandleNodeClicked"
-                                        Rendered="HandleArchitectureRendered"
-                                        Error="HandleError"
-                                        data-testid="mermaid-architecture" />
-
-                        <div class="sandbox-mermaid-event sandbox-mermaid-event--info" data-testid="mermaid-architecture-result">
-                            <div>
-                                <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Architecture render" />
-                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@(_architectureRender is null ? "Pending" : "Rendered")" />
-                            </div>
-                            <div class="sandbox-mermaid-event__meta">
-                                <span>Nodes: @(_architectureRender?.NodeCount.ToString() ?? "pending")</span>
-                                <span>SVG: @(_architectureRender?.SvgElementId ?? "pending")</span>
-                            </div>
-                        </div>
-                    </div>
-                </SectionCard>
-            </Grid>
-
-            <SectionCard Title="All bundled Mermaid graph types" Description="Each graph type is drawn by the wrapper from a compact, valid source sample.">
-                <Grid ColumnsLg="2" Columns2Xl="3" Gap="@(LayoutGap.Medium)" Class="sandbox-mermaid-gallery" data-testid="mermaid-gallery">
-                    @foreach (var example in GalleryExamples)
-                    {
-                        <div @key="example.Key" class="sandbox-mermaid-gallery__item" data-testid="@($"mermaid-example-{example.Key}")">
-                            <MermaidDiagram @key="example.Key"
-                                            Title="@example.Title"
-                                            Description="@example.Description"
-                                            Source="@example.Source"
-                                            Options="@DefaultOptions"
-                                            PanZoomEnabled="true"
-                                            ShowControls="false"
-                                            Class="sandbox-mermaid-diagram--gallery"
-                                            Style="@($"--cda-mermaid-min-height: {example.Height};")"
-                                            NodeClicked="HandleNodeClicked"
-                                            data-testid="@($"mermaid-gallery-diagram-{example.Key}")" />
-
-                            <div class="sandbox-mermaid-gallery__status">
-                                <span>@example.Key</span>
-                                <span>@GetGalleryStatus(example.Key)</span>
-                            </div>
-                        </div>
-                    }
-                </Grid>
-            </SectionCard>
-
-            @if (_lastError is not null)
+            @foreach (var section in Sections)
             {
-                <Alert AlertStyle="@(AlertStyle.Warning)" data-testid="mermaid-last-error">
-                    @_lastError.LocationText @_lastError.Message
-                </Alert>
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "MermaidDiagram")
+                    {
+                        <Grid ColumnsLg="2" Gap="@(LayoutGap.Large)" Class="sandbox-mermaid-workspace">
+                            <ExampleBlock Title="Clickable flowchart"
+                                          Description="Flowchart nodes raise EventCallback payloads from the JavaScript wrapper back into Blazor."
+                                          SourceId="examples/Mermaid/ClickableFlowchart.razor"
+                                          ApiTypes="@MermaidDiagramApiTypes">
+                                <div class="sandbox-mermaid-stack">
+                                    <MermaidDiagram Title="Change-delivery flow"
+                                                    Description="Click nodes, use the toolbar buttons, scroll to zoom, or drag the SVG to pan."
+                                                    Source="@FlowchartSource"
+                                                    Options="@DefaultOptions"
+                                                    NodeClicked="HandleNodeClicked"
+                                                    Rendered="HandlePrimaryRendered"
+                                                    Error="HandleError"
+                                                    data-testid="mermaid-flowchart" />
+
+                                    <div class="sandbox-mermaid-event" data-testid="mermaid-click-result">
+                                        <div>
+                                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Last node event" />
+                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@ClickedNodeLabel" />
+                                        </div>
+                                        <div class="sandbox-mermaid-event__meta">
+                                            <span>Id: @(_lastClick?.NodeId ?? "none")</span>
+                                            <span>SVG: @(_lastClick?.SvgElementId ?? "none")</span>
+                                            <span>Nodes: @(_primaryRender?.NodeCount.ToString() ?? "pending")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ExampleBlock>
+
+                            <ExampleBlock Title="architecture-beta"
+                                          Description="Newer Mermaid diagram types render through the same wrapper and share node events plus pan/zoom support."
+                                          SourceId="examples/Mermaid/ArchitectureBeta.razor">
+                                <div class="sandbox-mermaid-stack">
+                                    <MermaidDiagram Title="Sandbox architecture"
+                                                    Description="Groups, services, icons, junctions, and directional ports from architecture-beta."
+                                                    Source="@ArchitectureSource"
+                                                    Options="@ArchitectureOptions"
+                                                    NodeClicked="HandleNodeClicked"
+                                                    Rendered="HandleArchitectureRendered"
+                                                    Error="HandleError"
+                                                    data-testid="mermaid-architecture" />
+
+                                    <div class="sandbox-mermaid-event sandbox-mermaid-event--info" data-testid="mermaid-architecture-result">
+                                        <div>
+                                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Architecture render" />
+                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@(_architectureRender is null ? "Pending" : "Rendered")" />
+                                        </div>
+                                        <div class="sandbox-mermaid-event__meta">
+                                            <span>Nodes: @(_architectureRender?.NodeCount.ToString() ?? "pending")</span>
+                                            <span>SVG: @(_architectureRender?.SvgElementId ?? "pending")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ExampleBlock>
+                        </Grid>
+
+                        <ExampleBlock Title="All bundled Mermaid graph types"
+                                      Description="Each graph type is drawn by the wrapper from a compact, valid source sample."
+                                      SourceId="examples/Mermaid/GraphGallery.razor">
+                            <Grid ColumnsLg="2" Columns2Xl="3" Gap="@(LayoutGap.Medium)" Class="sandbox-mermaid-gallery" data-testid="mermaid-gallery">
+                                @foreach (var example in GalleryExamples)
+                                {
+                                    <div @key="example.Key" class="sandbox-mermaid-gallery__item" data-testid="@($"mermaid-example-{example.Key}")">
+                                        <MermaidDiagram @key="example.Key"
+                                                        Title="@example.Title"
+                                                        Description="@example.Description"
+                                                        Source="@example.Source"
+                                                        Options="@DefaultOptions"
+                                                        PanZoomEnabled="true"
+                                                        ShowControls="false"
+                                                        Class="sandbox-mermaid-diagram--gallery"
+                                                        Style="@($"--cda-mermaid-min-height: {example.Height};")"
+                                                        NodeClicked="HandleNodeClicked"
+                                                        data-testid="@($"mermaid-gallery-diagram-{example.Key}")" />
+
+                                        <div class="sandbox-mermaid-gallery__status">
+                                            <span>@example.Key</span>
+                                            <span>@GetGalleryStatus(example.Key)</span>
+                                        </div>
+                                    </div>
+                                }
+                            </Grid>
+                        </ExampleBlock>
+
+                        @if (_lastError is not null)
+                        {
+                            <Alert AlertStyle="@(AlertStyle.Warning)" data-testid="mermaid-last-error">
+                                @_lastError.LocationText @_lastError.Message
+                            </Alert>
+                        }
+                    }
+                </section>
             }
         }
     </ChildContent>
@@ -149,6 +166,8 @@
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Mermaid);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/mermaid");
+    private static readonly IReadOnlyList<Type> MermaidDiagramApiTypes = [typeof(MermaidDiagram)];
 
     private static readonly MermaidDiagramOptions DefaultOptions = new()
     {
