@@ -313,7 +313,8 @@ public static class SandboxCatalogRegistry
                 new("toolbar", "Toolbar", typeof(Toolbar)),
                 new("tree-view", "TreeView", typeof(TreeView)),
                 new("steps", "Steps", typeof(Steps)),
-                new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell))
+                new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell)),
+                new("side-menu", "SideMenu", typeof(SideMenu))
             ]
         };
 

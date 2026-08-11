@@ -1,0 +1,172 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inject SideMenuService SideMenus
+@implements IDisposable
+
+<div class="sandbox-side-menu-toolbar">
+    <div>
+        <TextBlock TextStyle="TextStyle.Subtitle2" Value="Service controls" />
+        <TextBlock TextStyle="TextStyle.Note" Value="These buttons act through SideMenuService rather than a component reference." />
+    </div>
+    <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.Wrap">
+        <Button Text="Project context" Icon="folder_open" Size="ButtonSize.Small" Click="UseProjectContextAsync" />
+        <Button Text="Analytics context" Icon="analytics" ButtonStyle="ButtonStyle.Info" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="UseAnalyticsContextAsync" />
+        <Button Text="Restore declared items" Icon="restart_alt" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="RestoreDeclaredItemsAsync" />
+        <Button Text="Toggle via service" Icon="swap_horiz" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="ToggleFromServiceAsync" />
+    </Cluster>
+</div>
+
+<div class="sandbox-side-menu-lab">
+    <div class="sandbox-side-menu-host">
+        <SideMenu MenuId="@MenuId"
+                  Title="Delivery workspace"
+                  Subtitle="@contextLabel"
+                  Icon="apps"
+                  Expanded="@menuExpanded"
+                  ExpandedChanged="@(value => menuExpanded = value)"
+                  Items="@declaredItems"
+                  MoreItems="@DeclaredMoreItems"
+                  BottomItems="@DeclaredBottomItems"
+                  ItemSelected="@(selection => lastComponentSelection = $"{selection.Item.Text} / {selection.Source}")">
+            <MenuItems>
+                <SideMenuItem Id="timeline" Text="Timeline" Icon="timeline" Description="Milestones and delivery dates." Selected="@(selection => lastDeclarativeSelection = $"{selection.Item.Text} callback received")" />
+                <SideMenuItem Id="requirements" Text="Requirements" Icon="fact_check" Description="Scope, constraints, and acceptance." />
+                <SideMenuItem Id="resources" Text="Resource planning" Icon="inventory_2" Description="People, agents, tools, and allocations." BadgeText="8" />
+                <SideMenuItem Id="quality" Text="Quality review" Icon="verified" Description="Tests, evidence, and release gates." />
+                <SideMenuItem Id="audit" Text="Audit archive" Icon="inventory" Description="Historical decisions and immutable evidence." OverflowBehavior="SideMenuOverflowBehavior.AlwaysInMore" />
+            </MenuItems>
+            <MoreMenuItems>
+                <SideMenuItem Id="shortcuts" Text="Keyboard shortcuts" Icon="keyboard" Description="Review navigation and command keys." />
+            </MoreMenuItems>
+            <BottomMenuItems>
+                <SideMenuItem Id="account" Text="Account" Icon="account_circle" Description="Profile, team, and session actions." PanelTitle="Account and workspace" Children="@AccountItems" />
+            </BottomMenuItems>
+        </SideMenu>
+    </div>
+
+    <section class="sandbox-side-menu-workspace" aria-label="Side menu selection proof">
+        <header class="sandbox-side-menu-workspace__header">
+            <div>
+                <span class="sandbox-side-menu-workspace__eyebrow">@contextLabel</span>
+                <h3>@selectedHeading</h3>
+                <p>Selections can start inside the menu or from another service-aware component and still reach the same listeners.</p>
+            </div>
+            <StatusBadge Text="@(menuExpanded ? "Open" : "Compact")" Tone="@(menuExpanded ? "success" : "neutral")" />
+        </header>
+
+        <div class="sandbox-side-menu-signal-grid">
+            <div class="sandbox-side-menu-signal">
+                <span>Service subscription</span>
+                <strong>@lastServiceSelection</strong>
+            </div>
+            <div class="sandbox-side-menu-signal">
+                <span>Component callback</span>
+                <strong>@lastComponentSelection</strong>
+            </div>
+            <div class="sandbox-side-menu-signal">
+                <span>Declarative item callback</span>
+                <strong>@lastDeclarativeSelection</strong>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    private const string MenuId = "sandbox-side-menu-example";
+
+    private static readonly IReadOnlyList<ISideMenuItem> BasePropertyItems =
+    [
+        new SideMenuItemDefinition { Id = "overview", Text = "Overview", Icon = "dashboard", Description = "Current delivery status and decisions.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "inbox", Text = "Inbox", Icon = "inbox", Description = "Requests that need review.", BadgeText = "12", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "projects", Text = "Projects", Icon = "folder_open", Description = "Active project portfolio and context." }
+    ];
+
+    private static readonly IReadOnlyList<ISideMenuItem> DeclaredMoreItems =
+    [
+        new SideMenuItemDefinition { Id = "command-center", Text = "Command center", Icon = "terminal", Description = "Open advanced workspace commands." }
+    ];
+
+    private static readonly IReadOnlyList<ISideMenuItem> DeclaredBottomItems =
+    [
+        new SideMenuItemDefinition { Id = "help", Text = "Help", Icon = "help", Description = "Open contextual documentation." }
+    ];
+
+    private static readonly IReadOnlyList<ISideMenuItem> AccountItems =
+    [
+        new SideMenuItemDefinition { Id = "profile", Text = "Your profile", Icon = "person", Description = "Identity and personal preferences." },
+        new SideMenuItemDefinition { Id = "team", Text = "Switch team", Icon = "groups", Description = "Change the active delivery team.", BadgeText = "3" },
+        new SideMenuItemDefinition { Id = "sign-out", Text = "Sign out", Icon = "logout", Description = "End the current session." }
+    ];
+
+    private static readonly IReadOnlyList<ISideMenuItem> ProjectContextItems =
+    [
+        new SideMenuItemDefinition { Id = "project-health", Text = "Project health", Icon = "monitor_heart", Description = "Delivery, cost, and quality signals.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "project-board", Text = "Delivery board", Icon = "view_kanban", Description = "Work moving through the current phase.", BadgeText = "24" },
+        new SideMenuItemDefinition { Id = "project-plan", Text = "Plan", Icon = "account_tree", Description = "Scope and dependency model." }
+    ];
+
+    private static readonly IReadOnlyList<ISideMenuItem> AnalyticsContextItems =
+    [
+        new SideMenuItemDefinition { Id = "analytics-summary", Text = "Analytics summary", Icon = "analytics", Description = "Current performance indicators.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "analytics-throughput", Text = "Throughput", Icon = "speed", Description = "Delivery rate and cycle time." },
+        new SideMenuItemDefinition { Id = "analytics-quality", Text = "Quality trends", Icon = "query_stats", Description = "Defects, tests, and reliability." }
+    ];
+
+    private IDisposable? serviceSubscription;
+    private IReadOnlyList<ISideMenuItem> declaredItems = BasePropertyItems;
+    private bool menuExpanded = true;
+    private string contextLabel = "Declared + parameter items";
+    private string selectedHeading = "No destination selected";
+    private string lastServiceSelection = "Waiting for selection";
+    private string lastComponentSelection = "Waiting for selection";
+    private string lastDeclarativeSelection = "Select Timeline to prove this callback";
+
+    protected override void OnInitialized()
+    {
+        serviceSubscription = SideMenus.Subscribe(MenuId, HandleServiceSelectionAsync);
+    }
+
+    private Task UseProjectContextAsync()
+    {
+        SideMenus.SetItems(MenuId, ProjectContextItems);
+        contextLabel = "Project tab context";
+        selectedHeading = "No destination selected";
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task UseAnalyticsContextAsync()
+    {
+        SideMenus.SetItems(MenuId, AnalyticsContextItems);
+        contextLabel = "Analytics tab context";
+        selectedHeading = "No destination selected";
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task RestoreDeclaredItemsAsync()
+    {
+        SideMenus.ResetItems(MenuId);
+        contextLabel = "Declared + parameter items";
+        selectedHeading = "No destination selected";
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task ToggleFromServiceAsync()
+    {
+        SideMenus.ToggleExpanded(MenuId);
+        return Task.CompletedTask;
+    }
+
+    private async ValueTask HandleServiceSelectionAsync(SideMenuSelection selection)
+    {
+        await InvokeAsync(() =>
+        {
+            selectedHeading = selection.Item.Text;
+            lastServiceSelection = $"{selection.Item.Text} / {selection.Source}";
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        serviceSubscription?.Dispose();
+    }
+}
