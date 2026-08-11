@@ -1,0 +1,17 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Overlays
+@inject DialogService DialogService
+
+<Cluster Gap="LayoutGap.Small">
+    <Button Text="Compact dialog"
+            ButtonStyle="ButtonStyle.Light"
+            Variant="Variant.Outlined"
+            Click="@(() => DialogService.OpenAsync<DialogServiceExampleContent>(
+                "Compact service dialog",
+                options: new DialogOptions { Size = ModalSize.Compact }))" />
+    <Button Text="Backdrop locked"
+            ButtonStyle="ButtonStyle.Warning"
+            Variant="Variant.Outlined"
+            Click="@(() => DialogService.OpenAsync<DialogServiceExampleContent>(
+                "Backdrop close disabled",
+                options: new DialogOptions { Size = ModalSize.Compact, CloseOnBackdrop = false }))" />
+</Cluster>

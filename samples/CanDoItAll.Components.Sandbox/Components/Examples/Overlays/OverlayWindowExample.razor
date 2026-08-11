@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Overlays
+
+<div class="relative min-h-[16rem] overflow-hidden rounded-2xl border border-slate-200 bg-white"
+     data-cda-overlay-frame
+     data-cda-overlay-container>
+    <OverlayWindow WindowId="example-overlay-window"
+                   Title="Inspector window"
+                   Kicker="OverlayLib"
+                   Summary="Floating support content inside a shared overlay host."
+                   State="@(new OverlayWindowState { IsVisible = true })"
+                   DefaultWidth="320"
+                   DefaultHeight="240"
+                   DefaultPlacement="top-right">
+        <ChildContent>
+            <TextBlock TextStyle="TextStyle.Body2" Value="This floating surface is rendered by OverlayLib, while the surrounding content remains ordinary BaseLib layout." />
+        </ChildContent>
+    </OverlayWindow>
+</div>

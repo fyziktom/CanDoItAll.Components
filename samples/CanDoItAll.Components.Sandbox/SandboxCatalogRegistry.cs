@@ -2,6 +2,7 @@ using CanDoItAll.Components.BaseLib;
 using CanDoItAll.Components.Charts;
 using CanDoItAll.Components.Gantt;
 using CanDoItAll.Components.Mermaid;
+using CanDoItAll.Components.OverlayLib;
 using CanDoItAll.Components.QRCode.Components;
 
 namespace CanDoItAll.Components.Sandbox;
@@ -296,6 +297,15 @@ public static class SandboxCatalogRegistry
                 new("card", "Card", typeof(Card)),
                 new("data-grid", "DataGrid", typeof(DataGrid<>)),
                 new("dialog", "Dialog", typeof(Dialog))
+            ],
+            ["/groups/overlays"] =
+            [
+                new("help-popover", "HelpPopover", typeof(HelpPopover)),
+                new("dialog-service", "DialogService", typeof(DialogService)),
+                new("tooltip-service", "TooltipService", typeof(TooltipService)),
+                new("notification-service", "NotificationService", typeof(NotificationService)),
+                new("overlay-window", "OverlayWindow", typeof(OverlayWindow)),
+                new("sticky-action-footer", "StickyActionFooter", typeof(StickyActionFooter))
             ]
         };
 
