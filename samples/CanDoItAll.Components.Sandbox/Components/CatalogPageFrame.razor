@@ -10,14 +10,16 @@
 
                 @if (ToolbarState is { ShowCoverage: true })
                 {
-                    <SectionCard Title="Coverage" Description="Areas the happy/dense/empty screenshots need to make obvious.">
-                        <div class="sandbox-proof-list">
-                            @foreach (var note in Group.ProofNotes)
-                            {
-                                <p>@note</p>
-                            }
-                        </div>
-                    </SectionCard>
+                    <div class="sandbox-page-section">
+                        <SectionCard Title="Coverage" Description="Areas the happy/dense/empty screenshots need to make obvious.">
+                            <div class="sandbox-proof-list">
+                                @foreach (var note in Group.ProofNotes)
+                                {
+                                    <p>@note</p>
+                                }
+                            </div>
+                        </SectionCard>
+                    </div>
                 }
             </Header>
 
