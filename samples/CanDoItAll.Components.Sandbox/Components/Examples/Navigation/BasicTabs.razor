@@ -1,0 +1,24 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Tabs SelectedIndex="@selectedIndex"
+      SelectedIndexChanged="@(value => selectedIndex = value)"
+      Variant="TabsVariant.WorkspacePrimary"
+      BorderMode="TabsBorderMode.Soft"
+      Tone="TabsTone.Primary"
+      AriaLabel="Basic workspace tabs">
+    <TabItems>
+        <TabsItem Text="Overview" Icon="bars_staggered">
+            <TextBlock TextStyle="TextStyle.Body2" Value="The basic tabs setup should feel readable, calm, and clearly selected without needing any special styling tricks." />
+        </TabsItem>
+        <TabsItem Text="Activity log" Icon="calendar" BadgeText="2">
+            <TextBlock TextStyle="TextStyle.Body2" Value="The selected header and content surface should feel like one connected control instead of two disconnected shapes." />
+        </TabsItem>
+        <TabsItem Text="Evidence" Icon="circle_info">
+            <TextBlock TextStyle="TextStyle.Body2" Value="Longer supporting labels should stay readable and the disabled state should read clearly instead of making every tab look unavailable." />
+        </TabsItem>
+    </TabItems>
+</Tabs>
+
+@code {
+    private int selectedIndex = 1;
+}

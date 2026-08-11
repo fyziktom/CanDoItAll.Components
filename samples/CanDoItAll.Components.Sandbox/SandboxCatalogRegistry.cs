@@ -309,6 +309,7 @@ public static class SandboxCatalogRegistry
             ],
             ["/groups/navigation"] =
             [
+                new("tabs", "Tabs", typeof(Tabs)),
                 new("toolbar", "Toolbar", typeof(Toolbar)),
                 new("tree-view", "TreeView", typeof(TreeView)),
                 new("steps", "Steps", typeof(Steps)),

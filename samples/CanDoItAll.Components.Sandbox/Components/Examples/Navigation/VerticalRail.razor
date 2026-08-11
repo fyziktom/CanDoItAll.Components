@@ -1,0 +1,25 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Tabs SelectedIndex="@selectedIndex"
+      SelectedIndexChanged="@(value => selectedIndex = value)"
+      Variant="TabsVariant.WorkspaceTertiary"
+      BorderMode="TabsBorderMode.Soft"
+      Tone="TabsTone.Success"
+      TabPosition="TabPosition.Left"
+      AriaLabel="Vertical settings tabs">
+    <TabItems>
+        <TabsItem Text="General">
+            <TextBlock TextStyle="TextStyle.Body2" Value="Vertical tabs should read like a settings rail instead of an unrelated side list." />
+        </TabsItem>
+        <TabsItem Text="Notifications" BadgeText="3">
+            <TextBlock TextStyle="TextStyle.Body2" Value="Longer labels still need to align cleanly and keep the panel seam intact." />
+        </TabsItem>
+        <TabsItem Text="Audit trail">
+            <TextBlock TextStyle="TextStyle.Body2" Value="Disabled items must remain visible while clearly opting out of interaction." />
+        </TabsItem>
+    </TabItems>
+</Tabs>
+
+@code {
+    private int selectedIndex;
+}

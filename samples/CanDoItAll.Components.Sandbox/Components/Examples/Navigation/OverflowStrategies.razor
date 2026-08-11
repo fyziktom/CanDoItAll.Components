@@ -1,0 +1,61 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<div class="sandbox-demo-grid sandbox-demo-grid--two">
+    <div>
+        <TextBlock TextStyle="TextStyle.Subtitle2" Value="Wrapping in a narrow column" Class="mb-3" />
+        <div class="w-full min-w-0 max-w-[21rem]">
+            <Tabs SelectedIndex="@wrapSelectedIndex"
+                  SelectedIndexChanged="@(value => wrapSelectedIndex = value)"
+                  Variant="TabsVariant.WorkspaceSecondary"
+                  BorderMode="TabsBorderMode.Soft"
+                  Tone="TabsTone.Primary"
+                  OverflowMode="TabsOverflowMode.Wrap"
+                  AriaLabel="Wrapping tabs in a narrow column">
+                <TabItems>
+                    <TabsItem Text="Long title that forces a second line" Icon="bars_staggered">
+                        <TextBlock TextStyle="TextStyle.Body2" Value="Wrapped tabs should become a tidy multi-row control instead of an accidental broken seam." />
+                    </TabsItem>
+                    <TabsItem Icon="circle_info">
+                        <TextBlock TextStyle="TextStyle.Body2" Value="This second tab keeps the missing-title fallback visible in a tighter layout." />
+                    </TabsItem>
+                    <TabsItem Text="Secondary proof notes" BadgeText="beta">
+                        <TextBlock TextStyle="TextStyle.Body2" Value="Badges and multi-line labels need to remain aligned even when the row wraps." />
+                    </TabsItem>
+                </TabItems>
+            </Tabs>
+        </div>
+    </div>
+
+    <div>
+        <TextBlock TextStyle="TextStyle.Subtitle2" Value="Scrollable strip in the same width" Class="mb-3" />
+        <div class="w-full min-w-0 max-w-[21rem]">
+            <Tabs SelectedIndex="@scrollSelectedIndex"
+                  SelectedIndexChanged="@(value => scrollSelectedIndex = value)"
+                  Variant="TabsVariant.WorkspaceSecondary"
+                  BorderMode="TabsBorderMode.Soft"
+                  Tone="TabsTone.Info"
+                  OverflowMode="TabsOverflowMode.Scroll"
+                  AriaLabel="Scrollable tabs in a narrow column">
+                <TabItems>
+                    <TabsItem Text="Overview">
+                        <TextBlock TextStyle="TextStyle.Body2" Value="Keep the strip single-line when horizontal movement is easier to understand than wrapping." />
+                    </TabsItem>
+                    <TabsItem Text="Automation checkpoints">
+                        <TextBlock TextStyle="TextStyle.Body2" Value="Long labels should still be fully visible while the row scrolls." />
+                    </TabsItem>
+                    <TabsItem Text="Validation questions">
+                        <TextBlock TextStyle="TextStyle.Body2" Value="Keyboard focus and active state should remain strong even when some tabs start off-screen." />
+                    </TabsItem>
+                    <TabsItem Text="Regression notes">
+                        <TextBlock TextStyle="TextStyle.Body2" Value="The right edge should not clip the final tab or its hover border." />
+                    </TabsItem>
+                </TabItems>
+            </Tabs>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int wrapSelectedIndex = 2;
+    private int scrollSelectedIndex = 2;
+}

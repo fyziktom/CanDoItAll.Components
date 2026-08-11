@@ -1,0 +1,24 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Tabs SelectedIndex="@selectedIndex"
+      SelectedIndexChanged="@(value => selectedIndex = value)"
+      Variant="TabsVariant.WorkspaceSecondary"
+      BorderMode="TabsBorderMode.Soft"
+      Tone="TabsTone.Secondary"
+      AriaLabel="Missing title fallback tabs">
+    <TabItems>
+        <TabsItem Text="Configured tab">
+            <TextBlock TextStyle="TextStyle.Body2" Value="The configured tab uses the normal text path." />
+        </TabsItem>
+        <TabsItem Icon="circle_info">
+            <TextBlock TextStyle="TextStyle.Body2" Value="This example intentionally omits Text. The fallback label should still feel stable and readable." />
+        </TabsItem>
+        <TabsItem Text="Another tab">
+            <TextBlock TextStyle="TextStyle.Body2" Value="The surrounding tabs should not collapse just because one label is missing." />
+        </TabsItem>
+    </TabItems>
+</Tabs>
+
+@code {
+    private int selectedIndex = 1;
+}
