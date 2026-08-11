@@ -14,21 +14,6 @@
                   DemoSummary="Drag bars to move them, use green handles to resize, use blue ports to add or reconnect dependencies, hover assignment icons, and export the current projection as PNG."
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
-    <Notes>
-        <div class="sandbox-proof-list">
-            <p>Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale, drag empty timeline space to pan, and double-click an empty row point to request a new eight-hour task from the host.</p>
-            @if (CurrentScenario == SandboxScenarioKey.DenseContent)
-            {
-                <p>The dense proof combines a Canvas runtime hub with exactly eight incoming and eight outgoing edges and a 43-task delivery chain, forcing both scroll axes while exercising endpoint lanes and exact mouse reconnection.</p>
-            }
-            else
-            {
-                <p>The implementation task has two predecessors, proving multiple dependencies without encoding them into task records.</p>
-            }
-            <p>Drop the staged security review onto the Canvas runtime → Host integration bridge to replace that edge and move the dependent path.</p>
-        </div>
-    </Notes>
-
     <ChildContent>
         @foreach (var section in Sections)
         {

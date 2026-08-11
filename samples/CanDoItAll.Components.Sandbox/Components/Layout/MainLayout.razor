@@ -27,20 +27,13 @@
                     </header>
 
                     <aside id="sandbox-navigation" class="sandbox-sidebar @(mobileNavigationOpen ? "is-open" : null)">
-                        <a class="sandbox-brand" href="/">
-                            <span class="sandbox-brand__eyebrow">CanDoItAll</span>
-                            <span class="sandbox-brand__title">Components Sandbox</span>
+                        <a href="@BuildSidebarLink("/")"
+                           class="sandbox-nav__link @(IsActiveRoute("/") ? "is-active" : string.Empty)">
+                            <span class="sandbox-nav__title">CanDoItAll Components Sandbox</span>
+                            <span class="sandbox-nav__meta">Home</span>
                         </a>
 
-                        <p class="sandbox-brand__summary">A calm validation lab for standard shared surfaces, route coverage, and future MCP examples.</p>
-
                         <nav class="sandbox-nav" aria-label="Standard proof groups">
-                            <a href="@BuildSidebarLink("/groups/coverage")"
-                               class="sandbox-nav__link @(IsActiveRoute("/groups/coverage") ? "is-active" : string.Empty)">
-                                <span class="sandbox-nav__title">Coverage Index</span>
-                                <span class="sandbox-nav__meta">standard / routes / exceptions</span>
-                            </a>
-
                             @foreach (var group in SandboxCatalogRegistry.StandardGroups)
                             {
                                 <a href="@BuildSidebarLink(group.Route)"
@@ -101,15 +94,6 @@
                                 </nav>
                             </div>
                         }
-
-                        <SectionCard Title="Validation Gate" Description="Each page needs happy, dense, and empty proof before sign-off.">
-                            <div class="space-y-2">
-                                @foreach (var question in SandboxCatalogRegistry.ValidationQuestions.Take(4))
-                                {
-                                    <p class="cda-body-muted">@question</p>
-                                }
-                            </div>
-                        </SectionCard>
                     </aside>
 
                     <main class="sandbox-main">

@@ -27,6 +27,14 @@
                             data-testid="@($"sandbox-toolbar-frame-{preset.ToSlug()}")" />
                 }
             </div>
+
+            <Button Text="Coverage"
+                    ButtonStyle="@(toolbarState.ShowCoverage ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Variant="@(toolbarState.ShowCoverage ? Variant.Filled : Variant.Outlined)"
+                    Size="ButtonSize.Small"
+                    Click="@(() => toolbarState.ToggleCoverage())"
+                    aria-pressed="@(toolbarState.ShowCoverage ? "true" : "false")"
+                    data-testid="sandbox-toolbar-coverage-toggle" />
         }
 
         @if (ThemeState is not null)

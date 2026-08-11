@@ -12,6 +12,8 @@ public sealed class SandboxToolbarState
 
     public bool HasContext => owner is not null;
 
+    public bool ShowCoverage { get; private set; }
+
     public SandboxScenarioKey Scenario { get; private set; }
 
     public SandboxFramePreset Frame { get; private set; }
@@ -48,6 +50,12 @@ public sealed class SandboxToolbarState
         {
             Changed?.Invoke();
         }
+    }
+
+    public void ToggleCoverage()
+    {
+        ShowCoverage = !ShowCoverage;
+        Changed?.Invoke();
     }
 
     public void Unregister(object owner)
