@@ -1,0 +1,30 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Charts
+
+<CdaChart Title="Energy source share"
+          Description="Pie slices use point-level colors while the wrapper owns labels."
+          Series="@(new List<CdaChartSeries>
+                  {
+                      new()
+                      {
+                          Name = "Source share",
+                          Type = CdaChartType.Pie,
+                          Points =
+                          [
+                              new("Solar", 38m, "#16a34a"),
+                              new("Grid import", 34m, "#2563eb"),
+                              new("Battery", 18m, "#7c3aed"),
+                              new("Export", 10m, "#0891b2")
+                          ]
+                      }
+                  })"
+          Options="@(new CdaChartOptions
+                   {
+                       Type = CdaChartType.Pie,
+                       XAxisType = CdaChartAxisType.Category,
+                       ShowDataLabels = true,
+                       ShowToolbar = false,
+                       EnableZoom = false,
+                       LegendPosition = CdaChartLegendPosition.Bottom,
+                       Palette = ["#16a34a", "#2563eb", "#7c3aed", "#0891b2"]
+                   })"
+          Height="340" />

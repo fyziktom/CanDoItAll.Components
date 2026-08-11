@@ -1,0 +1,33 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Charts
+
+<CdaChart Title="Filled consumption area"
+          Description="Area fill, datetime labels, unit formatting, and toolbar controls."
+          Series="@(new List<CdaChartSeries>
+                  {
+                      new()
+                      {
+                          Name = "Main meter",
+                          Type = CdaChartType.Area,
+                          Color = "#14b8a6",
+                          Points =
+                          [
+                              new(new DateTime(2026, 4, 30, 6, 0, 0, DateTimeKind.Utc), 0.18m),
+                              new(new DateTime(2026, 4, 30, 10, 0, 0, DateTimeKind.Utc), 0.42m),
+                              new(new DateTime(2026, 4, 30, 14, 0, 0, DateTimeKind.Utc), 0.54m),
+                              new(new DateTime(2026, 4, 30, 18, 0, 0, DateTimeKind.Utc), 0.31m),
+                              new(new DateTime(2026, 4, 30, 22, 0, 0, DateTimeKind.Utc), 0.22m)
+                          ]
+                      }
+                  })"
+          Options="@(new CdaChartOptions
+                   {
+                       Type = CdaChartType.Area,
+                       Unit = "kWh",
+                       XAxisType = CdaChartAxisType.DateTime,
+                       YAxisTitle = "Consumption (kWh)",
+                       FillOpacity = 0.36,
+                       Curve = CdaChartCurve.Step,
+                       LegendPosition = CdaChartLegendPosition.Bottom,
+                       Palette = ["#14b8a6"]
+                   })"
+          Height="340" />

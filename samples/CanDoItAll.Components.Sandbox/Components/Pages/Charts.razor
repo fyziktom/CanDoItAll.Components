@@ -47,44 +47,70 @@
                 <SummaryTile Label="Mode" Value="@CurrentScenario.ToLabel()" HelperText="@CurrentScenario.ToSummary()" />
             </SummaryTiles>
 
-            <div class="sandbox-demo-grid sandbox-demo-grid--two">
-                <CdaChart Title="Filled consumption area"
-                          Description="Area fill, datetime labels, unit formatting, and toolbar controls."
-                          Series="@ConsumptionAreaSeries"
-                          Options="@AreaOptions"
-                          Height="@PrimaryChartHeight"
-                          data-testid="chart-area" />
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
 
-                <CdaChart Title="Energy source share"
-                          Description="Pie slices use point-level colors while the wrapper owns labels."
-                          Series="@ShareSeries"
-                          Options="@PieOptions"
-                          Height="@PrimaryChartHeight"
-                          data-testid="chart-pie" />
-            </div>
+                    @if (section.ComponentName == "CdaChart")
+                    {
+                        <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                            <ExampleBlock Title="Filled consumption area"
+                                          Description="Area fill, datetime labels, unit formatting, and toolbar controls."
+                                          SourceId="examples/Charts/FilledConsumptionArea.razor"
+                                          ApiTypes="@CdaChartApiTypes">
+                                <CdaChart AriaLabel="Filled consumption area"
+                                          Series="@ConsumptionAreaSeries"
+                                          Options="@AreaOptions"
+                                          Height="@PrimaryChartHeight"
+                                          data-testid="chart-area" />
+                            </ExampleBlock>
 
-            <CdaChart Title="Multi-line house overview"
-                      Description="Several operational signals share one datetime axis with tuned colors and stable legend ordering."
-                      Series="@MultiLineSeries"
-                      Options="@MultiLineOptions"
-                      Height="@WideChartHeight"
-                      data-testid="chart-multiline" />
+                            <ExampleBlock Title="Energy source share"
+                                          Description="Pie slices use point-level colors while the wrapper owns labels."
+                                          SourceId="examples/Charts/EnergySourceShare.razor">
+                                <CdaChart AriaLabel="Energy source share"
+                                          Series="@ShareSeries"
+                                          Options="@PieOptions"
+                                          Height="@PrimaryChartHeight"
+                                          data-testid="chart-pie" />
+                            </ExampleBlock>
+                        </div>
 
-            <div class="sandbox-demo-grid sandbox-demo-grid--two">
-                <CdaChart Title="Spot price line with labels"
-                          Description="Data labels and smooth curve support labeled trend inspection without leaving the wrapper."
-                          Series="@PriceSeries"
-                          Options="@PriceOptions"
-                          Height="@PrimaryChartHeight"
-                          data-testid="chart-labels" />
+                        <ExampleBlock Title="Multi-line house overview"
+                                      Description="Several operational signals share one datetime axis with tuned colors and stable legend ordering."
+                                      SourceId="examples/Charts/MultiLineHouseOverview.razor">
+                            <CdaChart AriaLabel="Multi-line house overview"
+                                      Series="@MultiLineSeries"
+                                      Options="@MultiLineOptions"
+                                      Height="@WideChartHeight"
+                                      data-testid="chart-multiline" />
+                        </ExampleBlock>
 
-                <CdaChart Title="Color-tuned import/export bars"
-                          Description="Per-point colors distinguish import from export while keeping one public point model."
-                          Series="@ColorTunedSeries"
-                          Options="@BarOptions"
-                          Height="@PrimaryChartHeight"
-                          data-testid="chart-colors" />
-            </div>
+                        <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                            <ExampleBlock Title="Spot price line with labels"
+                                          Description="Data labels and smooth curve support labeled trend inspection without leaving the wrapper."
+                                          SourceId="examples/Charts/SpotPriceLineWithLabels.razor">
+                                <CdaChart AriaLabel="Spot price line with labels"
+                                          Series="@PriceSeries"
+                                          Options="@PriceOptions"
+                                          Height="@PrimaryChartHeight"
+                                          data-testid="chart-labels" />
+                            </ExampleBlock>
+
+                            <ExampleBlock Title="Color-tuned import/export bars"
+                                          Description="Per-point colors distinguish import from export while keeping one public point model."
+                                          SourceId="examples/Charts/ColorTunedImportExportBars.razor">
+                                <CdaChart AriaLabel="Color-tuned import/export bars"
+                                          Series="@ColorTunedSeries"
+                                          Options="@BarOptions"
+                                          Height="@PrimaryChartHeight"
+                                          data-testid="chart-colors" />
+                            </ExampleBlock>
+                        </div>
+                    }
+                </section>
+            }
         }
     </ChildContent>
 </CatalogPageFrame>
@@ -92,6 +118,8 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Charts);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Charts);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/charts");
+    private static readonly IReadOnlyList<Type> CdaChartApiTypes = [typeof(CdaChart)];
     private static readonly DateTime Start = new(2026, 4, 30, 3, 0, 0, DateTimeKind.Utc);
     private static readonly IReadOnlyList<CdaChartSeries> EmptySeries = [];
 

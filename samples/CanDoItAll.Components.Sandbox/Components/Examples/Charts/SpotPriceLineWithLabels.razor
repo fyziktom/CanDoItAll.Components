@@ -1,0 +1,34 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Charts
+
+<CdaChart Title="Spot price line with labels"
+          Description="Data labels and smooth curve support labeled trend inspection without leaving the wrapper."
+          Series="@(new List<CdaChartSeries>
+                  {
+                      new()
+                      {
+                          Name = "Spot CZK",
+                          Type = CdaChartType.Line,
+                          Color = "#0f766e",
+                          ShowDataLabels = true,
+                          Points =
+                          [
+                              new(new DateTime(2026, 4, 30, 0, 0, 0, DateTimeKind.Utc), 3.6m),
+                              new(new DateTime(2026, 4, 30, 6, 0, 0, DateTimeKind.Utc), 4.4m),
+                              new(new DateTime(2026, 4, 30, 12, 0, 0, DateTimeKind.Utc), 4.9m),
+                              new(new DateTime(2026, 4, 30, 18, 0, 0, DateTimeKind.Utc), 3.1m)
+                          ]
+                      }
+                  })"
+          Options="@(new CdaChartOptions
+                   {
+                       Type = CdaChartType.Line,
+                       Unit = "CZK",
+                       XAxisType = CdaChartAxisType.DateTime,
+                       YAxisTitle = "Price (CZK)",
+                       Curve = CdaChartCurve.Smooth,
+                       ShowToolbar = false,
+                       ShowDataLabels = true,
+                       LegendPosition = CdaChartLegendPosition.Bottom,
+                       Palette = ["#0f766e"]
+                   })"
+          Height="340" />

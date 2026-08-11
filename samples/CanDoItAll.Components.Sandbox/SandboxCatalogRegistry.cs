@@ -1,4 +1,5 @@
 using CanDoItAll.Components.BaseLib;
+using CanDoItAll.Components.Charts;
 using CanDoItAll.Components.QRCode.Components;
 
 namespace CanDoItAll.Components.Sandbox;
@@ -255,6 +256,10 @@ public static class SandboxCatalogRegistry
                 new("qr-code-view", "QrCodeView", typeof(QrCodeView)),
                 new("qr-code-button", "QrCodeButton", typeof(QrCodeButton)),
                 new("qr-scan-button", "QrScanButton", typeof(QrScanButton))
+            ],
+            ["/groups/charts"] =
+            [
+                new("cda-chart", "CdaChart", typeof(CdaChart))
             ]
         };
 
