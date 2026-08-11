@@ -2,6 +2,8 @@
 @inject NavigationManager NavigationManager
 
 <div class="sandbox-toolbar" data-testid="sandbox-toolbar">
+    <div class="flex justify-center items-center gap-2.5"><img class="inline-block" src="./assets/logo.svg" alt="CanDoItAll" height="32" width="32"> CanDoItAll</div>
+
     <div class="sandbox-toolbar__controls">
         @if (ToolbarState is { HasContext: true } toolbarState)
         {
@@ -13,7 +15,7 @@
                           Value="@toolbarState.Scenario"
                           ValueChanged="HandleScenarioChanged"
                           aria-label="Scenario"
-                          data-testid="sandbox-toolbar-scenario" />
+                          data-testid="sandbox-toolbar-scenario"/>
             </div>
 
             <div class="sandbox-toolbar__frame-group" role="group" aria-label="Frame preset">
@@ -24,7 +26,7 @@
                             Variant="@(preset == toolbarState.Frame ? Variant.Filled : Variant.Outlined)"
                             Size="ButtonSize.Small"
                             Click="@(() => toolbarState.FrameChanged.InvokeAsync(preset))"
-                            data-testid="@($"sandbox-toolbar-frame-{preset.ToSlug()}")" />
+                            data-testid="@($"sandbox-toolbar-frame-{preset.ToSlug()}")"/>
                 }
             </div>
 
@@ -34,7 +36,7 @@
                     Size="ButtonSize.Small"
                     Click="@(() => toolbarState.ToggleCoverage())"
                     aria-pressed="@(toolbarState.ShowCoverage ? "true" : "false")"
-                    data-testid="sandbox-toolbar-coverage-toggle" />
+                    data-testid="sandbox-toolbar-coverage-toggle"/>
         }
 
         @if (ThemeState is not null)
@@ -46,7 +48,7 @@
                     Size="ButtonSize.Small"
                     Click="ToggleDarkMode"
                     aria-pressed="@(ThemeState.IsDark ? "true" : "false")"
-                    data-testid="sandbox-toolbar-dark-toggle" />
+                    data-testid="sandbox-toolbar-dark-toggle"/>
         }
     </div>
 </div>
