@@ -4,12 +4,19 @@
   "license": "MIT",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.7",
-    "tailwindcss": "^4.1.7"
+    "tailwindcss": "^4.1.7",
+    "concurrently": "^10.0.4"
   },
   "scripts": {
+    "help": "tailwindcss --help",
     "build": "npm run build:baselib && npm run build:sandbox",
     "build:baselib": "tailwindcss -i ./input.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css",
     "build:sandbox": "tailwindcss -i ./sandbox-input.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/tailwind-sandbox.css",
-    "watch": "tailwindcss -i ./input.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css --watch"
+    "watch": "concurrently 'npm run watch:baselib' 'npm run watch:sandbox'",
+    "watch:baselib": "tailwindcss  --watch=always -i ./input.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css",
+    "watch:sandbox": "tailwindcss  --watch=always -i ./sandbox-input.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/tailwind-sandbox.css"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.5.6": true
   }
 }
