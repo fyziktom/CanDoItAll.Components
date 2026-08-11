@@ -100,51 +100,67 @@
     private DotNetObjectReference<Dialog>? dotNetReference;
     private bool browserDialogOpen;
 
+    /// <summary>Controls visibility. The dialog is a controlled component: set this from the host's own state rather than expecting the dialog to track it internally.</summary>
     [Parameter]
     public bool IsOpen { get; set; }
 
+    /// <summary>Heading shown in the dialog header.</summary>
     [Parameter]
     public string Title { get; set; } = string.Empty;
 
+    /// <summary>Small label rendered above <see cref="Title"/>.</summary>
     [Parameter]
     public string? Eyebrow { get; set; }
 
+    /// <summary>Supporting sentence rendered under <see cref="Title"/>.</summary>
     [Parameter]
     public string? Subtitle { get; set; }
 
+    /// <summary>Body text for the header's help popover. Omit to hide the help affordance.</summary>
     [Parameter]
     public string? HelpText { get; set; }
 
+    /// <summary>Heading for the header's help popover. Falls back to <see cref="Title"/> when unset.</summary>
     [Parameter]
     public string? HelpHeading { get; set; }
 
+    /// <summary>Width preset for the dialog surface.</summary>
     [Parameter]
     public ModalSize Size { get; set; } = ModalSize.Medium;
 
+    /// <summary>Accessible name for the dialog's <c>role="dialog"</c> container. Falls back to <see cref="Title"/> when unset.</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>Value applied to <c>data-testid</c> on the dialog surface, for test targeting.</summary>
     [Parameter]
     public string? TestId { get; set; }
 
+    /// <summary>Closes the dialog when the backdrop is clicked.</summary>
     [Parameter]
     public bool CloseOnBackdrop { get; set; } = true;
 
+    /// <summary>Shows the built-in close button in the header.</summary>
     [Parameter]
     public bool ShowCloseButton { get; set; } = true;
 
+    /// <summary>Reduces header and body padding for compact dialogs.</summary>
     [Parameter]
     public bool DenseChrome { get; set; }
 
+    /// <summary>Additional content (typically buttons) rendered in the header, next to the close button.</summary>
     [Parameter]
     public RenderFragment? HeaderActions { get; set; }
 
+    /// <summary>The dialog's body content.</summary>
     [Parameter]
     public RenderFragment ChildContent { get; set; } = default!;
 
+    /// <summary>Content rendered in a dedicated footer region, typically primary and secondary actions.</summary>
     [Parameter]
     public RenderFragment? Footer { get; set; }
 
+    /// <summary>Invoked when the dialog requests to close, from the close button, backdrop click, or Escape key. The host must set <see cref="IsOpen"/> to <c>false</c> in response.</summary>
     [Parameter]
     public EventCallback OnClose { get; set; }
 

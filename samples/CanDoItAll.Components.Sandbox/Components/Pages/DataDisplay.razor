@@ -36,172 +36,223 @@
         }
         else
         {
-            <div data-testid="data-display-summary-strip">
-                <SectionCard Title="Supporting metrics" Description="Simple counts stay inline so the record list remains the dominant surface.">
-                    <CompactStatStrip>
-                        @foreach (var tile in Tiles)
-                        {
-                            <CompactStat Label="@tile.Label"
-                                         Value="@tile.Value"
-                                         HelperText="@tile.HelperText"
-                                         Tone="@tile.Tone" />
-                        }
-                    </CompactStatStrip>
-                </SectionCard>
-            </div>
-
-            <div data-testid="data-display-selection-rows">
-                <SectionCard Title="Records" Description="The primary list owns the useful first viewport; editing opens only when requested.">
-                    <HeaderActions>
-                        <Button Text="Add record"
-                                Icon="add"
-                                ButtonStyle="@(ButtonStyle.Primary)"
-                                Disabled="@IsDisabled"
-                                Click="OpenNewItemEditor" />
-                    </HeaderActions>
-                    <ChildContent>
-                        <div class="sandbox-list">
-                            @foreach (var row in Rows)
-                            {
-                                <SelectionListItem Title="@row.Title"
-                                                   Eyebrow="@row.Eyebrow"
-                                                   Meta="@row.Meta"
-                                                   Summary="@row.Summary"
-                                                   Dense="true"
-                                                   Disabled="@IsDisabled"
-                                                   OnSelect="@(() => OpenItemEditor(row))">
-                                    <Status>
-                                        <StatusBadge Text="@row.State" Tone="@row.Tone" />
-                                    </Status>
-                                    <Actions>
-                                        <Button Text="Edit"
-                                                ButtonStyle="@(ButtonStyle.Light)"
-                                                Variant="@(Variant.Outlined)"
-                                                Disabled="@IsDisabled"
-                                                Click="@(() => OpenItemEditor(row))" />
-                                    </Actions>
-                                    <ChildContent>
-                                        <Cluster Gap="LayoutGap.Small">
-                                            @foreach (var chip in row.Chips)
-                                            {
-                                                <StatusBadge Text="@chip.Text" Tone="@chip.Tone" />
-                                            }
-                                        </Cluster>
-                                    </ChildContent>
-                                </SelectionListItem>
-                            }
-                        </div>
-                    </ChildContent>
-                </SectionCard>
-            </div>
-
-            <SectionCard Title="Visual collection" Description="Use cards only when media and independent item actions improve recognition.">
-                <CardGrid data-testid="data-display-card-grid">
-                    @foreach (var card in Cards)
-                    {
-                        <Card>
-                            <Media>
-                                <img src="@card.ImageSource" alt="" />
-                            </Media>
-                            <Header>
-                                <Split Breakpoint="LayoutBreakpoint.None"
-                                       Gap="LayoutGap.Small"
-                                       AlignItems="AlignItems.Start"
-                                       JustifyContent="JustifyContent.SpaceBetween"
-                                       Wrap="FlexWrap.Wrap">
-                                    <Stack GapScale="LayoutGap.Tiny">
-                                        <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@card.Eyebrow" />
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@card.Title" />
-                                    </Stack>
-                                    <StatusBadge Text="@card.State" Tone="@card.Tone" />
-                                </Split>
-                            </Header>
-                            <Tags>
-                                @foreach (var fact in card.Facts.Take(2))
+            @foreach (var section in Sections)
+            {
+                @if (section.ComponentName == "CompactStat")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section" data-testid="data-display-summary-strip">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Supporting metrics"
+                                      Description="Simple counts stay inline so the record list remains the dominant surface."
+                                      SourceId="examples/DataDisplay/SupportingMetrics.razor"
+                                      ApiTypes="@CompactStatApiTypes">
+                            <CompactStatStrip>
+                                @foreach (var tile in Tiles)
                                 {
-                                    <StatusBadge Text="@($"{fact.Label}: {fact.Value}")" Tone="neutral" />
+                                    <CompactStat Label="@tile.Label"
+                                                 Value="@tile.Value"
+                                                 HelperText="@tile.HelperText"
+                                                 Tone="@tile.Tone" />
                                 }
-                            </Tags>
-                            <ChildContent>
-                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@card.Summary" />
-                            </ChildContent>
-                            <Actions>
-                                <Button Text="Edit"
-                                        Icon="edit"
+                            </CompactStatStrip>
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "SelectionListItem")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section" data-testid="data-display-selection-rows">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Records"
+                                      Description="The primary list owns the useful first viewport; editing opens only when requested."
+                                      SourceId="examples/DataDisplay/Records.razor"
+                                      ApiTypes="@SelectionListItemApiTypes">
+                            <Cluster Gap="LayoutGap.Small" JustifyContent="JustifyContent.End">
+                                <Button Text="Add record"
+                                        Icon="add"
                                         ButtonStyle="@(ButtonStyle.Primary)"
                                         Disabled="@IsDisabled"
-                                        Click="@(() => OpenItemEditor(card))" />
-                            </Actions>
-                        </Card>
-                    }
-                </CardGrid>
-            </SectionCard>
+                                        Click="OpenNewItemEditor" />
+                            </Cluster>
+                            <div class="sandbox-list">
+                                @foreach (var row in Rows)
+                                {
+                                    <SelectionListItem Title="@row.Title"
+                                                       Eyebrow="@row.Eyebrow"
+                                                       Meta="@row.Meta"
+                                                       Summary="@row.Summary"
+                                                       Dense="true"
+                                                       Disabled="@IsDisabled"
+                                                       OnSelect="@(() => OpenItemEditor(row))">
+                                        <Status>
+                                            <StatusBadge Text="@row.State" Tone="@row.Tone" />
+                                        </Status>
+                                        <Actions>
+                                            <Button Text="Edit"
+                                                    ButtonStyle="@(ButtonStyle.Light)"
+                                                    Variant="@(Variant.Outlined)"
+                                                    Disabled="@IsDisabled"
+                                                    Click="@(() => OpenItemEditor(row))" />
+                                        </Actions>
+                                        <ChildContent>
+                                            <Cluster Gap="LayoutGap.Small">
+                                                @foreach (var chip in row.Chips)
+                                                {
+                                                    <StatusBadge Text="@chip.Text" Tone="@chip.Tone" />
+                                                }
+                                            </Cluster>
+                                        </ChildContent>
+                                    </SelectionListItem>
+                                }
+                            </div>
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "Card")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Visual collection"
+                                      Description="Use cards only when media and independent item actions improve recognition."
+                                      SourceId="examples/DataDisplay/VisualCollection.razor"
+                                      ApiTypes="@CardApiTypes">
+                            <CardGrid data-testid="data-display-card-grid">
+                                @foreach (var card in Cards)
+                                {
+                                    <Card>
+                                        <Media>
+                                            <img src="@card.ImageSource" alt="" />
+                                        </Media>
+                                        <Header>
+                                            <Split Breakpoint="LayoutBreakpoint.None"
+                                                   Gap="LayoutGap.Small"
+                                                   AlignItems="AlignItems.Start"
+                                                   JustifyContent="JustifyContent.SpaceBetween"
+                                                   Wrap="FlexWrap.Wrap">
+                                                <Stack GapScale="LayoutGap.Tiny">
+                                                    <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@card.Eyebrow" />
+                                                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@card.Title" />
+                                                </Stack>
+                                                <StatusBadge Text="@card.State" Tone="@card.Tone" />
+                                            </Split>
+                                        </Header>
+                                        <Tags>
+                                            @foreach (var fact in card.Facts.Take(2))
+                                            {
+                                                <StatusBadge Text="@($"{fact.Label}: {fact.Value}")" Tone="neutral" />
+                                            }
+                                        </Tags>
+                                        <ChildContent>
+                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="@card.Summary" />
+                                        </ChildContent>
+                                        <Actions>
+                                            <Button Text="Edit"
+                                                    Icon="edit"
+                                                    ButtonStyle="@(ButtonStyle.Primary)"
+                                                    Disabled="@IsDisabled"
+                                                    Click="@(() => OpenItemEditor(card))" />
+                                        </Actions>
+                                    </Card>
+                                }
+                            </CardGrid>
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "Dialog")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Record editor dialog"
+                                      Description="Opened from the Add record and Edit actions above; created and edited state stay dialog-only until saved."
+                                      SourceId="examples/DataDisplay/RecordDialog.razor"
+                                      ApiTypes="@DialogApiTypes">
+                            <Dialog IsOpen="@(editorState is not null)"
+                                    Title="@EditorDialogTitle"
+                                    Subtitle="@EditorDialogSubtitle"
+                                    Size="ModalSize.Compact"
+                                    DenseChrome="true"
+                                    OnClose="CloseCardEditor">
+                                <ChildContent>
+                                    @if (editorState is not null)
+                                    {
+                                        <FormStack>
+                                            <FormField Text="Title">
+                                                <TextBox Value="@editorState.Title"
+                                                         ValueChanged="UpdateEditorTitle" />
+                                            </FormField>
+                                            <FormField Text="Review notes">
+                                                <TextArea Value="@editorState.Notes"
+                                                          ValueChanged="UpdateEditorNotes"
+                                                          Size="@(CurrentScenario == SandboxScenarioKey.LongText ? TextAreaSize.Extended : TextAreaSize.Standard)" />
+                                            </FormField>
+                                        </FormStack>
+                                    }
+                                </ChildContent>
+                                <Footer>
+                                    <Button Text="Cancel"
+                                            ButtonStyle="@(ButtonStyle.Light)"
+                                            Variant="@(Variant.Outlined)"
+                                            Click="CloseCardEditor" />
+                                    <Button Text="@EditorPrimaryActionText"
+                                            Icon="save"
+                                            ButtonStyle="@(ButtonStyle.Primary)"
+                                            Disabled="@IsEditorSaveDisabled"
+                                            Click="SaveItemEditor" />
+                                </Footer>
+                            </Dialog>
+                        </ExampleBlock>
+                    </section>
+                }
+            }
         }
 
-        <SectionCard Title="Data grid states" Description="The shared grid proves keyboard row activation, paging boundaries, captions, loading, empty, dense, and long-content behavior.">
-            <Stack GapScale="LayoutGap.Medium">
-                <DataGrid TItem="DisplayRowModel"
-                          Data="@GridRows"
-                          Caption="Component hardening records"
-                          Loading="@(CurrentScenario == SandboxScenarioKey.LoadingState)"
-                          LoadingText="Loading component hardening records…"
-                          EmptyText="No component hardening records match this scenario."
-                          AllowPaging="true"
-                          PageSize="2"
-                          RowSelect="SelectGridRow"
-                          data-testid="sandbox-data-grid">
-                    <Columns>
-                        <DataGridColumn TItem="DisplayRowModel" Property="Title" Title="Surface" />
-                        <DataGridColumn TItem="DisplayRowModel" Property="Meta" Title="Scope" />
-                        <DataGridColumn TItem="DisplayRowModel" Property="State" Title="State" />
-                    </Columns>
-                </DataGrid>
-                <Alert AlertStyle="AlertStyle.Info">
-                    Selected grid row: @(selectedGridRowTitle ?? "none — activate a row with click, Enter, or Space").
-                </Alert>
-            </Stack>
-        </SectionCard>
+        @{
+            var dataGridSection = Sections.FirstOrDefault(s => s.ComponentName == "DataGrid");
+        }
+        @if (dataGridSection is not null)
+        {
+            <section id="@dataGridSection.Anchor" class="sandbox-component-section">
+                <h2 class="sandbox-component-section__heading">@($"<{dataGridSection.ComponentName}>")</h2>
+                <ExampleBlock Title="Data grid states"
+                              Description="The shared grid proves keyboard row activation, paging boundaries, captions, loading, empty, dense, and long-content behavior."
+                              SourceId="examples/DataDisplay/DataGridStates.razor"
+                              ApiTypes="@DataGridApiTypes">
+                    <Stack GapScale="LayoutGap.Medium">
+                        <DataGrid TItem="DisplayRowModel"
+                                  Data="@GridRows"
+                                  Caption="Component hardening records"
+                                  Loading="@(CurrentScenario == SandboxScenarioKey.LoadingState)"
+                                  LoadingText="Loading component hardening records…"
+                                  EmptyText="No component hardening records match this scenario."
+                                  AllowPaging="true"
+                                  PageSize="2"
+                                  RowSelect="SelectGridRow"
+                                  data-testid="sandbox-data-grid">
+                            <Columns>
+                                <DataGridColumn TItem="DisplayRowModel" Property="Title" Title="Surface" />
+                                <DataGridColumn TItem="DisplayRowModel" Property="Meta" Title="Scope" />
+                                <DataGridColumn TItem="DisplayRowModel" Property="State" Title="State" />
+                            </Columns>
+                        </DataGrid>
+                        <Alert AlertStyle="AlertStyle.Info">
+                            Selected grid row: @(selectedGridRowTitle ?? "none — activate a row with click, Enter, or Space").
+                        </Alert>
+                    </Stack>
+                </ExampleBlock>
+            </section>
+        }
     </ChildContent>
 </CatalogPageFrame>
-
-<Dialog IsOpen="@(editorState is not null)"
-        Title="@EditorDialogTitle"
-        Subtitle="@EditorDialogSubtitle"
-        Size="ModalSize.Compact"
-        DenseChrome="true"
-        OnClose="CloseCardEditor">
-    <ChildContent>
-        @if (editorState is not null)
-        {
-            <FormStack>
-                <FormField Text="Title">
-                    <TextBox Value="@editorState.Title"
-                             ValueChanged="UpdateEditorTitle" />
-                </FormField>
-                <FormField Text="Review notes">
-                    <TextArea Value="@editorState.Notes"
-                              ValueChanged="UpdateEditorNotes"
-                              Size="@(CurrentScenario == SandboxScenarioKey.LongText ? TextAreaSize.Extended : TextAreaSize.Standard)" />
-                </FormField>
-            </FormStack>
-        }
-    </ChildContent>
-    <Footer>
-        <Button Text="Cancel"
-                ButtonStyle="@(ButtonStyle.Light)"
-                Variant="@(Variant.Outlined)"
-                Click="CloseCardEditor" />
-        <Button Text="@EditorPrimaryActionText"
-                Icon="save"
-                ButtonStyle="@(ButtonStyle.Primary)"
-                Disabled="@IsEditorSaveDisabled"
-                Click="SaveItemEditor" />
-    </Footer>
-</Dialog>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.DataDisplay);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataDisplay);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/data-display");
+
+    private static readonly IReadOnlyList<Type> CompactStatApiTypes = [typeof(CompactStat), typeof(CompactStatStrip)];
+    private static readonly IReadOnlyList<Type> SelectionListItemApiTypes = [typeof(SelectionListItem)];
+    private static readonly IReadOnlyList<Type> CardApiTypes = [typeof(Card), typeof(CardGrid)];
+    private static readonly IReadOnlyList<Type> DialogApiTypes = [typeof(Dialog)];
+    private static readonly IReadOnlyList<Type> DataGridApiTypes = [typeof(DataGrid<DisplayRowModel>)];
     private const string PrimaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-01.jpg";
     private const string SecondaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-02.jpg";
     private string? selectedGridRowTitle;

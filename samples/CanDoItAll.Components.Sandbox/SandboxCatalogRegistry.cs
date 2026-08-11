@@ -288,6 +288,14 @@ public static class SandboxCatalogRegistry
                 new("typeblock", "TextBlock", typeof(TextBlock)),
                 new("summary-tiles", "SummaryTiles", typeof(SummaryTiles)),
                 new("icon", "Icon", typeof(Icon))
+            ],
+            ["/groups/data-display"] =
+            [
+                new("compact-stat", "CompactStat", typeof(CompactStat)),
+                new("selection-list-item", "SelectionListItem", typeof(SelectionListItem)),
+                new("card", "Card", typeof(Card)),
+                new("data-grid", "DataGrid", typeof(DataGrid<>)),
+                new("dialog", "Dialog", typeof(Dialog))
             ]
         };
 

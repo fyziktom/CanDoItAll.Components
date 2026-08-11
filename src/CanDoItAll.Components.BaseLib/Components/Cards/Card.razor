@@ -48,18 +48,23 @@
 </div>
 
 @code {
+    /// <summary>Media (typically an image) rendered above the card body. Supplying any of <see cref="Media"/>, <see cref="Header"/>, <see cref="Tags"/>, or <see cref="Actions"/> switches the card into structured layout.</summary>
     [Parameter]
     public RenderFragment? Media { get; set; }
 
+    /// <summary>Header content, typically a title and status badge.</summary>
     [Parameter]
     public RenderFragment? Header { get; set; }
 
+    /// <summary>Tag or fact badges rendered between the header and main content.</summary>
     [Parameter]
     public RenderFragment? Tags { get; set; }
 
+    /// <summary>Main card content.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Action content (typically buttons) rendered at the bottom of the card.</summary>
     [Parameter]
     public RenderFragment? Actions { get; set; }
 

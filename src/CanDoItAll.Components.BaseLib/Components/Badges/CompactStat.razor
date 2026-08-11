@@ -20,36 +20,47 @@
     private static readonly TimeSpan DefaultTooltipDelay = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan DefaultTooltipDuration = TimeSpan.FromSeconds(6);
 
+    /// <summary>Metric label. Combined with <see cref="Value"/> for the badge text unless <see cref="Text"/> is supplied directly.</summary>
     [Parameter]
     public string Label { get; set; } = string.Empty;
 
+    /// <summary>Metric value shown before <see cref="Label"/> in the badge text.</summary>
     [Parameter]
     public string? Value { get; set; }
 
+    /// <summary>Full badge text, overriding the <see cref="Value"/> + <see cref="Label"/> composition.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Tone passed through to the underlying <see cref="StatusBadge"/>.</summary>
     [Parameter]
     public string Tone { get; set; } = "neutral";
 
+    /// <summary>Supplementary detail shown in the tooltip in place of the badge text, when no explicit <see cref="TooltipText"/> is given.</summary>
     [Parameter]
     public string? HelperText { get; set; }
 
+    /// <summary>Explicit tooltip content, overriding <see cref="HelperText"/> and the default <c>Label: Value</c> composition.</summary>
     [Parameter]
     public string? TooltipText { get; set; }
 
+    /// <summary>Preferred side the tooltip opens on.</summary>
     [Parameter]
     public TooltipPosition Position { get; set; } = TooltipPosition.Bottom;
 
+    /// <summary>Delay before the tooltip opens after hover or focus.</summary>
     [Parameter]
     public TimeSpan? TooltipDelay { get; set; } = DefaultTooltipDelay;
 
+    /// <summary>How long the tooltip stays open once shown.</summary>
     [Parameter]
     public TimeSpan? TooltipDuration { get; set; } = DefaultTooltipDuration;
 
+    /// <summary>Additional CSS class merged onto the tooltip panel.</summary>
     [Parameter]
     public string? TooltipClass { get; set; } = "cda-compact-stat-tooltip";
 
+    /// <summary>Value applied to <c>data-testid</c> on the tooltip panel, for test targeting.</summary>
     [Parameter]
     public string? TestId { get; set; }
 
