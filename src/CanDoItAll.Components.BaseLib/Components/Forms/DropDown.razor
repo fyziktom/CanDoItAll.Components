@@ -21,33 +21,43 @@
 @code {
     private readonly List<DropDownOption<TValue>> options = [];
 
+    /// <summary>The items to populate as options; each is mapped via <see cref="TextProperty"/>/<see cref="ValueProperty"/>.</summary>
     [Parameter]
     public System.Collections.IEnumerable? Data { get; set; }
 
+    /// <summary>The selected value.</summary>
     [Parameter]
     public TValue? Value { get; set; }
 
+    /// <summary>Raised whenever <see cref="Value"/> changes.</summary>
     [Parameter]
     public EventCallback<TValue?> ValueChanged { get; set; }
 
+    /// <summary>Raised after the selection changes, with the new value.</summary>
     [Parameter]
     public EventCallback<object?> Change { get; set; }
 
+    /// <summary>Name of the property on each <see cref="Data"/> item to use as the option's display text; uses the item itself if unset.</summary>
     [Parameter]
     public string? TextProperty { get; set; }
 
+    /// <summary>Name of the property on each <see cref="Data"/> item to use as the option's value; uses the item itself if unset.</summary>
     [Parameter]
     public string? ValueProperty { get; set; }
 
+    /// <summary>Placeholder text shown as a selectable empty option.</summary>
     [Parameter]
     public string? Placeholder { get; set; }
 
+    /// <summary>When <c>true</c>, an empty option is always shown even without <see cref="Placeholder"/> text.</summary>
     [Parameter]
     public bool AllowClear { get; set; }
 
+    /// <summary>When <c>true</c>, the dropdown cannot be interacted with.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>The visual style applied to the select element.</summary>
     [Parameter]
     public InputLook Look { get; set; } = InputLook.Default;
 

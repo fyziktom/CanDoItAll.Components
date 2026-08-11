@@ -1,0 +1,20 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Steps Value="@stepIndex"
+       ValueChanged="@(value => stepIndex = value)"
+       NavigationPosition="StepsNavigationPosition.Both"
+       Linear="true">
+    <StepsItem Text="Scope" Description="Frame the request and choose the demo group.">
+        <TextBlock TextStyle="TextStyle.Body2" Value="Scope the request and set the acceptance expectation before opening the implementation details." />
+    </StepsItem>
+    <StepsItem Text="Review" Description="Inspect the current variation and proof notes.">
+        <TextBlock TextStyle="TextStyle.Body2" Value="Review how the component behaves in dense, empty, and mobile conditions." />
+    </StepsItem>
+    <StepsItem Text="Proof" Description="Capture the screenshots and sign off.">
+        <TextBlock TextStyle="TextStyle.Body2" Value="Proof means screenshots, validation questions, and a clear answer on whether the layout still works." />
+    </StepsItem>
+</Steps>
+
+@code {
+    private int stepIndex = 1;
+}

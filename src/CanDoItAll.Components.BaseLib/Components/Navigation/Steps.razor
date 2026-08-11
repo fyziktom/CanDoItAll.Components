@@ -112,48 +112,63 @@
 @code {
     private readonly List<StepsItem> items = [];
 
+    /// <summary>The index, among registered <see cref="StepsItem"/> children, of the active step.</summary>
     [Parameter]
     public int Value { get; set; }
 
+    /// <summary>Raised whenever <see cref="Value"/> changes, including programmatic changes.</summary>
     [Parameter]
     public EventCallback<int> ValueChanged { get; set; }
 
+    /// <summary>Raised after the active step changes.</summary>
     [Parameter]
     public EventCallback<int> Change { get; set; }
 
+    /// <summary>Optional async guard invoked with the candidate step index before a step change is committed; return <c>false</c> to block it.</summary>
     [Parameter]
     public Func<int, Task<bool>>? CanChange { get; set; }
 
+    /// <summary>When <c>false</c>, steps cannot be selected directly (only via <see cref="NavigationPosition"/> buttons).</summary>
     [Parameter]
     public bool CanSelect { get; set; } = true;
 
+    /// <summary>When <c>true</c>, only completed or the current step can be selected directly, enforcing forward-only progress.</summary>
     [Parameter]
     public bool Linear { get; set; }
 
+    /// <summary>When <c>true</c>, each step's description is shown alongside its label.</summary>
     [Parameter]
     public bool ShowDescriptions { get; set; }
 
+    /// <summary>When <c>true</c>, the Previous/Next navigation buttons are rendered but disabled.</summary>
     [Parameter]
     public bool NavigationDisabled { get; set; }
 
+    /// <summary>Where Previous/Next navigation buttons are rendered relative to the active step's content.</summary>
     [Parameter]
     public StepsNavigationPosition NavigationPosition { get; set; } = StepsNavigationPosition.None;
 
+    /// <summary>Label for the Previous navigation button.</summary>
     [Parameter]
     public string PreviousText { get; set; } = "Previous";
 
+    /// <summary>Label for the Next navigation button.</summary>
     [Parameter]
     public string NextText { get; set; } = "Next";
 
+    /// <summary>Value applied as the Previous button's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? PreviousButtonTestId { get; set; }
 
+    /// <summary>Value applied as the Next button's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? NextButtonTestId { get; set; }
 
+    /// <summary>Content containing <see cref="StepsItem"/> children.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Additional attributes applied to the steps' root element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 

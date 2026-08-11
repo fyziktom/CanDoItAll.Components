@@ -71,36 +71,47 @@
     private bool wasOpen;
     private bool browserMenuOpen;
 
+    /// <summary>Whether the context menu is currently visible.</summary>
     [Parameter]
     public bool IsOpen { get; set; }
 
+    /// <summary>Horizontal viewport position, in pixels, where the menu is anchored.</summary>
     [Parameter]
     public double X { get; set; }
 
+    /// <summary>Vertical viewport position, in pixels, where the menu is anchored.</summary>
     [Parameter]
     public double Y { get; set; }
 
+    /// <summary>Accessible label for the menu's <c>role="menu"</c> element.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Context menu";
 
+    /// <summary>Optional heading shown above the menu items.</summary>
     [Parameter]
     public string? Heading { get; set; }
 
+    /// <summary>Optional description shown below <see cref="Heading"/>.</summary>
     [Parameter]
     public string? Description { get; set; }
 
+    /// <summary>Value applied as the menu's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? TestId { get; set; }
 
+    /// <summary>When <c>true</c>, selecting an item also raises <see cref="OnClose"/>.</summary>
     [Parameter]
     public bool CloseOnSelect { get; set; } = true;
 
+    /// <summary>The menu's items.</summary>
     [Parameter, EditorRequired]
     public IReadOnlyList<ContextMenuItem> Items { get; set; } = [];
 
+    /// <summary>Raised with the selected item's id.</summary>
     [Parameter]
     public EventCallback<string> ItemSelected { get; set; }
 
+    /// <summary>Raised when the menu should close, whether from selection, Escape, or an outside click.</summary>
     [Parameter]
     public EventCallback OnClose { get; set; }
 

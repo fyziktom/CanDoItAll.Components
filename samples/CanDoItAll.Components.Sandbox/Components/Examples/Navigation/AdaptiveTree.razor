@@ -1,0 +1,71 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<div class="relative">
+    <TreeView Items="@nodes"
+              Style="TreeViewStyle.Workbench"
+              AriaLabel="Component navigation tree"
+              EmptyText="No navigation nodes match the current filter."
+              OnSelect="HandleSelect"
+              OnToggle="HandleToggle"
+              OnContextMenu="@(request => contextRequest = request)" />
+
+    <ContextMenu IsOpen="@(contextRequest is not null)"
+                 X="@(contextRequest?.ClientX ?? 16)"
+                 Y="@(contextRequest?.ClientY ?? 16)"
+                 Items="@MenuItems"
+                 Heading="Tree action"
+                 AriaLabel="Tree node actions"
+                 ItemSelected="@(_ => contextRequest = null)"
+                 OnClose="@(() => contextRequest = null)" />
+</div>
+
+@code {
+    private static readonly IReadOnlyList<ContextMenuItem> MenuItems =
+    [
+        new() { Id = "select", Text = "Select node", Icon = "check" },
+        new() { Id = "open-details", Text = "Open details", Icon = "open_in_new" }
+    ];
+
+    private TreeViewNodeContextMenuRequest? contextRequest;
+
+    private IReadOnlyList<TreeViewNode> nodes =
+    [
+        new()
+        {
+            Id = "foundations",
+            Text = "Foundations",
+            Icon = "bars_staggered",
+            IsExpanded = true,
+            Children =
+            [
+                new() { Id = "page-scaffold", Text = "Page scaffold", Icon = "space_dashboard" },
+                new() { Id = "list-detail", Text = "List-detail shell", Icon = "view_sidebar", IsSelected = true }
+            ]
+        },
+        new()
+        {
+            Id = "controls",
+            Text = "Navigation controls",
+            Icon = "account_tree",
+            Children =
+            [
+                new() { Id = "tabs", Text = "Tabs", Icon = "tab" },
+                new() { Id = "steps", Text = "Steps", Icon = "timeline" }
+            ]
+        }
+    ];
+
+    private Task HandleSelect(string id)
+    {
+        nodes = nodes.Select(node => node with { IsSelected = node.Id == id, Children = node.Children.Select(child => child with { IsSelected = child.Id == id }).ToArray() }).ToArray();
+        contextRequest = null;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleToggle(string id)
+    {
+        nodes = nodes.Select(node => node.Id == id ? node with { IsExpanded = !node.IsExpanded } : node).ToArray();
+        contextRequest = null;
+        return Task.CompletedTask;
+    }
+}

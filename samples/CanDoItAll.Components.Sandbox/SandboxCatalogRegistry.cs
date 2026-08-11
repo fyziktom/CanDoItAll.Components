@@ -185,8 +185,8 @@ public static class SandboxCatalogRegistry
         CreateExample("navigation-happy", SandboxGroupKey.Navigation, "Workspace navigation", SandboxScenarioKey.HappyPath, "Tabs, steps, tree navigation, and list-detail movement in a standard workflow that keeps dense content segmented instead of vertically stacked.", ["keyboard", "tabs", "treeview", "progressive-disclosure", "reduce-scroll"], "Tabs", "Steps", "TreeView", "TooltipTarget", "ListDetailShell"),
         CreateExample("navigation-dense", SandboxGroupKey.Navigation, "Dense workspace routing", SandboxScenarioKey.DenseContent, "High-information navigation shell with active detail.", ["dense"], "SecondaryTabs", "SelectionListItem"),
         CreateExample("navigation-empty", SandboxGroupKey.Navigation, "Nothing selected", SandboxScenarioKey.EmptyState, "Navigation shell before an item is selected.", ["empty"], "ListDetailShell", "EmptyState"),
-        CreateCustomExample("navigation-tabs-lab", SandboxGroupKey.Navigation, "Tabs lab", "/groups/navigation/tabs", SandboxScenarioKey.HappyPath, "Dedicated tabs page covering the readable default setup, advanced accent styling, shell customization, overflow strategies, and edge cases that prove tabs can replace long stacked pages.", ["tabs", "responsive", "edge-cases", "customization", "progressive-disclosure", "reduce-scroll", "overflow"], "Tabs"),
-        CreateCustomExample("navigation-side-menu-lab", SandboxGroupKey.Navigation, "Side menu lab", "/groups/navigation/side-menu", SandboxScenarioKey.HappyPath, "Responsive side menu covering declarative and list-fed items, measured overflow, service-driven context switching, utility panels, persistence, and the small-screen top dropdown.", ["side-menu", "responsive", "overflow", "service", "local-storage", "dropdown"], "SideMenu", "SideMenuItem", "SideMenuService"),
+        CreateCustomExample("navigation-tabs-lab", SandboxGroupKey.Navigation, "Tabs lab", "/groups/navigation#tabs", SandboxScenarioKey.HappyPath, "Dedicated tabs section covering the readable default setup, advanced accent styling, shell customization, overflow strategies, and edge cases that prove tabs can replace long stacked pages.", ["tabs", "responsive", "edge-cases", "customization", "progressive-disclosure", "reduce-scroll", "overflow"], "Tabs"),
+        CreateCustomExample("navigation-side-menu-lab", SandboxGroupKey.Navigation, "Side menu lab", "/groups/navigation#side-menu", SandboxScenarioKey.HappyPath, "Responsive side menu covering declarative and list-fed items, measured overflow, service-driven context switching, utility panels, persistence, and the small-screen top dropdown.", ["side-menu", "responsive", "overflow", "service", "local-storage", "dropdown"], "SideMenu", "SideMenuItem", "SideMenuService"),
         CreateCustomExample("navigation-treeview-adaptive", SandboxGroupKey.Navigation, "Adaptive TreeView rows", "/groups/navigation?scenario=long-text&frame=desktop", SandboxScenarioKey.LongText, "Three-level TreeView proof for adaptive labels, compact badges, full-width nesting, and right-positioned service tooltips.", ["treeview", "responsive", "long-text", "tooltip", "ellipsis"], "TreeView", "TreeViewNodeRow", "TooltipTarget", "TooltipService"),
         CreateExample("feedback-happy", SandboxGroupKey.Feedback, "Status surfaces", SandboxScenarioKey.HappyPath, "Alerts, badges, notifications, and load states.", ["status"], "Alert", "Notification", "NotificationService", "StatusBadge"),
         CreateExample("feedback-dense", SandboxGroupKey.Feedback, "Operational feedback", SandboxScenarioKey.DenseContent, "Mixed severity feedback inside a busy operational surface.", ["dense"], "Alert", "StatusBadge", "SummaryTiles"),
@@ -306,6 +306,13 @@ public static class SandboxCatalogRegistry
                 new("notification-service", "NotificationService", typeof(NotificationService)),
                 new("overlay-window", "OverlayWindow", typeof(OverlayWindow)),
                 new("sticky-action-footer", "StickyActionFooter", typeof(StickyActionFooter))
+            ],
+            ["/groups/navigation"] =
+            [
+                new("toolbar", "Toolbar", typeof(Toolbar)),
+                new("tree-view", "TreeView", typeof(TreeView)),
+                new("steps", "Steps", typeof(Steps)),
+                new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell))
             ]
         };
 

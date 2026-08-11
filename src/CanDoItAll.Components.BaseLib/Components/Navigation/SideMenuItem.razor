@@ -13,45 +13,59 @@
     [CascadingParameter(Name = PlacementCascadeName)]
     private SideMenuItemPlacement Placement { get; set; }
 
+    /// <summary>Unique identifier for this item within its parent <see cref="SideMenu"/>.</summary>
     [Parameter]
     public string Id { get; set; } = string.Empty;
 
+    /// <summary>The item's label.</summary>
     [Parameter]
     public string Text { get; set; } = string.Empty;
 
+    /// <summary>Material icon token shown before <see cref="Text"/>.</summary>
     [Parameter]
     public string Icon { get; set; } = "circle";
 
+    /// <summary>Supporting text shown in tooltips and panel headers.</summary>
     [Parameter]
     public string Description { get; set; } = string.Empty;
 
+    /// <summary>Optional badge text rendered alongside <see cref="Text"/>.</summary>
     [Parameter]
     public string BadgeText { get; set; } = string.Empty;
 
+    /// <summary>Title shown in this item's panel header when it opens one; falls back to <see cref="Text"/>.</summary>
     [Parameter]
     public string PanelTitle { get; set; } = string.Empty;
 
+    /// <summary>When <c>true</c>, the item cannot be activated.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>When <c>false</c>, the item is excluded from rendering entirely.</summary>
     [Parameter]
     public bool Visible { get; set; } = true;
 
+    /// <summary>How this item behaves when the menu doesn't have room to show it inline.</summary>
     [Parameter]
     public SideMenuOverflowBehavior OverflowBehavior { get; set; }
 
+    /// <summary>Whether activating this item opens a panel, selects it directly, or infers behavior from <see cref="Children"/>/<see cref="PanelContent"/>.</summary>
     [Parameter]
     public SideMenuItemActivation Activation { get; set; }
 
+    /// <summary>Child items shown in this item's panel.</summary>
     [Parameter]
     public IReadOnlyList<ISideMenuItem> Children { get; set; } = [];
 
+    /// <summary>Custom content shown in this item's panel, in addition to any <see cref="Children"/>.</summary>
     [Parameter]
     public RenderFragment? PanelContent { get; set; }
 
+    /// <summary>Arbitrary caller-supplied data associated with this item.</summary>
     [Parameter]
     public object? Payload { get; set; }
 
+    /// <summary>Raised when this specific item is selected.</summary>
     [Parameter]
     public EventCallback<SideMenuSelection> Selected { get; set; }
 

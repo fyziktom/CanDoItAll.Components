@@ -1,0 +1,49 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<ListDetailShell ListPaneWidth="20rem">
+    <ListHeader>
+        <TextBlock TextStyle="TextStyle.Subtitle2" Value="Navigation items" />
+    </ListHeader>
+    <ListContent>
+        <div class="sandbox-list">
+            @foreach (var item in items)
+            {
+                <SelectionListItem IsSelected="@(item.Id == selectedId)"
+                                   Title="@item.Title"
+                                   Eyebrow="@item.Eyebrow"
+                                   Meta="@item.Meta"
+                                   Summary="@item.Summary"
+                                   OnSelect="@(() => selectedId = item.Id)">
+                    <Status>
+                        <StatusBadge Text="@item.State" Tone="@item.Tone" />
+                    </Status>
+                </SelectionListItem>
+            }
+        </div>
+    </ListContent>
+    <DetailHeader>
+        <TextBlock TextStyle="TextStyle.Subtitle2" Value="Detail" />
+    </DetailHeader>
+    <DetailContent>
+        @{
+            var selected = items.First(item => item.Id == selectedId);
+        }
+        <div class="space-y-3">
+            <TextBlock TextStyle="TextStyle.Subtitle1" Value="@selected.Title" />
+            <TextBlock TextStyle="TextStyle.Body2" Value="@selected.Summary" />
+            <StatusBadge Text="@selected.State" Tone="@selected.Tone" />
+        </div>
+    </DetailContent>
+</ListDetailShell>
+
+@code {
+    private sealed record NavigationItem(string Id, string Title, string Eyebrow, string Meta, string Summary, string State, string Tone);
+
+    private static readonly IReadOnlyList<NavigationItem> items =
+    [
+        new("overview", "Overview", "Shell", "route / overview", "Baseline route summary and proof notes.", "Active", "info"),
+        new("feedback", "Feedback", "States", "route / feedback", "Review notification, alert, and empty-state coverage.", "Ready", "success")
+    ];
+
+    private string selectedId = "overview";
+}

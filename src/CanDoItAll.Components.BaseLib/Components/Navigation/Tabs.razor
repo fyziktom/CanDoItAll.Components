@@ -115,45 +115,59 @@
     private int focusedVisibleIndex = -1;
     private int? pendingFocusVisibleIndex;
 
+    /// <summary>The index, among visible <see cref="TabsItem"/> children, of the selected tab.</summary>
     [Parameter]
     public int SelectedIndex { get; set; }
 
+    /// <summary>Raised whenever <see cref="SelectedIndex"/> changes, including programmatic changes.</summary>
     [Parameter]
     public EventCallback<int> SelectedIndexChanged { get; set; }
 
+    /// <summary>Raised when the selection changes as a result of user interaction (click or keyboard).</summary>
     [Parameter]
     public EventCallback<int> Change { get; set; }
 
+    /// <summary>Whether inactive tab panels stay in the DOM (<see cref="TabRenderMode.Client"/>) or are omitted (<see cref="TabRenderMode.Server"/>).</summary>
     [Parameter]
     public TabRenderMode RenderMode { get; set; } = TabRenderMode.Server;
 
+    /// <summary>Which edge of the tab list the tab strip is rendered against.</summary>
     [Parameter]
     public TabPosition TabPosition { get; set; } = TabPosition.Top;
 
+    /// <summary>The visual style applied to the tab strip and panels.</summary>
     [Parameter]
     public TabsVariant Variant { get; set; } = TabsVariant.WorkspacePrimary;
 
+    /// <summary>Controls whether a border is drawn around the tab strip.</summary>
     [Parameter]
     public TabsBorderMode BorderMode { get; set; } = TabsBorderMode.Auto;
 
+    /// <summary>The accent color applied to the active tab indicator and related styling.</summary>
     [Parameter]
     public TabsTone Tone { get; set; } = TabsTone.Primary;
 
+    /// <summary>How the tab strip handles more tabs than fit its available width.</summary>
     [Parameter]
     public TabsOverflowMode OverflowMode { get; set; } = TabsOverflowMode.Auto;
 
+    /// <summary>How the active tab panel handles content taller than its available height.</summary>
     [Parameter]
     public TabsPanelOverflowMode PanelOverflowMode { get; set; } = TabsPanelOverflowMode.Visible;
 
+    /// <summary>When <c>true</c>, the tabs container stretches to fill the height of its parent.</summary>
     [Parameter]
     public bool FillHeight { get; set; }
 
+    /// <summary>Accessible label for the tab list; falls back to "Tabs" when unset.</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>Content containing <see cref="TabsItem"/> children, used when items need to be declared separately from <see cref="ChildContent"/>.</summary>
     [Parameter]
     public RenderFragment? TabItems { get; set; }
 
+    /// <summary>Content containing <see cref="TabsItem"/> children.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

@@ -25,27 +25,35 @@ else
 }
 
 @code {
+    /// <summary>The text value.</summary>
     [Parameter]
     public string? Value { get; set; }
 
+    /// <summary>Raised whenever <see cref="Value"/> changes.</summary>
     [Parameter]
     public EventCallback<string?> ValueChanged { get; set; }
 
+    /// <summary>Raised after the value changes, with the new value.</summary>
     [Parameter]
     public EventCallback<string?> Change { get; set; }
 
+    /// <summary>Placeholder text shown when <see cref="Value"/> is empty.</summary>
     [Parameter]
     public string? Placeholder { get; set; }
 
+    /// <summary>When <c>true</c>, the value is displayed but cannot be edited.</summary>
     [Parameter]
     public bool ReadOnly { get; set; }
 
+    /// <summary>When <c>true</c>, the input cannot be interacted with.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>When <c>true</c>, <see cref="ValueChanged"/>/<see cref="Change"/> fire on every keystroke instead of on blur/commit.</summary>
     [Parameter]
     public bool Immediate { get; set; }
 
+    /// <summary>The visual style applied to the input element.</summary>
     [Parameter]
     public InputLook Look { get; set; } = InputLook.Default;
 
