@@ -3,8 +3,8 @@
 @layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
-    --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-    --font-mono: 'Noto Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --font-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-mono: "Noto Sans Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --color-emerald-200: oklch(90.5% 0.093 164.15);
     --color-violet-200: oklch(89.4% 0.057 293.283);
     --color-slate-50: oklch(98.4% 0.003 247.858);
@@ -614,6 +614,16 @@
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
   transition-duration: var(--tw-duration, var(--default-transition-duration));
 }
+.sm\:col-\[\.\.\.\] {
+  @media (width >= 40rem) {
+    grid-column: ...;
+  }
+}
+.md\:col-\[\.\.\.\] {
+  @media (width >= 48rem) {
+    grid-column: ...;
+  }
+}
 .md\:grid-cols-2 {
   @media (width >= 48rem) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -968,9 +978,9 @@ body {
   overflow: visible;
   border: 1px solid var(--cad-color-border-soft);
   border-radius: var(--cad-radius-panel);
-  background: radial-gradient(circle at 12% 0%, var(--cad-tone-info-soft-bg), transparent 28%), var(--cad-color-surface-soft);
+  background: radial-gradient( circle at 12% 0%, var(--cad-tone-info-soft-bg), transparent 28% ), var(--cad-color-surface-soft);
   @supports (color: color-mix(in lab, red, red)) {
-    background: radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--cad-tone-info-soft-bg) 72%, transparent), transparent 28%), var(--cad-color-surface-soft);
+    background: radial-gradient( circle at 12% 0%, color-mix(in srgb, var(--cad-tone-info-soft-bg) 72%, transparent), transparent 28% ), var(--cad-color-surface-soft);
   }
   padding: 0.75rem;
 }
