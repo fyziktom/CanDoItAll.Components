@@ -12,6 +12,8 @@
         </div>
     </header>
 
+    <div>
+
     <div class="sandbox-example__toolbar">
         <Tabs class="sandbox-example__tabs"
               SelectedIndex="@selectedTabIndex"
@@ -38,12 +40,14 @@
         {
             <CopyButton Value="@Source"
                         Text="Copy"
+                        Variant="Variant.Text"
                         CopiedText="Copied"
                         Size="CopyButtonSize.Small"
                         data-testid="@($"{TestId}-copy")" />
         }
     </div>
 
+    <div class="border p-5 border-(--cad-tone-primary-soft-border)">
     @switch (ActivePanel)
     {
         case PanelKind.Example:
@@ -69,6 +73,9 @@
             No embedded source found for <code>@SourceId</code>.
         </p>
     }
+    </div>
+
+    </div>
 </section>
 
 @code {
