@@ -7,6 +7,7 @@
     --cad-side-menu-muted: #94a3b8;
     --cad-side-menu-accent: #38bdf8;
     --cad-side-menu-accent-soft: rgba(56, 189, 248, 0.14);
+
     @apply relative isolate shrink-0 overflow-visible border text-sm;
     z-index: 41;
     width: 17rem;
@@ -19,7 +20,9 @@
       linear-gradient(180deg, var(--cad-side-menu-bg-soft) 0%, var(--cad-side-menu-bg) 72%);
     color: var(--cad-side-menu-fg);
     box-shadow: 0 24px 60px rgba(2, 6, 23, 0.24);
-    transition: width 180ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 180ms ease;
+    transition:
+      width 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 180ms ease;
   }
 
   .cad-side-menu--fill-height {
@@ -389,9 +392,7 @@
     max-height: calc(100dvh - 6rem);
     border-color: var(--cad-side-menu-border);
     border-radius: var(--cad-radius-panel);
-    background:
-      radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.13), transparent 30%),
-      var(--cad-side-menu-bg);
+    background: radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.13), transparent 30%), var(--cad-side-menu-bg);
     box-shadow: 0 28px 64px rgba(2, 6, 23, 0.34);
     animation: cad-side-menu-dropdown-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
@@ -511,6 +512,7 @@
     opacity: 0;
     transform: translateX(0.4rem) scale(0.985);
   }
+
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
@@ -522,6 +524,7 @@
     opacity: 0;
     transform: translateY(-0.35rem);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

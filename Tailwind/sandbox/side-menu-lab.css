@@ -1,193 +1,197 @@
 .sandbox-side-menu-toolbar {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    border-bottom: 1px solid var(--cad-color-border-soft);
-    padding-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--cad-color-border-soft);
+  padding-bottom: 1rem;
 }
 
 .sandbox-side-menu-lab {
-    display: grid;
-    grid-template-columns: max-content minmax(0, 1fr);
-    min-height: 42rem;
-    overflow: visible;
-    border: 1px solid var(--cad-color-border-soft);
-    border-radius: var(--cad-radius-panel);
-    background:
-        radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--cad-tone-info-soft-bg) 72%, transparent), transparent 28%),
-        var(--cad-color-surface-soft);
-    padding: 0.75rem;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  min-height: 42rem;
+  overflow: visible;
+  border: 1px solid var(--cad-color-border-soft);
+  border-radius: var(--cad-radius-panel);
+  background:
+    radial-gradient(
+      circle at 12% 0%,
+      color-mix(in srgb, var(--cad-tone-info-soft-bg) 72%, transparent),
+      transparent 28%
+    ),
+    var(--cad-color-surface-soft);
+  padding: 0.75rem;
 }
 
 .sandbox-side-menu-lab.is-height-stressed {
-    min-height: 29rem;
+  min-height: 29rem;
 }
 
 .sandbox-side-menu-host {
-    position: relative;
-    height: 42rem;
-    min-height: 0;
-    overflow: visible;
+  position: relative;
+  height: 42rem;
+  min-height: 0;
+  overflow: visible;
 }
 
 .sandbox-side-menu-lab.is-height-stressed .sandbox-side-menu-host {
-    height: 29rem;
+  height: 29rem;
 }
 
 .sandbox-side-menu-workspace {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.25rem 1.5rem;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
 }
 
 .sandbox-side-menu-workspace__header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    border-bottom: 1px solid var(--cad-color-border-soft);
-    padding-bottom: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--cad-color-border-soft);
+  padding-bottom: 1.25rem;
 }
 
 .sandbox-side-menu-workspace__eyebrow {
-    display: block;
-    margin-bottom: 0.35rem;
-    color: var(--cad-tone-info-soft-fg);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--cad-tone-info-soft-fg);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .sandbox-side-menu-workspace__header h3 {
-    margin: 0;
-    color: var(--cad-color-text-strong);
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-    font-weight: 700;
-    letter-spacing: -0.025em;
+  margin: 0;
+  color: var(--cad-color-text-strong);
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .sandbox-side-menu-workspace__header p {
-    margin: 0.5rem 0 0;
-    max-width: 48rem;
-    color: var(--cad-color-text-muted);
-    font-size: 0.88rem;
-    line-height: 1.6;
+  margin: 0.5rem 0 0;
+  max-width: 48rem;
+  color: var(--cad-color-text-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
 }
 
 .sandbox-side-menu-signal-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-block: 1px solid var(--cad-color-border-soft);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid var(--cad-color-border-soft);
 }
 
 .sandbox-side-menu-signal {
-    min-width: 0;
-    padding: 0.9rem 1rem;
+  min-width: 0;
+  padding: 0.9rem 1rem;
 }
 
 .sandbox-side-menu-signal + .sandbox-side-menu-signal {
-    border-left: 1px solid var(--cad-color-border-soft);
+  border-left: 1px solid var(--cad-color-border-soft);
 }
 
 .sandbox-side-menu-signal span {
-    display: block;
-    color: var(--cad-color-text-soft);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  display: block;
+  color: var(--cad-color-text-soft);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .sandbox-side-menu-signal strong {
-    display: block;
-    margin-top: 0.45rem;
-    overflow: hidden;
-    color: var(--cad-color-text-strong);
-    font-size: 0.78rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  display: block;
+  margin-top: 0.45rem;
+  overflow: hidden;
+  color: var(--cad-color-text-strong);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sandbox-side-menu-activity {
-    display: grid;
-    gap: 0;
+  display: grid;
+  gap: 0;
 }
 
 .sandbox-side-menu-activity__row {
-    display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.85rem;
-    border-bottom: 1px solid var(--cad-color-border-soft);
-    padding: 0.9rem 0;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  border-bottom: 1px solid var(--cad-color-border-soft);
+  padding: 0.9rem 0;
 }
 
 .sandbox-side-menu-activity__icon {
-    display: inline-flex;
-    width: 2.5rem;
-    height: 2.5rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.85rem;
-    background: var(--cad-tone-info-soft-bg);
-    color: var(--cad-tone-info-soft-fg);
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.85rem;
+  background: var(--cad-tone-info-soft-bg);
+  color: var(--cad-tone-info-soft-fg);
 }
 
 .sandbox-side-menu-activity__row strong {
-    color: var(--cad-color-text-strong);
-    font-size: 0.82rem;
+  color: var(--cad-color-text-strong);
+  font-size: 0.82rem;
 }
 
 .sandbox-side-menu-activity__row p {
-    margin: 0.2rem 0 0;
-    color: var(--cad-color-text-muted);
-    font-size: 0.75rem;
-    line-height: 1.5;
+  margin: 0.2rem 0 0;
+  color: var(--cad-color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 767px) {
-    .sandbox-side-menu-toolbar,
-    .sandbox-side-menu-workspace__header {
-        flex-direction: column;
-    }
+  .sandbox-side-menu-toolbar,
+  .sandbox-side-menu-workspace__header {
+    flex-direction: column;
+  }
 
-    .sandbox-side-menu-lab,
-    .sandbox-side-menu-lab.is-height-stressed {
-        display: block;
-        min-height: 34rem;
-        padding: 0.5rem;
-    }
+  .sandbox-side-menu-lab,
+  .sandbox-side-menu-lab.is-height-stressed {
+    display: block;
+    min-height: 34rem;
+    padding: 0.5rem;
+  }
 
-    .sandbox-side-menu-host,
-    .sandbox-side-menu-lab.is-height-stressed .sandbox-side-menu-host {
-        height: 4.1rem;
-    }
+  .sandbox-side-menu-host,
+  .sandbox-side-menu-lab.is-height-stressed .sandbox-side-menu-host {
+    height: 4.1rem;
+  }
 
-    .sandbox-side-menu-workspace {
-        gap: 1.1rem;
-        padding: 1rem 0.5rem 0.5rem;
-    }
+  .sandbox-side-menu-workspace {
+    gap: 1.1rem;
+    padding: 1rem 0.5rem 0.5rem;
+  }
 
-    .sandbox-side-menu-signal-grid {
-        grid-template-columns: 1fr;
-    }
+  .sandbox-side-menu-signal-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .sandbox-side-menu-signal + .sandbox-side-menu-signal {
-        border-top: 1px solid var(--cad-color-border-soft);
-        border-left: 0;
-    }
+  .sandbox-side-menu-signal + .sandbox-side-menu-signal {
+    border-top: 1px solid var(--cad-color-border-soft);
+    border-left: 0;
+  }
 
-    .sandbox-side-menu-activity__row {
-        grid-template-columns: 2.5rem minmax(0, 1fr);
-    }
+  .sandbox-side-menu-activity__row {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
 
-    .sandbox-side-menu-activity__row > .rz-badge,
-    .sandbox-side-menu-activity__row > .cda-status-badge {
-        grid-column: 2;
-        justify-self: start;
-    }
+  .sandbox-side-menu-activity__row > .rz-badge,
+  .sandbox-side-menu-activity__row > .cda-status-badge {
+    grid-column: 2;
+    justify-self: start;
+  }
 }
