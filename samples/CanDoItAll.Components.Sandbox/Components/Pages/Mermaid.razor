@@ -8,10 +8,6 @@
                   Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@GalleryExamples.Count"
-                  HeroTitle="Mermaid.js diagrams behind a CanDoItAll-owned wrapper."
-                  HeroSummary="The Mermaid page proves the vendored official Mermaid asset with every bundled diagram family, Blazor node-click events, BaseLib's shared zoom/pan frame, architecture-beta, and parser diagnostics."
-                  DemoTitle="Mermaid graph gallery"
-                  DemoSummary="Every sample below is rendered through MermaidDiagram, not a direct Mermaid call."
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
@@ -21,7 +17,7 @@
         }
         else if (CurrentScenario == SandboxScenarioKey.EmptyState)
         {
-            <div class="sandbox-demo-grid sandbox-demo-grid--two">
+            <div class="sandbox-demo-grid--two">
                 <EmptyState Eyebrow="Mermaid" Title="No diagram source" Description="An empty source renders as an oriented empty viewport instead of a parser failure." />
                 <MermaidDiagram Title="Empty Mermaid source"
                                 Description="The wrapper reports a successful empty render while leaving the diagram viewport calm."

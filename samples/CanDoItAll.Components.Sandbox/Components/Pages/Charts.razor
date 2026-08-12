@@ -8,10 +8,6 @@
                   Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  HeroTitle="Operational charts behind a CanDoItAll-owned API."
-                  HeroSummary="The charts page proves that Apex-backed rendering can stay behind a wrapper while still covering pies, line trends, area fills, multi-series overlays, labels, units, and tuned colors."
-                  DemoTitle="Chart wrapper examples"
-                  DemoSummary="Generated energy-style samples rendered through CdaChart and CanDoItAll chart models."
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
@@ -21,7 +17,7 @@
         }
         else if (CurrentScenario == SandboxScenarioKey.EmptyState)
         {
-            <div class="sandbox-demo-grid sandbox-demo-grid--two">
+            <div class="sandbox-demo-grid--two">
                 <EmptyState Eyebrow="Charts" Title="No chart data" Description="The chart wrapper can render a calm zero-data state before any consumer has series to show." />
                 <CdaChart Title="Empty chart"
                           Description="No series have been provided."
@@ -46,7 +42,7 @@
 
                     @if (section.ComponentName == "CdaChart")
                     {
-                        <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                        <div class="sandbox-demo-grid--two">
                             <ExampleBlock Title="Filled consumption area"
                                           Description="Area fill, datetime labels, unit formatting, and toolbar controls."
                                           SourceId="examples/Charts/FilledConsumptionArea.razor"
@@ -79,7 +75,7 @@
                                       data-testid="chart-multiline" />
                         </ExampleBlock>
 
-                        <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                        <div class="sandbox-demo-grid--two">
                             <ExampleBlock Title="Spot price line with labels"
                                           Description="Data labels and smooth curve support labeled trend inspection without leaving the wrapper."
                                           SourceId="examples/Charts/SpotPriceLineWithLabels.razor">

@@ -514,7 +514,7 @@ public static class SandboxFramePresetExtensions
         {
             SandboxFramePreset.Desktop => "sandbox-demo-frame--desktop",
             SandboxFramePreset.Mobile => "sandbox-demo-frame--mobile",
-            _ => "sandbox-demo-frame--live"
+            _ => "w-full"
         };
     }
 }

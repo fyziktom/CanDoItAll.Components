@@ -10,10 +10,6 @@
                   Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  HeroTitle="Tabs, steps, and list-detail movement that remain keyboard-ready."
-                  HeroSummary="The navigation page focuses on active-state clarity, keyboard movement, and whether denser navigation shells still explain themselves quickly."
-                  DemoTitle="Navigation primitives"
-                  DemoSummary="Shared tabs, steps, and list-detail surfaces for the current scenario."
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
@@ -120,7 +116,7 @@
                     <ExampleBlock Title="Shell customization"
                                   Description="Use the shared tabs contract first, then add a consumer shell with the root Class when the page needs stronger atmosphere. The dark workstation shell is a specialized treatment, not the baseline look."
                                   SourceId="examples/Navigation/ShellCustomization.razor">
-                        <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                        <div class="sandbox-demo-grid--two">
                             <Tabs SelectedIndex="@classTabIndex"
                                   SelectedIndexChanged="HandleClassTabChanged"
                                   Variant="@(TabsVariant.WorkspaceSecondary)"
@@ -218,7 +214,7 @@
                     <ExampleBlock Title="Overflow strategies"
                                   Description="When wrapping becomes too noisy, scroll mode keeps the control to one row without clipping labels or breaking focus behavior."
                                   SourceId="examples/Navigation/OverflowStrategies.razor">
-                        <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                        <div class="sandbox-demo-grid--two">
                             <div class="w-full min-w-0 max-w-[21rem]" data-testid="tabs-lab-wrap-shell">
                                 <Tabs SelectedIndex="@wrapTabIndex"
                                       SelectedIndexChanged="HandleWrapTabChanged"

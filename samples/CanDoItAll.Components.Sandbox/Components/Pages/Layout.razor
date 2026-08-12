@@ -10,10 +10,6 @@
                   Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  HeroTitle="Page-level composition that uses width intentionally."
-                  HeroSummary="The layout page proves that shared shells, headers, rails, sections, and sticky actions still orient the user on both wide and constrained frames."
-                  DemoTitle="Layout system"
-                  DemoSummary="Page scaffolds, split regions, and sticky actions under the current scenario."
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
@@ -72,14 +68,14 @@
                                 </SecondaryRail>
 
                                 <ChildContent>
-                                    <div class="sandbox-demo-grid sandbox-demo-grid--two"
+                                    <div class="sandbox-demo-grid--two"
                                          data-testid="sandbox-layout-primary-grid">
                                         <FormSection Title="Primary workspace" Description="The main region should be able to hold operational content without collapsing the reading rhythm.">
                                             <div class="space-y-4">
                                                 <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Release acceptance workspace" />
                                                 <TextBlock TextStyle="@(TextStyle.Body2)" Value="@WorkspaceCopy" />
 
-                                                <div class="sandbox-demo-grid sandbox-demo-grid--two">
+                                                <div class="sandbox-demo-grid--two">
                                                     @foreach (var metric in WorkspaceMetrics)
                                                     {
                                                         <SectionCard Title="@metric.Title" Description="@metric.Description">

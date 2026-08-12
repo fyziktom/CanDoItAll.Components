@@ -8,7 +8,7 @@
 
                 @if (ToolbarState is { ShowCoverage: true })
                 {
-                    <div class="sandbox-page-section cda-section-card">
+                    <div class="sandbox-page-section flex flex-col gap-4 cda-section-card">
                         <SectionCard Title="Coverage" Description="Areas the happy/dense/empty screenshots need to make obvious.">
                             <ul class="list-decimal ml-5">
                                 @foreach (var note in Group.ProofNotes)
@@ -21,56 +21,20 @@
                 }
             </Header>
 
-            @* <Lead> *@
-            @*     <SectionCard Title="@HeroTitle" Description="@HeroSummary"> *@
-            @*         <Stack GapScale="LayoutGap.Small" *@
-            @*                Class="min-w-0"> *@
-            @*             <Cluster Gap="LayoutGap.Small"> *@
-            @*                 <StatusBadge Text="@HeroEyebrow" Tone="info" /> *@
-            @*             @foreach (var focusArea in Group.FocusAreas) *@
-            @*             { *@
-            @*                     <StatusBadge Text="@focusArea" Tone="neutral" /> *@
-            @*             } *@
-            @*             </Cluster> *@
-            @* *@
-            @*             <CompactStatStrip> *@
-            @*                 <CompactStat Label="Scenario" *@
-            @*                              Value="@Scenario.ToLabel()" *@
-            @*                              HelperText="@Scenario.ToSummary()" *@
-            @*                              Tone="info" /> *@
-            @*                 <CompactStat Label="Frame" *@
-            @*                              Value="@Frame.ToLabel()" *@
-            @*                              HelperText="Use a constrained frame or the live viewport to verify composition." /> *@
-            @*                 <CompactStat Label="Examples" *@
-            @*                              Value="@ExampleCount.ToString()" *@
-            @*                              HelperText="Curated examples available for this group." *@
-            @*                              Tone="success" /> *@
-            @*                 <CompactStat Text="Dense + empty proof" *@
-            @*                              HelperText="Each group needs dense and empty-state screenshot proof." *@
-            @*                              Tone="warning" /> *@
-            @*             </CompactStatStrip> *@
-            @*         </Stack> *@
-            @*     </SectionCard> *@
-            @* </Lead> *@
-
             <ChildContent>
-                <div class="sandbox-page-section">
-                    @* <SectionCard Title="@DemoTitle" Description="@DemoSummary"> *@
-                        @* <SmallText Text="@Scenario.ToSummary()" Paragraph="true" /> *@
-
-                        <div class="sandbox-demo-frame @Frame.ToSurfaceClass()" data-testid="sandbox-demo-surface">
-                            <div class="sandbox-demo-stage">
-                                @ChildContent
-                            </div>
+                <div class="sandbox-page-section flex flex-col gap-4">
+                    <div class="sandbox-demo-frame @Frame.ToSurfaceClass()" data-testid="sandbox-demo-surface">
+                        <div class="sandbox-demo-stage">
+                            @ChildContent
                         </div>
-                    @* </SectionCard> *@
+                    </div>
                 </div>
 
                 @* Examples and API tables sit outside the demo frame so the Desktop/Mobile
                    presets constrain only the proof surface, not the reference material. *@
                 @if (Examples is not null)
                 {
-                    <div class="sandbox-page-section">
+                    <div class="sandbox-page-section flex flex-col gap-4">
                         <SectionCard Title="Examples"
                                      Description="Copy-ready markup. Each snippet is the embedded source of the component rendering above it.">
                             <div class="sandbox-example-list" data-testid="sandbox-examples">
@@ -82,7 +46,7 @@
 
                 @if (Api is not null)
                 {
-                    <div class="sandbox-page-section">
+                    <div class="sandbox-page-section flex flex-col gap-4">
                         <SectionCard Title="Component API"
                                      Description="Parameters reflected from the compiled assembly; descriptions come from the /// comments on each component.">
                             <div class="sandbox-api-list" data-testid="sandbox-api">
@@ -104,21 +68,6 @@
 
     [Parameter, EditorRequired]
     public SandboxFramePreset Frame { get; set; }
-
-    [Parameter]
-    public string HeroEyebrow { get; set; } = "Group focus";
-
-    [Parameter, EditorRequired]
-    public string HeroTitle { get; set; } = string.Empty;
-
-    [Parameter, EditorRequired]
-    public string HeroSummary { get; set; } = string.Empty;
-
-    [Parameter, EditorRequired]
-    public string DemoTitle { get; set; } = string.Empty;
-
-    [Parameter, EditorRequired]
-    public string DemoSummary { get; set; } = string.Empty;
 
     [Parameter]
     public int ExampleCount { get; set; }
