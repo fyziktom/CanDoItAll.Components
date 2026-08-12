@@ -1,75 +1,50 @@
 .sandbox-mermaid-workspace {
-  display: grid;
-  gap: 1rem;
+  @apply grid gap-4;
 }
 
 .sandbox-mermaid-stack {
-  display: grid;
-  gap: 0.9rem;
-  min-width: 0;
+  @apply grid gap-[0.9rem] min-w-0;
 }
 
 .sandbox-mermaid-event {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.85rem;
+  @apply flex flex-wrap items-start justify-between gap-[0.85rem] rounded-(--cad-radius-surface) py-[0.9rem] px-4;
   border: 1px solid var(--cad-tone-success-soft-border);
-  border-radius: var(--cad-radius-surface);
   background: color-mix(in srgb, var(--cad-tone-success-soft-bg) 68%, var(--cad-color-surface) 32%);
-  padding: 0.9rem 1rem;
 }
 
 .sandbox-mermaid-event--info {
-  border-color: var(--cad-tone-info-soft-border);
+  @apply border-(--cad-tone-info-soft-border);
   background: color-mix(in srgb, var(--cad-tone-info-soft-bg) 66%, var(--cad-color-surface) 34%);
 }
 
 .sandbox-mermaid-event__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  font-size: 0.78rem;
-  color: var(--cad-color-text-muted);
+  @apply flex flex-wrap gap-[0.55rem] text-[0.78rem] text-(--cad-color-text-muted);
 }
 
 .sandbox-mermaid-event__meta span {
+  @apply rounded-full py-[0.24rem] px-[0.55rem];
   border: 1px solid color-mix(in srgb, var(--cad-tone-success-soft-border) 72%, transparent);
-  border-radius: 9999px;
   background: color-mix(in srgb, var(--cad-color-surface) 78%, transparent);
-  padding: 0.24rem 0.55rem;
 }
 
 .sandbox-mermaid-gallery {
-  min-width: 0;
+  @apply min-w-0;
 }
 
 .sandbox-mermaid-gallery__item {
-  display: grid;
-  min-width: 0;
-  gap: 0.65rem;
+  @apply grid min-w-0 gap-[0.65rem];
 }
 
 .sandbox-mermaid-diagram--gallery {
-  height: 100%;
+  @apply h-full;
 }
 
 .sandbox-mermaid-gallery__status {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.5rem;
+  @apply flex flex-wrap justify-between gap-2 rounded-(--cad-radius-surface) text-(--cad-color-text-muted) text-[0.76rem] font-[650] py-[0.45rem] px-[0.6rem];
   border: 1px solid var(--cad-color-border-soft);
-  border-radius: var(--cad-radius-surface);
   background: color-mix(in srgb, var(--cad-color-surface-soft) 76%, var(--cad-color-surface) 24%);
-  color: var(--cad-color-text-muted);
-  font-size: 0.76rem;
-  font-weight: 650;
-  padding: 0.45rem 0.6rem;
 }
 
-.sandbox-mermaid-gallery__status span:first-child {
-  color: var(--cad-color-text-strong);
-  text-transform: lowercase;
+.sandbox-mermaid-gallery__status span {
+  @apply first:text-(--cad-color-text-strong) first:lowercase;
 }

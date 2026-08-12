@@ -1,92 +1,57 @@
 .sandbox-kv-list {
-  display: grid;
-  gap: 0.85rem;
+  @apply grid gap-[0.85rem];
 }
 
 .sandbox-kv-item {
-  display: flex;
-  min-width: 0;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem;
+  @apply flex min-w-0 items-start flex-wrap justify-between gap-4 pb-[0.85rem];
+  @apply last:border-b-0 last:pb-0;
+  @apply max-sm:gap-[0.35rem];
   border-bottom: 1px solid color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
-  padding-bottom: 0.85rem;
-}
-
-.sandbox-kv-item:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
 }
 
 .sandbox-kv-item strong {
-  min-width: 0;
-  color: var(--cad-color-text-strong);
-  overflow-wrap: anywhere;
+  @apply min-w-0 text-(--cad-color-text-strong) wrap-anywhere;
 }
 
 .sandbox-kv-item span {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  text-align: right;
+  @apply min-w-0 wrap-anywhere text-right;
 }
 
-@media (max-width: 640px) {
-  .sandbox-kv-item {
-    gap: 0.35rem;
-  }
-
-  .sandbox-kv-item strong,
-  .sandbox-kv-item span {
-    flex-basis: 100%;
-    text-align: left;
-  }
+.sandbox-kv-item strong,
+.sandbox-kv-item span {
+  @apply max-sm:basis-full max-sm:text-left;
 }
 
 .sandbox-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  @apply flex flex-col gap-3;
 }
 
 .sandbox-toc-group {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--cad-color-text-strong);
-  text-decoration: none;
+  @apply text-[1.05rem] font-bold text-(--cad-color-text-strong) no-underline;
 }
 
 .sandbox-toc-group:hover,
 .sandbox-toc-group:focus-visible {
-  text-decoration: underline;
+  @apply underline;
 }
 
 .sandbox-toc-items {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--cad-color-text-muted);
+  @apply m-0 text-[0.9rem] leading-[1.7] text-(--cad-color-text-muted);
 }
 
 .sandbox-toc-items a {
-  color: var(--cad-tone-info-soft-fg);
-  text-decoration: none;
+  @apply text-(--cad-tone-info-soft-fg) no-underline;
 }
 
 .sandbox-toc-items a:hover,
 .sandbox-toc-items a:focus-visible {
-  text-decoration: underline;
+  @apply underline;
 }
 
 .sandbox-proof-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
+  @apply flex flex-col gap-[0.65rem];
 }
 
 .sandbox-proof-list p {
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--cad-color-text-muted);
+  @apply m-0 text-[0.92rem] leading-[1.6] text-(--cad-color-text-muted);
 }

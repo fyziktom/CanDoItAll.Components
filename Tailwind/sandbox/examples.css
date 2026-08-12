@@ -1,141 +1,97 @@
 /* ------------------------------------------------------------------ *
  * Examples and component API reference
  * ------------------------------------------------------------------ */
-
 .sandbox-example-list,
 .sandbox-api-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  @apply flex flex-col gap-5;
 }
 
 .sandbox-example,
 .sandbox-api {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  @apply flex flex-col gap-3;
 }
 
 .sandbox-demo-stage > .sandbox-component-section + .sandbox-component-section {
-  margin-top: 2rem;
-  padding-top: 2rem;
-
-  /*border-top: 1px solid var(--cad-color-border-soft);*/
+  @apply mt-8 pt-8; /*border-top: 1px solid var(--cad-color-border-soft);*/
 }
 
 .sandbox-component-section > .sandbox-example + .sandbox-example {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-
-  /*border-top: 1px solid var(--cad-color-border-soft);*/
+  @apply mt-5 pt-5; /*border-top: 1px solid var(--cad-color-border-soft);*/
 }
 
 .sandbox-example__header,
 .sandbox-api__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
+  @apply flex flex-wrap items-start justify-between gap-3;
 }
 
 .sandbox-example__heading,
 .sandbox-api__heading {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 0.125rem;
+  @apply flex min-w-0 flex-col gap-0.5;
 }
 
 .sandbox-example__toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  @apply flex items-center justify-between gap-2 flex-wrap;
 }
 
 /* Tabs is used as a compact strip alongside the Copy button here, not as a
    full-width tab bar, so it shouldn't claim the whole toolbar row. */
 .sandbox-example__toolbar .cad-tabs.sandbox-example__tabs {
-  width: auto;
-  max-width: max-content;
-  flex: 0 1 auto;
+  @apply w-auto max-w-max flex-initial;
 }
 
 /* Panels are rendered manually below the toolbar instead of by Tabs itself. */
 .sandbox-example__tabs .cad-tabs__panels {
-  display: none;
+  @apply hidden;
 }
 
 .sandbox-example__demo {
+  @apply border-(--cad-color-border-soft);
   @apply border p-5 rounded-lg;
-  border-color: var(--cad-color-border-soft);
 }
 
 .sandbox-example__source {
-  overflow: hidden;
+  @apply overflow-hidden rounded-(--cad-radius-control);
   border: 1px solid var(--cad-color-border-soft);
-  border-radius: var(--cad-radius-control);
   background: var(--cad-color-surface-soft);
 }
 
 .sandbox-example__code {
+  @apply m-0 overflow-x-auto py-3.5 px-4 text-[0.8125rem] leading-[1.6] text-(--cad-color-text-strong);
   @apply font-mono;
-  margin: 0;
-  overflow-x: auto;
-  padding: 0.875rem 1rem;
-  font-size: 0.8125rem;
-  line-height: 1.6;
   tab-size: 4;
-  color: var(--cad-color-text-strong);
 }
 
 .sandbox-example__missing {
-  margin: 0;
-  font-size: 0.8125rem;
-  color: var(--cad-tone-warning-soft-fg);
+  @apply m-0 text-[0.8125rem] text-(--cad-tone-warning-soft-fg);
 }
 
 /* The reference tables can be wider than the page; they scroll inside their
    own container so the page body never scrolls horizontally. */
 .sandbox-api__scroll {
-  overflow-x: auto;
+  @apply overflow-x-auto;
 }
 
 .sandbox-api__table {
-  width: 100%;
-  min-width: 44rem;
-  border-collapse: collapse;
-  font-size: 0.8125rem;
-  text-align: left;
+  @apply w-full min-w-176 border-collapse text-[0.8125rem] text-left;
 }
 
 .sandbox-api__table th,
 .sandbox-api__table td {
-  vertical-align: top;
+  @apply align-top py-2 px-3;
   border-bottom: 1px solid var(--cad-color-border-soft);
-  padding: 0.5rem 0.75rem;
 }
 
 .sandbox-api__table thead th {
-  border-bottom-color: var(--cad-color-border);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cad-color-text-soft);
+  @apply border-b-(--cad-color-border) text-[0.6875rem] font-bold tracking-[0.12em] uppercase text-(--cad-color-text-soft);
 }
 
 .sandbox-api__table tbody th {
-  font-weight: 600;
-  white-space: nowrap;
-  color: var(--cad-color-text-strong);
+  @apply font-semibold whitespace-nowrap text-(--cad-color-text-strong);
 }
 
 .sandbox-api__table tbody tr:last-child th,
 .sandbox-api__table tbody tr:last-child td {
-  border-bottom: 0;
+  @apply border-b-0;
 }
 
 .sandbox-api__row--inherited {
@@ -145,51 +101,38 @@
 .sandbox-api__name,
 .sandbox-api__type,
 .sandbox-api__default {
+  @apply text-[0.8125rem];
   @apply font-mono;
-  font-size: 0.8125rem;
 }
 
 .sandbox-api__type {
-  color: var(--cad-tone-info-soft-fg);
+  @apply text-(--cad-tone-info-soft-fg);
 }
 
 .sandbox-api__default {
-  color: var(--cad-color-text-muted);
+  @apply text-(--cad-color-text-muted);
 }
 
 .sandbox-api__enum {
-  display: block;
-  padding-top: 0.25rem;
-  font-size: 0.6875rem;
-  line-height: 1.5;
-  color: var(--cad-color-text-soft);
+  @apply block pt-1 text-[0.6875rem] leading-normal text-(--cad-color-text-soft);
 }
 
 .sandbox-api__flag {
-  display: inline-block;
-  margin-left: 0.375rem;
-  border-radius: 999px;
+  @apply inline-block ml-1.5 rounded-[999px] py-[0.0625rem] px-1.5 text-[0.625rem] font-semibold tracking-[0.04em] uppercase text-(--cad-color-text-soft);
   background: var(--cad-color-surface-soft);
-  padding: 0.0625rem 0.375rem;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--cad-color-text-soft);
 }
 
 .sandbox-api__flag--required {
+  @apply text-(--cad-tone-warning-soft-fg);
   background: var(--cad-tone-warning-soft-bg);
-  color: var(--cad-tone-warning-soft-fg);
 }
 
 .sandbox-api__none {
-  color: var(--cad-color-text-soft);
+  @apply text-(--cad-color-text-soft);
 }
 
 /* Deliberately visible rather than blank: an undocumented parameter is a gap
    somebody should close, not an empty cell to skip past. */
 .sandbox-api__undocumented {
-  font-style: italic;
-  color: var(--cad-tone-warning-soft-fg);
+  @apply italic text-(--cad-tone-warning-soft-fg);
 }

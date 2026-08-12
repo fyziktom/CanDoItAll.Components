@@ -105,15 +105,12 @@
   }
 }
 
-@media (min-width: 1280px) {
-  .cad-sheet-toolbar-row,
-  .zy-sheet-toolbar-row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-  }
+.cad-sheet-toolbar-row,
+.zy-sheet-toolbar-row {
+  @apply xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center;
+}
 
-  .cad-sheet-toolbar-actions,
-  .zy-sheet-toolbar-actions {
-    justify-content: flex-end;
-  }
+.cad-sheet-toolbar-actions,
+.zy-sheet-toolbar-actions {
+  @apply xl:justify-end;
 }

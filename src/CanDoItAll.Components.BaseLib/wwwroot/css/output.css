@@ -2230,12 +2230,16 @@
     background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.98));
   }
 }
-@media (min-width: 1280px) {
-  .cad-sheet-toolbar-row, .zy-sheet-toolbar-row {
-    grid-template-columns: minmax(0, 1fr) auto;
+.cad-sheet-toolbar-row, .zy-sheet-toolbar-row {
+  @media (width >= 80rem) {
+    grid-template-columns: minmax(0,1fr) auto;
+  }
+  @media (width >= 80rem) {
     align-items: center;
   }
-  .cad-sheet-toolbar-actions, .zy-sheet-toolbar-actions {
+}
+.cad-sheet-toolbar-actions, .zy-sheet-toolbar-actions {
+  @media (width >= 80rem) {
     justify-content: flex-end;
   }
 }
