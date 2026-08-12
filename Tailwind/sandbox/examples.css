@@ -19,13 +19,13 @@
 .sandbox-demo-stage > .sandbox-component-section + .sandbox-component-section {
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--cad-color-border-soft);
+    /*border-top: 1px solid var(--cad-color-border-soft);*/
 }
 
 .sandbox-component-section > .sandbox-example + .sandbox-example {
     margin-top: 1.25rem;
     padding-top: 1.25rem;
-    border-top: 1px solid var(--cad-color-border-soft);
+    /*border-top: 1px solid var(--cad-color-border-soft);*/
 }
 
 .sandbox-example__header,
@@ -43,6 +43,32 @@
     min-width: 0;
     flex-direction: column;
     gap: 0.125rem;
+}
+
+.sandbox-example__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Tabs is used as a compact strip alongside the Copy button here, not as a
+   full-width tab bar, so it shouldn't claim the whole toolbar row. */
+.sandbox-example__toolbar .cad-tabs.sandbox-example__tabs {
+    width: auto;
+    max-width: max-content;
+    flex: 0 1 auto;
+}
+
+/* Panels are rendered manually below the toolbar instead of by Tabs itself. */
+.sandbox-example__tabs .cad-tabs__panels {
+    display: none;
+}
+
+.sandbox-example__demo {
+    @apply border p-5 rounded-lg;
+    border-color: var(--cad-color-border-soft);
 }
 
 .sandbox-example__source {

@@ -3,21 +3,19 @@
 <div class="sandbox-page">
     <PageScaffold MaxWidthClass="max-w-[1720px]">
             <Header>
-                <PageHeader Eyebrow="Components Sandbox"
-                            Title="@Group.Title"
-                            Description="@Group.Summary"
-                            Compact="true" />
+                <PageHeader Title="@Group.Title"
+                            Description="@Group.Summary" />
 
                 @if (ToolbarState is { ShowCoverage: true })
                 {
-                    <div class="sandbox-page-section">
+                    <div class="sandbox-page-section cda-section-card">
                         <SectionCard Title="Coverage" Description="Areas the happy/dense/empty screenshots need to make obvious.">
-                            <div class="sandbox-proof-list">
+                            <ul class="list-decimal ml-5">
                                 @foreach (var note in Group.ProofNotes)
                                 {
-                                    <p>@note</p>
+                                    <li>@note</li>
                                 }
-                            </div>
+                            </ul>
                         </SectionCard>
                     </div>
                 }
@@ -57,15 +55,15 @@
 
             <ChildContent>
                 <div class="sandbox-page-section">
-                    <SectionCard Title="@DemoTitle" Description="@DemoSummary">
-                        <SmallText Text="@Scenario.ToSummary()" Paragraph="true" />
+                    @* <SectionCard Title="@DemoTitle" Description="@DemoSummary"> *@
+                        @* <SmallText Text="@Scenario.ToSummary()" Paragraph="true" /> *@
 
                         <div class="sandbox-demo-frame @Frame.ToSurfaceClass()" data-testid="sandbox-demo-surface">
                             <div class="sandbox-demo-stage">
                                 @ChildContent
                             </div>
                         </div>
-                    </SectionCard>
+                    @* </SectionCard> *@
                 </div>
 
                 @* Examples and API tables sit outside the demo frame so the Desktop/Mobile

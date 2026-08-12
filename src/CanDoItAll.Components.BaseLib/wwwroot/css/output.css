@@ -1112,6 +1112,9 @@
 .align-top {
   vertical-align: top;
 }
+.font-mono {
+  font-family: var(--font-mono);
+}
 .text-base {
   font-size: var(--text-base);
   line-height: var(--tw-leading, var(--text-base--line-height));
@@ -1141,11 +1144,17 @@
 .text-\[0\.94rem\] {
   font-size: 0.94rem;
 }
+.text-\[1\.3rem\] {
+  font-size: 1.3rem;
+}
 .text-\[1\.5rem\] {
   font-size: 1.5rem;
 }
 .text-\[1\.7rem\] {
   font-size: 1.7rem;
+}
+.text-\[1\.25rem\] {
+  font-size: 1.25rem;
 }
 .text-\[10px\] {
   font-size: 10px;
@@ -1176,6 +1185,14 @@
 .leading-tight {
   --tw-leading: var(--leading-tight);
   line-height: var(--leading-tight);
+}
+.font-black {
+  --tw-font-weight: var(--font-weight-black);
+  font-weight: var(--font-weight-black);
+}
+.font-bold {
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 .font-medium {
   --tw-font-weight: var(--font-weight-medium);
@@ -1759,7 +1776,7 @@
     --cad-color-surface-soft: #fff;
     --cad-color-border: #e0e0e0;
     --cad-color-border-soft: #aaa;
-    --cad-color-text-strong: rgba(0,0,0,.87);
+    --cad-color-text-strong: rgba(0,0,0,.7);
     --cad-color-text: rgba(0,0,0,.87);
     --cad-color-text-muted: rgba(64,64,64,.87);
     --cad-color-text-soft: rgba(96,96,96,.87);
@@ -4759,8 +4776,6 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--spacing) * 2);
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 1px;
     padding-bottom: calc(var(--spacing) * 2.5);
     @media (width >= 64rem) {
       flex-direction: row;
@@ -4771,7 +4786,6 @@
     @media (width >= 64rem) {
       justify-content: space-between;
     }
-    border-color: var(--cad-color-border-soft);
   }
   .cda-page-header--compact {
     display: flex;
@@ -4838,7 +4852,7 @@
     letter-spacing: 0.18em;
   }
   .cda-page-header__title {
-    margin: calc(var(--spacing) * 0);
+    margin-bottom: calc(var(--spacing) * 0);
     font-size: var(--text-xl);
     line-height: var(--tw-leading, var(--text-xl--line-height));
     --tw-font-weight: var(--font-weight-semibold);
@@ -4863,7 +4877,7 @@
     }
   }
   .cda-page-header__description {
-    margin: calc(var(--spacing) * 0);
+    margin-top: calc(var(--spacing) * 4);
     max-width: var(--container-4xl);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));

@@ -10,68 +10,76 @@
                 <TextBlock TextStyle="@(TextStyle.Body2)" Value="@Description" />
             }
         </div>
-
-        <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.NoWrap">
-            @if (HasSource)
-            {
-                <Button Text="@(isSourceVisible ? "Hide code" : "Show code")"
-                        Icon="@(isSourceVisible ? "expand_less" : "code")"
-                        ButtonStyle="@(ButtonStyle.Light)"
-                        Variant="@(Variant.Outlined)"
-                        Size="@(ButtonSize.Small)"
-                        Click="ToggleSource"
-                        aria-expanded="@(isSourceVisible ? "true" : "false")"
-                        data-testid="@($"{TestId}-toggle")" />
-
-                <CopyButton Value="@Source"
-                            Text="Copy"
-                            CopiedText="Copied"
-                            Size="CopyButtonSize.Small"
-                            data-testid="@($"{TestId}-copy")" />
-            }
-
-            @if (ApiTypes is { Count: > 0 })
-            {
-                <Button Text="@(isApiVisible ? "Hide API" : "Show API")"
-                        Icon="@(isApiVisible ? "expand_less" : "api")"
-                        ButtonStyle="@(ButtonStyle.Light)"
-                        Variant="@(Variant.Outlined)"
-                        Size="@(ButtonSize.Small)"
-                        Click="ToggleApi"
-                        aria-expanded="@(isApiVisible ? "true" : "false")"
-                        data-testid="@($"{TestId}-api-toggle")" />
-            }
-        </Cluster>
     </header>
 
-    <div class="sandbox-example__demo">
-        @ChildContent
+    <div class="sandbox-example__toolbar">
+        <Tabs class="sandbox-example__tabs"
+              SelectedIndex="@selectedTabIndex"
+              SelectedIndexChanged="HandleTabChanged"
+              RenderMode="@(TabRenderMode.Server)"
+              Variant="@(TabsVariant.ModalCompact)"
+              BorderMode="@(TabsBorderMode.None)"
+              AriaLabel="@($"{Title} view")"
+              data-testid="@($"{TestId}-tabs")">
+            <TabItems>
+                <TabsItem Text="Example" />
+                @if (ApiTypes is { Count: > 0 })
+                {
+                    <TabsItem Text="API" />
+                }
+                @if (HasSource)
+                {
+                    <TabsItem Text="Code" />
+                }
+            </TabItems>
+        </Tabs>
+
+        @if (HasSource)
+        {
+            <CopyButton Value="@Source"
+                        Text="Copy"
+                        CopiedText="Copied"
+                        Size="CopyButtonSize.Small"
+                        data-testid="@($"{TestId}-copy")" />
+        }
     </div>
 
-    @if (HasSource && isSourceVisible)
+    @switch (ActivePanel)
     {
-        <div class="sandbox-example__source" data-testid="@($"{TestId}-source")">
-            <pre class="sandbox-example__code"><code>@Source</code></pre>
-        </div>
+        case PanelKind.Example:
+            <div class="sandbox-example__demo">
+                @ChildContent
+            </div>
+            break;
+        case PanelKind.Api:
+            <div class="sandbox-example__api" data-testid="@($"{TestId}-api")">
+                <ComponentApiTable Types="@ApiTypes" />
+            </div>
+            break;
+        case PanelKind.Code:
+            <div class="sandbox-example__source" data-testid="@($"{TestId}-source")">
+                <pre class="sandbox-example__code"><code>@Source</code></pre>
+            </div>
+            break;
     }
-    else if (!HasSource)
+
+    @if (!HasSource)
     {
         <p class="sandbox-example__missing" data-testid="@($"{TestId}-missing")">
             No embedded source found for <code>@SourceId</code>.
         </p>
     }
-
-    @if (ApiTypes is { Count: > 0 } && isApiVisible)
-    {
-        <div class="sandbox-example__api" data-testid="@($"{TestId}-api")">
-            <ComponentApiTable Types="@ApiTypes" />
-        </div>
-    }
 </section>
 
 @code {
-    private bool isSourceVisible;
-    private bool isApiVisible;
+    private enum PanelKind
+    {
+        Example,
+        Api,
+        Code
+    }
+
+    private int selectedTabIndex;
 
     /// <summary>Heading shown above the live demo.</summary>
     [Parameter, EditorRequired]
@@ -92,11 +100,11 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    /// <summary>Starts with the source panel already expanded.</summary>
+    /// <summary>Starts with the Code tab selected instead of Example.</summary>
     [Parameter]
     public bool SourceExpanded { get; set; }
 
-    /// <summary>When set, shows a "Show API" toggle that expands a ComponentApiTable scoped to these types under the example.</summary>
+    /// <summary>When set, shows an "API" tab that renders a ComponentApiTable scoped to these types.</summary>
     [Parameter]
     public IReadOnlyList<Type>? ApiTypes { get; set; }
 
@@ -110,18 +118,46 @@
         .Replace('/', '-')
         .ToLowerInvariant();
 
+    private List<PanelKind> VisiblePanels
+    {
+        get
+        {
+            var panels = new List<PanelKind> { PanelKind.Example };
+
+            if (ApiTypes is { Count: > 0 })
+            {
+                panels.Add(PanelKind.Api);
+            }
+
+            if (HasSource)
+            {
+                panels.Add(PanelKind.Code);
+            }
+
+            return panels;
+        }
+    }
+
+    private PanelKind ActivePanel
+    {
+        get
+        {
+            var panels = VisiblePanels;
+            var index = Math.Clamp(selectedTabIndex, 0, panels.Count - 1);
+            return panels[index];
+        }
+    }
+
     protected override void OnInitialized()
     {
-        isSourceVisible = SourceExpanded;
+        if (SourceExpanded && HasSource)
+        {
+            selectedTabIndex = VisiblePanels.IndexOf(PanelKind.Code);
+        }
     }
 
-    private void ToggleSource()
+    private void HandleTabChanged(int index)
     {
-        isSourceVisible = !isSourceVisible;
-    }
-
-    private void ToggleApi()
-    {
-        isApiVisible = !isApiVisible;
+        selectedTabIndex = index;
     }
 }
