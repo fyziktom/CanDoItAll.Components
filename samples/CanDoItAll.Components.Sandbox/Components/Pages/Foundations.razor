@@ -2,6 +2,7 @@
 @page "/groups/foundations"
 @inherits CatalogPageBase
 @using System.Globalization
+@using CanDoItAll.Components.Sandbox.Components.Examples.Foundations
 
 <PageTitle>Foundations</PageTitle>
 
@@ -37,15 +38,42 @@
                                       Description="Shared text styles should stay calm, readable, and easy to scan in sequence."
                                       SourceId="examples/Foundations/TypeScale.razor"
                                       ApiTypes="@TextBlockApiTypes">
-                            <div class="space-y-4">
-                                @foreach (var specimen in TypeSpecimens)
-                                {
-                                    <div class="space-y-1">
-                                        <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@specimen.Label" />
-                                        <TextBlock TextStyle="@specimen.Style" Value="@specimen.Value" />
-                                    </div>
-                                }
-                            </div>
+                            @if (CurrentScenario is SandboxScenarioKey.DenseContent or SandboxScenarioKey.LongText)
+                            {
+                                <div class="space-y-4">
+                                    @foreach (var specimen in TypeSpecimens)
+                                    {
+                                        <div class="space-y-1">
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@specimen.Label" />
+                                                @if (specimen.DuplicateOf is not null)
+                                                {
+                                                    <StatusBadge Text="@($"renders like {specimen.DuplicateOf}")" />
+                                                }
+                                            </div>
+                                            <TextBlock TextStyle="@specimen.Style" Value="@specimen.Value" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <TypeScale />
+                            }
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Bare elements and classes vs TextBlock "
+                                      Description="Bare HTML now carries sensible defaults; apply cda-text-block classes directly when the required tag and the desired visual weight don't match."
+                                      SourceId="examples/Foundations/RawElementsEscapeHatch.razor"
+                                      ApiTypes="@TextBlockApiTypes">
+                            <RawElementsEscapeHatch />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Inline formatting"
+                                      Description="Value renders as encoded plain text; use ChildContent with raw markup for bold, italic, or mixed emphasis inside a TextBlock."
+                                      SourceId="examples/Foundations/InlineFormatting.razor"
+                                      ApiTypes="@TextBlockApiTypes">
+                            <InlineFormatting />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "SummaryTiles")
@@ -147,11 +175,11 @@
     private static readonly IReadOnlyList<Type> SummaryTilesApiTypes = [typeof(SummaryTiles), typeof(SummaryTile)];
     private static readonly IReadOnlyList<Type> IconApiTypes = [typeof(Icon)];
 
+    // Only reached from the Dense/LongText branch — the happy-path specimens live solely
+    // in the TypeScale example component (rendered directly, not duplicated here).
     private IReadOnlyList<TypeSpecimen> TypeSpecimens => CurrentScenario == SandboxScenarioKey.DenseContent
         ? DenseTypeSpecimens
-        : CurrentScenario == SandboxScenarioKey.LongText
-            ? LongTextTypeSpecimens
-            : BaseTypeSpecimens;
+        : LongTextTypeSpecimens;
 
     private string SurfaceParagraph => CurrentScenario switch
     {
@@ -165,31 +193,22 @@
         ? DenseIcons
         : BaseIcons;
 
-    private static readonly IReadOnlyList<TypeSpecimen> BaseTypeSpecimens =
-    [
-        new("Hero / H1", TextStyle.H1, "Component acceptance starts with clear hierarchy."),
-        new("Section / H3", TextStyle.H3, "Surfaces should still scan when decorative styling is stripped away."),
-        new("Subtitle", TextStyle.Subtitle1, "Shared patterns need calm supporting language."),
-        new("Body", TextStyle.Body2, "Readable body copy should survive dense layouts and mobile widths."),
-        new("Caption", TextStyle.Caption, "Small labels support scanning without overwhelming the page.")
-    ];
-
     private static readonly IReadOnlyList<TypeSpecimen> DenseTypeSpecimens =
     [
-        new("Hero / H1", TextStyle.H1, "Dense review surfaces still need a strong opening line."),
-        new("Section / H3", TextStyle.H3, "Dense subheads keep adjacent blocks understandable."),
-        new("Subtitle", TextStyle.Subtitle2, "Metadata headings can compact slightly without losing emphasis."),
-        new("Body", TextStyle.Body2, "Dense copy uses tighter stacking, not smaller text."),
-        new("Muted", TextStyle.Muted, "Muted helper text should remain readable inside compact lists.")
+        new("H1", TextStyle.H1, "Dense review surfaces still need a strong opening line."),
+        new("H3", TextStyle.H3, "Dense subheads keep adjacent blocks understandable."),
+        new("Subtitle2", TextStyle.Subtitle2, "Metadata headings can compact slightly without losing emphasis."),
+        new("Body2", TextStyle.Body2, "Dense copy uses tighter stacking, not smaller text."),
+        new("Muted", TextStyle.Muted, "Muted helper text should remain readable inside compact lists.", DuplicateOf: "Note")
     ];
 
     private static readonly IReadOnlyList<TypeSpecimen> LongTextTypeSpecimens =
     [
-        new("Hero / H1", TextStyle.H1, "Component acceptance still depends on fast comprehension even when the page needs to carry longer guidance for newer contributors."),
-        new("Section / H3", TextStyle.H3, "Longer explanatory headings cannot push the page into awkward wrapping or broken visual rhythm."),
-        new("Body", TextStyle.Body2, "Long-form helper copy must stay readable across the full-width shell without turning the first viewport into a wall of text."),
-        new("Note", TextStyle.Note, "Support notes remain short, but they also need a stable line length when the primary copy grows."),
-        new("Caption", TextStyle.Caption, "The smallest text still needs enough contrast to be usable.")
+        new("H1", TextStyle.H1, "Component acceptance still depends on fast comprehension even when the page needs to carry longer guidance for newer contributors."),
+        new("H3", TextStyle.H3, "Longer explanatory headings cannot push the page into awkward wrapping or broken visual rhythm."),
+        new("Body2", TextStyle.Body2, "Long-form helper copy must stay readable across the full-width shell without turning the first viewport into a wall of text."),
+        new("Note", TextStyle.Note, "Support notes remain short, but they also need a stable line length when the primary copy grows.", DuplicateOf: "Muted"),
+        new("Caption", TextStyle.Caption, "The smallest text still needs enough contrast to be usable.", DuplicateOf: "Small")
     ];
 
     private static readonly IReadOnlyList<IconToken> BaseIcons =
@@ -254,7 +273,7 @@
     private void HandlePlaygroundIconChanged(ChangeEventArgs e)
         => PlaygroundIconToken = e.Value?.ToString() ?? PlaygroundIconToken;
 
-    private sealed record TypeSpecimen(string Label, TextStyle Style, string Value);
+    private sealed record TypeSpecimen(string Label, TextStyle Style, string Value, string? DuplicateOf = null);
 
     private sealed record IconToken(string Token, string Label);
 }

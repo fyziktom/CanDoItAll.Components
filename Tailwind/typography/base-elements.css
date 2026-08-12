@@ -1,0 +1,60 @@
+/* Base defaults for bare typographic elements (no cda-text-block class applied).
+   Values mirror ./text.css's .cda-text-block--* rules — keep the two in sync.
+   Scoped with :not(.cda-text-block) so applying a cda-text-block--* modifier
+   (the escape hatch) fully opts an element out of these defaults instead of
+   layering on top of it — several .cda-text-block--* rules (body1/body2/note/
+   muted/small/caption) don't set font-weight, and h6's uppercase/tracking
+   would otherwise leak into any of them. */
+@layer base {
+  .cad-theme-host h1:not(.cda-text-block) {
+    @apply m-0 text-4xl font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-theme-host h2:not(.cda-text-block) {
+    @apply m-0 text-3xl font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-theme-host h3:not(.cda-text-block) {
+    @apply m-0 text-2xl font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-theme-host h4:not(.cda-text-block) {
+    @apply m-0 text-xl font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-theme-host h5:not(.cda-text-block) {
+    @apply m-0 text-lg font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-theme-host h6:not(.cda-text-block) {
+    @apply m-0 text-base font-semibold uppercase tracking-[0.18em];
+    color: var(--cad-color-text-muted);
+  }
+
+  .cad-theme-host p:not(.cda-text-block) {
+    @apply m-0 text-base;
+    color: var(--cad-color-text);
+  }
+
+  .cad-theme-host small:not(.cda-text-block) {
+    @apply text-xs;
+    color: var(--cad-color-text-soft);
+  }
+
+  /* strong/em are intentionally unscoped: they should keep applying inside
+     cda-text-block content too (e.g. inline formatting via TextBlock's
+     ChildContent), and neither property collides with any cda-text-block
+     rule. */
+  .cad-theme-host strong {
+    font-weight: 600;
+  }
+
+  .cad-theme-host em {
+    font-style: italic;
+  }
+}
