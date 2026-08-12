@@ -1,6 +1,7 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 @page "/groups/foundations"
 @inherits CatalogPageBase
+@using System.Globalization
 
 <PageTitle>Foundations</PageTitle>
 
@@ -84,6 +85,52 @@
                                 }
                             </div>
                         </ExampleBlock>
+
+                        <ExampleBlock Title="Icon playground"
+                                      Description="Adjust size and the Material Symbols variation axes to see how a glyph responds."
+                                      SourceId="examples/Foundations/IconPlayground.razor"
+                                      ApiTypes="@IconApiTypes">
+                            <div class="sandbox-icon-playground">
+                                <div class="sandbox-icon-playground__controls">
+                                    <FormField Text="Icon">
+                                        <select class="sandbox-icon-playground__select" value="@PlaygroundIconToken" @onchange="HandlePlaygroundIconChanged">
+                                            @foreach (var icon in PlaygroundIconTokens)
+                                            {
+                                                <option value="@icon.Token">@icon.Label</option>
+                                            }
+                                        </select>
+                                    </FormField>
+                                    <FormField Text="@($"Size ({PlaygroundSize}px)")">
+                                        <Slider TValue="int" Value="@PlaygroundSize" ValueChanged="@(v => PlaygroundSize = v)" Min="24" Max="256" Step="1" />
+                                    </FormField>
+                                    <FormField Text="Filled">
+                                        <Switch Value="@PlaygroundFilled" ValueChanged="@(v => PlaygroundFilled = v)" />
+                                    </FormField>
+                                    <FormField Text="@($"Weight ({PlaygroundWeight})")">
+                                        <Slider TValue="int" Value="@PlaygroundWeight" ValueChanged="@(v => PlaygroundWeight = v)" Min="100" Max="700" Step="10" />
+                                    </FormField>
+                                    <FormField Text="@($"Grade ({PlaygroundGrade})")">
+                                        <Slider TValue="int" Value="@PlaygroundGrade" ValueChanged="@(v => PlaygroundGrade = v)" Min="-25" Max="200" Step="5" />
+                                    </FormField>
+                                    <FormField Text="@($"Optical size ({PlaygroundOpticalSize})")">
+                                        <Slider TValue="int" Value="@PlaygroundOpticalSize" ValueChanged="@(v => PlaygroundOpticalSize = v)" Min="20" Max="48" Step="1" />
+                                    </FormField>
+                                    <FormField Text="Background checker">
+                                        <Switch Value="@PlaygroundShowChecker" ValueChanged="@(v => PlaygroundShowChecker = v)" />
+                                    </FormField>
+                                </div>
+                                <div class="sandbox-icon-playground__stage">
+                                    <div class="@PlaygroundCheckerBoxClass" style="@PlaygroundCheckerBoxStyle">
+                                        <Icon Name="@PlaygroundIconToken"
+                                              Filled="@PlaygroundFilled"
+                                              Weight="@PlaygroundWeight"
+                                              Grade="@PlaygroundGrade"
+                                              OpticalSize="@PlaygroundOpticalSize"
+                                              Style="@PlaygroundIconStyle" />
+                                    </div>
+                                </div>
+                            </div>
+                        </ExampleBlock>
                     }
                 </section>
             }
@@ -147,26 +194,65 @@
 
     private static readonly IReadOnlyList<IconToken> BaseIcons =
     [
-        new("plus", "Create"),
-        new("filter", "Filter"),
+        new("add_2", "Create"),
+        new("filter_alt", "Filter"),
         new("calendar", "Schedule"),
         new("circle_info", "Context"),
-        new("floppy_disk", "Save"),
+        new("save", "Save"),
         new("risk", "Warning")
     ];
 
     private static readonly IReadOnlyList<IconToken> DenseIcons =
     [
-        new("plus", "Create"),
-        new("filter", "Filter"),
+        new("add_2", "Create"),
+        new("filter_alt", "Filter"),
         new("calendar", "Schedule"),
         new("circle_info", "Context"),
-        new("floppy_disk", "Save"),
+        new("save", "Save"),
         new("risk", "Warning"),
         new("flow", "Flow"),
         new("bars_staggered", "Density"),
         new("research", "Inspect")
     ];
+
+    private static readonly IReadOnlyList<IconToken> PlaygroundIconTokens = BaseIcons;
+
+    private string PlaygroundIconToken = "add_2";
+    private int PlaygroundSize = 256;
+    private bool PlaygroundFilled;
+    private int PlaygroundWeight = 400;
+    private int PlaygroundGrade;
+    private int PlaygroundOpticalSize = 24;
+    private bool PlaygroundShowChecker = true;
+
+    private string PlaygroundCheckerBoxClass => PlaygroundShowChecker
+        ? "sandbox-icon-playground__checker-box sandbox-icon-playground__checker-box--checker"
+        : "sandbox-icon-playground__checker-box";
+
+    private string PlaygroundCheckerBoxStyle
+    {
+        get
+        {
+            var baseStyle = $"width:min({PlaygroundSize}px, 100%);";
+            if (!PlaygroundShowChecker)
+            {
+                return baseStyle;
+            }
+
+            // The two offset gradient layers double the visible square count, so dividing by
+            // 12 (not 24) yields a 24x24 visible grid matching the Material Symbols design grid.
+            var tile = PlaygroundSize / 12.0;
+            var half = tile / 2.0;
+            return $"{baseStyle} background-size:{tile.ToString(CultureInfo.InvariantCulture)}px {tile.ToString(CultureInfo.InvariantCulture)}px; background-position:0 0, {half.ToString(CultureInfo.InvariantCulture)}px {half.ToString(CultureInfo.InvariantCulture)}px;";
+        }
+    }
+
+    private string PlaygroundIconStyle => PlaygroundShowChecker
+        ? $"font-size:{PlaygroundSize}px; opacity:0.55;"
+        : $"font-size:{PlaygroundSize}px;";
+
+    private void HandlePlaygroundIconChanged(ChangeEventArgs e)
+        => PlaygroundIconToken = e.Value?.ToString() ?? PlaygroundIconToken;
 
     private sealed record TypeSpecimen(string Label, TextStyle Style, string Value);
 
