@@ -4,8 +4,11 @@
   "license": "MIT",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.7",
-    "tailwindcss": "^4.1.7",
-    "concurrently": "^10.0.4"
+    "concurrently": "^10.0.4",
+    "css-to-tailwindcss4": "^0.0.3",
+    "prettier": "^3.9.6",
+    "stylelint": "^17.14.1",
+    "tailwindcss": "^4.1.7"
   },
   "scripts": {
     "help": "tailwindcss --help",
@@ -14,7 +17,11 @@
     "build:sandbox": "tailwindcss -i ./input-sandbox.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/css/output.css",
     "watch": "concurrently 'npm run watch:baselib' 'npm run watch:sandbox'",
     "watch:baselib": "tailwindcss  --watch=always -i ./input-base.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css",
-    "watch:sandbox": "tailwindcss  --watch=always -i ./input-sandbox.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/css/output.css"
+    "watch:sandbox": "tailwindcss  --watch=always -i ./input-sandbox.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/css/output.css",
+    "apply": "node scripts/css-to-apply.mjs",
+    "format": "npm run format:indent && npm run format:spacing",
+    "format:indent": "prettier --write \"**/*.css\"",
+    "format:spacing": "stylelint --fix \"**/*.css\""
   },
   "allowScripts": {
     "@parcel/watcher@2.5.6": true
