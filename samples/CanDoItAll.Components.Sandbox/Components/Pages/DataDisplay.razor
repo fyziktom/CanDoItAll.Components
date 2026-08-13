@@ -2,6 +2,7 @@
 @page "/groups/data-display"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.DataDisplay
 
 <PageTitle>Data Display</PageTitle>
 
@@ -190,6 +191,234 @@
                         </ExampleBlock>
                     </section>
                 }
+                else if (section.ComponentName == "ActionCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Action card"
+                                      Description="A selectable card shell with an active and inactive tone."
+                                      SourceId="examples/DataDisplay/ActionCardShowcase.razor"
+                                      ApiTypes="@ActionCardApiTypes">
+                            <ActionCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "ActionReviewPanel")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Action review panel"
+                                      Description="Summarizes the facts a reviewer should see before confirming an action."
+                                      SourceId="examples/DataDisplay/ActionReviewPanelShowcase.razor"
+                                      ApiTypes="@ActionReviewPanelApiTypes">
+                            <ActionReviewPanelShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "AuthCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Auth card"
+                                      Description="A centered shell sized for sign-in and account entry flows."
+                                      SourceId="examples/DataDisplay/AuthCardShowcase.razor"
+                                      ApiTypes="@AuthCardApiTypes">
+                            <AuthCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardActions")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Card actions"
+                                      Description="An inline action cluster, or a bordered footer row when Secondary is set."
+                                      SourceId="examples/DataDisplay/CardActionsShowcase.razor"
+                                      ApiTypes="@CardActionsApiTypes">
+                            <CardActionsShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardButton")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Card button"
+                                      Description="A solid or ghost action button that renders as a link when Href is set."
+                                      SourceId="examples/DataDisplay/CardButtonShowcase.razor"
+                                      ApiTypes="@CardButtonApiTypes">
+                            <CardButtonShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardGrid")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Card grid"
+                                      Description="A responsive auto-fit grid for laying out Card and other card-family items."
+                                      SourceId="examples/DataDisplay/CardGridShowcase.razor"
+                                      ApiTypes="@CardGridApiTypes">
+                            <CardGridShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardStatsWithNumber")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Card stat with number"
+                                      Description="A compact stat card with small, normal, and large sizes, and an optional icon."
+                                      SourceId="examples/DataDisplay/CardStatsWithNumberShowcase.razor"
+                                      ApiTypes="@CardStatsWithNumberApiTypes">
+                            <CardStatsWithNumberShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "HeroCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Hero card"
+                                      Description="A gradient hero surface for introducing a page or section."
+                                      SourceId="examples/DataDisplay/HeroCardShowcase.razor"
+                                      ApiTypes="@HeroCardApiTypes">
+                            <HeroCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "MetricCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Metric card"
+                                      Description="A label and value pair, with an optional custom ValueContent fragment."
+                                      SourceId="examples/DataDisplay/MetricCardShowcase.razor"
+                                      ApiTypes="@MetricCardApiTypes">
+                            <MetricCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "PanelCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Panel card"
+                                      Description="A general-purpose bordered panel, with a quieter Soft variant."
+                                      SourceId="examples/DataDisplay/PanelCardShowcase.razor"
+                                      ApiTypes="@PanelCardApiTypes">
+                            <PanelCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "ParitySectionCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Parity section card"
+                                      Description="A plain bordered card that renders as a section by default, or an article."
+                                      SourceId="examples/DataDisplay/ParitySectionCardShowcase.razor"
+                                      ApiTypes="@ParitySectionCardApiTypes">
+                            <ParitySectionCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "PriceBar")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Price bar"
+                                      Description="A full-width price or value row with default and success tones."
+                                      SourceId="examples/DataDisplay/PriceBarShowcase.razor"
+                                      ApiTypes="@PriceBarApiTypes">
+                            <PriceBarShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "PriceRow")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Price row"
+                                      Description="A space-between flex row for pairing a label with a price or value."
+                                      SourceId="examples/DataDisplay/PriceRowShowcase.razor"
+                                      ApiTypes="@PriceRowApiTypes">
+                            <PriceRowShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "SectionCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Section card"
+                                      Description="A titled section shell with description, help popover, and header actions — used throughout the Sandbox chrome itself."
+                                      SourceId="examples/DataDisplay/SectionCardShowcase.razor"
+                                      ApiTypes="@SectionCardApiTypes">
+                            <SectionCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "StatBox")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Stat box"
+                                      Description="A compact stat card, with a Simple variant for dense rows."
+                                      SourceId="examples/DataDisplay/StatBoxShowcase.razor"
+                                      ApiTypes="@StatBoxApiTypes">
+                            <StatBoxShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "StatsCardRow")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Stats card row"
+                                      Description="A flex row container for laying out CardStatsWithNumber items."
+                                      SourceId="examples/DataDisplay/StatsCardRowShowcase.razor"
+                                      ApiTypes="@StatsCardRowApiTypes">
+                            <StatsCardRowShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "StatsGrid")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Stats grid"
+                                      Description="A responsive grid intended for SummaryTile items."
+                                      SourceId="examples/DataDisplay/StatsGridShowcase.razor"
+                                      ApiTypes="@StatsGridApiTypes">
+                            <StatsGridShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "SummaryTile")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Summary tile"
+                                      Description="A single label/value tile with tone, compact, badge, and tooltip-helper variants."
+                                      SourceId="examples/DataDisplay/SummaryTileShowcase.razor"
+                                      ApiTypes="@SummaryTileApiTypes">
+                            <SummaryTileShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "SurfaceCard")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Surface card"
+                                      Description="A general-purpose surface wrapper, with a quieter Soft variant."
+                                      SourceId="examples/DataDisplay/SurfaceCardShowcase.razor"
+                                      ApiTypes="@SurfaceCardApiTypes">
+                            <SurfaceCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
             }
         }
 
@@ -240,6 +469,25 @@
     private static readonly IReadOnlyList<Type> SelectionListItemApiTypes = [typeof(SelectionListItem)];
     private static readonly IReadOnlyList<Type> CardApiTypes = [typeof(Card), typeof(CardGrid)];
     private static readonly IReadOnlyList<Type> DialogApiTypes = [typeof(Dialog)];
+    private static readonly IReadOnlyList<Type> ActionCardApiTypes = [typeof(ActionCard)];
+    private static readonly IReadOnlyList<Type> ActionReviewPanelApiTypes = [typeof(ActionReviewPanel)];
+    private static readonly IReadOnlyList<Type> AuthCardApiTypes = [typeof(AuthCard)];
+    private static readonly IReadOnlyList<Type> CardActionsApiTypes = [typeof(CardActions)];
+    private static readonly IReadOnlyList<Type> CardButtonApiTypes = [typeof(CardButton)];
+    private static readonly IReadOnlyList<Type> CardGridApiTypes = [typeof(CardGrid)];
+    private static readonly IReadOnlyList<Type> CardStatsWithNumberApiTypes = [typeof(CardStatsWithNumber)];
+    private static readonly IReadOnlyList<Type> HeroCardApiTypes = [typeof(HeroCard)];
+    private static readonly IReadOnlyList<Type> MetricCardApiTypes = [typeof(MetricCard)];
+    private static readonly IReadOnlyList<Type> PanelCardApiTypes = [typeof(PanelCard)];
+    private static readonly IReadOnlyList<Type> ParitySectionCardApiTypes = [typeof(ParitySectionCard)];
+    private static readonly IReadOnlyList<Type> PriceBarApiTypes = [typeof(PriceBar)];
+    private static readonly IReadOnlyList<Type> PriceRowApiTypes = [typeof(PriceRow)];
+    private static readonly IReadOnlyList<Type> SectionCardApiTypes = [typeof(SectionCard)];
+    private static readonly IReadOnlyList<Type> StatBoxApiTypes = [typeof(StatBox)];
+    private static readonly IReadOnlyList<Type> StatsCardRowApiTypes = [typeof(StatsCardRow), typeof(CardStatsWithNumber)];
+    private static readonly IReadOnlyList<Type> StatsGridApiTypes = [typeof(StatsGrid), typeof(SummaryTile)];
+    private static readonly IReadOnlyList<Type> SummaryTileApiTypes = [typeof(SummaryTile)];
+    private static readonly IReadOnlyList<Type> SurfaceCardApiTypes = [typeof(SurfaceCard)];
     private static readonly IReadOnlyList<Type> DataGridApiTypes = [typeof(DataGrid<DisplayRowModel>)];
     private const string PrimaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-01.jpg";
     private const string SecondaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-02.jpg";

@@ -313,7 +313,26 @@ public static class SandboxCatalogRegistry
                 new("selection-list-item", "SelectionListItem", typeof(SelectionListItem)),
                 new("card", "Card", typeof(Card)),
                 new("data-grid", "DataGrid", typeof(DataGrid<>)),
-                new("dialog", "Dialog", typeof(Dialog))
+                new("dialog", "Dialog", typeof(Dialog)),
+                new("action-card", "ActionCard", typeof(ActionCard)),
+                new("action-review-panel", "ActionReviewPanel", typeof(ActionReviewPanel)),
+                new("auth-card", "AuthCard", typeof(AuthCard)),
+                new("card-actions", "CardActions", typeof(CardActions)),
+                new("card-button", "CardButton", typeof(CardButton)),
+                new("card-grid", "CardGrid", typeof(CardGrid)),
+                new("card-stats-with-number", "CardStatsWithNumber", typeof(CardStatsWithNumber)),
+                new("hero-card", "HeroCard", typeof(HeroCard)),
+                new("metric-card", "MetricCard", typeof(MetricCard)),
+                new("panel-card", "PanelCard", typeof(PanelCard)),
+                new("parity-section-card", "ParitySectionCard", typeof(ParitySectionCard)),
+                new("price-bar", "PriceBar", typeof(PriceBar)),
+                new("price-row", "PriceRow", typeof(PriceRow)),
+                new("section-card", "SectionCard", typeof(SectionCard)),
+                new("stat-box", "StatBox", typeof(StatBox)),
+                new("stats-card-row", "StatsCardRow", typeof(StatsCardRow)),
+                new("stats-grid", "StatsGrid", typeof(StatsGrid)),
+                new("summary-tile", "SummaryTile", typeof(SummaryTile)),
+                new("surface-card", "SurfaceCard", typeof(SurfaceCard))
             ],
             ["/groups/overlays"] =
             [
