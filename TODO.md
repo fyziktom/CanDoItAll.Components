@@ -128,7 +128,7 @@ BadgesGroup, ChipRow, CompactStatStrip, Pill, PillList, StatusBadge, ProfileTagC
 
 Documented: Badge, Chip, CompactStat
 
-### Cards (27 of 29 missing)
+### ✅ Cards (27 of 29 missing)
 ActionCard, ActionReviewPanel, AuthCard, CardActions, CardButton, CardGrid, CardStatsWithNumber, HeroCard, MetricCard, PanelCard, ParitySectionCard, PriceBar, PriceRow, SectionCard, StatBox, StatsCardRow, StatsGrid, SummaryTile, SurfaceCard, BuilderStatBox *(Compat)*, BuilderStatStrip *(Compat)*, SheetCard *(Compat)*, SheetCardHeading *(Compat)*, SheetCardTop *(Compat)*, SheetGrid *(Compat)*, SheetNote *(Compat)*, SheetSection *(Compat)*
 
 Documented: Card, SummaryTiles
