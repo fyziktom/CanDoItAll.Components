@@ -579,14 +579,14 @@
     private string WidthRailCopy => CurrentFrame switch
     {
         SandboxFramePreset.Mobile => "Mobile should surface the headline, first metric, and next step without forcing horizontal scanning.",
-        SandboxFramePreset.Desktop => "Desktop should use breadth deliberately and avoid dead space between sections.",
+        SandboxFramePreset.Tablet => "Tablet should use breadth deliberately and avoid dead space between sections.",
         _ => "The live viewport should keep the same hierarchy rules as the proof frames."
     };
 
     private string ViewportLabel => CurrentFrame switch
     {
         SandboxFramePreset.Mobile => "Mobile",
-        SandboxFramePreset.Desktop => "Desktop",
+        SandboxFramePreset.Tablet => "Tablet",
         _ => "Live"
     };
 

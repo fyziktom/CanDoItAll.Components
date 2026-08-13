@@ -18,16 +18,15 @@
                           data-testid="sandbox-toolbar-scenario"/>
             </div>
 
-            <div class="sandbox-toolbar__frame-group" role="group" aria-label="Frame preset">
-                @foreach (var preset in FramePresets)
-                {
-                    <Button Text="@preset.ToLabel()"
-                            ButtonStyle="@(preset == toolbarState.Frame ? ButtonStyle.Primary : ButtonStyle.Light)"
-                            Variant="@(preset == toolbarState.Frame ? Variant.Filled : Variant.Outlined)"
-                            Size="ButtonSize.Small"
-                            Click="@(() => toolbarState.FrameChanged.InvokeAsync(preset))"
-                            data-testid="@($"sandbox-toolbar-frame-{preset.ToSlug()}")"/>
-                }
+            <div class="sandbox-toolbar__frame">
+                <DropDown TValue="SandboxFramePreset"
+                          Data="@FrameOptions"
+                          TextProperty="Text"
+                          ValueProperty="Value"
+                          Value="@toolbarState.Frame"
+                          ValueChanged="HandleFrameChanged"
+                          aria-label="Frame preset"
+                          data-testid="sandbox-toolbar-frame"/>
             </div>
 
             <Button Text="Coverage"
@@ -54,7 +53,9 @@
 </div>
 
 @code {
-    private static readonly IReadOnlyList<SandboxFramePreset> FramePresets = Enum.GetValues<SandboxFramePreset>();
+    private static readonly IReadOnlyList<FrameOption> FrameOptions = Enum.GetValues<SandboxFramePreset>()
+        .Select(value => new FrameOption(value.ToLabel(), value))
+        .ToArray();
 
     private static readonly IReadOnlyList<ScenarioOption> ScenarioOptions = Enum.GetValues<SandboxScenarioKey>()
         .Select(value => new ScenarioOption(value.ToLabel(), value))
@@ -69,8 +70,13 @@
     private Task HandleScenarioChanged(SandboxScenarioKey scenario)
         => ToolbarState!.ScenarioChanged.InvokeAsync(scenario);
 
+    private Task HandleFrameChanged(SandboxFramePreset frame)
+        => ToolbarState!.FrameChanged.InvokeAsync(frame);
+
     private void ToggleDarkMode()
         => NavigationManager.NavigateTo(SandboxQueryLinks.WithDark(NavigationManager, !ThemeState!.IsDark));
 
     private sealed record ScenarioOption(string Text, SandboxScenarioKey Value);
+
+    private sealed record FrameOption(string Text, SandboxFramePreset Value);
 }

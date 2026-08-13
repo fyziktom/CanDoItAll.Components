@@ -39,7 +39,7 @@ public enum SandboxScenarioKey
 public enum SandboxFramePreset
 {
     LiveViewport,
-    Desktop,
+    Tablet,
     Mobile
 }
 
@@ -482,7 +482,7 @@ public static class SandboxFramePresetExtensions
     {
         return value?.Trim().ToLowerInvariant() switch
         {
-            "desktop" => SandboxFramePreset.Desktop,
+            "tablet" => SandboxFramePreset.Tablet,
             "mobile" => SandboxFramePreset.Mobile,
             _ => SandboxFramePreset.LiveViewport
         };
@@ -492,7 +492,7 @@ public static class SandboxFramePresetExtensions
     {
         return value switch
         {
-            SandboxFramePreset.Desktop => "desktop",
+            SandboxFramePreset.Tablet => "tablet",
             SandboxFramePreset.Mobile => "mobile",
             _ => "live"
         };
@@ -502,9 +502,9 @@ public static class SandboxFramePresetExtensions
     {
         return value switch
         {
-            SandboxFramePreset.Desktop => "Desktop Frame",
-            SandboxFramePreset.Mobile => "Mobile Frame",
-            _ => "Live Viewport"
+            SandboxFramePreset.Tablet => "Tablet",
+            SandboxFramePreset.Mobile => "Mobile",
+            _ => "Live"
         };
     }
 
@@ -512,7 +512,7 @@ public static class SandboxFramePresetExtensions
     {
         return value switch
         {
-            SandboxFramePreset.Desktop => "sandbox-demo-frame--desktop",
+            SandboxFramePreset.Tablet => "sandbox-demo-frame--tablet",
             SandboxFramePreset.Mobile => "sandbox-demo-frame--mobile",
             _ => "w-full"
         };

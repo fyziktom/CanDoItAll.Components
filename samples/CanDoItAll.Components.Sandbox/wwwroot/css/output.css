@@ -846,13 +846,8 @@ body {
   align-items: center;
   gap: calc(var(--spacing) * 3);
 }
-.sandbox-toolbar__scenario {
-  min-width: calc(var(--spacing) * 44);
-}
-.sandbox-toolbar__frame-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+.sandbox-toolbar__scenario, .sandbox-toolbar__frame {
+  max-width: calc(var(--spacing) * 40);
 }
 .sandbox-demo-toolbar {
   display: flex;
@@ -894,9 +889,9 @@ body {
   padding-block: calc(var(--spacing) * 4);
   background: var(--cad-color-surface);
 }
-.sandbox-demo-frame--desktop {
+.sandbox-demo-frame--tablet {
   margin-inline: auto;
-  width: min(100%, 1180px);
+  width: min(100%, 820px);
   border-radius: var(--cad-radius-control);
   padding: calc(var(--spacing) * 4);
   border: 1px solid var(--cad-color-border-soft);
