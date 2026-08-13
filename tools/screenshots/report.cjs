@@ -38,11 +38,10 @@ async function main() {
     ? JSON.parse(fs.readFileSync(diffResultsPath, "utf8"))
     : { against: null, results: [] };
 
-  const resultsByKey = new Map(diffResults.results.map(result => [result.key, result]));
   const themeNames = Object.keys(config.themes);
   const viewportNames = config.viewports.map(viewport => viewport.name);
 
-  const { combos, pages, pageOrderByAlternative } = bucketJobs(manifest.jobs, resultsByKey, diffResults.against);
+  const { combos, pages, pageOrderByAlternative } = bucketJobs(manifest.jobs, diffResults.results, diffResults.against);
   const showAlternativeHeadings = pageOrderByAlternative.size > 1;
 
   // The report is regenerated fresh each run; current/baseline/diff PNGs are left alone.
@@ -65,10 +64,11 @@ async function main() {
   console.log(`Report written to ${readmePath}`);
 }
 
-function bucketJobs(jobs, resultsByKey, against) {
-  const combos = new Map(); // combo -> { combo, viewportName, themeName, alternativeName, items: [] }
+function bucketJobs(jobs, results, against) {
+  const combos = new Map(); // combo -> { combo, viewportName, themeName, alternativeName, items: [], removedItems: [] }
   const pages = new Map(); // "alternative::page" -> { alternativeName, page, title, entries: [] }
   const pageOrderByAlternative = new Map(); // alternativeName -> [page, ...] in first-seen order
+  const resultsByKey = new Map(results.map(result => [result.key, result]));
 
   for (const job of jobs) {
     const diffResult = resultsByKey.get(job.key) ?? {
@@ -82,6 +82,7 @@ function bucketJobs(jobs, resultsByKey, against) {
         themeName: job.theme,
         alternativeName: job.alternative,
         items: [],
+        removedItems: [],
       });
     }
     if (job.file) {
@@ -89,7 +90,13 @@ function bucketJobs(jobs, resultsByKey, against) {
         page: job.page,
         title: job.title,
         currentFile: job.file,
+        url: job.url,
         diffFile: diffResult.diffFile ?? null,
+        status: diffResult.status,
+        reason: diffResult.reason ?? null,
+        diffPercentage: diffResult.diffPercentage ?? null,
+        diffCount: diffResult.diffCount ?? null,
+        totalPixels: diffResult.totalPixels ?? null,
       });
     }
 
@@ -101,6 +108,7 @@ function bucketJobs(jobs, resultsByKey, against) {
       viewportName: job.viewport,
       themeName: job.theme,
       currentFile: job.file ?? null,
+      url: job.url,
       status: diffResult.status,
       reason: diffResult.reason ?? null,
       diffPercentage: diffResult.diffPercentage ?? null,
@@ -120,46 +128,95 @@ function bucketJobs(jobs, resultsByKey, against) {
     }
   }
 
+  // Pages that existed in the baseline's current/ tree but weren't captured this run — only
+  // attributable to a combo that's still active in the current config (see key format in diff.cjs).
+  for (const result of results) {
+    if (result.status !== "removed") {
+      continue;
+    }
+    const slashIndex = result.key.lastIndexOf("/");
+    const combo = result.key.slice(0, slashIndex);
+    const page = result.key.slice(slashIndex + 1);
+    if (combos.has(combo)) {
+      combos.get(combo).removedItems.push({
+        page,
+        label: titleFromSlug(page),
+        baselineFile: result.baselineFile,
+      });
+    }
+  }
+
   return { combos, pages, pageOrderByAlternative };
+}
+
+function titleFromSlug(slug) {
+  return slug
+    .split("-")
+    .map(word => (word ? word.charAt(0).toUpperCase() + word.slice(1) : word))
+    .join(" ");
 }
 
 function writeGalleries(outputDir, readmePath, combos) {
   const galleryTemplate = fs.readFileSync(path.join(__dirname, "templates", "gallery.mustache"), "utf8");
 
   for (const comboData of combos.values()) {
-    const sortedItems = [...comboData.items].sort((a, b) => a.title.localeCompare(b.title));
+    const items = comboData.items;
 
     const currentReadmePath = path.join(outputDir, "current", comboData.combo, "README.md");
     fs.mkdirSync(path.dirname(currentReadmePath), { recursive: true });
     fs.writeFileSync(
       currentReadmePath,
       Mustache.render(galleryTemplate, {
-        galleryTitle: `${comboData.viewportName} / ${comboData.themeName} / ${comboData.alternativeName} — Current`,
+        galleryTitle: `${comboData.viewportName} / ${comboData.themeName} / ${comboData.alternativeName}`,
         backLink: relHref(currentReadmePath, readmePath),
-        items: sortedItems.map(item => ({
+        items: items.map(item => ({
           title: item.title,
           image: relHref(currentReadmePath, path.join(outputDir, "current", item.currentFile)),
+          capturedUrl: item.url,
         })),
       })
     );
 
-    const changedItems = sortedItems.filter(item => item.diffFile);
-    if (changedItems.length > 0) {
+    const changedItems = items.filter(item => item.diffFile);
+    const sortedRemovedItems = [...comboData.removedItems].sort((a, b) => a.label.localeCompare(b.label));
+    if (changedItems.length > 0 || sortedRemovedItems.length > 0) {
       const diffReadmePath = path.join(outputDir, "diff", comboData.combo, "README.md");
       fs.mkdirSync(path.dirname(diffReadmePath), { recursive: true });
       fs.writeFileSync(
         diffReadmePath,
         Mustache.render(galleryTemplate, {
-          galleryTitle: `${comboData.viewportName} / ${comboData.themeName} / ${comboData.alternativeName} — Diff`,
+          galleryTitle: `${comboData.viewportName} / ${comboData.themeName} / ${comboData.alternativeName}`,
           backLink: relHref(diffReadmePath, readmePath),
           items: changedItems.map(item => ({
             title: item.title,
             image: relHref(diffReadmePath, path.join(outputDir, item.diffFile)),
+            capturedUrl: item.url,
+            statusLine: formatStatusLine(item),
+            pageLink: relHref(
+              diffReadmePath,
+              path.join(outputDir, "pages", comboData.alternativeName, `${item.page}.md`)
+            ),
           })),
+          removedTable: renderRemovedTable(
+            sortedRemovedItems.map(item => ({
+              label: item.label,
+              link: relHref(diffReadmePath, path.join(outputDir, item.baselineFile)),
+            }))
+          ),
         })
       );
     }
   }
+}
+
+function renderRemovedTable(rows) {
+  if (rows.length === 0) {
+    return null;
+  }
+  const header = `| Label | Link |`;
+  const divider = `| --- | --- |`;
+  const body = rows.map(row => `| ${row.label} | [${row.label}](${row.link}) |`);
+  return [header, divider, ...body].join("\n");
 }
 
 function writePageReports(outputDir, readmePath, pages, pageOrderByAlternative, showAlternativeHeadings) {
@@ -172,8 +229,7 @@ function writePageReports(outputDir, readmePath, pages, pageOrderByAlternative, 
       const indexHref = relHref(pagePath, readmePath);
       const pagination = buildPaginationLine(indexHref, pageOrder, index, hrefForIndex);
 
-      const combosForPage = [...pageData.entries]
-        .sort((a, b) => a.viewportName.localeCompare(b.viewportName) || a.themeName.localeCompare(b.themeName))
+      const combosForPage = pageData.entries
         .map(entry => ({
           viewport: entry.viewportName,
           theme: entry.themeName,
@@ -183,6 +239,7 @@ function writePageReports(outputDir, readmePath, pages, pageOrderByAlternative, 
           diffCount: entry.diffCount,
           totalPixels: entry.totalPixels,
           error: entry.error,
+          capturedUrl: entry.url,
           currentImage: entry.currentFile
             ? relHref(pagePath, path.join(outputDir, "current", entry.currentFile))
             : null,
@@ -214,14 +271,14 @@ function renderPageMarkdown({ pageTitle, alternativeName, showAlternativeHeading
       lines.push(statusLine, "");
     }
 
-    lines.push(combo.currentImage ? `![current](${combo.currentImage})` : "_none_", "");
+    lines.push(combo.currentImage ? `[![current](${combo.currentImage})](${combo.capturedUrl})` : "_none_", "");
 
     if (combo.baselineImage) {
-      lines.push("**Baseline**", "", `![baseline](${combo.baselineImage})`, "");
+      lines.push("**Baseline**", "", `[![baseline](${combo.baselineImage})](${combo.capturedUrl})`, "");
     }
 
     if (combo.diffImage) {
-      lines.push("**Diff**", "", `![diff](${combo.diffImage})`, "");
+      lines.push("**Diff**", "", `[![diff](${combo.diffImage})](${combo.capturedUrl})`, "");
     }
 
     while (lines[lines.length - 1] === "") {
@@ -337,9 +394,8 @@ function renderScreenshotsTable(viewportNames, themeNames, lookupCell) {
       if (!cell) {
         return "—";
       }
-      const current = `[current](${cell.current})`;
-      const diff = cell.diff ? `[diff](${cell.diff})` : "—";
-      return `${current} · ${diff}`;
+      const open = `[open](${cell.current})`;
+      return cell.diff ? `${open} / [diff](${cell.diff})` : open;
     });
     return `| ${viewportName} | ${cells.join(" | ")} |`;
   });

@@ -36,10 +36,11 @@ async function main() {
   const manifest = [];
 
   try {
-    for (const job of jobs) {
+    for (const [index, job] of jobs.entries()) {
       const entry = await captureJob(browser, config, job);
       manifest.push(entry);
-      console.log(entry.error ? `  FAIL ${job.key}: ${entry.error}` : `  ok   ${job.key}`);
+      const progress = `${index + 1}/${jobs.length}`;
+      console.log(entry.error ? `  FAIL ${progress}   ${job.key}: ${entry.error}` : `  ok   ${progress}   ${job.key}`);
     }
   } finally {
     await browser.close();

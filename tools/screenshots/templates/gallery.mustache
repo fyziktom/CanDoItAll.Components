@@ -5,7 +5,16 @@
 {{#items}}
 ## {{{title}}}
 
-![{{{title}}}]({{{image}}})
+{{#statusLine}}
+{{{statusLine}}}{{#pageLink}} [open]({{{pageLink}}}){{/pageLink}}
+
+{{/statusLine}}
+[![{{{title}}}]({{{image}}})]({{{capturedUrl}}})
 
 ---
 {{/items}}
+{{#removedTable}}
+## Removed pages
+
+{{{removedTable}}}
+{{/removedTable}}
