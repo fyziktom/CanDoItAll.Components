@@ -1,3 +1,4 @@
+using System.Linq;
 using CanDoItAll.Components.BaseLib;
 using CanDoItAll.Components.CanvasLib;
 using CanDoItAll.Components.Charts;
@@ -396,6 +397,13 @@ public static class SandboxCatalogRegistry
 
     public static IReadOnlyList<SandboxPageSection> GetSections(string route)
         => PageSections.TryGetValue(route, out var sections) ? sections : [];
+
+    public static int UniqueComponentCount { get; } =
+        PageSections.Values
+            .SelectMany(sections => sections)
+            .Select(section => section.ComponentType)
+            .Distinct()
+            .Count();
 
     public static SandboxGroupDefinition GetGroup(SandboxGroupKey key)
         => Groups.First(group => group.Key == key);
