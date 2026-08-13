@@ -99,3 +99,92 @@ Extracted from the sibling app repo's UI/UX refactor notes where this component 
   source doc.
 - Whether per-component API documentation is worth writing at all, versus the published
   Sandbox catalogue plus a short decision guide being sufficient.
+
+# BaseLib components missing from the Sandbox TOC
+
+## Context
+
+You noticed `Avatar.razor` (`Components/Identity/Avatar.razor`) isn't listed anywhere in the Sandbox's table of contents at `https://localhost:55173/`, and asked for a full audit of every `CanDoItAll.Components.BaseLib` component against what the Sandbox actually documents, so you know the full scope of the documentation gap.
+
+**Method:**
+- Enumerated all `.razor` components in `src/CanDoItAll.Components.BaseLib/Components/` → **165 components** across 18 folders (Badges, Buttons, Cards, DataDisplay, DataVisualization, Feedback, Forms, Identity, Layout, Lists, Modals, Navigation, Storage, Typography — several with `Compatibility` subfolders).
+- Enumerated everything documented in the Sandbox via its single source of truth, `samples/CanDoItAll.Components.Sandbox/SandboxCatalogRegistry.cs` (`PageSections`, read by both `MainLayout.razor`'s sidebar and `Home.razor`'s full TOC) → **47 unique BaseLib components** documented (the registry also lists non-BaseLib components from Charts/Mermaid/QRCode/OverlayLib/CanvasLib, which are out of scope here).
+- Diffed by component name.
+
+**Result: ~118 of 165 BaseLib components (72%) have no Sandbox entry**, confirming `Avatar` is not an isolated case — it's part of a much larger documentation backlog concentrated in Cards, Navigation, Typography, and the various `Compatibility` subfolders.
+
+## Missing components, by folder
+
+### Identity (4 of 6 missing) — includes Avatar
+- **Avatar** ← the one you spotted
+- CreatorLine
+- CreatorSocialLink
+- CreatorAvatar *(Compatibility)*
+
+Documented: Icon, RoboAvatar
+
+### Badges (8 of 11 missing)
+BadgesGroup, ChipRow, CompactStatStrip, Pill, PillList, StatusBadge, ProfileTagChip *(Compat)*, ProfileTagChipRow *(Compat)*
+
+Documented: Badge, Chip, CompactStat
+
+### Cards (27 of 29 missing)
+ActionCard, ActionReviewPanel, AuthCard, CardActions, CardButton, CardGrid, CardStatsWithNumber, HeroCard, MetricCard, PanelCard, ParitySectionCard, PriceBar, PriceRow, SectionCard, StatBox, StatsCardRow, StatsGrid, SummaryTile, SurfaceCard, BuilderStatBox *(Compat)*, BuilderStatStrip *(Compat)*, SheetCard *(Compat)*, SheetCardHeading *(Compat)*, SheetCardTop *(Compat)*, SheetGrid *(Compat)*, SheetNote *(Compat)*, SheetSection *(Compat)*
+
+Documented: Card, SummaryTiles
+
+### DataDisplay (3 of 3 missing — entire folder undocumented)
+DiffViewer, Timeline, TimelineStepper
+
+### DataVisualization (7 of 8 missing)
+CategoryAxis, Chart, DataGridColumn, GridLines, LineSeries, ProgressBar, ValueAxis
+
+Documented: DataGrid
+
+### Feedback (4 of 10 missing)
+EmptyState, LoadingState, Notification, Tooltip
+
+Documented: Alert, Callout, HelpPopover, StatusCheckList, TooltipTarget, VerificationList
+
+### Forms (11 of 27 missing)
+FormField, FormRow, FormSection, FormStack, InlineActions, SettingsSwitchLabel, DebugToggle *(Compat)*, ProfileField *(Compat)*, ProfileToggle *(Compat)*, SheetField *(Compat)*, TagTextEdit *(Compat)*
+
+Documented: CheckBox, DropDown, Editable, EntityPicker, Fieldset, FileUpload, Numeric, Password, PrefixedField, SecretField, SettingsSwitchRow, Slider, Switch, TagEditor, TextArea, TextBox
+
+### Layout (9–10 of 16 missing)
+Body, Cluster, Layout, PageShell, Sidebar, Split, ThemeHost, WorkspacePanel, WorkspaceSplit
+
+*Column* is ambiguous: the Layout group page has a combined anchor `row-column`, but no dedicated registry section for Column on its own — effectively under-documented.
+
+Documented: Grid, PageScaffold, Row, Stack, StickyActionFooter, ZoomPanFrame
+
+### Lists (6 of 8 missing)
+FactTable, ListGroup, ListItem, ListPanelHeader, MetaList, PlainList
+
+Documented: ListDetailShell, SelectionListItem
+
+### Modals (6 of 7 missing)
+DangerActionDialog, DialogHost, DialogScaffold, InspectorDialogLayout, PickerDialogShell, ZyWorkspaceModal *(Compat)*
+
+Documented: Dialog
+
+### Navigation (18 of 24 missing)
+ContextMenu, FilterBar, LegalToc, LegalTocNav, PageHeaderActionButton, RibbonTabs, SecondaryTabs, SideMenuItem, StepsItem, TabsItem, ToolbarActions, ToolbarFields, ToolbarRow, TreeViewNodeRow, DashboardActions *(Compat)*, ImmersiveRibbonTabs *(Compat)*, PageHeaderActions *(Compat)*, PageHeaderCopy *(Compat)*
+
+Documented: PageHeader, SideMenu, Steps, Tabs, Toolbar, TreeView
+
+### Storage (2 of 2 missing — entire folder undocumented)
+StorageBadgeStrip, StorageSummaryCard
+
+### Typography (11 of 12 missing)
+CopyableMonoValue, Divider, Eyebrow, FooterText, HashDisplay, Header, MonoText, MutedInline, SectionHead, SectionHeading, SmallText
+
+Documented: TextBlock
+
+### Buttons (0 missing — fully documented)
+Button, CopyButton
+
+## Notes on scope
+- "Compatibility" subfolder components (legacy/shim wrappers) are almost entirely undocumented across every folder that has one — worth deciding as a group whether they're meant to be Sandbox-visible at all, or intentionally excluded as deprecated.
+- Three entire folders (DataDisplay, Storage, and effectively most of Cards) have next to no Sandbox presence.
+- This plan only delivers the audit list above — no code changes. If you want, a natural next step would be to scope adding Sandbox demo sections for a subset (e.g., start with Identity/Avatar, or tackle a whole folder like DataDisplay or Storage).
