@@ -24,6 +24,28 @@ body {
   border-bottom: 1px solid var(--cad-color-border-soft);
 }
 
+.sandbox-nav__search {
+  @apply px-0 py-2;
+}
+
+.sandbox-nav__search-input {
+  @apply w-full rounded-md border px-3 py-[0.4rem] text-[0.85rem];
+  border-color: var(--cad-color-border-soft);
+  background: var(--cad-color-surface);
+  color: var(--cad-color-text);
+}
+
+.sandbox-nav__search-input:focus-visible {
+  outline: 2px solid var(--cad-tone-primary-soft-border);
+  outline-offset: 1px;
+}
+
+.sandbox-nav__match {
+  @apply rounded-[0.2rem] px-[0.15rem];
+  background: var(--cad-tone-warning-soft-bg);
+  color: var(--cad-tone-warning-soft-fg);
+}
+
 .sandbox-nav {
   @apply flex flex-col gap-0.5;
 }

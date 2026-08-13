@@ -19,18 +19,33 @@
                             @* <span class="sandbox-nav__meta">Home</span> *@
                         </a>
 
+                        <div class="sandbox-nav__search">
+                            <TextBox Value="@searchQuery"
+                                     ValueChanged="@OnSearchQueryChanged"
+                                     Immediate="true"
+                                     Look="InputLook.Plain"
+                                     Placeholder="Search components…"
+                                     class="sandbox-nav__search-input"
+                                     aria-label="Search components" />
+                        </div>
+
                         <nav class="sandbox-nav" aria-label="Standard proof groups">
                             @foreach (var group in SandboxCatalogRegistry.StandardGroups)
                             {
+                                if (!ShouldShowGroup(group))
+                                {
+                                    continue;
+                                }
+
                                 <a href="@BuildSidebarLink(group.Route)"
                                    class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
                                     <span class="sandbox-nav__title">@group.Title</span>
                                     <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
                                 </a>
 
-                                @if (IsActive(group))
+                                @if (ShouldExpandGroup(group))
                                 {
-                                    var sections = SandboxCatalogRegistry.GetSections(group.Route);
+                                    var sections = GetVisibleSections(group);
                                     if (sections.Count > 0)
                                     {
                                         <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
@@ -38,7 +53,7 @@
                                             {
                                                 <a href="@BuildSectionLink(group.Route, section.Anchor)"
                                                    class="sandbox-nav__link sandbox-nav__link--sub">
-                                                    <span class="sandbox-nav__title">@section.ComponentName</span>
+                                                    <span class="sandbox-nav__title">@BuildHighlightedName(section.ComponentName)</span>
                                                 </a>
                                             }
                                         </nav>
@@ -47,6 +62,11 @@
                             }
                         </nav>
 
+                        @if (IsSearching && !HasAnyVisibleGroup())
+                        {
+                            <p class="sandbox-nav__meta">No components found.</p>
+                        }
+
                         @if (SandboxCatalogRegistry.DeferredGroups.Count > 0)
                         {
                             <div class="space-y-2">
@@ -54,15 +74,20 @@
                                 <nav class="sandbox-nav" aria-label="Deferred proof groups">
                                     @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
                                     {
+                                        if (!ShouldShowGroup(group))
+                                        {
+                                            continue;
+                                        }
+
                                         <a href="@BuildSidebarLink(group.Route)"
                                            class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
                                             <span class="sandbox-nav__title">@group.Title</span>
                                             <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
                                         </a>
 
-                                        @if (IsActive(group))
+                                        @if (ShouldExpandGroup(group))
                                         {
-                                            var deferredSections = SandboxCatalogRegistry.GetSections(group.Route);
+                                            var deferredSections = GetVisibleSections(group);
                                             if (deferredSections.Count > 0)
                                             {
                                                 <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
@@ -70,7 +95,7 @@
                                                     {
                                                         <a href="@BuildSectionLink(group.Route, section.Anchor)"
                                                            class="sandbox-nav__link sandbox-nav__link--sub">
-                                                            <span class="sandbox-nav__title">@section.ComponentName</span>
+                                                            <span class="sandbox-nav__title">@BuildHighlightedName(section.ComponentName)</span>
                                                         </a>
                                                     }
                                                 </nav>
@@ -97,6 +122,7 @@
 @code {
     private readonly SandboxThemeState themeState = new();
     private readonly SandboxToolbarState toolbarState = new();
+    private string searchQuery = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -117,6 +143,7 @@
 
     private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
     {
+        searchQuery = string.Empty;
         SyncThemeFromQuery();
     }
 
@@ -129,6 +156,64 @@
 
         themeState.SetTheme(isDark ? CadThemes.Dark : CadThemes.Light);
     }
+
+    private string NormalizedQuery => searchQuery.Trim();
+
+    private bool IsSearching => NormalizedQuery.Length > 0;
+
+    private void OnSearchQueryChanged(string? value) => searchQuery = value ?? string.Empty;
+
+    private IReadOnlyList<SandboxPageSection> GetVisibleSections(SandboxGroupDefinition group)
+    {
+        var sections = SandboxCatalogRegistry.GetSections(group.Route);
+        if (!IsSearching)
+        {
+            return sections;
+        }
+
+        return sections
+            .Where(section => section.ComponentName.Contains(NormalizedQuery, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private bool ShouldShowGroup(SandboxGroupDefinition group)
+        => !IsSearching || GetVisibleSections(group).Count > 0;
+
+    private bool ShouldExpandGroup(SandboxGroupDefinition group)
+        => IsActive(group) || (IsSearching && GetVisibleSections(group).Count > 0);
+
+    private bool HasAnyVisibleGroup()
+        => SandboxCatalogRegistry.StandardGroups.Concat(SandboxCatalogRegistry.DeferredGroups).Any(ShouldShowGroup);
+
+    // Highlights only the first match; component names are short enough that
+    // additional occurrences are unlikely and not worth the added complexity.
+    private RenderFragment BuildHighlightedName(string name) => builder =>
+    {
+        var query = NormalizedQuery;
+        var matchIndex = query.Length == 0 ? -1 : name.IndexOf(query, StringComparison.OrdinalIgnoreCase);
+        if (matchIndex < 0)
+        {
+            builder.AddContent(0, name);
+            return;
+        }
+
+        var seq = 0;
+        if (matchIndex > 0)
+        {
+            builder.AddContent(seq++, name[..matchIndex]);
+        }
+
+        builder.OpenElement(seq++, "mark");
+        builder.AddAttribute(seq++, "class", "sandbox-nav__match");
+        builder.AddContent(seq++, name.Substring(matchIndex, query.Length));
+        builder.CloseElement();
+
+        var afterIndex = matchIndex + query.Length;
+        if (afterIndex < name.Length)
+        {
+            builder.AddContent(seq, name[afterIndex..]);
+        }
+    };
 
     private bool IsActive(SandboxGroupDefinition group)
         => IsActiveRoute(group.Route);

@@ -188,3 +188,14 @@ Button, CopyButton
 - "Compatibility" subfolder components (legacy/shim wrappers) are almost entirely undocumented across every folder that has one — worth deciding as a group whether they're meant to be Sandbox-visible at all, or intentionally excluded as deprecated.
 - Three entire folders (DataDisplay, Storage, and effectively most of Cards) have next to no Sandbox presence.
 - This plan only delivers the audit list above — no code changes. If you want, a natural next step would be to scope adding Sandbox demo sections for a subset (e.g., start with Identity/Avatar, or tackle a whole folder like DataDisplay or Storage).
+
+# DEV NOTES
+
+- [ ] map component usage across products
+- [ ] btn mouse over, pointer
+- [x] nav filter
+- [ ] reorg toc to readme
+- [ ] pr notes
+- [ ] homo avatars
+- [ ] full dark theme html level, disable animation during transition
+- [ ] ignore output
