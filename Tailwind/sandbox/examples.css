@@ -16,11 +16,20 @@
 }
 
 .sandbox-demo-stage > .sandbox-component-section + .sandbox-component-section {
-  @apply mt-8 pt-8; /*border-top: 1px solid var(--cad-color-border-soft);*/
+  /*border-top: 1px solid var(--cad-color-border-soft);*/
 }
 
+.sandbox-demo-stage > .sandbox-component-section:not(:last-child) {
+  @apply mb-12;
+}
+
+
 .sandbox-component-section > .sandbox-example + .sandbox-example {
-  @apply mt-5 pt-5; /*border-top: 1px solid var(--cad-color-border-soft);*/
+  /*border-top: 1px solid var(--cad-color-border-soft);*/
+}
+
+.sandbox-component-section > .sandbox-example:not(:last-child) {
+  @apply mb-8;
 }
 
 .sandbox-example__header,
