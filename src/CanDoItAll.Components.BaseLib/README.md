@@ -191,6 +191,7 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 - [CreatorLine](Components/Identity/CreatorLine.razor)
 - [CreatorSocialLink](Components/Identity/CreatorSocialLink.razor)
 - [Icon](Components/Identity/Icon.razor)
+- [RoboAvatar](Components/Identity/RoboAvatar.razor)
 
 ### Layout And Shells
 

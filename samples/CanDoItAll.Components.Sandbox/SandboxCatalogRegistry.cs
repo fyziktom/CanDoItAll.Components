@@ -290,7 +290,8 @@ public static class SandboxCatalogRegistry
             [
                 new("typeblock", "TextBlock", typeof(TextBlock)),
                 new("summary-tiles", "SummaryTiles", typeof(SummaryTiles)),
-                new("icon", "Icon", typeof(Icon))
+                new("icon", "Icon", typeof(Icon)),
+                new("robo-avatar", "RoboAvatar", typeof(RoboAvatar))
             ],
             ["/groups/data-display"] =
             [

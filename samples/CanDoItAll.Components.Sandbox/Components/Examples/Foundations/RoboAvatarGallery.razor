@@ -1,0 +1,30 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Foundations
+
+<div class="space-y-6">
+    <div class="sandbox-demo-grid--three">
+        @foreach (var seed in Seeds)
+        {
+            <div class="sandbox-icon-tile">
+                <RoboAvatar Seed="@seed" SizePx="48" Title="@seed" Variant="RoboAvatarVariant.Gradient" LineWidth=".75" Dark="@(ThemeState?.IsDark ?? false)" />
+                <TextBlock TextStyle="TextStyle.Subtitle2" Value="@seed" />
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    public SandboxThemeState? ThemeState { get; set; }
+
+    private static readonly IReadOnlyList<string> Seeds =
+    [
+        "tomas",
+        "connor",
+        "morgan",
+        "reese",
+        "agent",
+        "quinn",
+        "blue",
+        "cheese"
+    ];
+}

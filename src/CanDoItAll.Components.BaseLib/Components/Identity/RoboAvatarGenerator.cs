@@ -1,0 +1,245 @@
+using System.Globalization;
+using System.Text;
+
+namespace CanDoItAll.Components.BaseLib;
+
+public static class RoboAvatarGenerator
+{
+    private const string Digits = "0123456789";
+
+    private static readonly string[] BodyShapes =
+    [
+        "<path d=\"M 3,8 H 2 C 1.446,8 1,8.446 1,9 v 6 c 0,0.554 0.446,1 1,1 h 1 z m 18,0 h 1 c 0.554,0 1,0.446 1,1 v 6 c 0,0.554 -0.446,1 -1,1 H 21 Z M 8,3 h 8 c 2.77,0 5,2.1541613 5,4.829958 v 8.815639 c 0,2.675797 -2.23,4.829958 -5,4.829958 H 8 c -2.77,0 -5,-2.154161 -5,-4.829958 V 7.829958 C 3,5.1541613 5.23,3 8,3 Z\"></path>",
+        "<path d=\"M 12,1.5325091 10,4 h 4 z M 12,5.5 V 4 M 7.5000007,5.5 H 16.5 c 2.77,0 5,2.1541613 5,4.829958 v 6.315639 c 0,2.675797 -2.23,4.829958 -5,4.829958 H 7.5000007 c -2.7700002,0 -5.0000005,-2.154161 -5.0000005,-4.829958 V 10.329958 C 2.5000002,7.6541613 4.7300005,5.5 7.5000007,5.5 Z\"></path>",
+        "<path d=\"m 5,3 h 14 l 2,2 -7.444444,16.475555 H 10.444444 L 7.4125009,14.765457 3,5 Z\"></path>",
+        "<rect width=\"18\" height=\"18.475555\" x=\"3\" y=\"4\" rx=\"9\" ry=\"9\"></rect>",
+        "<path d=\"M 20.269398,4.670667 A 1.3293333,1.3293333 0 0 0 21.598731,6 1.3293333,1.3293333 0 0 0 22.928065,4.670667 1.3293333,1.3293333 0 0 0 21.598731,3.341333 1.3293333,1.3293333 0 0 0 20.269398,4.670667 Z m 0.408181,0.958438 -1.749514,1.775306 M 3.7306016,4.670667 A 1.3293333,1.3293333 0 0 1 2.4012683,6 1.3293333,1.3293333 0 0 1 1.071935,4.670667 1.3293333,1.3293333 0 0 1 2.4012683,3.341333 1.3293333,1.3293333 0 0 1 3.7306016,4.670667 Z M 3.3224212,5.629105 5.071935,7.404411 M 12,4 c 4.986,0 9,4.014 9,9 v 0.475555 c 0,4.986 -4.014,9 -9,9 -4.986,0 -9,-4.014 -9,-9 V 13 C 3,8.014 7.014,4 12,4 Z\"></path>",
+        "<path d=\"M 19.670667,5.3293333 A 1.3293333,1.3293333 0 0 0 21,6.6586666 1.3293333,1.3293333 0 0 0 22.329334,5.3293333 1.3293333,1.3293333 0 0 0 21,4 1.3293333,1.3293333 0 0 0 19.670667,5.3293333 Z m 0.408181,0.9584385 -1.749514,1.775306 M 3.5593048,5.7549519 A 1.3293333,1.3293333 0 0 1 3.2322932,7.6062535 1.3293333,1.3293333 0 0 1 1.3809916,7.2792418 1.3293333,1.3293333 0 0 1 1.7080033,5.4279402 1.3293333,1.3293333 0 0 1 3.5593048,5.7549519 Z M 3.7743725,6.7742465 6.2256276,7.2257534 M 12,4.5 c 6.089228,0 16.474666,16.917112 0,16.975555 C -4.4401003,21.533876 5.859193,4.5 12,4.5 Z\"></path>",
+        "<path d=\"M 12 3 C 7.014 3 3 6.122 3 10 L 3 13 L 3 14.474609 L 3 21.474609 L 12 21.474609 L 21 21.474609 L 21 14.474609 L 21 13 L 21 10 C 21 6.122 16.986 3 12 3 z \"></path>",
+        "<path d=\"M 1.5000001,14.507289 V 11.968266 C 1.5000001,6.722847 5.8332513,2.5 11.21581,2.5 h 1.56838 C 18.166749,2.5 22.5,6.722847 22.5,11.968266 v 2.539023 M 12,4 c 4.986,0 9,4.014 9,9 v 0.475555 c 0,4.986 -4.014,9 -9,9 -4.986,0 -9,-4.014 -9,-9 V 13 C 3,8.014 7.014,4 12,4 Z\"></path>",
+        "<path d=\"m 11,5 0.446982,-4 h 1.106036 L 13,5 M 12,5 C 7.845,5 4.5,8.122 4.5,12 v 1 1.474609 7 h 7.5 7.5 v -7 V 13 12 C 19.5,8.122 16.155,5 12,5 Z\"></path>",
+        "<path d=\"M 14.446982,6 14.893964,2 H 16 l 0.446982,4 m -9,0 0.446982,-4 H 9 L 9.446982,6 M 5,6 h 14 l 2,2 v 3 9 l -7.444444,2.475555 H 10.444444 L 3,20 V 11 8 Z\"></path>"
+    ];
+
+    private static readonly string[] MouthShapes =
+    [
+        "<path d=\"m 17,17.018372 c 0,1.380712 -0.45455,2.5 -5,2.5 -4.54545,0 -5,-1.119288 -5,-2.5 0,-1.380712 0.45455,-2.5 5,-2.5 4.54545,0 5,1.119288 5,2.5 z\"></path>",
+        "<rect width=\"14\" height=\"3\" x=\"5\" y=\"15.481628\" rx=\"2\" ry=\"2\"></rect>",
+        "<path d=\"M 15,16 H 9 C 8.723,16 7.33333,16.669 7.33333,17.5 7.33333,16.669 8.723,16 9,16 h 6 c 0.277,0 1.66667,0.669 1.66667,1.5 C 16.66667,16.669 15.277,16 15,16 Z\"></path>",
+        "<path d=\"m 18,16 -6,3 -6,-3 v 0 z\"></path>",
+        "<path d=\"m 9,15.481628 v 3 m 6,-3 v 3 m -3,-3 v 3 m -5,-3 h 10 c 1.108,0 2,0.669 2,1.5 0,0.831 -0.892,1.5 -2,1.5 H 7 c -1.108,0 -2,-0.669 -2,-1.5 0,-0.831 0.892,-1.5 2,-1.5 z\"></path>",
+        "<path d=\"M 7,17 H 17 M 7,14.963263 h 10 c 1.108,0 2,0.892 2,2 v 0.03673 c 0,1.108 -0.892,2 -2,2 H 7 c -1.108,0 -2,-0.892 -2,-2 v -0.03673 c 0,-1.108 0.892,-2 2,-2 z\"></path>",
+        "<path d=\"m 15.5,17.018372 c 0,0.562431 -0.31818,1.018372 -3.5,1.018372 -3.18182,0 -3.5,-0.455941 -3.5,-1.018372 C 8.5,16.45594 8.81818,16 12,16 c 3.18182,0 3.5,0.45594 3.5,1.018372 z m 1.5,0 c 0,1.380712 -0.45455,2.5 -5,2.5 -4.54545,0 -5,-1.119288 -5,-2.5 0,-1.380712 0.45455,-2.5 5,-2.5 4.54545,0 5,1.119288 5,2.5 z\"></path>",
+        "<path d=\"M 15,17.492979 H 9 c -0.277,0 -1.66667,-0.669 -1.66667,-1.5 0,0.831 1.38967,1.5 1.66667,1.5 h 6 c 0.277,0 1.66667,-0.669 1.66667,-1.5 0,0.831 -1.38967,1.5 -1.66667,1.5 z\"></path>",
+        "<path d=\"m 16,15 -8,4 m 0,-4 8,4 m 1,-1.981628 c 0,1.380712 -0.45454,2.5 -5,2.5 -4.54545,0 -5,-1.119288 -5,-2.5 0,-1.380712 0.45455,-2.5 5,-2.5 4.54546,0 5,1.119288 5,2.5 z\"></path>",
+        "<rect width=\"10\" height=\"2\" x=\"7\" y=\"16.018372\" rx=\"0\"></rect>"
+    ];
+
+    private static readonly string[] EyeShapes =
+    [
+        "<path d=\"M 8.25 8.5 C 7.0035 8.5 6 9.2805 6 10.25 C 6 11.2195 7.0035 12 8.25 12 C 9.4965 12 10.5 11.2195 10.5 10.25 C 10.5 9.2805 9.4965 8.5 8.25 8.5 z M 15.75 8.5 C 14.5035 8.5 13.5 9.2805 13.5 10.25 C 13.5 11.2195 14.5035 12 15.75 12 C 16.9965 12 18 11.2195 18 10.25 C 18 9.2805 16.9965 8.5 15.75 8.5 z \"></path>",
+        "<path d=\"m 9.8124982,9.5367552 c -0.7271257,0 -1.3125012,0.7804968 -1.3125012,1.7499968 0,0.9695 0.5853755,1.75 1.3125012,1.75 0.7271258,0 1.3125008,-0.7805 1.3125008,-1.75 0,-0.9695 -0.585375,-1.7499968 -1.3125008,-1.7499968 z m 4.3750038,0 c -0.727126,0 -1.312501,0.7804968 -1.312501,1.7499968 0,0.9695 0.585375,1.75 1.312501,1.75 0.727126,0 1.312501,-0.7805 1.312501,-1.75 0,-0.9695 -0.585375,-1.7499968 -1.312501,-1.7499968 z\"></path>",
+        "<path d=\"m 17,9 -4,4 m 0,-4 4,4 M 11,9 7,13 m 0,-4 4,4\"></path>",
+        "<path d=\"m 14,12.5 2,-3 2,3 z m -8,0 2,-3 2,3 z\"></path>",
+        "<path d=\"m 13,8 h 6 v 5 H 13 Z M 5,8 h 6 v 5 H 5 Z\"></path>",
+        "<path d=\"m 17,11 a 1,1 0 0 1 -1,1 1,1 0 0 1 -1,-1 1,1 0 0 1 1,-1 1,1 0 0 1 1,1 z m 1.5,0 A 2.5,2.5 0 0 1 16,13.5 2.5,2.5 0 0 1 13.5,11 2.5,2.5 0 0 1 16,8.5 2.5,2.5 0 0 1 18.5,11 Z M 9,11 a 1,1 0 0 1 -1,1 1,1 0 0 1 -1,-1 1,1 0 0 1 1,-1 1,1 0 0 1 1,1 z m 1.5,0 A 2.5,2.5 0 0 1 8,13.5 2.5,2.5 0 0 1 5.5,11 2.5,2.5 0 0 1 8,8.5 2.5,2.5 0 0 1 10.5,11 Z\"></path>",
+        "<path d=\"M 17.799072,8.7071617 15,7.6277187 13.200928,12.292838 16,13.372281 Z m -11.5981438,0 L 9,7.6277187 10.799072,12.292838 8,13.372281 Z\"></path>",
+        "<path d=\"m 13,8 h 3 v 5 H 13 Z M 8,8 h 3 v 5 H 8 Z\"></path>",
+        "<path d=\"m 13,11 c 0,0.552285 -0.447715,1 -1,1 -0.552285,0 -1,-0.447715 -1,-1 0,-0.552285 0.447715,-1 1,-1 0.552285,0 1,0.447715 1,1 z m 1.5,0 c 0,1.380712 -1.119288,2.5 -2.5,2.5 -1.380712,0 -2.5,-1.119288 -2.5,-2.5 0,-1.3807119 1.119288,-2.5 2.5,-2.5 1.380712,0 2.5,1.1192881 2.5,2.5 z\"></path>",
+        "<path d=\"m 13,10 c 0,0.552285 -0.447715,1 -1,1 -0.552285,0 -1,-0.447715 -1,-1 0,-0.552285 0.447715,-1 1,-1 0.552285,0 1,0.447715 1,1 z M 12,7.7499891 c -1.610146,0 -3.221,0.7499859 -4.751953,2.2499999 3.061907,3.000029 6.441979,3.000029 9.503906,0 C 15.22099,8.499975 13.610146,7.7499891 12,7.7499891 Z\"></path>"
+    ];
+
+    private static readonly (string Name, string[] Variants)[] PartsInOrder =
+    [
+        ("body", BodyShapes),
+        ("mouth", MouthShapes),
+        ("eyes", EyeShapes)
+    ];
+
+    private static readonly string[] Palette =
+    [
+        "oklch(64.5% 0.246 16.439)",
+        "oklch(62.7% 0.265 303.9)",
+        "oklch(58.5% 0.233 277.117)",
+        "oklch(68.5% 0.169 237.323)",
+        "oklch(70.4% 0.14 182.503)",
+        "oklch(65.1% 0.027 264.364)"
+    ];
+
+    private static readonly int[][] SecondaryPalette =
+    [
+        [1, 2, 3, 5],
+        [0, 2, 3, 4, 5],
+        [0, 1, 4, 5],
+        [0, 1, 2, 4, 5],
+        [0, 1, 5],
+        [0, 1, 2, 3, 4]
+    ];
+
+    private static readonly string[] LightOpacityStops = ["0.24", "0.6", "0.12"];
+    private static readonly string[] DarkOpacityStops = ["0.3", "0.5", "0.18"];
+
+    // Follows the BaseLib surface token (flips with the nearest [data-cad-theme] ancestor set by
+    // ThemeHost) instead of a literal white, so the mouth/eyes plate doesn't stay white on dark
+    // surfaces. Falls back to white outside a ThemeHost, matching the JS default.
+    private const string DefaultBackground = "var(--cad-color-surface, #fff)";
+
+    public static string TextToAvatarId(string? text, int length = 12)
+    {
+        var input = string.IsNullOrEmpty(text) ? "robo-avatar" : text;
+
+        var hash = 0x811c9dc5u;
+        foreach (var character in input)
+        {
+            hash ^= character;
+            hash = unchecked(hash * 0x01000193u);
+        }
+
+        var state = hash != 0 ? hash : 1u;
+        var id = new char[length];
+        for (var index = 0; index < length; index++)
+        {
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            id[index] = Digits[(int)(state % 10)];
+        }
+
+        return new string(id);
+    }
+
+    public static string RenderSvg(RoboAvatarOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        var id = options.Id ?? TextToAvatarId(options.Text, PartsInOrder.Length * 2);
+        var shapeIndexes = new int[PartsInOrder.Length];
+        var colorIndexes = new int[PartsInOrder.Length];
+
+        for (var i = 0; i < PartsInOrder.Length; i++)
+        {
+            var (name, variants) = PartsInOrder[i];
+            shapeIndexes[i] = ResolveIndex(GetChoice(options.Choices, name), IdCharAt(id, i * 2), variants.Length);
+            colorIndexes[i] = ResolveIndex(GetChoice(options.Choices, $"{name}-color"), IdCharAt(id, i * 2 + 1), Palette.Length);
+        }
+
+        var bodyColorIndex = colorIndexes[0];
+        var useGradientDefs = options.Variant != RoboAvatarVariant.Plain;
+        var gradientElementId = $"cda-robo-{options.GradientId}";
+
+        var content = new StringBuilder();
+
+        if (useGradientDefs)
+        {
+            var opacityStops = options.Dark ? DarkOpacityStops : LightOpacityStops;
+            var stopStart = options.Variant == RoboAvatarVariant.Fill ? opacityStops[0] : opacityStops[1];
+            var stopEnd = options.Variant == RoboAvatarVariant.Fill ? opacityStops[0] : opacityStops[2];
+            var bodyColor = Palette[bodyColorIndex];
+
+            content.Append("<defs><radialGradient id=\"").Append(Escape(gradientElementId))
+                .Append("\" cx=\"0.5\" cy=\"0.5\" r=\"0.5\" fx=\"0.5\" fy=\".8\">")
+                .Append("<stop offset=\"0%\" stop-color=\"").Append(Escape(bodyColor)).Append("\" stop-opacity=\"").Append(stopStart).Append("\" />")
+                .Append("<stop offset=\"100%\" stop-color=\"").Append(Escape(bodyColor)).Append("\" stop-opacity=\"").Append(stopEnd).Append("\" />")
+                .Append("</radialGradient></defs>");
+        }
+
+        for (var i = 0; i < PartsInOrder.Length; i++)
+        {
+            var (name, variants) = PartsInOrder[i];
+            var shapeMarkup = variants[shapeIndexes[i]];
+            var color = i == 0
+                ? Palette[colorIndexes[0]]
+                : Palette[SecondaryPalette[bodyColorIndex][colorIndexes[i] % SecondaryPalette[bodyColorIndex].Length]];
+
+            content.Append("<g data-robo-part=\"").Append(Escape(name)).Append('"');
+
+            if (options.LineWidth is { } lineWidth)
+            {
+                content.Append(" stroke-width=\"").Append(lineWidth.ToString(CultureInfo.InvariantCulture)).Append('"');
+            }
+
+            var isGradientBody = i == 0 && useGradientDefs;
+            if (isGradientBody)
+            {
+                content.Append(" fill=\"url(#").Append(Escape(gradientElementId)).Append(")\" stroke=\"").Append(Escape(color)).Append('"');
+            }
+            else if (options.Background == "currentColor")
+            {
+                content.Append(" stroke=\"").Append(Escape(color)).Append("\" style=\"fill: currentColor;\"");
+            }
+            else
+            {
+                content.Append(" stroke=\"").Append(Escape(color)).Append("\" fill=\"").Append(Escape(options.Background ?? DefaultBackground)).Append('"');
+            }
+
+            content.Append('>').Append(shapeMarkup).Append("</g>");
+        }
+
+        var hasTitle = !string.IsNullOrEmpty(options.Title);
+        var svg = new StringBuilder();
+        svg.Append("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"");
+        if (hasTitle)
+        {
+            svg.Append(" role=\"img\"");
+        }
+
+        svg.Append('>');
+        if (hasTitle)
+        {
+            svg.Append("<title>").Append(EscapeText(options.Title!)).Append("</title>");
+        }
+
+        svg.Append(content);
+        svg.Append("</svg>");
+
+        return svg.ToString();
+    }
+
+    private static int? GetChoice(IReadOnlyDictionary<string, int>? choices, string key)
+        => choices is not null && choices.TryGetValue(key, out var value) ? value : null;
+
+    private static char? IdCharAt(string id, int index)
+        => index < id.Length ? id[index] : null;
+
+    private static int ResolveIndex(int? choice, char? idChar, int count)
+    {
+        if (count <= 0)
+        {
+            return 0;
+        }
+
+        if (choice is int selected)
+        {
+            return WrapIndex(selected - 1, count);
+        }
+
+        return WrapIndex(CharValue(idChar), count);
+    }
+
+    private static int CharValue(char? character)
+    {
+        if (character is null)
+        {
+            return 0;
+        }
+
+        var index = Digits.IndexOf(char.ToLowerInvariant(character.Value));
+        return index == -1 ? character.Value : index;
+    }
+
+    private static int WrapIndex(int index, int count)
+        => ((index % count) + count) % count;
+
+    private static string Escape(string value)
+        => value
+            .Replace("&", "&amp;", StringComparison.Ordinal)
+            .Replace("\"", "&quot;", StringComparison.Ordinal)
+            .Replace("<", "&lt;", StringComparison.Ordinal)
+            .Replace(">", "&gt;", StringComparison.Ordinal);
+
+    private static string EscapeText(string value)
+        => value
+            .Replace("&", "&amp;", StringComparison.Ordinal)
+            .Replace("<", "&lt;", StringComparison.Ordinal)
+            .Replace(">", "&gt;", StringComparison.Ordinal);
+}

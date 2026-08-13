@@ -2324,6 +2324,73 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.RoboAvatar",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.BaseLib.RoboAvatarVariant Variant {get;set;}",
+          "property System.Boolean Dark {get;set;}",
+          "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.Int32\u003E Choices {get;set;}",
+          "property System.Int32 SizePx {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E LineWidth {get;set;}",
+          "property System.String Background {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Seed {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.RoboAvatarGenerator",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static System.String RenderSvg(CanDoItAll.Components.BaseLib.RoboAvatarOptions options)",
+          "method static System.String TextToAvatarId(System.String text, System.Int32 length = optional)"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.RoboAvatarOptions",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.BaseLib.RoboAvatarOptions \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.RoboAvatarOptions other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property CanDoItAll.Components.BaseLib.RoboAvatarVariant Variant {get;set;}",
+          "property System.Boolean Dark {get;set;}",
+          "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.Int32\u003E Choices {get;set;}",
+          "property System.Nullable\u003CSystem.Double\u003E LineWidth {get;set;}",
+          "property System.String Background {get;set;}",
+          "property System.String GradientId {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Text {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.RoboAvatarVariant",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.RoboAvatarVariant Fill",
+          "field static const CanDoItAll.Components.BaseLib.RoboAvatarVariant Gradient",
+          "field static const CanDoItAll.Components.BaseLib.RoboAvatarVariant Plain"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.Row",
         "kind": "class",
         "isAbstract": false,
