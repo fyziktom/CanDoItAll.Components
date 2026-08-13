@@ -28,7 +28,7 @@ public enum SandboxGroupKey
 
 public enum SandboxScenarioKey
 {
-    HappyPath,
+    Default,
     DenseContent,
     EmptyState,
     LoadingState,
@@ -174,48 +174,48 @@ public static class SandboxCatalogRegistry
 
     public static IReadOnlyList<SandboxExampleDefinition> Examples { get; } =
     [
-        CreateExample("foundations-happy", SandboxGroupKey.Foundations, "Type scale", SandboxScenarioKey.HappyPath, "Baseline typography, surfaces, and icon alignment.", ["typography", "spacing"], "TextBlock", "Icon", "SummaryTiles"),
+        CreateExample("foundations-default", SandboxGroupKey.Foundations, "Type scale", SandboxScenarioKey.Default, "Baseline typography, surfaces, and icon alignment.", ["typography", "spacing"], "TextBlock", "Icon", "SummaryTiles"),
         CreateExample("foundations-dense", SandboxGroupKey.Foundations, "Dense editorial stack", SandboxScenarioKey.DenseContent, "Denser heading, copy, and icon combinations.", ["dense", "copy"], "TextBlock", "Card"),
         CreateExample("foundations-empty", SandboxGroupKey.Foundations, "Empty orientation", SandboxScenarioKey.EmptyState, "Foundation-only empty orientation surface.", ["empty"], "EmptyState"),
-        CreateExample("inputs-happy", SandboxGroupKey.Inputs, "Form entry", SandboxScenarioKey.HappyPath, "Standard field layout with validation and helper context.", ["forms"], "FormField", "TextBox", "DropDown", "Numeric"),
-        CreateExample("inputs-editable", SandboxGroupKey.Inputs, "Inline property editing", SandboxScenarioKey.HappyPath, "Editable property rows switch from displayed values to shared text and checkbox inputs.", ["forms", "inline-edit"], "Editable", "Stack", "TextBox", "CheckBox"),
+        CreateExample("inputs-default", SandboxGroupKey.Inputs, "Form entry", SandboxScenarioKey.Default, "Standard field layout with validation and helper context.", ["forms"], "FormField", "TextBox", "DropDown", "Numeric"),
+        CreateExample("inputs-editable", SandboxGroupKey.Inputs, "Inline property editing", SandboxScenarioKey.Default, "Editable property rows switch from displayed values to shared text and checkbox inputs.", ["forms", "inline-edit"], "Editable", "Stack", "TextBox", "CheckBox"),
         CreateExample("inputs-dense", SandboxGroupKey.Inputs, "Dense intake form", SandboxScenarioKey.DenseContent, "High-density entry form with stacked fields.", ["dense", "forms"], "FormSection", "TextArea", "Switch"),
         CreateExample("inputs-empty", SandboxGroupKey.Inputs, "No draft selected", SandboxScenarioKey.EmptyState, "Entry workflow before a draft is created.", ["empty"], "EmptyState"),
-        CreateExample("actions-happy", SandboxGroupKey.Actions, "Primary action hierarchy", SandboxScenarioKey.HappyPath, "Primary, secondary, ghost, and copy action contrast.", ["buttons", "copy"], "Button", "CopyButton"),
+        CreateExample("actions-default", SandboxGroupKey.Actions, "Primary action hierarchy", SandboxScenarioKey.Default, "Primary, secondary, ghost, and copy action contrast.", ["buttons", "copy"], "Button", "CopyButton"),
         CreateExample("actions-dense", SandboxGroupKey.Actions, "Dense inline actions", SandboxScenarioKey.DenseContent, "Action rows inside a compact review surface with copy affordances.", ["dense", "inline", "copy"], "Button", "CopyButton", "StatusBadge"),
         CreateExample("actions-empty", SandboxGroupKey.Actions, "No actions available", SandboxScenarioKey.EmptyState, "Action surface when prerequisites are missing.", ["empty"], "EmptyState", "Alert"),
-        CreateExample("navigation-happy", SandboxGroupKey.Navigation, "Workspace navigation", SandboxScenarioKey.HappyPath, "Tabs, steps, tree navigation, and list-detail movement in a standard workflow that keeps dense content segmented instead of vertically stacked.", ["keyboard", "tabs", "treeview", "progressive-disclosure", "reduce-scroll"], "Tabs", "Steps", "TreeView", "TooltipTarget", "ListDetailShell"),
+        CreateExample("navigation-default", SandboxGroupKey.Navigation, "Workspace navigation", SandboxScenarioKey.Default, "Tabs, steps, tree navigation, and list-detail movement in a standard workflow that keeps dense content segmented instead of vertically stacked.", ["keyboard", "tabs", "treeview", "progressive-disclosure", "reduce-scroll"], "Tabs", "Steps", "TreeView", "TooltipTarget", "ListDetailShell"),
         CreateExample("navigation-dense", SandboxGroupKey.Navigation, "Dense workspace routing", SandboxScenarioKey.DenseContent, "High-information navigation shell with active detail.", ["dense"], "SecondaryTabs", "SelectionListItem"),
         CreateExample("navigation-empty", SandboxGroupKey.Navigation, "Nothing selected", SandboxScenarioKey.EmptyState, "Navigation shell before an item is selected.", ["empty"], "ListDetailShell", "EmptyState"),
-        CreateCustomExample("navigation-tabs-lab", SandboxGroupKey.Navigation, "Tabs lab", "/groups/navigation#tabs", SandboxScenarioKey.HappyPath, "Dedicated tabs section covering the readable default setup, advanced accent styling, shell customization, overflow strategies, and edge cases that prove tabs can replace long stacked pages.", ["tabs", "responsive", "edge-cases", "customization", "progressive-disclosure", "reduce-scroll", "overflow"], "Tabs"),
-        CreateCustomExample("navigation-side-menu-lab", SandboxGroupKey.Navigation, "Side menu lab", "/groups/navigation#side-menu", SandboxScenarioKey.HappyPath, "Responsive side menu covering declarative and list-fed items, measured overflow, service-driven context switching, utility panels, persistence, and the small-screen top dropdown.", ["side-menu", "responsive", "overflow", "service", "local-storage", "dropdown"], "SideMenu", "SideMenuItem", "SideMenuService"),
+        CreateCustomExample("navigation-tabs-lab", SandboxGroupKey.Navigation, "Tabs lab", "/groups/navigation#tabs", SandboxScenarioKey.Default, "Dedicated tabs section covering the readable default setup, advanced accent styling, shell customization, overflow strategies, and edge cases that prove tabs can replace long stacked pages.", ["tabs", "responsive", "edge-cases", "customization", "progressive-disclosure", "reduce-scroll", "overflow"], "Tabs"),
+        CreateCustomExample("navigation-side-menu-lab", SandboxGroupKey.Navigation, "Side menu lab", "/groups/navigation#side-menu", SandboxScenarioKey.Default, "Responsive side menu covering declarative and list-fed items, measured overflow, service-driven context switching, utility panels, persistence, and the small-screen top dropdown.", ["side-menu", "responsive", "overflow", "service", "local-storage", "dropdown"], "SideMenu", "SideMenuItem", "SideMenuService"),
         CreateCustomExample("navigation-treeview-adaptive", SandboxGroupKey.Navigation, "Adaptive TreeView rows", "/groups/navigation?scenario=long-text&frame=desktop", SandboxScenarioKey.LongText, "Three-level TreeView proof for adaptive labels, compact badges, full-width nesting, and right-positioned service tooltips.", ["treeview", "responsive", "long-text", "tooltip", "ellipsis"], "TreeView", "TreeViewNodeRow", "TooltipTarget", "TooltipService"),
-        CreateExample("feedback-happy", SandboxGroupKey.Feedback, "Status surfaces", SandboxScenarioKey.HappyPath, "Alerts, badges, notifications, and load states.", ["status"], "Alert", "Notification", "NotificationService", "StatusBadge"),
+        CreateExample("feedback-default", SandboxGroupKey.Feedback, "Status surfaces", SandboxScenarioKey.Default, "Alerts, badges, notifications, and load states.", ["status"], "Alert", "Notification", "NotificationService", "StatusBadge"),
         CreateExample("feedback-dense", SandboxGroupKey.Feedback, "Operational feedback", SandboxScenarioKey.DenseContent, "Mixed severity feedback inside a busy operational surface.", ["dense"], "Alert", "StatusBadge", "SummaryTiles"),
         CreateExample("feedback-empty", SandboxGroupKey.Feedback, "No activity yet", SandboxScenarioKey.EmptyState, "Shared empty and loading transitions.", ["empty"], "EmptyState", "LoadingState"),
-        CreateExample("layout-happy", SandboxGroupKey.Layout, "Page scaffold", SandboxScenarioKey.HappyPath, "Page-level composition with header, lead, rail, section blocks, and a standalone zoom/pan preview.", ["page", "zoom-pan"], "PageScaffold", "PageHeader", "SectionCard", "ZoomPanFrame"),
+        CreateExample("layout-default", SandboxGroupKey.Layout, "Page scaffold", SandboxScenarioKey.Default, "Page-level composition with header, lead, rail, section blocks, and a standalone zoom/pan preview.", ["page", "zoom-pan"], "PageScaffold", "PageHeader", "SectionCard", "ZoomPanFrame"),
         CreateExample("layout-dense", SandboxGroupKey.Layout, "Dense workspace layout", SandboxScenarioKey.DenseContent, "Split layout that uses wider desktop space deliberately.", ["dense"], "PageScaffold", "FormSection", "StickyActionFooter"),
         CreateExample("layout-empty", SandboxGroupKey.Layout, "No records in view", SandboxScenarioKey.EmptyState, "Layout shell with an empty workspace region.", ["empty"], "PageScaffold", "EmptyState"),
-        CreateCustomExample("layout-composition", SandboxGroupKey.Layout, "Layout composition lab", "/groups/layout#stack", SandboxScenarioKey.HappyPath, "Compare Stack, Grid, and Row/Column versions of the same analytics control panel.", ["comparison", "responsive", "layout"], "Stack", "Grid", "Row", "Column", "FormRow"),
-        CreateExample("data-display-happy", SandboxGroupKey.DataDisplay, "Summary and list views", SandboxScenarioKey.HappyPath, "Cards, summaries, and list rows for stable data display.", ["lists"], "Card", "SelectionListItem", "SummaryTiles"),
+        CreateCustomExample("layout-composition", SandboxGroupKey.Layout, "Layout composition lab", "/groups/layout#stack", SandboxScenarioKey.Default, "Compare Stack, Grid, and Row/Column versions of the same analytics control panel.", ["comparison", "responsive", "layout"], "Stack", "Grid", "Row", "Column", "FormRow"),
+        CreateExample("data-display-default", SandboxGroupKey.DataDisplay, "Summary and list views", SandboxScenarioKey.Default, "Cards, summaries, and list rows for stable data display.", ["lists"], "Card", "SelectionListItem", "SummaryTiles"),
         CreateExample("data-display-dense", SandboxGroupKey.DataDisplay, "Dense data review", SandboxScenarioKey.DenseContent, "Metadata-heavy summaries and compact item rows.", ["dense", "metadata"], "SelectionListItem", "StatusBadge"),
         CreateExample("data-display-empty", SandboxGroupKey.DataDisplay, "No results", SandboxScenarioKey.EmptyState, "Shared empty display state for list-style data.", ["empty"], "EmptyState"),
-        CreateExample("charts-happy", SandboxGroupKey.Charts, "Trend and share charts", SandboxScenarioKey.HappyPath, "Area, line, multi-line, and pie examples using the CanDoItAll chart wrapper.", ["charts", "apex", "wrapper"], "CdaChart"),
+        CreateExample("charts-default", SandboxGroupKey.Charts, "Trend and share charts", SandboxScenarioKey.Default, "Area, line, multi-line, and pie examples using the CanDoItAll chart wrapper.", ["charts", "apex", "wrapper"], "CdaChart"),
         CreateExample("charts-dense", SandboxGroupKey.Charts, "Dense operational charts", SandboxScenarioKey.DenseContent, "Higher-density multi-series charts with legends, labels, and color tuning.", ["dense", "multi-series"], "CdaChart"),
         CreateExample("charts-empty", SandboxGroupKey.Charts, "No chart data", SandboxScenarioKey.EmptyState, "Wrapper empty-state behavior before any chart series is available.", ["empty"], "CdaChart", "EmptyState"),
-        CreateExample("mermaid-flowchart", SandboxGroupKey.Mermaid, "Interactive flowchart", SandboxScenarioKey.HappyPath, "Flowchart proof with .NET node-click events and pan/zoom controls.", ["mermaid", "flowchart", "click", "pan-zoom"], "MermaidDiagram"),
+        CreateExample("mermaid-flowchart", SandboxGroupKey.Mermaid, "Interactive flowchart", SandboxScenarioKey.Default, "Flowchart proof with .NET node-click events and pan/zoom controls.", ["mermaid", "flowchart", "click", "pan-zoom"], "MermaidDiagram"),
         CreateExample("mermaid-architecture", SandboxGroupKey.Mermaid, "Architecture beta", SandboxScenarioKey.DenseContent, "architecture-beta sample using groups, services, junctions, icons, labels, and directional ports.", ["mermaid", "architecture-beta", "services"], "MermaidDiagram"),
         CreateExample("mermaid-error", SandboxGroupKey.Mermaid, "Syntax diagnostics", SandboxScenarioKey.EmptyState, "Intentional Mermaid syntax failure proving line, column, excerpt, and expected-token rendering.", ["mermaid", "syntax-error", "diagnostics"], "MermaidDiagram", "Alert"),
-        CreateExample("qr-happy", SandboxGroupKey.QrCode, "QR payload rendering", SandboxScenarioKey.HappyPath, "URL and verification payloads rendered through the shared SVG component.", ["qr", "svg", "payload"], "QrCodeView", "QrCodeButton"),
+        CreateExample("qr-default", SandboxGroupKey.QrCode, "QR payload rendering", SandboxScenarioKey.Default, "URL and verification payloads rendered through the shared SVG component.", ["qr", "svg", "payload"], "QrCodeView", "QrCodeButton"),
         CreateExample("qr-long", SandboxGroupKey.QrCode, "Long QR payload", SandboxScenarioKey.LongText, "Long verification content with high error correction and constrained mobile width.", ["qr", "long-text", "error-correction"], "QrCodeView"),
         CreateExample("qr-empty", SandboxGroupKey.QrCode, "Empty and scanner fallback", SandboxScenarioKey.EmptyState, "Empty renderer state plus a camera-disabled manual scan dialog.", ["qr", "empty", "scanner", "fallback"], "QrCodeView", "QrScanButton"),
-        CreateExample("overlays-happy", SandboxGroupKey.Overlays, "Overlay services", SandboxScenarioKey.HappyPath, "DialogService, TooltipService, and NotificationService around contextual help and sticky actions.", ["overlay", "services"], "DialogService", "DialogHost", "TooltipService", "Tooltip", "NotificationService", "HelpPopover", "StickyActionFooter"),
+        CreateExample("overlays-default", SandboxGroupKey.Overlays, "Overlay services", SandboxScenarioKey.Default, "DialogService, TooltipService, and NotificationService around contextual help and sticky actions.", ["overlay", "services"], "DialogService", "DialogHost", "TooltipService", "Tooltip", "NotificationService", "HelpPopover", "StickyActionFooter"),
         CreateExample("overlays-dense", SandboxGroupKey.Overlays, "Dense approval flow", SandboxScenarioKey.DenseContent, "Inline approval surface with secondary actions, modal affordance, and service-hosted overlays.", ["dense", "approval"], "DialogService", "TooltipService", "NotificationService", "StickyActionFooter", "Alert"),
         CreateExample("overlays-empty", SandboxGroupKey.Overlays, "No modal context", SandboxScenarioKey.EmptyState, "Overlay surface before the user selects a record.", ["empty"], "EmptyState", "HelpPopover", "DialogHost"),
-        CreateExample("gantt-happy", SandboxGroupKey.Gantt, "Controlled project schedule", SandboxScenarioKey.HappyPath, "Move and resize tasks, reconnect dependencies, independently enable task requests from empty timeline points, reorder rows, insert work into a bridge edge, edit titles, and export the controlled projection.", ["gantt", "controlled", "interactive"], "GanttChart", "GanttTaskDragSource"),
+        CreateExample("gantt-default", SandboxGroupKey.Gantt, "Controlled project schedule", SandboxScenarioKey.Default, "Move and resize tasks, reconnect dependencies, independently enable task requests from empty timeline points, reorder rows, insert work into a bridge edge, edit titles, and export the controlled projection.", ["gantt", "controlled", "interactive"], "GanttChart", "GanttTaskDragSource"),
         CreateExample("gantt-dense", SandboxGroupKey.Gantt, "Dense dependency hub", SandboxScenarioKey.DenseContent, "Eight incoming and eight outgoing hub edges prove compact assignment indicators, endpoint lanes, and exact mouse reconnection under fan pressure.", ["dense", "dependencies", "assignments", "reconnection"], "GanttChart", "GanttAssignment"),
         CreateExample("gantt-empty", SandboxGroupKey.Gantt, "Empty schedule", SandboxScenarioKey.EmptyState, "Explicit zero-task surface without synthetic schedule data.", ["empty", "gantt"], "GanttChart"),
-        CreateExample("canvas-happy", SandboxGroupKey.Canvas, "Workbench surface", SandboxScenarioKey.HappyPath, "Shared workbench, floating windows, and calendar surface.", ["canvas", "workbench"], "CanvasWorkbench", "CanvasFloatingWindow", "CanvasCalendar"),
+        CreateExample("canvas-default", SandboxGroupKey.Canvas, "Workbench surface", SandboxScenarioKey.Default, "Shared workbench, floating windows, and calendar surface.", ["canvas", "workbench"], "CanvasWorkbench", "CanvasFloatingWindow", "CanvasCalendar"),
         CreateExample("canvas-dense", SandboxGroupKey.Canvas, "Dense workbench review", SandboxScenarioKey.DenseContent, "Deeper workbench, preview, and calendar density.", ["dense", "canvas"], "CanvasWorkbench", "CanvasSceneHostPreview", "LayerStackPreview"),
         CreateExample("canvas-empty", SandboxGroupKey.Canvas, "Empty canvas state", SandboxScenarioKey.EmptyState, "Canvas empty-state coverage across workbench and calendar.", ["empty", "canvas"], "CanvasWorkbench", "CanvasCalendar", "EmptyStateOverlay")
     ];
@@ -425,7 +425,7 @@ public static class SandboxScenarioKeyExtensions
             "loading" or "loading-state" => SandboxScenarioKey.LoadingState,
             "disabled" or "disabled-state" => SandboxScenarioKey.DisabledState,
             "long-text" => SandboxScenarioKey.LongText,
-            _ => SandboxScenarioKey.HappyPath
+            _ => SandboxScenarioKey.Default
         };
     }
 
@@ -438,7 +438,7 @@ public static class SandboxScenarioKeyExtensions
             SandboxScenarioKey.LoadingState => "loading-state",
             SandboxScenarioKey.DisabledState => "disabled-state",
             SandboxScenarioKey.LongText => "long-text",
-            _ => "happy-path"
+            _ => "default"
         };
     }
 
@@ -451,7 +451,7 @@ public static class SandboxScenarioKeyExtensions
             SandboxScenarioKey.LoadingState => "Loading",
             SandboxScenarioKey.DisabledState => "Disabled",
             SandboxScenarioKey.LongText => "Long Text",
-            _ => "Happy Path"
+            _ => "Default"
         };
     }
 

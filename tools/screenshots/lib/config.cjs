@@ -43,7 +43,7 @@ function validateConfig(config, resolvedPath) {
   }
 
   if (typeof config.alternatives !== "object" || config.alternatives === null || Array.isArray(config.alternatives) || Object.keys(config.alternatives).length === 0) {
-    throw new Error(`Config "alternatives" must be a non-empty object mapping alternative name to a query-string fragment (e.g. {"happy-path": "", "dense-content": "scenario=dense-content"}) in ${resolvedPath}`);
+    throw new Error(`Config "alternatives" must be a non-empty object mapping alternative name to a query-string fragment (e.g. {"default": "", "dense": "scenario=dense-content"}) in ${resolvedPath}`);
   }
 }
 
@@ -103,7 +103,7 @@ async function resolveRoutes(config) {
 }
 
 // A job's screenshot lives at current/{combo}/{page}.png, e.g.
-// current/desktop_light_happy-path/actions.png. "page" identifies the route (from its title,
+// current/desktop_light_default/actions.png. "page" identifies the route (from its title,
 // which is unique per route — "group" is just a coarse category like "Home"/"Components" and
 // is not necessarily unique) and "combo" identifies the viewport/theme/alternative combination.
 function buildJobs(config, routes) {

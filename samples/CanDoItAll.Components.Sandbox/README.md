@@ -4,7 +4,7 @@ Package version: `0.1.0`.
 
 ## Purpose
 
-The Sandbox is the living visual catalog for CanDoItAll.Components. It lets developers preview components in realistic compositions, compare happy/dense/empty scenarios, and capture browser-level regression evidence before taking a dependency into a product page.
+The Sandbox is the living visual catalog for CanDoItAll.Components. It lets developers preview components in realistic compositions, compare default/dense/empty scenarios, and capture browser-level regression evidence before taking a dependency into a product page.
 
 Run it locally with:
 
@@ -16,7 +16,7 @@ Then open the local URL shown by ASP.NET Core. The home page links to the catalo
 
 ## Validation Checklist
 
-Every standard group needs happy, dense, and empty-state proof (a screenshot or a manual walkthrough) before it's considered signed off. Use these questions as the review checklist:
+Every standard group needs default, dense, and empty-state proof (a screenshot or a manual walkthrough) before it's considered signed off. Use these questions as the review checklist:
 
 - Can I read all texts properly?
 - Will I like and understand this UI or layout as a new user?
@@ -33,7 +33,7 @@ The same list backs the "Validation" tab in each group page's proof dialog (`San
 
 ## Coverage Focus
 
-Each group page has its own coverage notes — the areas the happy/dense/empty screenshots need to make obvious. Toggle **Coverage** in the top toolbar (next to the theme switch) to show that group's notes at the top of the page. If a note's proof looks weak or uncertain, tune spacing, hierarchy, or variant usage rather than adding new markup.
+Each group page has its own coverage notes — the areas the default/dense/empty screenshots need to make obvious. Toggle **Coverage** in the top toolbar (next to the theme switch) to show that group's notes at the top of the page. If a note's proof looks weak or uncertain, tune spacing, hierarchy, or variant usage rather than adding new markup.
 
 ## Project Type
 

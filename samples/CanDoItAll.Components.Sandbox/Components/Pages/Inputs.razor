@@ -543,11 +543,11 @@
     private int uploadedFileCount;
     private long uploadedTotalSizeBytes;
     private IReadOnlyList<string> uploadedFileNames = [];
-    private SandboxScenarioKey advancedStateScenario = SandboxScenarioKey.HappyPath;
-    private AdvancedInputState AdvancedState = CreateAdvancedState(SandboxScenarioKey.HappyPath);
+    private SandboxScenarioKey advancedStateScenario = SandboxScenarioKey.Default;
+    private AdvancedInputState AdvancedState = CreateAdvancedState(SandboxScenarioKey.Default);
     private int advancedChangeCount;
-    private SandboxScenarioKey editableStateScenario = SandboxScenarioKey.HappyPath;
-    private EditableReviewItem EditableState = CreateEditableState(SandboxScenarioKey.HappyPath);
+    private SandboxScenarioKey editableStateScenario = SandboxScenarioKey.Default;
+    private EditableReviewItem EditableState = CreateEditableState(SandboxScenarioKey.Default);
     private int editableSaveCount;
 
     private InputFormState FormState => CurrentScenario switch

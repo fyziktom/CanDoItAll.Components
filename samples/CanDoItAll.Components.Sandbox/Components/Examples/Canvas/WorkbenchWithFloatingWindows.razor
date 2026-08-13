@@ -31,11 +31,11 @@
 </div>
 
 @code {
-    private CanvasWorkbenchUiState uiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.HappyPath);
-    private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.HappyPath);
+    private CanvasWorkbenchUiState uiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.Default);
+    private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.Default);
     private string selectedLabel = "Nothing selected";
 
-    private CanvasWorkbenchSurface Surface => SandboxCanvasSamples.CreateWorkbenchSurface(SandboxScenarioKey.HappyPath, uiState, inspectorState);
+    private CanvasWorkbenchSurface Surface => SandboxCanvasSamples.CreateWorkbenchSurface(SandboxScenarioKey.Default, uiState, inspectorState);
 
     private Task HandleSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)
     {

@@ -253,9 +253,9 @@ function formatStatusLine(combo) {
       }
       return "⚠️ changed";
     case "added":
-      return "🆕 added (no baseline)";
+      return "❇️ added (no baseline)";
     case "removed":
-      return "🗑️ removed (no longer captured)";
+      return "⛔️ removed (no longer captured)";
     case "capture-failed":
       return `❌ capture failed${combo.error ? `: ${combo.error}` : ""}`;
     case "error":

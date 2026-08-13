@@ -347,10 +347,10 @@
     ];
 
     private SandboxScenarioKey? initializedScenario;
-    private CanvasWorkbenchUiState workbenchUiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.HappyPath);
-    private CanvasWorkbenchWindowState inspectorWindowState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.HappyPath);
-    private CanvasWorkbenchWindowState activityWindowState = CreateActivityWindowState(SandboxScenarioKey.HappyPath);
-    private CanvasCalendarSurface currentCalendarSurface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.HappyPath);
+    private CanvasWorkbenchUiState workbenchUiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.Default);
+    private CanvasWorkbenchWindowState inspectorWindowState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.Default);
+    private CanvasWorkbenchWindowState activityWindowState = CreateActivityWindowState(SandboxScenarioKey.Default);
+    private CanvasCalendarSurface currentCalendarSurface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.Default);
     private readonly Dictionary<string, CanvasWorkbenchNodePositionChange> nodePositionOverrides = new(StringComparer.Ordinal);
     private string calendarExportStatus = "No calendar export requested";
     private string lastWorkbenchEvent = "No workbench interaction recorded yet.";
@@ -409,7 +409,7 @@
         SandboxScenarioKey.DisabledState => "Read only",
         SandboxScenarioKey.EmptyState => "Empty",
         SandboxScenarioKey.LongText => "Long text",
-        _ => "Happy path"
+        _ => "Default"
     };
 
     private string ScenarioBadgeTone => CurrentScenario switch

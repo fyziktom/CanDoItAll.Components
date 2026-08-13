@@ -7,7 +7,7 @@ public static class SandboxQueryLinks
     public static string WithScenario(NavigationManager navigationManager, SandboxScenarioKey scenario)
         => navigationManager.GetUriWithQueryParameter(
             "scenario",
-            scenario == SandboxScenarioKey.HappyPath ? null : scenario.ToSlug());
+            scenario == SandboxScenarioKey.Default ? null : scenario.ToSlug());
 
     public static string WithFrame(NavigationManager navigationManager, SandboxFramePreset frame)
         => navigationManager.GetUriWithQueryParameter(
@@ -28,7 +28,7 @@ public static class SandboxQueryLinks
         var target = navigationManager.ToAbsoluteUri(path).ToString();
         var parameters = new Dictionary<string, object?>();
 
-        if (scenario is { } scenarioValue && scenarioValue != SandboxScenarioKey.HappyPath)
+        if (scenario is { } scenarioValue && scenarioValue != SandboxScenarioKey.Default)
         {
             parameters["scenario"] = scenarioValue.ToSlug();
         }

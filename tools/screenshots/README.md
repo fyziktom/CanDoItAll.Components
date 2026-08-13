@@ -43,7 +43,7 @@ to). Neither ever pushes — `screenshots:store`/`screenshots:snapshot` print th
 run yourself once you want to share a branch.
 
 By default (`screenshots.config.json`) every script captures the trimmed matrix: desktop
-only, light only, happy-path only. Pass `--config tools/screenshots/screenshots.config.full.json`
+only, light only, default only. Pass `--config tools/screenshots/screenshots.config.full.json`
 to any of the scripts above to capture the full matrix instead (desktop + tablet + mobile,
 light + dark, and all six scenario alternatives) — e.g. `npm run screenshots:snapshot -- --config
 tools/screenshots/screenshots.config.full.json`.
@@ -92,7 +92,7 @@ they're omitted.
   changes, only config.
 - `alternatives` — explicit `{ name: "query-string-fragment" }` map, same shape as `themes`,
   for the Sandbox's `?scenario=` variants (dense content, empty state, loading, disabled, long
-  text). `screenshots.config.json` only has `{ "happy-path": "" }`; `screenshots.config.full.json`
+  text). `screenshots.config.json` only has `{ "default": "" }`; `screenshots.config.full.json`
   has all six. Every route × viewport × theme is captured once per `alternatives` entry.
 - `readySelector` — waited for before a screenshot is taken, in addition to `networkidle` and
   `document.fonts.ready`.
