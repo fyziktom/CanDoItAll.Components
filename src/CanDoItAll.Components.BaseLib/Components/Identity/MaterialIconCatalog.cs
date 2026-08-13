@@ -2,7 +2,8 @@ namespace CanDoItAll.Components.BaseLib;
 
 public static class MaterialIconCatalog
 {
-    private static readonly IReadOnlyDictionary<string, string> Aliases = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    /// <summary>Semantic shorthand tokens (and a few legacy Font Awesome class literals) mapped to their resolved Material Symbols name. This is not the full set of valid icon names — any raw Material Symbols name also resolves via <see cref="LooksLikeMaterialIconName"/>.</summary>
+    public static IReadOnlyDictionary<string, string> Aliases { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
         ["ai"] = "smart_toy",
         ["arch"] = "design_services",
@@ -144,6 +145,14 @@ public static class MaterialIconCatalog
         return false;
     }
 
+    // Accepts full Font Awesome class strings (e.g. "fas fa-chevron-right"), hence Contains
+    // rather than an exact match — that's also why "fa-angle-right" is unreachable here for the
+    // bare token: it already resolves via the Aliases dictionary above before this method runs,
+    // and only matters here for compound class strings. No caller in this repo currently passes
+    // any "fa-*" token (grepped .razor/.cs/.json repo-wide with zero hits outside this file), and
+    // this file's history is a single squashed commit, so the original consumer isn't recoverable
+    // from git. TODO: confirm with the owner whether an out-of-repo consumer still emits Font
+    // Awesome class tokens before removing this branch or the "fa-angle-right" alias entry.
     private static bool TryResolveFontAwesomeLiteral(string iconToken, out string iconName)
     {
         if (iconToken.Contains("fa-angle-right", StringComparison.OrdinalIgnoreCase)
