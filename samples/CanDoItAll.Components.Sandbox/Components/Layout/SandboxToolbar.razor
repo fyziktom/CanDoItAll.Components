@@ -2,7 +2,7 @@
 @inject NavigationManager NavigationManager
 
 <div class="sandbox-toolbar" data-testid="sandbox-toolbar">
-    <div class="flex justify-center items-center gap-2.5"><img class="inline-block" src="./assets/logo.svg" alt="CanDoItAll" height="32" width="32"> CanDoItAll</div>
+    <a class="flex justify-center items-center gap-2.5 no-underline text-inherit" href="@BuildHomeLink()"><img class="inline-block" src="./assets/logo.svg" alt="CanDoItAll" height="32" width="32"> CanDoItAll</a>
 
     <div class="sandbox-toolbar__controls">
         @if (ToolbarState is { HasContext: true } toolbarState)
@@ -75,6 +75,17 @@
 
     private void ToggleDarkMode()
         => NavigationManager.NavigateTo(SandboxQueryLinks.WithDark(NavigationManager, !ThemeState!.IsDark));
+
+    private string BuildHomeLink()
+    {
+        var hasContext = ToolbarState is { HasContext: true };
+        return SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            "/",
+            hasContext ? ToolbarState!.Scenario : null,
+            hasContext ? ToolbarState!.Frame : null,
+            ThemeState?.IsDark ?? false);
+    }
 
     private sealed record ScenarioOption(string Text, SandboxScenarioKey Value);
 

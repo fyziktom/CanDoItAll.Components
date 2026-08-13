@@ -24,26 +24,6 @@ body {
   border-bottom: 1px solid var(--cad-color-border-soft);
 }
 
-.sandbox-sidebar.is-open {
-  @apply flex;
-}
-
-.sandbox-brand {
-  @apply flex flex-col gap-1 no-underline;
-}
-
-.sandbox-brand__eyebrow {
-  @apply text-xs font-semibold uppercase tracking-[0.2em] text-(--cad-tone-success-soft-fg);
-}
-
-.sandbox-brand__title {
-  @apply text-[1.4rem] font-bold text-(--cad-color-text-strong);
-}
-
-.sandbox-brand__summary {
-  @apply m-0 text-[0.94rem] leading-[1.7] text-(--cad-color-text-muted);
-}
-
 .sandbox-nav {
   @apply flex flex-col gap-0.5;
 }
@@ -79,16 +59,6 @@ body {
   @apply pb-4;
 }
 
-.sandbox-mobile-header {
-  @apply flex items-center justify-between gap-4 rounded-(--cad-radius-panel) p-4 shadow-(--cad-shadow-soft) backdrop-filter-[blur(18px)];
-  border: 1px solid var(--cad-color-border-soft);
-  background: color-mix(in srgb, var(--cad-color-surface) 88%, transparent);
-}
-
-.sandbox-mobile-header .sandbox-brand__title {
-  @apply text-base;
-}
-
 @media (min-width: 1100px) {
   .sandbox-layout__shell {
     grid-template-columns: 18rem minmax(0, 1fr);
@@ -112,9 +82,5 @@ body {
   .sandbox-main {
     min-width: 0;
     padding: 1.5rem 1.75rem 2rem;
-  }
-
-  .sandbox-mobile-header {
-    display: none;
   }
 }
