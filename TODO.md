@@ -115,7 +115,7 @@ You noticed `Avatar.razor` (`Components/Identity/Avatar.razor`) isn't listed any
 
 ## Missing components, by folder
 
-### Identity (4 of 6 missing) — includes Avatar
+### ✅ Identity (4 of 6 missing) — includes Avatar
 - **Avatar** ← the one you spotted
 - CreatorLine
 - CreatorSocialLink
@@ -176,7 +176,7 @@ Documented: PageHeader, SideMenu, Steps, Tabs, Toolbar, TreeView
 ### Storage (2 of 2 missing — entire folder undocumented)
 StorageBadgeStrip, StorageSummaryCard
 
-### Typography (11 of 12 missing)
+### ✅ Typography (11 of 12 missing)
 CopyableMonoValue, Divider, Eyebrow, FooterText, HashDisplay, Header, MonoText, MutedInline, SectionHead, SectionHeading, SmallText
 
 Documented: TextBlock
