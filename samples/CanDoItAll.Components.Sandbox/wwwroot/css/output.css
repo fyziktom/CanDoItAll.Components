@@ -382,6 +382,13 @@
     margin-block-end: calc(calc(var(--spacing) * 6) * calc(1 - var(--tw-space-y-reverse)));
   }
 }
+.space-y-8 {
+  :where(& > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 8) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 8) * calc(1 - var(--tw-space-y-reverse)));
+  }
+}
 .divide-y {
   :where(& > :not(:last-child)) {
     --tw-divide-y-reverse: 0;
@@ -1136,10 +1143,9 @@ body {
 .sandbox-list {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--spacing) * 6);
 }
 .sandbox-toc-group {
-  font-size: 1.05rem;
   --tw-font-weight: var(--font-weight-bold);
   font-weight: var(--font-weight-bold);
   color: var(--cad-color-text-strong);
@@ -1149,11 +1155,9 @@ body {
   text-decoration-line: underline;
 }
 .sandbox-toc-items {
-  margin: calc(var(--spacing) * 0);
-  font-size: 0.9rem;
-  --tw-leading: 1.7;
-  line-height: 1.7;
-  color: var(--cad-color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  word-spacing: .125rem;
 }
 .sandbox-toc-items a {
   color: var(--cad-tone-info-soft-fg);
