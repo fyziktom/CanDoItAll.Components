@@ -291,7 +291,18 @@ public static class SandboxCatalogRegistry
                 new("typeblock", "TextBlock", typeof(TextBlock)),
                 new("summary-tiles", "SummaryTiles", typeof(SummaryTiles)),
                 new("icon", "Icon", typeof(Icon)),
-                new("robo-avatar", "RoboAvatar", typeof(RoboAvatar))
+                new("robo-avatar", "RoboAvatar", typeof(RoboAvatar)),
+                new("eyebrow", "Eyebrow", typeof(Eyebrow)),
+                new("section-heading", "SectionHeading", typeof(SectionHeading)),
+                new("section-head", "SectionHead", typeof(SectionHead)),
+                new("header", "Header", typeof(Header)),
+                new("divider", "Divider", typeof(Divider)),
+                new("mono-text", "MonoText", typeof(MonoText)),
+                new("copyable-mono-value", "CopyableMonoValue", typeof(CopyableMonoValue)),
+                new("hash-display", "HashDisplay", typeof(HashDisplay)),
+                new("muted-inline", "MutedInline", typeof(MutedInline)),
+                new("small-text", "SmallText", typeof(SmallText)),
+                new("footer-text", "FooterText", typeof(FooterText))
             ],
             ["/groups/data-display"] =
             [

@@ -171,6 +171,105 @@
                             <RoboAvatarGallery />
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "Eyebrow")
+                    {
+                        <ExampleBlock Title="Overline label"
+                                      Description="A small overline label that sits above a heading to give it context, from plain text or custom markup."
+                                      SourceId="examples/Foundations/EyebrowShowcase.razor"
+                                      ApiTypes="@EyebrowApiTypes">
+                            <EyebrowShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SectionHeading")
+                    {
+                        <ExampleBlock Title="Styled heading"
+                                      Description="Consistent heading styling for grouping a block of content."
+                                      SourceId="examples/Foundations/SectionHeadingShowcase.razor"
+                                      ApiTypes="@SectionHeadingApiTypes">
+                            <SectionHeadingShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SectionHead")
+                    {
+                        <ExampleBlock Title="Heading row"
+                                      Description="A flex row that spaces a heading and a trailing action apart, for section headers that need both."
+                                      SourceId="examples/Foundations/SectionHeadShowcase.razor"
+                                      ApiTypes="@SectionHeadApiTypes">
+                            <SectionHeadShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Header")
+                    {
+                        <ExampleBlock Title="Page header anatomy"
+                                      Description="Header composes with Eyebrow and SectionHead to form the typical top-of-page layout."
+                                      SourceId="examples/Foundations/HeaderShowcase.razor"
+                                      ApiTypes="@HeaderApiTypes">
+                            <HeaderShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Divider")
+                    {
+                        <ExampleBlock Title="Content separator"
+                                      Description="A hairline rule for separating adjacent blocks of content without adding a heading."
+                                      SourceId="examples/Foundations/DividerShowcase.razor"
+                                      ApiTypes="@DividerApiTypes">
+                            <DividerShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "MonoText")
+                    {
+                        <ExampleBlock Title="Monospace text"
+                                      Description="Renders text in the shared monospace style, from plain text or custom markup."
+                                      SourceId="examples/Foundations/MonoTextShowcase.razor"
+                                      ApiTypes="@MonoTextApiTypes">
+                            <MonoTextShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CopyableMonoValue")
+                    {
+                        <ExampleBlock Title="Copyable value"
+                                      Description="A monospace value with a copy button, with optional middle truncation for long identifiers."
+                                      SourceId="examples/Foundations/CopyableMonoValueShowcase.razor"
+                                      ApiTypes="@CopyableMonoValueApiTypes">
+                            <CopyableMonoValueShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "HashDisplay")
+                    {
+                        <ExampleBlock Title="Hash value"
+                                      Description="A CopyableMonoValue preset with hash-flavored defaults for copy label and empty state."
+                                      SourceId="examples/Foundations/HashDisplayShowcase.razor"
+                                      ApiTypes="@HashDisplayApiTypes">
+                            <HashDisplayShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "MutedInline")
+                    {
+                        <ExampleBlock Title="Muted inline text"
+                                      Description="De-emphasized text that sits inline within a sentence."
+                                      SourceId="examples/Foundations/MutedInlineShowcase.razor"
+                                      ApiTypes="@MutedInlineApiTypes">
+                            <MutedInlineShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SmallText")
+                    {
+                        <ExampleBlock Title="Small text variants"
+                                      Description="Muted small text that can render as a block, inline span, or standalone paragraph."
+                                      SourceId="examples/Foundations/SmallTextShowcase.razor"
+                                      ApiTypes="@SmallTextApiTypes">
+                            <SmallTextShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FooterText")
+                    {
+                        <ExampleBlock Title="Footer caption"
+                                      Description="Small muted text styled for page and card footers."
+                                      SourceId="examples/Foundations/FooterTextShowcase.razor"
+                                      ApiTypes="@FooterTextApiTypes">
+                            <FooterTextShowcase />
+                        </ExampleBlock>
+                    }
                 </section>
             }
         }
@@ -186,6 +285,17 @@
     private static readonly IReadOnlyList<Type> SummaryTilesApiTypes = [typeof(SummaryTiles), typeof(SummaryTile)];
     private static readonly IReadOnlyList<Type> IconApiTypes = [typeof(Icon)];
     private static readonly IReadOnlyList<Type> RoboAvatarApiTypes = [typeof(RoboAvatar)];
+    private static readonly IReadOnlyList<Type> EyebrowApiTypes = [typeof(Eyebrow)];
+    private static readonly IReadOnlyList<Type> SectionHeadingApiTypes = [typeof(SectionHeading)];
+    private static readonly IReadOnlyList<Type> SectionHeadApiTypes = [typeof(SectionHead)];
+    private static readonly IReadOnlyList<Type> HeaderApiTypes = [typeof(Header)];
+    private static readonly IReadOnlyList<Type> DividerApiTypes = [typeof(Divider)];
+    private static readonly IReadOnlyList<Type> MonoTextApiTypes = [typeof(MonoText)];
+    private static readonly IReadOnlyList<Type> CopyableMonoValueApiTypes = [typeof(CopyableMonoValue)];
+    private static readonly IReadOnlyList<Type> HashDisplayApiTypes = [typeof(HashDisplay)];
+    private static readonly IReadOnlyList<Type> MutedInlineApiTypes = [typeof(MutedInline)];
+    private static readonly IReadOnlyList<Type> SmallTextApiTypes = [typeof(SmallText)];
+    private static readonly IReadOnlyList<Type> FooterTextApiTypes = [typeof(FooterText)];
 
     // Only reached from the Dense/LongText branch — the default specimens live solely
     // in the TypeScale example component (rendered directly, not duplicated here).
