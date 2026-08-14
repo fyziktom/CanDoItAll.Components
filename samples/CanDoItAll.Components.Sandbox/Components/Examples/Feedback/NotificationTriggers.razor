@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Feedback
+@inject NotificationService NotificationService
+
+<Cluster Gap="LayoutGap.Small">
+    <Button Text="Success toast" Icon="check_circle" ButtonStyle="@(ButtonStyle.Success)" Variant="@(Variant.Outlined)"
+            Click="@(() => NotificationService.Success("Feedback saved", "The reviewer queue picked up your latest change.", position: NotificationPosition.BottomCenter))" />
+    <Button Text="Warning toast" Icon="warning" ButtonStyle="@(ButtonStyle.Warning)" Variant="@(Variant.Outlined)"
+            Click="@(() => NotificationService.Warning("Needs a second look", "Dense and mobile variants still need a closer proof pass.", position: NotificationPosition.BottomCenter))" />
+    <Button Text="Error toast" Icon="error" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Outlined)"
+            Click="@(() => NotificationService.Error("Could not refresh", "The status summary failed to refresh. Try again.", position: NotificationPosition.BottomCenter))" />
+</Cluster>

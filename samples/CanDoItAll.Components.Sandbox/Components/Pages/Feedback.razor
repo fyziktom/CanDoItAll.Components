@@ -2,6 +2,7 @@
 @page "/groups/feedback"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
+@inject NotificationService NotificationService
 
 <PageTitle>Feedback</PageTitle>
 
@@ -128,6 +129,67 @@
                                               TestId="sandbox-feedback-verification-list" />
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "EmptyState")
+                    {
+                        <ExampleBlock Title="Empty state"
+                                      Description="A calm, oriented surface for zero-data moments, independent of the page-level empty scenario above."
+                                      SourceId="examples/Feedback/EmptyStateCard.razor"
+                                      ApiTypes="@EmptyStateApiTypes">
+                            <EmptyState Eyebrow="Feedback queue"
+                                        Title="No open feedback items"
+                                        Description="New alerts, notifications, and validation issues will appear here as soon as they are raised.">
+                                <Actions>
+                                    <Button Text="Create test alert" Icon="add" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
+                                </Actions>
+                            </EmptyState>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "LoadingState")
+                    {
+                        <ExampleBlock Title="Loading state"
+                                      Description="A skeleton surface that communicates progress instead of a blank failure."
+                                      SourceId="examples/Feedback/LoadingStateCard.razor"
+                                      ApiTypes="@LoadingStateApiTypes">
+                            <LoadingState Eyebrow="Feedback queue"
+                                          Title="Refreshing feedback items"
+                                          Description="The list stays calm while alerts and notifications refresh in the background." />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Notification")
+                    {
+                        <ExampleBlock Title="Toast host"
+                                      Description="Notification renders whatever NotificationService currently holds. It is mounted once in the app layout and groups toasts by position."
+                                      SourceId="examples/Feedback/NotificationTriggers.razor"
+                                      ApiTypes="@NotificationApiTypes">
+                            <Cluster Gap="LayoutGap.Small" data-testid="sandbox-feedback-notification-triggers">
+                                <Button Text="Success toast" Icon="check_circle" ButtonStyle="@(ButtonStyle.Success)" Variant="@(Variant.Outlined)" Click="ShowSuccessToast" />
+                                <Button Text="Warning toast" Icon="warning" ButtonStyle="@(ButtonStyle.Warning)" Variant="@(Variant.Outlined)" Click="ShowWarningToast" />
+                                <Button Text="Error toast" Icon="error" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Outlined)" Click="ShowErrorToast" />
+                            </Cluster>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Tooltip")
+                    {
+                        <ExampleBlock Title="Rich tooltip content"
+                                      Description="The same host-mounted Tooltip can render arbitrary markup through TooltipTarget's TooltipContent template, not just plain text."
+                                      SourceId="examples/Feedback/TooltipRichContent.razor"
+                                      ApiTypes="@TooltipApiTypes">
+                            <span data-testid="sandbox-feedback-tooltip-rich-trigger">
+                                <TooltipTarget Position="@(TooltipPosition.Bottom)"
+                                               TestId="sandbox-feedback-tooltip-rich">
+                                    <TooltipContent>
+                                        <div class="space-y-1 text-left">
+                                            <p class="m-0 font-semibold">Rich tooltip content</p>
+                                            <p class="m-0">The tooltip host can render any markup passed to it, not just plain strings.</p>
+                                        </div>
+                                    </TooltipContent>
+                                    <ChildContent>
+                                        <Button Text="Rich content" Icon="info" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
+                                    </ChildContent>
+                                </TooltipTarget>
+                            </span>
+                        </ExampleBlock>
+                    }
                 </section>
             }
         }
@@ -145,6 +207,19 @@
     private static readonly IReadOnlyList<Type> HelpPopoverApiTypes = [typeof(HelpPopover)];
     private static readonly IReadOnlyList<Type> StatusCheckListApiTypes = [typeof(StatusCheckList)];
     private static readonly IReadOnlyList<Type> VerificationListApiTypes = [typeof(VerificationList)];
+    private static readonly IReadOnlyList<Type> EmptyStateApiTypes = [typeof(EmptyState)];
+    private static readonly IReadOnlyList<Type> LoadingStateApiTypes = [typeof(LoadingState)];
+    private static readonly IReadOnlyList<Type> NotificationApiTypes = [typeof(Notification)];
+    private static readonly IReadOnlyList<Type> TooltipApiTypes = [typeof(Tooltip), typeof(TooltipTarget)];
+
+    private void ShowSuccessToast()
+        => NotificationService.Success("Feedback saved", "The reviewer queue picked up your latest change.", position: NotificationPosition.BottomCenter);
+
+    private void ShowWarningToast()
+        => NotificationService.Warning("Needs a second look", "Dense and mobile variants still need a closer proof pass.", position: NotificationPosition.BottomCenter);
+
+    private void ShowErrorToast()
+        => NotificationService.Error("Could not refresh", "The status summary failed to refresh. Try again.", position: NotificationPosition.BottomCenter);
 
     private string LongCalloutText => CurrentScenario == SandboxScenarioKey.LongText
         ? "Long callout text should maintain a useful line length and avoid pushing adjacent feedback examples wider than their grid column."

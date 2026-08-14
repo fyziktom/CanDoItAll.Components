@@ -1,0 +1,23 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+
+<FormStack>
+    <FormRow Split="true">
+        <FormField Text="Title">
+            <TextBox Value="@title" ValueChanged="@(value => title = value)" Placeholder="Short, clear summary" />
+        </FormField>
+        <FormField Text="Status">
+            <DropDown TValue="string" Data="@StatusOptions" Value="@status" ValueChanged="@(value => status = value)" Placeholder="Select status" />
+        </FormField>
+    </FormRow>
+    <FormField Text="Notes">
+        <TextArea Value="@notes" ValueChanged="@(value => notes = value)" Placeholder="Explain context, risk, and reviewer expectations." />
+    </FormField>
+</FormStack>
+
+@code {
+    private static readonly IReadOnlyList<string> StatusOptions = ["Draft", "Review", "Blocked", "Approved"];
+
+    private string? title = "Component validation pass";
+    private string? status = "Draft";
+    private string? notes;
+}

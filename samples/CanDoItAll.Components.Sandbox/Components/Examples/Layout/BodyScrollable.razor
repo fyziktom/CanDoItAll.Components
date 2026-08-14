@@ -1,0 +1,24 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
+
+<Body FillHeight="true" Scrollable="true" Style="height:14rem;" Class="rounded-[1.25rem] border border-slate-200 bg-white p-4">
+    <div class="space-y-3">
+        @foreach (var item in Rows)
+        {
+            <div class="rounded-[0.85rem] border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">@item</div>
+        }
+    </div>
+</Body>
+
+@code {
+    private static readonly IReadOnlyList<string> Rows =
+    [
+        "Release acceptance checklist",
+        "Reviewer lane assignments",
+        "Priority threshold history",
+        "Budget reference audit",
+        "Notification delivery log",
+        "Mobile viewport proof",
+        "Tablet viewport proof",
+        "Accessibility pass notes"
+    ];
+}

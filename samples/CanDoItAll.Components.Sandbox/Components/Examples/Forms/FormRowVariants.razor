@@ -1,0 +1,23 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+
+<Stack GapScale="LayoutGap.Medium">
+    <FormRow Split="true">
+        <FormField Text="Priority threshold">
+            <Slider TValue="int" Value="@priority" ValueChanged="@(value => priority = value)" Min="0" Max="100" Step="5" />
+        </FormField>
+        <FormField Text="Budget reference">
+            <TextBox Value="@budgetCode" ValueChanged="@(value => budgetCode = value)" Placeholder="Review budget code" Class="cda-input" />
+        </FormField>
+    </FormRow>
+    <FormRow Split="false">
+        <FormField Text="Notes">
+            <TextArea Value="@notes" ValueChanged="@(value => notes = value)" Placeholder="Explain context, risk, and reviewer expectations." />
+        </FormField>
+    </FormRow>
+</Stack>
+
+@code {
+    private int priority = 70;
+    private string? budgetCode = "BASE-READY";
+    private string? notes;
+}

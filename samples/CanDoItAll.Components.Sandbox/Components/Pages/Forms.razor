@@ -466,6 +466,176 @@
                             </FormStack>
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "FormField")
+                    {
+                        <ExampleBlock Title="Field slots"
+                                      Description="FormField pairs a label with leading and trailing slots around the input, not just a bare label plus control."
+                                      SourceId="examples/Forms/FieldSlots.razor"
+                                      ApiTypes="@FormFieldApiTypes">
+                            <FormField Text="Reference code" data-testid="sandbox-forms-field-slots">
+                                <Start>
+                                    <Icon Name="tag" />
+                                </Start>
+                                <ChildContent>
+                                    <TextBox Value="@AdvancedState.BudgetCode"
+                                             ValueChanged="HandleBudgetCodeChanged"
+                                             Placeholder="Review budget code"
+                                             Disabled="@IsDisabled"
+                                             Class="cda-input" />
+                                </ChildContent>
+                                <End>
+                                    <StatusBadge Text="Synced" Tone="success" />
+                                </End>
+                            </FormField>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FormRow")
+                    {
+                        <ExampleBlock Title="Split vs stacked"
+                                      Description="FormRow arranges one or two fields either side by side or stacked in a single column."
+                                      SourceId="examples/Forms/FormRowVariants.razor"
+                                      ApiTypes="@FormRowApiTypes">
+                            <Stack GapScale="LayoutGap.Medium" data-testid="sandbox-forms-row-variants">
+                                <FormRow Split="true">
+                                    <FormField Text="Priority threshold">
+                                        <Slider TValue="int"
+                                                Value="@AdvancedState.Priority"
+                                                ValueChanged="HandlePriorityChanged"
+                                                Min="0"
+                                                Max="100"
+                                                Step="5"
+                                                Disabled="@IsDisabled" />
+                                    </FormField>
+                                    <FormField Text="Budget reference">
+                                        <TextBox Value="@AdvancedState.BudgetCode"
+                                                 ValueChanged="HandleBudgetCodeChanged"
+                                                 Placeholder="Review budget code"
+                                                 Disabled="@IsDisabled"
+                                                 Class="cda-input" />
+                                    </FormField>
+                                </FormRow>
+                                <FormRow Split="false">
+                                    <FormField Text="Notes">
+                                        <TextArea Value="@FormState.Notes"
+                                                  ValueChanged="HandleNotesChanged"
+                                                  Placeholder="@NotesPlaceholder"
+                                                  Disabled="@IsDisabled" />
+                                    </FormField>
+                                </FormRow>
+                            </Stack>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FormSection")
+                    {
+                        <ExampleBlock Title="Grouped section"
+                                      Description="FormSection pairs a title, description, icon, and optional help popover with a right-aligned actions cluster."
+                                      SourceId="examples/Forms/FormSectionShowcase.razor"
+                                      ApiTypes="@FormSectionApiTypes">
+                            <FormSection Title="Review readiness"
+                                         Description="Confirm the fields below before requesting sign-off."
+                                         Icon="fact_check"
+                                         HelpText="Sign-off requires a reviewer lane, a priority threshold, and a budget reference."
+                                         HelpHeading="Review readiness help">
+                                <Actions>
+                                    <Button Text="Request sign-off" Size="ButtonSize.Small" Disabled="@IsDisabled" />
+                                </Actions>
+                                <ChildContent>
+                                    <FormRow Split="true">
+                                        <FormField Text="Priority threshold">
+                                            <Slider TValue="int"
+                                                    Value="@AdvancedState.Priority"
+                                                    ValueChanged="HandlePriorityChanged"
+                                                    Min="0"
+                                                    Max="100"
+                                                    Step="5"
+                                                    Disabled="@IsDisabled" />
+                                        </FormField>
+                                        <FormField Text="Budget reference">
+                                            <TextBox Value="@AdvancedState.BudgetCode"
+                                                     ValueChanged="HandleBudgetCodeChanged"
+                                                     Placeholder="Review budget code"
+                                                     Disabled="@IsDisabled"
+                                                     Class="cda-input" />
+                                        </FormField>
+                                    </FormRow>
+                                </ChildContent>
+                            </FormSection>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FormStack")
+                    {
+                        <ExampleBlock Title="Stacked field groups"
+                                      Description="FormStack applies consistent vertical rhythm across FormRow and FormField groups without one-off spacing."
+                                      SourceId="examples/Forms/FormStackShowcase.razor"
+                                      ApiTypes="@FormStackApiTypes">
+                            <FormStack data-testid="sandbox-forms-stack">
+                                <FormRow Split="true">
+                                    <FormField Text="Title">
+                                        <TextBox Value="@FormState.Title" ValueChanged="HandleTitleChanged" Placeholder="@TitlePlaceholder" Disabled="@IsDisabled" />
+                                    </FormField>
+                                    <FormField Text="Status">
+                                        <DropDown TValue="string"
+                                                  Data="@StatusOptions"
+                                                  TextProperty="@nameof(SelectOption.Text)"
+                                                  ValueProperty="@nameof(SelectOption.Value)"
+                                                  Value="@FormState.Status"
+                                                  ValueChanged="HandleStatusChanged"
+                                                  Disabled="@IsDisabled" />
+                                    </FormField>
+                                </FormRow>
+                                <FormField Text="Notes">
+                                    <TextArea Value="@FormState.Notes"
+                                              ValueChanged="HandleNotesChanged"
+                                              Placeholder="@NotesPlaceholder"
+                                              Disabled="@IsDisabled" />
+                                </FormField>
+                            </FormStack>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "InlineActions")
+                    {
+                        <ExampleBlock Title="Inline action row"
+                                      Description="A flex-wrap row for grouping buttons and status badges, independent of any specific field."
+                                      SourceId="examples/Forms/InlineActionsRow.razor"
+                                      ApiTypes="@InlineActionsApiTypes">
+                            <InlineActions data-testid="sandbox-forms-inline-actions">
+                                <Button Text="Save draft" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Size="ButtonSize.Small" Disabled="@IsDisabled" />
+                                <Button Text="Request review" Size="ButtonSize.Small" Disabled="@IsDisabled" />
+                                <StatusBadge Text="@AdvancedSummary" Tone="success" />
+                            </InlineActions>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SettingsSwitchLabel")
+                    {
+                        <ExampleBlock Title="Switch label"
+                                      Description="SettingsSwitchLabel accepts plain text or custom child content, such as a label paired with a badge."
+                                      SourceId="examples/Forms/SwitchLabelVariants.razor"
+                                      ApiTypes="@SettingsSwitchLabelApiTypes">
+                            <Stack GapScale="LayoutGap.Medium" data-testid="sandbox-forms-switch-label-variants">
+                                <Split Breakpoint="LayoutBreakpoint.None"
+                                       AlignItems="AlignItems.Center"
+                                       JustifyContent="JustifyContent.SpaceBetween"
+                                       Gap="LayoutGap.Medium"
+                                       Class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+                                    <SettingsSwitchLabel Text="Publish externally" />
+                                    <Switch Value="@FormState.PublishExternally" ValueChanged="HandlePublishChanged" Disabled="@IsDisabled" />
+                                </Split>
+                                <Split Breakpoint="LayoutBreakpoint.None"
+                                       AlignItems="AlignItems.Center"
+                                       JustifyContent="JustifyContent.SpaceBetween"
+                                       Gap="LayoutGap.Medium"
+                                       Class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+                                    <SettingsSwitchLabel>
+                                        <Cluster AlignItems="AlignItems.Center" Gap="LayoutGap.Small">
+                                            <span>Notify reviewer leads</span>
+                                            <StatusBadge Text="Recommended" Tone="info" />
+                                        </Cluster>
+                                    </SettingsSwitchLabel>
+                                    <Switch Value="@AdvancedState.NotifyLeads" ValueChanged="HandleNotifyLeadsChanged" Disabled="@IsDisabled" />
+                                </Split>
+                            </Stack>
+                        </ExampleBlock>
+                    }
                 </section>
             }
         }
@@ -493,6 +663,12 @@
     private static readonly IReadOnlyList<Type> CheckBoxApiTypes = [typeof(CheckBox<bool>)];
     private static readonly IReadOnlyList<Type> FileUploadApiTypes = [typeof(FileUpload)];
     private static readonly IReadOnlyList<Type> FieldsetApiTypes = [typeof(Fieldset)];
+    private static readonly IReadOnlyList<Type> FormFieldApiTypes = [typeof(FormField)];
+    private static readonly IReadOnlyList<Type> FormRowApiTypes = [typeof(FormRow)];
+    private static readonly IReadOnlyList<Type> FormSectionApiTypes = [typeof(FormSection)];
+    private static readonly IReadOnlyList<Type> FormStackApiTypes = [typeof(FormStack)];
+    private static readonly IReadOnlyList<Type> InlineActionsApiTypes = [typeof(InlineActions)];
+    private static readonly IReadOnlyList<Type> SettingsSwitchLabelApiTypes = [typeof(SettingsSwitchLabel)];
 
     private static readonly IReadOnlyList<SelectOption> StatusOptions =
     [

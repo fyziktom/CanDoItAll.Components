@@ -1,0 +1,17 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+
+<FormField Text="Reference code">
+    <Start>
+        <Icon Name="tag" />
+    </Start>
+    <ChildContent>
+        <TextBox Value="@referenceCode" ValueChanged="@(value => referenceCode = value)" Placeholder="Review budget code" Class="cda-input" />
+    </ChildContent>
+    <End>
+        <StatusBadge Text="Synced" Tone="success" />
+    </End>
+</FormField>
+
+@code {
+    private string? referenceCode = "MIG-2026-Q3";
+}

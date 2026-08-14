@@ -452,6 +452,197 @@
                             </div>
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "Body")
+                    {
+                        <ExampleBlock Title="Scrollable content region"
+                                      Description="Body is the main content region inside a shell. FillHeight and Scrollable let it own its own scrollbar instead of the page."
+                                      SourceId="examples/Layout/BodyScrollable.razor"
+                                      ApiTypes="@BodyApiTypes">
+                            <Body FillHeight="true"
+                                  Scrollable="true"
+                                  Style="height:14rem;"
+                                  Class="rounded-[1.25rem] border border-slate-200 bg-white p-4"
+                                  data-testid="sandbox-layout-body">
+                                <div class="space-y-3">
+                                    @foreach (var item in BodySampleRows)
+                                    {
+                                        <div class="rounded-[0.85rem] border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">@item</div>
+                                    }
+                                </div>
+                            </Body>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Sidebar")
+                    {
+                        <ExampleBlock Title="Collapsible sidebar"
+                                      Description="Sidebar toggles visibility via Expanded, typically paired with a Body region inside a shell."
+                                      SourceId="examples/Layout/SidebarToggle.razor"
+                                      ApiTypes="@SidebarApiTypes">
+                            <div class="space-y-3" data-testid="sandbox-layout-sidebar">
+                                <Button Text="@(sidebarExpanded ? "Collapse sidebar" : "Expand sidebar")"
+                                        Icon="@(sidebarExpanded ? "menu_open" : "menu")"
+                                        ButtonStyle="@(ButtonStyle.Light)"
+                                        Variant="@(Variant.Outlined)"
+                                        Size="ButtonSize.Small"
+                                        Click="ToggleSidebar" />
+                                <div class="flex overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white" style="height:12rem;">
+                                    <Sidebar Expanded="@sidebarExpanded"
+                                             ExpandedChanged="HandleSidebarExpandedChanged"
+                                             Class="w-40 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
+                                        <div class="space-y-2 text-sm text-slate-600">
+                                            <p class="m-0 font-semibold text-slate-800">Navigation</p>
+                                            <p class="m-0">Feedback</p>
+                                            <p class="m-0">Forms</p>
+                                            <p class="m-0">Layout</p>
+                                        </div>
+                                    </Sidebar>
+                                    <div class="flex-1 p-4 text-sm text-slate-600">Main content stays in place while the sidebar collapses.</div>
+                                </div>
+                            </div>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "PageShell")
+                    {
+                        <ExampleBlock Title="Minimal page wrapper"
+                                      Description="PageShell is a thin structural wrapper that composes Sidebar and Body into a single shell region."
+                                      SourceId="examples/Layout/PageShellMiniShell.razor"
+                                      ApiTypes="@PageShellApiTypes">
+                            <PageShell Class="flex overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white"
+                                       Style="height:14rem;"
+                                       data-testid="sandbox-layout-page-shell">
+                                <Sidebar Class="w-40 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
+                                    <div class="space-y-2 text-sm text-slate-600">
+                                        <p class="m-0 font-semibold text-slate-800">Navigation</p>
+                                        <p class="m-0">Feedback</p>
+                                        <p class="m-0">Forms</p>
+                                        <p class="m-0">Layout</p>
+                                    </div>
+                                </Sidebar>
+                                <Body FillHeight="true" Scrollable="true" Class="flex-1 p-4">
+                                    <p class="m-0 text-sm text-slate-600">PageShell keeps the sidebar and main content in one predictable structure.</p>
+                                </Body>
+                            </PageShell>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Layout")
+                    {
+                        <ExampleBlock Title="App-level shell wrapper"
+                                      Description="Layout is the outermost shell primitive. FitViewport locks height to the viewport (minus ViewportOffset) and locks overflow; this preview overrides the computed height to a fixed size so the section stays contained on the page."
+                                      SourceId="examples/Layout/LayoutFitViewport.razor"
+                                      ApiTypes="@LayoutApiTypes">
+                            <CanDoItAll.Components.BaseLib.Layout FitViewport="true"
+                                                                   ViewportOffset="0px"
+                                                                   LockOverflow="true"
+                                                                   Style="height:14rem;"
+                                                                   Class="overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white"
+                                                                   data-testid="sandbox-layout-layout">
+                                <PageShell Class="flex h-full">
+                                    <Sidebar Class="w-36 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
+                                        <p class="m-0 text-sm text-slate-600">Rail</p>
+                                    </Sidebar>
+                                    <Body FillHeight="true" Scrollable="true" Class="flex-1 p-4">
+                                        <p class="m-0 text-sm text-slate-600">FitViewport and LockOverflow stay active here; only the computed height is capped for this preview.</p>
+                                    </Body>
+                                </PageShell>
+                            </CanDoItAll.Components.BaseLib.Layout>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Cluster")
+                    {
+                        <ExampleBlock Title="Wrapping action row"
+                                      Description="Cluster wraps items into a flexible row, controlling gap, alignment, and justification independent of a specific parent component."
+                                      SourceId="examples/Layout/ClusterTags.razor"
+                                      ApiTypes="@ClusterApiTypes">
+                            <Cluster AlignItems="AlignItems.Center"
+                                     JustifyContent="JustifyContent.Start"
+                                     Gap="LayoutGap.Small"
+                                     data-testid="sandbox-layout-cluster">
+                                <Pill>Accessibility</Pill>
+                                <Pill>API contract</Pill>
+                                <Pill>Density</Pill>
+                                <Pill>Mobile layout</Pill>
+                                <Pill>Publishing</Pill>
+                                <Pill>Visual proof</Pill>
+                            </Cluster>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Split")
+                    {
+                        <ExampleBlock Title="Responsive header row"
+                                      Description="Split lays out a title and description on one side and actions on the other, collapsing to a stacked column below its Breakpoint."
+                                      SourceId="examples/Layout/SplitHeaderRow.razor"
+                                      ApiTypes="@SplitApiTypes">
+                            <Split Breakpoint="LayoutBreakpoint.Md"
+                                   AlignItems="AlignItems.Center"
+                                   JustifyContent="JustifyContent.SpaceBetween"
+                                   Gap="LayoutGap.Medium"
+                                   Class="rounded-[1.25rem] border border-slate-200 bg-white px-4 py-3"
+                                   data-testid="sandbox-layout-split">
+                                <div class="space-y-1">
+                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Release acceptance" />
+                                    <TextBlock TextStyle="@(TextStyle.Caption)" Value="Collapses to a stacked column below the Md breakpoint." />
+                                </div>
+                                <Cluster Gap="LayoutGap.Small">
+                                    <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Size="ButtonSize.Small" />
+                                    <Button Text="Open checklist" Size="ButtonSize.Small" />
+                                </Cluster>
+                            </Split>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ThemeHost")
+                    {
+                        <ExampleBlock Title="Scoped theme"
+                                      Description="ThemeHost sets data-cad-theme and color-scheme so nested content can be scoped to light or dark independent of the rest of the page."
+                                      SourceId="examples/Layout/ThemeHostComparison.razor"
+                                      ApiTypes="@ThemeHostApiTypes">
+                            <Grid Gap="LayoutGap.Medium" Columns="1" ColumnsMd="2" data-testid="sandbox-layout-theme-host">
+                                <ThemeHost ThemeKey="@CadThemes.Light" Class="rounded-[1.25rem] border border-slate-200 bg-white p-4">
+                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Light</p>
+                                    <p class="mt-1 text-sm text-slate-700">Scoped to the light theme.</p>
+                                </ThemeHost>
+                                <ThemeHost ThemeKey="@CadThemes.Dark" Class="rounded-[1.25rem] border border-slate-800 bg-slate-900 p-4">
+                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Dark</p>
+                                    <p class="mt-1 text-sm text-slate-100">Scoped to the dark theme.</p>
+                                </ThemeHost>
+                            </Grid>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "WorkspacePanel")
+                    {
+                        <ExampleBlock Title="Panel tones"
+                                      Description="WorkspacePanel offers a solid Default tone and a dashed Ghost tone for placeholder or secondary content."
+                                      SourceId="examples/Layout/WorkspacePanelTones.razor"
+                                      ApiTypes="@WorkspacePanelApiTypes">
+                            <Grid Gap="LayoutGap.Medium" Columns="1" ColumnsMd="2" data-testid="sandbox-layout-workspace-panel">
+                                <WorkspacePanel Tone="WorkspacePanelTone.Default">
+                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Default</p>
+                                    <p class="mt-1 text-sm text-slate-700">A solid card for primary workspace content.</p>
+                                </WorkspacePanel>
+                                <WorkspacePanel Tone="WorkspacePanelTone.Ghost">
+                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Ghost</p>
+                                    <p class="mt-1 text-sm text-slate-700">A dashed placeholder tone for secondary or empty content.</p>
+                                </WorkspacePanel>
+                            </Grid>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "WorkspaceSplit")
+                    {
+                        <ExampleBlock Title="Two-column dashboard grid"
+                                      Description="WorkspaceSplit lays out a wide main panel and a narrower side panel, collapsing to one column below 1280px."
+                                      SourceId="examples/Layout/WorkspaceSplitDashboard.razor"
+                                      ApiTypes="@WorkspaceSplitApiTypes">
+                            <WorkspaceSplit data-testid="sandbox-layout-workspace-split">
+                                <WorkspacePanel Wide="true">
+                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Main panel</p>
+                                    <p class="mt-1 text-sm text-slate-700">The wide panel spans both grid tracks at desktop width via Wide.</p>
+                                </WorkspacePanel>
+                                <WorkspacePanel Tone="WorkspacePanelTone.Ghost">
+                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Side panel</p>
+                                    <p class="mt-1 text-sm text-slate-700">The narrower side panel stays a single track.</p>
+                                </WorkspacePanel>
+                            </WorkspaceSplit>
+                        </ExampleBlock>
+                    }
                 </section>
             }
         }
@@ -470,6 +661,37 @@
     private static readonly IReadOnlyList<Type> StackApiTypes = [typeof(Stack)];
     private static readonly IReadOnlyList<Type> GridApiTypes = [typeof(Grid)];
     private static readonly IReadOnlyList<Type> RowColumnApiTypes = [typeof(Row), typeof(Column)];
+    private static readonly IReadOnlyList<Type> BodyApiTypes = [typeof(Body)];
+    private static readonly IReadOnlyList<Type> SidebarApiTypes = [typeof(Sidebar)];
+    private static readonly IReadOnlyList<Type> PageShellApiTypes = [typeof(PageShell)];
+    private static readonly IReadOnlyList<Type> LayoutApiTypes = [typeof(CanDoItAll.Components.BaseLib.Layout)];
+    private static readonly IReadOnlyList<Type> ClusterApiTypes = [typeof(Cluster)];
+    private static readonly IReadOnlyList<Type> SplitApiTypes = [typeof(Split)];
+    private static readonly IReadOnlyList<Type> ThemeHostApiTypes = [typeof(ThemeHost)];
+    private static readonly IReadOnlyList<Type> WorkspacePanelApiTypes = [typeof(WorkspacePanel)];
+    private static readonly IReadOnlyList<Type> WorkspaceSplitApiTypes = [typeof(WorkspaceSplit), typeof(WorkspacePanel)];
+
+    private static readonly IReadOnlyList<string> BodySampleRows =
+    [
+        "Release acceptance checklist",
+        "Reviewer lane assignments",
+        "Priority threshold history",
+        "Budget reference audit",
+        "Notification delivery log",
+        "Mobile viewport proof",
+        "Tablet viewport proof",
+        "Accessibility pass notes"
+    ];
+
+    private bool sidebarExpanded = true;
+
+    private void ToggleSidebar() => sidebarExpanded = !sidebarExpanded;
+
+    private Task HandleSidebarExpandedChanged(bool value)
+    {
+        sidebarExpanded = value;
+        return Task.CompletedTask;
+    }
 
     private static readonly IReadOnlyList<string> ModeOptions = ["All modes", "Interval speed", "Harmony", "Sight reading"];
     private static readonly IReadOnlyList<int> WindowOptions = [7, 14, 30, 90, 180];

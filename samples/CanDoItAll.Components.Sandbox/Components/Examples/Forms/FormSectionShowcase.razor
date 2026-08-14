@@ -1,0 +1,26 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+
+<FormSection Title="Review readiness"
+             Description="Confirm the fields below before requesting sign-off."
+             Icon="fact_check"
+             HelpText="Sign-off requires a reviewer lane, a priority threshold, and a budget reference."
+             HelpHeading="Review readiness help">
+    <Actions>
+        <Button Text="Request sign-off" Size="ButtonSize.Small" />
+    </Actions>
+    <ChildContent>
+        <FormRow Split="true">
+            <FormField Text="Priority threshold">
+                <Slider TValue="int" Value="@priority" ValueChanged="@(value => priority = value)" Min="0" Max="100" Step="5" />
+            </FormField>
+            <FormField Text="Budget reference">
+                <TextBox Value="@budgetCode" ValueChanged="@(value => budgetCode = value)" Placeholder="Review budget code" Class="cda-input" />
+            </FormField>
+        </FormRow>
+    </ChildContent>
+</FormSection>
+
+@code {
+    private int priority = 70;
+    private string? budgetCode = "BASE-READY";
+}
