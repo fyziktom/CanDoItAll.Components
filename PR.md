@@ -26,7 +26,7 @@
 
 ## Components
 
-- added `/// <summary>` tags (shown in API tab in the sanbox app)
+- added `/// <summary>` tags (shown in API tab in the sanbox app) to 30% of components 
 - added RoboAvatar and HomoAvatar experimantal components
 - migrated to material symbols
 - added Noto Sans and Noto Mono fonts
