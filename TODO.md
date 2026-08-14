@@ -201,3 +201,4 @@ Button, CopyButton
 - [ ] ignore output
 - [ ] mermaind tooltip absolute element 2px padding global scroll glitch 
 - [x] link to source
+- [ ] favicon + states
