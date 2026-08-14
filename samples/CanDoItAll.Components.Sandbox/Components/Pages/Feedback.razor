@@ -177,6 +177,96 @@
                             </Cluster>
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "BadgesGroup")
+                    {
+                        <ExampleBlock Title="Badges group spacing"
+                                      Description="PillStack tightens the gap for denser badge clusters."
+                                      SourceId="examples/Feedback/BadgesGroupShowcase.razor"
+                                      ApiTypes="@BadgesGroupApiTypes">
+                            <div class="space-y-3">
+                                <BadgesGroup>
+                                    <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
+                                    <StatusBadge Text="Blocked" Tone="danger" />
+                                </BadgesGroup>
+                                <BadgesGroup PillStack="true">
+                                    <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
+                                    <StatusBadge Text="Blocked" Tone="danger" />
+                                </BadgesGroup>
+                            </div>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ChipRow")
+                    {
+                        <ExampleBlock Title="Chip row wrapping"
+                                      Description="A ChipRow wraps its chips onto multiple lines instead of overflowing."
+                                      SourceId="examples/Feedback/ChipRowShowcase.razor"
+                                      ApiTypes="@ChipRowApiTypes">
+                            <ChipRow>
+                                <Chip Text="Design review" />
+                                <Chip Text="API contract" />
+                                <Chip Text="Accessibility pass" />
+                                <Chip Text="Release notes" />
+                            </ChipRow>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "StatusBadge")
+                    {
+                        <ExampleBlock Title="Status badge tones"
+                                      Description="Every tone plus a NoWrap example that truncates instead of wrapping."
+                                      SourceId="examples/Feedback/StatusBadgeShowcase.razor"
+                                      ApiTypes="@StatusBadgeApiTypes">
+                            <div class="space-y-3">
+                                <Cluster Gap="LayoutGap.Small">
+                                    <StatusBadge Text="Healthy" Tone="success" />
+                                    <StatusBadge Text="Waiting proof" Tone="warning" />
+                                    <StatusBadge Text="Blocked" Tone="danger" />
+                                    <StatusBadge Text="Info" Tone="info" />
+                                    <StatusBadge Text="Neutral" Tone="neutral" />
+                                </Cluster>
+                                <div style="max-width: 10rem;">
+                                    <StatusBadge Text="Blocked by extended publication evidence copy" Tone="danger" NoWrap="true" />
+                                </div>
+                            </div>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Pill")
+                    {
+                        <ExampleBlock Title="Pill tones"
+                                      Description="Tone variants, an optional token prefix, and an interactive AsButton pill."
+                                      SourceId="examples/Feedback/PillShowcase.razor"
+                                      ApiTypes="@PillApiTypes">
+                            <Cluster Gap="LayoutGap.Small">
+                                <Pill Text="Neutral" Tone="PillTone.Neutral" />
+                                <Pill Text="Ok" Tone="PillTone.Ok" />
+                                <Pill Text="Info" Tone="PillTone.Info" />
+                                <Pill Text="Warn" Tone="PillTone.Warn" />
+                                <Pill Text="Plain" Tone="PillTone.Plain" />
+                                <Pill Text="Label" Tone="PillTone.Label" />
+                                <Pill Token="A" Text="Assigned" Tone="PillTone.Info" />
+                                <Pill Text="Refresh" AsButton="true" Tone="PillTone.Neutral" />
+                            </Cluster>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "PillList")
+                    {
+                        <ExampleBlock Title="Pill list density"
+                                      Description="Compact reduces the gap between pills for denser filter rows."
+                                      SourceId="examples/Feedback/PillListShowcase.razor"
+                                      ApiTypes="@PillListApiTypes">
+                            <div class="space-y-3">
+                                <PillList>
+                                    <Pill Text="All modes" Tone="PillTone.Neutral" />
+                                    <Pill Text="Desktop" Tone="PillTone.Info" />
+                                    <Pill Text="Mobile" Tone="PillTone.Info" />
+                                </PillList>
+                                <PillList Compact="true">
+                                    <Pill Text="All modes" Tone="PillTone.Neutral" />
+                                    <Pill Text="Desktop" Tone="PillTone.Info" />
+                                    <Pill Text="Mobile" Tone="PillTone.Info" />
+                                </PillList>
+                            </div>
+                        </ExampleBlock>
+                    }
                 </section>
             }
         }
@@ -189,7 +279,7 @@
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/feedback");
 
     private static readonly IReadOnlyList<Type> AlertApiTypes = [typeof(Alert)];
-    private static readonly IReadOnlyList<Type> BadgeApiTypes = [typeof(Badge), typeof(StatusBadge)];
+    private static readonly IReadOnlyList<Type> BadgeApiTypes = [typeof(Badge)];
     private static readonly IReadOnlyList<Type> ChipApiTypes = [typeof(Chip)];
     private static readonly IReadOnlyList<Type> CalloutApiTypes = [typeof(Callout)];
     private static readonly IReadOnlyList<Type> TooltipTargetApiTypes = [typeof(TooltipTarget)];
@@ -197,6 +287,11 @@
     private static readonly IReadOnlyList<Type> StatusCheckListApiTypes = [typeof(StatusCheckList)];
     private static readonly IReadOnlyList<Type> VerificationListApiTypes = [typeof(VerificationList)];
     private static readonly IReadOnlyList<Type> NotificationServiceApiTypes = [typeof(NotificationService)];
+    private static readonly IReadOnlyList<Type> BadgesGroupApiTypes = [typeof(BadgesGroup)];
+    private static readonly IReadOnlyList<Type> ChipRowApiTypes = [typeof(ChipRow)];
+    private static readonly IReadOnlyList<Type> StatusBadgeApiTypes = [typeof(StatusBadge)];
+    private static readonly IReadOnlyList<Type> PillApiTypes = [typeof(Pill)];
+    private static readonly IReadOnlyList<Type> PillListApiTypes = [typeof(PillList)];
 
     private string LongFeedbackBadgeText => CurrentScenario == SandboxScenarioKey.LongText
         ? "mobile warning requires screenshot confirmation"

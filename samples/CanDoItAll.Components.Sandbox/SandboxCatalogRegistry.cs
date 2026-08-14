@@ -285,7 +285,12 @@ public static class SandboxCatalogRegistry
                 new("help-popover", "HelpPopover", typeof(HelpPopover)),
                 new("status-check-list", "StatusCheckList", typeof(StatusCheckList)),
                 new("verification-list", "VerificationList", typeof(VerificationList)),
-                new("notification", "NotificationService", typeof(NotificationService))
+                new("notification", "NotificationService", typeof(NotificationService)),
+                new("badges-group", "BadgesGroup", typeof(BadgesGroup)),
+                new("chip-row", "ChipRow", typeof(ChipRow)),
+                new("status-badge", "StatusBadge", typeof(StatusBadge)),
+                new("pill", "Pill", typeof(Pill)),
+                new("pill-list", "PillList", typeof(PillList))
             ],
             ["/groups/foundations"] =
             [
@@ -334,7 +339,8 @@ public static class SandboxCatalogRegistry
                 new("stats-card-row", "StatsCardRow", typeof(StatsCardRow)),
                 new("stats-grid", "StatsGrid", typeof(StatsGrid)),
                 new("summary-tile", "SummaryTile", typeof(SummaryTile)),
-                new("surface-card", "SurfaceCard", typeof(SurfaceCard))
+                new("surface-card", "SurfaceCard", typeof(SurfaceCard)),
+                new("compact-stat-strip", "CompactStatStrip", typeof(CompactStatStrip))
             ],
             ["/groups/overlays"] =
             [

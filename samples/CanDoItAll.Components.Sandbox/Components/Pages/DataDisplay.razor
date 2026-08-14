@@ -419,6 +419,23 @@
                         </ExampleBlock>
                     </section>
                 }
+                else if (section.ComponentName == "CompactStatStrip")
+                {
+                    <section id="@section.Anchor" class="sandbox-component-section">
+                        <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                        <ExampleBlock Title="Wider stat strip"
+                                      Description="A CompactStatStrip holding more tiles than the summary example, proving it stays a single row of stats."
+                                      SourceId="examples/DataDisplay/CompactStatStripShowcase.razor"
+                                      ApiTypes="@CompactStatStripApiTypes">
+                            <CompactStatStrip>
+                                <CompactStat Label="Open" Value="12" Tone="info" />
+                                <CompactStat Label="Blocked" Value="2" Tone="danger" />
+                                <CompactStat Label="Shipped" Value="47" Tone="success" />
+                                <CompactStat Label="At risk" Value="5" Tone="warning" />
+                            </CompactStatStrip>
+                        </ExampleBlock>
+                    </section>
+                }
             }
         }
 
@@ -465,7 +482,8 @@
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataDisplay);
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/data-display");
 
-    private static readonly IReadOnlyList<Type> CompactStatApiTypes = [typeof(CompactStat), typeof(CompactStatStrip)];
+    private static readonly IReadOnlyList<Type> CompactStatApiTypes = [typeof(CompactStat)];
+    private static readonly IReadOnlyList<Type> CompactStatStripApiTypes = [typeof(CompactStatStrip)];
     private static readonly IReadOnlyList<Type> SelectionListItemApiTypes = [typeof(SelectionListItem)];
     private static readonly IReadOnlyList<Type> CardApiTypes = [typeof(Card), typeof(CardGrid)];
     private static readonly IReadOnlyList<Type> DialogApiTypes = [typeof(Dialog)];

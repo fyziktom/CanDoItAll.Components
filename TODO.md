@@ -123,7 +123,7 @@ You noticed `Avatar.razor` (`Components/Identity/Avatar.razor`) isn't listed any
 
 Documented: Icon, RoboAvatar
 
-### Badges (8 of 11 missing)
+### ✅ Badges (8 of 11 missing)
 BadgesGroup, ChipRow, CompactStatStrip, Pill, PillList, StatusBadge, ProfileTagChip *(Compat)*, ProfileTagChipRow *(Compat)*
 
 Documented: Badge, Chip, CompactStat
@@ -196,6 +196,6 @@ Button, CopyButton
 - [x] nav filter
 - [ ] reorg toc to readme
 - [ ] pr notes
-- [ ] homo avatars
+- [x] homo avatars
 - [ ] full dark theme html level, disable animation during transition
 - [ ] ignore output
