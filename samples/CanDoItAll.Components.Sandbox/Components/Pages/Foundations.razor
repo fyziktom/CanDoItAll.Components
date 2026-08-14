@@ -171,6 +171,15 @@
                             <RoboAvatarGallery />
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "HomoAvatar")
+                    {
+                        <ExampleBlock Title="Seed-generated avatars"
+                                      Description="Deterministic human avatars generated purely from a seed string, with harmonized body/mouth/eye coloring."
+                                      SourceId="examples/Foundations/HomoAvatarGallery.razor"
+                                      ApiTypes="@HomoAvatarApiTypes">
+                            <HomoAvatarGallery />
+                        </ExampleBlock>
+                    }
                     else if (section.ComponentName == "Avatar")
                     {
                         <ExampleBlock Title="Avatar"
@@ -312,6 +321,7 @@
     private static readonly IReadOnlyList<Type> SummaryTilesApiTypes = [typeof(SummaryTiles), typeof(SummaryTile)];
     private static readonly IReadOnlyList<Type> IconApiTypes = [typeof(Icon)];
     private static readonly IReadOnlyList<Type> RoboAvatarApiTypes = [typeof(RoboAvatar)];
+    private static readonly IReadOnlyList<Type> HomoAvatarApiTypes = [typeof(HomoAvatar)];
     private static readonly IReadOnlyList<Type> AvatarApiTypes = [typeof(Avatar)];
     private static readonly IReadOnlyList<Type> CreatorLineApiTypes = [typeof(CreatorLine)];
     private static readonly IReadOnlyList<Type> CreatorSocialLinkApiTypes = [typeof(CreatorSocialLink)];

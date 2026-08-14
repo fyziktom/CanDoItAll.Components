@@ -190,6 +190,7 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 - [CreatorAvatar](Components/Identity/Compatibility/CreatorAvatar.razor)
 - [CreatorLine](Components/Identity/CreatorLine.razor)
 - [CreatorSocialLink](Components/Identity/CreatorSocialLink.razor)
+- [HomoAvatar](Components/Identity/HomoAvatar.razor)
 - [Icon](Components/Identity/Icon.razor)
 - [RoboAvatar](Components/Identity/RoboAvatar.razor)
 

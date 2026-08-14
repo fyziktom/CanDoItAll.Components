@@ -1,0 +1,66 @@
+@namespace CanDoItAll.Components.BaseLib
+@inherits StyledComponentBase
+
+<span @attributes='BuildAttributes("inline-block", $"width:{SizePx}px;height:{SizePx}px;")' role="img" aria-label="@ResolveAriaLabel()">
+    @((MarkupString)renderedSvg)
+</span>
+
+@code {
+    private readonly string _gradientId = Guid.NewGuid().ToString("N")[..8];
+    private string renderedSvg = string.Empty;
+
+    /// <summary>Explicit digit-string seed. Takes priority over <see cref="Seed"/> when set.</summary>
+    [Parameter]
+    public string? Id { get; set; }
+
+    /// <summary>Free text hashed into a deterministic id, e.g. a user name or email.</summary>
+    [Parameter]
+    public string? Seed { get; set; }
+
+    /// <summary>Controls how the body shape is filled: flat color, a near-solid low-opacity fill, or a radial gradient. Mouth and eyes always render flat.</summary>
+    [Parameter]
+    public RoboAvatarVariant Variant { get; set; } = RoboAvatarVariant.Plain;
+
+    /// <summary>Adjusts gradient opacity stops for dark backgrounds. Only affects <see cref="RoboAvatarVariant.Fill"/> and <see cref="RoboAvatarVariant.Gradient"/>.</summary>
+    [Parameter]
+    public bool Dark { get; set; }
+
+    /// <summary>Stroke width applied to every part.</summary>
+    [Parameter]
+    public double? LineWidth { get; set; }
+
+    /// <summary>Fill color for non-gradient parts. Defaults to the BaseLib surface token, which tracks the ambient ThemeHost light/dark theme. Pass "currentColor" to inherit the surrounding text color.</summary>
+    [Parameter]
+    public string? Background { get; set; }
+
+    /// <summary>Accessible title rendered as an SVG <c>&lt;title&gt;</c> and used as the fallback aria-label.</summary>
+    [Parameter]
+    public string? Title { get; set; }
+
+    /// <summary>Rendered width and height, in pixels.</summary>
+    [Parameter]
+    public int SizePx { get; set; } = 96;
+
+    /// <summary>Manual per-part overrides. Shape: key is the part name ("body", "mouth", "eyes"). Color: key is "{part}-color". Values are 1-based.</summary>
+    [Parameter]
+    public IReadOnlyDictionary<string, int>? Choices { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        renderedSvg = HomoAvatarGenerator.RenderSvg(new HomoAvatarOptions
+        {
+            Id = Id,
+            Text = Seed,
+            Variant = Variant,
+            Dark = Dark,
+            LineWidth = LineWidth,
+            Background = Background,
+            Title = Title,
+            GradientId = _gradientId,
+            Choices = Choices
+        });
+    }
+
+    private string ResolveAriaLabel()
+        => string.IsNullOrWhiteSpace(Title) ? "Avatar" : Title;
+}

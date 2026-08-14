@@ -293,6 +293,7 @@ public static class SandboxCatalogRegistry
                 new("summary-tiles", "SummaryTiles", typeof(SummaryTiles)),
                 new("icon", "Icon", typeof(Icon)),
                 new("robo-avatar", "RoboAvatar", typeof(RoboAvatar)),
+                new("homo-avatar", "HomoAvatar", typeof(HomoAvatar)),
                 new("avatar", "Avatar", typeof(Avatar)),
                 new("creator-line", "CreatorLine", typeof(CreatorLine)),
                 new("creator-social-link", "CreatorSocialLink", typeof(CreatorSocialLink)),
