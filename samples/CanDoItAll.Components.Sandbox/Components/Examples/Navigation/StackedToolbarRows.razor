@@ -1,0 +1,19 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Toolbar>
+    <ToolbarRow>
+        <ToolbarFields>
+            <TextBox Value="@query" ValueChanged="@(value => query = value ?? string.Empty)" Immediate="true" Placeholder="Filter" aria-label="Filter" />
+        </ToolbarFields>
+    </ToolbarRow>
+    <ToolbarRow>
+        <ToolbarActions>
+            <StatusBadge Text="3 selected" Tone="info" />
+            <Button Text="Archive" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" />
+        </ToolbarActions>
+    </ToolbarRow>
+</Toolbar>
+
+@code {
+    private string query = string.Empty;
+}

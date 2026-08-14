@@ -1,0 +1,17 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Lists
+
+<ListPanelHeader Title="Shared records"
+                  Description="Records visible to the current workspace."
+                  Count="@("12")"
+                  HelpText="Records sync from the shared catalog every five minutes.">
+    <Actions>
+        <Button Text="Add record" Size="ButtonSize.Small" />
+    </Actions>
+    <Filters>
+        <TextBox Value="@filter" ValueChanged="@(value => filter = value ?? string.Empty)" Placeholder="Filter records" Immediate="true" />
+    </Filters>
+</ListPanelHeader>
+
+@code {
+    private string filter = string.Empty;
+}

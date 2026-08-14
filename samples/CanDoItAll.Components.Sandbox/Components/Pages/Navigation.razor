@@ -641,6 +641,250 @@
                         </Stack>
                     </ExampleBlock>
                 }
+                else if (section.ComponentName == "ContextMenu")
+                {
+                    <ExampleBlock Title="Trigger-driven context menu"
+                                  Description="Opens at a real cursor/click position and closes on selection, Escape, or an outside click."
+                                  SourceId="examples/Navigation/ContextMenuDemo.razor"
+                                  ApiTypes="@ContextMenuApiTypes">
+                        <div class="relative rounded-[1.25rem] border border-dashed border-slate-300 bg-slate-50/80 p-6 text-sm text-slate-500"
+                             @oncontextmenu="OpenNavigationContextMenu"
+                             @oncontextmenu:preventDefault="true"
+                             data-testid="sandbox-navigation-context-menu-zone">
+                            Right-click anywhere in this panel, or
+                            <Button Text="Open menu" Size="ButtonSize.Small" Click="OpenNavigationContextMenuFromButton" data-testid="sandbox-navigation-context-menu-trigger" />
+                            <ContextMenu IsOpen="@navigationContextMenuOpen"
+                                         X="@navigationContextMenuX"
+                                         Y="@navigationContextMenuY"
+                                         Items="@NavigationContextMenuItems"
+                                         Heading="Row actions"
+                                         AriaLabel="Demo row actions"
+                                         ItemSelected="HandleNavigationContextMenuItemSelected"
+                                         OnClose="CloseNavigationContextMenu"
+                                         TestId="sandbox-navigation-context-menu" />
+                        </div>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "FilterBar")
+                {
+                    <ExampleBlock Title="Filter bar"
+                                  Description="Rounded bar pairing filter controls with a result count and reset action."
+                                  SourceId="examples/Navigation/FilterBarDemo.razor"
+                                  ApiTypes="@FilterBarApiTypes">
+                        <FilterBar ResultText="128 results" data-testid="sandbox-navigation-filter-bar">
+                            <ChildContent>
+                                <TextBox Value="@filterBarQuery" ValueChanged="@(value => filterBarQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search" aria-label="Search" />
+                                <DropDown TValue="string" Data="@ToolbarScopes" Value="@filterBarScope" ValueChanged="@(value => filterBarScope = value ?? ToolbarScopeAll)" aria-label="Scope" />
+                            </ChildContent>
+                            <Actions>
+                                <Button Text="Reset" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => { filterBarQuery = string.Empty; filterBarScope = ToolbarScopeAll; })" />
+                            </Actions>
+                        </FilterBar>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "LegalToc")
+                {
+                    <ExampleBlock Title="Collapsible table of contents"
+                                  Description="A disclosure wrapper for a section's table of contents."
+                                  SourceId="examples/Navigation/LegalTableOfContents.razor"
+                                  ApiTypes="@LegalTocApiTypes">
+                        <LegalToc data-testid="sandbox-navigation-legal-toc">
+                            <summary class="cursor-pointer text-sm font-semibold text-slate-800">Table of contents</summary>
+                            <LegalTocNav>
+                                <a href="#scope">1. Scope</a>
+                                <a href="#data">2. Data handling</a>
+                                <a href="#liability">3. Liability</a>
+                                <a href="#contact">4. Contact</a>
+                            </LegalTocNav>
+                        </LegalToc>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "LegalTocNav")
+                {
+                    <ExampleBlock Title="Standalone link nav"
+                                  Description="LegalTocNav has no dependency on LegalToc — it can render as an always-visible related-links list."
+                                  SourceId="examples/Navigation/RelatedLinksNav.razor"
+                                  ApiTypes="@LegalTocNavApiTypes">
+                        <LegalTocNav data-testid="sandbox-navigation-legal-toc-nav">
+                            <a href="#privacy">Privacy policy</a>
+                            <a href="#terms">Terms of service</a>
+                            <a href="#cookies">Cookie policy</a>
+                        </LegalTocNav>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "PageHeaderActionButton")
+                {
+                    <ExampleBlock Title="Quick action buttons"
+                                  Description="Icon buttons with tooltip fallback text, meant to sit inline in a PageHeader's Actions region."
+                                  SourceId="examples/Navigation/QuickActionButtons.razor"
+                                  ApiTypes="@PageHeaderActionButtonApiTypes">
+                        <Cluster Gap="LayoutGap.Small">
+                            <div data-testid="sandbox-navigation-page-header-action-button">
+                                <PageHeaderActionButton Icon="download" Label="Download" />
+                                <PageHeaderActionButton Icon="share" Label="Share" ButtonStyle="@(ButtonStyle.Info)" />
+                                <PageHeaderActionButton Icon="more_horiz" Label="More" Disabled="@IsDisabled" />
+                            </div>
+                        </Cluster>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "RibbonTabs")
+                {
+                    <ExampleBlock Title="Ribbon tool tabs"
+                                  Description="A collapsible ribbon strip with tool tabs and a panel region, e.g. for document-editor-style toolbars."
+                                  SourceId="examples/Navigation/RibbonToolbar.razor"
+                                  ApiTypes="@RibbonTabsApiTypes">
+                        <RibbonTabs TItem="string"
+                                    Items="@RibbonTools"
+                                    SelectedItem="@ribbonSelectedTool"
+                                    SelectedItemChanged="@(item => ribbonSelectedTool = item)"
+                                    IsCollapsed="@ribbonCollapsed"
+                                    OnToggleCollapsed="@(() => ribbonCollapsed = !ribbonCollapsed)"
+                                    RootTestId="sandbox-navigation-ribbon-tabs">
+                            <PanelContent Context="tool">
+                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@($"{tool} tools appear here.")" />
+                            </PanelContent>
+                        </RibbonTabs>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "SecondaryTabs")
+                {
+                    <ExampleBlock Title="Pill status filter"
+                                  Description="Key-based pill tab switcher, distinct from the index-based Tabs component."
+                                  SourceId="examples/Navigation/StatusFilterTabs.razor"
+                                  ApiTypes="@SecondaryTabsApiTypes">
+                        <div data-testid="sandbox-navigation-secondary-tabs">
+                            <SecondaryTabs Items="@SecondaryStatusTabs"
+                                           SelectedKey="@secondaryTabsSelectedKey"
+                                           SelectedKeyChanged="@(key => secondaryTabsSelectedKey = key)" />
+                        </div>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "SideMenuItem")
+                {
+                    <ExampleBlock Title="Declarative side menu items"
+                                  Description="SideMenuItem registers itself with its parent SideMenu; this focuses on item-level parameters like badges, disabled state, and nested children."
+                                  SourceId="examples/Navigation/SideMenuItemShowcase.razor"
+                                  ApiTypes="@SideMenuItemStandaloneApiTypes">
+                        <div class="sandbox-side-menu-host" style="height: 22rem;">
+                            <SideMenu MenuId="sandbox-side-menu-item-demo" Title="Item showcase" Icon="widgets" data-testid="sandbox-navigation-side-menu-item">
+                                <MenuItems>
+                                    <SideMenuItem Id="inbox" Text="Inbox" Icon="inbox" BadgeText="5" Description="Unread requests." />
+                                    <SideMenuItem Id="archive" Text="Archive" Icon="inventory" Disabled="true" Description="Read-only history." />
+                                    <SideMenuItem Id="team" Text="Team" Icon="groups" PanelTitle="Team members" Children="@SideMenuItemDemoChildren" />
+                                </MenuItems>
+                            </SideMenu>
+                        </div>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "StepsItem")
+                {
+                    <ExampleBlock Title="Steps with icons and a disabled step"
+                                  Description="StepsItem-specific parameters: a custom badge icon and a step disabled from selection."
+                                  SourceId="examples/Navigation/StepsWithIcons.razor"
+                                  ApiTypes="@StepsItemApiTypes">
+                        <Steps Value="@stepsItemDemoIndex" ValueChanged="@(value => stepsItemDemoIndex = value)" data-testid="sandbox-navigation-steps-item">
+                            <StepsItem Text="Draft" Icon="edit" Description="Author the initial content." />
+                            <StepsItem Text="Legal review" Icon="gavel" Disabled="true" Description="Not yet available for this workflow." />
+                            <StepsItem Text="Publish" Icon="publish" Description="Ship to the shared catalog." />
+                        </Steps>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "TabsItem")
+                {
+                    <ExampleBlock Title="Tab item parameters"
+                                  Description="BadgeText, Disabled, and dynamic Visible toggling on individual tabs."
+                                  SourceId="examples/Navigation/TabsItemBadges.razor"
+                                  ApiTypes="@TabsItemStandaloneApiTypes">
+                        <Stack GapScale="LayoutGap.Small">
+                            <Switch Value="@tabsItemAuditVisible" ValueChanged="@(value => tabsItemAuditVisible = value)" AriaLabel="Show audit tab" />
+                            <Tabs SelectedIndex="@tabsItemDemoIndex" SelectedIndexChanged="@(index => tabsItemDemoIndex = index)" data-testid="sandbox-navigation-tabs-item">
+                                <TabItems>
+                                    <TabsItem Text="Overview" />
+                                    <TabsItem Text="Reviewer notes" BadgeText="2" />
+                                    <TabsItem Text="Legacy" Disabled="true" />
+                                    <TabsItem Text="Audit trail" Visible="@tabsItemAuditVisible" />
+                                </TabItems>
+                            </Tabs>
+                        </Stack>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "ToolbarActions")
+                {
+                    <ExampleBlock Title="Action button cluster"
+                                  Description="Grouped action buttons within a toolbar row, independent of any filter fields."
+                                  SourceId="examples/Navigation/ToolbarActionCluster.razor"
+                                  ApiTypes="@ToolbarActionsApiTypes">
+                        <Stack GapScale="LayoutGap.Small">
+                            <Toolbar data-testid="sandbox-navigation-toolbar-actions">
+                                <ToolbarRow>
+                                    <ToolbarActions>
+                                        <Button Text="Save" Click="@(() => toolbarActionsLastAction = "Save")" />
+                                        <Button Text="Export" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => toolbarActionsLastAction = "Export")" />
+                                        <Button Text="Delete" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Outlined)" Click="@(() => toolbarActionsLastAction = "Delete")" />
+                                    </ToolbarActions>
+                                </ToolbarRow>
+                            </Toolbar>
+                            <TextBlock TextStyle="@(TextStyle.Note)" Value="@($"Last action: {toolbarActionsLastAction}")" />
+                        </Stack>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "ToolbarFields")
+                {
+                    <ExampleBlock Title="Filter field cluster"
+                                  Description="Grouped filter fields within a toolbar row, without any action buttons."
+                                  SourceId="examples/Navigation/ToolbarFilterFields.razor"
+                                  ApiTypes="@ToolbarFieldsApiTypes">
+                        <Toolbar data-testid="sandbox-navigation-toolbar-fields">
+                            <ToolbarRow>
+                                <ToolbarFields>
+                                    <TextBox Value="@toolbarFieldsQuery" ValueChanged="@(value => toolbarFieldsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search records" aria-label="Search records" />
+                                    <DropDown TValue="string" Data="@ToolbarScopes" Value="@toolbarFieldsScope" ValueChanged="@(value => toolbarFieldsScope = value ?? ToolbarScopeAll)" aria-label="Field scope" />
+                                </ToolbarFields>
+                            </ToolbarRow>
+                        </Toolbar>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "ToolbarRow")
+                {
+                    <ExampleBlock Title="Stacked toolbar rows"
+                                  Description="Multiple ToolbarRow elements inside one Toolbar, e.g. a filter row above a bulk-actions row."
+                                  SourceId="examples/Navigation/StackedToolbarRows.razor"
+                                  ApiTypes="@ToolbarRowApiTypes">
+                        <Toolbar data-testid="sandbox-navigation-toolbar-row">
+                            <ToolbarRow>
+                                <ToolbarFields>
+                                    <TextBox Value="@toolbarRowsQuery" ValueChanged="@(value => toolbarRowsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Filter" aria-label="Filter" />
+                                </ToolbarFields>
+                            </ToolbarRow>
+                            <ToolbarRow>
+                                <ToolbarActions>
+                                    <StatusBadge Text="3 selected" Tone="info" />
+                                    <Button Text="Archive" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
+                                </ToolbarActions>
+                            </ToolbarRow>
+                        </Toolbar>
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "TreeViewNodeRow")
+                {
+                    <ExampleBlock Title="Adaptive row contract"
+                                  Description="TreeViewNodeRow renders one recursive row: adaptive labels, compact badges, and a right-positioned tooltip for long content."
+                                  SourceId="examples/Navigation/AdaptiveRowContract.razor"
+                                  ApiTypes="@TreeViewNodeRowApiTypes">
+                        <div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60" data-testid="sandbox-navigation-tree-view-node-row">
+                            <ul class="cda-treeview" role="tree" aria-label="Adaptive row proof">
+                                <TreeViewNodeRow Node="@adaptiveRowNode"
+                                                  Level="0"
+                                                  TreeId="sandbox-adaptive-row"
+                                                  Style="@(TreeViewStyle.Workbench)"
+                                                  ActiveNodeId="@adaptiveRowActiveId"
+                                                  OnActivate="@(id => adaptiveRowActiveId = id)"
+                                                  OnSelect="@(id => adaptiveRowActiveId = id)"
+                                                  OnToggle="HandleAdaptiveRowToggle" />
+                            </ul>
+                        </div>
+                    </ExampleBlock>
+                }
             </section>
         }
     </ChildContent>
@@ -657,6 +901,20 @@
     private static readonly IReadOnlyList<Type> StepsApiTypes = [typeof(Steps)];
     private static readonly IReadOnlyList<Type> PageHeaderApiTypes = [typeof(PageHeader)];
     private static readonly IReadOnlyList<Type> SideMenuApiTypes = [typeof(SideMenu), typeof(SideMenuItem)];
+    private static readonly IReadOnlyList<Type> ContextMenuApiTypes = [typeof(ContextMenu)];
+    private static readonly IReadOnlyList<Type> FilterBarApiTypes = [typeof(FilterBar)];
+    private static readonly IReadOnlyList<Type> LegalTocApiTypes = [typeof(LegalToc)];
+    private static readonly IReadOnlyList<Type> LegalTocNavApiTypes = [typeof(LegalTocNav)];
+    private static readonly IReadOnlyList<Type> PageHeaderActionButtonApiTypes = [typeof(PageHeaderActionButton)];
+    private static readonly IReadOnlyList<Type> RibbonTabsApiTypes = [typeof(RibbonTabs<string>)];
+    private static readonly IReadOnlyList<Type> SecondaryTabsApiTypes = [typeof(SecondaryTabs)];
+    private static readonly IReadOnlyList<Type> SideMenuItemStandaloneApiTypes = [typeof(SideMenuItem)];
+    private static readonly IReadOnlyList<Type> StepsItemApiTypes = [typeof(StepsItem)];
+    private static readonly IReadOnlyList<Type> TabsItemStandaloneApiTypes = [typeof(TabsItem)];
+    private static readonly IReadOnlyList<Type> ToolbarActionsApiTypes = [typeof(ToolbarActions)];
+    private static readonly IReadOnlyList<Type> ToolbarFieldsApiTypes = [typeof(ToolbarFields)];
+    private static readonly IReadOnlyList<Type> ToolbarRowApiTypes = [typeof(ToolbarRow)];
+    private static readonly IReadOnlyList<Type> TreeViewNodeRowApiTypes = [typeof(TreeViewNodeRow)];
 
     private const string SideMenuId = "sandbox-side-menu";
 
@@ -763,6 +1021,64 @@
         ToolbarScopeNavigation,
         ToolbarScopeOverlays
     ];
+
+    private bool navigationContextMenuOpen;
+    private double navigationContextMenuX = 24;
+    private double navigationContextMenuY = 24;
+
+    private static readonly IReadOnlyList<ContextMenuItem> NavigationContextMenuItems =
+    [
+        new() { Id = "rename", Text = "Rename", Icon = "edit" },
+        new() { Id = "duplicate", Text = "Duplicate", Icon = "content_copy" },
+        new() { Id = "delete", Text = "Delete", Icon = "delete", Danger = true, SeparatorBefore = true }
+    ];
+
+    private string filterBarQuery = string.Empty;
+    private string filterBarScope = ToolbarScopeAll;
+
+    private static readonly IReadOnlyList<string> RibbonTools = ["Format", "Insert", "Review"];
+    private string ribbonSelectedTool = "Format";
+    private bool ribbonCollapsed;
+
+    private static readonly IReadOnlyList<SecondaryTabItem> SecondaryStatusTabs =
+    [
+        new("all", "All", "24", null),
+        new("open", "Open", "9", "Still awaiting review."),
+        new("done", "Done", "15", "Marked complete this sprint.")
+    ];
+    private string secondaryTabsSelectedKey = "open";
+
+    private static readonly IReadOnlyList<ISideMenuItem> SideMenuItemDemoChildren =
+    [
+        new SideMenuItemDefinition { Id = "member-a", Text = "A. Rossi", Icon = "person" },
+        new SideMenuItemDefinition { Id = "member-b", Text = "J. Alvarez", Icon = "person" }
+    ];
+
+    private int stepsItemDemoIndex;
+
+    private int tabsItemDemoIndex;
+    private bool tabsItemAuditVisible = true;
+
+    private string toolbarActionsLastAction = "None yet";
+    private string toolbarFieldsQuery = string.Empty;
+    private string toolbarFieldsScope = ToolbarScopeAll;
+    private string toolbarRowsQuery = string.Empty;
+
+    private string? adaptiveRowActiveId;
+
+    private TreeViewNode adaptiveRowNode = new()
+    {
+        Id = "vendors",
+        Text = "Vendors and external dependencies requiring quarterly review",
+        Icon = "handshake",
+        BadgeText = "New",
+        Tooltip = "Partners, contracts, and outside delivery risk.",
+        IsExpanded = true,
+        Children =
+        [
+            new() { Id = "vendor-a", Text = "Acme Logistics", Icon = "local_shipping" }
+        ]
+    };
 
     private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
 
@@ -1018,6 +1334,38 @@
     {
         treeContextMenuRequest = null;
         return Task.CompletedTask;
+    }
+
+    private void OpenNavigationContextMenu(MouseEventArgs args)
+    {
+        navigationContextMenuX = args.ClientX;
+        navigationContextMenuY = args.ClientY;
+        navigationContextMenuOpen = true;
+    }
+
+    private void OpenNavigationContextMenuFromButton()
+    {
+        navigationContextMenuOpen = true;
+    }
+
+    private Task HandleNavigationContextMenuItemSelected(string itemId)
+    {
+        navigationContextMenuOpen = false;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseNavigationContextMenu()
+    {
+        navigationContextMenuOpen = false;
+        return Task.CompletedTask;
+    }
+
+    private void HandleAdaptiveRowToggle(string id)
+    {
+        if (adaptiveRowNode.Id == id)
+        {
+            adaptiveRowNode = adaptiveRowNode with { IsExpanded = !adaptiveRowNode.IsExpanded };
+        }
     }
 
     private IReadOnlyList<TreeViewNode> ResolveScopedTreeNodes()

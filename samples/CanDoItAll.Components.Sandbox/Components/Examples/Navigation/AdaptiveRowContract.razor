@@ -1,0 +1,40 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60">
+    <ul class="cda-treeview" role="tree" aria-label="Adaptive row proof">
+        <TreeViewNodeRow Node="@node"
+                          Level="0"
+                          TreeId="adaptive-row-demo"
+                          Style="TreeViewStyle.Workbench"
+                          ActiveNodeId="@activeId"
+                          OnActivate="@(id => activeId = id)"
+                          OnSelect="@(id => activeId = id)"
+                          OnToggle="HandleToggle" />
+    </ul>
+</div>
+
+@code {
+    private string? activeId;
+
+    private TreeViewNode node = new()
+    {
+        Id = "vendors",
+        Text = "Vendors and external dependencies requiring quarterly review",
+        Icon = "handshake",
+        BadgeText = "New",
+        Tooltip = "Partners, contracts, and outside delivery risk.",
+        IsExpanded = true,
+        Children =
+        [
+            new() { Id = "vendor-a", Text = "Acme Logistics", Icon = "local_shipping" }
+        ]
+    };
+
+    private void HandleToggle(string id)
+    {
+        if (node.Id == id)
+        {
+            node = node with { IsExpanded = !node.IsExpanded };
+        }
+    }
+}

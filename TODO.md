@@ -141,24 +141,24 @@ CategoryAxis, Chart, DataGridColumn, GridLines, LineSeries, ProgressBar, ValueAx
 
 Documented: DataGrid
 
-### Feedback (4 of 10 missing)
+### ✅ Feedback (4 of 10 missing)
 EmptyState, LoadingState, Notification, Tooltip
 
 Documented: Alert, Callout, HelpPopover, StatusCheckList, TooltipTarget, VerificationList
 
-### Forms (11 of 27 missing)
+### ✅ Forms (11 of 27 missing)
 FormField, FormRow, FormSection, FormStack, InlineActions, SettingsSwitchLabel, DebugToggle *(Compat)*, ProfileField *(Compat)*, ProfileToggle *(Compat)*, SheetField *(Compat)*, TagTextEdit *(Compat)*
 
 Documented: CheckBox, DropDown, Editable, EntityPicker, Fieldset, FileUpload, Numeric, Password, PrefixedField, SecretField, SettingsSwitchRow, Slider, Switch, TagEditor, TextArea, TextBox
 
-### Layout (9–10 of 16 missing)
+### ✅ Layout (9–10 of 16 missing)
 Body, Cluster, Layout, PageShell, Sidebar, Split, ThemeHost, WorkspacePanel, WorkspaceSplit
 
 *Column* is ambiguous: the Layout group page has a combined anchor `row-column`, but no dedicated registry section for Column on its own — effectively under-documented.
 
 Documented: Grid, PageScaffold, Row, Stack, StickyActionFooter, ZoomPanFrame
 
-### Lists (6 of 8 missing)
+### ✅ Lists (6 of 8 missing)
 FactTable, ListGroup, ListItem, ListPanelHeader, MetaList, PlainList
 
 Documented: ListDetailShell, SelectionListItem
@@ -168,7 +168,7 @@ DangerActionDialog, DialogHost, DialogScaffold, InspectorDialogLayout, PickerDia
 
 Documented: Dialog
 
-### Navigation (18 of 24 missing)
+### ✅ Navigation (18 of 24 missing)
 ContextMenu, FilterBar, LegalToc, LegalTocNav, PageHeaderActionButton, RibbonTabs, SecondaryTabs, SideMenuItem, StepsItem, TabsItem, ToolbarActions, ToolbarFields, ToolbarRow, TreeViewNodeRow, DashboardActions *(Compat)*, ImmersiveRibbonTabs *(Compat)*, PageHeaderActions *(Compat)*, PageHeaderCopy *(Compat)*
 
 Documented: PageHeader, SideMenu, Steps, Tabs, Toolbar, TreeView

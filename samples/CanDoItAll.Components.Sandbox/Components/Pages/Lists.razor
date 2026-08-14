@@ -97,6 +97,121 @@
                             </div>
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "FactTable")
+                    {
+                        <ExampleBlock Title="Fact grid"
+                                      Description="A bordered card for label/value fact pairs — the same wrapper StorageSummaryCard uses to lay out its facts grid."
+                                      SourceId="examples/Lists/FactGrid.razor"
+                                      ApiTypes="@FactTableApiTypes">
+                            <FactTable data-testid="sandbox-lists-fact-table">
+                                <div class="grid gap-x-4 gap-y-3 md:grid-cols-2">
+                                    <div class="min-w-0">
+                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Owner</p>
+                                        <p class="mb-0 mt-1 text-sm text-slate-700">A. Rossi</p>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Created</p>
+                                        <p class="mb-0 mt-1 text-sm text-slate-700">3 months ago</p>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Status</p>
+                                        <p class="mb-0 mt-1 text-sm text-slate-700">Active</p>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Storage used</p>
+                                        <p class="mb-0 mt-1 text-sm text-slate-700">4.2 GB of 10 GB</p>
+                                    </div>
+                                </div>
+                            </FactTable>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ListGroup")
+                    {
+                        <ExampleBlock Title="Grouped list"
+                                      Description="Vertical rhythm container for stacking bordered ListItem rows."
+                                      SourceId="examples/Lists/GroupedItems.razor"
+                                      ApiTypes="@ListGroupApiTypes">
+                            <ListGroup data-testid="sandbox-lists-list-group">
+                                <ListItem>
+                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Layout shell" />
+                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Shared shell keeps main content, rail, and sticky actions in distinct regions." />
+                                </ListItem>
+                                <ListItem>
+                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Detail pane" />
+                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="The selected record has enough room for operational detail." />
+                                </ListItem>
+                                <ListItem>
+                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Dense review lane" />
+                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Denser sections still need obvious grouping." />
+                                </ListItem>
+                            </ListGroup>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ListItem")
+                    {
+                        <ExampleBlock Title="List item card"
+                                      Description="A single bordered, shadowed card row — the atomic unit ListGroup and ListDetailShell arrange."
+                                      SourceId="examples/Lists/ProfileCard.razor"
+                                      ApiTypes="@ListItemApiTypes">
+                            <ListItem data-testid="sandbox-lists-list-item">
+                                <div class="space-y-2">
+                                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Canvas contract" />
+                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Workbench and calendar contracts keep typed surfaces and reusable preview evidence." />
+                                    <MetaList>
+                                        <span>Updated 2 days ago</span>
+                                        <span>4 comments</span>
+                                    </MetaList>
+                                </div>
+                            </ListItem>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ListPanelHeader")
+                    {
+                        <ExampleBlock Title="Panel header"
+                                      Description="Title, count pill, help popover, actions, and filters composed above a list."
+                                      SourceId="examples/Lists/PanelHeader.razor"
+                                      ApiTypes="@ListPanelHeaderApiTypes">
+                            <div data-testid="sandbox-lists-panel-header">
+                                <ListPanelHeader Title="Shared records"
+                                                  Description="Records visible to the current workspace."
+                                                  Count="@("12")"
+                                                  HelpText="Records sync from the shared catalog every five minutes.">
+                                    <Actions>
+                                        <Button Text="Add record" Size="ButtonSize.Small" />
+                                    </Actions>
+                                    <Filters>
+                                        <TextBox Value="@panelHeaderFilter" ValueChanged="@(value => panelHeaderFilter = value ?? string.Empty)" Placeholder="Filter records" Immediate="true" />
+                                    </Filters>
+                                </ListPanelHeader>
+                            </div>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "MetaList")
+                    {
+                        <ExampleBlock Title="Metadata row"
+                                      Description="Inline wrapping row for lightweight metadata such as timestamps and counts."
+                                      SourceId="examples/Lists/MetaRow.razor"
+                                      ApiTypes="@MetaListApiTypes">
+                            <MetaList data-testid="sandbox-lists-meta-list">
+                                <span>Updated 2 days ago</span>
+                                <span>4 comments</span>
+                                <span>Owner: A. Rossi</span>
+                            </MetaList>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "PlainList")
+                    {
+                        <ExampleBlock Title="Plain bulleted list"
+                                      Description="A simple disc-bulleted list for supporting checklist or requirement content."
+                                      SourceId="examples/Lists/BulletList.razor"
+                                      ApiTypes="@PlainListApiTypes">
+                            <PlainList data-testid="sandbox-lists-plain-list">
+                                <li>Scope the request and choose the demo group.</li>
+                                <li>Review the current variation and proof notes.</li>
+                                <li>Capture screenshots and sign off.</li>
+                            </PlainList>
+                        </ExampleBlock>
+                    }
                 </section>
             }
         }
@@ -110,6 +225,14 @@
 
     private static readonly IReadOnlyList<Type> ListDetailShellApiTypes = [typeof(ListDetailShell)];
     private static readonly IReadOnlyList<Type> SelectionListItemApiTypes = [typeof(SelectionListItem)];
+    private static readonly IReadOnlyList<Type> FactTableApiTypes = [typeof(FactTable)];
+    private static readonly IReadOnlyList<Type> ListGroupApiTypes = [typeof(ListGroup)];
+    private static readonly IReadOnlyList<Type> ListItemApiTypes = [typeof(ListItem)];
+    private static readonly IReadOnlyList<Type> ListPanelHeaderApiTypes = [typeof(ListPanelHeader)];
+    private static readonly IReadOnlyList<Type> MetaListApiTypes = [typeof(MetaList)];
+    private static readonly IReadOnlyList<Type> PlainListApiTypes = [typeof(PlainList)];
+
+    private string panelHeaderFilter = string.Empty;
 
     private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
 

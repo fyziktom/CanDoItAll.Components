@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Steps Value="@stepIndex" ValueChanged="@(value => stepIndex = value)">
+    <StepsItem Text="Draft" Icon="edit" Description="Author the initial content." />
+    <StepsItem Text="Legal review" Icon="gavel" Disabled="true" Description="Not yet available for this workflow." />
+    <StepsItem Text="Publish" Icon="publish" Description="Ship to the shared catalog." />
+</Steps>
+
+@code {
+    private int stepIndex;
+}

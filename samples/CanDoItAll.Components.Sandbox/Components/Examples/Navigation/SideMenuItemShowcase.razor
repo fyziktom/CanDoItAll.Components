@@ -1,0 +1,19 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<div class="sandbox-side-menu-host" style="height: 22rem;">
+    <SideMenu MenuId="side-menu-item-showcase" Title="Item showcase" Icon="widgets">
+        <MenuItems>
+            <SideMenuItem Id="inbox" Text="Inbox" Icon="inbox" BadgeText="5" Description="Unread requests." />
+            <SideMenuItem Id="archive" Text="Archive" Icon="inventory" Disabled="true" Description="Read-only history." />
+            <SideMenuItem Id="team" Text="Team" Icon="groups" PanelTitle="Team members" Children="@TeamMembers" />
+        </MenuItems>
+    </SideMenu>
+</div>
+
+@code {
+    private static readonly IReadOnlyList<ISideMenuItem> TeamMembers =
+    [
+        new SideMenuItemDefinition { Id = "member-a", Text = "A. Rossi", Icon = "person" },
+        new SideMenuItemDefinition { Id = "member-b", Text = "J. Alvarez", Icon = "person" }
+    ];
+}

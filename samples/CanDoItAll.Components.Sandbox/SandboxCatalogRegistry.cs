@@ -412,17 +412,37 @@ public static class SandboxCatalogRegistry
             ],
             ["/groups/lists"] =
             [
+                new("fact-table", "FactTable", typeof(FactTable)),
                 new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell)),
+                new("list-group", "ListGroup", typeof(ListGroup)),
+                new("list-item", "ListItem", typeof(ListItem)),
+                new("list-panel-header", "ListPanelHeader", typeof(ListPanelHeader)),
+                new("meta-list", "MetaList", typeof(MetaList)),
+                new("plain-list", "PlainList", typeof(PlainList)),
                 new("selection-list-item", "SelectionListItem", typeof(SelectionListItem))
             ],
             ["/groups/navigation"] =
             [
+                new("context-menu", "ContextMenu", typeof(ContextMenu)),
+                new("filter-bar", "FilterBar", typeof(FilterBar)),
+                new("legal-toc", "LegalToc", typeof(LegalToc)),
+                new("legal-toc-nav", "LegalTocNav", typeof(LegalTocNav)),
                 new("page-header", "PageHeader", typeof(PageHeader)),
+                new("page-header-action-button", "PageHeaderActionButton", typeof(PageHeaderActionButton)),
+                new("ribbon-tabs", "RibbonTabs", typeof(RibbonTabs<string>)),
+                new("secondary-tabs", "SecondaryTabs", typeof(SecondaryTabs)),
                 new("side-menu", "SideMenu", typeof(SideMenu)),
+                new("side-menu-item", "SideMenuItem", typeof(SideMenuItem)),
                 new("steps", "Steps", typeof(Steps)),
+                new("steps-item", "StepsItem", typeof(StepsItem)),
                 new("tabs", "Tabs", typeof(Tabs)),
+                new("tabs-item", "TabsItem", typeof(TabsItem)),
                 new("toolbar", "Toolbar", typeof(Toolbar)),
-                new("tree-view", "TreeView", typeof(TreeView))
+                new("toolbar-actions", "ToolbarActions", typeof(ToolbarActions)),
+                new("toolbar-fields", "ToolbarFields", typeof(ToolbarFields)),
+                new("toolbar-row", "ToolbarRow", typeof(ToolbarRow)),
+                new("tree-view", "TreeView", typeof(TreeView)),
+                new("tree-view-node-row", "TreeViewNodeRow", typeof(TreeViewNodeRow))
             ],
             ["/groups/layout"] =
             [

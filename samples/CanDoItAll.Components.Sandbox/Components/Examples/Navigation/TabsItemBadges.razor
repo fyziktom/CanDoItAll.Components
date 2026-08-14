@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Stack GapScale="LayoutGap.Small">
+    <Switch Value="@auditVisible" ValueChanged="@(value => auditVisible = value)" AriaLabel="Show audit tab" />
+    <Tabs SelectedIndex="@selectedIndex" SelectedIndexChanged="@(index => selectedIndex = index)">
+        <TabItems>
+            <TabsItem Text="Overview" />
+            <TabsItem Text="Reviewer notes" BadgeText="2" />
+            <TabsItem Text="Legacy" Disabled="true" />
+            <TabsItem Text="Audit trail" Visible="@auditVisible" />
+        </TabItems>
+    </Tabs>
+</Stack>
+
+@code {
+    private int selectedIndex;
+    private bool auditVisible = true;
+}

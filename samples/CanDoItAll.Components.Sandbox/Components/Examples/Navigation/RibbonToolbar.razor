@@ -1,0 +1,19 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<RibbonTabs TItem="string"
+            Items="@Tools"
+            SelectedItem="@selectedTool"
+            SelectedItemChanged="@(item => selectedTool = item)"
+            IsCollapsed="@collapsed"
+            OnToggleCollapsed="@(() => collapsed = !collapsed)">
+    <PanelContent Context="tool">
+        <TextBlock TextStyle="TextStyle.Body2" Value="@($"{tool} tools appear here.")" />
+    </PanelContent>
+</RibbonTabs>
+
+@code {
+    private static readonly IReadOnlyList<string> Tools = ["Format", "Insert", "Review"];
+
+    private string selectedTool = "Format";
+    private bool collapsed;
+}

@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<FilterBar ResultText="128 results">
+    <ChildContent>
+        <TextBox Value="@query" ValueChanged="@(value => query = value ?? string.Empty)" Immediate="true" Placeholder="Search" aria-label="Search" />
+        <DropDown TValue="string" Data="@Scopes" Value="@scope" ValueChanged="@(value => scope = value ?? Scopes[0])" aria-label="Scope" />
+    </ChildContent>
+    <Actions>
+        <Button Text="Reset" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@(() => { query = string.Empty; scope = Scopes[0]; })" />
+    </Actions>
+</FilterBar>
+
+@code {
+    private static readonly IReadOnlyList<string> Scopes = ["All standard groups", "Navigation only", "Overlay dependencies"];
+
+    private string query = string.Empty;
+    private string scope = Scopes[0];
+}

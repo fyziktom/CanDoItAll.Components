@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Stack GapScale="LayoutGap.Small">
+    <Toolbar>
+        <ToolbarRow>
+            <ToolbarActions>
+                <Button Text="Save" Click="@(() => lastAction = "Save")" />
+                <Button Text="Export" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@(() => lastAction = "Export")" />
+                <Button Text="Delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Outlined" Click="@(() => lastAction = "Delete")" />
+            </ToolbarActions>
+        </ToolbarRow>
+    </Toolbar>
+    <TextBlock TextStyle="TextStyle.Note" Value="@($"Last action: {lastAction}")" />
+</Stack>
+
+@code {
+    private string lastAction = "None yet";
+}
