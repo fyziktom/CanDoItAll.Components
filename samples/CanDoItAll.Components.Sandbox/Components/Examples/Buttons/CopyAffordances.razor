@@ -1,0 +1,26 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<Stack GapScale="LayoutGap.Medium">
+    <FormField Text="Copy source">
+        <TextBox Value="review-token-4Q26-copy-button"
+                 ReadOnly="true"
+                 id="example-copy-source" />
+    </FormField>
+
+    <Cluster Gap="LayoutGap.Small">
+        <CopyButton Text="Copy value"
+                    CopiedText="Copied"
+                    TargetElementId="example-copy-source"
+                    DisplayMode="CopyButtonDisplayMode.Text" />
+        <CopyButton Text="Copy value"
+                    CopiedText="Copied"
+                    TargetElementId="example-copy-source"
+                    DisplayMode="CopyButtonDisplayMode.TextWithIcon" />
+        <CopyButton TargetElementId="example-copy-source"
+                    DisplayMode="CopyButtonDisplayMode.IconButton"
+                    AriaLabel="Copy current value" />
+        <CopyButton TargetElementId="example-copy-source"
+                    DisplayMode="CopyButtonDisplayMode.IconOnly"
+                    AriaLabel="Copy current value" />
+    </Cluster>
+</Stack>

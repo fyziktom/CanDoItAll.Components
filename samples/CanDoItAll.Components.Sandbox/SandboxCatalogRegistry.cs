@@ -12,18 +12,25 @@ namespace CanDoItAll.Components.Sandbox;
 
 public enum SandboxGroupKey
 {
-    Foundations,
-    Inputs,
-    Actions,
+    Typography,
+    Identity,
+    Buttons,
+    Badges,
+    Forms,
+    Cards,
+    Lists,
     Navigation,
-    Feedback,
     Layout,
+    Feedback,
+    Modals,
     DataDisplay,
+    DataVisualization,
+    Storage,
     Charts,
     Mermaid,
     QrCode,
-    Overlays,
     Gantt,
+    Overlays,
     Canvas
 }
 
@@ -75,54 +82,103 @@ public static class SandboxCatalogRegistry
     public static IReadOnlyList<SandboxGroupDefinition> Groups { get; } =
     [
         new(
-            SandboxGroupKey.Foundations,
-            "Foundations",
-            "/groups/foundations",
-            "Typography, spacing, surfaces, and icon rhythm for the shared component language.",
-            ["typography", "icons"],
-            ["Readability first.", "Spacing must hold at dense and mobile widths.", "Icons should support scanning instead of decoration.", "Type should stay readable before color or decoration does any work.", "Spacing needs to hold both the generous and dense variants without falling into a card mosaic.", "Long text cannot cause accidental narrow columns or broken icon alignment."]),
+            SandboxGroupKey.Typography,
+            "Typography",
+            "/groups/typography",
+            "Type scale, monospace values, and supporting copy treatments for the shared component language.",
+            ["TextBlock", "Header", "Divider"],
+            ["Readability first.", "Type should stay readable before color or decoration does any work.", "Long text cannot cause accidental narrow columns or broken alignment."]),
         new(
-            SandboxGroupKey.Inputs,
-            "Inputs",
-            "/groups/inputs",
+            SandboxGroupKey.Identity,
+            "Identity",
+            "/groups/identity",
+            "Avatar and icon primitives that establish who or what a surface represents.",
+            ["Icon", "Avatar"],
+            ["Icons should support scanning instead of decoration.", "Avatar fallbacks must stay legible without a photo.", "Identity treatments should stay consistent across generated and uploaded avatars."]),
+        new(
+            SandboxGroupKey.Buttons,
+            "Buttons",
+            "/groups/buttons",
+            "Primary and secondary action treatments for inline and sectional flows.",
+            ["Button", "CopyButton"],
+            ["Primary action hierarchy must be obvious.", "Disabled actions should still explain intent.", "Copy affordances should confirm success quickly without turning utility actions into noise."]),
+        new(
+            SandboxGroupKey.Badges,
+            "Badges",
+            "/groups/badges",
+            "Compact status, count, and label tokens for inline metadata and lightweight tagging.",
+            ["Badge", "Chip", "Pill"],
+            ["Status language must be calm and actionable.", "Dense badge and chip clusters should wrap instead of overflowing.", "Interactive badges and pills need an obvious pressed and disabled state."]),
+        new(
+            SandboxGroupKey.Forms,
+            "Forms",
+            "/groups/forms",
             "Field-level components for fast data entry, review, and configuration flows.",
-            ["form inputs"],
+            ["TextBox", "CheckBox", "Password"],
             ["Form state stays explicit.", "Disabled and long-text states must remain legible.", "Mobile stacking should still scan quickly.", "Keep labels, helper copy, and field spacing legible before validation or decoration is added.", "Dense mode should stack more data, not shrink the affordances into noise.", "Disabled mode still needs to explain what the user is looking at."]),
         new(
-            SandboxGroupKey.Actions,
-            "Actions",
-            "/groups/actions",
-            "Primary and secondary action treatments for inline and sectional flows.",
-            ["buttons", "inline actions"],
-            ["Primary action hierarchy must be obvious.", "Dense toolbars cannot collapse into visual noise.", "Disabled actions should still explain intent.", "Primary actions need to stand out without drowning adjacent secondary actions.", "Dense rows still need obvious affordances and enough tap target space.", "Busy and disabled states must explain what changed instead of looking broken.", "Copy affordances should confirm success quickly without turning utility actions into noise."]),
+            SandboxGroupKey.Cards,
+            "Cards",
+            "/groups/cards",
+            "Card, panel, and metric surfaces for structured summaries and dense review content.",
+            ["Card", "AuthCard", "PanelCard"],
+            ["Long labels cannot destroy hierarchy.", "Dense metadata should still read as grouped information instead of raw text piled into cards.", "Long labels cannot collapse the card rhythm or force awkward truncation everywhere."]),
+        new(
+            SandboxGroupKey.Lists,
+            "Lists",
+            "/groups/lists",
+            "Selection and detail-shell primitives for scanning and drilling into dense records.",
+            ["ListGroup", "FactTable"],
+            ["Long labels cannot collapse the list rhythm.", "Selection state must remain obvious when the list gets dense.", "Detail shells should keep context when nothing is selected yet."]),
         new(
             SandboxGroupKey.Navigation,
             "Navigation",
             "/groups/navigation",
             "Shared navigation primitives for segmenting dense workflows into focused views so pages do not turn into long vertical scrolls.",
-            ["tabs", "steps", "side menu"],
+            ["Tabs", "Steps", "SideMenu"],
             ["Keyboard navigation should remain coherent.", "The active state must be obvious at a glance.", "Prefer tabs or split shells when users switch between modes instead of reading one tall page top-to-bottom.", "Users should understand the route hierarchy by scanning headings and active states only.", "Dense navigation should add information, not extra ambiguity.", "Keyboard and focus behavior matter here more than decoration."]),
-        new(
-            SandboxGroupKey.Feedback,
-            "Feedback",
-            "/groups/feedback",
-            "Status, alerts, loading, and empty-state surfaces that explain system state clearly.",
-            ["alerts", "notifications"],
-            ["Status language must be calm and actionable.", "Loading should not feel like a blank failure.", "Empty states need orientation and a next step.", "Severity should be obvious without overwhelming the rest of the page.", "Notifications need actionable language, not vague celebration or alarm.", "Empty and loading states still need a clear next step."]),
         new(
             SandboxGroupKey.Layout,
             "Layout",
             "/groups/layout",
             "Page-level composition patterns for headers, scaffolds, sections, and split regions.",
-            ["layout elements"],
+            ["Layout", "Grid", "Column"],
             ["Desktop layouts should use width intentionally.", "Mobile should orient the user inside the first viewport.", "Shared shells must avoid ad-hoc structure.", "Wide layouts should use horizontal space on purpose instead of drifting into accidental narrow columns.", "Mobile still needs a readable first viewport with a clear entry point into the page.", "Shared shells should remove ad-hoc page structure rather than becoming decorative wrappers.", "Prefer shared layout primitives (Stack, Grid, Row/Column) over one-off structural wrappers."]),
+        new(
+            SandboxGroupKey.Feedback,
+            "Feedback",
+            "/groups/feedback",
+            "Status, alerts, loading, and empty-state surfaces that explain system state clearly.",
+            ["Alert", "Tooltip"],
+            ["Status language must be calm and actionable.", "Loading should not feel like a blank failure.", "Empty states need orientation and a next step.", "Severity should be obvious without overwhelming the rest of the page.", "Empty and loading states still need a clear next step."]),
+        new(
+            SandboxGroupKey.Modals,
+            "Modals",
+            "/groups/modals",
+            "Dialog and modal shells for focused confirmation and inspection flows.",
+            ["Dialog", "DialogHost"],
+            ["Modal triggers must read clearly.", "The page should keep context when a dialog opens.", "Dialogs should close predictably without losing entered data."]),
         new(
             SandboxGroupKey.DataDisplay,
             "Data Display",
             "/groups/data-display",
-            "Reusable display surfaces for cards, lists, summaries, and metadata-heavy views.",
-            ["cards", "data grid", "dialogs"],
-            ["Long labels cannot destroy hierarchy.", "Dense displays still need calm grouping.", "Empty views should reuse shared empty surfaces.", "Dense metadata should still read as grouped information instead of raw text piled into cards.", "Long labels cannot collapse the card rhythm or force awkward truncation everywhere.", "The empty state should feel like part of the shared system, not an afterthought."]),
+            "Timeline, diff, and stepper surfaces for showing how records changed over time.",
+            ["DiffViewer", "Timeline"],
+            ["Chronological order must stay obvious at a glance.", "Long diffs and histories need calm grouping instead of an unbroken wall of rows.", "Empty views should reuse shared empty surfaces."]),
+        new(
+            SandboxGroupKey.DataVisualization,
+            "Data Visualization",
+            "/groups/data-visualization",
+            "Chart primitives and data grid surfaces for scanning trends and tabular series.",
+            ["Chart", "DataGrid"],
+            ["Dense tabular data must stay scannable at narrow widths.", "Axes, gridlines, and labels cannot crowd the plotted series.", "Empty and loading data states need explicit treatment, not a blank grid."]),
+        new(
+            SandboxGroupKey.Storage,
+            "Storage",
+            "/groups/storage",
+            "Summary and badge surfaces for storage usage and capacity status.",
+            ["StorageSummaryCard"],
+            ["Capacity status must be scannable at a glance.", "Near-limit and over-limit states need to read as genuinely different severities.", "Empty and unmeasured storage states still need explicit copy."]),
         new(
             SandboxGroupKey.Charts,
             "Charts",
@@ -145,19 +201,19 @@ public static class SandboxCatalogRegistry
             ["qr codes", "scanning"],
             ["Rendered codes must remain square and readable at narrow widths.", "Empty and long payloads need explicit states.", "Scanning must remain usable when camera access is unavailable or denied.", "The SVG stays square, labelled, and contained at desktop and mobile widths.", "Long payloads increase QR density without leaking text or overflowing the card.", "The scanner dialog always offers manual paste when camera access is disabled or unavailable."]),
         new(
-            SandboxGroupKey.Overlays,
-            "Overlays",
-            "/groups/overlays",
-            "Contextual and modal interaction layers for help, confirmation, and sticky actions.",
-            ["popover", "tooltips", "notifications"],
-            ["Overlay triggers must read clearly.", "The page should keep context when overlays open.", "Sticky actions should not dominate the viewport.", "Contextual help should answer a question quickly and then get out of the way.", "Sticky actions should close the workflow without stealing the page hierarchy.", "Overlay hosts should remain a shared concern instead of being reimplemented per page."]),
-        new(
             SandboxGroupKey.Gantt,
             "Gantt",
             "/groups/gantt",
             "Controlled interactive project scheduling with dense task metadata, dependency editing, insertion, and export.",
             ["gantt charts"],
             ["Every gesture must raise a typed request instead of mutating caller state.", "Rows, task bars, and dependency ports must remain aligned at dense desktop widths.", "Insertion must replace a real bridge edge and visibly propagate the dependent schedule.", "Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale, drag empty timeline space to pan, and double-click an empty row point to request a new eight-hour task from the host.", "The dense proof combines a Canvas runtime hub with exactly eight incoming and eight outgoing edges and a 43-task delivery chain, forcing both scroll axes while exercising endpoint lanes and exact mouse reconnection.", "The implementation task has two predecessors, proving multiple dependencies without encoding them into task records.", "Drop the staged security review onto the Canvas runtime → Host integration bridge to replace that edge and move the dependent path."]),
+        new(
+            SandboxGroupKey.Overlays,
+            "Overlays",
+            "/groups/overlays",
+            "Contextual and modal interaction services shared across the sandbox — dialog, tooltip, and notification hosts.",
+            ["dialog service", "tooltip service", "notifications"],
+            ["Dialog, tooltip, and notification hosts should remain a shared concern instead of being reimplemented per page.", "The page should keep context when a service-hosted overlay opens.", "Overlay windows must not trap focus or block dismissal."]),
         new(
             SandboxGroupKey.Canvas,
             "Canvas",
@@ -175,32 +231,41 @@ public static class SandboxCatalogRegistry
 
     public static IReadOnlyList<SandboxExampleDefinition> Examples { get; } =
     [
-        CreateExample("foundations-default", SandboxGroupKey.Foundations, "Type scale", SandboxScenarioKey.Default, "Baseline typography, surfaces, and icon alignment.", ["typography", "spacing"], "TextBlock", "Icon", "SummaryTiles"),
-        CreateExample("foundations-dense", SandboxGroupKey.Foundations, "Dense editorial stack", SandboxScenarioKey.DenseContent, "Denser heading, copy, and icon combinations.", ["dense", "copy"], "TextBlock", "Card"),
-        CreateExample("foundations-empty", SandboxGroupKey.Foundations, "Empty orientation", SandboxScenarioKey.EmptyState, "Foundation-only empty orientation surface.", ["empty"], "EmptyState"),
-        CreateExample("inputs-default", SandboxGroupKey.Inputs, "Form entry", SandboxScenarioKey.Default, "Standard field layout with validation and helper context.", ["forms"], "FormField", "TextBox", "DropDown", "Numeric"),
-        CreateExample("inputs-editable", SandboxGroupKey.Inputs, "Inline property editing", SandboxScenarioKey.Default, "Editable property rows switch from displayed values to shared text and checkbox inputs.", ["forms", "inline-edit"], "Editable", "Stack", "TextBox", "CheckBox"),
-        CreateExample("inputs-dense", SandboxGroupKey.Inputs, "Dense intake form", SandboxScenarioKey.DenseContent, "High-density entry form with stacked fields.", ["dense", "forms"], "FormSection", "TextArea", "Switch"),
-        CreateExample("inputs-empty", SandboxGroupKey.Inputs, "No draft selected", SandboxScenarioKey.EmptyState, "Entry workflow before a draft is created.", ["empty"], "EmptyState"),
-        CreateExample("actions-default", SandboxGroupKey.Actions, "Primary action hierarchy", SandboxScenarioKey.Default, "Primary, secondary, ghost, and copy action contrast.", ["buttons", "copy"], "Button", "CopyButton"),
-        CreateExample("actions-dense", SandboxGroupKey.Actions, "Dense inline actions", SandboxScenarioKey.DenseContent, "Action rows inside a compact review surface with copy affordances.", ["dense", "inline", "copy"], "Button", "CopyButton", "StatusBadge"),
-        CreateExample("actions-empty", SandboxGroupKey.Actions, "No actions available", SandboxScenarioKey.EmptyState, "Action surface when prerequisites are missing.", ["empty"], "EmptyState", "Alert"),
+        CreateExample("typography-default", SandboxGroupKey.Typography, "Type scale", SandboxScenarioKey.Default, "Baseline typography, surfaces, and icon alignment.", ["typography", "spacing"], "TextBlock", "Icon", "SummaryTiles"),
+        CreateExample("typography-dense", SandboxGroupKey.Typography, "Dense editorial stack", SandboxScenarioKey.DenseContent, "Denser heading, copy, and icon combinations.", ["dense", "copy"], "TextBlock", "Card"),
+        CreateExample("typography-empty", SandboxGroupKey.Typography, "Empty orientation", SandboxScenarioKey.EmptyState, "Foundation-only empty orientation surface.", ["empty"], "EmptyState"),
+        CreateExample("identity-default", SandboxGroupKey.Identity, "Avatars and icons", SandboxScenarioKey.Default, "Icon language paired with generated and uploaded avatar treatments.", ["icons", "avatars"], "Icon", "Avatar", "RoboAvatar"),
+        CreateExample("buttons-default", SandboxGroupKey.Buttons, "Primary action hierarchy", SandboxScenarioKey.Default, "Primary, secondary, ghost, and copy action contrast.", ["buttons", "copy"], "Button", "CopyButton"),
+        CreateExample("buttons-dense", SandboxGroupKey.Buttons, "Dense inline actions", SandboxScenarioKey.DenseContent, "Action rows inside a compact review surface with copy affordances.", ["dense", "inline", "copy"], "Button", "CopyButton", "StatusBadge"),
+        CreateExample("buttons-empty", SandboxGroupKey.Buttons, "No actions available", SandboxScenarioKey.EmptyState, "Action surface when prerequisites are missing.", ["empty"], "EmptyState", "Alert"),
+        CreateExample("badges-default", SandboxGroupKey.Badges, "Status and label tokens", SandboxScenarioKey.Default, "Badge, chip, and pill treatments for compact metadata and tagging.", ["badges", "chips", "tags"], "Badge", "Chip", "Pill"),
+        CreateExample("badges-dense", SandboxGroupKey.Badges, "Dense badge clusters", SandboxScenarioKey.DenseContent, "Higher-density badge and chip groupings inside a compact review surface.", ["dense", "badges"], "BadgesGroup", "ChipRow", "StatusBadge"),
+        CreateExample("badges-empty", SandboxGroupKey.Badges, "No status yet", SandboxScenarioKey.EmptyState, "Badge surface before any status is available.", ["empty"], "EmptyState"),
+        CreateExample("forms-default", SandboxGroupKey.Forms, "Form entry", SandboxScenarioKey.Default, "Standard field layout with validation and helper context.", ["forms"], "FormField", "TextBox", "DropDown", "Numeric"),
+        CreateExample("forms-editable", SandboxGroupKey.Forms, "Inline property editing", SandboxScenarioKey.Default, "Editable property rows switch from displayed values to shared text and checkbox inputs.", ["forms", "inline-edit"], "Editable", "Stack", "TextBox", "CheckBox"),
+        CreateExample("forms-dense", SandboxGroupKey.Forms, "Dense intake form", SandboxScenarioKey.DenseContent, "High-density entry form with stacked fields.", ["dense", "forms"], "FormSection", "TextArea", "Switch"),
+        CreateExample("forms-empty", SandboxGroupKey.Forms, "No draft selected", SandboxScenarioKey.EmptyState, "Entry workflow before a draft is created.", ["empty"], "EmptyState"),
+        CreateExample("cards-default", SandboxGroupKey.Cards, "Summary and list views", SandboxScenarioKey.Default, "Cards, summaries, and list rows for stable data display.", ["cards"], "Card", "SelectionListItem", "SummaryTiles"),
+        CreateExample("lists-default", SandboxGroupKey.Lists, "Selection and detail views", SandboxScenarioKey.Default, "List-detail shell and selection rows for scanning and drilling into records.", ["lists", "selection"], "SelectionListItem", "ListDetailShell"),
+        CreateExample("lists-dense", SandboxGroupKey.Lists, "Dense data review", SandboxScenarioKey.DenseContent, "Metadata-heavy summaries and compact item rows.", ["dense", "metadata"], "SelectionListItem", "StatusBadge"),
+        CreateExample("data-display-empty", SandboxGroupKey.DataDisplay, "No results", SandboxScenarioKey.EmptyState, "Placeholder proof surface until Data Display components are wired into the sandbox.", ["empty"], "EmptyState"),
         CreateExample("navigation-default", SandboxGroupKey.Navigation, "Workspace navigation", SandboxScenarioKey.Default, "Tabs, steps, tree navigation, and list-detail movement in a standard workflow that keeps dense content segmented instead of vertically stacked.", ["keyboard", "tabs", "treeview", "progressive-disclosure", "reduce-scroll"], "Tabs", "Steps", "TreeView", "TooltipTarget", "ListDetailShell"),
         CreateExample("navigation-dense", SandboxGroupKey.Navigation, "Dense workspace routing", SandboxScenarioKey.DenseContent, "High-information navigation shell with active detail.", ["dense"], "SecondaryTabs", "SelectionListItem"),
         CreateExample("navigation-empty", SandboxGroupKey.Navigation, "Nothing selected", SandboxScenarioKey.EmptyState, "Navigation shell before an item is selected.", ["empty"], "ListDetailShell", "EmptyState"),
         CreateCustomExample("navigation-tabs-lab", SandboxGroupKey.Navigation, "Tabs lab", "/groups/navigation#tabs", SandboxScenarioKey.Default, "Dedicated tabs section covering the readable default setup, advanced accent styling, shell customization, overflow strategies, and edge cases that prove tabs can replace long stacked pages.", ["tabs", "responsive", "edge-cases", "customization", "progressive-disclosure", "reduce-scroll", "overflow"], "Tabs"),
         CreateCustomExample("navigation-side-menu-lab", SandboxGroupKey.Navigation, "Side menu lab", "/groups/navigation#side-menu", SandboxScenarioKey.Default, "Responsive side menu covering declarative and list-fed items, measured overflow, service-driven context switching, utility panels, persistence, and the small-screen top dropdown.", ["side-menu", "responsive", "overflow", "service", "local-storage", "dropdown"], "SideMenu", "SideMenuItem", "SideMenuService"),
         CreateCustomExample("navigation-treeview-adaptive", SandboxGroupKey.Navigation, "Adaptive TreeView rows", "/groups/navigation?scenario=long-text&frame=desktop", SandboxScenarioKey.LongText, "Three-level TreeView proof for adaptive labels, compact badges, full-width nesting, and right-positioned service tooltips.", ["treeview", "responsive", "long-text", "tooltip", "ellipsis"], "TreeView", "TreeViewNodeRow", "TooltipTarget", "TooltipService"),
-        CreateExample("feedback-default", SandboxGroupKey.Feedback, "Status surfaces", SandboxScenarioKey.Default, "Alerts, badges, notifications, and load states.", ["status"], "Alert", "Notification", "NotificationService", "StatusBadge"),
-        CreateExample("feedback-dense", SandboxGroupKey.Feedback, "Operational feedback", SandboxScenarioKey.DenseContent, "Mixed severity feedback inside a busy operational surface.", ["dense"], "Alert", "StatusBadge", "SummaryTiles"),
-        CreateExample("feedback-empty", SandboxGroupKey.Feedback, "No activity yet", SandboxScenarioKey.EmptyState, "Shared empty and loading transitions.", ["empty"], "EmptyState", "LoadingState"),
-        CreateExample("layout-default", SandboxGroupKey.Layout, "Page scaffold", SandboxScenarioKey.Default, "Page-level composition with header, lead, rail, section blocks, and a standalone zoom/pan preview.", ["page", "zoom-pan"], "PageScaffold", "PageHeader", "SectionCard", "ZoomPanFrame"),
+        CreateExample("layout-default", SandboxGroupKey.Layout, "Page scaffold", SandboxScenarioKey.Default, "Page-level composition with header, lead, rail, section blocks, and a standalone zoom/pan preview.", ["page", "zoom-pan"], "PageScaffold", "SectionCard", "ZoomPanFrame"),
         CreateExample("layout-dense", SandboxGroupKey.Layout, "Dense workspace layout", SandboxScenarioKey.DenseContent, "Split layout that uses wider desktop space deliberately.", ["dense"], "PageScaffold", "FormSection", "StickyActionFooter"),
         CreateExample("layout-empty", SandboxGroupKey.Layout, "No records in view", SandboxScenarioKey.EmptyState, "Layout shell with an empty workspace region.", ["empty"], "PageScaffold", "EmptyState"),
         CreateCustomExample("layout-composition", SandboxGroupKey.Layout, "Layout composition lab", "/groups/layout#stack", SandboxScenarioKey.Default, "Compare Stack, Grid, and Row/Column versions of the same analytics control panel.", ["comparison", "responsive", "layout"], "Stack", "Grid", "Row", "Column", "FormRow"),
-        CreateExample("data-display-default", SandboxGroupKey.DataDisplay, "Summary and list views", SandboxScenarioKey.Default, "Cards, summaries, and list rows for stable data display.", ["lists"], "Card", "SelectionListItem", "SummaryTiles"),
-        CreateExample("data-display-dense", SandboxGroupKey.DataDisplay, "Dense data review", SandboxScenarioKey.DenseContent, "Metadata-heavy summaries and compact item rows.", ["dense", "metadata"], "SelectionListItem", "StatusBadge"),
-        CreateExample("data-display-empty", SandboxGroupKey.DataDisplay, "No results", SandboxScenarioKey.EmptyState, "Shared empty display state for list-style data.", ["empty"], "EmptyState"),
+        CreateExample("feedback-default", SandboxGroupKey.Feedback, "Status surfaces", SandboxScenarioKey.Default, "Alerts, badges, notifications, and load states.", ["status"], "Alert", "Notification", "StatusBadge"),
+        CreateExample("feedback-dense", SandboxGroupKey.Feedback, "Operational feedback", SandboxScenarioKey.DenseContent, "Mixed severity feedback inside a busy operational surface.", ["dense"], "Alert", "StatusBadge", "SummaryTiles"),
+        CreateExample("feedback-empty", SandboxGroupKey.Feedback, "No activity yet", SandboxScenarioKey.EmptyState, "Shared empty and loading transitions.", ["empty"], "EmptyState", "LoadingState"),
+        CreateExample("modals-default", SandboxGroupKey.Modals, "Dialog shell", SandboxScenarioKey.Default, "Standard dialog composition for focused confirmation and inspection flows.", ["modals", "dialog"], "Dialog"),
+        CreateExample("data-visualization-default", SandboxGroupKey.DataVisualization, "Data grid", SandboxScenarioKey.Default, "Tabular series review using the shared data grid wrapper.", ["data grid", "tables"], "DataGrid"),
+        CreateExample("data-visualization-empty", SandboxGroupKey.DataVisualization, "No rows", SandboxScenarioKey.EmptyState, "Data grid empty-state behavior before any rows are available.", ["empty"], "DataGrid", "EmptyState"),
+        CreateExample("storage-empty", SandboxGroupKey.Storage, "No storage summary yet", SandboxScenarioKey.EmptyState, "Placeholder proof surface until Storage components are wired into the sandbox.", ["empty", "storage"], "EmptyState"),
         CreateExample("charts-default", SandboxGroupKey.Charts, "Trend and share charts", SandboxScenarioKey.Default, "Area, line, multi-line, and pie examples using the CanDoItAll chart wrapper.", ["charts", "apex", "wrapper"], "CdaChart"),
         CreateExample("charts-dense", SandboxGroupKey.Charts, "Dense operational charts", SandboxScenarioKey.DenseContent, "Higher-density multi-series charts with legends, labels, and color tuning.", ["dense", "multi-series"], "CdaChart"),
         CreateExample("charts-empty", SandboxGroupKey.Charts, "No chart data", SandboxScenarioKey.EmptyState, "Wrapper empty-state behavior before any chart series is available.", ["empty"], "CdaChart", "EmptyState"),
@@ -210,12 +275,12 @@ public static class SandboxCatalogRegistry
         CreateExample("qr-default", SandboxGroupKey.QrCode, "QR payload rendering", SandboxScenarioKey.Default, "URL and verification payloads rendered through the shared SVG component.", ["qr", "svg", "payload"], "QrCodeView", "QrCodeButton"),
         CreateExample("qr-long", SandboxGroupKey.QrCode, "Long QR payload", SandboxScenarioKey.LongText, "Long verification content with high error correction and constrained mobile width.", ["qr", "long-text", "error-correction"], "QrCodeView"),
         CreateExample("qr-empty", SandboxGroupKey.QrCode, "Empty and scanner fallback", SandboxScenarioKey.EmptyState, "Empty renderer state plus a camera-disabled manual scan dialog.", ["qr", "empty", "scanner", "fallback"], "QrCodeView", "QrScanButton"),
-        CreateExample("overlays-default", SandboxGroupKey.Overlays, "Overlay services", SandboxScenarioKey.Default, "DialogService, TooltipService, and NotificationService around contextual help and sticky actions.", ["overlay", "services"], "DialogService", "DialogHost", "TooltipService", "Tooltip", "NotificationService", "HelpPopover", "StickyActionFooter"),
-        CreateExample("overlays-dense", SandboxGroupKey.Overlays, "Dense approval flow", SandboxScenarioKey.DenseContent, "Inline approval surface with secondary actions, modal affordance, and service-hosted overlays.", ["dense", "approval"], "DialogService", "TooltipService", "NotificationService", "StickyActionFooter", "Alert"),
-        CreateExample("overlays-empty", SandboxGroupKey.Overlays, "No modal context", SandboxScenarioKey.EmptyState, "Overlay surface before the user selects a record.", ["empty"], "EmptyState", "HelpPopover", "DialogHost"),
         CreateExample("gantt-default", SandboxGroupKey.Gantt, "Controlled project schedule", SandboxScenarioKey.Default, "Move and resize tasks, reconnect dependencies, independently enable task requests from empty timeline points, reorder rows, insert work into a bridge edge, edit titles, and export the controlled projection.", ["gantt", "controlled", "interactive"], "GanttChart", "GanttTaskDragSource"),
         CreateExample("gantt-dense", SandboxGroupKey.Gantt, "Dense dependency hub", SandboxScenarioKey.DenseContent, "Eight incoming and eight outgoing hub edges prove compact assignment indicators, endpoint lanes, and exact mouse reconnection under fan pressure.", ["dense", "dependencies", "assignments", "reconnection"], "GanttChart", "GanttAssignment"),
         CreateExample("gantt-empty", SandboxGroupKey.Gantt, "Empty schedule", SandboxScenarioKey.EmptyState, "Explicit zero-task surface without synthetic schedule data.", ["empty", "gantt"], "GanttChart"),
+        CreateExample("overlays-default", SandboxGroupKey.Overlays, "Overlay services", SandboxScenarioKey.Default, "DialogService, TooltipService, and NotificationService hosting contextual overlays.", ["overlay", "services"], "DialogService", "DialogHost", "TooltipService", "Tooltip", "NotificationService"),
+        CreateExample("overlays-dense", SandboxGroupKey.Overlays, "Dense approval flow", SandboxScenarioKey.DenseContent, "Inline approval surface with secondary actions, modal affordance, and service-hosted overlays.", ["dense", "approval"], "DialogService", "TooltipService", "NotificationService", "Alert"),
+        CreateExample("overlays-empty", SandboxGroupKey.Overlays, "No modal context", SandboxScenarioKey.EmptyState, "Overlay surface before the user selects a record.", ["empty"], "EmptyState", "DialogHost"),
         CreateExample("canvas-default", SandboxGroupKey.Canvas, "Workbench surface", SandboxScenarioKey.Default, "Shared workbench, floating windows, and calendar surface.", ["canvas", "workbench"], "CanvasWorkbench", "CanvasFloatingWindow", "CanvasCalendar"),
         CreateExample("canvas-dense", SandboxGroupKey.Canvas, "Dense workbench review", SandboxScenarioKey.DenseContent, "Deeper workbench, preview, and calendar density.", ["dense", "canvas"], "CanvasWorkbench", "CanvasSceneHostPreview", "LayerStackPreview"),
         CreateExample("canvas-empty", SandboxGroupKey.Canvas, "Empty canvas state", SandboxScenarioKey.EmptyState, "Canvas empty-state coverage across workbench and calendar.", ["empty", "canvas"], "CanvasWorkbench", "CanvasCalendar", "EmptyStateOverlay")
@@ -244,90 +309,81 @@ public static class SandboxCatalogRegistry
     /// <summary>
     /// Named component sections rendered within a catalog page, keyed by route. Both the page
     /// itself (for anchors/headings/API types) and the sidebar sub-nav read from this list so
-    /// they can't drift out of sync. Only Actions is populated today; other pages migrate later.
+    /// they can't drift out of sync.
     /// </summary>
     public static IReadOnlyDictionary<string, IReadOnlyList<SandboxPageSection>> PageSections { get; } =
         new Dictionary<string, IReadOnlyList<SandboxPageSection>>(StringComparer.OrdinalIgnoreCase)
         {
-            ["/groups/actions"] =
-            [
-                new("button", "Button", typeof(Button)),
-                new("copy-button", "CopyButton", typeof(CopyButton)),
-                new("badge", "Badge", typeof(Badge)),
-                new("chip", "Chip", typeof(Chip)),
-                new("selection-list-item", "SelectionListItem", typeof(SelectionListItem))
-            ],
-            ["/groups/qr"] =
-            [
-                new("qr-code-view", "QrCodeView", typeof(QrCodeView)),
-                new("qr-code-button", "QrCodeButton", typeof(QrCodeButton)),
-                new("qr-scan-button", "QrScanButton", typeof(QrScanButton))
-            ],
-            ["/groups/charts"] =
-            [
-                new("cda-chart", "CdaChart", typeof(CdaChart))
-            ],
-            ["/groups/mermaid"] =
-            [
-                new("mermaid-diagram", "MermaidDiagram", typeof(MermaidDiagram))
-            ],
-            ["/groups/gantt"] =
-            [
-                new("gantt-chart", "GanttChart", typeof(GanttChart))
-            ],
-            ["/groups/feedback"] =
-            [
-                new("alert", "Alert", typeof(Alert)),
-                new("badge", "Badge", typeof(Badge)),
-                new("chip", "Chip", typeof(Chip)),
-                new("callout", "Callout", typeof(Callout)),
-                new("tooltip-target", "TooltipTarget", typeof(TooltipTarget)),
-                new("help-popover", "HelpPopover", typeof(HelpPopover)),
-                new("status-check-list", "StatusCheckList", typeof(StatusCheckList)),
-                new("verification-list", "VerificationList", typeof(VerificationList)),
-                new("notification", "NotificationService", typeof(NotificationService)),
-                new("badges-group", "BadgesGroup", typeof(BadgesGroup)),
-                new("chip-row", "ChipRow", typeof(ChipRow)),
-                new("status-badge", "StatusBadge", typeof(StatusBadge)),
-                new("pill", "Pill", typeof(Pill)),
-                new("pill-list", "PillList", typeof(PillList))
-            ],
-            ["/groups/foundations"] =
+            ["/groups/typography"] =
             [
                 new("typeblock", "TextBlock", typeof(TextBlock)),
-                new("summary-tiles", "SummaryTiles", typeof(SummaryTiles)),
+                new("eyebrow", "Eyebrow", typeof(Eyebrow)),
+                new("small-text", "SmallText", typeof(SmallText)),
+                new("copyable-mono-value", "CopyableMonoValue", typeof(CopyableMonoValue)),
+                new("footer-text", "FooterText", typeof(FooterText)),
+                new("hash-display", "HashDisplay", typeof(HashDisplay)),
+                new("header", "Header", typeof(Header)),
+                new("mono-text", "MonoText", typeof(MonoText)),
+                new("muted-inline", "MutedInline", typeof(MutedInline)),
+                new("section-head", "SectionHead", typeof(SectionHead)),
+                new("section-heading", "SectionHeading", typeof(SectionHeading)),
+                new("divider", "Divider", typeof(Divider))
+            ],
+            ["/groups/identity"] =
+            [
                 new("icon", "Icon", typeof(Icon)),
-                new("robo-avatar", "RoboAvatar", typeof(RoboAvatar)),
-                new("homo-avatar", "HomoAvatar", typeof(HomoAvatar)),
                 new("avatar", "Avatar", typeof(Avatar)),
                 new("creator-line", "CreatorLine", typeof(CreatorLine)),
                 new("creator-social-link", "CreatorSocialLink", typeof(CreatorSocialLink)),
-                new("eyebrow", "Eyebrow", typeof(Eyebrow)),
-                new("section-heading", "SectionHeading", typeof(SectionHeading)),
-                new("section-head", "SectionHead", typeof(SectionHead)),
-                new("header", "Header", typeof(Header)),
-                new("divider", "Divider", typeof(Divider)),
-                new("mono-text", "MonoText", typeof(MonoText)),
-                new("copyable-mono-value", "CopyableMonoValue", typeof(CopyableMonoValue)),
-                new("hash-display", "HashDisplay", typeof(HashDisplay)),
-                new("muted-inline", "MutedInline", typeof(MutedInline)),
-                new("small-text", "SmallText", typeof(SmallText)),
-                new("footer-text", "FooterText", typeof(FooterText))
+                new("homo-avatar", "HomoAvatar", typeof(HomoAvatar)),
+                new("robo-avatar", "RoboAvatar", typeof(RoboAvatar))
             ],
-            ["/groups/data-display"] =
+            ["/groups/buttons"] =
             [
+                new("button", "Button", typeof(Button)),
+                new("copy-button", "CopyButton", typeof(CopyButton))
+            ],
+            ["/groups/badges"] =
+            [
+                new("badge", "Badge", typeof(Badge)),
+                new("badges-group", "BadgesGroup", typeof(BadgesGroup)),
+                new("status-badge", "StatusBadge", typeof(StatusBadge)),
+                new("chip", "Chip", typeof(Chip)),
+                new("chip-row", "ChipRow", typeof(ChipRow)),
                 new("compact-stat", "CompactStat", typeof(CompactStat)),
-                new("selection-list-item", "SelectionListItem", typeof(SelectionListItem)),
+                new("compact-stat-strip", "CompactStatStrip", typeof(CompactStatStrip)),
+                new("pill", "Pill", typeof(Pill)),
+                new("pill-list", "PillList", typeof(PillList))
+            ],
+            ["/groups/forms"] =
+            [
+                new("checkbox", "CheckBox", typeof(CheckBox<>)),
+                new("dropdown", "DropDown", typeof(DropDown<>)),
+                new("editable", "Editable", typeof(Editable<>)),
+                new("entity-picker", "EntityPicker", typeof(EntityPicker)),
+                new("fieldset", "Fieldset", typeof(Fieldset)),
+                new("file-upload", "FileUpload", typeof(FileUpload)),
+                new("numeric", "Numeric", typeof(Numeric<>)),
+                new("password", "Password", typeof(Password)),
+                new("prefixed-field", "PrefixedField", typeof(PrefixedField)),
+                new("secret-field", "SecretField", typeof(SecretField)),
+                new("settings-switch-row", "SettingsSwitchRow", typeof(SettingsSwitchRow)),
+                new("slider", "Slider", typeof(Slider<>)),
+                new("switch", "Switch", typeof(Switch)),
+                new("tag-editor", "TagEditor", typeof(TagEditor)),
+                new("text-area", "TextArea", typeof(TextArea)),
+                new("textbox", "TextBox", typeof(TextBox))
+            ],
+            ["/groups/cards"] =
+            [
                 new("card", "Card", typeof(Card)),
-                new("data-grid", "DataGrid", typeof(DataGrid<>)),
-                new("dialog", "Dialog", typeof(Dialog)),
-                new("action-card", "ActionCard", typeof(ActionCard)),
-                new("action-review-panel", "ActionReviewPanel", typeof(ActionReviewPanel)),
-                new("auth-card", "AuthCard", typeof(AuthCard)),
                 new("card-actions", "CardActions", typeof(CardActions)),
                 new("card-button", "CardButton", typeof(CardButton)),
                 new("card-grid", "CardGrid", typeof(CardGrid)),
                 new("card-stats-with-number", "CardStatsWithNumber", typeof(CardStatsWithNumber)),
+                new("action-card", "ActionCard", typeof(ActionCard)),
+                new("action-review-panel", "ActionReviewPanel", typeof(ActionReviewPanel)),
+                new("auth-card", "AuthCard", typeof(AuthCard)),
                 new("hero-card", "HeroCard", typeof(HeroCard)),
                 new("metric-card", "MetricCard", typeof(MetricCard)),
                 new("panel-card", "PanelCard", typeof(PanelCard)),
@@ -339,56 +395,73 @@ public static class SandboxCatalogRegistry
                 new("stats-card-row", "StatsCardRow", typeof(StatsCardRow)),
                 new("stats-grid", "StatsGrid", typeof(StatsGrid)),
                 new("summary-tile", "SummaryTile", typeof(SummaryTile)),
-                new("surface-card", "SurfaceCard", typeof(SurfaceCard)),
-                new("compact-stat-strip", "CompactStatStrip", typeof(CompactStatStrip))
+                new("summary-tiles", "SummaryTiles", typeof(SummaryTiles)),
+                new("surface-card", "SurfaceCard", typeof(SurfaceCard))
             ],
-            ["/groups/overlays"] =
+            ["/groups/lists"] =
             [
-                new("help-popover", "HelpPopover", typeof(HelpPopover)),
-                new("dialog-service", "DialogService", typeof(DialogService)),
-                new("tooltip-service", "TooltipService", typeof(TooltipService)),
-                new("notification-service", "NotificationService", typeof(NotificationService)),
-                new("overlay-window", "OverlayWindow", typeof(OverlayWindow)),
-                new("sticky-action-footer", "StickyActionFooter", typeof(StickyActionFooter))
+                new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell)),
+                new("selection-list-item", "SelectionListItem", typeof(SelectionListItem))
             ],
             ["/groups/navigation"] =
             [
+                new("page-header", "PageHeader", typeof(PageHeader)),
+                new("side-menu", "SideMenu", typeof(SideMenu)),
+                new("steps", "Steps", typeof(Steps)),
                 new("tabs", "Tabs", typeof(Tabs)),
                 new("toolbar", "Toolbar", typeof(Toolbar)),
-                new("tree-view", "TreeView", typeof(TreeView)),
-                new("steps", "Steps", typeof(Steps)),
-                new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell)),
-                new("side-menu", "SideMenu", typeof(SideMenu))
+                new("tree-view", "TreeView", typeof(TreeView))
             ],
             ["/groups/layout"] =
             [
-                new("page-scaffold", "PageScaffold", typeof(PageScaffold)),
-                new("page-header", "PageHeader", typeof(PageHeader)),
-                new("zoom-pan-frame", "ZoomPanFrame", typeof(ZoomPanFrame)),
-                new("list-detail-shell", "ListDetailShell", typeof(ListDetailShell)),
-                new("sticky-action-footer", "StickyActionFooter", typeof(StickyActionFooter)),
-                new("stack", "Stack", typeof(Stack)),
                 new("grid", "Grid", typeof(Grid)),
-                new("row-column", "Row", typeof(Row))
+                new("page-scaffold", "PageScaffold", typeof(PageScaffold)),
+                new("row-column", "Row", typeof(Row)),
+                new("stack", "Stack", typeof(Stack)),
+                new("sticky-action-footer", "StickyActionFooter", typeof(StickyActionFooter)),
+                new("zoom-pan-frame", "ZoomPanFrame", typeof(ZoomPanFrame))
             ],
-            ["/groups/inputs"] =
+            ["/groups/feedback"] =
             [
-                new("textbox", "TextBox", typeof(TextBox)),
-                new("dropdown", "DropDown", typeof(DropDown<>)),
-                new("numeric", "Numeric", typeof(Numeric<>)),
-                new("password", "Password", typeof(Password)),
-                new("secret-field", "SecretField", typeof(SecretField)),
-                new("switch", "Switch", typeof(Switch)),
-                new("slider", "Slider", typeof(Slider<>)),
-                new("prefixed-field", "PrefixedField", typeof(PrefixedField)),
-                new("tag-editor", "TagEditor", typeof(TagEditor)),
-                new("entity-picker", "EntityPicker", typeof(EntityPicker)),
-                new("settings-switch-row", "SettingsSwitchRow", typeof(SettingsSwitchRow)),
-                new("editable", "Editable", typeof(Editable<>)),
-                new("text-area", "TextArea", typeof(TextArea)),
-                new("checkbox", "CheckBox", typeof(CheckBox<>)),
-                new("file-upload", "FileUpload", typeof(FileUpload)),
-                new("fieldset", "Fieldset", typeof(Fieldset))
+                new("alert", "Alert", typeof(Alert)),
+                new("callout", "Callout", typeof(Callout)),
+                new("help-popover", "HelpPopover", typeof(HelpPopover)),
+                new("status-check-list", "StatusCheckList", typeof(StatusCheckList)),
+                new("tooltip-target", "TooltipTarget", typeof(TooltipTarget)),
+                new("verification-list", "VerificationList", typeof(VerificationList))
+            ],
+            ["/groups/modals"] =
+            [
+                new("dialog", "Dialog", typeof(Dialog))
+            ],
+            ["/groups/data-visualization"] =
+            [
+                new("data-grid", "DataGrid", typeof(DataGrid<>))
+            ],
+            ["/groups/charts"] =
+            [
+                new("cda-chart", "CdaChart", typeof(CdaChart))
+            ],
+            ["/groups/mermaid"] =
+            [
+                new("mermaid-diagram", "MermaidDiagram", typeof(MermaidDiagram))
+            ],
+            ["/groups/qr"] =
+            [
+                new("qr-code-view", "QrCodeView", typeof(QrCodeView)),
+                new("qr-code-button", "QrCodeButton", typeof(QrCodeButton)),
+                new("qr-scan-button", "QrScanButton", typeof(QrScanButton))
+            ],
+            ["/groups/gantt"] =
+            [
+                new("gantt-chart", "GanttChart", typeof(GanttChart))
+            ],
+            ["/groups/overlays"] =
+            [
+                new("dialog-service", "DialogService", typeof(DialogService)),
+                new("tooltip-service", "TooltipService", typeof(TooltipService)),
+                new("notification-service", "NotificationService", typeof(NotificationService)),
+                new("overlay-window", "OverlayWindow", typeof(OverlayWindow))
             ],
             ["/groups/canvas"] =
             [

@@ -403,52 +403,23 @@
                         </Steps>
                     </ExampleBlock>
                 }
-                else if (section.ComponentName == "ListDetailShell")
+                else if (section.ComponentName == "PageHeader")
                 {
-                    <ExampleBlock Title="Selection and detail shell"
-                                  Description="Selection and detail context should stay readable with or without a chosen item."
-                                  SourceId="examples/Navigation/SelectionShell.razor"
-                                  ApiTypes="@ListDetailShellApiTypes">
-                        <ListDetailShell ListPaneWidth="20rem"
-                                         data-testid="sandbox-navigation-list-detail">
-                            <ListHeader>
-                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Navigation items" />
-                            </ListHeader>
-                            <ListContent>
-                                <div class="sandbox-list">
-                                    @foreach (var item in NavigationItems)
-                                    {
-                                        <SelectionListItem IsSelected="@(item.Id == selectedItemId)"
-                                                           Title="@item.Title"
-                                                           Eyebrow="@item.Eyebrow"
-                                                           Meta="@item.Meta"
-                                                           Summary="@item.Summary"
-                                                           OnSelect="@(() => SelectItem(item.Id))">
-                                            <Status>
-                                                <StatusBadge Text="@item.State" Tone="@item.Tone" />
-                                            </Status>
-                                        </SelectionListItem>
-                                    }
-                                </div>
-                            </ListContent>
-                            <DetailHeader>
-                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Detail" />
-                            </DetailHeader>
-                            <DetailContent>
-                                @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-                                {
-                                    <EmptyState Eyebrow="Navigation" Title="Nothing selected" Description="Choose an item from the left pane to inspect the active route and proof notes." />
-                                }
-                                else
-                                {
-                                    <div class="space-y-3">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@SelectedItem.Title" />
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SelectedItem.Summary" />
-                                        <StatusBadge Text="@SelectedItem.State" Tone="@SelectedItem.Tone" />
-                                    </div>
-                                }
-                            </DetailContent>
-                        </ListDetailShell>
+                    <ExampleBlock Title="Header variants"
+                                  Description="A standard header carries eyebrow, title, description, and trailing actions; a compact header fits inside list-detail and rail panes."
+                                  SourceId="examples/Navigation/PageHeaderVariants.razor"
+                                  ApiTypes="@PageHeaderApiTypes">
+                        <div class="space-y-4">
+                            <PageHeader Eyebrow="Shared layout"
+                                        Title="@HeaderTitle"
+                                        Description="@HeaderDescription">
+                                <Actions>
+                                    <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
+                                    <Button Text="Open checklist" />
+                                </Actions>
+                            </PageHeader>
+                            <PageHeader Eyebrow="List pane" Title="Compact header" Compact="true" />
+                        </div>
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "SideMenu")
@@ -684,7 +655,7 @@
     private static readonly IReadOnlyList<Type> ToolbarApiTypes = [typeof(Toolbar)];
     private static readonly IReadOnlyList<Type> TreeViewApiTypes = [typeof(TreeView), typeof(ContextMenu)];
     private static readonly IReadOnlyList<Type> StepsApiTypes = [typeof(Steps)];
-    private static readonly IReadOnlyList<Type> ListDetailShellApiTypes = [typeof(ListDetailShell)];
+    private static readonly IReadOnlyList<Type> PageHeaderApiTypes = [typeof(PageHeader)];
     private static readonly IReadOnlyList<Type> SideMenuApiTypes = [typeof(SideMenu), typeof(SideMenuItem)];
 
     private const string SideMenuId = "sandbox-side-menu";
@@ -771,7 +742,6 @@
         new() { Id = "unavailable", Text = "Unavailable action", Icon = "block", Disabled = true, SeparatorBefore = true }
     ];
     private int stepIndex = 1;
-    private string selectedItemId = "overview";
     private string toolbarQuery = string.Empty;
     private string toolbarScope = ToolbarScopeAll;
     private string selectedTreeNodeId = "navigation-tabs";
@@ -816,9 +786,16 @@
         ? "Notifications and preference routing"
         : "Notifications";
 
-    private IReadOnlyList<NavigationItem> NavigationItems => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? DenseNavigationItems
-        : BaseNavigationItems;
+    private string HeaderTitle => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Migration acceptance workspace with extended release notes and validation guidance"
+        : "Migration acceptance workspace";
+
+    private string HeaderDescription => CurrentScenario switch
+    {
+        SandboxScenarioKey.DenseContent => "Dense layout still needs a stable main column, a concise supporting rail, and action placement that does not fight the content.",
+        SandboxScenarioKey.LongText => "Longer page descriptions should not force the header into awkward wrapping or a first viewport that feels like a document instead of a workspace.",
+        _ => "Shared page headers should make hierarchy, supporting context, and trailing actions obvious without inventing custom page structure."
+    };
 
     private IReadOnlyList<TreeViewNode> TreeNodes => FilterTreeNodes(ResolveScopedTreeNodes());
 
@@ -827,8 +804,6 @@
         : $"Filtered: {toolbarQuery}";
 
     private string ExpandedTreeStatus => $"{expandedTreeNodeIds.Count} expanded";
-
-    private NavigationItem SelectedItem => NavigationItems.FirstOrDefault(item => string.Equals(item.Id, selectedItemId, StringComparison.Ordinal)) ?? NavigationItems[0];
 
     protected override void OnInitialized()
     {
@@ -991,11 +966,6 @@
         expandedTreeNodeIds.Add("navigation-foundations");
         expandedTreeNodeIds.Add("navigation-controls");
         return Task.CompletedTask;
-    }
-
-    private void SelectItem(string id)
-    {
-        selectedItemId = id;
     }
 
     private Task SelectTreeNode(string id)
@@ -1227,18 +1197,4 @@
             _ => "Shared navigation components should remain readable under dense, long-text, and mobile conditions."
         };
 
-    private static readonly IReadOnlyList<NavigationItem> BaseNavigationItems =
-    [
-        new("overview", "Overview", "Shell", "route / overview", "Baseline route summary and proof notes.", "Active", "info"),
-        new("feedback", "Feedback", "States", "route / feedback", "Review notification, alert, and empty-state coverage.", "Ready", "success")
-    ];
-
-    private static readonly IReadOnlyList<NavigationItem> DenseNavigationItems =
-    [
-        new("overview", "Overview", "Shell", "route / overview", "Baseline route summary and proof notes.", "Active", "info"),
-        new("feedback", "Feedback", "States", "route / feedback", "Review notification, alert, and empty-state coverage.", "Ready", "success"),
-        new("canvas", "Canvas", "Runtime", "route / canvas", "Dense runtime route for workbench and calendar acceptance.", "Needs review", "warning")
-    ];
-
-    private sealed record NavigationItem(string Id, string Title, string Eyebrow, string Meta, string Summary, string State, string Tone);
 }

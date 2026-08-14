@@ -1,0 +1,21 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/storage"
+@inherits CatalogPageBase
+
+<PageTitle>Storage</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Scenario="@CurrentScenario"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  ScenarioChanged="NavigateScenario"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+        <EmptyState Eyebrow="Storage" Title="No components wired up yet" Description="StorageBadgeStrip and StorageSummaryCard are catalogued in BaseLib but not yet added to the sandbox." />
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Storage);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Storage);
+}

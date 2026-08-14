@@ -58,38 +58,7 @@
                 <section id="@section.Anchor" class="sandbox-component-section">
                     <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
 
-                    @if (section.ComponentName == "HelpPopover")
-                    {
-                        <ExampleBlock Title="Contextual help"
-                                      Description="Help should be available at the point of confusion without forcing a route change."
-                                      SourceId="examples/Overlays/ContextualHelp.razor"
-                                      ApiTypes="@HelpPopoverApiTypes">
-                            <Split Breakpoint="LayoutBreakpoint.Md"
-                                   Gap="LayoutGap.Large"
-                                   AlignItems="AlignItems.Start"
-                                   JustifyContent="JustifyContent.SpaceBetween"
-                                   Class="rounded-[1.5rem] border border-slate-200 bg-slate-50/80 p-5">
-                                <div class="space-y-2">
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Review decision support" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@HelpCopy" />
-                                </div>
-
-                                <HelpPopover Heading="Review checklist"
-                                             Body="@HelpBody"
-                                             Tip="@HelpTip"
-                                             PanelTestId="sandbox-overlays-help-panel">
-                                    <PanelContent>
-                                        <div class="sandbox-proof-list">
-                                            <p>Confirm desktop and mobile evidence.</p>
-                                            <p>Check empty and dense scenarios before approval.</p>
-                                            <p>Prefer shared components over one-off markup.</p>
-                                        </div>
-                                    </PanelContent>
-                                </HelpPopover>
-                            </Split>
-                        </ExampleBlock>
-                    }
-                    else if (section.ComponentName == "DialogService")
+                    @if (section.ComponentName == "DialogService")
                     {
                         <ExampleBlock Title="Dialog service"
                                       Description="DialogService examples cover modal sizes, protected backdrop behavior, and close results returned to the caller."
@@ -259,34 +228,6 @@
                             </div>
                         </ExampleBlock>
                     }
-                    else if (section.ComponentName == "StickyActionFooter")
-                    {
-                        <ExampleBlock Title="Sticky action footer"
-                                      Description="Sticky actions should close the workflow without stealing the page hierarchy."
-                                      SourceId="examples/Overlays/StickyFooterExample.razor"
-                                      ApiTypes="@StickyActionFooterApiTypes">
-                            <StickyActionFooter StatusLabel="Overlay state"
-                                                StatusMessage="@FooterMessage"
-                                                StatusTone="@FooterTone"
-                                                data-testid="sandbox-overlays-sticky-footer">
-                                <SecondaryActions>
-                                    <Button Text="Save draft"
-                                            ButtonStyle="@(ButtonStyle.Light)"
-                                            Variant="@(Variant.Outlined)"
-                                            Disabled="@IsDisabled" />
-                                </SecondaryActions>
-                                <PrimaryActions>
-                                    <Button Text="@PrimaryActionText" Disabled="@IsDisabled" />
-                                </PrimaryActions>
-                                <DangerActions>
-                                    <Button Text="Reject"
-                                            ButtonStyle="@(ButtonStyle.Danger)"
-                                            Variant="@(Variant.Text)"
-                                            Disabled="@IsDisabled" />
-                                </DangerActions>
-                            </StickyActionFooter>
-                        </ExampleBlock>
-                    }
                 </section>
             }
         }
@@ -298,12 +239,10 @@
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Overlays);
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/overlays");
 
-    private static readonly IReadOnlyList<Type> HelpPopoverApiTypes = [typeof(HelpPopover)];
     private static readonly IReadOnlyList<Type> DialogServiceApiTypes = [typeof(DialogService), typeof(DialogHost)];
     private static readonly IReadOnlyList<Type> TooltipServiceApiTypes = [typeof(TooltipService), typeof(TooltipTarget)];
     private static readonly IReadOnlyList<Type> NotificationServiceApiTypes = [typeof(NotificationService)];
     private static readonly IReadOnlyList<Type> OverlayWindowApiTypes = [typeof(OverlayWindow)];
-    private static readonly IReadOnlyList<Type> StickyActionFooterApiTypes = [typeof(StickyActionFooter)];
 
     private string DialogResultText { get; set; } = "No dialog result returned yet.";
     private OverlayWindowState overlayWindowState = new();
@@ -422,24 +361,6 @@
         return Task.CompletedTask;
     }
 
-    private string HelpCopy => CurrentScenario switch
-    {
-        SandboxScenarioKey.LongText => "Longer contextual copy should still stay short enough to read quickly and should hand off the full explanation to the popover panel instead of bloating the surrounding page.",
-        SandboxScenarioKey.DenseContent => "Dense review surfaces still need nearby help so users do not leave the current flow to answer simple questions.",
-        _ => "The page keeps its shape while contextual help answers small questions inline."
-    };
-
-    private string HelpBody => CurrentScenario switch
-    {
-        SandboxScenarioKey.LongText => "Use the popover for concise workflow guidance, escalation rules, and proof requirements that would otherwise crowd the surrounding page.",
-        SandboxScenarioKey.DenseContent => "Dense approval surfaces rely on short, well-scoped help to avoid route changes and extra supporting chrome.",
-        _ => "Contextual help should clarify the current action without replacing the main page content."
-    };
-
-    private string HelpTip => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? "Click outside or press Escape to close the help panel."
-        : "The panel should feel disposable once the user has their answer.";
-
     private string SurfaceCopy => CurrentScenario switch
     {
         SandboxScenarioKey.DenseContent => "Dense approval content still leaves room for sticky actions and contextual help without forcing the user to decode overlapping priority signals.",
@@ -479,24 +400,6 @@
     private string OverlayWindowStateTone => overlayWindowState.IsVisible
         ? overlayWindowState.IsMinimized ? "warning" : "success"
         : "warning";
-
-    private string FooterMessage => CurrentScenario switch
-    {
-        SandboxScenarioKey.EmptyState => "Select a request before sticky approval actions become available.",
-        SandboxScenarioKey.DisabledState => "Actions are visible but unavailable; the page should still explain what they would do.",
-        _ => "Sticky actions should keep the last decision visible without overpowering the page."
-    };
-
-    private string FooterTone => CurrentScenario switch
-    {
-        SandboxScenarioKey.EmptyState => "warning",
-        SandboxScenarioKey.DisabledState => "warning",
-        _ => "info"
-    };
-
-    private string PrimaryActionText => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Approve overlay treatment and capture proof"
-        : "Approve";
 
     private const string ApprovedStatus = "Approved";
     private const string ReviewStatus = "Needs review";

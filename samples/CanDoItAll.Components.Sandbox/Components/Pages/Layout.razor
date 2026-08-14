@@ -105,25 +105,6 @@
                             </PageScaffold>
                         </ExampleBlock>
                     }
-                    else if (section.ComponentName == "PageHeader")
-                    {
-                        <ExampleBlock Title="Header variants"
-                                      Description="A standard header carries eyebrow, title, description, and trailing actions; a compact header fits inside list-detail and rail panes."
-                                      SourceId="examples/Layout/PageHeaderVariants.razor"
-                                      ApiTypes="@PageHeaderApiTypes">
-                            <div class="space-y-4">
-                                <PageHeader Eyebrow="Shared layout"
-                                            Title="@WorkspaceTitle"
-                                            Description="@WorkspaceDescription">
-                                    <Actions>
-                                        <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
-                                        <Button Text="Open checklist" />
-                                    </Actions>
-                                </PageHeader>
-                                <PageHeader Eyebrow="List pane" Title="Compact header" Compact="true" />
-                            </div>
-                        </ExampleBlock>
-                    }
                     else if (section.ComponentName == "ZoomPanFrame")
                     {
                         <ExampleBlock Title="Zoom and pan frame"
@@ -146,53 +127,6 @@
                                     Use the toolbar or wheel to zoom, drag or press the arrow keys after zooming, pinch on touch, and choose Reset or press 0 to restore the view.
                                 </Alert>
                             </Stack>
-                        </ExampleBlock>
-                    }
-                    else if (section.ComponentName == "ListDetailShell")
-                    {
-                        <ExampleBlock Title="Shared records list-detail"
-                                      Description="The lower split region should still orient the user, whether it holds full record content or an explanatory empty state."
-                                      SourceId="examples/Layout/RecordListDetailShell.razor"
-                                      ApiTypes="@ListDetailShellApiTypes">
-                            <ListDetailShell ListPaneWidth="22rem"
-                                             data-testid="sandbox-layout-list-detail">
-                                <ListHeader>
-                                    <PageHeader Eyebrow="List pane" Title="Shared records" Compact="true" />
-                                </ListHeader>
-                                <ListContent>
-                                    <div class="sandbox-list">
-                                        @foreach (var item in WorkspaceItems)
-                                        {
-                                            <SelectionListItem IsSelected="@(item.Id == SelectedItem.Id)"
-                                                               Title="@item.Title"
-                                                               Eyebrow="@item.Eyebrow"
-                                                               Meta="@item.Meta"
-                                                               Summary="@item.Summary">
-                                                <Status>
-                                                    <StatusBadge Text="@item.State" Tone="@item.Tone" />
-                                                </Status>
-                                            </SelectionListItem>
-                                        }
-                                    </div>
-                                </ListContent>
-                                <DetailHeader>
-                                    <PageHeader Eyebrow="Detail pane" Title="Selected record" Compact="true" />
-                                </DetailHeader>
-                                <DetailContent>
-                                    @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-                                    {
-                                        <EmptyState Eyebrow="Layout" Title="No records in view" Description="The detail region should stay oriented even when the current filter returns nothing." />
-                                    }
-                                    else
-                                    {
-                                        <div class="space-y-4">
-                                            <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@SelectedItem.Title" />
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SelectedItem.Summary" />
-                                            <Alert AlertStyle="@(AlertStyle.Info)">@SelectedItem.Detail</Alert>
-                                        </div>
-                                    }
-                                </DetailContent>
-                            </ListDetailShell>
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "StickyActionFooter")
@@ -531,9 +465,7 @@
     private const string ZoomPanImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-06.jpg";
 
     private static readonly IReadOnlyList<Type> PageScaffoldApiTypes = [typeof(PageScaffold)];
-    private static readonly IReadOnlyList<Type> PageHeaderApiTypes = [typeof(PageHeader)];
     private static readonly IReadOnlyList<Type> ZoomPanFrameApiTypes = [typeof(ZoomPanFrame)];
-    private static readonly IReadOnlyList<Type> ListDetailShellApiTypes = [typeof(ListDetailShell)];
     private static readonly IReadOnlyList<Type> StickyActionFooterApiTypes = [typeof(StickyActionFooter)];
     private static readonly IReadOnlyList<Type> StackApiTypes = [typeof(Stack)];
     private static readonly IReadOnlyList<Type> GridApiTypes = [typeof(Grid)];
@@ -606,8 +538,6 @@
         ? "Approve workspace layout and capture proof bundle"
         : "Approve layout";
 
-    private WorkspaceItem SelectedItem => WorkspaceItems[0];
-
     private IReadOnlyList<WorkspaceMetric> WorkspaceMetrics => CurrentScenario == SandboxScenarioKey.DenseContent
         ? DenseMetrics
         : BaseMetrics;
@@ -615,10 +545,6 @@
     private IReadOnlyList<WorkspaceFact> SecondaryFacts => CurrentScenario == SandboxScenarioKey.LongText
         ? LongFacts
         : BaseFacts;
-
-    private IReadOnlyList<WorkspaceItem> WorkspaceItems => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? DenseItems
-        : BaseItems;
 
     private string HeroEyebrow => CurrentScenario == SandboxScenarioKey.LongText
         ? "Practice analytics composition"
@@ -721,25 +647,7 @@
         new("Headline", "Can grow without breaking the shell")
     ];
 
-    private static readonly IReadOnlyList<WorkspaceItem> BaseItems =
-    [
-        new("layout-shell", "Layout shell", "Header / rail", "Shared shell keeps main content, supporting rail, and sticky actions in distinct regions.", "Ready", "success", "The default page composition holds together without one-off wrappers."),
-        new("detail-pane", "Detail pane", "Split view", "The selected record has enough room for operational detail without hiding the list.", "Active", "info", "Split layout should preserve both orientation and detail context.")
-    ];
-
-    private static readonly IReadOnlyList<WorkspaceItem> DenseItems =
-    [
-        new("layout-shell", "Layout shell", "Header / rail", "Shared shell keeps main content, supporting rail, and sticky actions in distinct regions.", "Ready", "success", "The default page composition holds together without one-off wrappers."),
-        new("detail-pane", "Detail pane", "Split view", "The selected record has enough room for operational detail without hiding the list.", "Active", "info", "Split layout should preserve both orientation and detail context."),
-        new("dense-review", "Dense review lane", "Proof / actions", "Denser sections still need obvious grouping and a visible path to completion.", "Review", "warning", "Dense mode cannot become an undifferentiated grid of bordered boxes.")
-    ];
-
     private sealed record WorkspaceMetric(string Title, string Value, string Description, string ToneLabel, string Tone);
 
     private sealed record WorkspaceFact(string Label, string Value);
-
-    private sealed record WorkspaceItem(string Id, string Title, string Eyebrow, string Summary, string State, string Tone, string Detail)
-    {
-        public string Meta => Id;
-    }
 }

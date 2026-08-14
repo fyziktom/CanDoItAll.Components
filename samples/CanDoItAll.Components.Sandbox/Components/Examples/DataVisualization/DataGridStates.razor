@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.DataVisualization
+
+<DataGrid TItem="DataGridExampleRow"
+          Data="@(new List<DataGridExampleRow>
+                {
+                    new("Shell registry", "groups / routes", "Ready"),
+                    new("Canvas contract", "surface / state", "Active")
+                })"
+          Caption="Component hardening records"
+          EmptyText="No component hardening records match this scenario."
+          AllowPaging="true"
+          PageSize="2">
+    <Columns>
+        <DataGridColumn TItem="DataGridExampleRow" Property="Title" Title="Surface" />
+        <DataGridColumn TItem="DataGridExampleRow" Property="Meta" Title="Scope" />
+        <DataGridColumn TItem="DataGridExampleRow" Property="State" Title="State" />
+    </Columns>
+</DataGrid>

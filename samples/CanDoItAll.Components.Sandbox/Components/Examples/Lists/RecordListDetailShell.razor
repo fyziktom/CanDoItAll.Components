@@ -1,0 +1,49 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Lists
+
+<ListDetailShell ListPaneWidth="22rem">
+    <ListHeader>
+        <PageHeader Eyebrow="List pane" Title="Shared records" Compact="true" />
+    </ListHeader>
+    <ListContent>
+        <div class="sandbox-list">
+            @foreach (var item in items)
+            {
+                <SelectionListItem IsSelected="@(item.Id == selectedId)"
+                                   Title="@item.Title"
+                                   Eyebrow="@item.Eyebrow"
+                                   Meta="@item.Id"
+                                   Summary="@item.Summary"
+                                   OnSelect="@(() => selectedId = item.Id)">
+                    <Status>
+                        <StatusBadge Text="@item.State" Tone="@item.Tone" />
+                    </Status>
+                </SelectionListItem>
+            }
+        </div>
+    </ListContent>
+    <DetailHeader>
+        <PageHeader Eyebrow="Detail pane" Title="Selected record" Compact="true" />
+    </DetailHeader>
+    <DetailContent>
+        @{
+            var selected = items.First(item => item.Id == selectedId);
+        }
+        <div class="space-y-4">
+            <TextBlock TextStyle="TextStyle.Subtitle1" Value="@selected.Title" />
+            <TextBlock TextStyle="TextStyle.Body2" Value="@selected.Summary" />
+            <Alert AlertStyle="AlertStyle.Info">@selected.Detail</Alert>
+        </div>
+    </DetailContent>
+</ListDetailShell>
+
+@code {
+    private sealed record RecordItem(string Id, string Title, string Eyebrow, string Summary, string State, string Tone, string Detail);
+
+    private static readonly IReadOnlyList<RecordItem> items =
+    [
+        new("layout-shell", "Layout shell", "Header / rail", "Shared shell keeps main content, supporting rail, and sticky actions in distinct regions.", "Ready", "success", "The default page composition holds together without one-off wrappers."),
+        new("detail-pane", "Detail pane", "Split view", "The selected record has enough room for operational detail without hiding the list.", "Active", "info", "Split layout should preserve both orientation and detail context.")
+    ];
+
+    private string selectedId = "layout-shell";
+}

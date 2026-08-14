@@ -75,8 +75,12 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 
 ### Badges, Chips, And Status
 
+Badges
+Badge, Chip, Pill
+
 - [Badge](Components/Badges/Badge.razor)
 - [BadgesGroup](Components/Badges/BadgesGroup.razor)
+- [StatusBadge](Components/Badges/StatusBadge.razor)
 - [Chip](Components/Badges/Chip.razor)
 - [ChipRow](Components/Badges/ChipRow.razor)
 - [CompactStat](Components/Badges/CompactStat.razor)
@@ -85,25 +89,30 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 - [PillList](Components/Badges/PillList.razor)
 - [ProfileTagChip](Components/Badges/Compatibility/ProfileTagChip.razor)
 - [ProfileTagChipRow](Components/Badges/Compatibility/ProfileTagChipRow.razor)
-- [StatusBadge](Components/Badges/StatusBadge.razor)
 
 ### Buttons And Commands
+
+Buttons
+Button, CopyButton
 
 - [Button](Components/Buttons/Button.razor)
 - [CopyButton](Components/Buttons/CopyButton.razor)
 
 ### Cards, Panels, And Metrics
 
-- [ActionCard](Components/Cards/ActionCard.razor)
-- [ActionReviewPanel](Components/Cards/ActionReviewPanel.razor)
-- [AuthCard](Components/Cards/AuthCard.razor)
-- [BuilderStatBox](Components/Cards/Compatibility/BuilderStatBox.razor)
-- [BuilderStatStrip](Components/Cards/Compatibility/BuilderStatStrip.razor)
+Cards
+Card, AuthCard, PaneCard
+
 - [Card](Components/Cards/Card.razor)
 - [CardActions](Components/Cards/CardActions.razor)
 - [CardButton](Components/Cards/CardButton.razor)
 - [CardGrid](Components/Cards/CardGrid.razor)
 - [CardStatsWithNumber](Components/Cards/CardStatsWithNumber.razor)
+- [ActionCard](Components/Cards/ActionCard.razor)
+- [ActionReviewPanel](Components/Cards/ActionReviewPanel.razor)
+- [AuthCard](Components/Cards/AuthCard.razor)
+- [BuilderStatBox](Components/Cards/Compatibility/BuilderStatBox.razor)
+- [BuilderStatStrip](Components/Cards/Compatibility/BuilderStatStrip.razor)
 - [HeroCard](Components/Cards/HeroCard.razor)
 - [MetricCard](Components/Cards/MetricCard.razor)
 - [PanelCard](Components/Cards/PanelCard.razor)
@@ -126,11 +135,17 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 
 ### Data Display And Timelines
 
+Data Display
+DiffViewer, Timeline
+
 - [DiffViewer](Components/DataDisplay/DiffViewer.razor)
 - [Timeline](Components/DataDisplay/Timeline.razor)
 - [TimelineStepper](Components/DataDisplay/TimelineStepper.razor)
 
 ### Data Visualization
+
+Data Visualization
+Chart, DataGrid
 
 - [CategoryAxis](Components/DataVisualization/CategoryAxis.razor)
 - [Chart](Components/DataVisualization/Chart.razor)
@@ -142,6 +157,9 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 - [ValueAxis](Components/DataVisualization/ValueAxis.razor)
 
 ### Feedback, Help, And Overlays
+
+Feedback
+Alert, Tooltip
 
 - [Alert](Components/Feedback/Alert.razor)
 - [Callout](Components/Feedback/Callout.razor)
@@ -155,6 +173,9 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 - [VerificationList](Components/Feedback/VerificationList.razor)
 
 ### Forms And Inputs
+
+Forms
+TextBox, CheckBox, Password
 
 - [CheckBox](Components/Forms/CheckBox.razor)
 - [DebugToggle](Components/Forms/Compatibility/DebugToggle.razor)
@@ -186,15 +207,21 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 
 ### Identity And Icons
 
+Identity
+Icon, Avatar
+
+- [Icon](Components/Identity/Icon.razor)
 - [Avatar](Components/Identity/Avatar.razor)
 - [CreatorAvatar](Components/Identity/Compatibility/CreatorAvatar.razor)
 - [CreatorLine](Components/Identity/CreatorLine.razor)
 - [CreatorSocialLink](Components/Identity/CreatorSocialLink.razor)
 - [HomoAvatar](Components/Identity/HomoAvatar.razor)
-- [Icon](Components/Identity/Icon.razor)
 - [RoboAvatar](Components/Identity/RoboAvatar.razor)
 
 ### Layout And Shells
+
+Layout
+Layout, Grid, Column
 
 - [Body](Components/Layout/Body.razor)
 - [Cluster](Components/Layout/Cluster.razor)
@@ -215,6 +242,9 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 
 ### Lists And Selection
 
+Lists
+ListGroup, FactTable
+
 - [FactTable](Components/Lists/FactTable.razor)
 - [ListDetailShell](Components/Lists/ListDetailShell.razor)
 - [ListGroup](Components/Lists/ListGroup.razor)
@@ -226,15 +256,21 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 
 ### Modals And Dialogs
 
-- [DangerActionDialog](Components/Modals/DangerActionDialog.razor)
+Modals
+Dialog, DialogHost
+
 - [Dialog](Components/Modals/Dialog.razor)
 - [DialogHost](Components/Modals/DialogHost.razor)
 - [DialogScaffold](Components/Modals/DialogScaffold.razor)
+- [DangerActionDialog](Components/Modals/DangerActionDialog.razor)
 - [InspectorDialogLayout](Components/Modals/InspectorDialogLayout.razor)
 - [PickerDialogShell](Components/Modals/PickerDialogShell.razor)
 - [ZyWorkspaceModal](Components/Modals/Compatibility/ZyWorkspaceModal.razor)
 
 ### Navigation, Tabs, And Toolbars
+
+Navigation
+Tabs, Steps, SideMenu
 
 - [ContextMenu](Components/Navigation/ContextMenu.razor)
 - [DashboardActions](Components/Navigation/Compatibility/DashboardActions.razor)
@@ -262,15 +298,19 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 - [TreeViewNodeRow](Components/Navigation/TreeViewNodeRow.razor)
 
 ### Storage
+Storage
+StorageSummaryCard
 
 - [StorageBadgeStrip](Components/Storage/StorageBadgeStrip.razor)
 - [StorageSummaryCard](Components/Storage/StorageSummaryCard.razor)
 
 ### Typography
+Typography
 
-- [CopyableMonoValue](Components/Typography/CopyableMonoValue.razor)
-- [Divider](Components/Typography/Divider.razor)
+- [TextBlock](Components/Typography/TextBlock.razor)
 - [Eyebrow](Components/Typography/Eyebrow.razor)
+- [SmallText](Components/Typography/SmallText.razor)
+- [CopyableMonoValue](Components/Typography/CopyableMonoValue.razor)
 - [FooterText](Components/Typography/FooterText.razor)
 - [HashDisplay](Components/Typography/HashDisplay.razor)
 - [Header](Components/Typography/Header.razor)
@@ -278,8 +318,7 @@ BaseLib currently exposes 164 Razor components. Links point to the component sou
 - [MutedInline](Components/Typography/MutedInline.razor)
 - [SectionHead](Components/Typography/SectionHead.razor)
 - [SectionHeading](Components/Typography/SectionHeading.razor)
-- [SmallText](Components/Typography/SmallText.razor)
-- [TextBlock](Components/Typography/TextBlock.razor)
+- [Divider](Components/Typography/Divider.razor)
 
 ## Project Type
 

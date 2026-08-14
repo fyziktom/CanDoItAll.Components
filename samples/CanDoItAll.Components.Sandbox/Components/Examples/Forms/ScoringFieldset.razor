@@ -1,0 +1,24 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+
+<Fieldset>
+    <HeaderTemplate>
+        <span>Scoring and reference fields</span>
+    </HeaderTemplate>
+    <ChildContent>
+        <FormRow Split="true">
+            <FormField Text="Priority threshold">
+                <Slider TValue="int" Value="@priority" ValueChanged="@(value => priority = value)" Min="0" Max="100" Step="5" />
+            </FormField>
+            <FormField Text="Budget reference">
+                <PrefixedField Prefix="ref" Suffix="USD" StackOnMobile="true">
+                    <TextBox Value="@budgetCode" ValueChanged="@(value => budgetCode = value ?? string.Empty)" Immediate="true" Placeholder="Review budget code" Class="cda-input" />
+                </PrefixedField>
+            </FormField>
+        </FormRow>
+    </ChildContent>
+</Fieldset>
+
+@code {
+    private int priority = 70;
+    private string budgetCode = "BASE-READY";
+}

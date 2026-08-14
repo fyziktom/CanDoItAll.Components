@@ -1,0 +1,217 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/buttons"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<PageTitle>Buttons</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Scenario="@CurrentScenario"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@RegisteredExamples.Count"
+                  ScenarioChanged="NavigateScenario"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
+        {
+            <EmptyState Eyebrow="Buttons" Title="No actions available" Description="Choose a request before approve, revise, or archive actions become available." />
+        }
+        else
+        {
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "Button")
+                    {
+                        <ExampleBlock Title="Primary hierarchy"
+                                      Description="One filled primary action carries the page; everything else steps down through outlined and text variants."
+                                      SourceId="examples/Buttons/PrimaryHierarchy.razor"
+                                      ApiTypes="@ButtonApiTypes">
+                            <Cluster Gap="LayoutGap.Medium">
+                                <Button Text="@PrimaryText" IsBusy="@IsBusy" Disabled="@IsDisabled" />
+                                <Button Text="Save draft" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Disabled="@IsDisabled" />
+                                <Button Text="Request changes" ButtonStyle="@(ButtonStyle.Warning)" Variant="@(Variant.Outlined)" Disabled="@IsDisabled" />
+                                <Button Text="Archive" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Text)" Disabled="@IsDisabled" />
+                            </Cluster>
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Icon-only actions"
+                                      Description="Icon-only buttons derive their accessible name from the icon token when no text is supplied; a long label button proves wrapping stays calm under long text."
+                                      SourceId="examples/Buttons/IconOnlyActions.razor">
+                            <Grid Gap="LayoutGap.Large"
+                                  ColumnTemplate="repeat(auto-fit,minmax(min(100%,16rem),1fr))"
+                                  data-testid="sandbox-actions-icon-badge-surface">
+                                <div class="space-y-3">
+                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Icon-only actions" />
+                                    <Cluster Gap="LayoutGap.Small">
+                                        <Button Icon="visibility"
+                                                Variant="@(Variant.Outlined)"
+                                                ButtonStyle="@(ButtonStyle.Light)"
+                                                Disabled="@IsDisabled"
+                                                data-testid="sandbox-actions-icon-only-view" />
+                                        <Button Icon="download"
+                                                Variant="@(Variant.Outlined)"
+                                                ButtonStyle="@(ButtonStyle.Info)"
+                                                Disabled="@IsDisabled"
+                                                data-testid="sandbox-actions-icon-only-download" />
+                                        <Button Icon="delete"
+                                                Variant="@(Variant.Text)"
+                                                ButtonStyle="@(ButtonStyle.Danger)"
+                                                Disabled="@IsDisabled"
+                                                data-testid="sandbox-actions-icon-only-delete" />
+                                    </Cluster>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Long action label" />
+                                    <Button Text="@LongActionText"
+                                            Icon="rocket_launch"
+                                            Variant="@(Variant.Outlined)"
+                                            ButtonStyle="@(ButtonStyle.Info)"
+                                            Disabled="@IsDisabled"
+                                            data-testid="sandbox-actions-long-button" />
+                                </div>
+                            </Grid>
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CopyButton")
+                    {
+                        <ExampleBlock Title="Copy affordances"
+                                      Description="All four display modes read from the same target element and confirm success in place."
+                                      SourceId="examples/Buttons/CopyAffordances.razor"
+                                      ApiTypes="@CopyButtonApiTypes">
+                            <Grid Gap="LayoutGap.Large"
+                                  Columns="1"
+                                  ColumnsLg="2">
+                                <div class="space-y-4">
+                                    <FormField Text="Copy source">
+                                        <TextBox Value="@CopySourceValue"
+                                                 ReadOnly="true"
+                                                 Disabled="@IsDisabled"
+                                                 id="@CopySourceId"
+                                                 data-testid="sandbox-actions-copy-source" />
+                                    </FormField>
+
+                                    <TextBlock TextStyle="@(TextStyle.Caption)"
+                                               Value="@CopySupportText" />
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div class="space-y-2">
+                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)"
+                                                   Value="Display modes" />
+
+                                        <Cluster Gap="LayoutGap.Small">
+                                            <CopyButton Text="Copy value"
+                                                        CopiedText="Copied"
+                                                        TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.Text"
+                                                        data-testid="sandbox-actions-copy-text" />
+                                            <CopyButton Text="Copy value"
+                                                        CopiedText="Copied"
+                                                        TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.TextWithIcon"
+                                                        data-testid="sandbox-actions-copy-text-icon" />
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconButton"
+                                                        AriaLabel="Copy current value"
+                                                        data-testid="sandbox-actions-copy-icon-button" />
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconOnly"
+                                                        AriaLabel="Copy current value"
+                                                        data-testid="sandbox-actions-copy-icon-only" />
+                                        </Cluster>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)"
+                                                   Value="Compact icon sizes" />
+
+                                        <Cluster Gap="LayoutGap.Small">
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconButton"
+                                                        Size="CopyButtonSize.ExtraSmall"
+                                                        AriaLabel="Copy current value with extra small icon button"
+                                                        data-testid="sandbox-actions-copy-icon-button-xs" />
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconButton"
+                                                        Size="CopyButtonSize.Small"
+                                                        AriaLabel="Copy current value with small icon button"
+                                                        data-testid="sandbox-actions-copy-icon-button-sm" />
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconButton"
+                                                        Size="CopyButtonSize.Medium"
+                                                        AriaLabel="Copy current value with medium icon button"
+                                                        data-testid="sandbox-actions-copy-icon-button-md" />
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconOnly"
+                                                        Size="CopyButtonSize.ExtraSmall"
+                                                        AriaLabel="Copy current value with extra small icon"
+                                                        data-testid="sandbox-actions-copy-icon-only-xs" />
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconOnly"
+                                                        Size="CopyButtonSize.Small"
+                                                        AriaLabel="Copy current value with small icon"
+                                                        data-testid="sandbox-actions-copy-icon-only-sm" />
+                                            <CopyButton TargetElementId="@CopySourceId"
+                                                        Disabled="@IsDisabled"
+                                                        DisplayMode="CopyButtonDisplayMode.IconOnly"
+                                                        Size="CopyButtonSize.Medium"
+                                                        AriaLabel="Copy current value with medium icon"
+                                                        data-testid="sandbox-actions-copy-icon-only-md" />
+                                        </Cluster>
+                                    </div>
+                                </div>
+                            </Grid>
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+        }
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Buttons);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> RegisteredExamples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Buttons);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/buttons");
+    private const string CopySourceId = "sandbox-actions-copy-source-input";
+
+    private static readonly IReadOnlyList<Type> ButtonApiTypes = [typeof(Button)];
+    private static readonly IReadOnlyList<Type> CopyButtonApiTypes = [typeof(CopyButton)];
+
+    private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
+
+    private bool IsBusy => CurrentScenario == SandboxScenarioKey.LoadingState;
+
+    private string PrimaryText => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Approve shared component update and publish the acceptance proof bundle"
+        : "Approve update";
+
+    private string LongActionText => CurrentScenario == SandboxScenarioKey.LongText
+        ? "Open the acceptance evidence package with a deliberately long label"
+        : "Open acceptance evidence";
+
+    private string CopySourceValue => CurrentScenario switch
+    {
+        SandboxScenarioKey.DenseContent => "pkg-review://navigation-polish/approval-window?owner=design-system&lane=dense",
+        SandboxScenarioKey.LongText => "https://sandbox.candoitall.dev/review/component-proof/copy-button?request=approve-shared-component-update-and-publish-acceptance-evidence",
+        _ => "review-token-4Q26-copy-button"
+    };
+
+    private string CopySupportText => IsDisabled
+        ? "This scenario locks the source and every copy affordance so the disabled treatment can be reviewed."
+        : "Select part of the read-only input to copy only that slice; otherwise the full value is copied.";
+}

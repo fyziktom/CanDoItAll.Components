@@ -1,0 +1,99 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/modals"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Modals
+
+<PageTitle>Modals</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Scenario="@CurrentScenario"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  ScenarioChanged="NavigateScenario"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
+        {
+            <EmptyState Eyebrow="Modals" Title="No record open" Description="Open a record before the editor dialog becomes available." />
+        }
+        else
+        {
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "Dialog")
+                    {
+                        <ExampleBlock Title="Record editor dialog"
+                                      Description="Opened on demand; edited state stays dialog-only until saved."
+                                      SourceId="examples/Modals/RecordDialog.razor"
+                                      ApiTypes="@DialogApiTypes">
+                            <Cluster Gap="LayoutGap.Small">
+                                <Button Text="Edit record"
+                                        Icon="edit"
+                                        ButtonStyle="@(ButtonStyle.Primary)"
+                                        Click="OpenEditor" />
+                            </Cluster>
+                            <Dialog IsOpen="@isOpen"
+                                    Title="Edit record"
+                                    Subtitle="Edit details without displacing the rest of the page. Dialog-only state is initialized when this opens."
+                                    Size="ModalSize.Compact"
+                                    DenseChrome="true"
+                                    OnClose="CloseEditor">
+                                <ChildContent>
+                                    <FormStack>
+                                        <FormField Text="Title">
+                                            <TextBox Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" />
+                                        </FormField>
+                                        <FormField Text="Review notes">
+                                            <TextArea Value="@notes"
+                                                      ValueChanged="@(value => notes = value ?? string.Empty)"
+                                                      Size="@(CurrentScenario == SandboxScenarioKey.LongText ? TextAreaSize.Extended : TextAreaSize.Standard)" />
+                                        </FormField>
+                                    </FormStack>
+                                </ChildContent>
+                                <Footer>
+                                    <Button Text="Cancel"
+                                            ButtonStyle="@(ButtonStyle.Light)"
+                                            Variant="@(Variant.Outlined)"
+                                            Click="CloseEditor" />
+                                    <Button Text="Save"
+                                            Icon="save"
+                                            ButtonStyle="@(ButtonStyle.Primary)"
+                                            Disabled="@(string.IsNullOrWhiteSpace(title))"
+                                            Click="CloseEditor" />
+                                </Footer>
+                            </Dialog>
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+        }
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Modals);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Modals);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/modals");
+
+    private static readonly IReadOnlyList<Type> DialogApiTypes = [typeof(Dialog)];
+
+    private bool isOpen;
+    private string title = "Migration review";
+    private string notes = "Shared component uptake stays visible through a stable card shell and supporting metadata.";
+
+    private Task OpenEditor()
+    {
+        isOpen = true;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseEditor()
+    {
+        isOpen = false;
+        return Task.CompletedTask;
+    }
+}

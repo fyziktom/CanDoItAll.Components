@@ -1,0 +1,47 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/data-visualization"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Sandbox.Components.Examples.DataVisualization
+
+<PageTitle>Data Visualization</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Scenario="@CurrentScenario"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  ScenarioChanged="NavigateScenario"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
+        {
+            <EmptyState Eyebrow="Data Visualization" Title="No chart data" Description="Load a data series before charts and grids can render detail." />
+        }
+        else
+        {
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "DataGrid")
+                    {
+                        <ExampleBlock Title="Data grid states"
+                                      Description="The shared grid proves keyboard row activation, paging boundaries, and captions."
+                                      SourceId="examples/DataVisualization/DataGridStates.razor"
+                                      ApiTypes="@DataGridApiTypes">
+                            <DataGridStates />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+        }
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.DataVisualization);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataVisualization);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/data-visualization");
+
+    private static readonly IReadOnlyList<Type> DataGridApiTypes = [typeof(DataGrid<DataGridExampleRow>)];
+}

@@ -1,0 +1,229 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/identity"
+@inherits CatalogPageBase
+@using System.Globalization
+@using CanDoItAll.Components.Sandbox.Components.Examples.Identity
+
+<PageTitle>Identity</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Scenario="@CurrentScenario"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  ScenarioChanged="NavigateScenario"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
+        {
+            <EmptyState Eyebrow="Identity" Title="No profile selected" Description="Choose a profile to inspect icon and avatar treatments across the catalog." />
+        }
+        else
+        {
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "Icon")
+                    {
+                        <ExampleBlock Title="Icon language"
+                                      Description="Icons should support scanning rather than act like decoration."
+                                      SourceId="examples/Identity/IconLanguage.razor"
+                                      ApiTypes="@IconApiTypes">
+                            <div class="sandbox-demo-grid--three">
+                                @foreach (var icon in IconTokens)
+                                {
+                                    <div class="sandbox-icon-tile">
+                                        <Icon Name="@icon.Token" />
+                                        <div class="space-y-1">
+                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@icon.Label" />
+                                            <TextBlock TextStyle="@(TextStyle.Caption)" Value="@icon.Token" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Icon playground"
+                                      Description="Adjust size and the Material Symbols variation axes to see how a glyph responds."
+                                      SourceId="examples/Identity/IconPlayground.razor"
+                                      ApiTypes="@IconApiTypes">
+                            <div class="sandbox-icon-playground">
+                                <div class="sandbox-icon-playground__controls">
+                                    <FormField Text="Icon">
+                                        <select class="sandbox-icon-playground__select" value="@PlaygroundIconToken" @onchange="HandlePlaygroundIconChanged">
+                                            @foreach (var icon in PlaygroundIconTokens)
+                                            {
+                                                <option value="@icon.Token">@icon.Label</option>
+                                            }
+                                        </select>
+                                    </FormField>
+                                    <FormField Text="@($"Size ({PlaygroundSize}px)")">
+                                        <Slider TValue="int" Value="@PlaygroundSize" ValueChanged="@(v => PlaygroundSize = v)" Min="24" Max="256" Step="1" />
+                                    </FormField>
+                                    <FormField Text="Filled">
+                                        <Switch Value="@PlaygroundFilled" ValueChanged="@(v => PlaygroundFilled = v)" />
+                                    </FormField>
+                                    <FormField Text="@($"Weight ({PlaygroundWeight})")">
+                                        <Slider TValue="int" Value="@PlaygroundWeight" ValueChanged="@(v => PlaygroundWeight = v)" Min="100" Max="700" Step="10" />
+                                    </FormField>
+                                    <FormField Text="@($"Grade ({PlaygroundGrade})")">
+                                        <Slider TValue="int" Value="@PlaygroundGrade" ValueChanged="@(v => PlaygroundGrade = v)" Min="-25" Max="200" Step="5" />
+                                    </FormField>
+                                    <FormField Text="@($"Optical size ({PlaygroundOpticalSize})")">
+                                        <Slider TValue="int" Value="@PlaygroundOpticalSize" ValueChanged="@(v => PlaygroundOpticalSize = v)" Min="20" Max="48" Step="1" />
+                                    </FormField>
+                                    <FormField Text="Background checker">
+                                        <Switch Value="@PlaygroundShowChecker" ValueChanged="@(v => PlaygroundShowChecker = v)" />
+                                    </FormField>
+                                </div>
+                                <div class="sandbox-icon-playground__stage">
+                                    <div class="@PlaygroundCheckerBoxClass" style="@PlaygroundCheckerBoxStyle">
+                                        <Icon Name="@PlaygroundIconToken"
+                                              Filled="@PlaygroundFilled"
+                                              Weight="@PlaygroundWeight"
+                                              Grade="@PlaygroundGrade"
+                                              OpticalSize="@PlaygroundOpticalSize"
+                                              Style="@PlaygroundIconStyle" />
+                                    </div>
+                                </div>
+                            </div>
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Icon alias catalog"
+                                      Description="The full set of semantic shorthand tokens the icon resolver understands, previewed against their resolved Material Symbols glyph."
+                                      SourceId="examples/Identity/MaterialIconCatalogGallery.razor">
+                            <MaterialIconCatalogGallery />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Avatar")
+                    {
+                        <ExampleBlock Title="Avatar"
+                                      Description="An image avatar with automatic fallback to a bundled stock photo or initials text, in three sizes and two shapes."
+                                      SourceId="examples/Identity/AvatarShowcase.razor"
+                                      ApiTypes="@AvatarApiTypes">
+                            <AvatarShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CreatorLine")
+                    {
+                        <ExampleBlock Title="Creator byline"
+                                      Description="A flex row that composes an avatar, name, and social links into a compact byline."
+                                      SourceId="examples/Identity/CreatorLineShowcase.razor"
+                                      ApiTypes="@CreatorLineApiTypes">
+                            <CreatorLineShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CreatorSocialLink")
+                    {
+                        <ExampleBlock Title="Social link"
+                                      Description="A styled anchor for a creator's social or external profile link."
+                                      SourceId="examples/Identity/CreatorSocialLinkShowcase.razor"
+                                      ApiTypes="@CreatorSocialLinkApiTypes">
+                            <CreatorSocialLinkShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "HomoAvatar")
+                    {
+                        <ExampleBlock Title="Seed-generated avatars"
+                                      Description="Deterministic human avatars generated purely from a seed string, with harmonized body/mouth/eye coloring."
+                                      SourceId="examples/Identity/HomoAvatarGallery.razor"
+                                      ApiTypes="@HomoAvatarApiTypes">
+                            <HomoAvatarGallery />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "RoboAvatar")
+                    {
+                        <ExampleBlock Title="Seed-generated avatars"
+                                      Description="Deterministic robot avatars generated purely from a seed string, with harmonized body/mouth/eye coloring."
+                                      SourceId="examples/Identity/RoboAvatarGallery.razor"
+                                      ApiTypes="@RoboAvatarApiTypes">
+                            <RoboAvatarGallery />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+        }
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Identity);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Identity);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/identity");
+
+    private static readonly IReadOnlyList<Type> IconApiTypes = [typeof(Icon)];
+    private static readonly IReadOnlyList<Type> AvatarApiTypes = [typeof(Avatar)];
+    private static readonly IReadOnlyList<Type> CreatorLineApiTypes = [typeof(CreatorLine)];
+    private static readonly IReadOnlyList<Type> CreatorSocialLinkApiTypes = [typeof(CreatorSocialLink)];
+    private static readonly IReadOnlyList<Type> HomoAvatarApiTypes = [typeof(HomoAvatar)];
+    private static readonly IReadOnlyList<Type> RoboAvatarApiTypes = [typeof(RoboAvatar)];
+
+    private IReadOnlyList<IconToken> IconTokens => CurrentScenario == SandboxScenarioKey.DenseContent
+        ? DenseIcons
+        : BaseIcons;
+
+    private static readonly IReadOnlyList<IconToken> BaseIcons =
+    [
+        new("add_2", "Create"),
+        new("filter_alt", "Filter"),
+        new("calendar", "Schedule"),
+        new("circle_info", "Context"),
+        new("save", "Save"),
+        new("risk", "Warning")
+    ];
+
+    private static readonly IReadOnlyList<IconToken> DenseIcons =
+    [
+        new("add_2", "Create"),
+        new("filter_alt", "Filter"),
+        new("calendar", "Schedule"),
+        new("circle_info", "Context"),
+        new("save", "Save"),
+        new("risk", "Warning"),
+        new("flow", "Flow"),
+        new("bars_staggered", "Density"),
+        new("research", "Inspect")
+    ];
+
+    private static readonly IReadOnlyList<IconToken> PlaygroundIconTokens = BaseIcons;
+
+    private string PlaygroundIconToken = "add_2";
+    private int PlaygroundSize = 256;
+    private bool PlaygroundFilled;
+    private int PlaygroundWeight = 400;
+    private int PlaygroundGrade;
+    private int PlaygroundOpticalSize = 24;
+    private bool PlaygroundShowChecker = true;
+
+    private string PlaygroundCheckerBoxClass => PlaygroundShowChecker
+        ? "sandbox-icon-playground__checker-box sandbox-icon-playground__checker-box--checker"
+        : "sandbox-icon-playground__checker-box";
+
+    private string PlaygroundCheckerBoxStyle
+    {
+        get
+        {
+            var baseStyle = $"width:min({PlaygroundSize}px, 100%);";
+            if (!PlaygroundShowChecker)
+            {
+                return baseStyle;
+            }
+
+            // The two offset gradient layers double the visible square count, so dividing by
+            // 12 (not 24) yields a 24x24 visible grid matching the Material Symbols design grid.
+            var tile = PlaygroundSize / 12.0;
+            var half = tile / 2.0;
+            return $"{baseStyle} background-size:{tile.ToString(CultureInfo.InvariantCulture)}px {tile.ToString(CultureInfo.InvariantCulture)}px; background-position:0 0, {half.ToString(CultureInfo.InvariantCulture)}px {half.ToString(CultureInfo.InvariantCulture)}px;";
+        }
+    }
+
+    private string PlaygroundIconStyle => PlaygroundShowChecker
+        ? $"font-size:{PlaygroundSize}px; opacity:0.55;"
+        : $"font-size:{PlaygroundSize}px;";
+
+    private void HandlePlaygroundIconChanged(ChangeEventArgs e)
+        => PlaygroundIconToken = e.Value?.ToString() ?? PlaygroundIconToken;
+
+    private sealed record IconToken(string Token, string Label);
+}

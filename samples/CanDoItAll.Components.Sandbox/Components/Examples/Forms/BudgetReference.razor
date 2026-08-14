@@ -1,0 +1,15 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+
+<FormField Text="Budget reference">
+    <PrefixedField Prefix="ref" Suffix="USD" StackOnMobile="true">
+        <TextBox Value="@budgetCode"
+                 ValueChanged="@(value => budgetCode = value ?? string.Empty)"
+                 Immediate="true"
+                 Placeholder="Review budget code"
+                 Class="cda-input" />
+    </PrefixedField>
+</FormField>
+
+@code {
+    private string budgetCode = "BASE-READY";
+}

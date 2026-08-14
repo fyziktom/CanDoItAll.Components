@@ -1,0 +1,19 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+
+<FormField Text="Reminders">
+    <Split Breakpoint="LayoutBreakpoint.None"
+           Gap="LayoutGap.Medium"
+           AlignItems="AlignItems.Center"
+           JustifyContent="JustifyContent.SpaceBetween"
+           Class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+        <div class="space-y-1">
+            <TextBlock TextStyle="TextStyle.Subtitle2" Value="Send daily reminders" />
+            <TextBlock TextStyle="TextStyle.Caption" Value="Keep reviewers aligned before the approval window closes." />
+        </div>
+        <Switch Value="@remindersEnabled" ValueChanged="@(value => remindersEnabled = value)" />
+    </Split>
+</FormField>
+
+@code {
+    private bool remindersEnabled = true;
+}
