@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.DataVisualization
+
+<Chart>
+    <ValueAxis Min="0" Max="100" />
+    <LineSeries Title="API latency"
+                Data="@(new List<ChartPoint> { new(42), new(48), new(39), new(55), new(51), new(60) })"
+                ValueProperty="Value" />
+    <LineSeries Title="Queue depth"
+                Data="@(new List<ChartPoint> { new(20), new(28), new(31), new(24), new(35), new(30) })"
+                ValueProperty="Value" />
+</Chart>

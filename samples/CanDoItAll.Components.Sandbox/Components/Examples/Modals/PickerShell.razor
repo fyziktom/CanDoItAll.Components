@@ -1,0 +1,12 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Modals
+
+<PickerDialogShell Eyebrow="Assign owner"
+                    Title="Choose a reviewer"
+                    PickerTitle="Available reviewers"
+                    Items="@(new List<EntityPickerItem>
+                  {
+                      new() { Id = "reviewer-1", Label = "Priya Shah", Description = "Platform UI", Icon = "person" },
+                      new() { Id = "reviewer-2", Label = "Marcus Lee", Description = "Design systems", Icon = "person" },
+                      new() { Id = "reviewer-3", Label = "Alex Kim", Description = "Accessibility", Icon = "person" }
+                  })"
+                    SelectedId="reviewer-2" />

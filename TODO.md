@@ -133,10 +133,10 @@ ActionCard, ActionReviewPanel, AuthCard, CardActions, CardButton, CardGrid, Card
 
 Documented: Card, SummaryTiles
 
-### DataDisplay (3 of 3 missing — entire folder undocumented)
+### ✅ DataDisplay (3 of 3 missing — entire folder undocumented)
 DiffViewer, Timeline, TimelineStepper
 
-### DataVisualization (7 of 8 missing)
+### ✅ DataVisualization (7 of 8 missing)
 CategoryAxis, Chart, DataGridColumn, GridLines, LineSeries, ProgressBar, ValueAxis
 
 Documented: DataGrid
@@ -163,7 +163,7 @@ FactTable, ListGroup, ListItem, ListPanelHeader, MetaList, PlainList
 
 Documented: ListDetailShell, SelectionListItem
 
-### Modals (6 of 7 missing)
+### ✅ Modals (6 of 7 missing)
 DangerActionDialog, DialogHost, DialogScaffold, InspectorDialogLayout, PickerDialogShell, ZyWorkspaceModal *(Compat)*
 
 Documented: Dialog
@@ -173,7 +173,7 @@ ContextMenu, FilterBar, LegalToc, LegalTocNav, PageHeaderActionButton, RibbonTab
 
 Documented: PageHeader, SideMenu, Steps, Tabs, Toolbar, TreeView
 
-### Storage (2 of 2 missing — entire folder undocumented)
+### ✅ Storage (2 of 2 missing — entire folder undocumented)
 StorageBadgeStrip, StorageSummaryCard
 
 ### ✅ Typography (11 of 12 missing)
@@ -181,7 +181,7 @@ CopyableMonoValue, Divider, Eyebrow, FooterText, HashDisplay, Header, MonoText, 
 
 Documented: TextBlock
 
-### Buttons (0 missing — fully documented)
+### ✅ Buttons (0 missing — fully documented)
 Button, CopyButton
 
 ## Notes on scope
@@ -199,3 +199,4 @@ Button, CopyButton
 - [x] homo avatars
 - [ ] full dark theme html level, disable animation during transition
 - [ ] ignore output
+- [ ] mermaind tooltip absolute element 2px padding global scroll glitch 

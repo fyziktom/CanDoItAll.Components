@@ -11,11 +11,72 @@
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        <EmptyState Eyebrow="Storage" Title="No components wired up yet" Description="StorageBadgeStrip and StorageSummaryCard are catalogued in BaseLib but not yet added to the sandbox." />
+        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
+        {
+            <EmptyState Eyebrow="Storage" Title="No storage summary yet" Description="Usage badges and capacity facts appear once a storage entity has reported status." />
+        }
+        else
+        {
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "StorageBadgeStrip")
+                    {
+                        <ExampleBlock Title="Storage status badges"
+                                      Description="A compact row of tone-driven status badges."
+                                      SourceId="examples/Storage/StorageStatusBadges.razor"
+                                      ApiTypes="@StorageBadgeStripApiTypes">
+                            <StorageBadgeStrip Badges="@StorageBadges" />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "StorageSummaryCard")
+                    {
+                        <ExampleBlock Title="Storage summary card"
+                                      Description="Badge strip and fact grid together, with an emphasized variant for the active plan."
+                                      SourceId="examples/Storage/StorageSummary.razor"
+                                      ApiTypes="@StorageSummaryCardApiTypes">
+                            <Stack GapScale="LayoutGap.Medium">
+                                <StorageSummaryCard Model="@StorageModel" />
+                                <StorageSummaryCard Model="@StorageModel" Emphasized="true" />
+                            </Stack>
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+        }
     </ChildContent>
 </CatalogPageFrame>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Storage);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Storage);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/storage");
+
+    private static readonly IReadOnlyList<Type> StorageBadgeStripApiTypes = [typeof(StorageBadgeStrip)];
+    private static readonly IReadOnlyList<Type> StorageSummaryCardApiTypes = [typeof(StorageSummaryCard)];
+
+    private static readonly IReadOnlyList<StorageSummaryBadge> StorageBadges =
+    [
+        new("Plan: Pro", "info"),
+        new("82% used", "warning"),
+        new("Backups on", "success")
+    ];
+
+    private static readonly StorageSummaryModel StorageModel = new()
+    {
+        Eyebrow = "Workspace storage",
+        Title = "Primary object store",
+        Description = "Shared bucket for uploads, exports, and generated assets.",
+        Footnote = "Usage refreshes every 15 minutes.",
+        Badges = StorageBadges,
+        Facts =
+        [
+            new("Used", "82.4 GB of 100 GB"),
+            new("Objects", "128,940"),
+            new("Region", "us-east-1"),
+            new("Last backup", "2026-08-14 03:00 UTC")
+        ]
+    };
 }

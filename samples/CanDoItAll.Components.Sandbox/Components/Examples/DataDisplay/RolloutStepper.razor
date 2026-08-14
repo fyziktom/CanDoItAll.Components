@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.DataDisplay
+
+<TimelineStepper CurrentStep="2"
+                  TotalSteps="5"
+                  AvailableStep="3"
+                  Mode="TimelineStepperMode.Manual"
+                  ShowModeToggle="true"
+                  StepLabel="Rollout stage"
+                  StatusText="Data available"
+                  StatusTone="success"
+                  Ticks="@(new List<TimelineStepperTick>
+                  {
+                      new() { Step = 1, Label = "Build", Description = "Artifact built and signed.", Major = true },
+                      new() { Step = 2, Label = "Canary", Description = "5% traffic shifted." },
+                      new() { Step = 3, Label = "Bake", Description = "Soak period before full rollout." },
+                      new() { Step = 4, Label = "Rollout", Description = "Remaining traffic shifted.", Disabled = true },
+                      new() { Step = 5, Label = "Complete", Description = "Rollout finished.", Major = true, Disabled = true }
+                  })" />

@@ -11,11 +11,119 @@
                   ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        <EmptyState Eyebrow="Data Display" Title="No components wired up yet" Description="DiffViewer, Timeline, and TimelineStepper are catalogued in BaseLib but not yet added to the sandbox." />
+        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
+        {
+            <EmptyState Eyebrow="Data Display" Title="No change history yet" Description="Diffs, timelines, and steppers need at least one recorded change before they can render detail." />
+        }
+        else
+        {
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "DiffViewer")
+                    {
+                        <ExampleBlock Title="Config diff"
+                                      Description="Side-by-side before/after panel with a changed-line summary."
+                                      SourceId="examples/DataDisplay/ConfigDiff.razor"
+                                      ApiTypes="@DiffViewerApiTypes">
+                            <DiffViewer Eyebrow="Config"
+                                        Title="deploy.settings.json"
+                                        Summary="Retry policy tightened before the next rollout."
+                                        BeforeText="@DiffBeforeText"
+                                        AfterText="@DiffAfterText" />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Timeline")
+                    {
+                        <ExampleBlock Title="Deployment timeline"
+                                      Description="Vertical activity log spanning success, warning, and neutral tones."
+                                      SourceId="examples/DataDisplay/DeploymentTimeline.razor"
+                                      ApiTypes="@TimelineApiTypes">
+                            <Timeline Items="@TimelineItems" AriaLabel="Deployment timeline" />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "TimelineStepper")
+                    {
+                        <ExampleBlock Title="Rollout stepper"
+                                      Description="Manual/automatic scrubber for stepping through recorded ticks."
+                                      SourceId="examples/DataDisplay/RolloutStepper.razor"
+                                      ApiTypes="@TimelineStepperApiTypes">
+                            <TimelineStepper CurrentStep="@stepperCurrentStep"
+                                              TotalSteps="5"
+                                              AvailableStep="@stepperAvailableStep"
+                                              Mode="@stepperMode"
+                                              ModeChanged="@(mode => stepperMode = mode)"
+                                              ShowModeToggle="true"
+                                              StepLabel="Rollout stage"
+                                              StatusText="@(stepperCurrentStep < stepperAvailableStep ? "Data available" : "Awaiting next stage")"
+                                              StatusTone="@(stepperCurrentStep < stepperAvailableStep ? "success" : "warning")"
+                                              Ticks="@StepperTicks"
+                                              PreviousClicked="@(() => stepperCurrentStep = Math.Max(1, stepperCurrentStep - 1))"
+                                              NextClicked="@(() => stepperCurrentStep = Math.Min(5, stepperCurrentStep + 1))"
+                                              StepSelected="@(step => stepperCurrentStep = step)" />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+        }
     </ChildContent>
 </CatalogPageFrame>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.DataDisplay);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataDisplay);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/data-display");
+
+    private static readonly IReadOnlyList<Type> DiffViewerApiTypes = [typeof(DiffViewer)];
+    private static readonly IReadOnlyList<Type> TimelineApiTypes = [typeof(Timeline)];
+    private static readonly IReadOnlyList<Type> TimelineStepperApiTypes = [typeof(TimelineStepper)];
+
+    private int stepperCurrentStep = 2;
+    private readonly int stepperAvailableStep = 3;
+    private TimelineStepperMode stepperMode = TimelineStepperMode.Manual;
+
+    private const string DiffBeforeText = "{\n  \"retries\": 1,\n  \"timeoutSeconds\": 30\n}";
+    private const string DiffAfterText = "{\n  \"retries\": 3,\n  \"timeoutSeconds\": 15\n}";
+
+    private static readonly IReadOnlyList<TimelineItem> TimelineItems =
+    [
+        new()
+        {
+            Label = "Rollout started",
+            Description = "Deploy pipeline picked up the release candidate.",
+            Meta = "v2.4.0",
+            Timestamp = new DateTimeOffset(2026, 8, 12, 9, 15, 0, TimeSpan.Zero),
+            Icon = "rocket_launch",
+            Tone = "neutral"
+        },
+        new()
+        {
+            Label = "Canary healthy",
+            Description = "5% traffic shifted with no elevated error rate.",
+            Meta = "10% -> 5%",
+            Timestamp = new DateTimeOffset(2026, 8, 12, 9, 42, 0, TimeSpan.Zero),
+            Icon = "monitor_heart",
+            Tone = "success"
+        },
+        new()
+        {
+            Label = "Latency warning",
+            Description = "p95 latency briefly exceeded budget on one region.",
+            Meta = "us-east-1",
+            Timestamp = new DateTimeOffset(2026, 8, 12, 10, 5, 0, TimeSpan.Zero),
+            Icon = "warning",
+            Tone = "warning"
+        }
+    ];
+
+    private static readonly IReadOnlyList<TimelineStepperTick> StepperTicks =
+    [
+        new() { Step = 1, Label = "Build", Description = "Artifact built and signed.", Major = true },
+        new() { Step = 2, Label = "Canary", Description = "5% traffic shifted." },
+        new() { Step = 3, Label = "Bake", Description = "Soak period before full rollout." },
+        new() { Step = 4, Label = "Rollout", Description = "Remaining traffic shifted.", Disabled = true },
+        new() { Step = 5, Label = "Complete", Description = "Rollout finished.", Major = true, Disabled = true }
+    ];
 }

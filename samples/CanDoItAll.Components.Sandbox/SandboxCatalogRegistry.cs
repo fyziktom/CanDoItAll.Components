@@ -248,7 +248,8 @@ public static class SandboxCatalogRegistry
         CreateExample("cards-default", SandboxGroupKey.Cards, "Summary and list views", SandboxScenarioKey.Default, "Cards, summaries, and list rows for stable data display.", ["cards"], "Card", "SelectionListItem", "SummaryTiles"),
         CreateExample("lists-default", SandboxGroupKey.Lists, "Selection and detail views", SandboxScenarioKey.Default, "List-detail shell and selection rows for scanning and drilling into records.", ["lists", "selection"], "SelectionListItem", "ListDetailShell"),
         CreateExample("lists-dense", SandboxGroupKey.Lists, "Dense data review", SandboxScenarioKey.DenseContent, "Metadata-heavy summaries and compact item rows.", ["dense", "metadata"], "SelectionListItem", "StatusBadge"),
-        CreateExample("data-display-empty", SandboxGroupKey.DataDisplay, "No results", SandboxScenarioKey.EmptyState, "Placeholder proof surface until Data Display components are wired into the sandbox.", ["empty"], "EmptyState"),
+        CreateExample("data-display-default", SandboxGroupKey.DataDisplay, "Change history surfaces", SandboxScenarioKey.Default, "Diff, timeline, and stepper surfaces for showing how records changed over time.", ["diff", "timeline", "stepper"], "DiffViewer", "Timeline", "TimelineStepper"),
+        CreateExample("data-display-empty", SandboxGroupKey.DataDisplay, "No results", SandboxScenarioKey.EmptyState, "Data display surface before any change history is available.", ["empty"], "EmptyState"),
         CreateExample("navigation-default", SandboxGroupKey.Navigation, "Workspace navigation", SandboxScenarioKey.Default, "Tabs, steps, tree navigation, and list-detail movement in a standard workflow that keeps dense content segmented instead of vertically stacked.", ["keyboard", "tabs", "treeview", "progressive-disclosure", "reduce-scroll"], "Tabs", "Steps", "TreeView", "TooltipTarget", "ListDetailShell"),
         CreateExample("navigation-dense", SandboxGroupKey.Navigation, "Dense workspace routing", SandboxScenarioKey.DenseContent, "High-information navigation shell with active detail.", ["dense"], "SecondaryTabs", "SelectionListItem"),
         CreateExample("navigation-empty", SandboxGroupKey.Navigation, "Nothing selected", SandboxScenarioKey.EmptyState, "Navigation shell before an item is selected.", ["empty"], "ListDetailShell", "EmptyState"),
@@ -263,9 +264,14 @@ public static class SandboxCatalogRegistry
         CreateExample("feedback-dense", SandboxGroupKey.Feedback, "Operational feedback", SandboxScenarioKey.DenseContent, "Mixed severity feedback inside a busy operational surface.", ["dense"], "Alert", "StatusBadge", "SummaryTiles"),
         CreateExample("feedback-empty", SandboxGroupKey.Feedback, "No activity yet", SandboxScenarioKey.EmptyState, "Shared empty and loading transitions.", ["empty"], "EmptyState", "LoadingState"),
         CreateExample("modals-default", SandboxGroupKey.Modals, "Dialog shell", SandboxScenarioKey.Default, "Standard dialog composition for focused confirmation and inspection flows.", ["modals", "dialog"], "Dialog"),
-        CreateExample("data-visualization-default", SandboxGroupKey.DataVisualization, "Data grid", SandboxScenarioKey.Default, "Tabular series review using the shared data grid wrapper.", ["data grid", "tables"], "DataGrid"),
+        CreateExample("modals-scaffold", SandboxGroupKey.Modals, "Dialog body layouts", SandboxScenarioKey.Default, "DialogScaffold-based layouts for danger confirmation, inspector, and picker dialog bodies.", ["modals", "dialog", "scaffold"], "DialogScaffold", "DangerActionDialog", "InspectorDialogLayout", "PickerDialogShell"),
+        CreateExample("modals-host", SandboxGroupKey.Modals, "Dialog host", SandboxScenarioKey.Default, "DialogHost renders whatever DialogService currently has open, mounted once at the app layout.", ["modals", "service"], "DialogHost"),
+        CreateExample("data-visualization-default", SandboxGroupKey.DataVisualization, "Data grid", SandboxScenarioKey.Default, "Tabular series review using the shared data grid wrapper.", ["data grid", "tables"], "DataGrid", "DataGridColumn"),
         CreateExample("data-visualization-empty", SandboxGroupKey.DataVisualization, "No rows", SandboxScenarioKey.EmptyState, "Data grid empty-state behavior before any rows are available.", ["empty"], "DataGrid", "EmptyState"),
-        CreateExample("storage-empty", SandboxGroupKey.Storage, "No storage summary yet", SandboxScenarioKey.EmptyState, "Placeholder proof surface until Storage components are wired into the sandbox.", ["empty", "storage"], "EmptyState"),
+        CreateExample("data-visualization-chart", SandboxGroupKey.DataVisualization, "Line chart series", SandboxScenarioKey.Default, "Chart, LineSeries, and ValueAxis compose an SVG line chart via cascading registration.", ["charts", "svg"], "Chart", "LineSeries", "ValueAxis"),
+        CreateExample("data-visualization-progress", SandboxGroupKey.DataVisualization, "Progress meter", SandboxScenarioKey.Default, "Standalone progress bar for bounded value ranges.", ["progress", "meter"], "ProgressBar"),
+        CreateExample("storage-default", SandboxGroupKey.Storage, "Storage summary", SandboxScenarioKey.Default, "Badge strip and summary card surfaces for storage usage and capacity status.", ["storage", "badges"], "StorageBadgeStrip", "StorageSummaryCard"),
+        CreateExample("storage-empty", SandboxGroupKey.Storage, "No storage summary yet", SandboxScenarioKey.EmptyState, "Storage summary surface before any usage data is available.", ["empty", "storage"], "EmptyState"),
         CreateExample("charts-default", SandboxGroupKey.Charts, "Trend and share charts", SandboxScenarioKey.Default, "Area, line, multi-line, and pie examples using the CanDoItAll chart wrapper.", ["charts", "apex", "wrapper"], "CdaChart"),
         CreateExample("charts-dense", SandboxGroupKey.Charts, "Dense operational charts", SandboxScenarioKey.DenseContent, "Higher-density multi-series charts with legends, labels, and color tuning.", ["dense", "multi-series"], "CdaChart"),
         CreateExample("charts-empty", SandboxGroupKey.Charts, "No chart data", SandboxScenarioKey.EmptyState, "Wrapper empty-state behavior before any chart series is available.", ["empty"], "CdaChart", "EmptyState"),
@@ -432,11 +438,34 @@ public static class SandboxCatalogRegistry
             ],
             ["/groups/modals"] =
             [
-                new("dialog", "Dialog", typeof(Dialog))
+                new("dialog", "Dialog", typeof(Dialog)),
+                new("dialog-scaffold", "DialogScaffold", typeof(DialogScaffold)),
+                new("danger-action-dialog", "DangerActionDialog", typeof(DangerActionDialog)),
+                new("inspector-dialog-layout", "InspectorDialogLayout", typeof(InspectorDialogLayout)),
+                new("picker-dialog-shell", "PickerDialogShell", typeof(PickerDialogShell)),
+                new("dialog-host", "DialogHost", typeof(DialogHost))
+            ],
+            ["/groups/data-display"] =
+            [
+                new("diff-viewer", "DiffViewer", typeof(DiffViewer)),
+                new("timeline", "Timeline", typeof(Timeline)),
+                new("timeline-stepper", "TimelineStepper", typeof(TimelineStepper))
+            ],
+            ["/groups/storage"] =
+            [
+                new("storage-badge-strip", "StorageBadgeStrip", typeof(StorageBadgeStrip)),
+                new("storage-summary-card", "StorageSummaryCard", typeof(StorageSummaryCard))
             ],
             ["/groups/data-visualization"] =
             [
-                new("data-grid", "DataGrid", typeof(DataGrid<>))
+                new("data-grid", "DataGrid", typeof(DataGrid<>)),
+                new("data-grid-column", "DataGridColumn", typeof(DataGridColumn<>)),
+                new("chart", "Chart", typeof(Chart)),
+                new("line-series", "LineSeries", typeof(LineSeries)),
+                new("value-axis", "ValueAxis", typeof(ValueAxis)),
+                new("category-axis", "CategoryAxis", typeof(CategoryAxis)),
+                new("grid-lines", "GridLines", typeof(GridLines)),
+                new("progress-bar", "ProgressBar", typeof(ProgressBar))
             ],
             ["/groups/charts"] =
             [
