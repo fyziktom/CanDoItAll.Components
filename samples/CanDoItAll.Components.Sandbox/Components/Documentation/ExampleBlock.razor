@@ -36,6 +36,7 @@
             </TabItems>
         </Tabs>
 
+        <div>
         @if (HasSource)
         {
             <CopyButton Value="@Source"
@@ -45,6 +46,18 @@
                         Size="CopyButtonSize.Small"
                         data-testid="@($"{TestId}-copy")" />
         }
+
+        @if (GitHubSourceUrl is not null)
+        {
+            <Button Text="Source"
+                    Icon="link"
+                    Href="@GitHubSourceUrl"
+                    Target="_blank"
+                    Variant="Variant.Text"
+                    Size="ButtonSize.Small"
+                    data-testid="@($"{TestId}-github")" />
+        }
+        </div>
     </div>
 
     <div class="border p-5 border-(--cad-tone-primary-soft-border)">
@@ -115,9 +128,32 @@
     [Parameter]
     public IReadOnlyList<Type>? ApiTypes { get; set; }
 
+    /// <summary>
+    /// The library component this example demonstrates, when it isn't already implied by the
+    /// first entry of <see cref="ApiTypes"/> — for example a second example of a component that
+    /// doesn't need its own "API" tab. Combined with the cascaded catalog group to resolve a
+    /// "View on GitHub" link automatically; see <see cref="ComponentSourceCatalog"/>.
+    /// </summary>
+    [Parameter]
+    public Type? ComponentType { get; set; }
+
+    /// <summary>The catalog group this example is filed under, supplied by CatalogPageFrame.</summary>
+    [CascadingParameter]
+    public SandboxGroupDefinition? Group { get; set; }
+
     private string? Source => ExampleSource.TryGet(SourceId);
 
     private bool HasSource => !string.IsNullOrEmpty(Source);
+
+    private Type? PrimaryApiType => ComponentType ?? ApiTypes?.FirstOrDefault();
+
+    private string? LibrarySourcePath => PrimaryApiType is null
+        ? null
+        : ComponentSourceCatalog.Resolve(Group?.Key, PrimaryApiType);
+
+    private string? GitHubSourceUrl => LibrarySourcePath is null
+        ? null
+        : $"https://github.com/fyziktom/CanDoItAll.Components/blob/{GitInfo.CurrentBranch}/{LibrarySourcePath}";
 
     private string TestId => "sandbox-example-" + SourceId
         .Replace("examples/", string.Empty, StringComparison.OrdinalIgnoreCase)
