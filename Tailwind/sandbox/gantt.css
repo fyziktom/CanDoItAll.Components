@@ -1,0 +1,41 @@
+.sandbox-gantt-proof {
+  @apply grid gap-4 min-w-0;
+}
+
+.sandbox-gantt-control-row {
+  @apply flex items-center justify-between gap-4 rounded-(--cad-radius-surface) py-[0.8rem] px-[0.9rem];
+  border: 1px solid var(--cad-color-border-soft);
+  background: color-mix(in srgb, var(--cad-color-surface-soft) 76%, var(--cad-color-surface) 24%);
+}
+
+.sandbox-gantt-insertion {
+  @apply grid grid-cols-[auto_minmax(13rem,_auto)_minmax(12rem,_1fr)] items-center gap-[0.65rem] min-w-0;
+}
+
+.sandbox-gantt-insertion__eyebrow {
+  @apply text-(--cad-color-text-strong) text-[0.72rem] font-[760] tracking-[0.08em] uppercase;
+}
+
+.sandbox-gantt-insertion__hint {
+  @apply text-(--cad-color-text-muted) text-[0.78rem] leading-[1.4];
+}
+
+.sandbox-gantt-legend {
+  @apply flex flex-wrap gap-2;
+}
+
+.sandbox-gantt-host {
+  @apply min-w-0 rounded-[calc(var(--cad-radius-surface)_+_0.25rem)] shadow-[0_14px_34px_color-mix(in_srgb,_var(--cad-color-text-strong)_8%,_transparent)];
+  background: color-mix(in srgb, var(--cad-color-surface-soft) 74%, transparent);
+}
+
+@media (max-width: 960px) {
+  .sandbox-gantt-control-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sandbox-gantt-insertion {
+    grid-template-columns: 1fr;
+  }
+}

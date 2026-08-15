@@ -39,8 +39,7 @@ npm run apply -- .
 
 `css-to-tailwindcss4` is an early-stage package (v0.0.x) and its output is not safe to commit unreviewed. Issues found so far:
 
-- **Fabricated utility classes.** It converted `tab-size: 4` into `@apply tab-4` — that class doesn't exist in Tailwind v4, and the build fails with `Cannot apply unknown utility class`. Always run `npm run build` right after `apply` to catch this; a clean script exit doesn't mean the output is valid.
-- **Not idempotent on partially-converted files.** If a file keeps a raw declaration the converter can't handle (e.g. the `tab-size` example above, deliberately left as plain CSS), rerunning `apply` on that same file reprocesses the raw declaration and can reintroduce the same broken class. Don't rerun `apply` on a file it has already touched without checking the diff again.
+- **Not idempotent on partially-converted files.** If a file keeps a raw declaration the converter can't handle, rerunning `apply` on that same file reprocesses the raw declaration and can reintroduce the same broken class. Don't rerun `apply` on a file it has already touched without checking the diff again.
 - **Can collapse multiple `@media` blocks into one unreadable line.** On `foundation/radzen-layout.css` it merged five separate breakpoint rules into a single ~900-character `@apply` line using arbitrary-value responsive variants (`sm:col-[...] md:col-[...] ...`). Technically valid and it builds, but unreadable — rewrite conversions like this back to plain `@media` CSS by hand.
 - **Low value on files that already use `@apply` well.** Running it on already-converted files (e.g. `forms/*.css`) made no real conversion, just indentation/blank-line churn.
 
