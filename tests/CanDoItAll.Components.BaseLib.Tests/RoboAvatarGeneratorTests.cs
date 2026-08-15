@@ -34,11 +34,11 @@ public sealed class RoboAvatarGeneratorTests
             svg,
             StringComparison.Ordinal);
         Assert.Contains(
-            "<g data-robo-part=\"mouth\" stroke=\"oklch(58.5% 0.233 277.117)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"m 18,16 -6,3 -6,-3 v 0 z\"></path></g>",
+            "<g data-robo-part=\"mouth\" stroke=\"oklch(68.5% 0.169 237.323)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"m 18,16 -6,3 -6,-3 v 0 z\"></path></g>",
             svg,
             StringComparison.Ordinal);
         Assert.Contains(
-            "<g data-robo-part=\"eyes\" stroke=\"oklch(64.5% 0.246 16.439)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"m 14,12.5 2,-3 2,3 z m -8,0 2,-3 2,3 z\"></path></g>",
+            "<g data-robo-part=\"eyes\" stroke=\"oklch(68.5% 0.169 237.323)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"m 14,12.5 2,-3 2,3 z m -8,0 2,-3 2,3 z\"></path></g>",
             svg,
             StringComparison.Ordinal);
     }
