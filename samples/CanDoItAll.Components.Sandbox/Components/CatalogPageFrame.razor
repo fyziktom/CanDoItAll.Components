@@ -23,13 +23,13 @@
             </Header>
 
             <ChildContent>
-                <div class="sandbox-page-section flex flex-col gap-4">
-                    <div class="sandbox-demo-frame @Frame.ToSurfaceClass()" data-testid="sandbox-demo-surface">
+                <CascadingValue Value="@Frame" Name="SandboxFramePreset">
+                    <div class="sandbox-page-section flex flex-col gap-4">
                         <div class="sandbox-demo-stage">
                             @ChildContent
                         </div>
                     </div>
-                </div>
+                </CascadingValue>
 
                 @* Examples and API tables sit outside the demo frame so the Tablet/Mobile
                    presets constrain only the proof surface, not the reference material. *@

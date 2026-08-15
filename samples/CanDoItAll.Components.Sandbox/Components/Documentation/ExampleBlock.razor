@@ -64,8 +64,11 @@
     @switch (ActivePanel)
     {
         case PanelKind.Example:
-            <div class="sandbox-example__demo">
-                @ChildContent
+            <div class="sandbox-demo-frame @Frame.ToSurfaceClass()"
+                 data-testid="@($"{TestId}-demo")">
+                <div class="sandbox-example__demo">
+                    @ChildContent
+                </div>
             </div>
             break;
         case PanelKind.Api:
@@ -140,6 +143,10 @@
     /// <summary>The catalog group this example is filed under, supplied by CatalogPageFrame.</summary>
     [CascadingParameter]
     public SandboxGroupDefinition? Group { get; set; }
+
+    /// <summary>The viewport preset applied only to the live example rendering.</summary>
+    [CascadingParameter(Name = "SandboxFramePreset")]
+    public SandboxFramePreset Frame { get; set; } = SandboxFramePreset.LiveViewport;
 
     private string? Source => ExampleSource.TryGet(SourceId);
 
