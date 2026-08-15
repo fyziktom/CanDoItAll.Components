@@ -191,14 +191,15 @@ Button, CopyButton
 
 # DEV NOTES
 
-- [ ] map component usage across products
-- [ ] btn mouse over, pointer
-- [x] nav filter
-- [ ] reorg toc to readme
-- [ ] pr notes
-- [x] homo avatars
-- [ ] full dark theme html level, disable animation during transition
 - [ ] ignore output
-- [ ] mermaind tooltip absolute element 2px padding global scroll glitch 
-- [x] link to source
+- [ ] radzen-layout.css?
 - [ ] favicon + states
+- [ ] full dark theme html level, disable animation during transition
+- [ ] btn mouse over, pointer
+- [ ] mermaind tooltip absolute element 2px padding global scroll glitch
+- [x] map component usage across products
+- [x] nav filter
+- [x] reorg toc to readme
+- [x] pr notes
+- [x] homo avatars
+- [x] link to source
