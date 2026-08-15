@@ -1,23 +1,26 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
 
-<FormStack>
+<FormStack data-testid="sandbox-forms-stack">
     <FormRow Split="true">
         <FormField Text="Title">
-            <TextBox Value="@title" ValueChanged="@(value => title = value)" Placeholder="Short, clear summary" />
+            <TextBox Value="@FormState.Title" ValueChanged="HandleTitleChanged" Placeholder="@TitlePlaceholder"
+                     Disabled="@IsDisabled" />
         </FormField>
         <FormField Text="Status">
-            <DropDown TValue="string" Data="@StatusOptions" Value="@status" ValueChanged="@(value => status = value)" Placeholder="Select status" />
+            <DropDown TValue="string"
+                      Data="@StatusOptions"
+                      TextProperty="@nameof(SelectOption.Text)"
+                      ValueProperty="@nameof(SelectOption.Value)"
+                      Value="@FormState.Status"
+                      ValueChanged="HandleStatusChanged"
+                      Disabled="@IsDisabled" />
         </FormField>
     </FormRow>
     <FormField Text="Notes">
-        <TextArea Value="@notes" ValueChanged="@(value => notes = value)" Placeholder="Explain context, risk, and reviewer expectations." />
+        <TextArea Value="@FormState.Notes"
+                  ValueChanged="HandleNotesChanged"
+                  Placeholder="@NotesPlaceholder"
+                  Disabled="@IsDisabled" />
     </FormField>
 </FormStack>
-
-@code {
-    private static readonly IReadOnlyList<string> StatusOptions = ["Draft", "Review", "Blocked", "Approved"];
-
-    private string? title = "Component validation pass";
-    private string? status = "Draft";
-    private string? notes;
-}

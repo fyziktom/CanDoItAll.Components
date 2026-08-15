@@ -2,10 +2,13 @@
 
 <Stack GapScale="LayoutGap.Medium">
     <ZoomPanFrame AriaLabel="Packaged raster zoom and pan preview"
-                  Style="block-size: clamp(14rem, 42vw, 24rem); --cda-zoom-pan-min-height: 14rem;">
-        <img src="_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-06.jpg"
+                  ResetKey="@CurrentScenario"
+                  Style="block-size: clamp(14rem, 42vw, 24rem); --cda-zoom-pan-min-height: 14rem;"
+                  data-testid="sandbox-zoom-pan-frame">
+        <img src="@ZoomPanImageSource"
              alt="Portrait preview used to validate zoom and pan"
              draggable="false"
+             data-testid="sandbox-zoom-pan-image"
              style="block-size: 100%; inline-size: 100%; object-fit: contain;" />
     </ZoomPanFrame>
 
@@ -13,3 +16,9 @@
         Use the toolbar or wheel to zoom, drag or press the arrow keys after zooming, pinch on touch, and choose Reset or press 0 to restore the view.
     </Alert>
 </Stack>
+
+@code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private SandboxScenarioKey CurrentScenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
+    private const string ZoomPanImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-06.jpg";
+}

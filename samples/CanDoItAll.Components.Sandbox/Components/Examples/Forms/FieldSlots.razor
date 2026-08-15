@@ -1,17 +1,18 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
 
-<FormField Text="Reference code">
+<FormField Text="Reference code" data-testid="sandbox-forms-field-slots">
     <Start>
         <Icon Name="tag" />
     </Start>
     <ChildContent>
-        <TextBox Value="@referenceCode" ValueChanged="@(value => referenceCode = value)" Placeholder="Review budget code" Class="cda-input" />
+        <TextBox Value="@AdvancedState.BudgetCode"
+                 ValueChanged="HandleBudgetCodeChanged"
+                 Placeholder="Review budget code"
+                 Disabled="@IsDisabled"
+                 Class="cda-input" />
     </ChildContent>
     <End>
         <StatusBadge Text="Synced" Tone="success" />
     </End>
 </FormField>
-
-@code {
-    private string? referenceCode = "MIG-2026-Q3";
-}

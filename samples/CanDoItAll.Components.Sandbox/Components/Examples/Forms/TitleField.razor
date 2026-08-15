@@ -1,11 +1,9 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
 
 <FormField Text="Title">
-    <TextBox Value="@title"
-             ValueChanged="@(value => title = value ?? string.Empty)"
-             Placeholder="Short, clear summary" />
+    <TextBox Value="@FormState.Title"
+             ValueChanged="HandleTitleChanged"
+             Placeholder="@TitlePlaceholder"
+             Disabled="@IsDisabled" />
 </FormField>
-
-@code {
-    private string title = "Component validation pass";
-}

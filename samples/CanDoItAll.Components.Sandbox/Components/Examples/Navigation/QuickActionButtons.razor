@@ -1,7 +1,10 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
 <Cluster Gap="LayoutGap.Small">
-    <PageHeaderActionButton Icon="download" Label="Download" />
-    <PageHeaderActionButton Icon="share" Label="Share" ButtonStyle="ButtonStyle.Info" />
-    <PageHeaderActionButton Icon="more_horiz" Label="More" Disabled="true" />
+    <div data-testid="sandbox-navigation-page-header-action-button">
+        <PageHeaderActionButton Icon="download" Label="Download" />
+        <PageHeaderActionButton Icon="share" Label="Share" ButtonStyle="@(ButtonStyle.Info)" />
+        <PageHeaderActionButton Icon="more_horiz" Label="More" Disabled="@IsDisabled" />
+    </div>
 </Cluster>

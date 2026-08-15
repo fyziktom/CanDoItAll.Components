@@ -2,7 +2,6 @@
 @page "/groups/layout"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Layout
-@using System.Globalization
 
 <PageTitle>Layout</PageTitle>
 
@@ -30,79 +29,7 @@
                                       Description="A shared scaffold keeps header, lead metrics, supporting rail, and primary content in distinct, predictable regions."
                                       SourceId="examples/Layout/PageScaffoldWorkspace.razor"
                                       ApiTypes="@PageScaffoldApiTypes">
-                            <PageScaffold MaxWidthClass="max-w-[1280px]"
-                                          data-testid="sandbox-layout-scaffold">
-                                <Header>
-                                    <PageHeader Eyebrow="Shared layout"
-                                                Title="@WorkspaceTitle"
-                                                Description="@WorkspaceDescription">
-                                        <Actions>
-                                            <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
-                                            <Button Text="Open checklist" />
-                                        </Actions>
-                                    </PageHeader>
-                                </Header>
-
-                                <Lead>
-                                    <SummaryTiles>
-                                        <SummaryTile Label="Regions" Value="@RegionCount.ToString()" HelperText="Primary content, supporting rail, and action footer stay structurally distinct." Tone="info" />
-                                        <SummaryTile Label="Sections" Value="@SectionCount.ToString()" HelperText="Grouped sections should read clearly without extra chrome." Tone="success" />
-                                        <SummaryTile Label="Viewport" Value="@ViewportLabel" HelperText="Frame changes should preserve orientation and hierarchy." Tone="warning" />
-                                    </SummaryTiles>
-                                </Lead>
-
-                                <SecondaryRail>
-                                    <SectionCard Title="Review rail" Description="The supporting rail should stay concise and useful.">
-                                        <div class="sandbox-proof-list">
-                                            <p>Use the right rail for compact context, not for duplicate content.</p>
-                                            <p>Headings should make the page understandable before the user reads paragraphs.</p>
-                                        </div>
-                                    </SectionCard>
-
-                                    <SectionCard Title="Current emphasis" Description="Scenario-specific expectations for this pass.">
-                                        <div class="sandbox-proof-list">
-                                            <p>@ScenarioRailCopy</p>
-                                            <p>@WidthRailCopy</p>
-                                        </div>
-                                    </SectionCard>
-                                </SecondaryRail>
-
-                                <ChildContent>
-                                    <div class="sandbox-demo-grid--two"
-                                         data-testid="sandbox-layout-primary-grid">
-                                        <FormSection Title="Primary workspace" Description="The main region should be able to hold operational content without collapsing the reading rhythm.">
-                                            <div class="space-y-4">
-                                                <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Release acceptance workspace" />
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@WorkspaceCopy" />
-
-                                                <div class="sandbox-demo-grid--two">
-                                                    @foreach (var metric in WorkspaceMetrics)
-                                                    {
-                                                        <SectionCard Title="@metric.Title" Description="@metric.Description">
-                                                            <div class="space-y-2">
-                                                                <TextBlock TextStyle="@(TextStyle.H4)" Value="@metric.Value" />
-                                                                <StatusBadge Text="@metric.ToneLabel" Tone="@metric.Tone" />
-                                                            </div>
-                                                        </SectionCard>
-                                                    }
-                                                </div>
-                                            </div>
-                                        </FormSection>
-
-                                        <SectionCard Title="Secondary workspace" Description="The supporting column still needs enough substance to justify its width.">
-                                            <div class="sandbox-kv-list">
-                                                @foreach (var item in SecondaryFacts)
-                                                {
-                                                    <div class="sandbox-kv-item">
-                                                        <strong>@item.Label</strong>
-                                                        <span>@item.Value</span>
-                                                    </div>
-                                                }
-                                            </div>
-                                        </SectionCard>
-                                    </div>
-                                </ChildContent>
-                            </PageScaffold>
+                            <PageScaffoldWorkspace />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ZoomPanFrame")
@@ -111,22 +38,7 @@
                                       Description="A standalone raster preview proves the shared interaction boundary without relying on Mermaid rendering."
                                       SourceId="examples/Layout/ZoomPanPreview.razor"
                                       ApiTypes="@ZoomPanFrameApiTypes">
-                            <Stack GapScale="LayoutGap.Medium">
-                                <ZoomPanFrame AriaLabel="Packaged raster zoom and pan preview"
-                                              ResetKey="@CurrentScenario"
-                                              Style="block-size: clamp(14rem, 42vw, 24rem); --cda-zoom-pan-min-height: 14rem;"
-                                              data-testid="sandbox-zoom-pan-frame">
-                                    <img src="@ZoomPanImageSource"
-                                         alt="Portrait preview used to validate zoom and pan"
-                                         draggable="false"
-                                         data-testid="sandbox-zoom-pan-image"
-                                         style="block-size: 100%; inline-size: 100%; object-fit: contain;" />
-                                </ZoomPanFrame>
-
-                                <Alert AlertStyle="AlertStyle.Info">
-                                    Use the toolbar or wheel to zoom, drag or press the arrow keys after zooming, pinch on touch, and choose Reset or press 0 to restore the view.
-                                </Alert>
-                            </Stack>
+                            <ZoomPanPreview />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "StickyActionFooter")
@@ -135,20 +47,7 @@
                                       Description="The sticky footer should close the flow with a clear primary action, without dominating the page."
                                       SourceId="examples/Layout/WorkspaceFooter.razor"
                                       ApiTypes="@StickyActionFooterApiTypes">
-                            <StickyActionFooter StatusLabel="Layout state"
-                                                StatusMessage="@FooterMessage"
-                                                StatusTone="@FooterTone"
-                                                data-testid="sandbox-layout-sticky-footer">
-                                <SecondaryActions>
-                                    <Button Text="Save draft" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Disabled="@IsActionDisabled" />
-                                </SecondaryActions>
-                                <PrimaryActions>
-                                    <Button Text="@PrimaryActionText" Disabled="@IsActionDisabled" />
-                                </PrimaryActions>
-                                <DangerActions>
-                                    <Button Text="Discard" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Text)" Disabled="@IsActionDisabled" />
-                                </DangerActions>
-                            </StickyActionFooter>
+                            <WorkspaceFooter />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Stack")
@@ -157,69 +56,7 @@
                                       Description="Useful when the structure is mostly linear and the right-side region can remain a stack of actions."
                                       SourceId="examples/Layout/StackComposition.razor"
                                       ApiTypes="@StackApiTypes">
-                            <div class="@HeroSurfaceClass" data-testid="layout-composition-stack">
-                                <Stack Orientation="Orientation.Vertical" Class="w-full" Gap="1.25rem">
-                                    <Stack Orientation="Orientation.Horizontal" Class="w-full">
-                                        <Stack Orientation="Orientation.Vertical" Gap="1rem">
-                                            <span class="cda-shell-pill cda-shell-pill--neutral">@HeroEyebrow</span>
-                                            <div class="space-y-2">
-                                                <p class="text-base font-semibold text-slate-950">@HeroTitle</p>
-                                                <p class="text-sm leading-6 text-slate-600">@HeroDescription</p>
-                                            </div>
-                                        </Stack>
-
-                                        <Stack Orientation="Orientation.Vertical" Class="w-full" Gap="1rem">
-                                            <Stack Orientation="Orientation.Horizontal"
-                                                   JustifyContent="JustifyContent.End"
-                                                   Class="w-full"
-                                                   Gap="1rem">
-                                                <PillList>
-                                                    <Pill>@SelectedModeLabel</Pill>
-                                                    <Pill>@WindowLabel</Pill>
-                                                    <Pill>@FreshnessLabel</Pill>
-                                                </PillList>
-                                            </Stack>
-
-                                            <Stack Orientation="Orientation.Horizontal"
-                                                   JustifyContent="JustifyContent.End"
-                                                   Class="w-full"
-                                                   Gap="1rem">
-                                                <Button Text="Refresh"
-                                                        Icon="refresh"
-                                                        ButtonStyle="ButtonStyle.Light"
-                                                        Click="HandleRefreshAsync"
-                                                        Disabled="@ActionsDisabled" />
-                                                <Button Text="Reset Data"
-                                                        Icon="delete"
-                                                        ButtonStyle="ButtonStyle.Danger"
-                                                        Click="HandleResetAsync"
-                                                        Disabled="@ActionsDisabled" />
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-
-                                    <FormRow Split="true" Class="w-full">
-                                        <FormField Text="Mode" ContainerClass="w-full">
-                                            <ChildContent>
-                                                <DropDown TValue="string"
-                                                          Data="@ModeOptions"
-                                                          Value="@selectedMode"
-                                                          Change="OnModeChanged"
-                                                          Style="width:100%" />
-                                            </ChildContent>
-                                        </FormField>
-                                        <FormField Text="Time Window" ContainerClass="w-full">
-                                            <ChildContent>
-                                                <DropDown TValue="int"
-                                                          Data="@WindowOptions"
-                                                          Value="@selectedWindowDays"
-                                                          Change="OnWindowChanged"
-                                                          Style="width:100%" />
-                                            </ChildContent>
-                                        </FormField>
-                                    </FormRow>
-                                </Stack>
-                            </div>
+                            <StackComposition />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Grid")
@@ -228,74 +65,7 @@
                                       Description="A good middle ground when the surface needs track-based composition, but the right side still reads well as nested stacks."
                                       SourceId="examples/Layout/GridComposition.razor"
                                       ApiTypes="@GridApiTypes">
-                            <div class="@HeroSurfaceClass" data-testid="layout-composition-grid">
-                                <Grid Gap="LayoutGap.XLarge" Class="w-full">
-                                    <Grid Gap="LayoutGap.XLarge"
-                                          ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
-                                          Class="w-full">
-                                        <Stack Orientation="Orientation.Vertical" Gap="1rem">
-                                            <span class="cda-shell-pill cda-shell-pill--neutral">@HeroEyebrow</span>
-                                            <div class="space-y-2">
-                                                <p class="text-base font-semibold text-slate-950">@HeroTitle</p>
-                                                <p class="text-sm leading-6 text-slate-600">@HeroDescription</p>
-                                            </div>
-                                        </Stack>
-
-                                        <Stack Orientation="Orientation.Vertical" Class="w-full" Gap="1rem">
-                                            <Stack Orientation="Orientation.Horizontal"
-                                                   JustifyContent="JustifyContent.End"
-                                                   Wrap="FlexWrap.Wrap"
-                                                   Class="w-full"
-                                                   Gap="1rem">
-                                                <PillList>
-                                                    <Pill>@SelectedModeLabel</Pill>
-                                                    <Pill>@WindowLabel</Pill>
-                                                    <Pill>@FreshnessLabel</Pill>
-                                                </PillList>
-                                            </Stack>
-
-                                            <Stack Orientation="Orientation.Horizontal"
-                                                   JustifyContent="JustifyContent.End"
-                                                   Wrap="FlexWrap.Wrap"
-                                                   Class="w-full"
-                                                   Gap="1rem">
-                                                <Button Text="Refresh"
-                                                        Icon="refresh"
-                                                        ButtonStyle="ButtonStyle.Light"
-                                                        Click="HandleRefreshAsync"
-                                                        Disabled="@ActionsDisabled" />
-                                                <Button Text="Reset Data"
-                                                        Icon="delete"
-                                                        ButtonStyle="ButtonStyle.Danger"
-                                                        Click="HandleResetAsync"
-                                                        Disabled="@ActionsDisabled" />
-                                            </Stack>
-                                        </Stack>
-                                    </Grid>
-
-                                    <FormRow Split="true" Class="w-full">
-                                        <FormField Text="Mode" ContainerClass="w-full">
-                                            <ChildContent>
-                                                <DropDown TValue="string"
-                                                          Data="@ModeOptions"
-                                                          Value="@selectedMode"
-                                                          Change="OnModeChanged"
-                                                          Style="width:100%" />
-                                            </ChildContent>
-                                        </FormField>
-
-                                        <FormField Text="Time Window" ContainerClass="w-full">
-                                            <ChildContent>
-                                                <DropDown TValue="int"
-                                                          Data="@WindowOptions"
-                                                          Value="@selectedWindowDays"
-                                                          Change="OnWindowChanged"
-                                                          Style="width:100%" />
-                                            </ChildContent>
-                                        </FormField>
-                                    </FormRow>
-                                </Grid>
-                            </div>
+                            <GridComposition />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Row")
@@ -304,152 +74,13 @@
                                       Description="This version keeps the whole composition inside the shared layout primitives while bounding the two-track composition to wider breakpoints."
                                       SourceId="examples/Layout/RowColumnFixed.razor"
                                       ApiTypes="@RowColumnApiTypes">
-                            <div class="@HeroSurfaceClass" data-testid="layout-composition-row-column-fixed">
-                                <Grid Columns="1"
-                                      ColumnsLg="2"
-                                      ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
-                                      Gap="LayoutGap.XLarge"
-                                      Class="w-full">
-                                    <Row GapScale="LayoutGap.XLarge">
-                                        <Column GapScale="LayoutGap.Medium" JustifyContent="JustifyContent.Center">
-                                            <span class="cda-shell-pill cda-shell-pill--neutral">@HeroEyebrow</span>
-                                            <p class="text-base font-semibold text-slate-950">@HeroTitle</p>
-                                            <p class="text-sm leading-6 text-slate-600">@HeroDescription</p>
-                                        </Column>
-
-                                        <Column GapScale="LayoutGap.Large"
-                                                AlignItems="AlignItems.End"
-                                                JustifyContent="JustifyContent.SpaceBetween">
-                                            <PillList>
-                                                <Pill>@SelectedModeLabel</Pill>
-                                                <Pill>@WindowLabel</Pill>
-                                                <Pill>@FreshnessLabel</Pill>
-                                            </PillList>
-
-                                            <Row Columns="1" ColumnsSm="2" GapScale="LayoutGap.Large">
-                                                <Column>
-                                                    <Button Text="Refresh"
-                                                            Icon="refresh"
-                                                            ButtonStyle="ButtonStyle.Light"
-                                                            Click="HandleRefreshAsync"
-                                                            Disabled="@ActionsDisabled" />
-                                                </Column>
-                                                <Column>
-                                                    <Button Text="Reset Data"
-                                                            Icon="delete"
-                                                            ButtonStyle="ButtonStyle.Danger"
-                                                            Click="HandleResetAsync"
-                                                            Disabled="@ActionsDisabled" />
-                                                </Column>
-                                            </Row>
-                                        </Column>
-                                    </Row>
-
-                                    <Row Columns="1" ColumnsMd="2" GapScale="LayoutGap.XLarge">
-                                        <Column>
-                                            <FormField Text="Mode" ContainerClass="w-full">
-                                                <ChildContent>
-                                                    <DropDown TValue="string"
-                                                              Data="@ModeOptions"
-                                                              Value="@selectedMode"
-                                                              Change="OnModeChanged"
-                                                              Style="width:100%" />
-                                                </ChildContent>
-                                            </FormField>
-                                        </Column>
-
-                                        <Column>
-                                            <FormField Text="Time Window" ContainerClass="w-full">
-                                                <ChildContent>
-                                                    <DropDown TValue="int"
-                                                              Data="@WindowOptions"
-                                                              Value="@selectedWindowDays"
-                                                              Change="OnWindowChanged"
-                                                              Style="width:100%" />
-                                                </ChildContent>
-                                            </FormField>
-                                        </Column>
-                                    </Row>
-                                </Grid>
-                            </div>
+                            <RowColumnFixed />
                         </ExampleBlock>
 
                         <ExampleBlock Title="4. Responsive Grid + Row + Column"
                                       Description="Preferred pattern. The same-row columns inherit and override tracks through the shared primitives, so the layout can collapse to one column and expand again without custom structural CSS."
                                       SourceId="examples/Layout/RowColumnResponsive.razor">
-                            <div class="@HeroSurfaceClass" data-testid="layout-composition-row-column-responsive">
-                                <Grid Columns="1"
-                                      ColumnsSm="1"
-                                      ColumnsMd="2"
-                                      ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
-                                      Gap="LayoutGap.XLarge"
-                                      Class="w-full">
-                                    <Row GapScale="LayoutGap.XLarge">
-                                        <Column GapScale="LayoutGap.Medium" JustifyContent="JustifyContent.Center">
-                                            <span class="cda-shell-pill cda-shell-pill--neutral">@HeroEyebrow</span>
-                                            <p class="text-base font-semibold text-slate-950">@HeroTitle</p>
-                                            <p class="text-sm leading-6 text-slate-600">@HeroDescription</p>
-                                        </Column>
-
-                                        <Column GapScale="LayoutGap.Large"
-                                                AlignItems="AlignItems.End"
-                                                JustifyContent="JustifyContent.SpaceBetween">
-                                            <PillList>
-                                                <Pill>@SelectedModeLabel</Pill>
-                                                <Pill>@WindowLabel</Pill>
-                                                <Pill>@FreshnessLabel</Pill>
-                                            </PillList>
-
-                                            <Row Columns="1" ColumnsSm="2" GapScale="LayoutGap.Large">
-                                                <Column>
-                                                    <Button Text="Refresh"
-                                                            Icon="refresh"
-                                                            ButtonStyle="ButtonStyle.Light"
-                                                            Click="HandleRefreshAsync"
-                                                            Disabled="@ActionsDisabled" />
-                                                </Column>
-                                                <Column>
-                                                    <Button Text="Reset Data"
-                                                            Icon="delete"
-                                                            ButtonStyle="ButtonStyle.Danger"
-                                                            Click="HandleResetAsync"
-                                                            Disabled="@ActionsDisabled" />
-                                                </Column>
-                                            </Row>
-                                        </Column>
-                                    </Row>
-
-                                    <Row Columns="1"
-                                         ColumnsSm="1"
-                                         ColumnsMd="2"
-                                         ColumnTemplateLg="repeat(2,minmax(0,1fr))"
-                                         GapScale="LayoutGap.XLarge">
-                                        <Column>
-                                            <FormField Text="Mode" ContainerClass="w-full">
-                                                <ChildContent>
-                                                    <DropDown TValue="string"
-                                                              Data="@ModeOptions"
-                                                              Value="@selectedMode"
-                                                              Change="OnModeChanged"
-                                                              Style="width:100%" />
-                                                </ChildContent>
-                                            </FormField>
-                                        </Column>
-
-                                        <Column>
-                                            <FormField Text="Time Window" ContainerClass="w-full">
-                                                <ChildContent>
-                                                    <DropDown TValue="int"
-                                                              Data="@WindowOptions"
-                                                              Value="@selectedWindowDays"
-                                                              Change="OnWindowChanged"
-                                                              Style="width:100%" />
-                                                </ChildContent>
-                                            </FormField>
-                                        </Column>
-                                    </Row>
-                                </Grid>
-                            </div>
+                            <RowColumnResponsive />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Body")
@@ -458,18 +89,7 @@
                                       Description="Body is the main content region inside a shell. FillHeight and Scrollable let it own its own scrollbar instead of the page."
                                       SourceId="examples/Layout/BodyScrollable.razor"
                                       ApiTypes="@BodyApiTypes">
-                            <Body FillHeight="true"
-                                  Scrollable="true"
-                                  Style="height:14rem;"
-                                  Class="rounded-[1.25rem] border border-slate-200 bg-white p-4"
-                                  data-testid="sandbox-layout-body">
-                                <div class="space-y-3">
-                                    @foreach (var item in BodySampleRows)
-                                    {
-                                        <div class="rounded-[0.85rem] border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">@item</div>
-                                    }
-                                </div>
-                            </Body>
+                            <BodyScrollable />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Sidebar")
@@ -478,27 +98,7 @@
                                       Description="Sidebar toggles visibility via Expanded, typically paired with a Body region inside a shell."
                                       SourceId="examples/Layout/SidebarToggle.razor"
                                       ApiTypes="@SidebarApiTypes">
-                            <div class="space-y-3" data-testid="sandbox-layout-sidebar">
-                                <Button Text="@(sidebarExpanded ? "Collapse sidebar" : "Expand sidebar")"
-                                        Icon="@(sidebarExpanded ? "menu_open" : "menu")"
-                                        ButtonStyle="@(ButtonStyle.Light)"
-                                        Variant="@(Variant.Outlined)"
-                                        Size="ButtonSize.Small"
-                                        Click="ToggleSidebar" />
-                                <div class="flex overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white" style="height:12rem;">
-                                    <Sidebar Expanded="@sidebarExpanded"
-                                             ExpandedChanged="HandleSidebarExpandedChanged"
-                                             Class="w-40 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
-                                        <div class="space-y-2 text-sm text-slate-600">
-                                            <p class="m-0 font-semibold text-slate-800">Navigation</p>
-                                            <p class="m-0">Feedback</p>
-                                            <p class="m-0">Forms</p>
-                                            <p class="m-0">Layout</p>
-                                        </div>
-                                    </Sidebar>
-                                    <div class="flex-1 p-4 text-sm text-slate-600">Main content stays in place while the sidebar collapses.</div>
-                                </div>
-                            </div>
+                            <SidebarToggle />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "PageShell")
@@ -507,21 +107,7 @@
                                       Description="PageShell is a thin structural wrapper that composes Sidebar and Body into a single shell region."
                                       SourceId="examples/Layout/PageShellMiniShell.razor"
                                       ApiTypes="@PageShellApiTypes">
-                            <PageShell Class="flex overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white"
-                                       Style="height:14rem;"
-                                       data-testid="sandbox-layout-page-shell">
-                                <Sidebar Class="w-40 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
-                                    <div class="space-y-2 text-sm text-slate-600">
-                                        <p class="m-0 font-semibold text-slate-800">Navigation</p>
-                                        <p class="m-0">Feedback</p>
-                                        <p class="m-0">Forms</p>
-                                        <p class="m-0">Layout</p>
-                                    </div>
-                                </Sidebar>
-                                <Body FillHeight="true" Scrollable="true" Class="flex-1 p-4">
-                                    <p class="m-0 text-sm text-slate-600">PageShell keeps the sidebar and main content in one predictable structure.</p>
-                                </Body>
-                            </PageShell>
+                            <PageShellMiniShell />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Layout")
@@ -530,21 +116,7 @@
                                       Description="Layout is the outermost shell primitive. FitViewport locks height to the viewport (minus ViewportOffset) and locks overflow; this preview overrides the computed height to a fixed size so the section stays contained on the page."
                                       SourceId="examples/Layout/LayoutFitViewport.razor"
                                       ApiTypes="@LayoutApiTypes">
-                            <CanDoItAll.Components.BaseLib.Layout FitViewport="true"
-                                                                   ViewportOffset="0px"
-                                                                   LockOverflow="true"
-                                                                   Style="height:14rem;"
-                                                                   Class="overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white"
-                                                                   data-testid="sandbox-layout-layout">
-                                <PageShell Class="flex h-full">
-                                    <Sidebar Class="w-36 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
-                                        <p class="m-0 text-sm text-slate-600">Rail</p>
-                                    </Sidebar>
-                                    <Body FillHeight="true" Scrollable="true" Class="flex-1 p-4">
-                                        <p class="m-0 text-sm text-slate-600">FitViewport and LockOverflow stay active here; only the computed height is capped for this preview.</p>
-                                    </Body>
-                                </PageShell>
-                            </CanDoItAll.Components.BaseLib.Layout>
+                            <LayoutFitViewport />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Cluster")
@@ -553,17 +125,7 @@
                                       Description="Cluster wraps items into a flexible row, controlling gap, alignment, and justification independent of a specific parent component."
                                       SourceId="examples/Layout/ClusterTags.razor"
                                       ApiTypes="@ClusterApiTypes">
-                            <Cluster AlignItems="AlignItems.Center"
-                                     JustifyContent="JustifyContent.Start"
-                                     Gap="LayoutGap.Small"
-                                     data-testid="sandbox-layout-cluster">
-                                <Pill>Accessibility</Pill>
-                                <Pill>API contract</Pill>
-                                <Pill>Density</Pill>
-                                <Pill>Mobile layout</Pill>
-                                <Pill>Publishing</Pill>
-                                <Pill>Visual proof</Pill>
-                            </Cluster>
+                            <ClusterTags />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Split")
@@ -572,21 +134,7 @@
                                       Description="Split lays out a title and description on one side and actions on the other, collapsing to a stacked column below its Breakpoint."
                                       SourceId="examples/Layout/SplitHeaderRow.razor"
                                       ApiTypes="@SplitApiTypes">
-                            <Split Breakpoint="LayoutBreakpoint.Md"
-                                   AlignItems="AlignItems.Center"
-                                   JustifyContent="JustifyContent.SpaceBetween"
-                                   Gap="LayoutGap.Medium"
-                                   Class="rounded-[1.25rem] border border-slate-200 bg-white px-4 py-3"
-                                   data-testid="sandbox-layout-split">
-                                <div class="space-y-1">
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Release acceptance" />
-                                    <TextBlock TextStyle="@(TextStyle.Caption)" Value="Collapses to a stacked column below the Md breakpoint." />
-                                </div>
-                                <Cluster Gap="LayoutGap.Small">
-                                    <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Size="ButtonSize.Small" />
-                                    <Button Text="Open checklist" Size="ButtonSize.Small" />
-                                </Cluster>
-                            </Split>
+                            <SplitHeaderRow />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ThemeHost")
@@ -595,16 +143,7 @@
                                       Description="ThemeHost sets data-cad-theme and color-scheme so nested content can be scoped to light or dark independent of the rest of the page."
                                       SourceId="examples/Layout/ThemeHostComparison.razor"
                                       ApiTypes="@ThemeHostApiTypes">
-                            <Grid Gap="LayoutGap.Medium" Columns="1" ColumnsMd="2" data-testid="sandbox-layout-theme-host">
-                                <ThemeHost ThemeKey="@CadThemes.Light" Class="rounded-[1.25rem] border border-slate-200 bg-white p-4">
-                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Light</p>
-                                    <p class="mt-1 text-sm text-slate-700">Scoped to the light theme.</p>
-                                </ThemeHost>
-                                <ThemeHost ThemeKey="@CadThemes.Dark" Class="rounded-[1.25rem] border border-slate-800 bg-slate-900 p-4">
-                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Dark</p>
-                                    <p class="mt-1 text-sm text-slate-100">Scoped to the dark theme.</p>
-                                </ThemeHost>
-                            </Grid>
+                            <ThemeHostComparison />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "WorkspacePanel")
@@ -613,16 +152,7 @@
                                       Description="WorkspacePanel offers a solid Default tone and a dashed Ghost tone for placeholder or secondary content."
                                       SourceId="examples/Layout/WorkspacePanelTones.razor"
                                       ApiTypes="@WorkspacePanelApiTypes">
-                            <Grid Gap="LayoutGap.Medium" Columns="1" ColumnsMd="2" data-testid="sandbox-layout-workspace-panel">
-                                <WorkspacePanel Tone="WorkspacePanelTone.Default">
-                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Default</p>
-                                    <p class="mt-1 text-sm text-slate-700">A solid card for primary workspace content.</p>
-                                </WorkspacePanel>
-                                <WorkspacePanel Tone="WorkspacePanelTone.Ghost">
-                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Ghost</p>
-                                    <p class="mt-1 text-sm text-slate-700">A dashed placeholder tone for secondary or empty content.</p>
-                                </WorkspacePanel>
-                            </Grid>
+                            <WorkspacePanelTones />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "WorkspaceSplit")
@@ -631,16 +161,7 @@
                                       Description="WorkspaceSplit lays out a wide main panel and a narrower side panel, collapsing to one column below 1280px."
                                       SourceId="examples/Layout/WorkspaceSplitDashboard.razor"
                                       ApiTypes="@WorkspaceSplitApiTypes">
-                            <WorkspaceSplit data-testid="sandbox-layout-workspace-split">
-                                <WorkspacePanel Wide="true">
-                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Main panel</p>
-                                    <p class="mt-1 text-sm text-slate-700">The wide panel spans both grid tracks at desktop width via Wide.</p>
-                                </WorkspacePanel>
-                                <WorkspacePanel Tone="WorkspacePanelTone.Ghost">
-                                    <p class="m-0 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Side panel</p>
-                                    <p class="mt-1 text-sm text-slate-700">The narrower side panel stays a single track.</p>
-                                </WorkspacePanel>
-                            </WorkspaceSplit>
+                            <WorkspaceSplitDashboard />
                         </ExampleBlock>
                     }
                 </section>
@@ -653,7 +174,6 @@
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Layout);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Layout);
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/layout");
-    private const string ZoomPanImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-06.jpg";
 
     private static readonly IReadOnlyList<Type> PageScaffoldApiTypes = [typeof(PageScaffold)];
     private static readonly IReadOnlyList<Type> ZoomPanFrameApiTypes = [typeof(ZoomPanFrame)];
@@ -670,206 +190,4 @@
     private static readonly IReadOnlyList<Type> ThemeHostApiTypes = [typeof(ThemeHost)];
     private static readonly IReadOnlyList<Type> WorkspacePanelApiTypes = [typeof(WorkspacePanel)];
     private static readonly IReadOnlyList<Type> WorkspaceSplitApiTypes = [typeof(WorkspaceSplit), typeof(WorkspacePanel)];
-
-    private static readonly IReadOnlyList<string> BodySampleRows =
-    [
-        "Release acceptance checklist",
-        "Reviewer lane assignments",
-        "Priority threshold history",
-        "Budget reference audit",
-        "Notification delivery log",
-        "Mobile viewport proof",
-        "Tablet viewport proof",
-        "Accessibility pass notes"
-    ];
-
-    private bool sidebarExpanded = true;
-
-    private void ToggleSidebar() => sidebarExpanded = !sidebarExpanded;
-
-    private Task HandleSidebarExpandedChanged(bool value)
-    {
-        sidebarExpanded = value;
-        return Task.CompletedTask;
-    }
-
-    private static readonly IReadOnlyList<string> ModeOptions = ["All modes", "Interval speed", "Harmony", "Sight reading"];
-    private static readonly IReadOnlyList<int> WindowOptions = [7, 14, 30, 90, 180];
-
-    private const string HeroSurfaceClass =
-        "w-full min-w-0 rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(244,249,255,0.98)_56%,rgba(220,243,255,0.96)_100%)] p-5 shadow-[0_24px_60px_-34px_rgba(14,116,144,0.3)]";
-
-    private string selectedMode = ModeOptions[0];
-    private int selectedWindowDays = 30;
-    private DateTimeOffset lastUpdated = new(2026, 4, 4, 11, 9, 0, TimeSpan.FromHours(-4));
-
-    private string WorkspaceTitle => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Migration acceptance workspace with extended release notes and validation guidance"
-        : "Migration acceptance workspace";
-
-    private string WorkspaceDescription => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense layout still needs a stable main column, a concise supporting rail, and action placement that does not fight the content.",
-        SandboxScenarioKey.EmptyState => "The shell should still orient the user even when the active list is empty and the detail panel has nothing to show yet.",
-        SandboxScenarioKey.LongText => "Longer page descriptions should not force the scaffold into awkward wrapping or a first viewport that feels like a document instead of a workspace.",
-        _ => "Shared page shells should make hierarchy, supporting context, and final actions obvious without inventing custom page structure."
-    };
-
-    private string WorkspaceCopy => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense workspace content compresses spacing slightly, but the header, key metrics, and detail region still need enough separation to stay scannable.",
-        SandboxScenarioKey.LongText => "Longer explanatory copy belongs in the main region, where it can keep a controlled reading width and still leave the rail available for compact operational context.",
-        _ => "The default layout keeps the main work in the primary region, keeps support context in the rail, and uses the sticky footer to close the flow cleanly."
-    };
-
-    private string ScenarioRailCopy => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "This pass checks whether denser content still looks composed rather than over-packed.",
-        SandboxScenarioKey.EmptyState => "This pass checks whether the shell explains itself before any records are selected.",
-        SandboxScenarioKey.LongText => "This pass checks whether longer page copy stays readable without crushing the layout.",
-        _ => "This pass checks baseline composition and region clarity."
-    };
-
-    private string WidthRailCopy => CurrentFrame switch
-    {
-        SandboxFramePreset.Mobile => "Mobile should surface the headline, first metric, and next step without forcing horizontal scanning.",
-        SandboxFramePreset.Tablet => "Tablet should use breadth deliberately and avoid dead space between sections.",
-        _ => "The live viewport should keep the same hierarchy rules as the proof frames."
-    };
-
-    private string ViewportLabel => CurrentFrame switch
-    {
-        SandboxFramePreset.Mobile => "Mobile",
-        SandboxFramePreset.Tablet => "Tablet",
-        _ => "Live"
-    };
-
-    private int RegionCount => 3;
-
-    private int SectionCount => CurrentScenario == SandboxScenarioKey.DenseContent ? 6 : 5;
-
-    private bool IsActionDisabled => CurrentScenario == SandboxScenarioKey.EmptyState;
-
-    private string FooterMessage => CurrentScenario == SandboxScenarioKey.EmptyState
-        ? "Choose or create a record before the page-level actions become available."
-        : "Shared layout components should make the next step obvious without inventing one-off page wrappers.";
-
-    private string FooterTone => CurrentScenario == SandboxScenarioKey.EmptyState ? "warning" : "info";
-
-    private string PrimaryActionText => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Approve workspace layout and capture proof bundle"
-        : "Approve layout";
-
-    private IReadOnlyList<WorkspaceMetric> WorkspaceMetrics => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? DenseMetrics
-        : BaseMetrics;
-
-    private IReadOnlyList<WorkspaceFact> SecondaryFacts => CurrentScenario == SandboxScenarioKey.LongText
-        ? LongFacts
-        : BaseFacts;
-
-    private string HeroEyebrow => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Practice analytics composition"
-        : "Practice analytics";
-
-    private string HeroTitle => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Switch the active practice mode or time window without losing scan rhythm."
-        : "Switch the mode or time window.";
-
-    private string HeroDescription => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense metadata and action controls should still read as one coherent control surface.",
-        SandboxScenarioKey.EmptyState => "Even with no fresh activity, the layout should remain oriented and calm.",
-        SandboxScenarioKey.DisabledState => "Disabled controls should preserve hierarchy instead of collapsing the composition.",
-        SandboxScenarioKey.LongText => "Longer explanatory copy should wrap cleanly while the filters, pills, and actions stay aligned.",
-        _ => "Compare how the same content behaves when the structure moves from simple stacks to responsive rows and columns."
-    };
-
-    private string SelectedModeLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "All note-identification modes"
-        : selectedMode;
-
-    private string WindowLabel => $"{selectedWindowDays}-day window";
-
-    private string FreshnessLabel => CurrentScenario == SandboxScenarioKey.EmptyState
-        ? "No attempts yet"
-        : $"Updated {lastUpdated.ToString("M/d/yyyy h:mm tt", CultureInfo.InvariantCulture)}";
-
-    private bool ActionsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
-
-    private Task OnModeChanged(object value)
-    {
-        selectedMode = value?.ToString() ?? selectedMode;
-        return Task.CompletedTask;
-    }
-
-    private Task OnWindowChanged(object value)
-    {
-        if (value is int days)
-        {
-            selectedWindowDays = days;
-        }
-        else if (int.TryParse(value?.ToString(), out var parsedDays))
-        {
-            selectedWindowDays = parsedDays;
-        }
-
-        return Task.CompletedTask;
-    }
-
-    private Task HandleRefreshAsync()
-    {
-        if (!ActionsDisabled && CurrentScenario != SandboxScenarioKey.EmptyState)
-        {
-            lastUpdated = lastUpdated.AddMinutes(12);
-        }
-
-        return Task.CompletedTask;
-    }
-
-    private Task HandleResetAsync()
-    {
-        if (!ActionsDisabled)
-        {
-            selectedMode = ModeOptions[0];
-            selectedWindowDays = 30;
-            lastUpdated = new DateTimeOffset(2026, 4, 4, 11, 9, 0, TimeSpan.FromHours(-4));
-        }
-
-        return Task.CompletedTask;
-    }
-
-    private static readonly IReadOnlyList<WorkspaceMetric> BaseMetrics =
-    [
-        new("Primary flow", "Review", "Focus stays on the main acceptance path without starving the support rail.", "Ready", "success"),
-        new("Secondary rail", "2 cards", "Supporting context stays compact and avoids duplicating main content.", "Balanced", "info")
-    ];
-
-    private static readonly IReadOnlyList<WorkspaceMetric> DenseMetrics =
-    [
-        new("Primary flow", "Review", "Focus stays on the main acceptance path without starving the support rail.", "Ready", "success"),
-        new("Secondary rail", "2 cards", "Supporting context stays compact and avoids duplicating main content.", "Balanced", "info"),
-        new("List-detail shell", "3 records", "The lower split region still reads clearly in a denser pass.", "Active", "warning")
-    ];
-
-    private static readonly IReadOnlyList<WorkspaceFact> BaseFacts =
-    [
-        new("Main width", "Intentional"),
-        new("Rail content", "Concise"),
-        new("Action placement", "Footer"),
-        new("Detail behavior", "Inline")
-    ];
-
-    private static readonly IReadOnlyList<WorkspaceFact> LongFacts =
-    [
-        new("Main width", "Protects readable line length"),
-        new("Rail content", "Still compact under longer copy"),
-        new("Action placement", "Footer closes the flow"),
-        new("Detail behavior", "Longer summaries still scan"),
-        new("Headline", "Can grow without breaking the shell")
-    ];
-
-    private sealed record WorkspaceMetric(string Title, string Value, string Description, string ToneLabel, string Tone);
-
-    private sealed record WorkspaceFact(string Label, string Value);
 }

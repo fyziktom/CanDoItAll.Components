@@ -1,9 +1,18 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
 
-<CalendarTimeGridRenderer Snapshot="@Snapshot" />
+@if (Surface.Events.Count > 0)
+{
+    <CalendarTimeGridRenderer Snapshot="@Snapshot" />
+}
+else
+{
+    <EmptyState Eyebrow="Canvas" Title="No scheduled events"
+                Description="The time grid boundary card has nothing to render until the calendar surface has events." />
+}
 
 @code {
-    private static readonly CanvasCalendarSurface Surface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.Default);
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private CanvasCalendarSurface Surface => SandboxCanvasSamples.CreateCalendarSurface(ToolbarState?.Scenario ?? SandboxScenarioKey.Default);
 
     private CalendarTimeGridRendererSnapshot Snapshot => CalendarTimeGridRendererFactory.Create(Surface);
 }

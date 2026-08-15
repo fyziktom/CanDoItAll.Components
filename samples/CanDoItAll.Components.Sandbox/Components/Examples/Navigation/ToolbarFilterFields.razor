@@ -1,17 +1,11 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
-<Toolbar>
+<Toolbar data-testid="sandbox-navigation-toolbar-fields">
     <ToolbarRow>
         <ToolbarFields>
-            <TextBox Value="@query" ValueChanged="@(value => query = value ?? string.Empty)" Immediate="true" Placeholder="Search records" aria-label="Search records" />
-            <DropDown TValue="string" Data="@Scopes" Value="@scope" ValueChanged="@(value => scope = value ?? Scopes[0])" aria-label="Field scope" />
+            <TextBox Value="@toolbarFieldsQuery" ValueChanged="@(value => toolbarFieldsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search records" aria-label="Search records" />
+            <DropDown TValue="string" Data="@ToolbarScopes" Value="@toolbarFieldsScope" ValueChanged="@(value => toolbarFieldsScope = value ?? ToolbarScopeAll)" aria-label="Field scope" />
         </ToolbarFields>
     </ToolbarRow>
 </Toolbar>
-
-@code {
-    private static readonly IReadOnlyList<string> Scopes = ["All standard groups", "Navigation only", "Overlay dependencies"];
-
-    private string query = string.Empty;
-    private string scope = Scopes[0];
-}

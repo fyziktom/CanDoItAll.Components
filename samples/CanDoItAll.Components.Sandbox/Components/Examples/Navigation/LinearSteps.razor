@@ -1,20 +1,20 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
 <Steps Value="@stepIndex"
-       ValueChanged="@(value => stepIndex = value)"
-       NavigationPosition="StepsNavigationPosition.Both"
-       Linear="true">
+       ValueChanged="HandleStepChanged"
+       data-testid="sandbox-navigation-steps"
+       PreviousButtonTestId="sandbox-navigation-steps-previous"
+       NextButtonTestId="sandbox-navigation-steps-next"
+       NavigationPosition="@(StepsNavigationPosition.Both)"
+       Linear="@IsDisabled">
     <StepsItem Text="Scope" Description="Frame the request and choose the demo group.">
-        <TextBlock TextStyle="TextStyle.Body2" Value="Scope the request and set the acceptance expectation before opening the implementation details." />
+        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Scope the request and set the acceptance expectation before opening the implementation details." />
     </StepsItem>
     <StepsItem Text="Review" Description="Inspect the current variation and proof notes.">
-        <TextBlock TextStyle="TextStyle.Body2" Value="Review how the component behaves in dense, empty, and mobile conditions." />
+        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Review how the component behaves in dense, empty, and mobile conditions." />
     </StepsItem>
     <StepsItem Text="Proof" Description="Capture the screenshots and sign off.">
-        <TextBlock TextStyle="TextStyle.Body2" Value="Proof means screenshots, validation questions, and a clear answer on whether the layout still works." />
+        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Proof means screenshots, validation questions, and a clear answer on whether the layout still works." />
     </StepsItem>
 </Steps>
-
-@code {
-    private int stepIndex = 1;
-}

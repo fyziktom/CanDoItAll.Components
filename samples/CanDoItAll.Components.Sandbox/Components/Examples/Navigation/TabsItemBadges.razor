@@ -1,18 +1,14 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
 <Stack GapScale="LayoutGap.Small">
-    <Switch Value="@auditVisible" ValueChanged="@(value => auditVisible = value)" AriaLabel="Show audit tab" />
-    <Tabs SelectedIndex="@selectedIndex" SelectedIndexChanged="@(index => selectedIndex = index)">
+    <Switch Value="@tabsItemAuditVisible" ValueChanged="@(value => tabsItemAuditVisible = value)" AriaLabel="Show audit tab" />
+    <Tabs SelectedIndex="@tabsItemDemoIndex" SelectedIndexChanged="@(index => tabsItemDemoIndex = index)" data-testid="sandbox-navigation-tabs-item">
         <TabItems>
             <TabsItem Text="Overview" />
             <TabsItem Text="Reviewer notes" BadgeText="2" />
             <TabsItem Text="Legacy" Disabled="true" />
-            <TabsItem Text="Audit trail" Visible="@auditVisible" />
+            <TabsItem Text="Audit trail" Visible="@tabsItemAuditVisible" />
         </TabItems>
     </Tabs>
 </Stack>
-
-@code {
-    private int selectedIndex;
-    private bool auditVisible = true;
-}

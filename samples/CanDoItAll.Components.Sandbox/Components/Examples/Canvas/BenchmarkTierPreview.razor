@@ -5,21 +5,38 @@
         @foreach (var definition in Definitions)
         {
             <Button Text="@definition.Label"
-                    ButtonStyle="@(definition.Key == selectedTierKey ? ButtonStyle.Primary : ButtonStyle.Light)"
-                    Variant="@(definition.Key == selectedTierKey ? Variant.Filled : Variant.Outlined)"
-                    Click="@(() => selectedTierKey = definition.Key)"
-                    data-testid="@($"canvas-example-tier-{definition.Key}")" />
+                    ButtonStyle="@(definition.Key == BenchmarkState.SelectedTierKey ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Variant="@(definition.Key == BenchmarkState.SelectedTierKey ? Variant.Filled : Variant.Outlined)"
+                    Click="@(() => BenchmarkState.SelectTier(definition.Key))"
+                    data-testid="@($"canvas-benchmark-tier-{definition.Key}")" />
+        }
+        <Button Text="Run benchmark" ButtonStyle="@(ButtonStyle.Success)" IsBusy="@BenchmarkState.IsRunning"
+                Click="BenchmarkState.RunAsync" data-testid="canvas-benchmark-run" />
+        @if (!string.IsNullOrWhiteSpace(BenchmarkState.LastMeasuredLabel))
+        {
+            <StatusBadge Text="@BenchmarkState.LastMeasuredLabel" Tone="success" />
         }
     </div>
 
-    <div class="min-h-[24rem] w-full min-w-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-50/80 p-3">
+    <SummaryTiles>
+        <SummaryTile Label="Nodes"
+                     Value="@SelectedDefinition.NodeCount.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                     HelperText="Typed workbench nodes rendered by both paths." Tone="info" />
+        <SummaryTile Label="Links"
+                     Value="@SelectedDefinition.LinkCount.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                     HelperText="Connector count used by the shipped and prototype scenes." Tone="success" />
+    </SummaryTiles>
+
+    <div
+        class="min-h-[26rem] w-full min-w-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-50/80 p-3"
+        data-testid="canvas-benchmark-retained-preview">
         <CanvasWorkbench Surface="@SelectedDefinition.Surface" />
     </div>
 </div>
 
 @code {
+    [CascadingParameter] public CanvasBenchmarkShowcaseState BenchmarkState { get; set; } = default!;
     private readonly IReadOnlyList<CanvasBenchmarkSurfaceDefinition> Definitions = CanvasBenchmarkSamples.CreateDefinitions();
-    private string selectedTierKey = CanvasBenchmarkSamples.DefaultTierKey;
 
-    private CanvasBenchmarkSurfaceDefinition SelectedDefinition => CanvasBenchmarkSamples.GetDefinition(selectedTierKey);
+    private CanvasBenchmarkSurfaceDefinition SelectedDefinition => CanvasBenchmarkSamples.GetDefinition(BenchmarkState.SelectedTierKey);
 }

@@ -15,12 +15,14 @@
     <ChildContent>
         @if (CurrentScenario == SandboxScenarioKey.LoadingState)
         {
-            <LoadingState Eyebrow="Cards" Title="Loading summary surface" Description="Cards keep their structure while the record set and computed metrics load." />
+            <LoadingState Eyebrow="Cards" Title="Loading summary surface"
+                          Description="Cards keep their structure while the record set and computed metrics load." />
         }
         else if (CurrentScenario == SandboxScenarioKey.EmptyState)
         {
             <div data-testid="data-display-empty-state">
-                <EmptyState Eyebrow="Cards" Title="No results" Description="Adjust the current filters or add records before the shared card views can render detail." />
+                <EmptyState Eyebrow="Cards" Title="No results"
+                            Description="Adjust the current filters or add records before the shared card views can render detail." />
             </div>
         }
         else
@@ -35,16 +37,7 @@
                                       Description="Spacing, copy length, and support metrics need to feel deliberate without additional chrome."
                                       SourceId="examples/Cards/SurfaceRhythm.razor"
                                       ApiTypes="@SummaryTilesApiTypes">
-                            <div class="space-y-4">
-                                <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Workspace review cadence" />
-                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SurfaceParagraph" />
-                                <SummaryTiles>
-                                    <SummaryTile Label="Desktop cadence" Value="24px" HelperText="Default section spacing for the generous pass." Tone="info" />
-                                    <SummaryTile Label="Dense cadence" Value="16px" HelperText="Compact variant used when the page carries more metadata." Tone="success" />
-                                    <SummaryTile Label="Reading line" Value="66 ch" HelperText="Long copy still needs a controlled reading width." />
-                                    <SummaryTile Label="Icon offset" Value="12px" HelperText="Support icons should align to the text rhythm." Tone="warning" />
-                                </SummaryTiles>
-                            </div>
+                            <SurfaceRhythm />
                         </ExampleBlock>
                     </section>
                 }
@@ -56,44 +49,7 @@
                                       Description="Use cards only when media and independent item actions improve recognition."
                                       SourceId="examples/Cards/VisualCollection.razor"
                                       ApiTypes="@CardApiTypes">
-                            <CardGrid data-testid="data-display-card-grid">
-                                @foreach (var card in CardItems)
-                                {
-                                    <Card>
-                                        <Media>
-                                            <img src="@card.ImageSource" alt="" />
-                                        </Media>
-                                        <Header>
-                                            <Split Breakpoint="LayoutBreakpoint.None"
-                                                   Gap="LayoutGap.Small"
-                                                   AlignItems="AlignItems.Start"
-                                                   JustifyContent="JustifyContent.SpaceBetween"
-                                                   Wrap="FlexWrap.Wrap">
-                                                <Stack GapScale="LayoutGap.Tiny">
-                                                    <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="@card.Eyebrow" />
-                                                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@card.Title" />
-                                                </Stack>
-                                                <StatusBadge Text="@card.State" Tone="@card.Tone" />
-                                            </Split>
-                                        </Header>
-                                        <Tags>
-                                            @foreach (var fact in card.Facts.Take(2))
-                                            {
-                                                <StatusBadge Text="@($"{fact.Label}: {fact.Value}")" Tone="neutral" />
-                                            }
-                                        </Tags>
-                                        <ChildContent>
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="@card.Summary" />
-                                        </ChildContent>
-                                        <Actions>
-                                            <Button Text="Edit"
-                                                    Icon="edit"
-                                                    ButtonStyle="@(ButtonStyle.Primary)"
-                                                    Disabled="@IsDisabled" />
-                                        </Actions>
-                                    </Card>
-                                }
-                            </CardGrid>
+                            <VisualCollection />
                         </ExampleBlock>
                     </section>
                 }
@@ -484,4 +440,5 @@
         string Tone,
         string ImageSource,
         IReadOnlyList<DisplayCardFact> Facts);
+
 }

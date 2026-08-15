@@ -1,12 +1,13 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
 
-<PageScaffold MaxWidthClass="max-w-[1280px]">
+<PageScaffold MaxWidthClass="max-w-[1280px]"
+              data-testid="sandbox-layout-scaffold">
     <Header>
         <PageHeader Eyebrow="Shared layout"
-                    Title="Migration acceptance workspace"
-                    Description="Shared page shells should make hierarchy, supporting context, and final actions obvious without inventing custom page structure.">
+                    Title="@WorkspaceTitle"
+                    Description="@WorkspaceDescription">
             <Actions>
-                <Button Text="Share view" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" />
+                <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
                 <Button Text="Open checklist" />
             </Actions>
         </PageHeader>
@@ -14,9 +15,9 @@
 
     <Lead>
         <SummaryTiles>
-            <SummaryTile Label="Regions" Value="3" HelperText="Primary content, supporting rail, and action footer stay structurally distinct." Tone="info" />
-            <SummaryTile Label="Sections" Value="5" HelperText="Grouped sections should read clearly without extra chrome." Tone="success" />
-            <SummaryTile Label="Viewport" Value="Live" HelperText="Frame changes should preserve orientation and hierarchy." Tone="warning" />
+            <SummaryTile Label="Regions" Value="@RegionCount.ToString()" HelperText="Primary content, supporting rail, and action footer stay structurally distinct." Tone="info" />
+            <SummaryTile Label="Sections" Value="@SectionCount.ToString()" HelperText="Grouped sections should read clearly without extra chrome." Tone="success" />
+            <SummaryTile Label="Viewport" Value="@ViewportLabel" HelperText="Frame changes should preserve orientation and hierarchy." Tone="warning" />
         </SummaryTiles>
     </Lead>
 
@@ -27,24 +28,81 @@
                 <p>Headings should make the page understandable before the user reads paragraphs.</p>
             </div>
         </SectionCard>
+
+        <SectionCard Title="Current emphasis" Description="Scenario-specific expectations for this pass.">
+            <div class="sandbox-proof-list">
+                <p>@ScenarioRailCopy</p>
+                <p>@WidthRailCopy</p>
+            </div>
+        </SectionCard>
     </SecondaryRail>
 
     <ChildContent>
-        <div class="sandbox-demo-grid--two">
+        <div class="sandbox-demo-grid--two"
+             data-testid="sandbox-layout-primary-grid">
             <FormSection Title="Primary workspace" Description="The main region should be able to hold operational content without collapsing the reading rhythm.">
                 <div class="space-y-4">
-                    <TextBlock TextStyle="TextStyle.Subtitle1" Value="Release acceptance workspace" />
-                    <TextBlock TextStyle="TextStyle.Body2" Value="The default layout keeps the main work in the primary region, keeps support context in the rail, and uses the sticky footer to close the flow cleanly." />
+                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Release acceptance workspace" />
+                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@WorkspaceCopy" />
+
+                    <div class="sandbox-demo-grid--two">
+                        @foreach (var metric in WorkspaceMetrics)
+                        {
+                            <SectionCard Title="@metric.Title" Description="@metric.Description">
+                                <div class="space-y-2">
+                                    <TextBlock TextStyle="@(TextStyle.H4)" Value="@metric.Value" />
+                                    <StatusBadge Text="@metric.ToneLabel" Tone="@metric.Tone" />
+                                </div>
+                            </SectionCard>
+                        }
+                    </div>
                 </div>
             </FormSection>
 
             <SectionCard Title="Secondary workspace" Description="The supporting column still needs enough substance to justify its width.">
                 <div class="sandbox-kv-list">
-                    <div class="sandbox-kv-item"><strong>Main width</strong><span>Intentional</span></div>
-                    <div class="sandbox-kv-item"><strong>Rail content</strong><span>Concise</span></div>
-                    <div class="sandbox-kv-item"><strong>Action placement</strong><span>Footer</span></div>
+                    @foreach (var item in SecondaryFacts)
+                    {
+                        <div class="sandbox-kv-item">
+                            <strong>@item.Label</strong>
+                            <span>@item.Value</span>
+                        </div>
+                    }
                 </div>
             </SectionCard>
         </div>
     </ChildContent>
 </PageScaffold>
+
+@code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private SandboxScenarioKey Scenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
+    private SandboxFramePreset Frame => ToolbarState?.Frame ?? SandboxFramePreset.LiveViewport;
+    private string WorkspaceTitle => Scenario == SandboxScenarioKey.LongText ? "Migration acceptance workspace with extended release notes and validation guidance" : "Migration acceptance workspace";
+    private string WorkspaceDescription => Scenario switch
+    {
+        SandboxScenarioKey.DenseContent => "Dense layout still needs a stable main column, a concise supporting rail, and action placement that does not fight the content.",
+        SandboxScenarioKey.EmptyState => "The shell should still orient the user even when the active list is empty and the detail panel has nothing to show yet.",
+        SandboxScenarioKey.LongText => "Longer page descriptions should not force the scaffold into awkward wrapping or a first viewport that feels like a document instead of a workspace.",
+        _ => "Shared page shells should make hierarchy, supporting context, and final actions obvious without inventing custom page structure."
+    };
+    private string WorkspaceCopy => Scenario switch
+    {
+        SandboxScenarioKey.DenseContent => "Dense workspace content compresses spacing slightly, but the header, key metrics, and detail region still need enough separation to stay scannable.",
+        SandboxScenarioKey.LongText => "Longer explanatory copy belongs in the main region, where it can keep a controlled reading width and still leave the rail available for compact operational context.",
+        _ => "The default layout keeps the main work in the primary region, keeps support context in the rail, and uses the sticky footer to close the flow cleanly."
+    };
+    private string ScenarioRailCopy => Scenario switch { SandboxScenarioKey.DenseContent => "This pass checks whether denser content still looks composed rather than over-packed.", SandboxScenarioKey.EmptyState => "This pass checks whether the shell explains itself before any records are selected.", SandboxScenarioKey.LongText => "This pass checks whether longer page copy stays readable without crushing the layout.", _ => "This pass checks baseline composition and region clarity." };
+    private string WidthRailCopy => Frame switch { SandboxFramePreset.Mobile => "Mobile should surface the headline, first metric, and next step without forcing horizontal scanning.", SandboxFramePreset.Tablet => "Tablet should use breadth deliberately and avoid dead space between sections.", _ => "The live viewport should keep the same hierarchy rules as the proof frames." };
+    private string ViewportLabel => Frame switch { SandboxFramePreset.Mobile => "Mobile", SandboxFramePreset.Tablet => "Tablet", _ => "Live" };
+    private int RegionCount => 3;
+    private int SectionCount => Scenario == SandboxScenarioKey.DenseContent ? 6 : 5;
+    private IReadOnlyList<WorkspaceMetric> WorkspaceMetrics => Scenario == SandboxScenarioKey.DenseContent ? DenseMetrics : BaseMetrics;
+    private IReadOnlyList<WorkspaceFact> SecondaryFacts => Scenario == SandboxScenarioKey.LongText ? LongFacts : BaseFacts;
+    private static readonly IReadOnlyList<WorkspaceMetric> BaseMetrics = [new("Primary flow", "Review", "Focus stays on the main acceptance path without starving the support rail.", "Ready", "success"), new("Secondary rail", "2 cards", "Supporting context stays compact and avoids duplicating main content.", "Balanced", "info")];
+    private static readonly IReadOnlyList<WorkspaceMetric> DenseMetrics = [.. BaseMetrics, new("List-detail shell", "3 records", "The lower split region still reads clearly in a denser pass.", "Active", "warning")];
+    private static readonly IReadOnlyList<WorkspaceFact> BaseFacts = [new("Main width", "Intentional"), new("Rail content", "Concise"), new("Action placement", "Footer"), new("Detail behavior", "Inline")];
+    private static readonly IReadOnlyList<WorkspaceFact> LongFacts = [new("Main width", "Protects readable line length"), new("Rail content", "Still compact under longer copy"), new("Action placement", "Footer closes the flow"), new("Detail behavior", "Longer summaries still scan"), new("Headline", "Can grow without breaking the shell")];
+    private sealed record WorkspaceMetric(string Title, string Value, string Description, string ToneLabel, string Tone);
+    private sealed record WorkspaceFact(string Label, string Value);
+}

@@ -1,44 +1,71 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
+@inherits LayoutCompositionShowcaseBase
 
-<Grid Gap="LayoutGap.XLarge">
-    <Grid Gap="LayoutGap.XLarge" ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)">
-        <Stack Orientation="Orientation.Vertical" Gap="1rem">
-            <span class="cda-shell-pill cda-shell-pill--neutral">Practice analytics</span>
-            <div class="space-y-2">
-                <p class="text-base font-semibold text-slate-950">Switch the mode or time window.</p>
-                <p class="text-sm leading-6 text-slate-600">A good middle ground when the surface needs track-based composition, but the right side still reads well as nested stacks.</p>
-            </div>
-        </Stack>
+<div class="@HeroSurfaceClass" data-testid="layout-composition-grid">
+    <Grid Gap="LayoutGap.XLarge" Class="w-full">
+        <Grid Gap="LayoutGap.XLarge"
+              ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
+              Class="w-full">
+            <Stack Orientation="Orientation.Vertical" Gap="1rem">
+                <span class="cda-shell-pill cda-shell-pill--neutral">@HeroEyebrow</span>
+                <div class="space-y-2">
+                    <p class="text-base font-semibold text-slate-950">@HeroTitle</p>
+                    <p class="text-sm leading-6 text-slate-600">@HeroDescription</p>
+                </div>
+            </Stack>
 
-        <Stack Orientation="Orientation.Vertical" Class="w-full" Gap="1rem">
-            <Stack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap" Gap="1rem">
-                <PillList>
-                    <Pill>All modes</Pill>
-                    <Pill>30-day window</Pill>
-                </PillList>
+            <Stack Orientation="Orientation.Vertical" Class="w-full" Gap="1rem">
+                <Stack Orientation="Orientation.Horizontal"
+                       JustifyContent="JustifyContent.End"
+                       Wrap="FlexWrap.Wrap"
+                       Class="w-full"
+                       Gap="1rem">
+                    <PillList>
+                        <Pill>@SelectedModeLabel</Pill>
+                        <Pill>@WindowLabel</Pill>
+                        <Pill>@FreshnessLabel</Pill>
+                    </PillList>
+                </Stack>
+
+                <Stack Orientation="Orientation.Horizontal"
+                       JustifyContent="JustifyContent.End"
+                       Wrap="FlexWrap.Wrap"
+                       Class="w-full"
+                       Gap="1rem">
+                    <Button Text="Refresh"
+                            Icon="refresh"
+                            ButtonStyle="ButtonStyle.Light"
+                            Click="HandleRefreshAsync"
+                            Disabled="@ActionsDisabled" />
+                    <Button Text="Reset Data"
+                            Icon="delete"
+                            ButtonStyle="ButtonStyle.Danger"
+                            Click="HandleResetAsync"
+                            Disabled="@ActionsDisabled" />
+                </Stack>
             </Stack>
-            <Stack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap" Gap="1rem">
-                <Button Text="Refresh" Icon="refresh" ButtonStyle="ButtonStyle.Light" />
-                <Button Text="Reset Data" Icon="delete" ButtonStyle="ButtonStyle.Danger" />
-            </Stack>
-        </Stack>
+        </Grid>
+
+        <FormRow Split="true" Class="w-full">
+            <FormField Text="Mode" ContainerClass="w-full">
+                <ChildContent>
+                    <DropDown TValue="string"
+                              Data="@ModeOptions"
+                              Value="@selectedMode"
+                              Change="OnModeChanged"
+                              Style="width:100%" />
+                </ChildContent>
+            </FormField>
+
+            <FormField Text="Time Window" ContainerClass="w-full">
+                <ChildContent>
+                    <DropDown TValue="int"
+                              Data="@WindowOptions"
+                              Value="@selectedWindowDays"
+                              Change="OnWindowChanged"
+                              Style="width:100%" />
+                </ChildContent>
+            </FormField>
+        </FormRow>
     </Grid>
-
-    <FormRow Split="true">
-        <FormField Text="Mode">
-            <ChildContent>
-                <DropDown TValue="string" Data="@ModeOptions" Value="@ModeOptions[0]" Style="width:100%" />
-            </ChildContent>
-        </FormField>
-        <FormField Text="Time Window">
-            <ChildContent>
-                <DropDown TValue="int" Data="@WindowOptions" Value="30" Style="width:100%" />
-            </ChildContent>
-        </FormField>
-    </FormRow>
-</Grid>
-
-@code {
-    private static readonly IReadOnlyList<string> ModeOptions = ["All modes", "Interval speed", "Harmony"];
-    private static readonly IReadOnlyList<int> WindowOptions = [7, 14, 30, 90];
-}
+</div>

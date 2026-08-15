@@ -4,81 +4,99 @@
 @inject IJSRuntime JS
 
 <div class="w-full min-w-0 space-y-4">
-    <div class="flex flex-wrap items-center gap-3">
-        <Button Text="Run benchmark"
-                ButtonStyle="@(ButtonStyle.Success)"
-                IsBusy="@isRunning"
-                Click="RunBenchmarkAsync"
-                data-testid="canvas-example-benchmark-run" />
-    </div>
-
     <canvas @ref="prototypeCanvas"
-            class="h-[20rem] w-full rounded-[1.75rem] border border-slate-200 bg-slate-950"
-            data-testid="canvas-example-prototype-canvas"></canvas>
+            class="h-[26rem] w-full rounded-[1.75rem] border border-slate-200 bg-slate-950"
+            data-testid="canvas-benchmark-prototype-canvas"></canvas>
+    <Alert AlertStyle="@(AlertStyle.Light)">The prototype draws node rectangles, titles, links, and group frames. It
+        intentionally omits selection mirrors, floating overlays, export, and semantic accessibility layers.
+    </Alert>
 
-    @if (runResult is not null)
+    @if (BenchmarkState.Result is null)
+    {
+        <Alert AlertStyle="@(AlertStyle.Light)">Run the benchmark above to capture workbench-versus-prototype
+            materialization timings and the explicit go or no-go recommendation.
+        </Alert>
+    }
+    else
     {
         <div class="overflow-x-auto" data-testid="canvas-example-results">
             <table class="min-w-full divide-y divide-slate-200 text-sm">
                 <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                    <tr>
-                        <th class="px-4 py-3">Tier</th>
-                        <th class="px-4 py-3">Workbench Avg</th>
-                        <th class="px-4 py-3">Prototype Avg</th>
-                        <th class="px-4 py-3">Delta</th>
-                    </tr>
+                <tr>
+                    <th class="px-4 py-3">Tier</th>
+                    <th class="px-4 py-3">Scene</th>
+                    <th class="px-4 py-3">Workbench Avg</th>
+                    <th class="px-4 py-3">Prototype Avg</th>
+                    <th class="px-4 py-3">Delta</th>
+                    <th class="px-4 py-3">Workbench DOM</th>
+                </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
-                    @foreach (var measurement in runResult.Tiers)
-                    {
-                        <tr>
-                            <td class="px-4 py-3 font-semibold text-slate-900">@measurement.Label</td>
-                            <td class="px-4 py-3 text-slate-900">@($"{measurement.RetainedAverageMs:F2} ms")</td>
-                            <td class="px-4 py-3 text-slate-900">@($"{measurement.CanvasAverageMs:F2} ms")</td>
-                            <td class="px-4 py-3">
-                                <StatusBadge Text="@FormatDelta(measurement.ImprovementRatio)" Tone="@(measurement.ImprovementRatio >= 0 ? "success" : "warning")" />
-                            </td>
-                        </tr>
-                    }
+                @foreach (var measurement in BenchmarkState.Result.Tiers)
+                {
+                    <tr>
+                        <td class="px-4 py-3 font-semibold text-slate-900">@measurement.Label</td>
+                        <td class="px-4 py-3 text-slate-600">@($"{measurement.NodeCount} nodes / {measurement.LinkCount} links")</td>
+                        <td class="px-4 py-3 text-slate-900">@FormatDuration(measurement.RetainedAverageMs)</td>
+                        <td class="px-4 py-3 text-slate-900">@FormatDuration(measurement.CanvasAverageMs)</td>
+                        <td class="px-4 py-3">
+                            <StatusBadge Text="@FormatDelta(measurement.ImprovementRatio)"
+                                         Tone="@(measurement.ImprovementRatio >= 0 ? "success" : "warning")" />
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">@measurement.RetainedDomNodeCount.ToString(System.Globalization.CultureInfo.InvariantCulture)</td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
+        <Alert AlertStyle="@(AlertStyle.Warning)" data-testid="canvas-benchmark-decision"><strong
+                class="font-semibold">@BenchmarkState.Result.Recommendation:</strong><span
+                class="ml-2">@BenchmarkState.Result.Summary</span></Alert>
     }
 </div>
 
 @code {
+    [CascadingParameter] public CanvasBenchmarkShowcaseState BenchmarkState { get; set; } = default!;
     private readonly IReadOnlyList<CanvasBenchmarkSurfaceDefinition> definitions = CanvasBenchmarkSamples.CreateDefinitions();
-    private bool isRunning;
     private ElementReference prototypeCanvas;
     private IJSObjectReference? module;
-    private CanvasBenchmarkRunResult? runResult;
+    private string? renderedTierKey;
+
+    protected override void OnInitialized()
+    {
+        BenchmarkState.Changed += HandleBenchmarkStateChanged;
+        BenchmarkState.RunRequested += RunBenchmarkAsync;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import", "/js/canvasBenchmarkPage.js");
-            await module.InvokeVoidAsync("renderPrototype", prototypeCanvas, CanvasBenchmarkSamples.GetDefinition(CanvasBenchmarkSamples.DefaultTierKey));
+        }
+
+        if (module is not null && !string.Equals(renderedTierKey, BenchmarkState.SelectedTierKey, StringComparison.Ordinal))
+        {
+            renderedTierKey = BenchmarkState.SelectedTierKey;
+            await module.InvokeVoidAsync("renderPrototype", prototypeCanvas, CanvasBenchmarkSamples.GetDefinition(renderedTierKey));
         }
     }
 
-    private async Task RunBenchmarkAsync()
+    private async Task<bool> RunBenchmarkAsync()
     {
-        if (isRunning || module is null)
+        if (module is null)
         {
-            return;
+            return false;
         }
 
-        isRunning = true;
-        try
-        {
-            runResult = await module.InvokeAsync<CanvasBenchmarkRunResult>("runBenchmarkSuite", prototypeCanvas, definitions, 4);
-        }
-        finally
-        {
-            isRunning = false;
-        }
+        var result = await module.InvokeAsync<CanvasBenchmarkRunResult>("runBenchmarkSuite", prototypeCanvas, definitions, 4);
+        BenchmarkState.SetResult(result);
+        return true;
     }
+
+    private void HandleBenchmarkStateChanged() => _ = InvokeAsync(StateHasChanged);
+
+    private static string FormatDuration(double value) => $"{value:F2} ms";
 
     private static string FormatDelta(double value)
     {
@@ -88,6 +106,8 @@
 
     public async ValueTask DisposeAsync()
     {
+        BenchmarkState.Changed -= HandleBenchmarkStateChanged;
+        BenchmarkState.RunRequested -= RunBenchmarkAsync;
         if (module is null)
         {
             return;
@@ -102,19 +122,4 @@
         }
     }
 
-    private sealed class CanvasBenchmarkRunResult
-    {
-        public List<CanvasBenchmarkMeasurement> Tiers { get; set; } = [];
-    }
-
-    private sealed class CanvasBenchmarkMeasurement
-    {
-        public string Label { get; set; } = string.Empty;
-
-        public double RetainedAverageMs { get; set; }
-
-        public double CanvasAverageMs { get; set; }
-
-        public double ImprovementRatio { get; set; }
-    }
 }

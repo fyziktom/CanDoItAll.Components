@@ -1,14 +1,12 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
 
 <FormField Text="Confidence">
     <Numeric TValue="int"
-             Value="@confidence"
-             ValueChanged="@(value => confidence = value)"
+             Value="@FormState.Confidence"
+             ValueChanged="HandleConfidenceChanged"
              Min="0"
              Max="100"
-             Step="5" />
+             Step="5"
+             Disabled="@IsDisabled" />
 </FormField>
-
-@code {
-    private int confidence = 70;
-}

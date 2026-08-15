@@ -38,17 +38,7 @@
                                       Description="DataGridColumn resolves a cell either by reflecting Property or by rendering a Template."
                                       SourceId="examples/DataVisualization/DataGridColumnTemplate.razor"
                                       ApiTypes="@DataGridColumnApiTypes">
-                            <DataGrid TItem="DataGridExampleRow" Data="@DataGridColumnRows" Caption="Component hardening records with status badges">
-                                <Columns>
-                                    <DataGridColumn TItem="DataGridExampleRow" Property="Title" Title="Surface" />
-                                    <DataGridColumn TItem="DataGridExampleRow" Property="Meta" Title="Scope" />
-                                    <DataGridColumn TItem="DataGridExampleRow" Title="State">
-                                        <Template>
-                                            <StatusBadge Tone="@(context.State == "Ready" ? "success" : "info")" Text="@context.State" />
-                                        </Template>
-                                    </DataGridColumn>
-                                </Columns>
-                            </DataGrid>
+                            <DataGridColumnTemplate />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Chart")
@@ -57,59 +47,43 @@
                                       Description="Chart, LineSeries, and ValueAxis compose an SVG line chart via cascading registration."
                                       SourceId="examples/DataVisualization/TrendChart.razor"
                                       ApiTypes="@ChartApiTypes">
-                            <Chart>
-                                <ValueAxis Min="0" Max="100" />
-                                <LineSeries Title="API latency" Data="@LatencySeriesA" ValueProperty="Value" />
-                                <LineSeries Title="Queue depth" Data="@LatencySeriesB" ValueProperty="Value" />
-                            </Chart>
+                            <TrendChart />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "LineSeries")
                     {
                         <ExampleBlock Title="Line series"
                                       Description="LineSeries only makes sense registered inside a Chart; ValueProperty is read via reflection off each data item."
-                                      SourceId="examples/DataVisualization/TrendChart.razor"
+                                      SourceId="examples/DataVisualization/LineSeriesRegistration.razor"
                                       ApiTypes="@LineSeriesApiTypes">
-                            <Chart>
-                                <LineSeries Title="API latency" Data="@LatencySeriesA" ValueProperty="Value" />
-                                <LineSeries Title="Queue depth" Data="@LatencySeriesB" ValueProperty="Value" />
-                            </Chart>
+                            <LineSeriesRegistration />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ValueAxis")
                     {
                         <ExampleBlock Title="Value axis"
                                       Description="ValueAxis pins the chart's y-axis Min/Max instead of auto-scaling from series data."
-                                      SourceId="examples/DataVisualization/TrendChart.razor"
+                                      SourceId="examples/DataVisualization/PinnedValueAxis.razor"
                                       ApiTypes="@ValueAxisApiTypes">
-                            <Chart>
-                                <ValueAxis Min="0" Max="100" />
-                                <LineSeries Title="API latency" Data="@LatencySeriesA" ValueProperty="Value" />
-                            </Chart>
+                            <PinnedValueAxis />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "CategoryAxis")
                     {
                         <ExampleBlock Title="Category axis"
                                       Description="Shown for correct usage syntax. Chart does not currently read CategoryAxis, so it has no visible effect yet."
-                                      SourceId="examples/DataVisualization/AxisPlaceholders.razor"
+                                      SourceId="examples/DataVisualization/CategoryAxisUsage.razor"
                                       ApiTypes="@CategoryAxisApiTypes">
-                            <Chart>
-                                <CategoryAxis />
-                                <LineSeries Title="API latency" Data="@LatencySeriesA" ValueProperty="Value" />
-                            </Chart>
+                            <CategoryAxisUsage />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "GridLines")
                     {
                         <ExampleBlock Title="Grid lines"
                                       Description="Shown for correct usage syntax. Chart draws its own fixed gridlines and does not currently consume this component."
-                                      SourceId="examples/DataVisualization/AxisPlaceholders.razor"
+                                      SourceId="examples/DataVisualization/GridLinesUsage.razor"
                                       ApiTypes="@GridLinesApiTypes">
-                            <Chart>
-                                <GridLines Visible="true" />
-                                <LineSeries Title="API latency" Data="@LatencySeriesA" ValueProperty="Value" />
-                            </Chart>
+                            <GridLinesUsage />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ProgressBar")
@@ -118,11 +92,7 @@
                                       Description="Standalone bounded meter; percentage is derived from Value relative to Min/Max."
                                       SourceId="examples/DataVisualization/ProgressMeters.razor"
                                       ApiTypes="@ProgressBarApiTypes">
-                            <Stack GapScale="LayoutGap.Small">
-                                <ProgressBar Value="35" />
-                                <ProgressBar Value="72" />
-                                <ProgressBar Value="140" Min="0" Max="200" />
-                            </Stack>
+                            <ProgressMeters />
                         </ExampleBlock>
                     }
                 </section>
@@ -145,21 +115,4 @@
     private static readonly IReadOnlyList<Type> GridLinesApiTypes = [typeof(GridLines)];
     private static readonly IReadOnlyList<Type> ProgressBarApiTypes = [typeof(ProgressBar)];
 
-    private static readonly IReadOnlyList<DataGridExampleRow> DataGridColumnRows =
-    [
-        new("Shell registry", "groups / routes", "Ready"),
-        new("Canvas contract", "surface / state", "Active")
-    ];
-
-    private sealed record ChartPoint(double Value);
-
-    private static readonly IReadOnlyList<ChartPoint> LatencySeriesA =
-    [
-        new(42), new(48), new(39), new(55), new(51), new(60)
-    ];
-
-    private static readonly IReadOnlyList<ChartPoint> LatencySeriesB =
-    [
-        new(20), new(28), new(31), new(24), new(35), new(30)
-    ];
 }

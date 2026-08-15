@@ -1,9 +1,28 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
 
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <Cluster Gap="LayoutGap.Small">
+        <Button Text="Show inspector" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)"
+                Click="ShowInspectorWindow" data-testid="show-canvas-inspector" />
+        <Button Text="Reset inspector" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)"
+                Click="ResetInspectorWindow" data-testid="reset-canvas-inspector" />
+        <Button Text="Show activity" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)"
+                Click="ShowActivityWindow" data-testid="show-canvas-activity" />
+        <Button Text="Overlap windows" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)"
+                Click="OverlapCanvasWindows" data-testid="overlap-canvas-windows" />
+        <Button Text="Select three" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)"
+                Click="SelectThreeWorkbenchNodes" data-testid="select-three-canvas-nodes" />
+        <Button Text="Move selected" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)"
+                Click="MoveSelectedWorkbenchNodes" data-testid="move-selected-canvas-nodes" />
+    </Cluster>
+    <StatusBadge Text="@InspectorWindowStateLabel" Tone="@InspectorWindowStateTone" />
+</div>
+<Alert AlertStyle="AlertStyle.Info" data-testid="canvas-event-status">@lastWorkbenchEvent</Alert>
 <div class="sandbox-canvas-host">
     <CanvasWorkbench Surface="@Surface"
-                      SelectionChanged="HandleSelectionChanged"
-                      StateChanged="HandleStateChanged">
+                     SelectionChanged="HandleSelectionChanged"
+                     NodesMoved="HandleNodesMoved"
+                     StateChanged="HandleStateChanged">
         <OverlayContent>
             @if (inspectorState.IsVisible)
             {
@@ -20,33 +39,82 @@
                                       MinHeight="220"
                                       State="@inspectorState"
                                       StateChanged="HandleInspectorStateChanged">
-                        <div class="sandbox-floating-window-copy">
-                            <TextBlock TextStyle="TextStyle.Subtitle2" Value="Selected node" />
-                            <TextBlock TextStyle="TextStyle.Body2" Value="@selectedLabel" />
-                        </div>
-                    </CanvasFloatingWindow>
+                    <div class="sandbox-floating-window-copy">
+                        <TextBlock TextStyle="TextStyle.Subtitle2" Value="Selected node" />
+                        <TextBlock TextStyle="TextStyle.Body2" Value="@selectedLabel" />
+                    </div>
+                </CanvasFloatingWindow>
+            }
+            @if (activityState.IsVisible)
+            {
+                <CanvasFloatingWindow WindowId="sandbox-activity" TestId="sandbox-canvas-activity"
+                                      AriaLabel="Sandbox canvas activity" Kicker="Event proof"
+                                      Title="Interaction activity"
+                                      Summary="A second shared window proves overlap, activation order, independent geometry, minimize, and close behavior."
+                                      DefaultPlacement="bottom-left" DefaultWidth="340" DefaultHeight="300"
+                                      MinWidth="280" MinHeight="200" State="@activityState"
+                                      StateChanged="HandleActivityStateChanged">
+                    <div class="sandbox-floating-window-copy">
+                        <StatusBadge Text="@(uiState.SelectedNodeIds.Count + " selected")" Tone="info" />
+                        <TextBlock TextStyle="TextStyle.Body2" Value="@lastWorkbenchEvent" />
+                    </div>
+                </CanvasFloatingWindow>
             }
         </OverlayContent>
     </CanvasWorkbench>
 </div>
 
 @code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private SandboxScenarioKey initializedScenario;
     private CanvasWorkbenchUiState uiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.Default);
     private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.Default);
+    private CanvasWorkbenchWindowState activityState = CreateActivityWindowState(SandboxScenarioKey.Default);
+    private readonly Dictionary<string, CanvasWorkbenchNodePositionChange> nodePositionOverrides = new(StringComparer.Ordinal);
     private string selectedLabel = "Nothing selected";
+    private string lastWorkbenchEvent = "No workbench interaction recorded yet.";
 
-    private CanvasWorkbenchSurface Surface => SandboxCanvasSamples.CreateWorkbenchSurface(SandboxScenarioKey.Default, uiState, inspectorState);
+    private SandboxScenarioKey Scenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
+
+    private CanvasWorkbenchSurface Surface
+    {
+        get
+        {
+            var surface = SandboxCanvasSamples.CreateWorkbenchSurface(Scenario, uiState, inspectorState);
+            foreach (var node in surface.Nodes)
+                if (nodePositionOverrides.TryGetValue(node.Id, out var position))
+                {
+                    node.X = position.X;
+                    node.Y = position.Y;
+                }
+
+            return surface;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (initializedScenario == Scenario) return;
+        initializedScenario = Scenario;
+        uiState = SandboxCanvasSamples.CreateWorkbenchUiState(Scenario);
+        inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(Scenario);
+        activityState = CreateActivityWindowState(Scenario);
+        nodePositionOverrides.Clear();
+        lastWorkbenchEvent = "No workbench interaction recorded yet.";
+    }
 
     private Task HandleSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)
     {
         uiState.SelectedNodeIds = [.. args.SelectedNodeIds];
         selectedLabel = Surface.Nodes.FirstOrDefault(node => node.Id == args.PrimaryNodeId)?.Title ?? "Nothing selected";
+        lastWorkbenchEvent = $"Selection changed: {args.SelectedNodeIds.Count} node(s); primary {args.PrimaryNodeId ?? "none"}.";
         return Task.CompletedTask;
     }
 
     private Task HandleStateChanged(string json)
     {
         uiState = CanvasWorkbenchUiState.Parse(json);
+        lastWorkbenchEvent = "Workbench viewport or persisted UI state changed.";
         return Task.CompletedTask;
     }
 
@@ -55,4 +123,67 @@
         inspectorState = CanvasWorkbenchWindowState.Normalize(state);
         return Task.CompletedTask;
     }
+
+    private Task HandleActivityStateChanged(CanvasWorkbenchWindowState state)
+    {
+        activityState = CanvasWorkbenchWindowState.Normalize(state);
+        lastWorkbenchEvent = "Activity window geometry or visibility changed.";
+        return Task.CompletedTask;
+    }
+
+    private Task HandleNodesMoved(CanvasWorkbenchNodesMovedEventArgs args)
+    {
+        foreach (var p in args.Positions) nodePositionOverrides[p.NodeId] = p;
+        lastWorkbenchEvent = $"Moved {args.Positions.Count} node(s).";
+        return Task.CompletedTask;
+    }
+
+    private Task ShowInspectorWindow()
+    {
+        var next = inspectorState.Clone();
+        next.IsVisible = true;
+        next.IsMinimized = false;
+        inspectorState = CanvasWorkbenchWindowState.Normalize(next);
+        return Task.CompletedTask;
+    }
+
+    private Task ResetInspectorWindow()
+    {
+        inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(Scenario);
+        return Task.CompletedTask;
+    }
+
+    private Task ShowActivityWindow()
+    {
+        activityState.IsVisible = true;
+        activityState.IsMinimized = false;
+        lastWorkbenchEvent = "Activity window shown.";
+        return Task.CompletedTask;
+    }
+
+    private Task OverlapCanvasWindows()
+    {
+        inspectorState = CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState { IsVisible = true, Left = 520, Top = 120, Width = 380, Height = 420 });
+        activityState = CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState { IsVisible = true, Left = 600, Top = 190, Width = 340, Height = 300 });
+        lastWorkbenchEvent = "Windows intentionally overlapped; click either title bar to verify activation order.";
+        return Task.CompletedTask;
+    }
+
+    private Task SelectThreeWorkbenchNodes()
+    {
+        uiState.SelectedNodeIds = Surface.Nodes.Take(3).Select(node => node.Id).ToList();
+        lastWorkbenchEvent = $"Deterministic stress control selected {uiState.SelectedNodeIds.Count} nodes.";
+        return Task.CompletedTask;
+    }
+
+    private Task MoveSelectedWorkbenchNodes()
+    {
+        foreach (var node in Surface.Nodes.Where(node => uiState.SelectedNodeIds.Contains(node.Id, StringComparer.Ordinal))) nodePositionOverrides[node.Id] = new CanvasWorkbenchNodePositionChange(node.Id, node.X + 40, node.Y + 24);
+        lastWorkbenchEvent = $"Deterministic stress control moved {uiState.SelectedNodeIds.Count} selected nodes.";
+        return Task.CompletedTask;
+    }
+
+    private static CanvasWorkbenchWindowState CreateActivityWindowState(SandboxScenarioKey scenario) => CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState { IsVisible = scenario == SandboxScenarioKey.DenseContent, Left = 24, Top = 360, Width = 340, Height = 300 });
+    private string InspectorWindowStateLabel => inspectorState.IsVisible ? inspectorState.IsMinimized ? "Inspector minimized" : "Inspector visible" : "Inspector hidden";
+    private string InspectorWindowStateTone => inspectorState.IsVisible ? inspectorState.IsMinimized ? "warning" : "success" : "warning";
 }

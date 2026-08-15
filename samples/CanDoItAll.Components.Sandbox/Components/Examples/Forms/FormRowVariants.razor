@@ -1,23 +1,31 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
 
-<Stack GapScale="LayoutGap.Medium">
+<Stack GapScale="LayoutGap.Medium" data-testid="sandbox-forms-row-variants">
     <FormRow Split="true">
         <FormField Text="Priority threshold">
-            <Slider TValue="int" Value="@priority" ValueChanged="@(value => priority = value)" Min="0" Max="100" Step="5" />
+            <Slider TValue="int"
+                    Value="@AdvancedState.Priority"
+                    ValueChanged="HandlePriorityChanged"
+                    Min="0"
+                    Max="100"
+                    Step="5"
+                    Disabled="@IsDisabled" />
         </FormField>
         <FormField Text="Budget reference">
-            <TextBox Value="@budgetCode" ValueChanged="@(value => budgetCode = value)" Placeholder="Review budget code" Class="cda-input" />
+            <TextBox Value="@AdvancedState.BudgetCode"
+                     ValueChanged="HandleBudgetCodeChanged"
+                     Placeholder="Review budget code"
+                     Disabled="@IsDisabled"
+                     Class="cda-input" />
         </FormField>
     </FormRow>
     <FormRow Split="false">
         <FormField Text="Notes">
-            <TextArea Value="@notes" ValueChanged="@(value => notes = value)" Placeholder="Explain context, risk, and reviewer expectations." />
+            <TextArea Value="@FormState.Notes"
+                      ValueChanged="HandleNotesChanged"
+                      Placeholder="@NotesPlaceholder"
+                      Disabled="@IsDisabled" />
         </FormField>
     </FormRow>
 </Stack>
-
-@code {
-    private int priority = 70;
-    private string? budgetCode = "BASE-READY";
-    private string? notes;
-}

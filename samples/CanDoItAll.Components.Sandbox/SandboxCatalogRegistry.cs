@@ -180,6 +180,13 @@ public static class SandboxCatalogRegistry
             ["StorageSummaryCard"],
             ["Capacity status must be scannable at a glance.", "Near-limit and over-limit states need to read as genuinely different severities.", "Empty and unmeasured storage states still need explicit copy."]),
         new(
+            SandboxGroupKey.Overlays,
+            "Overlays",
+            "/groups/overlays",
+            "Contextual and modal interaction services shared across the sandbox — dialog, tooltip, and notification hosts.",
+            ["dialog service", "tooltip service", "notifications"],
+            ["Dialog, tooltip, and notification hosts should remain a shared concern instead of being reimplemented per page.", "The page should keep context when a service-hosted overlay opens.", "Overlay windows must not trap focus or block dismissal."]),
+        new(
             SandboxGroupKey.Charts,
             "Charts",
             "/groups/charts",
@@ -207,20 +214,6 @@ public static class SandboxCatalogRegistry
             "Controlled interactive project scheduling with dense task metadata, dependency editing, insertion, and export.",
             ["gantt charts"],
             ["Every gesture must raise a typed request instead of mutating caller state.", "Rows, task bars, and dependency ports must remain aligned at dense desktop widths.", "Insertion must replace a real bridge edge and visibly propagate the dependent schedule.", "Task rows and canvas bars share the same row-height contract. Use the typed 0.25 h, 1 h, 1 d, or 1 w scale, drag empty timeline space to pan, and double-click an empty row point to request a new eight-hour task from the host.", "The dense proof combines a Canvas runtime hub with exactly eight incoming and eight outgoing edges and a 43-task delivery chain, forcing both scroll axes while exercising endpoint lanes and exact mouse reconnection.", "The implementation task has two predecessors, proving multiple dependencies without encoding them into task records.", "Drop the staged security review onto the Canvas runtime → Host integration bridge to replace that edge and move the dependent path."]),
-        new(
-            SandboxGroupKey.Overlays,
-            "Overlays",
-            "/groups/overlays",
-            "Contextual and modal interaction services shared across the sandbox — dialog, tooltip, and notification hosts.",
-            ["dialog service", "tooltip service", "notifications"],
-            ["Dialog, tooltip, and notification hosts should remain a shared concern instead of being reimplemented per page.", "The page should keep context when a service-hosted overlay opens.", "Overlay windows must not trap focus or block dismissal."]),
-        new(
-            SandboxGroupKey.Canvas,
-            "Canvas",
-            "/groups/canvas",
-            "Typed workbench and calendar surfaces plus runtime primitives and sandbox-only preview assets.",
-            ["workbench", "calendars"],
-            ["Canvas contracts stay typed.", "Runtime workbench stays distinct from sandbox previews.", "Desktop width should be used aggressively without losing orientation.", "The runtime workbench should stay focused on authoring behavior rather than carrying preview-only diagnostics.", "Floating windows, selection state, and viewport updates must stay typed across the shared contracts.", "Canvas proof assets belong in the sandbox so dense and empty scenarios can be reviewed without touching the runtime pages."])
     ];
 
     public static IReadOnlyList<SandboxGroupDefinition> StandardGroups { get; }

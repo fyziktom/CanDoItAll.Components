@@ -1,16 +1,52 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Mermaid
 
-<MermaidDiagram Title="Sandbox architecture"
-                 Description="Groups, services, icons, junctions, and directional ports from architecture-beta."
-                 Source="@("""
-                 architecture-beta
-                     group browser(cloud)[Browser]
-                     group app(cloud)[Blazor host]
-                     service user(internet)[User] in browser
-                     service sandbox(server)[Components sandbox] in app
-                     service wrapper(server)[MermaidDiagram] in app
+<div class="sandbox-mermaid-stack">
+    <MermaidDiagram Title="Sandbox architecture"
+                    Description="Groups, services, icons, junctions, and directional ports from architecture-beta."
+                    Source="@ArchitectureSource" Options="@ArchitectureOptions" NodeClicked="HandleNodeClicked"
+                    Rendered="HandleRendered" Error="HandleError" data-testid="mermaid-architecture" />
+    <div class="sandbox-mermaid-event sandbox-mermaid-event--info" data-testid="mermaid-architecture-result">
+        <div>
+            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Architecture render" />
+            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@(_render is null ? "Pending" : "Rendered")" />
+        </div>
+        <div class="sandbox-mermaid-event__meta"><span>Nodes: @(_render?.NodeCount.ToString() ?? "pending")</span><span>SVG: @(_render?.SvgElementId ?? "pending")</span>
+        </div>
+    </div>
+    @if (_lastError is not null)
+    {
+        <Alert AlertStyle="@(AlertStyle.Warning)"
+               data-testid="mermaid-last-error">@_lastError.LocationText @_lastError.Message</Alert>
+    }
+</div>
 
-                     user:R --> L:sandbox
-                     sandbox:R --> L:wrapper
-                 """)"
-                 Options="@(new MermaidDiagramOptions { Theme = "default", SecurityLevel = "loose", ArchitectureRandomize = false })" />
+@code {
+    private static readonly MermaidDiagramOptions ArchitectureOptions = new() { Theme = "default", SecurityLevel = "loose", ArchitectureRandomize = false };
+
+    private static readonly string ArchitectureSource = """
+        architecture-beta
+            group browser(cloud)[Browser]
+            group app(cloud)[Blazor host]
+            group package(server)[Mermaid package] in app
+            group docs(database)[Syntax guidance]
+
+            service user(internet)[User] in browser
+            service sandbox(server)[Components sandbox] in app
+            service wrapper(server)[MermaidDiagram] in package
+            service mermaidjs(server)["Official mermaid.js"] in package
+            service rules(database)[MCP rules] in docs
+            junction renderPath in package
+
+            user:R --> L:sandbox
+            sandbox:R --> L:wrapper
+            wrapper:R --> L:renderPath
+            renderPath:R --> L:mermaidjs
+            wrapper:B --> T:rules
+        """;
+
+    private MermaidRenderResult? _render;
+    private MermaidRenderError? _lastError;
+    private void HandleNodeClicked(MermaidNodeClickEventArgs args) => _lastError = null;
+    private void HandleRendered(MermaidRenderResult result) => _render = result;
+    private void HandleError(MermaidRenderError error) => _lastError = error;
+}

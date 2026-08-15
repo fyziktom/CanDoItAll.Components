@@ -4,7 +4,8 @@
     <CanvasSceneHostPreview Snapshot="@CanvasSceneHostPreviewFactory.CreateForWorkbench(Surface)" />
     <LayerStackPreview Snapshot="@LayerStackPreviewFactory.CreateForWorkbench()" />
     <ViewportControllerPreview Snapshot="@ViewportControllerPreviewFactory.CreateForWorkbench(Surface)" />
-    <SerializationPersistencePackPreview Snapshot="@SerializationPersistencePackPreviewFactory.CreateForWorkbench(Surface)" />
+    <SerializationPersistencePackPreview
+        Snapshot="@SerializationPersistencePackPreviewFactory.CreateForWorkbench(Surface)" />
     <TextMeasureServicePreview Snapshot="@TextMeasurePreviewFactory.CreateForWorkbench(Surface)" />
     <JsInteropBridgePreview Snapshot="@JsInteropBridgePreviewFactory.CreateForWorkbench(Surface)" />
     <CommandHistoryStorePreview Snapshot="@CommandHistoryStorePreviewFactory.CreateForWorkbench(Surface)" />
@@ -12,8 +13,11 @@
 </div>
 
 @code {
-    private static readonly CanvasWorkbenchSurface Surface = SandboxCanvasSamples.CreateWorkbenchSurface(
-        SandboxScenarioKey.Default,
-        SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.Default),
-        SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.Default));
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+
+    private CanvasWorkbenchSurface Surface => SandboxCanvasSamples.CreateWorkbenchSurface(
+        ToolbarState?.Scenario ?? SandboxScenarioKey.Default,
+        SandboxCanvasSamples.CreateWorkbenchUiState(ToolbarState?.Scenario ?? SandboxScenarioKey.Default),
+        SandboxCanvasSamples.CreateInspectorWindowState(ToolbarState?.Scenario ?? SandboxScenarioKey.Default));
+
 }

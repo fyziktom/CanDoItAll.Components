@@ -32,38 +32,7 @@
                                       Description="The lower split region should still orient the user, whether it holds full record content or an explanatory empty state."
                                       SourceId="examples/Lists/RecordListDetailShell.razor"
                                       ApiTypes="@ListDetailShellApiTypes">
-                            <ListDetailShell ListPaneWidth="22rem"
-                                             data-testid="sandbox-lists-list-detail">
-                                <ListHeader>
-                                    <PageHeader Eyebrow="List pane" Title="Shared records" Compact="true" />
-                                </ListHeader>
-                                <ListContent>
-                                    <div class="sandbox-list">
-                                        @foreach (var item in WorkspaceItems)
-                                        {
-                                            <SelectionListItem IsSelected="@(item.Id == SelectedItem.Id)"
-                                                               Title="@item.Title"
-                                                               Eyebrow="@item.Eyebrow"
-                                                               Meta="@item.Meta"
-                                                               Summary="@item.Summary">
-                                                <Status>
-                                                    <StatusBadge Text="@item.State" Tone="@item.Tone" />
-                                                </Status>
-                                            </SelectionListItem>
-                                        }
-                                    </div>
-                                </ListContent>
-                                <DetailHeader>
-                                    <PageHeader Eyebrow="Detail pane" Title="Selected record" Compact="true" />
-                                </DetailHeader>
-                                <DetailContent>
-                                    <div class="space-y-4">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@SelectedItem.Title" />
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SelectedItem.Summary" />
-                                        <Alert AlertStyle="@(AlertStyle.Info)">@SelectedItem.Detail</Alert>
-                                    </div>
-                                </DetailContent>
-                            </ListDetailShell>
+                        <RecordListDetailShell />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "SelectionListItem")
@@ -72,29 +41,7 @@
                                       Description="The primary list owns the useful first viewport."
                                       SourceId="examples/Lists/Records.razor"
                                       ApiTypes="@SelectionListItemApiTypes">
-                            <div class="sandbox-list">
-                                @foreach (var row in Rows)
-                                {
-                                    <SelectionListItem Title="@row.Title"
-                                                       Eyebrow="@row.Eyebrow"
-                                                       Meta="@row.Meta"
-                                                       Summary="@row.Summary"
-                                                       Dense="true"
-                                                       Disabled="@IsDisabled">
-                                        <Status>
-                                            <StatusBadge Text="@row.State" Tone="@row.Tone" />
-                                        </Status>
-                                        <ChildContent>
-                                            <Cluster Gap="LayoutGap.Small">
-                                                @foreach (var chip in row.Chips)
-                                                {
-                                                    <StatusBadge Text="@chip.Text" Tone="@chip.Tone" />
-                                                }
-                                            </Cluster>
-                                        </ChildContent>
-                                    </SelectionListItem>
-                                }
-                            </div>
+                        <Records />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "FactTable")
@@ -103,26 +50,7 @@
                                       Description="A bordered card for label/value fact pairs — the same wrapper StorageSummaryCard uses to lay out its facts grid."
                                       SourceId="examples/Lists/FactGrid.razor"
                                       ApiTypes="@FactTableApiTypes">
-                            <FactTable data-testid="sandbox-lists-fact-table">
-                                <div class="grid gap-x-4 gap-y-3 md:grid-cols-2">
-                                    <div class="min-w-0">
-                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Owner</p>
-                                        <p class="mb-0 mt-1 text-sm text-slate-700">A. Rossi</p>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Created</p>
-                                        <p class="mb-0 mt-1 text-sm text-slate-700">3 months ago</p>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Status</p>
-                                        <p class="mb-0 mt-1 text-sm text-slate-700">Active</p>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Storage used</p>
-                                        <p class="mb-0 mt-1 text-sm text-slate-700">4.2 GB of 10 GB</p>
-                                    </div>
-                                </div>
-                            </FactTable>
+                        <FactGrid />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ListGroup")
@@ -131,20 +59,7 @@
                                       Description="Vertical rhythm container for stacking bordered ListItem rows."
                                       SourceId="examples/Lists/GroupedItems.razor"
                                       ApiTypes="@ListGroupApiTypes">
-                            <ListGroup data-testid="sandbox-lists-list-group">
-                                <ListItem>
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Layout shell" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Shared shell keeps main content, rail, and sticky actions in distinct regions." />
-                                </ListItem>
-                                <ListItem>
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Detail pane" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="The selected record has enough room for operational detail." />
-                                </ListItem>
-                                <ListItem>
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Dense review lane" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Denser sections still need obvious grouping." />
-                                </ListItem>
-                            </ListGroup>
+                        <GroupedItems />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ListItem")
@@ -153,16 +68,7 @@
                                       Description="A single bordered, shadowed card row — the atomic unit ListGroup and ListDetailShell arrange."
                                       SourceId="examples/Lists/ProfileCard.razor"
                                       ApiTypes="@ListItemApiTypes">
-                            <ListItem data-testid="sandbox-lists-list-item">
-                                <div class="space-y-2">
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Canvas contract" />
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Workbench and calendar contracts keep typed surfaces and reusable preview evidence." />
-                                    <MetaList>
-                                        <span>Updated 2 days ago</span>
-                                        <span>4 comments</span>
-                                    </MetaList>
-                                </div>
-                            </ListItem>
+                        <ProfileCard />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ListPanelHeader")
@@ -171,19 +77,7 @@
                                       Description="Title, count pill, help popover, actions, and filters composed above a list."
                                       SourceId="examples/Lists/PanelHeader.razor"
                                       ApiTypes="@ListPanelHeaderApiTypes">
-                            <div data-testid="sandbox-lists-panel-header">
-                                <ListPanelHeader Title="Shared records"
-                                                  Description="Records visible to the current workspace."
-                                                  Count="@("12")"
-                                                  HelpText="Records sync from the shared catalog every five minutes.">
-                                    <Actions>
-                                        <Button Text="Add record" Size="ButtonSize.Small" />
-                                    </Actions>
-                                    <Filters>
-                                        <TextBox Value="@panelHeaderFilter" ValueChanged="@(value => panelHeaderFilter = value ?? string.Empty)" Placeholder="Filter records" Immediate="true" />
-                                    </Filters>
-                                </ListPanelHeader>
-                            </div>
+                        <PanelHeader />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "MetaList")
@@ -192,11 +86,7 @@
                                       Description="Inline wrapping row for lightweight metadata such as timestamps and counts."
                                       SourceId="examples/Lists/MetaRow.razor"
                                       ApiTypes="@MetaListApiTypes">
-                            <MetaList data-testid="sandbox-lists-meta-list">
-                                <span>Updated 2 days ago</span>
-                                <span>4 comments</span>
-                                <span>Owner: A. Rossi</span>
-                            </MetaList>
+                        <MetaRow />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "PlainList")
@@ -205,11 +95,7 @@
                                       Description="A simple disc-bulleted list for supporting checklist or requirement content."
                                       SourceId="examples/Lists/BulletList.razor"
                                       ApiTypes="@PlainListApiTypes">
-                            <PlainList data-testid="sandbox-lists-plain-list">
-                                <li>Scope the request and choose the demo group.</li>
-                                <li>Review the current variation and proof notes.</li>
-                                <li>Capture screenshots and sign off.</li>
-                            </PlainList>
+                        <BulletList />
                         </ExampleBlock>
                     }
                 </section>

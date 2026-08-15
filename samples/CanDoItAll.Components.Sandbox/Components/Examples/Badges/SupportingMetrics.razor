@@ -1,7 +1,46 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Badges
 
 <CompactStatStrip>
-    <CompactStat Label="Records" Value="24" HelperText="Stable item count for the shared review view." Tone="info" />
-    <CompactStat Label="Warnings" Value="3" HelperText="Rows with follow-up or proof gaps still outstanding." Tone="warning" />
-    <CompactStat Label="Ready" Value="18" HelperText="Items that can move forward without more layout work." Tone="success" />
+    @foreach (var tile in Tiles)
+    {
+        <CompactStat Label="@tile.Label" Value="@tile.Value" HelperText="@tile.HelperText" Tone="@tile.Tone" />
+    }
 </CompactStatStrip>
+
+@code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+
+    private IReadOnlyList<SummaryTileModel> Tiles => ToolbarState?.Scenario switch
+    {
+        SandboxScenarioKey.DenseContent => DenseTiles,
+        SandboxScenarioKey.LongText => LongTiles,
+        _ => BaseTiles
+    };
+
+    private static readonly IReadOnlyList<SummaryTileModel> BaseTiles =
+    [
+        new("Records", "24", "Stable item count for the shared review view.", "info"),
+        new("Warnings", "3", "Rows with follow-up or proof gaps still outstanding.", "warning"),
+        new("Ready", "18", "Items that can move forward without more layout work.", "success"),
+        new("Owners", "6", "Distinct ownership labels still visible in the shared system.", "neutral")
+    ];
+
+    private static readonly IReadOnlyList<SummaryTileModel> DenseTiles =
+    [
+        new("Records", "58", "Dense mode proves the page can absorb more metadata.", "info"),
+        new("Warnings", "7", "Some records still need screenshot or copy review.", "warning"),
+        new("Ready", "39", "Most records remain easy to scan in the denser pass.", "success"),
+        new("Groups", "9", "Shared grouping labels remain visible without extra UI chrome.", "neutral")
+    ];
+
+    private static readonly IReadOnlyList<SummaryTileModel> LongTiles =
+    [
+        new("Records", "24", "Stable item count for the shared review view.", "info"),
+        new("Longest title", "92 ch", "Longer labels should remain readable without destroying hierarchy.", "warning"),
+        new("Ready", "18", "Items that can move forward without more layout work.", "success"),
+        new("Visible context", "High", "Longer descriptions still keep supporting facts nearby.", "neutral")
+    ];
+
+    private sealed record SummaryTileModel(string Label, string Value, string HelperText, string Tone);
+
+}

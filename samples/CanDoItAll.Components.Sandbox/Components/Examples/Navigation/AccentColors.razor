@@ -1,69 +1,66 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
     <Card>
         <div class="space-y-4">
             <div class="space-y-1">
-                <TextBlock TextStyle="TextStyle.Subtitle2" Value="Info accent" />
-                <TextBlock TextStyle="TextStyle.Note" Value="Useful for review and documentation flows." />
+                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Info accent" />
+                <TextBlock TextStyle="@(TextStyle.Note)" Value="Useful for review and documentation flows." />
             </div>
-            <Tabs SelectedIndex="1"
-                  Variant="TabsVariant.WorkspaceSecondary"
-                  BorderMode="TabsBorderMode.Soft"
-                  Tone="TabsTone.Info"
-                  AriaLabel="Info accent tabs">
+            <Tabs SelectedIndex="1" Variant="@(TabsVariant.WorkspaceSecondary)" BorderMode="@(TabsBorderMode.Soft)"
+                  Tone="@(TabsTone.Info)" AriaLabel="Info accent tabs" data-testid="tabs-lab-tone-info">
                 <TabItems>
                     <TabsItem Text="Summary">
-                        <TextBlock TextStyle="TextStyle.Body2" Value="Information-heavy tabs keep a cool accent while the selected state still reads immediately." />
+                        <TextBlock TextStyle="@(TextStyle.Body2)"
+                                   Value="Information-heavy tabs keep a cool accent while the selected state still reads immediately." />
                     </TabsItem>
                     <TabsItem Text="Reviewer notes" BadgeText="2">
-                        <TextBlock TextStyle="TextStyle.Body2" Value="Use the tone to shift emphasis, not readability." />
+                        <TextBlock TextStyle="@(TextStyle.Body2)"
+                                   Value="Use the tone to shift emphasis, not readability." />
                     </TabsItem>
                 </TabItems>
             </Tabs>
         </div>
     </Card>
-
     <Card>
         <div class="space-y-4">
             <div class="space-y-1">
-                <TextBlock TextStyle="TextStyle.Subtitle2" Value="Success accent" />
-                <TextBlock TextStyle="TextStyle.Note" Value="Useful for completed or healthy workflow branches." />
+                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Success accent" />
+                <TextBlock TextStyle="@(TextStyle.Note)" Value="Useful for completed or healthy workflow branches." />
             </div>
-            <Tabs SelectedIndex="1"
-                  Variant="TabsVariant.WorkspaceSecondary"
-                  BorderMode="TabsBorderMode.Soft"
-                  Tone="TabsTone.Success"
-                  AriaLabel="Success accent tabs">
+            <Tabs SelectedIndex="1" Variant="@(TabsVariant.WorkspaceSecondary)" BorderMode="@(TabsBorderMode.Soft)"
+                  Tone="@(TabsTone.Success)" AriaLabel="Success accent tabs" data-testid="tabs-lab-tone-success">
                 <TabItems>
                     <TabsItem Text="Healthy">
-                        <TextBlock TextStyle="TextStyle.Body2" Value="The same shared structure can shift into a success-oriented accent without turning into a different component." />
+                        <TextBlock TextStyle="@(TextStyle.Body2)"
+                                   Value="The same shared structure can shift into a success-oriented accent without turning into a different component." />
                     </TabsItem>
                     <TabsItem Text="Ready to ship">
-                        <TextBlock TextStyle="TextStyle.Body2" Value="Keep the content and header seam intact even when the accent changes." />
+                        <TextBlock TextStyle="@(TextStyle.Body2)"
+                                   Value="Keep the content and header seam intact even when the accent changes." />
                     </TabsItem>
                 </TabItems>
             </Tabs>
         </div>
     </Card>
-
     <Card>
         <div class="space-y-4">
             <div class="space-y-1">
-                <TextBlock TextStyle="TextStyle.Subtitle2" Value="Warning accent" />
-                <TextBlock TextStyle="TextStyle.Note" Value="Useful when the selected area carries caution or review pressure." />
+                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Warning accent" />
+                <TextBlock TextStyle="@(TextStyle.Note)"
+                           Value="Useful when the selected area carries caution or review pressure." />
             </div>
-            <Tabs SelectedIndex="1"
-                  Variant="TabsVariant.WorkspaceSecondary"
-                  BorderMode="TabsBorderMode.Soft"
-                  Tone="TabsTone.Warning"
-                  AriaLabel="Warning accent tabs">
+            <Tabs SelectedIndex="1" Variant="@(TabsVariant.WorkspaceSecondary)" BorderMode="@(TabsBorderMode.Soft)"
+                  Tone="@(TabsTone.Warning)" AriaLabel="Warning accent tabs" data-testid="tabs-lab-tone-warning">
                 <TabItems>
                     <TabsItem Text="Checks">
-                        <TextBlock TextStyle="TextStyle.Body2" Value="Warning tone should feel deliberate, not noisy." />
+                        <TextBlock TextStyle="@(TextStyle.Body2)"
+                                   Value="Warning tone should feel deliberate, not noisy." />
                     </TabsItem>
                     <TabsItem Text="Needs attention" BadgeText="3">
-                        <TextBlock TextStyle="TextStyle.Body2" Value="Selected emphasis should remain obvious at a glance." />
+                        <TextBlock TextStyle="@(TextStyle.Body2)"
+                                   Value="Selected emphasis should remain obvious at a glance." />
                     </TabsItem>
                 </TabItems>
             </Tabs>

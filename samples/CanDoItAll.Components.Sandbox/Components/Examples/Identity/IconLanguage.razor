@@ -1,25 +1,21 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Identity
 
 <div class="sandbox-demo-grid--three">
-    <div class="sandbox-icon-tile">
-        <Icon Name="plus" />
-        <div class="space-y-1">
-            <TextBlock TextStyle="TextStyle.Subtitle2" Value="Create" />
-            <TextBlock TextStyle="TextStyle.Caption" Value="plus" />
+    @foreach (var icon in (ToolbarState?.Scenario == SandboxScenarioKey.DenseContent
+        ? new[] { ("add_2", "Create"), ("filter_alt", "Filter"), ("calendar", "Schedule"), ("circle_info", "Context"), ("save", "Save"), ("risk", "Warning"), ("flow", "Flow"), ("bars_staggered", "Density"), ("research", "Inspect") }
+        : new[] { ("add_2", "Create"), ("filter_alt", "Filter"), ("calendar", "Schedule"), ("circle_info", "Context"), ("save", "Save"), ("risk", "Warning") }))
+    {
+        <div class="sandbox-icon-tile">
+            <Icon Name="@icon.Item1" />
+            <div class="space-y-1">
+                <TextBlock TextStyle="TextStyle.Subtitle2" Value="@icon.Item2" />
+                <TextBlock TextStyle="TextStyle.Caption" Value="@icon.Item1" />
+            </div>
         </div>
-    </div>
-    <div class="sandbox-icon-tile">
-        <Icon Name="filter" />
-        <div class="space-y-1">
-            <TextBlock TextStyle="TextStyle.Subtitle2" Value="Filter" />
-            <TextBlock TextStyle="TextStyle.Caption" Value="filter" />
-        </div>
-    </div>
-    <div class="sandbox-icon-tile">
-        <Icon Name="calendar" />
-        <div class="space-y-1">
-            <TextBlock TextStyle="TextStyle.Subtitle2" Value="Schedule" />
-            <TextBlock TextStyle="TextStyle.Caption" Value="calendar" />
-        </div>
-    </div>
+    }
 </div>
+
+@code {
+    [CascadingParameter]
+    public SandboxToolbarState? ToolbarState { get; set; }
+}

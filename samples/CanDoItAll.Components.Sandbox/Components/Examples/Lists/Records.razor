@@ -1,17 +1,79 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Lists
 
 <div class="sandbox-list">
-    <SelectionListItem Title="Shell registry"
-                       Eyebrow="Catalog"
-                       Meta="groups / routes"
-                       Summary="Each shared group page feeds both the sandbox navigation and the future MCP search index."
-                       Dense="true"
-                       OnSelect="@(() => { })">
-        <Status>
-            <StatusBadge Text="Ready" Tone="success" />
-        </Status>
-        <Actions>
-            <Button Text="Edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" />
-        </Actions>
-    </SelectionListItem>
+    @foreach (var row in Rows)
+    {
+        <SelectionListItem Title="@row.Title"
+                           Eyebrow="@row.Eyebrow"
+                           Meta="@row.Meta"
+                           Summary="@row.Summary"
+                           Dense="true"
+                           Disabled="@IsDisabled">
+            <Status>
+                <StatusBadge Text="@row.State" Tone="@row.Tone" />
+            </Status>
+            <ChildContent>
+                <Cluster Gap="LayoutGap.Small">
+                    @foreach (var chip in row.Chips)
+                    {
+                        <StatusBadge Text="@chip.Text" Tone="@chip.Tone" />
+                    }
+                </Cluster>
+            </ChildContent>
+        </SelectionListItem>
+    }
 </div>
+
+@code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private bool IsDisabled => ToolbarState?.Scenario == SandboxScenarioKey.DisabledState;
+
+    private IReadOnlyList<DisplayRowModel> Rows => ToolbarState?.Scenario switch
+    {
+        SandboxScenarioKey.DenseContent => DenseRows,
+        SandboxScenarioKey.LongText => LongRows,
+        _ => BaseRows
+    };
+
+    private static readonly IReadOnlyList<DisplayRowModel> BaseRows =
+    [
+        new(DisplayItemId.New(), "Shell registry", "Catalog", "groups / routes", "Each shared group page feeds both the sandbox navigation and the future MCP search index.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
+        new(DisplayItemId.New(), "Canvas contract", "Canvas", "surface / state", "Workbench and calendar contracts keep typed surfaces and reusable preview evidence.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")])
+    ];
+
+    private static readonly IReadOnlyList<DisplayRowModel> DenseRows =
+    [
+        new(DisplayItemId.New(), "Shell registry", "Catalog", "groups / routes", "Each shared group page feeds both the sandbox navigation and the future MCP search index.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
+        new(DisplayItemId.New(), "Canvas contract", "Canvas", "surface / state", "Workbench and calendar contracts keep typed surfaces and reusable preview evidence.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")]),
+        new(DisplayItemId.New(), "Screenshot proof", "Validation", "desktop / mobile", "Dense and empty proof captures stay attached to the same shared group model.", "Pending", "warning", [new("Dense", "warning"), new("Empty", "success")])
+    ];
+
+    private static readonly IReadOnlyList<DisplayRowModel> LongRows =
+    [
+        new(DisplayItemId.New(), "Shell registry with extended explanatory summary", "Catalog", "groups / routes", "Longer row summaries still need clear separation between the title, metadata, supporting chips, and the open action.", "Ready", "success", [new("Catalog", "info"), new("Shared", "neutral")]),
+        new(DisplayItemId.New(), "Canvas contract and boundary previews", "Canvas", "surface / state", "Longer row labels should not break the right edge or hide the state treatment on narrower frames.", "Active", "info", [new("Typed", "success"), new("Preview", "warning")])
+    ];
+
+    private sealed record WorkspaceItem(string Id, string Title, string Eyebrow, string Summary, string State, string Tone, string Detail)
+    {
+        public string Meta => Id;
+    }
+
+    private readonly record struct DisplayItemId(Guid Value)
+    {
+        public static DisplayItemId New() => new(Guid.NewGuid());
+    }
+
+    private sealed record DisplayRowChip(string Text, string Tone);
+
+    private sealed record DisplayRowModel(
+        DisplayItemId Id,
+        string Title,
+        string Eyebrow,
+        string Meta,
+        string Summary,
+        string State,
+        string Tone,
+        IReadOnlyList<DisplayRowChip> Chips);
+
+}

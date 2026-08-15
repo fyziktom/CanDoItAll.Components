@@ -1,15 +1,27 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
 
 <StickyActionFooter StatusLabel="Layout state"
-                     StatusMessage="Shared layout components should make the next step obvious without inventing one-off page wrappers."
-                     StatusTone="info">
+                    StatusMessage="@FooterMessage"
+                    StatusTone="@FooterTone"
+                    data-testid="sandbox-layout-sticky-footer">
     <SecondaryActions>
-        <Button Text="Save draft" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" />
+        <Button Text="Save draft" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Disabled="@IsActionDisabled" />
     </SecondaryActions>
     <PrimaryActions>
-        <Button Text="Approve layout" />
+        <Button Text="@PrimaryActionText" Disabled="@IsActionDisabled" />
     </PrimaryActions>
     <DangerActions>
-        <Button Text="Discard" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" />
+        <Button Text="Discard" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Text)" Disabled="@IsActionDisabled" />
     </DangerActions>
 </StickyActionFooter>
+
+@code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private SandboxScenarioKey Scenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
+    private bool IsActionDisabled => Scenario == SandboxScenarioKey.EmptyState;
+    private string FooterMessage => IsActionDisabled
+        ? "Choose or create a record before the page-level actions become available."
+        : "Shared layout components should make the next step obvious without inventing one-off page wrappers.";
+    private string FooterTone => IsActionDisabled ? "warning" : "info";
+    private string PrimaryActionText => Scenario == SandboxScenarioKey.LongText ? "Approve workspace layout and capture proof bundle" : "Approve layout";
+}

@@ -16,7 +16,8 @@
     <ChildContent>
         @if (CurrentScenario == SandboxScenarioKey.EmptyState)
         {
-            <EmptyState Eyebrow="Modals" Title="No record open" Description="Open a record before the editor dialog becomes available." />
+            <EmptyState Eyebrow="Modals" Title="No record open"
+                        Description="Open a record before the editor dialog becomes available." />
         }
         else
         {
@@ -31,42 +32,7 @@
                                       Description="Opened on demand; edited state stays dialog-only until saved."
                                       SourceId="examples/Modals/RecordDialog.razor"
                                       ApiTypes="@DialogApiTypes">
-                            <Cluster Gap="LayoutGap.Small">
-                                <Button Text="Edit record"
-                                        Icon="edit"
-                                        ButtonStyle="@(ButtonStyle.Primary)"
-                                        Click="OpenEditor" />
-                            </Cluster>
-                            <Dialog IsOpen="@isOpen"
-                                    Title="Edit record"
-                                    Subtitle="Edit details without displacing the rest of the page. Dialog-only state is initialized when this opens."
-                                    Size="ModalSize.Compact"
-                                    DenseChrome="true"
-                                    OnClose="CloseEditor">
-                                <ChildContent>
-                                    <FormStack>
-                                        <FormField Text="Title">
-                                            <TextBox Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" />
-                                        </FormField>
-                                        <FormField Text="Review notes">
-                                            <TextArea Value="@notes"
-                                                      ValueChanged="@(value => notes = value ?? string.Empty)"
-                                                      Size="@(CurrentScenario == SandboxScenarioKey.LongText ? TextAreaSize.Extended : TextAreaSize.Standard)" />
-                                        </FormField>
-                                    </FormStack>
-                                </ChildContent>
-                                <Footer>
-                                    <Button Text="Cancel"
-                                            ButtonStyle="@(ButtonStyle.Light)"
-                                            Variant="@(Variant.Outlined)"
-                                            Click="CloseEditor" />
-                                    <Button Text="Save"
-                                            Icon="save"
-                                            ButtonStyle="@(ButtonStyle.Primary)"
-                                            Disabled="@(string.IsNullOrWhiteSpace(title))"
-                                            Click="CloseEditor" />
-                                </Footer>
-                            </Dialog>
+                            <RecordDialog />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "DialogScaffold")
@@ -75,26 +41,7 @@
                                       Description="Generic rail / main / review / footer layout used to build dialog bodies."
                                       SourceId="examples/Modals/ScaffoldLayout.razor"
                                       ApiTypes="@DialogScaffoldApiTypes">
-                            <DialogScaffold Eyebrow="Migration"
-                                            Title="Shared component uptake"
-                                            Description="Review the affected surfaces before approving the migration.">
-                                <ContextRail>
-                                    <Stack GapScale="LayoutGap.Small">
-                                        <StatusBadge Tone="info" Text="12 files" />
-                                        <StatusBadge Tone="success" Text="Tests passing" />
-                                    </Stack>
-                                </ContextRail>
-                                <ChildContent>
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="ListDetailShell call sites move to the token-driven variant in this pass." />
-                                </ChildContent>
-                                <ReviewPanel>
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Owner: Platform UI" />
-                                </ReviewPanel>
-                                <Footer>
-                                    <Button Text="Close" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
-                                    <Button Text="Approve" Icon="check" ButtonStyle="@(ButtonStyle.Primary)" />
-                                </Footer>
-                            </DialogScaffold>
+                            <ScaffoldLayout />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "DangerActionDialog")
@@ -103,18 +50,7 @@
                                       Description="Type-to-confirm body for destructive actions; the confirm button stays disabled until the phrase matches."
                                       SourceId="examples/Modals/DangerActionConfirm.razor"
                                       ApiTypes="@DangerActionDialogApiTypes">
-                            <Stack GapScale="LayoutGap.Small">
-                                <DangerActionDialog Eyebrow="Danger action"
-                                                     Title="Delete workspace"
-                                                     Description="This permanently removes the workspace and all of its data."
-                                                     RequiredConfirmation="delete workspace"
-                                                     Confirmed="@(() => dangerActionResult = "Confirmed")"
-                                                     Cancelled="@(() => dangerActionResult = "Cancelled")" />
-                                @if (dangerActionResult is not null)
-                                {
-                                    <Alert AlertStyle="@(AlertStyle.Info)">@dangerActionResult</Alert>
-                                }
-                            </Stack>
+                            <DangerActionConfirm />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "InspectorDialogLayout")
@@ -123,22 +59,7 @@
                                       Description="Rail/panel-named wrapper over DialogScaffold for entity inspection."
                                       SourceId="examples/Modals/InspectorLayout.razor"
                                       ApiTypes="@InspectorDialogLayoutApiTypes">
-                            <InspectorDialogLayout Eyebrow="Inspector"
-                                                    Title="Order #48213"
-                                                    Description="Read-only inspection of a single order and its related records.">
-                                <InspectorRail>
-                                    <Stack GapScale="LayoutGap.Small">
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Customer" />
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Fulfillment" />
-                                    </Stack>
-                                </InspectorRail>
-                                <ChildContent>
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Order placed 2026-08-11, shipped 2026-08-13." />
-                                </ChildContent>
-                                <InspectorPanel>
-                                    <StatusBadge Tone="success" Text="Shipped" />
-                                </InspectorPanel>
-                            </InspectorDialogLayout>
+                            <InspectorLayout />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "PickerDialogShell")
@@ -147,16 +68,7 @@
                                       Description="Select one entity from a list, with the review panel reflecting the current selection."
                                       SourceId="examples/Modals/PickerShell.razor"
                                       ApiTypes="@PickerDialogShellApiTypes">
-                            <PickerDialogShell Eyebrow="Assign owner"
-                                                Title="Choose a reviewer"
-                                                PickerTitle="Available reviewers"
-                                                Items="@PickerItems"
-                                                SelectedId="@pickerSelectedId"
-                                                SelectedIdChanged="@(id => pickerSelectedId = id)">
-                                <ReviewPanel>
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@PickerSelectionSummary" />
-                                </ReviewPanel>
-                            </PickerDialogShell>
+                            <PickerShell />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "DialogHost")
@@ -165,11 +77,7 @@
                                       Description="DialogHost takes no parameters — mount it once (see MainLayout) and open dialogs anywhere through DialogService."
                                       SourceId="examples/Modals/DialogHostTrigger.razor"
                                       ApiTypes="@DialogHostApiTypes">
-                            <Button Text="Open via DialogService"
-                                    Icon="open_in_new"
-                                    ButtonStyle="@(ButtonStyle.Secondary)"
-                                    Variant="@(Variant.Outlined)"
-                                    Click="OpenDangerDialogViaService" />
+                            <DialogHostTrigger />
                         </ExampleBlock>
                     }
                 </section>
@@ -190,55 +98,4 @@
     private static readonly IReadOnlyList<Type> PickerDialogShellApiTypes = [typeof(PickerDialogShell)];
     private static readonly IReadOnlyList<Type> DialogHostApiTypes = [typeof(DialogHost), typeof(DialogService)];
 
-    private bool isOpen;
-    private string title = "Migration review";
-    private string notes = "Shared component uptake stays visible through a stable card shell and supporting metadata.";
-
-    private string? dangerActionResult;
-
-    private string? pickerSelectedId = "reviewer-2";
-
-    private static readonly IReadOnlyList<EntityPickerItem> PickerItems =
-    [
-        new() { Id = "reviewer-1", Label = "Priya Shah", Description = "Platform UI", Icon = "person" },
-        new() { Id = "reviewer-2", Label = "Marcus Lee", Description = "Design systems", Icon = "person" },
-        new() { Id = "reviewer-3", Label = "Alex Kim", Description = "Accessibility", Icon = "person" }
-    ];
-
-    private string PickerSelectionSummary
-    {
-        get
-        {
-            var selected = PickerItems.FirstOrDefault(item => item.Id == pickerSelectedId);
-            return selected is null
-                ? "No reviewer selected."
-                : $"{selected.Label} — {selected.Description}";
-        }
-    }
-
-    private Task OpenEditor()
-    {
-        isOpen = true;
-        return Task.CompletedTask;
-    }
-
-    private Task CloseEditor()
-    {
-        isOpen = false;
-        return Task.CompletedTask;
-    }
-
-    private RenderFragment<DialogReference> DangerDialogContent => dialog =>
-        @<DangerActionDialog Eyebrow="Danger action"
-                              Title=""
-                              Description="This permanently removes the workspace and all of its data."
-                              RequiredConfirmation="delete workspace"
-                              Confirmed="@(() => dialog.CloseAsync("confirmed"))"
-                              Cancelled="@(() => dialog.CloseAsync("cancelled"))" />;
-
-    private Task OpenDangerDialogViaService()
-    {
-        _ = DialogService.OpenAsync("Delete workspace", DangerDialogContent, new DialogOptions { DenseChrome = true });
-        return Task.CompletedTask;
-    }
 }

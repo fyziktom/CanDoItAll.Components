@@ -1,31 +1,28 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
-<Toolbar>
+<Toolbar data-testid="sandbox-navigation-toolbar">
     <ToolbarRow>
         <ToolbarFields>
-            <TextBox Value="@query"
-                     ValueChanged="@(value => query = value ?? string.Empty)"
+            <TextBox Value="@toolbarQuery"
+                     ValueChanged="HandleToolbarQueryChanged"
                      Immediate="true"
                      Placeholder="Filter standard navigation"
-                     aria-label="Filter standard navigation" />
+                     aria-label="Filter standard navigation"
+                     data-testid="sandbox-navigation-toolbar-query" />
             <DropDown TValue="string"
-                      Data="@Scopes"
-                      Value="@scope"
-                      ValueChanged="@(value => scope = value ?? Scopes[0])"
-                      aria-label="Navigation scope" />
+                      Data="@ToolbarScopes"
+                      Value="@toolbarScope"
+                      ValueChanged="HandleToolbarScopeChanged"
+                      aria-label="Navigation scope"
+                      data-testid="sandbox-navigation-toolbar-scope" />
         </ToolbarFields>
         <ToolbarActions>
             <Button Text="Reset"
-                    ButtonStyle="ButtonStyle.Light"
-                    Variant="Variant.Outlined"
-                    Click="@(() => { query = string.Empty; scope = Scopes[0]; })" />
+                    ButtonStyle="@(ButtonStyle.Light)"
+                    Variant="@(Variant.Outlined)"
+                    Click="@ResetNavigationTools"
+                    data-testid="sandbox-navigation-toolbar-reset" />
         </ToolbarActions>
     </ToolbarRow>
 </Toolbar>
-
-@code {
-    private static readonly IReadOnlyList<string> Scopes = ["All standard groups", "Navigation only", "Overlay dependencies"];
-
-    private string query = string.Empty;
-    private string scope = Scopes[0];
-}

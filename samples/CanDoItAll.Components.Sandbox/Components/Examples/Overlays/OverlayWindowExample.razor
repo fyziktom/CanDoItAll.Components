@@ -1,18 +1,44 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Overlays
 
-<div class="relative min-h-[16rem] overflow-hidden rounded-2xl border border-slate-200 bg-white"
-     data-cda-overlay-frame
-     data-cda-overlay-container>
-    <OverlayWindow WindowId="example-overlay-window"
-                   Title="Inspector window"
-                   Kicker="OverlayLib"
-                   Summary="Floating support content inside a shared overlay host."
-                   State="@(new OverlayWindowState { IsVisible = true })"
-                   DefaultWidth="320"
-                   DefaultHeight="240"
-                   DefaultPlacement="top-right">
-        <ChildContent>
-            <TextBlock TextStyle="TextStyle.Body2" Value="This floating surface is rendered by OverlayLib, while the surrounding content remains ordinary BaseLib layout." />
-        </ChildContent>
-    </OverlayWindow>
+<div class="relative min-h-[28rem] overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm shadow-slate-200/60" data-cda-overlay-frame data-cda-overlay-container data-testid="sandbox-overlay-window-frame">
+    <div class="relative z-[2] flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/95 px-4 py-3" data-cda-overlay-safe-top data-testid="sandbox-overlay-window-safe-top">
+        <div class="min-w-0"><p class="cda-eyebrow cda-eyebrow--tight">OverlayLib</p><p class="break-words text-sm font-semibold text-slate-800">Window host frame</p></div>
+        <Cluster Gap="LayoutGap.Small"><Button Text="Show window" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@ShowOverlayWindow" data-testid="show-overlay-window" /><Button Text="Reset" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@ResetOverlayWindow" data-testid="reset-overlay-window" /></Cluster>
+    </div>
+    <div class="grid min-h-[22rem] gap-4 p-4 md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.65fr)]">
+        <div class="min-w-0 space-y-3 rounded-[1rem] border border-dashed border-slate-300 bg-slate-50/70 p-4">
+            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Host content remains available" />
+            <TextBlock TextStyle="@(TextStyle.Body2)" Value="@OverlayWindowHostCopy" />
+            <Cluster Gap="LayoutGap.Small"><StatusBadge Text="Bounded" Tone="success" /><StatusBadge Text="Safe top" Tone="info" /><StatusBadge Text="@OverlayWindowStateLabel" Tone="@OverlayWindowStateTone" /></Cluster>
+        </div>
+        <div class="min-w-0 space-y-3 rounded-[1rem] border border-slate-200 bg-white/90 p-4"><TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Frame acceptance" /><div class="sandbox-proof-list"><p>Window geometry must stay inside the bordered frame.</p><p>Header actions must remain icon-sized and reachable.</p><p>Hidden state must return through the shared show action.</p></div></div>
+    </div>
+    @if (overlayWindowState.IsVisible)
+    {
+        <OverlayWindow WindowId="sandbox-overlay-window" Title="Inspector window" Kicker="OverlayLib" Summary="@OverlayWindowSummary" TestId="sandbox-overlay-window" State="@overlayWindowState" StateChanged="HandleOverlayWindowStateChanged" DefaultWidth="360" DefaultHeight="300" MinHeight="220" MaxWidth="460" DefaultPlacement="top-right" ContainerSelector="[data-testid='sandbox-overlay-window-frame']" SafeTopSelector="[data-testid='sandbox-overlay-window-safe-top']">
+            <ChildContent>
+                <Stack GapScale="LayoutGap.Medium">
+                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@OverlayWindowBodyCopy" />
+                    <Alert AlertStyle="@(AlertStyle.Info)">This floating surface is rendered by OverlayLib, while the surrounding sandbox content remains ordinary BaseLib layout.</Alert>
+                    <Toolbar data-testid="sandbox-overlay-window-toolbar"><ToolbarRow><ToolbarFields><TextBox Value="@OverlayWindowSearch" ReadOnly="true" aria-label="Overlay window search preview" data-testid="sandbox-overlay-window-search" /></ToolbarFields><ToolbarActions><Button Text="Refresh" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Disabled="@IsDisabled" /></ToolbarActions></ToolbarRow></Toolbar>
+                    <Cluster Gap="LayoutGap.Small"><StatusBadge Text="Geometry" Tone="success" /><StatusBadge Text="Minimize" Tone="info" /><StatusBadge Text="Hide/show" Tone="warning" /></Cluster>
+                </Stack>
+            </ChildContent>
+        </OverlayWindow>
+    }
 </div>
+
+@code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private OverlayWindowState overlayWindowState = new();
+    private bool IsDisabled => ToolbarState?.Scenario is SandboxScenarioKey.EmptyState or SandboxScenarioKey.DisabledState;
+    private Task HandleOverlayWindowStateChanged(OverlayWindowState state) { overlayWindowState = OverlayWindowState.Normalize(state); return Task.CompletedTask; }
+    private Task ShowOverlayWindow() { overlayWindowState = OverlayWindowState.Normalize(new OverlayWindowState { IsVisible = true }); return Task.CompletedTask; }
+    private Task ResetOverlayWindow() { overlayWindowState = new OverlayWindowState { IsVisible = true }; return Task.CompletedTask; }
+    private string OverlayWindowSummary => ToolbarState?.Scenario switch { SandboxScenarioKey.LongText => "Longer title and summary copy still need to stay readable without pushing action buttons off the header.", SandboxScenarioKey.DenseContent => "Dense supporting tools should float inside the host frame without stealing the page hierarchy.", _ => "Floating support content inside a shared overlay host." };
+    private string OverlayWindowHostCopy => ToolbarState?.Scenario switch { SandboxScenarioKey.LongText => "The host frame deliberately includes enough ordinary page content to prove the floating surface supports the workflow instead of replacing the surrounding page.", SandboxScenarioKey.DenseContent => "Dense host content keeps visible status and proof notes while the overlay window remains bounded above it.", _ => "The surrounding page remains readable while OverlayWindow provides supporting inspection content." };
+    private string OverlayWindowBodyCopy => ToolbarState?.Scenario switch { SandboxScenarioKey.LongText => "Overlay body copy can grow, but it should wrap inside the floating surface and leave the header controls reachable.", SandboxScenarioKey.DenseContent => "Dense overlay content should rely on shared controls, not custom one-off panels.", _ => "Use the floating window for supporting tools that need to stay close to the current work." };
+    private string OverlayWindowSearch => ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "Filter overlay evidence and acceptance checkpoints" : "Filter overlay evidence";
+    private string OverlayWindowStateLabel => overlayWindowState.IsVisible ? overlayWindowState.IsMinimized ? "Minimized" : "Visible" : "Hidden";
+    private string OverlayWindowStateTone => overlayWindowState.IsVisible ? overlayWindowState.IsMinimized ? "warning" : "success" : "warning";
+}

@@ -1,7 +1,8 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
 
-<InlineActions>
-    <Button Text="Save draft" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Size="ButtonSize.Small" />
-    <Button Text="Request review" Size="ButtonSize.Small" />
-    <StatusBadge Text="3 tags | Platform foundation | notify" Tone="success" />
+<InlineActions data-testid="sandbox-forms-inline-actions">
+    <Button Text="Save draft" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Size="ButtonSize.Small" Disabled="@IsDisabled" />
+    <Button Text="Request review" Size="ButtonSize.Small" Disabled="@IsDisabled" />
+    <StatusBadge Text="@AdvancedSummary" Tone="success" />
 </InlineActions>

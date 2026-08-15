@@ -1,6 +1,7 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 @page "/groups/storage"
 @inherits CatalogPageBase
+@using CanDoItAll.Components.Sandbox.Components.Examples.Storage
 
 <PageTitle>Storage</PageTitle>
 
@@ -28,7 +29,7 @@
                                       Description="A compact row of tone-driven status badges."
                                       SourceId="examples/Storage/StorageStatusBadges.razor"
                                       ApiTypes="@StorageBadgeStripApiTypes">
-                            <StorageBadgeStrip Badges="@StorageBadges" />
+                            <StorageStatusBadges />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "StorageSummaryCard")
@@ -37,10 +38,7 @@
                                       Description="Badge strip and fact grid together, with an emphasized variant for the active plan."
                                       SourceId="examples/Storage/StorageSummary.razor"
                                       ApiTypes="@StorageSummaryCardApiTypes">
-                            <Stack GapScale="LayoutGap.Medium">
-                                <StorageSummaryCard Model="@StorageModel" />
-                                <StorageSummaryCard Model="@StorageModel" Emphasized="true" />
-                            </Stack>
+                            <StorageSummary />
                         </ExampleBlock>
                     }
                 </section>
@@ -57,26 +55,4 @@
     private static readonly IReadOnlyList<Type> StorageBadgeStripApiTypes = [typeof(StorageBadgeStrip)];
     private static readonly IReadOnlyList<Type> StorageSummaryCardApiTypes = [typeof(StorageSummaryCard)];
 
-    private static readonly IReadOnlyList<StorageSummaryBadge> StorageBadges =
-    [
-        new("Plan: Pro", "info"),
-        new("82% used", "warning"),
-        new("Backups on", "success")
-    ];
-
-    private static readonly StorageSummaryModel StorageModel = new()
-    {
-        Eyebrow = "Workspace storage",
-        Title = "Primary object store",
-        Description = "Shared bucket for uploads, exports, and generated assets.",
-        Footnote = "Usage refreshes every 15 minutes.",
-        Badges = StorageBadges,
-        Facts =
-        [
-            new("Used", "82.4 GB of 100 GB"),
-            new("Objects", "128,940"),
-            new("Region", "us-east-1"),
-            new("Last backup", "2026-08-14 03:00 UTC")
-        ]
-    };
 }

@@ -2,7 +2,6 @@
 @page "/groups/navigation"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Navigation
-@inject SideMenuService SideMenus
 
 <PageTitle>Navigation</PageTitle>
 
@@ -24,277 +23,43 @@
                                   Description="This is the default recommendation: readable labels, a visible selected state, and a panel surface that feels attached to the active tab."
                                   SourceId="examples/Navigation/BasicTabs.razor"
                                   ApiTypes="@TabsApiTypes">
-                        <Tabs SelectedIndex="@basicTabIndex"
-                              SelectedIndexChanged="HandleBasicTabChanged"
-                              Variant="@(TabsVariant.WorkspacePrimary)"
-                              BorderMode="@(TabsBorderMode.Soft)"
-                              Tone="@(TabsTone.Primary)"
-                              AriaLabel="Basic workspace tabs"
-                              data-testid="sandbox-navigation-basic-tabs">
-                            <TabItems>
-                                <TabsItem Text="Overview" Icon="bars_staggered">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="The basic tabs setup should feel readable, calm, and clearly selected without needing any special styling tricks." />
-                                </TabsItem>
-                                <TabsItem Text="Activity log" Icon="calendar" BadgeText="@ActivityBadgeText">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="The selected header and content surface should feel like one connected control instead of two disconnected shapes." />
-                                </TabsItem>
-                                <TabsItem Text="@EvidenceTabLabel" Icon="circle_info" Disabled="@IsDisabled">
-                                    @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-                                    {
-                                        <EmptyState Eyebrow="Evidence" Title="No review notes yet" Description="The panel should still feel connected to the selected tab even when there is no content to render." />
-                                    }
-                                    else
-                                    {
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Longer supporting labels should stay readable and the disabled state should read clearly instead of making every tab look unavailable." />
-                                    }
-                                </TabsItem>
-                            </TabItems>
-                        </Tabs>
+                        <BasicTabs />
                     </ExampleBlock>
 
                     <ExampleBlock Title="Advanced accent colors"
                                   Description="Accent colors are an advanced option. They should change the emphasis, not rescue an otherwise weak selected state."
                                   SourceId="examples/Navigation/AccentColors.razor">
-                        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                            <Card>
-                                <div class="space-y-4">
-                                    <div class="space-y-1">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Info accent" />
-                                        <TextBlock TextStyle="@(TextStyle.Note)" Value="Useful for review and documentation flows." />
-                                    </div>
-                                    <Tabs SelectedIndex="1" Variant="@(TabsVariant.WorkspaceSecondary)" BorderMode="@(TabsBorderMode.Soft)" Tone="@(TabsTone.Info)" AriaLabel="Info accent tabs" data-testid="tabs-lab-tone-info">
-                                        <TabItems>
-                                            <TabsItem Text="Summary">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Information-heavy tabs keep a cool accent while the selected state still reads immediately." />
-                                            </TabsItem>
-                                            <TabsItem Text="Reviewer notes" BadgeText="2">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Use the tone to shift emphasis, not readability." />
-                                            </TabsItem>
-                                        </TabItems>
-                                    </Tabs>
-                                </div>
-                            </Card>
-                            <Card>
-                                <div class="space-y-4">
-                                    <div class="space-y-1">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Success accent" />
-                                        <TextBlock TextStyle="@(TextStyle.Note)" Value="Useful for completed or healthy workflow branches." />
-                                    </div>
-                                    <Tabs SelectedIndex="1" Variant="@(TabsVariant.WorkspaceSecondary)" BorderMode="@(TabsBorderMode.Soft)" Tone="@(TabsTone.Success)" AriaLabel="Success accent tabs" data-testid="tabs-lab-tone-success">
-                                        <TabItems>
-                                            <TabsItem Text="Healthy">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="The same shared structure can shift into a success-oriented accent without turning into a different component." />
-                                            </TabsItem>
-                                            <TabsItem Text="Ready to ship">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Keep the content and header seam intact even when the accent changes." />
-                                            </TabsItem>
-                                        </TabItems>
-                                    </Tabs>
-                                </div>
-                            </Card>
-                            <Card>
-                                <div class="space-y-4">
-                                    <div class="space-y-1">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Warning accent" />
-                                        <TextBlock TextStyle="@(TextStyle.Note)" Value="Useful when the selected area carries caution or review pressure." />
-                                    </div>
-                                    <Tabs SelectedIndex="1" Variant="@(TabsVariant.WorkspaceSecondary)" BorderMode="@(TabsBorderMode.Soft)" Tone="@(TabsTone.Warning)" AriaLabel="Warning accent tabs" data-testid="tabs-lab-tone-warning">
-                                        <TabItems>
-                                            <TabsItem Text="Checks">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Warning tone should feel deliberate, not noisy." />
-                                            </TabsItem>
-                                            <TabsItem Text="Needs attention" BadgeText="3">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Selected emphasis should remain obvious at a glance." />
-                                            </TabsItem>
-                                        </TabItems>
-                                    </Tabs>
-                                </div>
-                            </Card>
-                        </div>
+                        <AccentColors />
                     </ExampleBlock>
 
                     <ExampleBlock Title="Shell customization"
                                   Description="Use the shared tabs contract first, then add a consumer shell with the root Class when the page needs stronger atmosphere. The dark workstation shell is a specialized treatment, not the baseline look."
                                   SourceId="examples/Navigation/ShellCustomization.razor">
-                        <div class="sandbox-demo-grid--two">
-                            <Tabs SelectedIndex="@classTabIndex"
-                                  SelectedIndexChanged="HandleClassTabChanged"
-                                  Variant="@(TabsVariant.WorkspaceSecondary)"
-                                  BorderMode="@(TabsBorderMode.Soft)"
-                                  Tone="@(TabsTone.Secondary)"
-                                  Class="rounded-[1.5rem] border border-violet-200/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(250,245,255,0.95)_100%)] p-3 shadow-[0_18px_45px_-32px_rgba(88,28,135,0.25)]"
-                                  AriaLabel="Tabs customized with root classes"
-                                  data-testid="tabs-lab-class">
-                                <TabItems>
-                                    <TabsItem Text="Review queue" Icon="bars_staggered">
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="The root Class can add a page-level shell without rewriting the shared tabs structure." />
-                                    </TabsItem>
-                                    <TabsItem Text="Pinned notes" Icon="calendar" BadgeText="4">
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="TabsItem can still take extra Tailwind classes for a one-off emphasis treatment." />
-                                    </TabsItem>
-                                    <TabsItem Text="History" Icon="circle_info">
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="The variant and tone enums still own the internal spacing and selected-state behavior." />
-                                    </TabsItem>
-                                </TabItems>
-                            </Tabs>
-
-                            <Tabs SelectedIndex="@workstationTabIndex"
-                                  SelectedIndexChanged="HandleWorkstationTabChanged"
-                                  Variant="@(TabsVariant.Workstation)"
-                                  BorderMode="@(TabsBorderMode.Soft)"
-                                  Class="rounded-[1.6rem] border border-emerald-200/20 bg-[linear-gradient(180deg,rgba(19,38,43,0.98)_0%,rgba(12,28,31,0.96)_100%)] p-4 shadow-[0_24px_56px_-34px_rgba(2,6,23,0.72)]"
-                                  AriaLabel="Workstation shell tabs"
-                                  data-testid="tabs-lab-workstation">
-                                <TabItems>
-                                    <TabsItem Text="Workbench">
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="The workstation variant can be dramatic, but it still needs readable text and a clear active state." />
-                                    </TabsItem>
-                                    <TabsItem Text="Operator queue" BadgeText="5">
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="This variant now carries its own local text and surface tokens so it remains readable in isolation." />
-                                    </TabsItem>
-                                    <TabsItem Text="Escalations">
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="Use this style when a darker shell is intentional, not as the default tabs example." />
-                                    </TabsItem>
-                                </TabItems>
-                            </Tabs>
-                        </div>
+                        <ShellCustomization />
                     </ExampleBlock>
 
                     <ExampleBlock Title="Optional borderless compact mode"
                                   Description="Compact modal usage can intentionally remove the button border when the pill treatment reads better."
                                   SourceId="examples/Navigation/CompactBorderless.razor">
-                        <Tabs SelectedIndex="@modalTabIndex"
-                              SelectedIndexChanged="HandleModalTabChanged"
-                              RenderMode="@(TabRenderMode.Client)"
-                              Variant="@(TabsVariant.ModalCompact)"
-                              BorderMode="@(TabsBorderMode.None)"
-                              Tone="@(TabsTone.Info)"
-                              AriaLabel="Compact borderless tabs"
-                              data-testid="tabs-lab-modal">
-                            <TabItems>
-                                <TabsItem Text="Summary">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="This variant keeps the panel minimal and uses rounded pills for lighter modal chrome." />
-                                </TabsItem>
-                                <TabsItem Text="Warnings" BadgeText="2">
-                                    <Alert AlertStyle="@(AlertStyle.Warning)">
-                                        Borderless tabs should still keep hover, focus, and active state obvious.
-                                    </Alert>
-                                </TabsItem>
-                                <TabsItem Text="Approval path">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Client render mode keeps the whole set rendered so the tab switch remains instantaneous." />
-                                </TabsItem>
-                            </TabItems>
-                        </Tabs>
+                        <CompactBorderless />
                     </ExampleBlock>
 
                     <ExampleBlock Title="Missing title fallback"
                                   Description="The fallback label should read like a real control, not like the component broke when a title was omitted."
                                   SourceId="examples/Navigation/MissingTitleFallback.razor">
-                        <Tabs SelectedIndex="@missingTitleTabIndex"
-                              SelectedIndexChanged="HandleMissingTitleTabChanged"
-                              Variant="@(TabsVariant.WorkspaceSecondary)"
-                              BorderMode="@(TabsBorderMode.Soft)"
-                              Tone="@(TabsTone.Secondary)"
-                              AriaLabel="Missing title fallback tabs"
-                              data-testid="tabs-lab-missing-title">
-                            <TabItems>
-                                <TabsItem Text="Configured tab">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="The configured tab uses the normal text path." />
-                                </TabsItem>
-                                <TabsItem Icon="circle_info">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="This example intentionally omits Text. The fallback label should still feel stable and readable." />
-                                </TabsItem>
-                                <TabsItem Text="Another tab">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="The surrounding tabs should not collapse just because one label is missing." />
-                                </TabsItem>
-                            </TabItems>
-                        </Tabs>
+                        <MissingTitleFallback />
                     </ExampleBlock>
 
                     <ExampleBlock Title="Overflow strategies"
                                   Description="When wrapping becomes too noisy, scroll mode keeps the control to one row without clipping labels or breaking focus behavior."
                                   SourceId="examples/Navigation/OverflowStrategies.razor">
-                        <div class="sandbox-demo-grid--two">
-                            <div class="w-full min-w-0 max-w-[21rem]" data-testid="tabs-lab-wrap-shell">
-                                <Tabs SelectedIndex="@wrapTabIndex"
-                                      SelectedIndexChanged="HandleWrapTabChanged"
-                                      Variant="@(TabsVariant.WorkspaceSecondary)"
-                                      BorderMode="@(TabsBorderMode.Soft)"
-                                      Tone="@(TabsTone.Primary)"
-                                      OverflowMode="@(TabsOverflowMode.Wrap)"
-                                      AriaLabel="Wrapping tabs in a narrow column"
-                                      data-testid="tabs-lab-wrap">
-                                    <TabItems>
-                                        <TabsItem Text="@WrapFirstTabLabel" Icon="bars_staggered">
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="Wrapped tabs should become a tidy multi-row control instead of an accidental broken seam." />
-                                        </TabsItem>
-                                        <TabsItem Icon="circle_info">
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="This second tab keeps the missing-title fallback visible in a tighter layout." />
-                                        </TabsItem>
-                                        <TabsItem Text="@WrapThirdTabLabel" BadgeText="beta">
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="Badges and multi-line labels need to remain aligned even when the row wraps." />
-                                        </TabsItem>
-                                    </TabItems>
-                                </Tabs>
-                            </div>
-
-                            <div class="w-full min-w-0 max-w-[21rem]" data-testid="tabs-lab-scroll-shell">
-                                <Tabs SelectedIndex="@scrollTabIndex"
-                                      SelectedIndexChanged="HandleScrollTabChanged"
-                                      Variant="@(TabsVariant.WorkspaceSecondary)"
-                                      BorderMode="@(TabsBorderMode.Soft)"
-                                      Tone="@(TabsTone.Info)"
-                                      OverflowMode="@(TabsOverflowMode.Scroll)"
-                                      AriaLabel="Scrollable tabs in a narrow column"
-                                      data-testid="tabs-lab-scroll">
-                                    <TabItems>
-                                        <TabsItem Text="Overview">
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="Keep the strip single-line when horizontal movement is easier to understand than wrapping." />
-                                        </TabsItem>
-                                        <TabsItem Text="Automation checkpoints">
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="Long labels should still be fully visible while the row scrolls." />
-                                        </TabsItem>
-                                        <TabsItem Text="Validation questions">
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="Keyboard focus and active state should remain strong even when some tabs start off-screen." />
-                                        </TabsItem>
-                                        <TabsItem Text="Regression notes">
-                                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="The right edge should not clip the final tab or its hover border." />
-                                        </TabsItem>
-                                        @if (CurrentScenario == SandboxScenarioKey.DenseContent)
-                                        {
-                                            <TabsItem Text="Stakeholder sign-off">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Dense scenarios add one more tab so the overflow behavior stays obvious." />
-                                            </TabsItem>
-                                        }
-                                    </TabItems>
-                                </Tabs>
-                            </div>
-                        </div>
+                        <OverflowStrategies />
                     </ExampleBlock>
 
                     <ExampleBlock Title="Vertical tabs for settings rails"
                                   Description="Left-positioned tabs need the same visual confidence and should collapse back to a sensible mobile stack."
                                   SourceId="examples/Navigation/VerticalRail.razor">
-                        <Tabs SelectedIndex="@verticalTabIndex"
-                              SelectedIndexChanged="HandleVerticalTabChanged"
-                              Variant="@(TabsVariant.WorkspaceTertiary)"
-                              BorderMode="@(TabsBorderMode.Soft)"
-                              Tone="@(TabsTone.Success)"
-                              TabPosition="@(TabPosition.Left)"
-                              AriaLabel="Vertical settings tabs"
-                              data-testid="tabs-lab-vertical">
-                            <TabItems>
-                                <TabsItem Text="General">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Vertical tabs should read like a settings rail instead of an unrelated side list." />
-                                </TabsItem>
-                                <TabsItem Text="@VerticalNotificationsTabLabel" BadgeText="3">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Longer labels still need to align cleanly and keep the panel seam intact." />
-                                </TabsItem>
-                                <TabsItem Text="Audit trail" Disabled="@(CurrentScenario == SandboxScenarioKey.DisabledState)">
-                                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="Disabled items must remain visible while clearly opting out of interaction." />
-                                </TabsItem>
-                            </TabItems>
-                        </Tabs>
+                        <VerticalRail />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "Toolbar")
@@ -303,31 +68,7 @@
                                   Description="Shared sheet toolbar structure groups filter fields and reset actions without custom page chrome."
                                   SourceId="examples/Navigation/FilterToolbar.razor"
                                   ApiTypes="@ToolbarApiTypes">
-                        <Toolbar data-testid="sandbox-navigation-toolbar">
-                            <ToolbarRow>
-                                <ToolbarFields>
-                                    <TextBox Value="@toolbarQuery"
-                                             ValueChanged="HandleToolbarQueryChanged"
-                                             Immediate="true"
-                                             Placeholder="Filter standard navigation"
-                                             aria-label="Filter standard navigation"
-                                             data-testid="sandbox-navigation-toolbar-query" />
-                                    <DropDown TValue="string"
-                                              Data="@ToolbarScopes"
-                                              Value="@toolbarScope"
-                                              ValueChanged="HandleToolbarScopeChanged"
-                                              aria-label="Navigation scope"
-                                              data-testid="sandbox-navigation-toolbar-scope" />
-                                </ToolbarFields>
-                                <ToolbarActions>
-                                    <Button Text="Reset"
-                                            ButtonStyle="@(ButtonStyle.Light)"
-                                            Variant="@(Variant.Outlined)"
-                                            Click="@ResetNavigationTools"
-                                            data-testid="sandbox-navigation-toolbar-reset" />
-                                </ToolbarActions>
-                            </ToolbarRow>
-                        </Toolbar>
+                        <FilterToolbar />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "TreeView")
@@ -336,46 +77,7 @@
                                   Description="Hierarchical selection, expansion, and right-click actions stay bounded and connected to the selected node."
                                   SourceId="examples/Navigation/AdaptiveTree.razor"
                                   ApiTypes="@TreeViewApiTypes">
-                        <Grid Gap="LayoutGap.Large"
-                              ColumnTemplate="minmax(0,1fr)"
-                              ColumnTemplateLg="minmax(16rem,0.85fr) minmax(0,1.15fr)">
-                            <div class="relative min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60"
-                                 data-testid="sandbox-navigation-tree-panel">
-                                <TreeView Items="@TreeNodes"
-                                          Style="@(TreeViewStyle.Workbench)"
-                                          AriaLabel="Standard component navigation tree"
-                                          EmptyText="No navigation nodes match the current filter."
-                                          OnSelect="SelectTreeNode"
-                                          OnToggle="ToggleTreeNode"
-                                          OnContextMenu="OpenTreeContextMenu"
-                                          data-testid="sandbox-navigation-tree" />
-                                <ContextMenu IsOpen="@(treeContextMenuRequest is not null)"
-                                             X="@(treeContextMenuRequest?.ClientX ?? 16)"
-                                             Y="@(treeContextMenuRequest?.ClientY ?? 16)"
-                                             Items="@TreeContextMenuItems"
-                                             Heading="Tree action"
-                                             Description="@(treeContextMenuRequest is null ? null : ResolveTreeNodeLabel(treeContextMenuRequest.NodeId))"
-                                             AriaLabel="Tree node actions"
-                                             ItemSelected="HandleTreeContextMenuItemSelected"
-                                             OnClose="CloseTreeContextMenu"
-                                             TestId="sandbox-navigation-tree-context-menu" />
-                            </div>
-
-                            <div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-4"
-                                 data-testid="sandbox-navigation-tree-detail">
-                                <Stack GapScale="LayoutGap.Medium">
-                                    <div class="space-y-1">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@ResolveTreeNodeLabel(selectedTreeNodeId)" />
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@ResolveTreeNodeSummary(selectedTreeNodeId)" />
-                                    </div>
-                                    <Cluster Gap="LayoutGap.Small">
-                                        <StatusBadge Text="@toolbarScope" Tone="info" />
-                                        <StatusBadge Text="@TreeFilterStatus" Tone="success" />
-                                        <StatusBadge Text="@ExpandedTreeStatus" Tone="warning" />
-                                    </Cluster>
-                                </Stack>
-                            </div>
-                        </Grid>
+                        <AdaptiveTree />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "Steps")
@@ -384,23 +86,7 @@
                                   Description="Step flow should read clearly at a glance and support linear progression."
                                   SourceId="examples/Navigation/LinearSteps.razor"
                                   ApiTypes="@StepsApiTypes">
-                        <Steps Value="@stepIndex"
-                               ValueChanged="HandleStepChanged"
-                               data-testid="sandbox-navigation-steps"
-                               PreviousButtonTestId="sandbox-navigation-steps-previous"
-                               NextButtonTestId="sandbox-navigation-steps-next"
-                               NavigationPosition="@(StepsNavigationPosition.Both)"
-                               Linear="@IsDisabled">
-                            <StepsItem Text="Scope" Description="Frame the request and choose the demo group.">
-                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Scope the request and set the acceptance expectation before opening the implementation details." />
-                            </StepsItem>
-                            <StepsItem Text="Review" Description="Inspect the current variation and proof notes.">
-                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Review how the component behaves in dense, empty, and mobile conditions." />
-                            </StepsItem>
-                            <StepsItem Text="Proof" Description="Capture the screenshots and sign off.">
-                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Proof means screenshots, validation questions, and a clear answer on whether the layout still works." />
-                            </StepsItem>
-                        </Steps>
+                        <LinearSteps />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "PageHeader")
@@ -409,17 +95,7 @@
                                   Description="A standard header carries eyebrow, title, description, and trailing actions; a compact header fits inside list-detail and rail panes."
                                   SourceId="examples/Navigation/PageHeaderVariants.razor"
                                   ApiTypes="@PageHeaderApiTypes">
-                        <div class="space-y-4">
-                            <PageHeader Eyebrow="Shared layout"
-                                        Title="@HeaderTitle"
-                                        Description="@HeaderDescription">
-                                <Actions>
-                                    <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
-                                    <Button Text="Open checklist" />
-                                </Actions>
-                            </PageHeader>
-                            <PageHeader Eyebrow="List pane" Title="Compact header" Compact="true" />
-                        </div>
+                        <PageHeaderVariants />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "SideMenu")
@@ -428,217 +104,7 @@
                                   Description="Parameter-fed and declarative items, measured overflow, bottom utilities, custom panels, and service-driven context switching in one bounded workspace."
                                   SourceId="examples/Navigation/SideMenuWorkspace.razor"
                                   ApiTypes="@SideMenuApiTypes">
-                        <Stack GapScale="LayoutGap.Large">
-                            <div class="sandbox-side-menu-toolbar" data-testid="side-menu-service-controls">
-                                <div>
-                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Service controls" />
-                                    <TextBlock TextStyle="@(TextStyle.Note)" Value="These buttons act through SideMenuService rather than a component reference." />
-                                </div>
-                                <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.Wrap">
-                                    <Button Text="Project context"
-                                            Icon="folder_open"
-                                            Size="ButtonSize.Small"
-                                            Click="UseProjectContextAsync"
-                                            data-testid="side-menu-context-project" />
-                                    <Button Text="Analytics context"
-                                            Icon="analytics"
-                                            ButtonStyle="@(ButtonStyle.Info)"
-                                            Variant="@(Variant.Outlined)"
-                                            Size="ButtonSize.Small"
-                                            Click="UseAnalyticsContextAsync"
-                                            data-testid="side-menu-context-analytics" />
-                                    <Button Text="Restore declared items"
-                                            Icon="restart_alt"
-                                            ButtonStyle="@(ButtonStyle.Light)"
-                                            Variant="@(Variant.Outlined)"
-                                            Size="ButtonSize.Small"
-                                            Click="RestoreDeclaredItemsAsync"
-                                            data-testid="side-menu-context-declared" />
-                                    <Button Text="Select first externally"
-                                            Icon="ads_click"
-                                            ButtonStyle="@(ButtonStyle.Light)"
-                                            Variant="@(Variant.Outlined)"
-                                            Size="ButtonSize.Small"
-                                            Click="SelectFirstExternallyAsync"
-                                            data-testid="side-menu-select-external" />
-                                    <Button Text="Toggle via service"
-                                            Icon="swap_horiz"
-                                            ButtonStyle="@(ButtonStyle.Light)"
-                                            Variant="@(Variant.Outlined)"
-                                            Size="ButtonSize.Small"
-                                            Click="ToggleFromServiceAsync"
-                                            data-testid="side-menu-toggle-external" />
-                                </Cluster>
-                            </div>
-
-                            <div class="sandbox-side-menu-lab @(CurrentScenario == SandboxScenarioKey.DenseContent ? "is-height-stressed" : null)"
-                                 data-scenario="@CurrentScenario.ToSlug()"
-                                 data-testid="side-menu-lab">
-                                <div class="sandbox-side-menu-host" data-testid="side-menu-host">
-                                    <SideMenu MenuId="@SideMenuId"
-                                              Title="Delivery workspace"
-                                              Subtitle="@sideMenuContextLabel"
-                                              Icon="apps"
-                                              Expanded="@sideMenuExpanded"
-                                              ExpandedChanged="HandleSideMenuExpandedChanged"
-                                              Items="@SideMenuDeclaredPropertyItems"
-                                              MoreItems="@SideMenuDeclaredMoreItems"
-                                              BottomItems="@SideMenuDeclaredBottomItems"
-                                              ItemSelected="HandleSideMenuComponentSelection"
-                                              data-testid="side-menu-proof">
-                                        <MenuItems>
-                                            @if (CurrentScenario != SandboxScenarioKey.EmptyState)
-                                            {
-                                                <SideMenuItem Id="timeline"
-                                                              Text="Timeline"
-                                                              Icon="timeline"
-                                                              Description="Milestones and delivery dates."
-                                                              Selected="HandleSideMenuDeclarativeSelection" />
-                                                <SideMenuItem Id="requirements"
-                                                              Text="Requirements"
-                                                              Icon="fact_check"
-                                                              Description="Scope, constraints, and acceptance." />
-                                                <SideMenuItem Id="resources"
-                                                              Text="Resource planning"
-                                                              Icon="inventory_2"
-                                                              Description="People, agents, tools, and allocations."
-                                                              BadgeText="8" />
-                                                <SideMenuItem Id="automations"
-                                                              Text="Automations"
-                                                              Icon="smart_toy"
-                                                              Description="Scheduled and event-driven work." />
-                                                <SideMenuItem Id="quality"
-                                                              Text="Quality review"
-                                                              Icon="verified"
-                                                              Description="Tests, evidence, and release gates."
-                                                              Disabled="@(CurrentScenario == SandboxScenarioKey.DisabledState)" />
-                                                <SideMenuItem Id="financials"
-                                                              Text="Financial controls"
-                                                              Icon="payments"
-                                                              Description="Budget, spend, and approval status." />
-                                                <SideMenuItem Id="vendors"
-                                                              Text="Vendors and external dependencies"
-                                                              Icon="handshake"
-                                                              Description="Partners, contracts, and outside delivery risk." />
-                                                <SideMenuItem Id="audit"
-                                                              Text="Audit archive"
-                                                              Icon="inventory"
-                                                              Description="Historical decisions and immutable evidence."
-                                                              OverflowBehavior="@(SideMenuOverflowBehavior.AlwaysInMore)" />
-                                            }
-                                        </MenuItems>
-
-                                        <MoreMenuItems>
-                                            <SideMenuItem Id="shortcuts"
-                                                          Text="Keyboard shortcuts"
-                                                          Icon="keyboard"
-                                                          Description="Review navigation and command keys." />
-                                        </MoreMenuItems>
-
-                                        <MoreContent>
-                                            <Stack GapScale="LayoutGap.Small">
-                                                <div>
-                                                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Custom More content" />
-                                                    <TextBlock TextStyle="@(TextStyle.Note)" Value="Consumers can append arbitrary BaseLib content beneath typed overflow actions." />
-                                                </div>
-                                                <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.Wrap">
-                                                    <StatusBadge Text="Scoped to current tab" Tone="info" />
-                                                    <Button Text="Run readiness action"
-                                                            Icon="play_arrow"
-                                                            Size="ButtonSize.Small"
-                                                            Click="RunSideMenuReadinessActionAsync"
-                                                            data-testid="side-menu-custom-more-action" />
-                                                </Cluster>
-                                            </Stack>
-                                        </MoreContent>
-
-                                        <BottomMenuItems>
-                                            <SideMenuItem Id="account"
-                                                          Text="Account"
-                                                          Icon="account_circle"
-                                                          Description="Profile, team, and session actions."
-                                                          PanelTitle="Account and workspace"
-                                                          Children="@SideMenuAccountItems" />
-                                            <SideMenuItem Id="settings"
-                                                          Text="Settings"
-                                                          Icon="settings"
-                                                          Description="Workspace preferences and menu behavior."
-                                                          PanelTitle="Workspace settings">
-                                                <PanelContent>
-                                                    <Stack GapScale="LayoutGap.Medium">
-                                                        <div>
-                                                            <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Navigation preferences" />
-                                                            <TextBlock TextStyle="@(TextStyle.Note)" Value="Expansion is synchronized through the service and remembered in localStorage." />
-                                                        </div>
-                                                        <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.Wrap">
-                                                            <StatusBadge Text="Persistence on" Tone="success" />
-                                                            <Button Text="Toggle menu"
-                                                                    Icon="swap_horiz"
-                                                                    Size="ButtonSize.Small"
-                                                                    Click="ToggleFromServiceAsync"
-                                                                    data-testid="side-menu-settings-toggle" />
-                                                        </Cluster>
-                                                    </Stack>
-                                                </PanelContent>
-                                            </SideMenuItem>
-                                        </BottomMenuItems>
-                                    </SideMenu>
-                                </div>
-
-                                <section class="sandbox-side-menu-workspace" aria-label="Side menu selection proof">
-                                    <header class="sandbox-side-menu-workspace__header">
-                                        <div>
-                                            <span class="sandbox-side-menu-workspace__eyebrow">@sideMenuContextLabel</span>
-                                            <h3>@sideMenuSelectedHeading</h3>
-                                            <p>Selections can start inside the menu or in another service-aware component and still reach the same listeners.</p>
-                                        </div>
-                                        <StatusBadge Text="@(sideMenuExpanded ? "Open" : "Compact")" Tone="@(sideMenuExpanded ? "success" : "neutral")" />
-                                    </header>
-
-                                    <div class="sandbox-side-menu-signal-grid">
-                                        <div class="sandbox-side-menu-signal">
-                                            <span>Service subscription</span>
-                                            <strong data-testid="side-menu-service-selection">@lastSideMenuServiceSelection</strong>
-                                        </div>
-                                        <div class="sandbox-side-menu-signal">
-                                            <span>Component callback</span>
-                                            <strong data-testid="side-menu-component-selection">@lastSideMenuComponentSelection</strong>
-                                        </div>
-                                        <div class="sandbox-side-menu-signal">
-                                            <span>Declarative item callback</span>
-                                            <strong data-testid="side-menu-declarative-selection">@lastSideMenuDeclarativeSelection</strong>
-                                        </div>
-                                    </div>
-
-                                    @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-                                    {
-                                        <EmptyState Eyebrow="Menu context"
-                                                    Title="No primary destinations"
-                                                    Description="Bottom utilities and custom More content remain available while the current tab has no primary menu model." />
-                                    }
-                                    else
-                                    {
-                                        <div class="sandbox-side-menu-activity">
-                                            <div class="sandbox-side-menu-activity__row">
-                                                <span class="sandbox-side-menu-activity__icon"><Icon Name="sync" /></span>
-                                                <div><strong>Context switching</strong><p>Project, analytics, and declared item sets can replace each other without remounting the menu.</p></div>
-                                                <StatusBadge Text="Ready" Tone="success" />
-                                            </div>
-                                            <div class="sandbox-side-menu-activity__row">
-                                                <span class="sandbox-side-menu-activity__icon"><Icon Name="unfold_less" /></span>
-                                                <div><strong>Measured overflow</strong><p>The available item-region height decides what remains visible and what moves under More.</p></div>
-                                                <StatusBadge Text="Observed" Tone="info" />
-                                            </div>
-                                            <div class="sandbox-side-menu-activity__row">
-                                                <span class="sandbox-side-menu-activity__icon"><Icon Name="devices" /></span>
-                                                <div><strong>Responsive mode</strong><p>Large and medium rails become a top-triggered downward menu below the small breakpoint.</p></div>
-                                                <StatusBadge Text="3 modes" Tone="warning" />
-                                            </div>
-                                        </div>
-                                    }
-                                </section>
-                            </div>
-                        </Stack>
+                        <SideMenuWorkspace />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "ContextMenu")
@@ -647,22 +113,7 @@
                                   Description="Opens at a real cursor/click position and closes on selection, Escape, or an outside click."
                                   SourceId="examples/Navigation/ContextMenuDemo.razor"
                                   ApiTypes="@ContextMenuApiTypes">
-                        <div class="relative rounded-[1.25rem] border border-dashed border-slate-300 bg-slate-50/80 p-6 text-sm text-slate-500"
-                             @oncontextmenu="OpenNavigationContextMenu"
-                             @oncontextmenu:preventDefault="true"
-                             data-testid="sandbox-navigation-context-menu-zone">
-                            Right-click anywhere in this panel, or
-                            <Button Text="Open menu" Size="ButtonSize.Small" Click="OpenNavigationContextMenuFromButton" data-testid="sandbox-navigation-context-menu-trigger" />
-                            <ContextMenu IsOpen="@navigationContextMenuOpen"
-                                         X="@navigationContextMenuX"
-                                         Y="@navigationContextMenuY"
-                                         Items="@NavigationContextMenuItems"
-                                         Heading="Row actions"
-                                         AriaLabel="Demo row actions"
-                                         ItemSelected="HandleNavigationContextMenuItemSelected"
-                                         OnClose="CloseNavigationContextMenu"
-                                         TestId="sandbox-navigation-context-menu" />
-                        </div>
+                        <ContextMenuDemo />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "FilterBar")
@@ -671,15 +122,7 @@
                                   Description="Rounded bar pairing filter controls with a result count and reset action."
                                   SourceId="examples/Navigation/FilterBarDemo.razor"
                                   ApiTypes="@FilterBarApiTypes">
-                        <FilterBar ResultText="128 results" data-testid="sandbox-navigation-filter-bar">
-                            <ChildContent>
-                                <TextBox Value="@filterBarQuery" ValueChanged="@(value => filterBarQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search" aria-label="Search" />
-                                <DropDown TValue="string" Data="@ToolbarScopes" Value="@filterBarScope" ValueChanged="@(value => filterBarScope = value ?? ToolbarScopeAll)" aria-label="Scope" />
-                            </ChildContent>
-                            <Actions>
-                                <Button Text="Reset" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => { filterBarQuery = string.Empty; filterBarScope = ToolbarScopeAll; })" />
-                            </Actions>
-                        </FilterBar>
+                        <FilterBarDemo />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "LegalToc")
@@ -688,15 +131,7 @@
                                   Description="A disclosure wrapper for a section's table of contents."
                                   SourceId="examples/Navigation/LegalTableOfContents.razor"
                                   ApiTypes="@LegalTocApiTypes">
-                        <LegalToc data-testid="sandbox-navigation-legal-toc">
-                            <summary class="cursor-pointer text-sm font-semibold text-slate-800">Table of contents</summary>
-                            <LegalTocNav>
-                                <a href="#scope">1. Scope</a>
-                                <a href="#data">2. Data handling</a>
-                                <a href="#liability">3. Liability</a>
-                                <a href="#contact">4. Contact</a>
-                            </LegalTocNav>
-                        </LegalToc>
+                        <LegalTableOfContents />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "LegalTocNav")
@@ -705,11 +140,7 @@
                                   Description="LegalTocNav has no dependency on LegalToc — it can render as an always-visible related-links list."
                                   SourceId="examples/Navigation/RelatedLinksNav.razor"
                                   ApiTypes="@LegalTocNavApiTypes">
-                        <LegalTocNav data-testid="sandbox-navigation-legal-toc-nav">
-                            <a href="#privacy">Privacy policy</a>
-                            <a href="#terms">Terms of service</a>
-                            <a href="#cookies">Cookie policy</a>
-                        </LegalTocNav>
+                        <RelatedLinksNav />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "PageHeaderActionButton")
@@ -718,13 +149,7 @@
                                   Description="Icon buttons with tooltip fallback text, meant to sit inline in a PageHeader's Actions region."
                                   SourceId="examples/Navigation/QuickActionButtons.razor"
                                   ApiTypes="@PageHeaderActionButtonApiTypes">
-                        <Cluster Gap="LayoutGap.Small">
-                            <div data-testid="sandbox-navigation-page-header-action-button">
-                                <PageHeaderActionButton Icon="download" Label="Download" />
-                                <PageHeaderActionButton Icon="share" Label="Share" ButtonStyle="@(ButtonStyle.Info)" />
-                                <PageHeaderActionButton Icon="more_horiz" Label="More" Disabled="@IsDisabled" />
-                            </div>
-                        </Cluster>
+                        <QuickActionButtons />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "RibbonTabs")
@@ -733,17 +158,7 @@
                                   Description="A collapsible ribbon strip with tool tabs and a panel region, e.g. for document-editor-style toolbars."
                                   SourceId="examples/Navigation/RibbonToolbar.razor"
                                   ApiTypes="@RibbonTabsApiTypes">
-                        <RibbonTabs TItem="string"
-                                    Items="@RibbonTools"
-                                    SelectedItem="@ribbonSelectedTool"
-                                    SelectedItemChanged="@(item => ribbonSelectedTool = item)"
-                                    IsCollapsed="@ribbonCollapsed"
-                                    OnToggleCollapsed="@(() => ribbonCollapsed = !ribbonCollapsed)"
-                                    RootTestId="sandbox-navigation-ribbon-tabs">
-                            <PanelContent Context="tool">
-                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@($"{tool} tools appear here.")" />
-                            </PanelContent>
-                        </RibbonTabs>
+                        <RibbonToolbar />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "SecondaryTabs")
@@ -752,11 +167,7 @@
                                   Description="Key-based pill tab switcher, distinct from the index-based Tabs component."
                                   SourceId="examples/Navigation/StatusFilterTabs.razor"
                                   ApiTypes="@SecondaryTabsApiTypes">
-                        <div data-testid="sandbox-navigation-secondary-tabs">
-                            <SecondaryTabs Items="@SecondaryStatusTabs"
-                                           SelectedKey="@secondaryTabsSelectedKey"
-                                           SelectedKeyChanged="@(key => secondaryTabsSelectedKey = key)" />
-                        </div>
+                        <StatusFilterTabs />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "SideMenuItem")
@@ -765,15 +176,7 @@
                                   Description="SideMenuItem registers itself with its parent SideMenu; this focuses on item-level parameters like badges, disabled state, and nested children."
                                   SourceId="examples/Navigation/SideMenuItemShowcase.razor"
                                   ApiTypes="@SideMenuItemStandaloneApiTypes">
-                        <div class="sandbox-side-menu-host" style="height: 22rem;">
-                            <SideMenu MenuId="sandbox-side-menu-item-demo" Title="Item showcase" Icon="widgets" data-testid="sandbox-navigation-side-menu-item">
-                                <MenuItems>
-                                    <SideMenuItem Id="inbox" Text="Inbox" Icon="inbox" BadgeText="5" Description="Unread requests." />
-                                    <SideMenuItem Id="archive" Text="Archive" Icon="inventory" Disabled="true" Description="Read-only history." />
-                                    <SideMenuItem Id="team" Text="Team" Icon="groups" PanelTitle="Team members" Children="@SideMenuItemDemoChildren" />
-                                </MenuItems>
-                            </SideMenu>
-                        </div>
+                        <SideMenuItemShowcase />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "StepsItem")
@@ -782,11 +185,7 @@
                                   Description="StepsItem-specific parameters: a custom badge icon and a step disabled from selection."
                                   SourceId="examples/Navigation/StepsWithIcons.razor"
                                   ApiTypes="@StepsItemApiTypes">
-                        <Steps Value="@stepsItemDemoIndex" ValueChanged="@(value => stepsItemDemoIndex = value)" data-testid="sandbox-navigation-steps-item">
-                            <StepsItem Text="Draft" Icon="edit" Description="Author the initial content." />
-                            <StepsItem Text="Legal review" Icon="gavel" Disabled="true" Description="Not yet available for this workflow." />
-                            <StepsItem Text="Publish" Icon="publish" Description="Ship to the shared catalog." />
-                        </Steps>
+                        <StepsWithIcons />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "TabsItem")
@@ -795,17 +194,7 @@
                                   Description="BadgeText, Disabled, and dynamic Visible toggling on individual tabs."
                                   SourceId="examples/Navigation/TabsItemBadges.razor"
                                   ApiTypes="@TabsItemStandaloneApiTypes">
-                        <Stack GapScale="LayoutGap.Small">
-                            <Switch Value="@tabsItemAuditVisible" ValueChanged="@(value => tabsItemAuditVisible = value)" AriaLabel="Show audit tab" />
-                            <Tabs SelectedIndex="@tabsItemDemoIndex" SelectedIndexChanged="@(index => tabsItemDemoIndex = index)" data-testid="sandbox-navigation-tabs-item">
-                                <TabItems>
-                                    <TabsItem Text="Overview" />
-                                    <TabsItem Text="Reviewer notes" BadgeText="2" />
-                                    <TabsItem Text="Legacy" Disabled="true" />
-                                    <TabsItem Text="Audit trail" Visible="@tabsItemAuditVisible" />
-                                </TabItems>
-                            </Tabs>
-                        </Stack>
+                        <TabsItemBadges />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "ToolbarActions")
@@ -814,18 +203,7 @@
                                   Description="Grouped action buttons within a toolbar row, independent of any filter fields."
                                   SourceId="examples/Navigation/ToolbarActionCluster.razor"
                                   ApiTypes="@ToolbarActionsApiTypes">
-                        <Stack GapScale="LayoutGap.Small">
-                            <Toolbar data-testid="sandbox-navigation-toolbar-actions">
-                                <ToolbarRow>
-                                    <ToolbarActions>
-                                        <Button Text="Save" Click="@(() => toolbarActionsLastAction = "Save")" />
-                                        <Button Text="Export" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => toolbarActionsLastAction = "Export")" />
-                                        <Button Text="Delete" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Outlined)" Click="@(() => toolbarActionsLastAction = "Delete")" />
-                                    </ToolbarActions>
-                                </ToolbarRow>
-                            </Toolbar>
-                            <TextBlock TextStyle="@(TextStyle.Note)" Value="@($"Last action: {toolbarActionsLastAction}")" />
-                        </Stack>
+                        <ToolbarActionCluster />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "ToolbarFields")
@@ -834,14 +212,7 @@
                                   Description="Grouped filter fields within a toolbar row, without any action buttons."
                                   SourceId="examples/Navigation/ToolbarFilterFields.razor"
                                   ApiTypes="@ToolbarFieldsApiTypes">
-                        <Toolbar data-testid="sandbox-navigation-toolbar-fields">
-                            <ToolbarRow>
-                                <ToolbarFields>
-                                    <TextBox Value="@toolbarFieldsQuery" ValueChanged="@(value => toolbarFieldsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search records" aria-label="Search records" />
-                                    <DropDown TValue="string" Data="@ToolbarScopes" Value="@toolbarFieldsScope" ValueChanged="@(value => toolbarFieldsScope = value ?? ToolbarScopeAll)" aria-label="Field scope" />
-                                </ToolbarFields>
-                            </ToolbarRow>
-                        </Toolbar>
+                        <ToolbarFilterFields />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "ToolbarRow")
@@ -850,19 +221,7 @@
                                   Description="Multiple ToolbarRow elements inside one Toolbar, e.g. a filter row above a bulk-actions row."
                                   SourceId="examples/Navigation/StackedToolbarRows.razor"
                                   ApiTypes="@ToolbarRowApiTypes">
-                        <Toolbar data-testid="sandbox-navigation-toolbar-row">
-                            <ToolbarRow>
-                                <ToolbarFields>
-                                    <TextBox Value="@toolbarRowsQuery" ValueChanged="@(value => toolbarRowsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Filter" aria-label="Filter" />
-                                </ToolbarFields>
-                            </ToolbarRow>
-                            <ToolbarRow>
-                                <ToolbarActions>
-                                    <StatusBadge Text="3 selected" Tone="info" />
-                                    <Button Text="Archive" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
-                                </ToolbarActions>
-                            </ToolbarRow>
-                        </Toolbar>
+                        <StackedToolbarRows />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "TreeViewNodeRow")
@@ -871,24 +230,14 @@
                                   Description="TreeViewNodeRow renders one recursive row: adaptive labels, compact badges, and a right-positioned tooltip for long content."
                                   SourceId="examples/Navigation/AdaptiveRowContract.razor"
                                   ApiTypes="@TreeViewNodeRowApiTypes">
-                        <div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60" data-testid="sandbox-navigation-tree-view-node-row">
-                            <ul class="cda-treeview" role="tree" aria-label="Adaptive row proof">
-                                <TreeViewNodeRow Node="@adaptiveRowNode"
-                                                  Level="0"
-                                                  TreeId="sandbox-adaptive-row"
-                                                  Style="@(TreeViewStyle.Workbench)"
-                                                  ActiveNodeId="@adaptiveRowActiveId"
-                                                  OnActivate="@(id => adaptiveRowActiveId = id)"
-                                                  OnSelect="@(id => adaptiveRowActiveId = id)"
-                                                  OnToggle="HandleAdaptiveRowToggle" />
-                            </ul>
-                        </div>
+                        <AdaptiveRowContract />
                     </ExampleBlock>
                 }
             </section>
         }
     </ChildContent>
 </CatalogPageFrame>
+
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Navigation);
@@ -915,634 +264,5 @@
     private static readonly IReadOnlyList<Type> ToolbarFieldsApiTypes = [typeof(ToolbarFields)];
     private static readonly IReadOnlyList<Type> ToolbarRowApiTypes = [typeof(ToolbarRow)];
     private static readonly IReadOnlyList<Type> TreeViewNodeRowApiTypes = [typeof(TreeViewNodeRow)];
-
-    private const string SideMenuId = "sandbox-side-menu";
-
-    private static readonly IReadOnlyList<ISideMenuItem> SideMenuBasePropertyItems =
-    [
-        new SideMenuItemDefinition { Id = "overview", Text = "Overview", Icon = "dashboard", Description = "Current delivery status and decisions.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
-        new SideMenuItemDefinition { Id = "inbox", Text = "Inbox", Icon = "inbox", Description = "Requests that need review.", BadgeText = "12", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
-        new SideMenuItemDefinition { Id = "projects", Text = "Projects", Icon = "folder_open", Description = "Active project portfolio and context." }
-    ];
-
-    private static readonly IReadOnlyList<ISideMenuItem> SideMenuDeclaredMoreItems =
-    [
-        new SideMenuItemDefinition { Id = "command-center", Text = "Command center", Icon = "terminal", Description = "Open advanced workspace commands." }
-    ];
-
-    private static readonly IReadOnlyList<ISideMenuItem> SideMenuDeclaredBottomItems =
-    [
-        new SideMenuItemDefinition { Id = "help", Text = "Help", Icon = "help", Description = "Open contextual documentation." }
-    ];
-
-    private static readonly IReadOnlyList<ISideMenuItem> SideMenuAccountItems =
-    [
-        new SideMenuItemDefinition { Id = "profile", Text = "Your profile", Icon = "person", Description = "Identity and personal preferences." },
-        new SideMenuItemDefinition { Id = "team", Text = "Switch team", Icon = "groups", Description = "Change the active delivery team.", BadgeText = "3" },
-        new SideMenuItemDefinition { Id = "sign-out", Text = "Sign out", Icon = "logout", Description = "End the current session." }
-    ];
-
-    private static readonly IReadOnlyList<ISideMenuItem> SideMenuProjectContextItems =
-    [
-        new SideMenuItemDefinition { Id = "project-health", Text = "Project health", Icon = "monitor_heart", Description = "Delivery, cost, and quality signals.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
-        new SideMenuItemDefinition { Id = "project-board", Text = "Delivery board", Icon = "view_kanban", Description = "Work moving through the current phase.", BadgeText = "24" },
-        new SideMenuItemDefinition { Id = "project-plan", Text = "Plan", Icon = "account_tree", Description = "Scope and dependency model." },
-        new SideMenuItemDefinition { Id = "project-team", Text = "Team", Icon = "groups", Description = "People and agent assignments." },
-        new SideMenuItemDefinition { Id = "project-calendar", Text = "Calendar", Icon = "calendar_month", Description = "Milestones and scheduled runs." },
-        new SideMenuItemDefinition { Id = "project-risk", Text = "Risks", Icon = "warning", Description = "Open threats and mitigations.", BadgeText = "5" },
-        new SideMenuItemDefinition { Id = "project-budget", Text = "Budget", Icon = "payments", Description = "Budget, actuals, and forecast." },
-        new SideMenuItemDefinition { Id = "project-quality", Text = "Quality", Icon = "verified", Description = "Evidence and release gates." },
-        new SideMenuItemDefinition { Id = "project-history", Text = "History", Icon = "history", Description = "Decisions and previous phases." },
-        new SideMenuItemDefinition { Id = "project-archive", Text = "Archive", Icon = "inventory", Description = "Closed work and snapshots.", OverflowBehavior = SideMenuOverflowBehavior.AlwaysInMore }
-    ];
-
-    private static readonly IReadOnlyList<ISideMenuItem> SideMenuAnalyticsContextItems =
-    [
-        new SideMenuItemDefinition { Id = "analytics-summary", Text = "Analytics summary", Icon = "analytics", Description = "Current performance indicators.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
-        new SideMenuItemDefinition { Id = "analytics-throughput", Text = "Throughput", Icon = "speed", Description = "Delivery rate and cycle time." },
-        new SideMenuItemDefinition { Id = "analytics-quality", Text = "Quality trends", Icon = "query_stats", Description = "Defects, tests, and reliability." },
-        new SideMenuItemDefinition { Id = "analytics-cost", Text = "Cost trends", Icon = "payments", Description = "Spend and forecast variance." },
-        new SideMenuItemDefinition { Id = "analytics-capacity", Text = "Capacity", Icon = "groups", Description = "Team and agent utilization." },
-        new SideMenuItemDefinition { Id = "analytics-exports", Text = "Exports", Icon = "download", Description = "Reports and downstream datasets.", OverflowBehavior = SideMenuOverflowBehavior.AlwaysInMore }
-    ];
-
-    private IDisposable? sideMenuServiceSubscription;
-    private bool sideMenuExpanded = true;
-    private string sideMenuContextLabel = "Declared + parameter items";
-    private string sideMenuSelectedHeading = "No destination selected";
-    private string lastSideMenuServiceSelection = "Waiting for selection";
-    private string lastSideMenuComponentSelection = "Waiting for selection";
-    private string lastSideMenuDeclarativeSelection = "Select Timeline to prove this callback";
-
-    private IReadOnlyList<ISideMenuItem> SideMenuDeclaredPropertyItems => CurrentScenario == SandboxScenarioKey.EmptyState
-        ? []
-        : CurrentScenario == SandboxScenarioKey.LongText
-            ? SideMenuBasePropertyItems
-                .Select(item => item is SideMenuItemDefinition definition
-                    ? definition with { Text = $"{definition.Text} with a deliberately extended navigation label" }
-                    : item)
-                .ToArray()
-            : SideMenuBasePropertyItems;
-
-    private int basicTabIndex = 1;
-    private int classTabIndex = 1;
-    private int workstationTabIndex = 1;
-    private int modalTabIndex;
-    private int missingTitleTabIndex = 1;
-    private int wrapTabIndex = 2;
-    private int scrollTabIndex = 2;
-    private int verticalTabIndex;
-
-    private static readonly IReadOnlyList<ContextMenuItem> TreeContextMenuItems =
-    [
-        new() { Id = "select", Text = "Select node", Icon = "check", Description = "Make this node the active detail target." },
-        new() { Id = "open-details", Text = "Open details", Icon = "open_in_new", Description = "Exercise a second keyboard-selectable action." },
-        new() { Id = "unavailable", Text = "Unavailable action", Icon = "block", Disabled = true, SeparatorBefore = true }
-    ];
-    private int stepIndex = 1;
-    private string toolbarQuery = string.Empty;
-    private string toolbarScope = ToolbarScopeAll;
-    private string selectedTreeNodeId = "navigation-tabs";
-    private TreeViewNodeContextMenuRequest? treeContextMenuRequest;
-    private readonly HashSet<string> expandedTreeNodeIds = new(StringComparer.Ordinal)
-    {
-        "navigation-foundations",
-        "navigation-controls",
-        "navigation-adaptive-rows"
-    };
-
-    private const string ToolbarScopeAll = "All standard groups";
-    private const string ToolbarScopeNavigation = "Navigation only";
-    private const string ToolbarScopeOverlays = "Overlay dependencies";
-
-    private static readonly IReadOnlyList<string> ToolbarScopes =
-    [
-        ToolbarScopeAll,
-        ToolbarScopeNavigation,
-        ToolbarScopeOverlays
-    ];
-
-    private bool navigationContextMenuOpen;
-    private double navigationContextMenuX = 24;
-    private double navigationContextMenuY = 24;
-
-    private static readonly IReadOnlyList<ContextMenuItem> NavigationContextMenuItems =
-    [
-        new() { Id = "rename", Text = "Rename", Icon = "edit" },
-        new() { Id = "duplicate", Text = "Duplicate", Icon = "content_copy" },
-        new() { Id = "delete", Text = "Delete", Icon = "delete", Danger = true, SeparatorBefore = true }
-    ];
-
-    private string filterBarQuery = string.Empty;
-    private string filterBarScope = ToolbarScopeAll;
-
-    private static readonly IReadOnlyList<string> RibbonTools = ["Format", "Insert", "Review"];
-    private string ribbonSelectedTool = "Format";
-    private bool ribbonCollapsed;
-
-    private static readonly IReadOnlyList<SecondaryTabItem> SecondaryStatusTabs =
-    [
-        new("all", "All", "24", null),
-        new("open", "Open", "9", "Still awaiting review."),
-        new("done", "Done", "15", "Marked complete this sprint.")
-    ];
-    private string secondaryTabsSelectedKey = "open";
-
-    private static readonly IReadOnlyList<ISideMenuItem> SideMenuItemDemoChildren =
-    [
-        new SideMenuItemDefinition { Id = "member-a", Text = "A. Rossi", Icon = "person" },
-        new SideMenuItemDefinition { Id = "member-b", Text = "J. Alvarez", Icon = "person" }
-    ];
-
-    private int stepsItemDemoIndex;
-
-    private int tabsItemDemoIndex;
-    private bool tabsItemAuditVisible = true;
-
-    private string toolbarActionsLastAction = "None yet";
-    private string toolbarFieldsQuery = string.Empty;
-    private string toolbarFieldsScope = ToolbarScopeAll;
-    private string toolbarRowsQuery = string.Empty;
-
-    private string? adaptiveRowActiveId;
-
-    private TreeViewNode adaptiveRowNode = new()
-    {
-        Id = "vendors",
-        Text = "Vendors and external dependencies requiring quarterly review",
-        Icon = "handshake",
-        BadgeText = "New",
-        Tooltip = "Partners, contracts, and outside delivery risk.",
-        IsExpanded = true,
-        Children =
-        [
-            new() { Id = "vendor-a", Text = "Acme Logistics", Icon = "local_shipping" }
-        ]
-    };
-
-    private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
-
-    private string ActivityBadgeText => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? "7"
-        : "2";
-
-    private string EvidenceTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Evidence and notes that must wrap cleanly"
-        : "Evidence";
-
-    private string WrapFirstTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "A very long tab label that should wrap with control"
-        : "Long title that forces a second line";
-
-    private string WrapThirdTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Another long label so two wrapped buttons can coexist without chaos"
-        : "Secondary proof notes";
-
-    private string VerticalNotificationsTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Notifications and preference routing"
-        : "Notifications";
-
-    private string HeaderTitle => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Migration acceptance workspace with extended release notes and validation guidance"
-        : "Migration acceptance workspace";
-
-    private string HeaderDescription => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense layout still needs a stable main column, a concise supporting rail, and action placement that does not fight the content.",
-        SandboxScenarioKey.LongText => "Longer page descriptions should not force the header into awkward wrapping or a first viewport that feels like a document instead of a workspace.",
-        _ => "Shared page headers should make hierarchy, supporting context, and trailing actions obvious without inventing custom page structure."
-    };
-
-    private IReadOnlyList<TreeViewNode> TreeNodes => FilterTreeNodes(ResolveScopedTreeNodes());
-
-    private string TreeFilterStatus => string.IsNullOrWhiteSpace(toolbarQuery)
-        ? "Unfiltered"
-        : $"Filtered: {toolbarQuery}";
-
-    private string ExpandedTreeStatus => $"{expandedTreeNodeIds.Count} expanded";
-
-    protected override void OnInitialized()
-    {
-        sideMenuServiceSubscription = SideMenus.Subscribe(SideMenuId, HandleSideMenuServiceSelectionAsync);
-    }
-
-    private Task UseProjectContextAsync()
-    {
-        SideMenus.SetItems(SideMenuId, SideMenuProjectContextItems);
-        sideMenuContextLabel = "Project tab context";
-        sideMenuSelectedHeading = "No destination selected";
-        return InvokeAsync(StateHasChanged);
-    }
-
-    private Task UseAnalyticsContextAsync()
-    {
-        SideMenus.SetItems(SideMenuId, SideMenuAnalyticsContextItems);
-        sideMenuContextLabel = "Analytics tab context";
-        sideMenuSelectedHeading = "No destination selected";
-        return InvokeAsync(StateHasChanged);
-    }
-
-    private Task RestoreDeclaredItemsAsync()
-    {
-        SideMenus.ResetItems(SideMenuId);
-        sideMenuContextLabel = "Declared + parameter items";
-        sideMenuSelectedHeading = "No destination selected";
-        return InvokeAsync(StateHasChanged);
-    }
-
-    private async Task SelectFirstExternallyAsync()
-    {
-        var firstItem = SideMenus.GetSnapshot(SideMenuId).Items.FirstOrDefault(item => item.Visible && !item.Disabled);
-        if (firstItem is not null)
-        {
-            await SideMenus.SelectAsync(SideMenuId, firstItem.Id);
-        }
-    }
-
-    private Task ToggleFromServiceAsync()
-    {
-        SideMenus.ToggleExpanded(SideMenuId);
-        return Task.CompletedTask;
-    }
-
-    private Task RunSideMenuReadinessActionAsync()
-        => SideMenus.SelectAsync(SideMenuId, "command-center");
-
-    private Task HandleSideMenuExpandedChanged(bool isExpanded)
-    {
-        sideMenuExpanded = isExpanded;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleSideMenuComponentSelection(SideMenuSelection selection)
-    {
-        lastSideMenuComponentSelection = $"{selection.Item.Text} / {selection.Source}";
-        return Task.CompletedTask;
-    }
-
-    private Task HandleSideMenuDeclarativeSelection(SideMenuSelection selection)
-    {
-        lastSideMenuDeclarativeSelection = $"{selection.Item.Text} callback received";
-        return Task.CompletedTask;
-    }
-
-    private async ValueTask HandleSideMenuServiceSelectionAsync(SideMenuSelection selection)
-    {
-        await InvokeAsync(() =>
-        {
-            sideMenuSelectedHeading = selection.Item.Text;
-            lastSideMenuServiceSelection = $"{selection.Item.Text} / {selection.Source}";
-            StateHasChanged();
-        });
-    }
-
-    public override void Dispose()
-    {
-        sideMenuServiceSubscription?.Dispose();
-        base.Dispose();
-    }
-
-    private Task HandleStepChanged(int value)
-    {
-        stepIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleBasicTabChanged(int value)
-    {
-        basicTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleClassTabChanged(int value)
-    {
-        classTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleWorkstationTabChanged(int value)
-    {
-        workstationTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleModalTabChanged(int value)
-    {
-        modalTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleMissingTitleTabChanged(int value)
-    {
-        missingTitleTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleWrapTabChanged(int value)
-    {
-        wrapTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleScrollTabChanged(int value)
-    {
-        scrollTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleVerticalTabChanged(int value)
-    {
-        verticalTabIndex = value;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleToolbarQueryChanged(string? value)
-    {
-        toolbarQuery = value ?? string.Empty;
-        treeContextMenuRequest = null;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleToolbarScopeChanged(string? value)
-    {
-        toolbarScope = string.IsNullOrWhiteSpace(value)
-            ? ToolbarScopeAll
-            : value;
-        treeContextMenuRequest = null;
-        return Task.CompletedTask;
-    }
-
-    private Task ResetNavigationTools()
-    {
-        toolbarQuery = string.Empty;
-        toolbarScope = ToolbarScopeAll;
-        selectedTreeNodeId = "navigation-tabs";
-        treeContextMenuRequest = null;
-        expandedTreeNodeIds.Clear();
-        expandedTreeNodeIds.Add("navigation-foundations");
-        expandedTreeNodeIds.Add("navigation-controls");
-        return Task.CompletedTask;
-    }
-
-    private Task SelectTreeNode(string id)
-    {
-        selectedTreeNodeId = id;
-        treeContextMenuRequest = null;
-        return Task.CompletedTask;
-    }
-
-    private Task ToggleTreeNode(string id)
-    {
-        if (!expandedTreeNodeIds.Add(id))
-        {
-            expandedTreeNodeIds.Remove(id);
-        }
-
-        treeContextMenuRequest = null;
-        return Task.CompletedTask;
-    }
-
-    private Task OpenTreeContextMenu(TreeViewNodeContextMenuRequest request)
-    {
-        selectedTreeNodeId = request.NodeId;
-        treeContextMenuRequest = request;
-        return Task.CompletedTask;
-    }
-
-    private Task FocusTreeContextNode()
-    {
-        if (treeContextMenuRequest is not null)
-        {
-            selectedTreeNodeId = treeContextMenuRequest.NodeId;
-        }
-
-        treeContextMenuRequest = null;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleTreeContextMenuItemSelected(string itemId)
-    {
-        return itemId switch
-        {
-            "select" => FocusTreeContextNode(),
-            "open-details" => FocusTreeContextNode(),
-            _ => Task.CompletedTask
-        };
-    }
-
-    private Task CloseTreeContextMenu()
-    {
-        treeContextMenuRequest = null;
-        return Task.CompletedTask;
-    }
-
-    private void OpenNavigationContextMenu(MouseEventArgs args)
-    {
-        navigationContextMenuX = args.ClientX;
-        navigationContextMenuY = args.ClientY;
-        navigationContextMenuOpen = true;
-    }
-
-    private void OpenNavigationContextMenuFromButton()
-    {
-        navigationContextMenuOpen = true;
-    }
-
-    private Task HandleNavigationContextMenuItemSelected(string itemId)
-    {
-        navigationContextMenuOpen = false;
-        return Task.CompletedTask;
-    }
-
-    private Task CloseNavigationContextMenu()
-    {
-        navigationContextMenuOpen = false;
-        return Task.CompletedTask;
-    }
-
-    private void HandleAdaptiveRowToggle(string id)
-    {
-        if (adaptiveRowNode.Id == id)
-        {
-            adaptiveRowNode = adaptiveRowNode with { IsExpanded = !adaptiveRowNode.IsExpanded };
-        }
-    }
-
-    private IReadOnlyList<TreeViewNode> ResolveScopedTreeNodes()
-    {
-        var foundationNode = CreateBranch(
-            "navigation-foundations",
-            CurrentScenario == SandboxScenarioKey.LongText ? "Layout and shell foundations" : "Foundations",
-            "bars_staggered",
-            "Core layout and shell primitives.",
-            "sandbox-navigation-tree-foundations",
-            "sandbox-navigation-tree-foundations-children",
-            [
-                CreateLeaf("navigation-page-scaffold", "Page scaffold", "Reusable page width and rail structure.", "space_dashboard", "sandbox-navigation-tree-page-scaffold"),
-                CreateLeaf("navigation-list-detail", "List-detail shell", "Shared list and detail layout with stable pane widths.", "view_sidebar", "sandbox-navigation-tree-list-detail")
-            ]);
-
-        var controlsNode = CreateBranch(
-            "navigation-controls",
-            CurrentScenario == SandboxScenarioKey.LongText ? "Tabs, steps, toolbar and tree controls" : "Navigation controls",
-            "account_tree",
-            "Standard movement and selection primitives.",
-            "sandbox-navigation-tree-controls",
-            "sandbox-navigation-tree-controls-children",
-            [
-                CreateLeaf("navigation-tabs", CurrentScenario == SandboxScenarioKey.LongText ? "Long navigation labels should remain understandable" : "Evidence", "Workspace tabs with wrapping and active-state proof.", "tab", "sandbox-navigation-tree-tabs"),
-                CreateLeaf("navigation-steps", "Steps", "Linear and selectable step movement.", "timeline", "sandbox-navigation-tree-steps"),
-                CreateLeaf("navigation-toolbar", "Toolbar", "Shared sheet toolbar structure for filters and actions.", "tune", "sandbox-navigation-tree-toolbar"),
-                CreateLeaf("navigation-tree", "Tree view", "Hierarchical navigation with context-menu requests.", "account_tree", "sandbox-navigation-tree-treeview"),
-                CreateBranch(
-                    "navigation-adaptive-rows",
-                    CurrentScenario == SandboxScenarioKey.LongText ? "Adaptive rows with constrained labels and badges" : "Adaptive tree rows",
-                    "width",
-                    "Tree rows preserve their hierarchy while labels and badges adapt to the available inline space.",
-                    "sandbox-navigation-tree-adaptive",
-                    "sandbox-navigation-tree-adaptive-children",
-                    [
-                        CreateLeaf(
-                            "navigation-adaptive-leaf",
-                            CurrentScenario == SandboxScenarioKey.LongText ? "Third-level project configuration details remain readable" : "Third-level adaptive row",
-                            "Full label, badge, and supporting details remain available from the right-side service tooltip.",
-                            "description",
-                            "sandbox-navigation-tree-adaptive-leaf",
-                            "DocumentationReviewRequired")
-                    ])
-            ]);
-
-        var overlayNode = CreateBranch(
-            "navigation-overlays",
-            CurrentScenario == SandboxScenarioKey.LongText ? "Overlay hosts and contextual surfaces" : "Overlay dependencies",
-            "layers",
-            "Overlay primitives reached from navigation flows.",
-            "sandbox-navigation-tree-overlays",
-            "sandbox-navigation-tree-overlays-children",
-            [
-                CreateLeaf("navigation-context-menu", "Context menu", "Right-click action surface connected to TreeView.", "ads_click", "sandbox-navigation-tree-context-node"),
-                CreateLeaf("navigation-dialog-host", "Dialog host", "Shared modal host used by page-level actions.", "capture", "sandbox-navigation-tree-dialog-host"),
-                CreateLeaf("navigation-overlay-window", "Overlay window", "Floating overlay window with bounded geometry.", "open_in_new", "sandbox-navigation-tree-overlay-window")
-            ]);
-
-        return toolbarScope switch
-        {
-            ToolbarScopeNavigation => [foundationNode, controlsNode],
-            ToolbarScopeOverlays => [overlayNode],
-            _ => [foundationNode, controlsNode, overlayNode]
-        };
-    }
-
-    private IReadOnlyList<TreeViewNode> FilterTreeNodes(IReadOnlyList<TreeViewNode> nodes)
-    {
-        if (string.IsNullOrWhiteSpace(toolbarQuery))
-        {
-            return nodes;
-        }
-
-        var query = toolbarQuery.Trim();
-        return nodes
-            .Select(node => FilterTreeNode(node, query))
-            .Where(node => node is not null)
-            .Cast<TreeViewNode>()
-            .ToArray();
-    }
-
-    private static TreeViewNode? FilterTreeNode(TreeViewNode node, string query)
-    {
-        var filteredChildren = node.Children
-            .Select(child => FilterTreeNode(child, query))
-            .Where(child => child is not null)
-            .Cast<TreeViewNode>()
-            .ToArray();
-
-        var isMatch = node.Text.Contains(query, StringComparison.OrdinalIgnoreCase)
-            || node.Tooltip.Contains(query, StringComparison.OrdinalIgnoreCase);
-
-        if (!isMatch && filteredChildren.Length == 0)
-        {
-            return null;
-        }
-
-        return node with
-        {
-            Children = filteredChildren,
-            IsExpanded = true
-        };
-    }
-
-    private TreeViewNode CreateBranch(
-        string id,
-        string text,
-        string icon,
-        string tooltip,
-        string dataTestId,
-        string childrenDataTestId,
-        IReadOnlyList<TreeViewNode> children)
-        => new()
-        {
-            Id = id,
-            Text = text,
-            Icon = icon,
-            Tooltip = tooltip,
-            BadgeText = children.Count.ToString(System.Globalization.CultureInfo.InvariantCulture),
-            Children = children,
-            ChildrenDataTestId = childrenDataTestId,
-            DataTestId = dataTestId,
-            IsExpanded = expandedTreeNodeIds.Contains(id),
-            IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal)
-        };
-
-    private TreeViewNode CreateLeaf(
-        string id,
-        string text,
-        string tooltip,
-        string icon,
-        string dataTestId,
-        string badgeText = "")
-        => new()
-        {
-            Id = id,
-            Text = text,
-            Icon = icon,
-            Tooltip = tooltip,
-            BadgeText = badgeText,
-            DataTestId = dataTestId,
-            IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal),
-            IsDisabled = CurrentScenario == SandboxScenarioKey.DisabledState && string.Equals(id, "navigation-context-menu", StringComparison.Ordinal)
-        };
-
-    private static string ResolveTreeNodeLabel(string id)
-        => id switch
-        {
-            "navigation-foundations" => "Foundations",
-            "navigation-page-scaffold" => "Page scaffold",
-            "navigation-list-detail" => "List-detail shell",
-            "navigation-controls" => "Navigation controls",
-            "navigation-tabs" => "Tabs",
-            "navigation-steps" => "Steps",
-            "navigation-toolbar" => "Toolbar",
-            "navigation-tree" => "Tree view",
-            "navigation-overlays" => "Overlay dependencies",
-            "navigation-context-menu" => "Context menu",
-            "navigation-dialog-host" => "Dialog host",
-            "navigation-overlay-window" => "Overlay window",
-            _ => "Navigation node"
-        };
-
-    private static string ResolveTreeNodeSummary(string id)
-        => id switch
-        {
-            "navigation-page-scaffold" => "PageScaffold keeps page width, rails, and section flow consistent.",
-            "navigation-list-detail" => "ListDetailShell protects list and detail panes from accidental width collapse.",
-            "navigation-tabs" => "Tabs handle selection, keyboard movement, wrapping, scrolling, and disabled states.",
-            "navigation-steps" => "Steps keep linear progression clear while allowing controlled navigation.",
-            "navigation-toolbar" => "Toolbar groups filters and actions without custom page chrome.",
-            "navigation-tree" => "TreeView supports hierarchical selection, expansion, and context-menu requests.",
-            "navigation-context-menu" => "Context-menu behavior should stay bounded, closeable, and connected to the selected node.",
-            "navigation-dialog-host" => "DialogHost owns modal layering so page content can stay focused.",
-            "navigation-overlay-window" => "OverlayWindow adds a bounded floating surface for complex supporting tools.",
-            _ => "Shared navigation components should remain readable under dense, long-text, and mobile conditions."
-        };
 
 }

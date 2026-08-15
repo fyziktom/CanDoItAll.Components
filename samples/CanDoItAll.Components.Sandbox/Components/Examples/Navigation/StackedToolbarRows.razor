@@ -1,19 +1,16 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
-<Toolbar>
+<Toolbar data-testid="sandbox-navigation-toolbar-row">
     <ToolbarRow>
         <ToolbarFields>
-            <TextBox Value="@query" ValueChanged="@(value => query = value ?? string.Empty)" Immediate="true" Placeholder="Filter" aria-label="Filter" />
+            <TextBox Value="@toolbarRowsQuery" ValueChanged="@(value => toolbarRowsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Filter" aria-label="Filter" />
         </ToolbarFields>
     </ToolbarRow>
     <ToolbarRow>
         <ToolbarActions>
             <StatusBadge Text="3 selected" Tone="info" />
-            <Button Text="Archive" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" />
+            <Button Text="Archive" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
         </ToolbarActions>
     </ToolbarRow>
 </Toolbar>
-
-@code {
-    private string query = string.Empty;
-}

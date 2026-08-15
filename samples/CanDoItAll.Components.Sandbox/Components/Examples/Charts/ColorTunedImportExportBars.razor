@@ -1,35 +1,8 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Charts
+@inherits ChartShowcaseBase
 
-<CdaChart Title="Color-tuned import/export bars"
-          Description="Per-point colors distinguish import from export while keeping one public point model."
-          Series="@(new List<CdaChartSeries>
-                  {
-                      new()
-                      {
-                          Name = "Import / export",
-                          Type = CdaChartType.Bar,
-                          Points =
-                          [
-                              new("T1", 1.1m, "#2563eb", "Import"),
-                              new("T2", 1.4m, "#2563eb", "Import"),
-                              new("T3", 0.7m, "#16a34a", "Export"),
-                              new("T4", 0.9m, "#16a34a", "Export"),
-                              new("T5", 1.3m, "#2563eb", "Import")
-                          ]
-                      }
-                  })"
-          Options="@(new CdaChartOptions
-                   {
-                       Type = CdaChartType.Bar,
-                       Unit = "kWh",
-                       XAxisType = CdaChartAxisType.Category,
-                       XAxisTitle = "Interval",
-                       YAxisTitle = "Energy balance",
-                       ValuePrecision = 1,
-                       TooltipPrecision = 2,
-                       ShowToolbar = false,
-                       RotateXAxisLabels = false,
-                       LegendPosition = CdaChartLegendPosition.Bottom,
-                       Palette = ["#2563eb", "#dc2626"]
-                   })"
-          Height="340" />
+<CdaChart AriaLabel="Color-tuned import/export bars"
+          Series="@ColorTunedSeries"
+          Options="@BarOptions"
+          Height="@PrimaryChartHeight"
+          data-testid="chart-colors" />

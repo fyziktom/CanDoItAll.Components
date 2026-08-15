@@ -1,11 +1,10 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
 
 <FormField Text="Notes">
-    <TextArea Value="@notes"
-              ValueChanged="@(value => notes = value ?? string.Empty)"
-              Placeholder="Explain context, risk, and reviewer expectations." />
+    <TextArea Value="@FormState.Notes"
+              ValueChanged="HandleNotesChanged"
+              Size="@(CurrentScenario == SandboxScenarioKey.DenseContent ? TextAreaSize.Extended : TextAreaSize.Standard)"
+              Placeholder="@NotesPlaceholder"
+              Disabled="@IsDisabled" />
 </FormField>
-
-@code {
-    private string notes = "Capture enough context for the reviewer to understand the request without reading surrounding application code.";
-}

@@ -1,41 +1,19 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
 <div class="relative rounded-[1.25rem] border border-dashed border-slate-300 bg-slate-50/80 p-6 text-sm text-slate-500"
-     @oncontextmenu="HandleContextMenu"
-     @oncontextmenu:preventDefault="true">
+     @oncontextmenu="OpenNavigationContextMenu"
+     @oncontextmenu:preventDefault="true"
+     data-testid="sandbox-navigation-context-menu-zone">
     Right-click anywhere in this panel, or
-    <Button Text="Open menu" Size="ButtonSize.Small" Click="OpenFromButton" />
-    <ContextMenu IsOpen="@isOpen"
-                 X="@x"
-                 Y="@y"
-                 Items="@MenuItems"
+    <Button Text="Open menu" Size="ButtonSize.Small" Click="OpenNavigationContextMenuFromButton" data-testid="sandbox-navigation-context-menu-trigger" />
+    <ContextMenu IsOpen="@navigationContextMenuOpen"
+                 X="@navigationContextMenuX"
+                 Y="@navigationContextMenuY"
+                 Items="@NavigationContextMenuItems"
                  Heading="Row actions"
                  AriaLabel="Demo row actions"
-                 ItemSelected="@(_ => isOpen = false)"
-                 OnClose="@(() => isOpen = false)" />
+                 ItemSelected="HandleNavigationContextMenuItemSelected"
+                 OnClose="CloseNavigationContextMenu"
+                 TestId="sandbox-navigation-context-menu" />
 </div>
-
-@code {
-    private static readonly IReadOnlyList<ContextMenuItem> MenuItems =
-    [
-        new() { Id = "rename", Text = "Rename", Icon = "edit" },
-        new() { Id = "duplicate", Text = "Duplicate", Icon = "content_copy" },
-        new() { Id = "delete", Text = "Delete", Icon = "delete", Danger = true, SeparatorBefore = true }
-    ];
-
-    private bool isOpen;
-    private double x = 24;
-    private double y = 24;
-
-    private void HandleContextMenu(MouseEventArgs args)
-    {
-        x = args.ClientX;
-        y = args.ClientY;
-        isOpen = true;
-    }
-
-    private void OpenFromButton()
-    {
-        isOpen = true;
-    }
-}

@@ -1,14 +1,16 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
 
-<div class="space-y-3">
-    <Button Text="@(expanded ? "Collapse sidebar" : "Expand sidebar")"
-            Icon="@(expanded ? "menu_open" : "menu")"
-            ButtonStyle="ButtonStyle.Light"
-            Variant="Variant.Outlined"
+<div class="space-y-3" data-testid="sandbox-layout-sidebar">
+    <Button Text="@(sidebarExpanded ? "Collapse sidebar" : "Expand sidebar")"
+            Icon="@(sidebarExpanded ? "menu_open" : "menu")"
+            ButtonStyle="@(ButtonStyle.Light)"
+            Variant="@(Variant.Outlined)"
             Size="ButtonSize.Small"
-            Click="@(() => expanded = !expanded)" />
+            Click="ToggleSidebar" />
     <div class="flex overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white" style="height:12rem;">
-        <Sidebar Expanded="@expanded" ExpandedChanged="@(value => expanded = value)" Class="w-40 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
+        <Sidebar Expanded="@sidebarExpanded"
+                 ExpandedChanged="HandleSidebarExpandedChanged"
+                 Class="w-40 shrink-0 border-r border-slate-200 bg-slate-50 p-3">
             <div class="space-y-2 text-sm text-slate-600">
                 <p class="m-0 font-semibold text-slate-800">Navigation</p>
                 <p class="m-0">Feedback</p>
@@ -21,5 +23,7 @@
 </div>
 
 @code {
-    private bool expanded = true;
+    private bool sidebarExpanded = true;
+    private void ToggleSidebar() => sidebarExpanded = !sidebarExpanded;
+    private Task HandleSidebarExpandedChanged(bool value) { sidebarExpanded = value; return Task.CompletedTask; }
 }

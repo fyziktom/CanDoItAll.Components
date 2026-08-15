@@ -1,8 +1,7 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 @page "/groups/overlays"
 @inherits CatalogPageBase
-@inject DialogService DialogService
-@inject NotificationService NotificationService
+@using CanDoItAll.Components.Sandbox.Components.Examples.Overlays
 
 <PageTitle>Overlays</PageTitle>
 
@@ -15,44 +14,11 @@
     <ChildContent>
         @if (CurrentScenario == SandboxScenarioKey.LoadingState)
         {
-            <LoadingState Eyebrow="Overlays" Title="Preparing overlay surfaces" Description="The page keeps context while contextual help, host layers, and sticky actions initialize." />
+            <LoadingState Eyebrow="Overlays" Title="Preparing overlay surfaces"
+                          Description="The page keeps context while contextual help, host layers, and sticky actions initialize." />
         }
         else
         {
-            <Grid Gap="LayoutGap.Large"
-                  ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
-                <SectionCard Title="Overlay hosts" Description="Hidden hosts should still be mounted centrally so pages do not create their own overlay plumbing.">
-                    <div class="space-y-4">
-                        <Alert AlertStyle="@(AlertStyle.Info)">Dialog and tooltip hosts stay mounted as shared infrastructure while individual pages focus on rendering and orchestration.</Alert>
-                        <Cluster Gap="LayoutGap.Small">
-                            <StatusBadge Text="Dialog host mounted" Tone="success" />
-                            <StatusBadge Text="Tooltip host mounted" Tone="success" />
-                            <StatusBadge Text="Notification host mounted" Tone="success" />
-                            <StatusBadge Text="Page context preserved" Tone="info" />
-                        </Cluster>
-                    </div>
-                </SectionCard>
-
-                <SectionCard Title="Review surface" Description="The surrounding page still needs enough context when overlays are in play.">
-                    @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-                    {
-                        <EmptyState Eyebrow="Overlays" Title="No record selected" Description="Select a request before contextual help, confirmation actions, and sticky approval controls become meaningful." />
-                    }
-                    else
-                    {
-                        <div class="space-y-3">
-                            <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Shared migration approval" />
-                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SurfaceCopy" />
-                            <Cluster Gap="LayoutGap.Small">
-                                <StatusBadge Text="Needs review" Tone="warning" />
-                                <StatusBadge Text="Help available" Tone="info" />
-                                <StatusBadge Text="Shared host" Tone="success" />
-                            </Cluster>
-                        </div>
-                    }
-                </SectionCard>
-            </Grid>
-
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -64,37 +30,7 @@
                                       Description="DialogService examples cover modal sizes, protected backdrop behavior, and close results returned to the caller."
                                       SourceId="examples/Overlays/DialogServiceTriggers.razor"
                                       ApiTypes="@DialogServiceApiTypes">
-                            <Stack GapScale="LayoutGap.Medium">
-                                <Cluster Gap="LayoutGap.Small">
-                                    <Button Text="Compact dialog"
-                                            ButtonStyle="@(ButtonStyle.Light)"
-                                            Variant="@(Variant.Outlined)"
-                                            Click="@(() => OpenSizedDialog(ModalSize.Compact))"
-                                            data-testid="open-compact-dialog" />
-                                    <Button Text="Wide dialog"
-                                            ButtonStyle="@(ButtonStyle.Info)"
-                                            Variant="@(Variant.Outlined)"
-                                            Click="@(() => OpenSizedDialog(ModalSize.Wide))"
-                                            data-testid="open-wide-dialog" />
-                                    <Button Text="Full dialog"
-                                            ButtonStyle="@(ButtonStyle.Secondary)"
-                                            Variant="@(Variant.Outlined)"
-                                            Click="@(() => OpenSizedDialog(ModalSize.Full))"
-                                            data-testid="open-full-dialog" />
-                                    <Button Text="Return object"
-                                            Click="@OpenResultDialog"
-                                            data-testid="open-result-dialog" />
-                                    <Button Text="Backdrop locked"
-                                            ButtonStyle="@(ButtonStyle.Warning)"
-                                            Variant="@(Variant.Outlined)"
-                                            Click="@OpenBackdropLockedDialog"
-                                            data-testid="open-backdrop-dialog" />
-                                </Cluster>
-
-                                <Alert AlertStyle="@(AlertStyle.Info)">
-                                    <span data-testid="dialog-result">@DialogResultText</span>
-                                </Alert>
-                            </Stack>
+                            <DialogServiceTriggers />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "TooltipService")
@@ -103,16 +39,7 @@
                                       Description="TooltipService stays host-mounted so local pages only trigger state."
                                       SourceId="examples/Overlays/TooltipServiceTarget.razor"
                                       ApiTypes="@TooltipServiceApiTypes">
-                            <TooltipTarget Text="TooltipService opened this host-mounted tooltip from pointer coordinates."
-                                           Position="TooltipPosition.RightTop"
-                                           Duration="@((TimeSpan?)null)"
-                                           TestId="service-tooltip"
-                                           TriggerClass="inline-flex">
-                                <span class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm"
-                                      data-testid="tooltip-trigger">
-                                    Hover service tooltip
-                                </span>
-                            </TooltipTarget>
+                            <TooltipServiceTarget />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "NotificationService")
@@ -121,11 +48,7 @@
                                       Description="NotificationService stays host-mounted so local pages only trigger state."
                                       SourceId="examples/Overlays/NotificationToast.razor"
                                       ApiTypes="@NotificationServiceApiTypes">
-                            <Button Text="Show toast"
-                                    ButtonStyle="@(ButtonStyle.Success)"
-                                    Variant="@(Variant.Outlined)"
-                                    Click="@ShowOverlayToast"
-                                    data-testid="show-overlay-toast" />
+                            <NotificationToast />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "OverlayWindow")
@@ -134,98 +57,7 @@
                                       Description="A bounded floating window should stay inside its host frame, preserve a safe top area, and keep action buttons readable while it moves through normal, minimized, and hidden states."
                                       SourceId="examples/Overlays/OverlayWindowExample.razor"
                                       ApiTypes="@OverlayWindowApiTypes">
-                            <div class="relative min-h-[28rem] overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm shadow-slate-200/60"
-                                 data-cda-overlay-frame
-                                 data-cda-overlay-container
-                                 data-testid="sandbox-overlay-window-frame">
-                                <div class="relative z-[2] flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/95 px-4 py-3"
-                                     data-cda-overlay-safe-top
-                                     data-testid="sandbox-overlay-window-safe-top">
-                                    <div class="min-w-0">
-                                        <p class="cda-eyebrow cda-eyebrow--tight">OverlayLib</p>
-                                        <p class="break-words text-sm font-semibold text-slate-800">Window host frame</p>
-                                    </div>
-                                    <Cluster Gap="LayoutGap.Small">
-                                        <Button Text="Show window"
-                                                ButtonStyle="@(ButtonStyle.Light)"
-                                                Variant="@(Variant.Outlined)"
-                                                Click="@ShowOverlayWindow"
-                                                data-testid="show-overlay-window" />
-                                        <Button Text="Reset"
-                                                ButtonStyle="@(ButtonStyle.Light)"
-                                                Variant="@(Variant.Outlined)"
-                                                Click="@ResetOverlayWindow"
-                                                data-testid="reset-overlay-window" />
-                                    </Cluster>
-                                </div>
-
-                                <div class="grid min-h-[22rem] gap-4 p-4 md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.65fr)]">
-                                    <div class="min-w-0 space-y-3 rounded-[1rem] border border-dashed border-slate-300 bg-slate-50/70 p-4">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Host content remains available" />
-                                        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@OverlayWindowHostCopy" />
-                                        <Cluster Gap="LayoutGap.Small">
-                                            <StatusBadge Text="Bounded" Tone="success" />
-                                            <StatusBadge Text="Safe top" Tone="info" />
-                                            <StatusBadge Text="@OverlayWindowStateLabel" Tone="@OverlayWindowStateTone" />
-                                        </Cluster>
-                                    </div>
-
-                                    <div class="min-w-0 space-y-3 rounded-[1rem] border border-slate-200 bg-white/90 p-4">
-                                        <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Frame acceptance" />
-                                        <div class="sandbox-proof-list">
-                                            <p>Window geometry must stay inside the bordered frame.</p>
-                                            <p>Header actions must remain icon-sized and reachable.</p>
-                                            <p>Hidden state must return through the shared show action.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @if (overlayWindowState.IsVisible)
-                                {
-                                    <OverlayWindow WindowId="sandbox-overlay-window"
-                                                   Title="Inspector window"
-                                                   Kicker="OverlayLib"
-                                                   Summary="@OverlayWindowSummary"
-                                                   TestId="sandbox-overlay-window"
-                                                   State="@overlayWindowState"
-                                                   StateChanged="HandleOverlayWindowStateChanged"
-                                                   DefaultWidth="360"
-                                                   DefaultHeight="300"
-                                                   MinHeight="220"
-                                                   MaxWidth="460"
-                                                   DefaultPlacement="top-right"
-                                                   ContainerSelector="[data-testid='sandbox-overlay-window-frame']"
-                                                   SafeTopSelector="[data-testid='sandbox-overlay-window-safe-top']">
-                                        <ChildContent>
-                                            <Stack GapScale="LayoutGap.Medium">
-                                                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@OverlayWindowBodyCopy" />
-                                                <Alert AlertStyle="@(AlertStyle.Info)">This floating surface is rendered by OverlayLib, while the surrounding sandbox content remains ordinary BaseLib layout.</Alert>
-                                                <Toolbar data-testid="sandbox-overlay-window-toolbar">
-                                                    <ToolbarRow>
-                                                        <ToolbarFields>
-                                                            <TextBox Value="@OverlayWindowSearch"
-                                                                     ReadOnly="true"
-                                                                     aria-label="Overlay window search preview"
-                                                                     data-testid="sandbox-overlay-window-search" />
-                                                        </ToolbarFields>
-                                                        <ToolbarActions>
-                                                            <Button Text="Refresh"
-                                                                    ButtonStyle="@(ButtonStyle.Light)"
-                                                                    Variant="@(Variant.Outlined)"
-                                                                    Disabled="@IsDisabled" />
-                                                        </ToolbarActions>
-                                                    </ToolbarRow>
-                                                </Toolbar>
-                                                <Cluster Gap="LayoutGap.Small">
-                                                    <StatusBadge Text="Geometry" Tone="success" />
-                                                    <StatusBadge Text="Minimize" Tone="info" />
-                                                    <StatusBadge Text="Hide/show" Tone="warning" />
-                                                </Cluster>
-                                            </Stack>
-                                        </ChildContent>
-                                    </OverlayWindow>
-                                }
-                            </div>
+                            <OverlayWindowExample />
                         </ExampleBlock>
                     }
                 </section>
@@ -244,123 +76,6 @@
     private static readonly IReadOnlyList<Type> NotificationServiceApiTypes = [typeof(NotificationService)];
     private static readonly IReadOnlyList<Type> OverlayWindowApiTypes = [typeof(OverlayWindow)];
 
-    private string DialogResultText { get; set; } = "No dialog result returned yet.";
-    private OverlayWindowState overlayWindowState = new();
-
-    private bool IsDisabled => CurrentScenario == SandboxScenarioKey.EmptyState || CurrentScenario == SandboxScenarioKey.DisabledState;
-
-    private Task OpenSizedDialog(ModalSize size)
-    {
-        var label = ResolveSizeLabel(size);
-        var slug = ResolveSizeSlug(size);
-
-        _ = DialogService.OpenAsync(
-            $"{label} service dialog",
-            dialog => @<Stack GapScale="LayoutGap.Medium">
-                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@($"This {label.ToLowerInvariant()} modal is opened by DialogService and rendered through the shared DialogHost.")" />
-                <Alert AlertStyle="@(AlertStyle.Info)">The modal keeps the existing BaseLib dialog chrome while the service owns result completion.</Alert>
-                <Cluster Gap="LayoutGap.Small">
-                    <Button Text="Close"
-                            ButtonStyle="@(ButtonStyle.Light)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@(() => CloseDialogWithResult(dialog, $"{label} closed"))"
-                            data-testid="close-sized-dialog" />
-                </Cluster>
-            </Stack>,
-            new DialogOptions
-            {
-                Size = size,
-                Subtitle = "Service-driven modal size proof.",
-                TestId = $"service-dialog-{slug}"
-            });
-
-        return Task.CompletedTask;
-    }
-
-    private async Task OpenResultDialog()
-    {
-        var result = await DialogService.OpenAsync(
-            "Return a decision object",
-            dialog => @<Stack GapScale="LayoutGap.Medium">
-                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Close this dialog with an object so the caller can continue the workflow with typed data." />
-                <Cluster Gap="LayoutGap.Small">
-                    <Button Text="Return approval"
-                            Click="@(() => CloseDialogWithDecision(dialog, ApprovedStatus))"
-                            data-testid="return-dialog-object" />
-                    <Button Text="Return review"
-                            ButtonStyle="@(ButtonStyle.Warning)"
-                            Variant="@(Variant.Outlined)"
-                            Click="@(() => CloseDialogWithDecision(dialog, ReviewStatus))" />
-                </Cluster>
-            </Stack>,
-            new DialogOptions
-            {
-                Size = ModalSize.Medium,
-                Subtitle = "The awaited service call receives the object supplied by dialog.CloseAsync.",
-                TestId = "service-dialog-result"
-            });
-
-        DialogResultText = result is DialogDecision decision
-            ? $"Dialog returned: {decision.Status} from {decision.Source}"
-            : "Dialog returned no object.";
-    }
-
-    private Task OpenBackdropLockedDialog()
-    {
-        _ = DialogService.OpenAsync(
-            "Backdrop close disabled",
-            dialog => @<Stack GapScale="LayoutGap.Medium">
-                <TextBlock TextStyle="@(TextStyle.Body2)" Value="Clicking outside this modal should leave it open. Use the explicit action to close it." />
-                <Button Text="Close locked dialog"
-                        ButtonStyle="@(ButtonStyle.Warning)"
-                        Variant="@(Variant.Outlined)"
-                        Click="@(() => CloseDialogWithResult(dialog, LockedCloseResult))"
-                        data-testid="close-backdrop-dialog" />
-            </Stack>,
-            new DialogOptions
-            {
-                Size = ModalSize.Compact,
-                CloseOnBackdrop = false,
-                Subtitle = "CloseOnBackdrop is false for this service dialog.",
-                TestId = "service-dialog-backdrop-locked"
-            });
-
-        return Task.CompletedTask;
-    }
-
-    private Task ShowOverlayToast()
-    {
-        NotificationService.Notify(new NotificationMessage
-        {
-            Severity = NotificationSeverity.Success,
-            Summary = "Overlay service toast",
-            Detail = "NotificationService rendered this bottom-center toast from the shared layout host.",
-            Duration = 0,
-            Position = NotificationPosition.BottomCenter,
-            TestId = "overlay-service-toast"
-        });
-
-        return Task.CompletedTask;
-    }
-
-    private Task HandleOverlayWindowStateChanged(OverlayWindowState state)
-    {
-        overlayWindowState = OverlayWindowState.Normalize(state);
-        return Task.CompletedTask;
-    }
-
-    private Task ShowOverlayWindow()
-    {
-        overlayWindowState = OverlayWindowState.Normalize(new OverlayWindowState { IsVisible = true });
-        return Task.CompletedTask;
-    }
-
-    private Task ResetOverlayWindow()
-    {
-        overlayWindowState = new OverlayWindowState { IsVisible = true };
-        return Task.CompletedTask;
-    }
-
     private string SurfaceCopy => CurrentScenario switch
     {
         SandboxScenarioKey.DenseContent => "Dense approval content still leaves room for sticky actions and contextual help without forcing the user to decode overlapping priority signals.",
@@ -368,74 +83,4 @@
         _ => "A shared overlay system should reinforce the review flow instead of fragmenting it."
     };
 
-    private string OverlayWindowSummary => CurrentScenario switch
-    {
-        SandboxScenarioKey.LongText => "Longer title and summary copy still need to stay readable without pushing action buttons off the header.",
-        SandboxScenarioKey.DenseContent => "Dense supporting tools should float inside the host frame without stealing the page hierarchy.",
-        _ => "Floating support content inside a shared overlay host."
-    };
-
-    private string OverlayWindowHostCopy => CurrentScenario switch
-    {
-        SandboxScenarioKey.LongText => "The host frame deliberately includes enough ordinary page content to prove the floating surface supports the workflow instead of replacing the surrounding page.",
-        SandboxScenarioKey.DenseContent => "Dense host content keeps visible status and proof notes while the overlay window remains bounded above it.",
-        _ => "The surrounding page remains readable while OverlayWindow provides supporting inspection content."
-    };
-
-    private string OverlayWindowBodyCopy => CurrentScenario switch
-    {
-        SandboxScenarioKey.LongText => "Overlay body copy can grow, but it should wrap inside the floating surface and leave the header controls reachable.",
-        SandboxScenarioKey.DenseContent => "Dense overlay content should rely on shared controls, not custom one-off panels.",
-        _ => "Use the floating window for supporting tools that need to stay close to the current work."
-    };
-
-    private string OverlayWindowSearch => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Filter overlay evidence and acceptance checkpoints"
-        : "Filter overlay evidence";
-
-    private string OverlayWindowStateLabel => overlayWindowState.IsVisible
-        ? overlayWindowState.IsMinimized ? "Minimized" : "Visible"
-        : "Hidden";
-
-    private string OverlayWindowStateTone => overlayWindowState.IsVisible
-        ? overlayWindowState.IsMinimized ? "warning" : "success"
-        : "warning";
-
-    private const string ApprovedStatus = "Approved";
-    private const string ReviewStatus = "Needs review";
-    private const string LockedCloseResult = "locked dialog closed";
-
-    private static Task CloseDialogWithResult(DialogReference dialog, object result)
-    {
-        return dialog.CloseAsync(result);
-    }
-
-    private static Task CloseDialogWithDecision(DialogReference dialog, string status)
-    {
-        return dialog.CloseAsync(new DialogDecision(status, "service-demo"));
-    }
-
-    private static string ResolveSizeLabel(ModalSize size)
-    {
-        return size switch
-        {
-            ModalSize.Compact => "Compact",
-            ModalSize.Wide => "Wide",
-            ModalSize.Full => "Full",
-            _ => "Medium"
-        };
-    }
-
-    private static string ResolveSizeSlug(ModalSize size)
-    {
-        return size switch
-        {
-            ModalSize.Compact => "compact",
-            ModalSize.Wide => "wide",
-            ModalSize.Full => "full",
-            _ => "medium"
-        };
-    }
-
-    private sealed record DialogDecision(string Status, string Source);
 }

@@ -1,71 +1,43 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
-<div class="relative">
-    <TreeView Items="@nodes"
-              Style="TreeViewStyle.Workbench"
-              AriaLabel="Component navigation tree"
-              EmptyText="No navigation nodes match the current filter."
-              OnSelect="HandleSelect"
-              OnToggle="HandleToggle"
-              OnContextMenu="@(request => contextRequest = request)" />
+<Grid Gap="LayoutGap.Large"
+      ColumnTemplate="minmax(0,1fr)"
+      ColumnTemplateLg="minmax(16rem,0.85fr) minmax(0,1.15fr)">
+    <div class="relative min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60"
+         data-testid="sandbox-navigation-tree-panel">
+        <TreeView Items="@TreeNodes"
+                  Style="@(TreeViewStyle.Workbench)"
+                  AriaLabel="Standard component navigation tree"
+                  EmptyText="No navigation nodes match the current filter."
+                  OnSelect="SelectTreeNode"
+                  OnToggle="ToggleTreeNode"
+                  OnContextMenu="OpenTreeContextMenu"
+                  data-testid="sandbox-navigation-tree" />
+        <ContextMenu IsOpen="@(treeContextMenuRequest is not null)"
+                     X="@(treeContextMenuRequest?.ClientX ?? 16)"
+                     Y="@(treeContextMenuRequest?.ClientY ?? 16)"
+                     Items="@TreeContextMenuItems"
+                     Heading="Tree action"
+                     Description="@(treeContextMenuRequest is null ? null : ResolveTreeNodeLabel(treeContextMenuRequest.NodeId))"
+                     AriaLabel="Tree node actions"
+                     ItemSelected="HandleTreeContextMenuItemSelected"
+                     OnClose="CloseTreeContextMenu"
+                     TestId="sandbox-navigation-tree-context-menu" />
+    </div>
 
-    <ContextMenu IsOpen="@(contextRequest is not null)"
-                 X="@(contextRequest?.ClientX ?? 16)"
-                 Y="@(contextRequest?.ClientY ?? 16)"
-                 Items="@MenuItems"
-                 Heading="Tree action"
-                 AriaLabel="Tree node actions"
-                 ItemSelected="@(_ => contextRequest = null)"
-                 OnClose="@(() => contextRequest = null)" />
-</div>
-
-@code {
-    private static readonly IReadOnlyList<ContextMenuItem> MenuItems =
-    [
-        new() { Id = "select", Text = "Select node", Icon = "check" },
-        new() { Id = "open-details", Text = "Open details", Icon = "open_in_new" }
-    ];
-
-    private TreeViewNodeContextMenuRequest? contextRequest;
-
-    private IReadOnlyList<TreeViewNode> nodes =
-    [
-        new()
-        {
-            Id = "foundations",
-            Text = "Foundations",
-            Icon = "bars_staggered",
-            IsExpanded = true,
-            Children =
-            [
-                new() { Id = "page-scaffold", Text = "Page scaffold", Icon = "space_dashboard" },
-                new() { Id = "list-detail", Text = "List-detail shell", Icon = "view_sidebar", IsSelected = true }
-            ]
-        },
-        new()
-        {
-            Id = "controls",
-            Text = "Navigation controls",
-            Icon = "account_tree",
-            Children =
-            [
-                new() { Id = "tabs", Text = "Tabs", Icon = "tab" },
-                new() { Id = "steps", Text = "Steps", Icon = "timeline" }
-            ]
-        }
-    ];
-
-    private Task HandleSelect(string id)
-    {
-        nodes = nodes.Select(node => node with { IsSelected = node.Id == id, Children = node.Children.Select(child => child with { IsSelected = child.Id == id }).ToArray() }).ToArray();
-        contextRequest = null;
-        return Task.CompletedTask;
-    }
-
-    private Task HandleToggle(string id)
-    {
-        nodes = nodes.Select(node => node.Id == id ? node with { IsExpanded = !node.IsExpanded } : node).ToArray();
-        contextRequest = null;
-        return Task.CompletedTask;
-    }
-}
+    <div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-4"
+         data-testid="sandbox-navigation-tree-detail">
+        <Stack GapScale="LayoutGap.Medium">
+            <div class="space-y-1">
+                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@ResolveTreeNodeLabel(selectedTreeNodeId)" />
+                <TextBlock TextStyle="@(TextStyle.Body2)" Value="@ResolveTreeNodeSummary(selectedTreeNodeId)" />
+            </div>
+            <Cluster Gap="LayoutGap.Small">
+                <StatusBadge Text="@toolbarScope" Tone="info" />
+                <StatusBadge Text="@TreeFilterStatus" Tone="success" />
+                <StatusBadge Text="@ExpandedTreeStatus" Tone="warning" />
+            </Cluster>
+        </Stack>
+    </div>
+</Grid>

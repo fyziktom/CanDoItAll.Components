@@ -15,7 +15,8 @@
     <ChildContent>
         @if (CurrentScenario == SandboxScenarioKey.EmptyState)
         {
-            <EmptyState Eyebrow="Badges" Title="No status yet" Description="Choose a record before status, chip, and pill treatments become available." />
+            <EmptyState Eyebrow="Badges" Title="No status yet"
+                        Description="Choose a record before status, chip, and pill treatments become available." />
         }
         else
         {
@@ -30,19 +31,7 @@
                                       Description="Small feedback tokens need to wrap and stay distinct."
                                       SourceId="examples/Badges/BadgesAndStatus.razor"
                                       ApiTypes="@BadgeApiTypes">
-                            <div class="space-y-3">
-                                <BadgesGroup>
-                                    <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
-                                    <Badge Text="@LongBadgeText" Tone="@(BadgeTone.Warn)" />
-                                    <StatusBadge Text="@LongStatusText" Tone="danger" />
-                                </BadgesGroup>
-                                <Cluster Gap="LayoutGap.Small">
-                                    <StatusBadge Text="Healthy" Tone="success" />
-                                    <StatusBadge Text="Waiting proof" Tone="warning" />
-                                    <StatusBadge Text="Blocked" Tone="danger" />
-                                    <StatusBadge Text="Info" Tone="info" />
-                                </Cluster>
-                            </div>
+                            <BadgesAndStatus />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "BadgesGroup")
@@ -51,16 +40,7 @@
                                       Description="PillStack tightens the gap for denser badge clusters."
                                       SourceId="examples/Badges/BadgesGroupShowcase.razor"
                                       ApiTypes="@BadgesGroupApiTypes">
-                            <div class="space-y-3">
-                                <BadgesGroup>
-                                    <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
-                                    <StatusBadge Text="Blocked" Tone="danger" />
-                                </BadgesGroup>
-                                <BadgesGroup PillStack="true">
-                                    <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
-                                    <StatusBadge Text="Blocked" Tone="danger" />
-                                </BadgesGroup>
-                            </div>
+                            <BadgesGroupShowcase />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "StatusBadge")
@@ -69,18 +49,7 @@
                                       Description="Every tone plus a NoWrap example that truncates instead of wrapping."
                                       SourceId="examples/Badges/StatusBadgeShowcase.razor"
                                       ApiTypes="@StatusBadgeApiTypes">
-                            <div class="space-y-3">
-                                <Cluster Gap="LayoutGap.Small">
-                                    <StatusBadge Text="Healthy" Tone="success" />
-                                    <StatusBadge Text="Waiting proof" Tone="warning" />
-                                    <StatusBadge Text="Blocked" Tone="danger" />
-                                    <StatusBadge Text="Info" Tone="info" />
-                                    <StatusBadge Text="Neutral" Tone="neutral" />
-                                </Cluster>
-                                <div style="max-width: 10rem;">
-                                    <StatusBadge Text="Blocked by extended publication evidence copy" Tone="danger" NoWrap="true" />
-                                </div>
-                            </div>
+                            <StatusBadgeShowcase />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Chip")
@@ -89,10 +58,7 @@
                                       Description="Compact tag-style affordances for lightweight labeling."
                                       SourceId="examples/Badges/ChipRowExample.razor"
                                       ApiTypes="@ChipApiTypes">
-                            <ChipRow>
-                                <Chip Text="Toast proof" />
-                                <Chip Text="@LongChipText" />
-                            </ChipRow>
+                            <ChipRowExample />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "ChipRow")
@@ -101,12 +67,7 @@
                                       Description="A ChipRow wraps its chips onto multiple lines instead of overflowing."
                                       SourceId="examples/Badges/ChipRowShowcase.razor"
                                       ApiTypes="@ChipRowApiTypes">
-                            <ChipRow>
-                                <Chip Text="Design review" />
-                                <Chip Text="API contract" />
-                                <Chip Text="Accessibility pass" />
-                                <Chip Text="Release notes" />
-                            </ChipRow>
+                            <ChipRowShowcase />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "CompactStat")
@@ -115,15 +76,7 @@
                                       Description="Simple counts stay inline so the record list remains the dominant surface."
                                       SourceId="examples/Badges/SupportingMetrics.razor"
                                       ApiTypes="@CompactStatApiTypes">
-                            <CompactStatStrip>
-                                @foreach (var tile in Tiles)
-                                {
-                                    <CompactStat Label="@tile.Label"
-                                                 Value="@tile.Value"
-                                                 HelperText="@tile.HelperText"
-                                                 Tone="@tile.Tone" />
-                                }
-                            </CompactStatStrip>
+                            <SupportingMetrics />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "CompactStatStrip")
@@ -132,12 +85,7 @@
                                       Description="A CompactStatStrip holding more tiles than the summary example, proving it stays a single row of stats."
                                       SourceId="examples/Badges/CompactStatStripShowcase.razor"
                                       ApiTypes="@CompactStatStripApiTypes">
-                            <CompactStatStrip>
-                                <CompactStat Label="Open" Value="12" Tone="info" />
-                                <CompactStat Label="Blocked" Value="2" Tone="danger" />
-                                <CompactStat Label="Shipped" Value="47" Tone="success" />
-                                <CompactStat Label="At risk" Value="5" Tone="warning" />
-                            </CompactStatStrip>
+                            <CompactStatStripShowcase />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "Pill")
@@ -146,16 +94,7 @@
                                       Description="Tone variants, an optional token prefix, and an interactive AsButton pill."
                                       SourceId="examples/Badges/PillShowcase.razor"
                                       ApiTypes="@PillApiTypes">
-                            <Cluster Gap="LayoutGap.Small">
-                                <Pill Text="Neutral" Tone="PillTone.Neutral" />
-                                <Pill Text="Ok" Tone="PillTone.Ok" />
-                                <Pill Text="Info" Tone="PillTone.Info" />
-                                <Pill Text="Warn" Tone="PillTone.Warn" />
-                                <Pill Text="Plain" Tone="PillTone.Plain" />
-                                <Pill Text="Label" Tone="PillTone.Label" />
-                                <Pill Token="A" Text="Assigned" Tone="PillTone.Info" />
-                                <Pill Text="Refresh" AsButton="true" Tone="PillTone.Neutral" />
-                            </Cluster>
+                            <PillShowcase />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "PillList")
@@ -164,18 +103,7 @@
                                       Description="Compact reduces the gap between pills for denser filter rows."
                                       SourceId="examples/Badges/PillListShowcase.razor"
                                       ApiTypes="@PillListApiTypes">
-                            <div class="space-y-3">
-                                <PillList>
-                                    <Pill Text="All modes" Tone="PillTone.Neutral" />
-                                    <Pill Text="Desktop" Tone="PillTone.Info" />
-                                    <Pill Text="Mobile" Tone="PillTone.Info" />
-                                </PillList>
-                                <PillList Compact="true">
-                                    <Pill Text="All modes" Tone="PillTone.Neutral" />
-                                    <Pill Text="Desktop" Tone="PillTone.Info" />
-                                    <Pill Text="Mobile" Tone="PillTone.Info" />
-                                </PillList>
-                            </div>
+                            <PillListShowcase />
                         </ExampleBlock>
                     }
                 </section>
@@ -199,48 +127,4 @@
     private static readonly IReadOnlyList<Type> PillApiTypes = [typeof(Pill)];
     private static readonly IReadOnlyList<Type> PillListApiTypes = [typeof(PillList)];
 
-    private string LongBadgeText => CurrentScenario == SandboxScenarioKey.LongText
-        ? "mobile warning requires screenshot confirmation"
-        : "Mobile warning";
-
-    private string LongStatusText => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Blocked by extended publication evidence copy"
-        : "Blocked";
-
-    private string LongChipText => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Long chip copy should wrap inside the available feedback column"
-        : "Review copy";
-
-    private IReadOnlyList<SummaryTileModel> Tiles => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => DenseTiles,
-        SandboxScenarioKey.LongText => LongTiles,
-        _ => BaseTiles
-    };
-
-    private static readonly IReadOnlyList<SummaryTileModel> BaseTiles =
-    [
-        new("Records", "24", "Stable item count for the shared review view.", "info"),
-        new("Warnings", "3", "Rows with follow-up or proof gaps still outstanding.", "warning"),
-        new("Ready", "18", "Items that can move forward without more layout work.", "success"),
-        new("Owners", "6", "Distinct ownership labels still visible in the shared system.", "neutral")
-    ];
-
-    private static readonly IReadOnlyList<SummaryTileModel> DenseTiles =
-    [
-        new("Records", "58", "Dense mode proves the page can absorb more metadata.", "info"),
-        new("Warnings", "7", "Some records still need screenshot or copy review.", "warning"),
-        new("Ready", "39", "Most records remain easy to scan in the denser pass.", "success"),
-        new("Groups", "9", "Shared grouping labels remain visible without extra UI chrome.", "neutral")
-    ];
-
-    private static readonly IReadOnlyList<SummaryTileModel> LongTiles =
-    [
-        new("Records", "24", "Stable item count for the shared review view.", "info"),
-        new("Longest title", "92 ch", "Longer labels should remain readable without destroying hierarchy.", "warning"),
-        new("Ready", "18", "Items that can move forward without more layout work.", "success"),
-        new("Visible context", "High", "Longer descriptions still keep supporting facts nearby.", "neutral")
-    ];
-
-    private sealed record SummaryTileModel(string Label, string Value, string HelperText, string Tone);
 }

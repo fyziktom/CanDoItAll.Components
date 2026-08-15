@@ -1,14 +1,12 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Overlays
 @inject NotificationService NotificationService
 
-<Button Text="Show toast"
-        ButtonStyle="ButtonStyle.Success"
-        Variant="Variant.Outlined"
-        Click="@(() => NotificationService.Notify(new NotificationMessage
-        {
-            Severity = NotificationSeverity.Success,
-            Summary = "Overlay service toast",
-            Detail = "NotificationService rendered this bottom-center toast from the shared layout host.",
-            Duration = 0,
-            Position = NotificationPosition.BottomCenter
-        }))" />
+<Button Text="Show toast" ButtonStyle="@(ButtonStyle.Success)" Variant="@(Variant.Outlined)" Click="@ShowOverlayToast" data-testid="show-overlay-toast" />
+
+@code {
+    private Task ShowOverlayToast()
+    {
+        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Overlay service toast", Detail = "NotificationService rendered this bottom-center toast from the shared layout host.", Duration = 0, Position = NotificationPosition.BottomCenter, TestId = "overlay-service-toast" });
+        return Task.CompletedTask;
+    }
+}

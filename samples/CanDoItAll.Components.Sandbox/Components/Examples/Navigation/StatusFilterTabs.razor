@@ -1,14 +1,8 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
-<SecondaryTabs Items="@Tabs" SelectedKey="@selectedKey" SelectedKeyChanged="@(key => selectedKey = key)" />
-
-@code {
-    private static readonly IReadOnlyList<SecondaryTabItem> Tabs =
-    [
-        new("all", "All", "24", null),
-        new("open", "Open", "9", "Still awaiting review."),
-        new("done", "Done", "15", "Marked complete this sprint.")
-    ];
-
-    private string selectedKey = "open";
-}
+<div data-testid="sandbox-navigation-secondary-tabs">
+    <SecondaryTabs Items="@SecondaryStatusTabs"
+                   SelectedKey="@secondaryTabsSelectedKey"
+                   SelectedKeyChanged="@(key => secondaryTabsSelectedKey = key)" />
+</div>

@@ -1,18 +1,12 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
 
-<FilterBar ResultText="128 results">
+<FilterBar ResultText="128 results" data-testid="sandbox-navigation-filter-bar">
     <ChildContent>
-        <TextBox Value="@query" ValueChanged="@(value => query = value ?? string.Empty)" Immediate="true" Placeholder="Search" aria-label="Search" />
-        <DropDown TValue="string" Data="@Scopes" Value="@scope" ValueChanged="@(value => scope = value ?? Scopes[0])" aria-label="Scope" />
+        <TextBox Value="@filterBarQuery" ValueChanged="@(value => filterBarQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search" aria-label="Search" />
+        <DropDown TValue="string" Data="@ToolbarScopes" Value="@filterBarScope" ValueChanged="@(value => filterBarScope = value ?? ToolbarScopeAll)" aria-label="Scope" />
     </ChildContent>
     <Actions>
-        <Button Text="Reset" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@(() => { query = string.Empty; scope = Scopes[0]; })" />
+        <Button Text="Reset" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => { filterBarQuery = string.Empty; filterBarScope = ToolbarScopeAll; })" />
     </Actions>
 </FilterBar>
-
-@code {
-    private static readonly IReadOnlyList<string> Scopes = ["All standard groups", "Navigation only", "Overlay dependencies"];
-
-    private string query = string.Empty;
-    private string scope = Scopes[0];
-}
