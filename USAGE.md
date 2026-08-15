@@ -2,7 +2,7 @@
 
 | Library | Group | Component | Self | CanDoItAll | CodeAnalysis | Sandbox |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Total** |  | 174 | 26 | 93 | 20 | 22 |
+| **Total** |  | 174 | 26 | 93 | 20 | 20 |
 | BaseLib | Badges | Badge | — | ✅ | — | — |
 | BaseLib | Badges | BadgesGroup | — | — | — | — |
 | BaseLib | Badges | Chip | — | — | — | — |
@@ -48,9 +48,9 @@
 | BaseLib | DataVisualization | ValueAxis | — | — | — | — |
 | BaseLib | Feedback | Alert | — | ✅ | — | — |
 | BaseLib | Feedback | Callout | — | — | — | — |
-| BaseLib | Feedback | EmptyState | — | ✅ | ✅ | ✅ |
+| BaseLib | Feedback | EmptyState | — | ✅ | ✅ | — |
 | BaseLib | Feedback | HelpPopover | ⭐ | ✅ | — | — |
-| BaseLib | Feedback | LoadingState | — | ✅ | — | ✅ |
+| BaseLib | Feedback | LoadingState | — | ✅ | — | — |
 | BaseLib | Feedback | Notification | — | ✅ | ✅ | ✅ |
 | BaseLib | Feedback | StatusCheckList | ⭐ | — | — | — |
 | BaseLib | Feedback | Tooltip | — | ✅ | ✅ | ✅ |
