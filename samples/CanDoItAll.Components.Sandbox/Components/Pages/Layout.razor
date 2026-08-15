@@ -6,18 +6,11 @@
 <PageTitle>Layout</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.LoadingState)
-        {
-            <LoadingState Eyebrow="Layout" Title="Composing the workspace shell" Description="The header, scaffold, and section rhythm stay legible while the content blocks load." />
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -166,7 +159,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 

@@ -10,11 +10,6 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
     [Inject]
     protected SideMenuService SideMenus { get; set; } = default!;
 
-    [CascadingParameter]
-    protected SandboxToolbarState? ToolbarState { get; set; }
-
-    protected SandboxScenarioKey CurrentScenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
-
     protected const string SideMenuId = "sandbox-side-menu";
 
     protected static readonly IReadOnlyList<ISideMenuItem> SideMenuBasePropertyItems =
@@ -73,15 +68,11 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
     protected string lastSideMenuComponentSelection = "Waiting for selection";
     protected string lastSideMenuDeclarativeSelection = "Select Timeline to prove this callback";
 
-    protected IReadOnlyList<ISideMenuItem> SideMenuDeclaredPropertyItems => CurrentScenario == SandboxScenarioKey.EmptyState
-        ? []
-        : CurrentScenario == SandboxScenarioKey.LongText
-            ? SideMenuBasePropertyItems
-                .Select(item => item is SideMenuItemDefinition definition
-                    ? definition with { Text = $"{definition.Text} with a deliberately extended navigation label" }
-                    : item)
-                .ToArray()
-            : SideMenuBasePropertyItems;
+    protected IReadOnlyList<ISideMenuItem> SideMenuDeclaredPropertyItems => SideMenuBasePropertyItems
+        .Select(item => item is SideMenuItemDefinition definition
+            ? definition with { Text = $"{definition.Text} with a deliberately extended navigation label" }
+            : item)
+        .ToArray();
 
     protected int basicTabIndex = 1;
     protected int classTabIndex = 1;
@@ -179,38 +170,14 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
         ]
     };
 
-    protected bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
-
-    protected string ActivityBadgeText => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? "7"
-        : "2";
-
-    protected string EvidenceTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Evidence and notes that must wrap cleanly"
-        : "Evidence";
-
-    protected string WrapFirstTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "A very long tab label that should wrap with control"
-        : "Long title that forces a second line";
-
-    protected string WrapThirdTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Another long label so two wrapped buttons can coexist without chaos"
-        : "Secondary proof notes";
-
-    protected string VerticalNotificationsTabLabel => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Notifications and preference routing"
-        : "Notifications";
-
-    protected string HeaderTitle => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Migration acceptance workspace with extended release notes and validation guidance"
-        : "Migration acceptance workspace";
-
-    protected string HeaderDescription => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense layout still needs a stable main column, a concise supporting rail, and action placement that does not fight the content.",
-        SandboxScenarioKey.LongText => "Longer page descriptions should not force the header into awkward wrapping or a first viewport that feels like a document instead of a workspace.",
-        _ => "Shared page headers should make hierarchy, supporting context, and trailing actions obvious without inventing custom page structure."
-    };
+    protected bool IsDisabled => false;
+    protected string ActivityBadgeText => "7";
+    protected string EvidenceTabLabel => "Evidence and notes that must wrap cleanly";
+    protected string WrapFirstTabLabel => "A very long tab label that should wrap with control";
+    protected string WrapThirdTabLabel => "Another long label so two wrapped buttons can coexist without chaos";
+    protected string VerticalNotificationsTabLabel => "Notifications and preference routing";
+    protected string HeaderTitle => "Migration acceptance workspace with extended release notes and validation guidance";
+    protected string HeaderDescription => "Longer page descriptions should not force the header into awkward wrapping or a first viewport that feels like a document instead of a workspace.";
 
     protected IReadOnlyList<TreeViewNode> TreeNodes => FilterTreeNodes(ResolveScopedTreeNodes());
 
@@ -470,7 +437,7 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
     {
         var foundationNode = CreateBranch(
             "navigation-foundations",
-            CurrentScenario == SandboxScenarioKey.LongText ? "Layout and shell foundations" : "Foundations",
+            "Layout and shell foundations",
             "bars_staggered",
             "Core layout and shell primitives.",
             "sandbox-navigation-tree-foundations",
@@ -482,19 +449,19 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
 
         var controlsNode = CreateBranch(
             "navigation-controls",
-            CurrentScenario == SandboxScenarioKey.LongText ? "Tabs, steps, toolbar and tree controls" : "Navigation controls",
+            "Tabs, steps, toolbar and tree controls",
             "account_tree",
             "Standard movement and selection primitives.",
             "sandbox-navigation-tree-controls",
             "sandbox-navigation-tree-controls-children",
             [
-                CreateLeaf("navigation-tabs", CurrentScenario == SandboxScenarioKey.LongText ? "Long navigation labels should remain understandable" : "Evidence", "Workspace tabs with wrapping and active-state proof.", "tab", "sandbox-navigation-tree-tabs"),
+                CreateLeaf("navigation-tabs", "Long navigation labels should remain understandable", "Workspace tabs with wrapping and active-state proof.", "tab", "sandbox-navigation-tree-tabs"),
                 CreateLeaf("navigation-steps", "Steps", "Linear and selectable step movement.", "timeline", "sandbox-navigation-tree-steps"),
                 CreateLeaf("navigation-toolbar", "Toolbar", "Shared sheet toolbar structure for filters and actions.", "tune", "sandbox-navigation-tree-toolbar"),
                 CreateLeaf("navigation-tree", "Tree view", "Hierarchical navigation with context-menu requests.", "account_tree", "sandbox-navigation-tree-treeview"),
                 CreateBranch(
                     "navigation-adaptive-rows",
-                    CurrentScenario == SandboxScenarioKey.LongText ? "Adaptive rows with constrained labels and badges" : "Adaptive tree rows",
+                    "Adaptive rows with constrained labels and badges",
                     "width",
                     "Tree rows preserve their hierarchy while labels and badges adapt to the available inline space.",
                     "sandbox-navigation-tree-adaptive",
@@ -502,7 +469,7 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
                     [
                         CreateLeaf(
                             "navigation-adaptive-leaf",
-                            CurrentScenario == SandboxScenarioKey.LongText ? "Third-level project configuration details remain readable" : "Third-level adaptive row",
+                            "Third-level project configuration details remain readable",
                             "Full label, badge, and supporting details remain available from the right-side service tooltip.",
                             "description",
                             "sandbox-navigation-tree-adaptive-leaf",
@@ -512,7 +479,7 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
 
         var overlayNode = CreateBranch(
             "navigation-overlays",
-            CurrentScenario == SandboxScenarioKey.LongText ? "Overlay hosts and contextual surfaces" : "Overlay dependencies",
+            "Overlay hosts and contextual surfaces",
             "layers",
             "Overlay primitives reached from navigation flows.",
             "sandbox-navigation-tree-overlays",
@@ -607,7 +574,7 @@ public abstract class NavigationExampleBase : ComponentBase, IDisposable
             BadgeText = badgeText,
             DataTestId = dataTestId,
             IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal),
-            IsDisabled = CurrentScenario == SandboxScenarioKey.DisabledState && string.Equals(id, "navigation-context-menu", StringComparison.Ordinal)
+            IsDisabled = false
         };
 
     protected static string ResolveTreeNodeLabel(string id)

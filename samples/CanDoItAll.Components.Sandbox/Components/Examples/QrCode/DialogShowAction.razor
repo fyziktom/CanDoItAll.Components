@@ -1,15 +1,10 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.QrCode
 
-<QrCodeButton Payload="@(new QrCodePayload(CurrentPayload, QrPayloadKind.Generic, "Component repository", CurrentCaption))"
+<QrCodeButton Payload="@(new QrCodePayload(Payload, QrPayloadKind.Generic, "Component repository", Caption))"
               Label="Show QR dialog"
               TestId="sandbox-qr-dialog-button" />
 
 @code {
-    [CascadingParameter]
-    public SandboxToolbarState? ToolbarState { get; set; }
-
-    private const string BaselinePayload = "https://github.com/fyziktom/CanDoItAll.Components";
-    private const string LongPayload = "candoitall://verify?package=CanDoItAll.Components.BaseLib&version=0.1.0&commit=0123456789abcdef0123456789abcdef01234567&scope=dialog,tooltip,context-menu,tree,data-grid,canvas,charts,mermaid,qr";
-    private string CurrentPayload => ToolbarState?.Scenario == SandboxScenarioKey.EmptyState ? string.Empty : ToolbarState?.Scenario == SandboxScenarioKey.LongText ? LongPayload : BaselinePayload;
-    private string CurrentCaption => ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "Long verification payload with high error correction" : "CanDoItAll.Components repository";
+    [Parameter] public string Payload { get; set; } = "https://github.com/fyziktom/CanDoItAll.Components";
+    [Parameter] public string Caption { get; set; } = "CanDoItAll.Components repository";
 }

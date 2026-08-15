@@ -16,12 +16,8 @@
 </StickyActionFooter>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private SandboxScenarioKey Scenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
-    private bool IsActionDisabled => Scenario == SandboxScenarioKey.EmptyState;
-    private string FooterMessage => IsActionDisabled
-        ? "Choose or create a record before the page-level actions become available."
-        : "Shared layout components should make the next step obvious without inventing one-off page wrappers.";
-    private string FooterTone => IsActionDisabled ? "warning" : "info";
-    private string PrimaryActionText => Scenario == SandboxScenarioKey.LongText ? "Approve workspace layout and capture proof bundle" : "Approve layout";
+    private bool IsActionDisabled => false;
+    private string FooterMessage => "Shared layout components should make the next step obvious without inventing one-off page wrappers.";
+    private string FooterTone => "info";
+    private string PrimaryActionText => "Approve workspace layout and capture proof bundle";
 }

@@ -6,24 +6,11 @@
 <PageTitle>Typography</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.LoadingState)
-        {
-            <LoadingState Eyebrow="Typography" Title="Loading typographic specimens"
-                          Description="The typography page still communicates structure while token previews are loading." />
-        }
-        else if (CurrentScenario == SandboxScenarioKey.EmptyState)
-        {
-            <EmptyState Eyebrow="Typography" Title="No token pack selected"
-                        Description="Choose a foundation pack to inspect type scale and copy treatments across the catalog." />
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -153,7 +140,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 

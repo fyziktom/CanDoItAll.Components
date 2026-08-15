@@ -7,10 +7,8 @@
 <PageTitle>QR Code</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
         @foreach (var section in Sections)
@@ -21,10 +19,20 @@
                 @if (section.ComponentName == "QrCodeView")
                 {
                     <ExampleBlock Title="Rendered payload"
-                                  Description="Direct SVG output with a visible caption and accessible name. Long payloads increase density and error correction; the empty scenario proves the no-payload state."
+                                  Description="Direct SVG output with a visible caption and accessible name."
                                   SourceId="examples/QrCode/RenderedPayload.razor"
                                   ApiTypes="@QrCodeViewApiTypes">
                         <RenderedPayload />
+                    </ExampleBlock>
+                    <ExampleBlock Title="Long verification payload"
+                                  Description="A dense payload with high error correction proves the rendered surface stays readable."
+                                  SourceId="examples/QrCode/RenderedPayload.razor">
+                        <RenderedPayload Payload="@LongPayload" Caption="Long verification payload with high error correction" Options="@LongPayloadOptions" />
+                    </ExampleBlock>
+                    <ExampleBlock Title="Empty payload"
+                                  Description="An explicit empty value proves the renderer's no-payload state."
+                                  SourceId="examples/QrCode/RenderedPayload.razor">
+                        <RenderedPayload Payload="" Caption="No verification payload" />
                     </ExampleBlock>
                 }
                 else if (section.ComponentName == "QrCodeButton")
@@ -58,5 +66,7 @@
     private static readonly IReadOnlyList<Type> QrCodeViewApiTypes = [typeof(QrCodeView)];
     private static readonly IReadOnlyList<Type> QrCodeButtonApiTypes = [typeof(QrCodeButton)];
     private static readonly IReadOnlyList<Type> QrScanButtonApiTypes = [typeof(QrScanButton)];
+    private const string LongPayload = "candoitall://verify?package=CanDoItAll.Components.BaseLib&version=0.1.0&commit=0123456789abcdef0123456789abcdef01234567&scope=dialog,tooltip,context-menu,tree,data-grid,canvas,charts,mermaid,qr";
+    private static readonly QrCodeRenderOptions LongPayloadOptions = new() { BorderModules = 2, ErrorCorrectionLevel = QrErrorCorrectionLevel.High };
 
 }

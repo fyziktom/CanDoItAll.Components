@@ -7,26 +7,11 @@
 <PageTitle>Cards</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.LoadingState)
-        {
-            <LoadingState Eyebrow="Cards" Title="Loading summary surface"
-                          Description="Cards keep their structure while the record set and computed metrics load." />
-        }
-        else if (CurrentScenario == SandboxScenarioKey.EmptyState)
-        {
-            <div data-testid="data-display-empty-state">
-                <EmptyState Eyebrow="Cards" Title="No results"
-                            Description="Adjust the current filters or add records before the shared card views can render detail." />
-            </div>
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 @if (section.ComponentName == "SummaryTiles")
@@ -282,7 +267,7 @@
                     </section>
                 }
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 
@@ -315,22 +300,11 @@
     private const string PrimaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-01.jpg";
     private const string SecondaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-02.jpg";
 
-    private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
+    private const bool IsDisabled = false;
 
-    private string SurfaceParagraph => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense surfaces reduce whitespace but still preserve grouping through headings, helper copy, and contained summary tiles. The page should feel brisk, not cramped.",
-        SandboxScenarioKey.LongText => "Long explanatory copy should remain readable without collapsing into a narrow, uncomfortable measure. When the catalog carries more editorial guidance, the surrounding surfaces still need to feel stable and intentional.",
-        SandboxScenarioKey.DisabledState => "Card surfaces in disabled mode should mute emphasis without flattening hierarchy. The user still needs to understand the structure even when interaction is unavailable.",
-        _ => "The generous default keeps the page calm, gives typography room to breathe, and lets the headings explain the layout before color or decoration has to."
-    };
+    private const string SurfaceParagraph = "Long explanatory copy remains readable without collapsing into a narrow, uncomfortable measure. When the catalog carries more editorial guidance, the surrounding surfaces still need to feel stable and intentional.";
 
-    private IReadOnlyList<DisplayCardModel> CardItems => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => DenseCards,
-        SandboxScenarioKey.LongText => LongCards,
-        _ => BaseCards
-    };
+    private IReadOnlyList<DisplayCardModel> CardItems => LongCards;
 
     private static readonly IReadOnlyList<DisplayCardModel> BaseCards =
     [

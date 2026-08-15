@@ -13,11 +13,8 @@
 </div>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-
     private CanvasWorkbenchSurface Surface => SandboxCanvasSamples.CreateWorkbenchSurface(
-        ToolbarState?.Scenario ?? SandboxScenarioKey.Default,
-        SandboxCanvasSamples.CreateWorkbenchUiState(ToolbarState?.Scenario ?? SandboxScenarioKey.Default),
-        SandboxCanvasSamples.CreateInspectorWindowState(ToolbarState?.Scenario ?? SandboxScenarioKey.Default));
+        SandboxCanvasSamples.CreateWorkbenchUiState(),
+        SandboxCanvasSamples.CreateInspectorWindowState());
 
 }

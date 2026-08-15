@@ -11,8 +11,7 @@ else
 }
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private CanvasCalendarSurface Surface => SandboxCanvasSamples.CreateCalendarSurface(ToolbarState?.Scenario ?? SandboxScenarioKey.Default);
+    private CanvasCalendarSurface Surface => SandboxCanvasSamples.CreateCalendarSurface();
 
     private CalendarTimeGridRendererSnapshot Snapshot => CalendarTimeGridRendererFactory.Create(Surface);
 }

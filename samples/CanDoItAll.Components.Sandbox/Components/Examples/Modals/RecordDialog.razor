@@ -18,9 +18,9 @@
                 <TextBox Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" />
             </FormField>
             <FormField Text="Review notes">
-                                            <TextArea Value="@notes"
-                                                      ValueChanged="@(value => notes = value ?? string.Empty)"
-                                                      Size="@(ToolbarState?.Scenario == SandboxScenarioKey.LongText ? TextAreaSize.Extended : TextAreaSize.Standard)" />
+                <TextArea Value="@notes"
+                          ValueChanged="@(value => notes = value ?? string.Empty)"
+                          Size="TextAreaSize.Extended" />
             </FormField>
         </FormStack>
     </ChildContent>
@@ -38,7 +38,6 @@
 </Dialog>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
     private bool isOpen;
     private string title = "Migration review";
     private string notes = "Shared component uptake stays visible through a stable card shell and supporting metadata.";

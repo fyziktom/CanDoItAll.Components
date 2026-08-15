@@ -7,17 +7,6 @@
     <div class="sandbox-toolbar__controls">
         @if (ToolbarState is { HasContext: true } toolbarState)
         {
-            <div class="sandbox-toolbar__scenario">
-                <DropDown TValue="SandboxScenarioKey"
-                          Data="@ScenarioOptions"
-                          TextProperty="Text"
-                          ValueProperty="Value"
-                          Value="@toolbarState.Scenario"
-                          ValueChanged="HandleScenarioChanged"
-                          aria-label="Scenario"
-                          data-testid="sandbox-toolbar-scenario"/>
-            </div>
-
             <div class="sandbox-toolbar__frame">
                 <DropDown TValue="SandboxFramePreset"
                           Data="@FrameOptions"
@@ -57,18 +46,11 @@
         .Select(value => new FrameOption(value.ToLabel(), value))
         .ToArray();
 
-    private static readonly IReadOnlyList<ScenarioOption> ScenarioOptions = Enum.GetValues<SandboxScenarioKey>()
-        .Select(value => new ScenarioOption(value.ToLabel(), value))
-        .ToArray();
-
     [CascadingParameter]
     public SandboxToolbarState? ToolbarState { get; set; }
 
     [CascadingParameter]
     public SandboxThemeState? ThemeState { get; set; }
-
-    private Task HandleScenarioChanged(SandboxScenarioKey scenario)
-        => ToolbarState!.ScenarioChanged.InvokeAsync(scenario);
 
     private Task HandleFrameChanged(SandboxFramePreset frame)
         => ToolbarState!.FrameChanged.InvokeAsync(frame);
@@ -82,12 +64,9 @@
         return SandboxQueryLinks.BuildCrossPageLink(
             NavigationManager,
             "/",
-            hasContext ? ToolbarState!.Scenario : null,
             hasContext ? ToolbarState!.Frame : null,
             ThemeState?.IsDark ?? false);
     }
-
-    private sealed record ScenarioOption(string Text, SandboxScenarioKey Value);
 
     private sealed record FrameOption(string Text, SandboxFramePreset Value);
 }

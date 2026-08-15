@@ -3,8 +3,8 @@
 <div class="space-y-3">
     <BadgesGroup>
         <Badge Text="Operational" Tone="@(BadgeTone.Info)" />
-        <Badge Text="@LongBadgeText" Tone="@(BadgeTone.Warn)" />
-        <StatusBadge Text="@LongStatusText" Tone="danger" />
+        <Badge Text="mobile warning requires screenshot confirmation" Tone="@(BadgeTone.Warn)" />
+        <StatusBadge Text="Blocked by extended publication evidence copy" Tone="danger" />
     </BadgesGroup>
     <Cluster Gap="LayoutGap.Small">
         <StatusBadge Text="Healthy" Tone="success" />
@@ -13,9 +13,3 @@
         <StatusBadge Text="Info" Tone="info" />
     </Cluster>
 </div>
-
-@code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private string LongBadgeText => ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "mobile warning requires screenshot confirmation" : "Mobile warning";
-    private string LongStatusText => ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "Blocked by extended publication evidence copy" : "Blocked";
-}

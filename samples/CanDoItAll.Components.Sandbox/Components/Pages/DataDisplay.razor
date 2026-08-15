@@ -6,19 +6,11 @@
 <PageTitle>Data Display</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-        {
-            <EmptyState Eyebrow="Data Display" Title="No change history yet"
-                        Description="Diffs, timelines, and steppers need at least one recorded change before they can render detail." />
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -53,7 +45,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 

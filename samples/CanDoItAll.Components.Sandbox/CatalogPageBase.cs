@@ -10,13 +10,8 @@ public abstract class CatalogPageBase : ComponentBase, IDisposable
     [CascadingParameter]
     protected SandboxToolbarState? ToolbarState { get; set; }
 
-    [Parameter, SupplyParameterFromQuery(Name = "scenario")]
-    public string? ScenarioQuery { get; set; }
-
     [Parameter, SupplyParameterFromQuery(Name = "frame")]
     public string? FrameQuery { get; set; }
-
-    protected SandboxScenarioKey CurrentScenario => SandboxScenarioKeyExtensions.Parse(ScenarioQuery);
 
     protected SandboxFramePreset CurrentFrame => SandboxFramePresetExtensions.Parse(FrameQuery);
 
@@ -26,15 +21,8 @@ public abstract class CatalogPageBase : ComponentBase, IDisposable
 
         ToolbarState?.Register(
             this,
-            CurrentScenario,
             CurrentFrame,
-            EventCallback.Factory.Create<SandboxScenarioKey>(this, NavigateScenario),
             EventCallback.Factory.Create<SandboxFramePreset>(this, NavigateFrame));
-    }
-
-    protected void NavigateScenario(SandboxScenarioKey scenario)
-    {
-        NavigationManager.NavigateTo(SandboxQueryLinks.WithScenario(NavigationManager, scenario));
     }
 
     protected void NavigateFrame(SandboxFramePreset frame)

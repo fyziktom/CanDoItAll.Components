@@ -91,10 +91,6 @@
 </div>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-
-    private SandboxScenarioKey CurrentScenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
-
     private static readonly DateTimeOffset ScheduleOrigin = new(2026, 7, 14, 8, 0, 0, TimeSpan.Zero);
     private static readonly GanttTaskId ScopeId = new("scope");
     private static readonly GanttTaskId ArchitectureId = new("architecture");
@@ -126,7 +122,7 @@
     private IReadOnlyList<GanttDependency> dependencies = [];
     private GanttChart? chart;
     private GanttTaskId? selectedTaskId;
-    private SandboxScenarioKey? loadedScenario;
+    private bool initialized;
     private bool showTaskTable = true;
     private GanttTimeScale timeScale = GanttTimeScale.Hour;
     private double pixelsPerHour = 12;
@@ -134,7 +130,7 @@
     private string lastEventKind = "Ready";
     private string lastEventMessage = "The chart is rendering caller-owned records. Interact with it to inspect typed requests.";
 
-    private bool InteractionsEnabled => CurrentScenario != SandboxScenarioKey.DisabledState;
+    private const bool InteractionsEnabled = true;
 
     private bool InsertionAlreadyAccepted => tasks.Any(task => task.Id == InsertionCandidateId);
 
@@ -146,12 +142,12 @@
 
     protected override void OnParametersSet()
     {
-        if (loadedScenario == CurrentScenario)
+        if (initialized)
         {
             return;
         }
 
-        loadedScenario = CurrentScenario;
+        initialized = true;
         ResetSchedule();
     }
 
@@ -162,16 +158,10 @@
         timeScale = GanttTimeScale.Hour;
         pixelsPerHour = 12;
         nextCreatedTaskNumber = 1;
-        tasks = CurrentScenario == SandboxScenarioKey.EmptyState
-            ? []
-            : BuildTasks(CurrentScenario == SandboxScenarioKey.DenseContent);
-        dependencies = CurrentScenario == SandboxScenarioKey.EmptyState
-            ? []
-            : BuildDependencies(CurrentScenario == SandboxScenarioKey.DenseContent);
-        lastEventKind = CurrentScenario == SandboxScenarioKey.EmptyState ? "Empty projection" : "Schedule reset";
-        lastEventMessage = CurrentScenario == SandboxScenarioKey.EmptyState
-            ? "No tasks were supplied; the component renders an explicit empty state."
-            : "The original controlled task and dependency arrays were restored.";
+        tasks = BuildTasks(dense: true);
+        dependencies = BuildDependencies(dense: true);
+        lastEventKind = "Schedule reset";
+        lastEventMessage = "The original controlled task and dependency arrays were restored.";
     }
 
     private void HandleTitleChange(GanttTaskTitleChangeRequest request)

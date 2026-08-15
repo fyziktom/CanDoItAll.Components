@@ -4,23 +4,12 @@
     <Alert AlertStyle="@(AlertStyle.Info)">The sandbox route loaded the shared assets and the page scaffold is ready for
         proof review.
     </Alert>
-    <Alert AlertStyle="@(AlertStyle.Warning)">Dense scenarios still need a screenshot review before the migration can be
+    <Alert AlertStyle="@(AlertStyle.Warning)">Dense proof still needs a screenshot review before the migration can be
         accepted.
     </Alert>
-    @if (ToolbarState?.Scenario == SandboxScenarioKey.LongText)
-    {
-        <Alert AlertStyle="@(AlertStyle.Danger)">Longer explanatory alerts should still remain readable without forcing
-            the user to decode an oversized block of red text or lose the rest of the page hierarchy.
-        </Alert>
-    }
-    else
-    {
-        <Alert AlertStyle="@(AlertStyle.Success)">The default pass is stable enough to move on to dense and empty-state
-            proof.
-        </Alert>
-    }
+    <Alert AlertStyle="@(AlertStyle.Danger)">Longer explanatory alerts should still remain readable without forcing
+        the user to decode an oversized block of red text or lose the rest of the page hierarchy.
+    </Alert>
+    <Alert AlertStyle="@(AlertStyle.Success)">The standard pass is stable enough to move on to the next proof.
+    </Alert>
 </div>
-
-@code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-}

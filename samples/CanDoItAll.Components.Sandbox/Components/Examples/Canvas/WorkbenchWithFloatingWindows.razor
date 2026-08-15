@@ -65,22 +65,18 @@
 </div>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private SandboxScenarioKey initializedScenario;
-    private CanvasWorkbenchUiState uiState = SandboxCanvasSamples.CreateWorkbenchUiState(SandboxScenarioKey.Default);
-    private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(SandboxScenarioKey.Default);
-    private CanvasWorkbenchWindowState activityState = CreateActivityWindowState(SandboxScenarioKey.Default);
+    private CanvasWorkbenchUiState uiState = SandboxCanvasSamples.CreateWorkbenchUiState();
+    private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState();
+    private CanvasWorkbenchWindowState activityState = CreateActivityWindowState();
     private readonly Dictionary<string, CanvasWorkbenchNodePositionChange> nodePositionOverrides = new(StringComparer.Ordinal);
     private string selectedLabel = "Nothing selected";
     private string lastWorkbenchEvent = "No workbench interaction recorded yet.";
-
-    private SandboxScenarioKey Scenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
 
     private CanvasWorkbenchSurface Surface
     {
         get
         {
-            var surface = SandboxCanvasSamples.CreateWorkbenchSurface(Scenario, uiState, inspectorState);
+            var surface = SandboxCanvasSamples.CreateWorkbenchSurface(uiState, inspectorState);
             foreach (var node in surface.Nodes)
                 if (nodePositionOverrides.TryGetValue(node.Id, out var position))
                 {
@@ -90,17 +86,6 @@
 
             return surface;
         }
-    }
-
-    protected override void OnParametersSet()
-    {
-        if (initializedScenario == Scenario) return;
-        initializedScenario = Scenario;
-        uiState = SandboxCanvasSamples.CreateWorkbenchUiState(Scenario);
-        inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(Scenario);
-        activityState = CreateActivityWindowState(Scenario);
-        nodePositionOverrides.Clear();
-        lastWorkbenchEvent = "No workbench interaction recorded yet.";
     }
 
     private Task HandleSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)
@@ -149,7 +134,7 @@
 
     private Task ResetInspectorWindow()
     {
-        inspectorState = SandboxCanvasSamples.CreateInspectorWindowState(Scenario);
+        inspectorState = SandboxCanvasSamples.CreateInspectorWindowState();
         return Task.CompletedTask;
     }
 
@@ -183,7 +168,7 @@
         return Task.CompletedTask;
     }
 
-    private static CanvasWorkbenchWindowState CreateActivityWindowState(SandboxScenarioKey scenario) => CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState { IsVisible = scenario == SandboxScenarioKey.DenseContent, Left = 24, Top = 360, Width = 340, Height = 300 });
+    private static CanvasWorkbenchWindowState CreateActivityWindowState() => CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState { IsVisible = true, Left = 24, Top = 360, Width = 340, Height = 300 });
     private string InspectorWindowStateLabel => inspectorState.IsVisible ? inspectorState.IsMinimized ? "Inspector minimized" : "Inspector visible" : "Inspector hidden";
     private string InspectorWindowStateTone => inspectorState.IsVisible ? inspectorState.IsMinimized ? "warning" : "success" : "warning";
 }

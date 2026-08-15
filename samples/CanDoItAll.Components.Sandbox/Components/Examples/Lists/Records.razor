@@ -25,15 +25,8 @@
 </div>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private bool IsDisabled => ToolbarState?.Scenario == SandboxScenarioKey.DisabledState;
-
-    private IReadOnlyList<DisplayRowModel> Rows => ToolbarState?.Scenario switch
-    {
-        SandboxScenarioKey.DenseContent => DenseRows,
-        SandboxScenarioKey.LongText => LongRows,
-        _ => BaseRows
-    };
+    private bool IsDisabled => false;
+    private IReadOnlyList<DisplayRowModel> Rows => LongRows;
 
     private static readonly IReadOnlyList<DisplayRowModel> BaseRows =
     [

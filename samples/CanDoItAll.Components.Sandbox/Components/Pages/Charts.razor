@@ -6,24 +6,11 @@
 <PageTitle>Charts</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.LoadingState)
-        {
-            <LoadingState Eyebrow="Charts" Title="Preparing chart samples"
-                          Description="The wrapper keeps a stable surface while generated trend and share data are loading." />
-        }
-        else if (CurrentScenario == SandboxScenarioKey.EmptyState)
-        {
-            <EmptyState Eyebrow="Charts" Title="No chart data"
-                        Description="The chart wrapper can render a calm zero-data state before any consumer has series to show." />
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -64,7 +51,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 

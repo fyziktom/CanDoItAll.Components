@@ -5,27 +5,10 @@
 
 <PageTitle>Mermaid</PageTitle>
 
-<CatalogPageFrame Group="@Group" Scenario="@CurrentScenario" Frame="@CurrentFrame"
-                  ExampleCount="@ExampleCount" ScenarioChanged="NavigateScenario" FrameChanged="NavigateFrame">
+<CatalogPageFrame Group="@Group" Frame="@CurrentFrame"
+                  ExampleCount="@ExampleCount" FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.LoadingState)
-        {
-            <LoadingState Eyebrow="Mermaid" Title="Preparing diagram module" Description="The wrapper keeps a stable viewport while the Mermaid ESM bundle is imported and queued for rendering." />
-        }
-        else if (CurrentScenario == SandboxScenarioKey.EmptyState)
-        {
-            <EmptyState Eyebrow="Mermaid" Title="No diagram source" Description="An empty source renders as an oriented empty viewport instead of a parser failure." />
-            <ExampleBlock Title="Empty source" Description="An empty source leaves a calm, successful viewport instead of producing a parser failure."
-                          SourceId="examples/Mermaid/EmptySource.razor" ApiTypes="@MermaidDiagramApiTypes">
-                <EmptySource />
-            </ExampleBlock>
-            <ExampleBlock Title="Syntax diagnostics" Description="An intentional invalid flowchart reports detailed parser diagnostics."
-                          SourceId="examples/Mermaid/SyntaxDiagnostics.razor" ApiTypes="@MermaidDiagramApiTypes">
-                <SyntaxDiagnostics />
-            </ExampleBlock>
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -50,7 +33,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 

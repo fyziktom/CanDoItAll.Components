@@ -1,9 +1,7 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Identity
 
 <div class="sandbox-demo-grid--three">
-    @foreach (var icon in (ToolbarState?.Scenario == SandboxScenarioKey.DenseContent
-        ? new[] { ("add_2", "Create"), ("filter_alt", "Filter"), ("calendar", "Schedule"), ("circle_info", "Context"), ("save", "Save"), ("risk", "Warning"), ("flow", "Flow"), ("bars_staggered", "Density"), ("research", "Inspect") }
-        : new[] { ("add_2", "Create"), ("filter_alt", "Filter"), ("calendar", "Schedule"), ("circle_info", "Context"), ("save", "Save"), ("risk", "Warning") }))
+    @foreach (var icon in new[] { ("add_2", "Create"), ("filter_alt", "Filter"), ("calendar", "Schedule"), ("circle_info", "Context"), ("save", "Save"), ("risk", "Warning"), ("flow", "Flow"), ("bars_staggered", "Density"), ("research", "Inspect") })
     {
         <div class="sandbox-icon-tile">
             <Icon Name="@icon.Item1" />
@@ -14,8 +12,3 @@
         </div>
     }
 </div>
-
-@code {
-    [CascadingParameter]
-    public SandboxToolbarState? ToolbarState { get; set; }
-}

@@ -12,25 +12,23 @@
                             </span>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-
-    private string LongCalloutText => ToolbarState?.Scenario == SandboxScenarioKey.LongText
+    private string LongCalloutText => true
         ? "Long callout text should maintain a useful line length and avoid pushing adjacent feedback examples wider than their grid column."
         : "Default feedback callouts carry neutral next-step guidance.";
 
-    private string TooltipText => ToolbarState?.Scenario == SandboxScenarioKey.LongText
+    private string TooltipText => true
         ? "Tooltip text can be longer, but it still needs to stay inside the viewport and wrap in a readable block."
         : "Tooltip text stays compact and viewport constrained.";
 
-    private string HelpPopoverBody => ToolbarState?.Scenario == SandboxScenarioKey.LongText
+    private string HelpPopoverBody => true
         ? "HelpPopover panels should stay readable with longer explanatory copy and remain close to the trigger without clipping."
         : "HelpPopover panels explain why a feedback state appears.";
 
-    private IReadOnlyList<StatusCheckItem> StatusItems => ToolbarState?.Scenario == SandboxScenarioKey.LongText
+    private IReadOnlyList<StatusCheckItem> StatusItems => true
         ? LongStatusItems
         : BaseStatusItems;
 
-    private IReadOnlyList<StatusCheckItem> VerificationItems => ToolbarState?.Scenario == SandboxScenarioKey.DenseContent
+    private IReadOnlyList<StatusCheckItem> VerificationItems => true
         ? DenseVerificationItems
         : BaseVerificationItems;
 

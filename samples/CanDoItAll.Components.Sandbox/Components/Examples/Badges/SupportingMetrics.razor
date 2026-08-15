@@ -8,14 +8,7 @@
 </CompactStatStrip>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-
-    private IReadOnlyList<SummaryTileModel> Tiles => ToolbarState?.Scenario switch
-    {
-        SandboxScenarioKey.DenseContent => DenseTiles,
-        SandboxScenarioKey.LongText => LongTiles,
-        _ => BaseTiles
-    };
+    private IReadOnlyList<SummaryTileModel> Tiles => LongTiles;
 
     private static readonly IReadOnlyList<SummaryTileModel> BaseTiles =
     [

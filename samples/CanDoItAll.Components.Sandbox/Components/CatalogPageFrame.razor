@@ -66,20 +66,10 @@
     public SandboxGroupDefinition Group { get; set; } = default!;
 
     [Parameter, EditorRequired]
-    public SandboxScenarioKey Scenario { get; set; }
-
-    [Parameter, EditorRequired]
     public SandboxFramePreset Frame { get; set; }
 
     [Parameter]
     public int ExampleCount { get; set; }
-
-    // No longer invoked by this component — scenario/frame changes are now driven by the
-    // fixed top toolbar via SandboxToolbarState, wired through CatalogPageBase.SetParametersAsync.
-    // Kept as parameters so existing <CatalogPageFrame ScenarioChanged="NavigateScenario" ...>
-    // markup on the other catalog pages keeps compiling unchanged.
-    [Parameter]
-    public EventCallback<SandboxScenarioKey> ScenarioChanged { get; set; }
 
     [Parameter]
     public EventCallback<SandboxFramePreset> FrameChanged { get; set; }

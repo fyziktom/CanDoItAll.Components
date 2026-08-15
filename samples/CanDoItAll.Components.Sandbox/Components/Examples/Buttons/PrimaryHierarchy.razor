@@ -2,23 +2,18 @@
 
 <Cluster Gap="LayoutGap.Medium">
     <Button
-        Text="@(ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "Approve shared component update and publish the acceptance proof bundle" : "Approve update")"
-        IsBusy="@(ToolbarState?.Scenario == SandboxScenarioKey.LoadingState)"
-        Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)" />
+        Text="Approve shared component update and publish the acceptance proof bundle" />
     <Button Text="Save draft"
             ButtonStyle="ButtonStyle.Light"
             Variant="Variant.Outlined"
-            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)" />
+            />
     <Button Text="Request changes"
             ButtonStyle="ButtonStyle.Warning"
             Variant="Variant.Outlined"
-            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)" />
+            />
     <Button Text="Archive"
             ButtonStyle="ButtonStyle.Danger"
             Variant="Variant.Text"
-            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)" />
+            />
+    <Button Text="Unavailable while approval is pending" Disabled="true" />
 </Cluster>
-
-@code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-}

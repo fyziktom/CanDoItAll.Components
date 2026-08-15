@@ -34,12 +34,9 @@
 </ListDetailShell>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
     private WorkspaceItem SelectedItem => WorkspaceItems[0];
 
-    private IReadOnlyList<WorkspaceItem> WorkspaceItems => ToolbarState?.Scenario == SandboxScenarioKey.DenseContent
-        ? DenseItems
-        : BaseItems;
+    private IReadOnlyList<WorkspaceItem> WorkspaceItems => DenseItems;
 
     private static readonly IReadOnlyList<WorkspaceItem> BaseItems =
     [

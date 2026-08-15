@@ -9,14 +9,12 @@ public abstract class ChartShowcaseBase : ComponentBase
     [CascadingParameter]
     public SandboxToolbarState? ToolbarState { get; set; }
 
-    protected SandboxScenarioKey Scenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
-
     protected SandboxFramePreset Frame => ToolbarState?.Frame ?? SandboxFramePreset.LiveViewport;
 
     protected static readonly DateTime Start = new(2026, 4, 30, 3, 0, 0, DateTimeKind.Utc);
     protected static readonly IReadOnlyList<CdaChartSeries> EmptySeries = [];
 
-    protected bool IsDense => Scenario == SandboxScenarioKey.DenseContent || Scenario == SandboxScenarioKey.LongText;
+    protected bool IsDense => true;
 
     protected object PrimaryChartHeight => Frame == SandboxFramePreset.Mobile ? 300 : 340;
 

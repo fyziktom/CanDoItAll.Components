@@ -7,20 +7,11 @@
 <PageTitle>Lists</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-        {
-            <div data-testid="data-display-empty-state">
-                <EmptyState Eyebrow="Lists" Title="No results" Description="Adjust the current filters or add records before the shared list views can render detail." />
-            </div>
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section" data-testid="data-display-selection-rows">
@@ -100,7 +91,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 
@@ -120,20 +111,13 @@
 
     private string panelHeaderFilter = string.Empty;
 
-    private bool IsDisabled => CurrentScenario == SandboxScenarioKey.DisabledState;
+    private const bool IsDisabled = false;
 
     private WorkspaceItem SelectedItem => WorkspaceItems[0];
 
-    private IReadOnlyList<WorkspaceItem> WorkspaceItems => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? DenseItems
-        : BaseItems;
+    private IReadOnlyList<WorkspaceItem> WorkspaceItems => DenseItems;
 
-    private IReadOnlyList<DisplayRowModel> Rows => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => DenseRows,
-        SandboxScenarioKey.LongText => LongRows,
-        _ => BaseRows
-    };
+    private IReadOnlyList<DisplayRowModel> Rows => LongRows;
 
     private static readonly IReadOnlyList<WorkspaceItem> BaseItems =
     [

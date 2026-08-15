@@ -6,8 +6,9 @@
 - reorganized sandbox group content around components
 - modernized the Sandbox look [from](https://github.com/darosh/CanDoItAll.Components.Screenshots/blob/screenshots_2026-08-13_10-49/current/desktop_light_default/README.md) ... to [see latest branch here](https://github.com/darosh/CanDoItAll.Components.Screenshots)
 - added toolbar
-- scenario, viewport and theme selection moved to toolbar
-- scenario, viewport and theme selection is persistent across navigation
+- viewport and theme selection moved to toolbar
+- viewport and theme selection is persistent across navigation
+- removed scenario selection, examples are demoing diferents states directly
 - removed poetic LLM lingo artifacts "calm laboratory" and so on
 - added search as you type filter to side nav
 - removed coverage page

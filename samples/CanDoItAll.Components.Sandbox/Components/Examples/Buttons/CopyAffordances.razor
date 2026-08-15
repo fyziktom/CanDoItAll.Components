@@ -4,15 +4,14 @@
     <div class="space-y-4">
         <FormField Text="Copy source">
             <TextBox
-                Value="@(ToolbarState?.Scenario == SandboxScenarioKey.DenseContent ? "pkg-review://navigation-polish/approval-window?owner=design-system&lane=dense" : ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "https://sandbox.candoitall.dev/review/component-proof/copy-button?request=approve-shared-component-update-and-publish-acceptance-evidence" : "review-token-4Q26-copy-button")"
+                Value="https://sandbox.candoitall.dev/review/component-proof/copy-button?request=approve-shared-component-update-and-publish-acceptance-evidence"
                 ReadOnly="true"
-                Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                 id="sandbox-actions-copy-source-input"
                 data-testid="sandbox-actions-copy-source" />
         </FormField>
 
         <TextBlock TextStyle="TextStyle.Caption"
-                   Value="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState ? "This scenario locks the source and every copy affordance so the disabled treatment can be reviewed." : "Select part of the read-only input to copy only that slice; otherwise the full value is copied.")" />
+                   Value="Select part of the read-only input to copy only that slice; otherwise the full value is copied." />
     </div>
     <div class="space-y-4">
         <div class="space-y-2">
@@ -21,20 +20,16 @@
                 <CopyButton Text="Copy value"
                             CopiedText="Copied"
                             TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.Text" data-testid="sandbox-actions-copy-text" />
                 <CopyButton Text="Copy value"
                             CopiedText="Copied"
                             TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.TextWithIcon"
                             data-testid="sandbox-actions-copy-text-icon" />
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconButton" AriaLabel="Copy current value"
                             data-testid="sandbox-actions-copy-icon-button" />
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconOnly" AriaLabel="Copy current value"
                             data-testid="sandbox-actions-copy-icon-only" />
             </Cluster>
@@ -43,32 +38,26 @@
             <TextBlock TextStyle="TextStyle.Subtitle2" Value="Compact icon sizes" />
             <Cluster Gap="LayoutGap.Small">
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconButton" Size="CopyButtonSize.ExtraSmall"
                             AriaLabel="Copy current value with extra small icon button"
                             data-testid="sandbox-actions-copy-icon-button-xs" />
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconButton" Size="CopyButtonSize.Small"
                             AriaLabel="Copy current value with small icon button"
                             data-testid="sandbox-actions-copy-icon-button-sm" />
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconButton" Size="CopyButtonSize.Medium"
                             AriaLabel="Copy current value with medium icon button"
                             data-testid="sandbox-actions-copy-icon-button-md" />
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconOnly" Size="CopyButtonSize.ExtraSmall"
                             AriaLabel="Copy current value with extra small icon"
                             data-testid="sandbox-actions-copy-icon-only-xs" />
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconOnly" Size="CopyButtonSize.Small"
                             AriaLabel="Copy current value with small icon"
                             data-testid="sandbox-actions-copy-icon-only-sm" />
                 <CopyButton TargetElementId="sandbox-actions-copy-source-input"
-                            Disabled="@(ToolbarState?.Scenario == SandboxScenarioKey.DisabledState)"
                             DisplayMode="CopyButtonDisplayMode.IconOnly" Size="CopyButtonSize.Medium"
                             AriaLabel="Copy current value with medium icon"
                             data-testid="sandbox-actions-copy-icon-only-md" />
@@ -76,7 +65,3 @@
         </div>
     </div>
 </Grid>
-
-@code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-}

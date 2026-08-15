@@ -6,19 +6,11 @@
 <PageTitle>Overlays</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.LoadingState)
-        {
-            <LoadingState Eyebrow="Overlays" Title="Preparing overlay surfaces"
-                          Description="The page keeps context while contextual help, host layers, and sticky actions initialize." />
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -62,7 +54,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 
@@ -76,11 +68,6 @@
     private static readonly IReadOnlyList<Type> NotificationServiceApiTypes = [typeof(NotificationService)];
     private static readonly IReadOnlyList<Type> OverlayWindowApiTypes = [typeof(OverlayWindow)];
 
-    private string SurfaceCopy => CurrentScenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense approval content still leaves room for sticky actions and contextual help without forcing the user to decode overlapping priority signals.",
-        SandboxScenarioKey.LongText => "Longer surrounding copy should not hide the sticky action footer or make the contextual help trigger feel disconnected from the content it supports.",
-        _ => "A shared overlay system should reinforce the review flow instead of fragmenting it."
-    };
+    private const string SurfaceCopy = "Longer surrounding copy should not hide the sticky action footer or make the contextual help trigger feel disconnected from the content it supports.";
 
 }

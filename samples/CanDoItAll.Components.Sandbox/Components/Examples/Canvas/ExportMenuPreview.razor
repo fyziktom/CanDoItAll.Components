@@ -7,9 +7,8 @@
 </div>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
     private string calendarExportStatus = "No calendar export requested";
-    private CanvasCalendarSurface Surface => SandboxCanvasSamples.CreateCalendarSurface(ToolbarState?.Scenario ?? SandboxScenarioKey.Default);
+    private CanvasCalendarSurface Surface => SandboxCanvasSamples.CreateCalendarSurface();
 
     private CalendarExportMenuSnapshot Snapshot => CalendarExportMenuFactory.Create(Surface);
 }

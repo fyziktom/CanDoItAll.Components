@@ -3,8 +3,7 @@
 <CalendarMiniMonthNavigator Snapshot="@Snapshot" />
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private CanvasCalendarSurface Surface => SandboxCanvasSamples.CreateCalendarSurface(ToolbarState?.Scenario ?? SandboxScenarioKey.Default);
+    private CanvasCalendarSurface Surface => SandboxCanvasSamples.CreateCalendarSurface();
 
     private CalendarMiniMonthNavigatorSnapshot Snapshot => CalendarMiniMonthNavigatorFactory.Create(Surface);
 }

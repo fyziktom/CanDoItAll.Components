@@ -2,10 +2,5 @@
 
 <ChipRow>
     <Chip Text="Toast proof" />
-    <Chip Text="@LongChipText" />
+    <Chip Text="Long chip copy should wrap inside the available feedback column" />
 </ChipRow>
-
-@code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private string LongChipText => ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "Long chip copy should wrap inside the available feedback column" : "Review copy";
-}

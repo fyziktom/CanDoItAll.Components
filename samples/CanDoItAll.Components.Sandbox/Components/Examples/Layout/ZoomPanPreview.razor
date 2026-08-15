@@ -2,7 +2,7 @@
 
 <Stack GapScale="LayoutGap.Medium">
     <ZoomPanFrame AriaLabel="Packaged raster zoom and pan preview"
-                  ResetKey="@CurrentScenario"
+                  ResetKey="@("zoom-pan-preview")"
                   Style="block-size: clamp(14rem, 42vw, 24rem); --cda-zoom-pan-min-height: 14rem;"
                   data-testid="sandbox-zoom-pan-frame">
         <img src="@ZoomPanImageSource"
@@ -18,7 +18,5 @@
 </Stack>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private SandboxScenarioKey CurrentScenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
     private const string ZoomPanImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-06.jpg";
 }

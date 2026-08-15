@@ -8,24 +8,11 @@
 <PageTitle>Feedback</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
     <ChildContent>
-        @if (CurrentScenario == SandboxScenarioKey.EmptyState)
-        {
-            <EmptyState Eyebrow="Feedback" Title="No incidents this hour"
-                        Description="No active warnings or evidence requests are waiting on the sandbox owner." />
-        }
-        else if (CurrentScenario == SandboxScenarioKey.LoadingState)
-        {
-            <LoadingState Eyebrow="Feedback" Title="Refreshing health snapshot"
-                          Description="The status summary remains calm while probes and examples refresh." />
-        }
-        else
-        {
+
             @foreach (var section in Sections)
             {
                 <section id="@section.Anchor" class="sandbox-component-section">
@@ -123,7 +110,7 @@
                     }
                 </section>
             }
-        }
+
     </ChildContent>
 </CatalogPageFrame>
 
@@ -152,25 +139,15 @@
     private void ShowErrorToast()
         => NotificationService.Error("Could not refresh", "The status summary failed to refresh. Try again.", position: NotificationPosition.BottomCenter);
 
-    private string LongCalloutText => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Long callout text should maintain a useful line length and avoid pushing adjacent feedback examples wider than their grid column."
-        : "Default feedback callouts carry neutral next-step guidance.";
+    private const string LongCalloutText = "Long callout text should maintain a useful line length and avoid pushing adjacent feedback examples wider than their grid column.";
 
-    private string TooltipText => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Tooltip text can be longer, but it still needs to stay inside the viewport and wrap in a readable block."
-        : "Tooltip text stays compact and viewport constrained.";
+    private const string TooltipText = "Tooltip text can be longer, but it still needs to stay inside the viewport and wrap in a readable block.";
 
-    private string HelpPopoverBody => CurrentScenario == SandboxScenarioKey.LongText
-        ? "HelpPopover panels should stay readable with longer explanatory copy and remain close to the trigger without clipping."
-        : "HelpPopover panels explain why a feedback state appears.";
+    private const string HelpPopoverBody = "HelpPopover panels should stay readable with longer explanatory copy and remain close to the trigger without clipping.";
 
-    private IReadOnlyList<StatusCheckItem> StatusItems => CurrentScenario == SandboxScenarioKey.LongText
-        ? LongStatusItems
-        : BaseStatusItems;
+    private IReadOnlyList<StatusCheckItem> StatusItems => LongStatusItems;
 
-    private IReadOnlyList<StatusCheckItem> VerificationItems => CurrentScenario == SandboxScenarioKey.DenseContent
-        ? DenseVerificationItems
-        : BaseVerificationItems;
+    private IReadOnlyList<StatusCheckItem> VerificationItems => DenseVerificationItems;
 
     private static readonly IReadOnlyList<StatusCheckItem> BaseStatusItems =
     [

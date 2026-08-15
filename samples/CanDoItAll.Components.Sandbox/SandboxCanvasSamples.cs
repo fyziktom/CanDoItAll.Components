@@ -8,53 +8,49 @@ public static class SandboxCanvasSamples
 
     private static readonly DateTimeOffset AnchorDate = new(2026, 4, 6, 8, 0, 0, TimeSpan.Zero);
 
-    public static CanvasWorkbenchUiState CreateWorkbenchUiState(SandboxScenarioKey scenario)
+    public static CanvasWorkbenchUiState CreateWorkbenchUiState()
     {
         var state = new CanvasWorkbenchUiState
         {
-            SelectedNodeIds = scenario == SandboxScenarioKey.EmptyState ? [] : ["root"],
-            ShowDiagnostics = scenario == SandboxScenarioKey.DenseContent,
-            ShowMinimap = scenario != SandboxScenarioKey.EmptyState,
-            Zoom = scenario == SandboxScenarioKey.DenseContent ? 0.92 : 1,
-            PanX = scenario == SandboxScenarioKey.DenseContent ? 78 : 90,
-            PanY = scenario == SandboxScenarioKey.DenseContent ? 96 : 110,
-            ActiveInspectorTab = scenario == SandboxScenarioKey.DenseContent ? "metrics" : "overview"
+            SelectedNodeIds = ["root"],
+            ShowDiagnostics = true,
+            ShowMinimap = true,
+            Zoom = 0.92,
+            PanX = 78,
+            PanY = 96,
+            ActiveInspectorTab = "metrics"
         };
 
-        if (scenario == SandboxScenarioKey.DenseContent)
-        {
-            state.GroupFrames =
-            [
-                new CanvasWorkbenchGroupFrame
-                {
-                    Id = "sandbox-proof-frame",
-                    Label = "Shared proof lane",
-                    Tone = "sky",
-                    AnchorNodeIds = ["foundations", "inputs", "feedback"]
-                }
-            ];
-        }
+        state.GroupFrames =
+        [
+            new CanvasWorkbenchGroupFrame
+            {
+                Id = "sandbox-proof-frame",
+                Label = "Shared proof lane",
+                Tone = "sky",
+                AnchorNodeIds = ["foundations", "inputs", "feedback"]
+            }
+        ];
 
         return state;
     }
 
-    public static CanvasWorkbenchWindowState CreateInspectorWindowState(SandboxScenarioKey scenario)
+    public static CanvasWorkbenchWindowState CreateInspectorWindowState()
     {
         return CanvasWorkbenchWindowState.Normalize(new CanvasWorkbenchWindowState
         {
-            IsVisible = scenario != SandboxScenarioKey.EmptyState,
-            IsMinimized = scenario == SandboxScenarioKey.DisabledState,
-            Width = scenario == SandboxScenarioKey.LongText ? 440 : 380,
-            Height = scenario == SandboxScenarioKey.DenseContent ? 500 : 420
+            IsVisible = true,
+            IsMinimized = false,
+            Width = 440,
+            Height = 500
         });
     }
 
     public static CanvasWorkbenchSurface CreateWorkbenchSurface(
-        SandboxScenarioKey scenario,
         CanvasWorkbenchUiState? uiState,
         CanvasWorkbenchWindowState inspectorWindowState)
     {
-        var state = CloneUiState(uiState ?? CreateWorkbenchUiState(scenario));
+        var state = CloneUiState(uiState ?? CreateWorkbenchUiState());
         state.WindowStates = new Dictionary<string, CanvasWorkbenchWindowState>(StringComparer.Ordinal)
         {
             [InspectorWindowId] = CanvasWorkbenchWindowState.Normalize(inspectorWindowState)
@@ -62,36 +58,36 @@ public static class SandboxCanvasSamples
 
         return new CanvasWorkbenchSurface
         {
-            SurfaceId = $"sandbox-canvas:{scenario.ToSlug()}",
+            SurfaceId = "sandbox-canvas:proof-workspace",
             Mode = "catalog",
             UiState = state,
-            Chrome = CreateChrome(scenario),
-            Nodes = BuildNodes(scenario),
-            Links = BuildLinks(scenario)
+            Chrome = CreateChrome(),
+            Nodes = BuildNodes(),
+            Links = BuildLinks()
         };
     }
 
-    public static CanvasCalendarSurface CreateCalendarSurface(SandboxScenarioKey scenario)
+    public static CanvasCalendarSurface CreateCalendarSurface()
     {
-        var events = BuildEvents(scenario);
+        var events = BuildEvents();
         var selectedEventId = events.FirstOrDefault()?.EventId ?? string.Empty;
         var selectedDate = events.FirstOrDefault()?.StartUtc?.ToString("yyyy-MM-dd") ?? AnchorDate.ToString("yyyy-MM-dd");
-        var isReadOnly = scenario == SandboxScenarioKey.DisabledState;
+        const bool isReadOnly = false;
 
         return new CanvasCalendarSurface
         {
-            SurfaceId = $"sandbox-calendar:{scenario.ToSlug()}",
+            SurfaceId = "sandbox-calendar:proof-schedule",
             Events = events,
-            InitialView = scenario == SandboxScenarioKey.DenseContent ? "week" : "day",
+            InitialView = "week",
             SelectedDate = selectedDate,
             SelectedEventId = selectedEventId,
             Timezone = "UTC",
             Locale = "en-US",
             WeekStartsOn = 1,
-            SlotMinutes = scenario == SandboxScenarioKey.DenseContent ? 30 : 60,
+            SlotMinutes = 30,
             BusinessHoursStart = 7,
             BusinessHoursEnd = 21,
-            MiniMonthCount = scenario == SandboxScenarioKey.DenseContent ? 2 : 1,
+            MiniMonthCount = 2,
             AllowCreate = !isReadOnly,
             AllowEdit = !isReadOnly,
             AllowDelete = !isReadOnly,
@@ -105,23 +101,17 @@ public static class SandboxCanvasSamples
         };
     }
 
-    private static CanvasWorkbenchChrome CreateChrome(SandboxScenarioKey scenario)
+    private static CanvasWorkbenchChrome CreateChrome()
     {
         return new CanvasWorkbenchChrome
         {
-            HintText = scenario switch
-            {
-                SandboxScenarioKey.DenseContent => "Use the shared workbench for denser proof reviews, floating inspector context, and typed navigation across the extracted component system.",
-                SandboxScenarioKey.LongText => "This pass checks whether longer node titles and supporting copy still fit the shared canvas chrome without collapsing the workbench rhythm.",
-                SandboxScenarioKey.EmptyState => "Choose a node to inspect the shared workbench vocabulary.",
-                _ => "Shared workbench chrome should stay legible while nodes, overlays, and preview assets evolve."
-            },
+            HintText = "Use the shared workbench for denser proof reviews, floating inspector context, and typed navigation across the extracted component system.",
             EmptyStateKicker = "Canvas sandbox",
-            EmptyStateTitle = scenario == SandboxScenarioKey.EmptyState ? "No canvas sample selected" : "Inspect the shared canvas",
+            EmptyStateTitle = "Inspect the shared canvas",
             EmptyStateDescription = "Use the same typed workbench surface, floating window, and preview cards that the runtime pages consume.",
             FocusActionLabel = "Focus root",
             ShowFocusAction = true,
-            ShowQuickCreateRail = scenario != SandboxScenarioKey.DisabledState,
+            ShowQuickCreateRail = true,
             QuickCreateActions =
             [
                 new CanvasWorkbenchAction
@@ -144,20 +134,11 @@ public static class SandboxCanvasSamples
         };
     }
 
-    private static List<CanvasWorkbenchNode> BuildNodes(SandboxScenarioKey scenario)
+    private static List<CanvasWorkbenchNode> BuildNodes()
     {
-        if (scenario == SandboxScenarioKey.EmptyState)
-        {
-            return [];
-        }
-
-        var isReadOnly = scenario == SandboxScenarioKey.DisabledState;
-        var rootTitle = scenario == SandboxScenarioKey.LongText
-            ? "Shared component migration workspace with extended validation narrative"
-            : "Shared component migration";
-        var feedbackTitle = scenario == SandboxScenarioKey.LongText
-            ? "Feedback, status, and notification surfaces with longer descriptive copy"
-            : "Feedback and proof";
+        const bool isReadOnly = false;
+        const string rootTitle = "Shared component migration workspace with extended validation narrative";
+        const string feedbackTitle = "Feedback, status, and notification surfaces with longer descriptive copy";
 
         var nodes = new List<CanvasWorkbenchNode>
         {
@@ -218,8 +199,8 @@ public static class SandboxCanvasSamples
                 Title = "Inputs",
                 Subtitle = "Entry and review",
                 LeadText = "Field state, helper copy, and disabled behavior stay explicit inside the shared system.",
-                Status = scenario == SandboxScenarioKey.DisabledState ? "Read only" : "Active",
-                StatusPill = scenario == SandboxScenarioKey.DisabledState ? "Locked" : "Editable",
+                Status = "Active",
+                StatusPill = "Editable",
                 AccentColor = "#2563eb",
                 PaletteKey = "sky",
                 IsCollapsible = true,
@@ -241,8 +222,8 @@ public static class SandboxCanvasSamples
                 Title = feedbackTitle,
                 Subtitle = "Status surfaces",
                 LeadText = "Alerts, empty states, and toasts stay specific and calm instead of feeling theatrical.",
-                Status = scenario == SandboxScenarioKey.DenseContent ? "Review" : "Ready",
-                StatusPill = scenario == SandboxScenarioKey.DenseContent ? "Dense pass" : "Approved",
+                Status = "Review",
+                StatusPill = "Dense pass",
                 AccentColor = "#0f766e",
                 PaletteKey = "mint",
                 IsReadOnly = isReadOnly,
@@ -279,43 +260,35 @@ public static class SandboxCanvasSamples
             }
         };
 
-        if (scenario == SandboxScenarioKey.DenseContent)
+        nodes.Add(new CanvasWorkbenchNode
         {
-            nodes.Add(new CanvasWorkbenchNode
-            {
-                Id = "proof",
-                ParentId = "canvas",
-                Family = "item",
-                Kind = "proof",
-                Icon = "photo_camera",
-                Title = "Dense desktop and mobile capture",
-                Subtitle = "Proof queue",
-                LeadText = "Screenshot proof stays connected to the same shared catalog model instead of living in a separate document.",
-                Status = "Pending",
-                StatusPill = "Capture",
-                AccentColor = "#e11d48",
-                PaletteKey = "rose",
-                IsReadOnly = isReadOnly,
-                X = 1220,
-                Y = 180,
-                Chips =
-                [
-                    new CanvasWorkbenchChip { Text = "Desktop", Tone = "danger" },
-                    new CanvasWorkbenchChip { Text = "Mobile", Tone = "danger" }
-                ]
-            });
-        }
+            Id = "proof",
+            ParentId = "canvas",
+            Family = "item",
+            Kind = "proof",
+            Icon = "photo_camera",
+            Title = "Dense desktop and mobile capture",
+            Subtitle = "Proof queue",
+            LeadText = "Screenshot proof stays connected to the same shared catalog model instead of living in a separate document.",
+            Status = "Pending",
+            StatusPill = "Capture",
+            AccentColor = "#e11d48",
+            PaletteKey = "rose",
+            IsReadOnly = isReadOnly,
+            X = 1220,
+            Y = 180,
+            Chips =
+            [
+                new CanvasWorkbenchChip { Text = "Desktop", Tone = "danger" },
+                new CanvasWorkbenchChip { Text = "Mobile", Tone = "danger" }
+            ]
+        });
 
         return nodes;
     }
 
-    private static List<CanvasWorkbenchLink> BuildLinks(SandboxScenarioKey scenario)
+    private static List<CanvasWorkbenchLink> BuildLinks()
     {
-        if (scenario == SandboxScenarioKey.EmptyState)
-        {
-            return [];
-        }
-
         var links = new List<CanvasWorkbenchLink>
         {
             new() { SourceId = "root", TargetId = "foundations", Kind = "contains" },
@@ -326,30 +299,20 @@ public static class SandboxCanvasSamples
             new() { SourceId = "inputs", TargetId = "canvas", Kind = "feeds" }
         };
 
-        if (scenario == SandboxScenarioKey.DenseContent)
+        links.Add(new CanvasWorkbenchLink
         {
-            links.Add(new CanvasWorkbenchLink
-            {
-                SourceId = "canvas",
-                TargetId = "proof",
-                Kind = "requires",
-                IsUserAuthored = true
-            });
-        }
+            SourceId = "canvas",
+            TargetId = "proof",
+            Kind = "requires",
+            IsUserAuthored = true
+        });
 
         return links;
     }
 
-    private static List<CanvasCalendarEvent> BuildEvents(SandboxScenarioKey scenario)
+    private static List<CanvasCalendarEvent> BuildEvents()
     {
-        if (scenario == SandboxScenarioKey.EmptyState)
-        {
-            return [];
-        }
-
-        var kickoffTitle = scenario == SandboxScenarioKey.LongText
-            ? "Shared component rollout review with extended acceptance notes"
-            : "Shared component rollout review";
+        const string kickoffTitle = "Shared component rollout review with extended acceptance notes";
 
         var events = new List<CanvasCalendarEvent>
         {
@@ -402,7 +365,7 @@ public static class SandboxCanvasSamples
                 Category = "Proof",
                 Color = "#d97706",
                 EventType = "Proof",
-                Status = scenario == SandboxScenarioKey.DisabledState ? "Planned" : "Ready",
+                Status = "Ready",
                 Notes = "Calendar boundary previews should remain connected to the shared surface contract.",
                 ChecklistRows =
                 [
@@ -413,32 +376,29 @@ public static class SandboxCanvasSamples
             }
         };
 
-        if (scenario == SandboxScenarioKey.DenseContent)
+        events.Add(new CanvasCalendarEvent
         {
-            events.Add(new CanvasCalendarEvent
-            {
-                Id = "release-window",
-                EventId = "release-window",
-                Title = "Release window",
-                Description = "Ship the shared component extraction once proof and MCP indexing are complete.",
-                StartUtc = AnchorDate.AddHours(7),
-                EndUtc = AnchorDate.AddHours(8),
-                Timezone = "UTC",
-                TimezoneName = "UTC",
-                LocationLabel = "Deployment lane",
-                Category = "Release",
-                Color = "#0f766e",
-                EventType = "Release",
-                Status = "Blocked",
-                Notes = "This remains blocked until dense and empty-state screenshots are reviewed.",
-                ChecklistRows =
-                [
-                    new CanvasCalendarChecklistRow { Label = "Dense proof", Status = "Pending", Note = "Awaiting visual review." },
-                    new CanvasCalendarChecklistRow { Label = "MCP validation", Status = "Pending", Note = "Tool contracts still need testing." }
-                ],
-                ChecklistItemCount = 2
-            });
-        }
+            Id = "release-window",
+            EventId = "release-window",
+            Title = "Release window",
+            Description = "Ship the shared component extraction once proof and MCP indexing are complete.",
+            StartUtc = AnchorDate.AddHours(7),
+            EndUtc = AnchorDate.AddHours(8),
+            Timezone = "UTC",
+            TimezoneName = "UTC",
+            LocationLabel = "Deployment lane",
+            Category = "Release",
+            Color = "#0f766e",
+            EventType = "Release",
+            Status = "Blocked",
+            Notes = "This remains blocked until dense and empty-state screenshots are reviewed.",
+            ChecklistRows =
+            [
+                new CanvasCalendarChecklistRow { Label = "Dense proof", Status = "Pending", Note = "Awaiting visual review." },
+                new CanvasCalendarChecklistRow { Label = "MCP validation", Status = "Pending", Note = "Tool contracts still need testing." }
+            ],
+            ChecklistItemCount = 2
+        });
 
         return events;
     }

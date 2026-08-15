@@ -29,16 +29,15 @@
 </div>
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
     private OverlayWindowState overlayWindowState = new();
-    private bool IsDisabled => ToolbarState?.Scenario is SandboxScenarioKey.EmptyState or SandboxScenarioKey.DisabledState;
+    private const bool IsDisabled = false;
     private Task HandleOverlayWindowStateChanged(OverlayWindowState state) { overlayWindowState = OverlayWindowState.Normalize(state); return Task.CompletedTask; }
     private Task ShowOverlayWindow() { overlayWindowState = OverlayWindowState.Normalize(new OverlayWindowState { IsVisible = true }); return Task.CompletedTask; }
     private Task ResetOverlayWindow() { overlayWindowState = new OverlayWindowState { IsVisible = true }; return Task.CompletedTask; }
-    private string OverlayWindowSummary => ToolbarState?.Scenario switch { SandboxScenarioKey.LongText => "Longer title and summary copy still need to stay readable without pushing action buttons off the header.", SandboxScenarioKey.DenseContent => "Dense supporting tools should float inside the host frame without stealing the page hierarchy.", _ => "Floating support content inside a shared overlay host." };
-    private string OverlayWindowHostCopy => ToolbarState?.Scenario switch { SandboxScenarioKey.LongText => "The host frame deliberately includes enough ordinary page content to prove the floating surface supports the workflow instead of replacing the surrounding page.", SandboxScenarioKey.DenseContent => "Dense host content keeps visible status and proof notes while the overlay window remains bounded above it.", _ => "The surrounding page remains readable while OverlayWindow provides supporting inspection content." };
-    private string OverlayWindowBodyCopy => ToolbarState?.Scenario switch { SandboxScenarioKey.LongText => "Overlay body copy can grow, but it should wrap inside the floating surface and leave the header controls reachable.", SandboxScenarioKey.DenseContent => "Dense overlay content should rely on shared controls, not custom one-off panels.", _ => "Use the floating window for supporting tools that need to stay close to the current work." };
-    private string OverlayWindowSearch => ToolbarState?.Scenario == SandboxScenarioKey.LongText ? "Filter overlay evidence and acceptance checkpoints" : "Filter overlay evidence";
+    private const string OverlayWindowSummary = "Longer title and summary copy still need to stay readable without pushing action buttons off the header.";
+    private const string OverlayWindowHostCopy = "The host frame deliberately includes enough ordinary page content to prove the floating surface supports the workflow instead of replacing the surrounding page.";
+    private const string OverlayWindowBodyCopy = "Overlay body copy can grow, but it should wrap inside the floating surface and leave the header controls reachable.";
+    private const string OverlayWindowSearch = "Filter overlay evidence and acceptance checkpoints";
     private string OverlayWindowStateLabel => overlayWindowState.IsVisible ? overlayWindowState.IsMinimized ? "Minimized" : "Visible" : "Hidden";
     private string OverlayWindowStateTone => overlayWindowState.IsVisible ? overlayWindowState.IsMinimized ? "warning" : "success" : "warning";
 }

@@ -13,17 +13,7 @@
                 ExportAsync="HandleExportAsync" />
 
 @code {
-    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private SandboxScenarioKey initializedScenario;
-    private CanvasCalendarSurface surface = SandboxCanvasSamples.CreateCalendarSurface(SandboxScenarioKey.Default);
-
-    protected override void OnParametersSet()
-    {
-        var scenario = ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
-        if (initializedScenario == scenario) return;
-        initializedScenario = scenario;
-        surface = SandboxCanvasSamples.CreateCalendarSurface(scenario);
-    }
+    private readonly CanvasCalendarSurface surface = SandboxCanvasSamples.CreateCalendarSurface();
 
     private Task HandleSelectionChanged(CanvasCalendarSelectionChangedEventArgs args)
     {
@@ -166,8 +156,8 @@
         var eventId = calendarEvent is null ? string.Empty : ResolveCalendarEventId(calendarEvent);
         return
         [
-            new CanvasCalendarPlaylist { PlaylistId = "playlist-release-proof", Title = "Release proof playlist", Subtitle = "Cross-event validation set", Purpose = "Reuse proof evidence for publishing readiness", Status = "Ready", TotalScores = 12, ConnectedEventCount = 1, BuilderUrl = "/groups/canvas?scenario=dense-content", ConnectedEvents = [new CanvasCalendarConnectedEvent { EventId = "release-window", Title = "Release window", ScheduledStartUtc = new DateTimeOffset(2026, 4, 6, 15, 0, 0, TimeSpan.Zero), TimezoneName = "UTC", LocationLabel = "Deployment lane", IsPrimary = true }] },
-            new CanvasCalendarPlaylist { PlaylistId = "playlist-mobile-review", Title = "Mobile review playlist", Subtitle = "Small viewport QA", Purpose = "Validate compact calendar and preview states", Status = "Draft", TotalScores = 8, ConnectedEventCount = string.Equals(eventId, "canvas-proof", StringComparison.Ordinal) ? 1 : 0, BuilderUrl = "/groups/canvas?scenario=long-text" }
+            new CanvasCalendarPlaylist { PlaylistId = "playlist-release-proof", Title = "Release proof playlist", Subtitle = "Cross-event validation set", Purpose = "Reuse proof evidence for publishing readiness", Status = "Ready", TotalScores = 12, ConnectedEventCount = 1, BuilderUrl = "/groups/canvas#canvas-workbench", ConnectedEvents = [new CanvasCalendarConnectedEvent { EventId = "release-window", Title = "Release window", ScheduledStartUtc = new DateTimeOffset(2026, 4, 6, 15, 0, 0, TimeSpan.Zero), TimezoneName = "UTC", LocationLabel = "Deployment lane", IsPrimary = true }] },
+            new CanvasCalendarPlaylist { PlaylistId = "playlist-mobile-review", Title = "Mobile review playlist", Subtitle = "Small viewport QA", Purpose = "Validate compact calendar and preview states", Status = "Draft", TotalScores = 8, ConnectedEventCount = string.Equals(eventId, "canvas-proof", StringComparison.Ordinal) ? 1 : 0, BuilderUrl = "/groups/canvas#canvas-calendar" }
         ];
     }
 

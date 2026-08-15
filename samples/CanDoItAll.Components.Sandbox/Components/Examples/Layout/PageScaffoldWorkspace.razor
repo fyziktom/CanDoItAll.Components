@@ -29,7 +29,7 @@
             </div>
         </SectionCard>
 
-        <SectionCard Title="Current emphasis" Description="Scenario-specific expectations for this pass.">
+        <SectionCard Title="Current emphasis" Description="What this workspace sample proves.">
             <div class="sandbox-proof-list">
                 <p>@ScenarioRailCopy</p>
                 <p>@WidthRailCopy</p>
@@ -76,29 +76,17 @@
 
 @code {
     [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
-    private SandboxScenarioKey Scenario => ToolbarState?.Scenario ?? SandboxScenarioKey.Default;
     private SandboxFramePreset Frame => ToolbarState?.Frame ?? SandboxFramePreset.LiveViewport;
-    private string WorkspaceTitle => Scenario == SandboxScenarioKey.LongText ? "Migration acceptance workspace with extended release notes and validation guidance" : "Migration acceptance workspace";
-    private string WorkspaceDescription => Scenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense layout still needs a stable main column, a concise supporting rail, and action placement that does not fight the content.",
-        SandboxScenarioKey.EmptyState => "The shell should still orient the user even when the active list is empty and the detail panel has nothing to show yet.",
-        SandboxScenarioKey.LongText => "Longer page descriptions should not force the scaffold into awkward wrapping or a first viewport that feels like a document instead of a workspace.",
-        _ => "Shared page shells should make hierarchy, supporting context, and final actions obvious without inventing custom page structure."
-    };
-    private string WorkspaceCopy => Scenario switch
-    {
-        SandboxScenarioKey.DenseContent => "Dense workspace content compresses spacing slightly, but the header, key metrics, and detail region still need enough separation to stay scannable.",
-        SandboxScenarioKey.LongText => "Longer explanatory copy belongs in the main region, where it can keep a controlled reading width and still leave the rail available for compact operational context.",
-        _ => "The default layout keeps the main work in the primary region, keeps support context in the rail, and uses the sticky footer to close the flow cleanly."
-    };
-    private string ScenarioRailCopy => Scenario switch { SandboxScenarioKey.DenseContent => "This pass checks whether denser content still looks composed rather than over-packed.", SandboxScenarioKey.EmptyState => "This pass checks whether the shell explains itself before any records are selected.", SandboxScenarioKey.LongText => "This pass checks whether longer page copy stays readable without crushing the layout.", _ => "This pass checks baseline composition and region clarity." };
+    private string WorkspaceTitle => "Migration acceptance workspace with extended release notes and validation guidance";
+    private string WorkspaceDescription => "Longer page descriptions should not force the scaffold into awkward wrapping or a first viewport that feels like a document instead of a workspace.";
+    private string WorkspaceCopy => "Longer explanatory copy belongs in the main region, where it can keep a controlled reading width and still leave the rail available for compact operational context.";
+    private string ScenarioRailCopy => "This sample checks whether longer page copy stays readable without crushing the layout.";
     private string WidthRailCopy => Frame switch { SandboxFramePreset.Mobile => "Mobile should surface the headline, first metric, and next step without forcing horizontal scanning.", SandboxFramePreset.Tablet => "Tablet should use breadth deliberately and avoid dead space between sections.", _ => "The live viewport should keep the same hierarchy rules as the proof frames." };
     private string ViewportLabel => Frame switch { SandboxFramePreset.Mobile => "Mobile", SandboxFramePreset.Tablet => "Tablet", _ => "Live" };
     private int RegionCount => 3;
-    private int SectionCount => Scenario == SandboxScenarioKey.DenseContent ? 6 : 5;
-    private IReadOnlyList<WorkspaceMetric> WorkspaceMetrics => Scenario == SandboxScenarioKey.DenseContent ? DenseMetrics : BaseMetrics;
-    private IReadOnlyList<WorkspaceFact> SecondaryFacts => Scenario == SandboxScenarioKey.LongText ? LongFacts : BaseFacts;
+    private int SectionCount => 6;
+    private IReadOnlyList<WorkspaceMetric> WorkspaceMetrics => DenseMetrics;
+    private IReadOnlyList<WorkspaceFact> SecondaryFacts => LongFacts;
     private static readonly IReadOnlyList<WorkspaceMetric> BaseMetrics = [new("Primary flow", "Review", "Focus stays on the main acceptance path without starving the support rail.", "Ready", "success"), new("Secondary rail", "2 cards", "Supporting context stays compact and avoids duplicating main content.", "Balanced", "info")];
     private static readonly IReadOnlyList<WorkspaceMetric> DenseMetrics = [.. BaseMetrics, new("List-detail shell", "3 records", "The lower split region still reads clearly in a denser pass.", "Active", "warning")];
     private static readonly IReadOnlyList<WorkspaceFact> BaseFacts = [new("Main width", "Intentional"), new("Rail content", "Concise"), new("Action placement", "Footer"), new("Detail behavior", "Inline")];

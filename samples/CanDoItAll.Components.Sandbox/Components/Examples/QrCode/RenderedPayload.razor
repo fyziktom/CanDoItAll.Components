@@ -1,31 +1,13 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.QrCode
 
-<QrCodeView Payload="@CurrentPayload"
-            Caption="@CurrentCaption"
+<QrCodeView Payload="@Payload"
+            Caption="@Caption"
             AriaLabel="QR code for the sandbox verification payload"
-            Options="@CurrentOptions"
+            Options="@Options"
             TestId="sandbox-qr-view" />
 
 @code {
-    [CascadingParameter]
-    public SandboxToolbarState? ToolbarState { get; set; }
-
-    private const string BaselinePayload = "https://github.com/fyziktom/CanDoItAll.Components";
-    private const string LongPayload = "candoitall://verify?package=CanDoItAll.Components.BaseLib&version=0.1.0&commit=0123456789abcdef0123456789abcdef01234567&scope=dialog,tooltip,context-menu,tree,data-grid,canvas,charts,mermaid,qr";
-
-    private string CurrentPayload => ToolbarState?.Scenario == SandboxScenarioKey.EmptyState
-        ? string.Empty
-        : ToolbarState?.Scenario == SandboxScenarioKey.LongText ? LongPayload : BaselinePayload;
-
-    private string CurrentCaption => ToolbarState?.Scenario == SandboxScenarioKey.LongText
-        ? "Long verification payload with high error correction"
-        : "CanDoItAll.Components repository";
-
-    private QrCodeRenderOptions CurrentOptions => new()
-    {
-        BorderModules = ToolbarState?.Scenario == SandboxScenarioKey.DenseContent ? 2 : 4,
-        ErrorCorrectionLevel = ToolbarState?.Scenario == SandboxScenarioKey.LongText
-            ? QrErrorCorrectionLevel.High
-            : QrErrorCorrectionLevel.Medium
-    };
+    [Parameter] public string Payload { get; set; } = "https://github.com/fyziktom/CanDoItAll.Components";
+    [Parameter] public string Caption { get; set; } = "CanDoItAll.Components repository";
+    [Parameter] public QrCodeRenderOptions Options { get; set; } = new() { BorderModules = 4, ErrorCorrectionLevel = QrErrorCorrectionLevel.Medium };
 }
