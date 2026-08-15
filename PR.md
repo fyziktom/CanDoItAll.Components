@@ -47,6 +47,7 @@
 ## Tools
 
 - added screenshoting diff, visual, regression check tool
+- added `componets-usage` tool generating [./USAGE.md](./USAGE.md) report
 
 ## Repo
 
