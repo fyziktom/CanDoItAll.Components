@@ -191,12 +191,14 @@ Button, CopyButton
 
 # DEV NOTES
 
+- [ ] 1st component header margin top fix
 - [ ] ignore output
 - [ ] radzen-layout.css?
 - [ ] favicon + states
 - [ ] full dark theme html level, disable animation during transition
 - [ ] btn mouse over, pointer
 - [ ] mermaind tooltip absolute element 2px padding global scroll glitch
+- [x] usage counts
 - [x] map component usage across products
 - [x] nav filter
 - [x] reorg toc to readme

@@ -183,7 +183,11 @@ function escapeRegex(value) {
 }
 
 function buildUsageRegex(componentName) {
-  return new RegExp(`<(?:\\w+\\.)?${escapeRegex(componentName)}(?=[\\s/>])`);
+  return new RegExp(`<(?:\\w+\\.)?${escapeRegex(componentName)}(?=[\\s/>])`, "g");
+}
+
+function countUsages(content, componentName) {
+  return content.match(buildUsageRegex(componentName))?.length ?? 0;
 }
 
 function renderReport(groups, siblingResults, baseLibFiles) {
@@ -203,25 +207,29 @@ function renderReport(groups, siblingResults, baseLibFiles) {
   for (const group of sortedGroups) {
     for (const component of group.components) {
       componentCount += 1;
-      const regex = buildUsageRegex(component.name);
-
       const selfContent = baseLibFiles
         .filter(file => file.filePath !== component.filePath)
         .map(file => file.content)
         .join("\n");
-      const selfUsed = regex.test(selfContent);
-      if (selfUsed) {
+      const selfUsageCount = countUsages(selfContent, component.name);
+      if (selfUsageCount > 0) {
         selfCount += 1;
       }
 
       const cells = siblingResults.map((sibling, index) => {
-        const used = regex.test(sibling.content);
-        if (used) {
+        const usageCount = countUsages(sibling.content, component.name);
+        if (usageCount > 0) {
           usedCounts[index] += 1;
         }
-        return used ? "✅" : "—";
+        return usageCount > 0 ? `✅\u202F${usageCount}` : " ";
       });
-      rows.push([group.library, group.group, component.name, selfUsed ? "⭐" : "—", ...cells]);
+      rows.push([
+        group.library,
+        group.group,
+        component.name,
+        selfUsageCount > 0 ? `⭐\u202F${selfUsageCount}` : " ",
+        ...cells
+      ]);
     }
   }
 
