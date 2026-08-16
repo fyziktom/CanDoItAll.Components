@@ -59,6 +59,7 @@
 ### 3.B App V3
 
 - navigation, structural reorg
+- full bookmarkability coverage
 - full redesign
 - in place new items, in place edits, ...
 - animations (a least for layout changes like expanding/collapsing to keep user in context)
