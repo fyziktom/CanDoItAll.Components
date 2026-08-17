@@ -28,6 +28,8 @@
     "webgllib:test-command-batch-runtime-idle-policy": "node tools/webgllib/test-command-batch-runtime-idle-policy.cjs",
     "webgl:validate-rc": "powershell -ExecutionPolicy Bypass -File scripts/validate-webgl-rc.ps1",
     "build:tailwind": "npm --prefix Tailwind run build",
+    "build:sandbox-wasm-static": "npm run build:tailwind && node -e \"require('node:fs').rmSync('artifacts/sandbox-wasm-publish', { recursive: true, force: true })\" && dotnet publish ./samples/CanDoItAll.Components.SandboxWasm/CanDoItAll.Components.SandboxWasm.csproj --configuration Release --property:CompressionEnabled=false --output ./artifacts/sandbox-wasm-publish",
+    "deploy:sandbox-wasm-gh-pages": "npm run build:sandbox-wasm-static && gh-pages --dist ./artifacts/sandbox-wasm-publish/wwwroot --branch gh-pages --dotfiles",
     "watch:tailwind": "npm --prefix Tailwind run watch",
     "watch:sandbox": "dotnet watch --project ./samples/CanDoItAll.Components.Sandbox",
     "watch:sandbox-wasm": "dotnet watch --project ./samples/CanDoItAll.Components.SandboxWasm",
@@ -43,6 +45,7 @@
   "type": "commonjs",
   "license": "MIT",
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "material-symbols": "^0.45.10",
     "mustache": "^4.2.0",
     "odiff-bin": "^4.5.0",
