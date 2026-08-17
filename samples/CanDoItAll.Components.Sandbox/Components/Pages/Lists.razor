@@ -14,7 +14,7 @@
 
             @foreach (var section in Sections)
             {
-                <section id="@section.Anchor" class="sandbox-component-section" data-testid="data-display-selection-rows">
+                <section id="@(section.Anchor)" class="sandbox-component-section" data-testid="data-display-selection-rows">
                     <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
 
                     @if (section.ComponentName == "ListDetailShell")

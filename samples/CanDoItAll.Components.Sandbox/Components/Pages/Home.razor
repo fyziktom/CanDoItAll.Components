@@ -28,7 +28,7 @@
                                 @for (var i = 0; i < sections.Count; i++)
                                 {
                                     var section = sections[i];
-                                    <a href="@($"{group.Route}#{section.Anchor}")">@section.ComponentName</a>@(i < sections.Count - 1 ? ", " : "")
+                                    <a href="@($"{group.Route}#{section.Anchor}")">@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
                                 }
                             </p>
                         }
