@@ -31,7 +31,8 @@ public enum SandboxGroupKey
     QrCode,
     Gantt,
     Overlays,
-    Canvas
+    Canvas,
+    Transitions
 }
 
 public enum SandboxFramePreset
@@ -49,7 +50,8 @@ public sealed record SandboxGroupDefinition(
     IReadOnlyList<string> FocusAreas,
     IReadOnlyList<string> ProofNotes)
 {
-    public bool IsStandardProofGroup => Key is not SandboxGroupKey.Canvas;
+    // public bool IsStandardProofGroup => Key is not SandboxGroupKey.Canvas;
+    public bool IsStandardProofGroup => true;
 
     public string ProofScope => IsStandardProofGroup ? "Standard" : "Deferred";
 }
@@ -209,7 +211,14 @@ public static class SandboxCatalogRegistry
             "/groups/canvas",
             "Typed workbench and calendar surfaces plus runtime primitives and sandbox-only preview assets.",
             ["workbench", "calendars"],
-            ["Canvas contracts stay typed.", "Runtime workbench stays distinct from sandbox previews.", "Desktop width should be used aggressively without losing orientation.", "The runtime workbench should stay focused on authoring behavior rather than carrying preview-only diagnostics.", "Floating windows, selection state, and viewport updates must stay typed across the shared contracts.", "Canvas proof assets belong in the sandbox so dense and empty scenarios can be reviewed without touching the runtime pages."])
+            ["Canvas contracts stay typed.", "Runtime workbench stays distinct from sandbox previews.", "Desktop width should be used aggressively without losing orientation.", "The runtime workbench should stay focused on authoring behavior rather than carrying preview-only diagnostics.", "Floating windows, selection state, and viewport updates must stay typed across the shared contracts.", "Canvas proof assets belong in the sandbox so dense and empty scenarios can be reviewed without touching the runtime pages."]),
+        new(
+            SandboxGroupKey.Transitions,
+            "Transitions",
+            "/groups/transitions",
+            "Animated transitions.",
+            ["expand transition"],
+            ["Transitions smoothly."])
     ];
 
     public static IReadOnlyList<SandboxGroupDefinition> StandardGroups { get; }
@@ -529,6 +538,10 @@ public static class SandboxCatalogRegistry
                 new("calendar-mini-month-navigator", "CalendarMiniMonthNavigator", typeof(CalendarMiniMonthNavigator)),
                 new("calendar-time-grid-renderer", "CalendarTimeGridRenderer", typeof(CalendarTimeGridRenderer)),
                 new("preview-assets", "CanvasSceneHostPreview", typeof(CanvasSceneHostPreview))
+            ],
+            ["/groups/transitions"] =
+            [
+                new("expand-transition", "ExpandTransition", typeof(ExpandTransition))
             ]
         };
 

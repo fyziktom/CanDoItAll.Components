@@ -1,0 +1,40 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/groups/transitions"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Sandbox.Components.Examples.Transitions
+
+<PageTitle>Transitions</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in Sections)
+            {
+                <section id="@section.Anchor" class="sandbox-component-section">
+                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+
+                    @if (section.ComponentName == "ExpandTransition")
+                    {
+                        <ExampleBlock Title="Expand Transition"
+                                      Description="Expand and collapse child content."
+                                      SourceId="examples/Transitions/ExpandTransitionExample.razor"
+                                      ApiTypes="@ExpandTransitionTypes">
+                            <ExpandTransitionExample />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Transitions);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Transitions);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/transitions");
+
+    private static readonly IReadOnlyList<Type> ExpandTransitionTypes = [typeof(ExpandTransition)];
+}
