@@ -8,6 +8,6 @@ dotnet run --project samples/CanDoItAll.Components.SandboxWasm/CanDoItAll.Compon
 dotnet publish samples/CanDoItAll.Components.SandboxWasm/CanDoItAll.Components.SandboxWasm.csproj --configuration Release
 ```
 
-Deploy the published `wwwroot` directory. GitHub Pages deployments must retain `.nojekyll`, rewrite
-the `index.html` base href to the repository path (for example, `/CanDoItAll.Components/`), and add
-an SPA fallback for deep links.
+Deploy the published `wwwroot` directory. The relative `index.html` base href works for a GitHub
+Pages project site and a custom-domain root; retain `.nojekyll` and add an SPA fallback for deep
+links if the host supports one.
