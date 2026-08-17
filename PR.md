@@ -33,6 +33,7 @@
 - added Noto Sans and Noto Mono fonts
 - changed MaterialIconCatalogGallery to expose the icon dictionary and added complete preview to sandbox app
 - consolidated "Bare elements", "class" and "TextBlock" styles
+- added ExpandTransition
 
 ## Tailwind
 
