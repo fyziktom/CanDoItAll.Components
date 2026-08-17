@@ -311,7 +311,6 @@
             };
 
             calendars.set(host, entry);
-            return emitState(entry);
         },
 
         update: function (host, surface) {
