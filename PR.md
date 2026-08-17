@@ -44,6 +44,7 @@
 - added stylelint/pretier based `format` script
 - consolidated intend across css files, added to editorconfig css section
 - added css reset
+- ignore output.css
 
 ## Tools
 
