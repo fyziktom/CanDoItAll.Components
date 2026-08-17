@@ -13,7 +13,7 @@
                 <div class="sandbox-layout__backdrop" aria-hidden="true"></div>
                 <div class="sandbox-layout__shell">
                     <aside id="sandbox-navigation" class="sandbox-sidebar">
-                        <a href="@BuildSidebarLink("/")"
+                        <a href="@BuildSidebarLink("/")" data-sandbox-route
                            class="sandbox-nav__link @(IsActiveRoute("/") ? "is-active" : string.Empty)">
                             <span class="sandbox-nav__title">Components Sandbox</span>
                             @* <span class="sandbox-nav__meta">Home</span> *@
@@ -37,7 +37,7 @@
                                     continue;
                                 }
 
-                                <a href="@BuildSidebarLink(group.Route)"
+                                <a href="@BuildSidebarLink(group.Route)" data-sandbox-route
                                    class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
                                     <span class="sandbox-nav__title">@group.Title</span>
                                     <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
@@ -51,7 +51,7 @@
                                         <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
                                             @foreach (var section in sections)
                                             {
-                                                <a href="@BuildSectionLink(group.Route, section.Anchor)"
+                                                <a href="@BuildSectionLink(group.Route, section.Anchor)" data-sandbox-route
                                                    class="sandbox-nav__link sandbox-nav__link--sub">
                                                     <span class="sandbox-nav__title">@BuildHighlightedName(section.ComponentName)</span>
                                                 </a>
@@ -79,7 +79,7 @@
                                             continue;
                                         }
 
-                                        <a href="@BuildSidebarLink(group.Route)"
+                                        <a href="@BuildSidebarLink(group.Route)" data-sandbox-route
                                            class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
                                             <span class="sandbox-nav__title">@group.Title</span>
                                             <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
@@ -93,7 +93,7 @@
                                                 <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
                                                     @foreach (var section in deferredSections)
                                                     {
-                                                        <a href="@BuildSectionLink(group.Route, section.Anchor)"
+                                                        <a href="@BuildSectionLink(group.Route, section.Anchor)" data-sandbox-route
                                                            class="sandbox-nav__link sandbox-nav__link--sub">
                                                             <span class="sandbox-nav__title">@BuildHighlightedName(section.ComponentName)</span>
                                                         </a>
@@ -224,7 +224,7 @@
 
     private bool IsActiveRoute(string route)
     {
-        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var relativePath = SandboxQueryLinks.GetCurrentRoute(NavigationManager);
         var currentPath = relativePath.Split('?', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
         if (string.IsNullOrWhiteSpace(currentPath))
         {
@@ -247,7 +247,12 @@
     {
         return IsActiveRoute(route)
             ? SandboxQueryLinks.WithFragment(NavigationManager, anchor)
-            : $"{BuildSidebarLink(route)}#{anchor}";
+            : SandboxQueryLinks.BuildCrossPageLink(
+                NavigationManager,
+                route,
+                toolbarState.HasContext ? toolbarState.Frame : null,
+                themeState.IsDark,
+                anchor);
     }
 
     private void HandleThemeChanged()

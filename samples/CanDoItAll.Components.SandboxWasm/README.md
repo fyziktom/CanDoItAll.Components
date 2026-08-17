@@ -9,5 +9,5 @@ dotnet publish samples/CanDoItAll.Components.SandboxWasm/CanDoItAll.Components.S
 ```
 
 Deploy the published `wwwroot` directory. The relative `index.html` base href works for a GitHub
-Pages project site and a custom-domain root; retain `.nojekyll` and add an SPA fallback for deep
-links if the host supports one.
+Pages project site and a custom-domain root. The WASM catalog uses `?page=groups/...` links, so
+refreshing or sharing a catalog page always requests the static `index.html` entry point.

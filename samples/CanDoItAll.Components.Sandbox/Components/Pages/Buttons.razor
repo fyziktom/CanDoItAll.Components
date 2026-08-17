@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/buttons"
+@page "/buttons"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
 @using CanDoItAll.Components.Sandbox.Components.Examples.Buttons
@@ -51,7 +51,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Buttons);
     private static readonly IReadOnlyList<SandboxExampleDefinition> RegisteredExamples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Buttons);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/buttons");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/buttons");
     private static readonly IReadOnlyList<Type> ButtonApiTypes = [typeof(Button)];
     private static readonly IReadOnlyList<Type> CopyButtonApiTypes = [typeof(CopyButton)];
 

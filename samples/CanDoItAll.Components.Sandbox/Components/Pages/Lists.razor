@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/lists"
+@page "/lists"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
 @using CanDoItAll.Components.Sandbox.Components.Examples.Lists
@@ -98,7 +98,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Lists);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Lists);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/lists");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/lists");
 
     private static readonly IReadOnlyList<Type> ListDetailShellApiTypes = [typeof(ListDetailShell)];
     private static readonly IReadOnlyList<Type> SelectionListItemApiTypes = [typeof(SelectionListItem)];

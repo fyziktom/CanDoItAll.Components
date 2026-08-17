@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/data-display"
+@page "/data-display"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.DataDisplay
 
@@ -52,7 +52,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.DataDisplay);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataDisplay);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/data-display");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/data-display");
 
     private static readonly IReadOnlyList<Type> DiffViewerApiTypes = [typeof(DiffViewer)];
     private static readonly IReadOnlyList<Type> TimelineApiTypes = [typeof(Timeline)];

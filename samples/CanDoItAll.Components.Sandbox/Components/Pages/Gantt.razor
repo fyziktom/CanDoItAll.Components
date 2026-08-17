@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/gantt"
+@page "/gantt"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Gantt
 
@@ -32,6 +32,6 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Gantt);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Gantt);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/gantt");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/gantt");
     private static readonly IReadOnlyList<Type> GanttChartApiTypes = [typeof(GanttChart), typeof(GanttTaskDragSource)];
 }

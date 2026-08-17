@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/canvas"
+@page "/canvas"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Canvas
 
@@ -95,7 +95,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Canvas);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Canvas);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/canvas");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/canvas");
     private static readonly IReadOnlyList<Type> CanvasWorkbenchApiTypes = [typeof(CanvasWorkbench), typeof(CanvasFloatingWindow)];
     private static readonly IReadOnlyList<Type> CanvasCalendarApiTypes = [typeof(CanvasCalendar)];
     private static readonly IReadOnlyList<Type> CalendarSelectionPanelApiTypes = [typeof(CalendarSelectionPanel)];

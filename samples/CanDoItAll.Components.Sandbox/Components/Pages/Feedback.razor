@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/feedback"
+@page "/feedback"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
 @using CanDoItAll.Components.Sandbox.Components.Examples.Feedback
@@ -117,7 +117,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Feedback);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Feedback);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/feedback");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/feedback");
 
     private static readonly IReadOnlyList<Type> AlertApiTypes = [typeof(Alert)];
     private static readonly IReadOnlyList<Type> CalloutApiTypes = [typeof(Callout)];

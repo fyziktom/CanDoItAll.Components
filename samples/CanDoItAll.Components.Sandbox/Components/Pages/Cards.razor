@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/cards"
+@page "/cards"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Common
 @using CanDoItAll.Components.Sandbox.Components.Examples.Cards
@@ -274,7 +274,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Cards);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Cards);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/cards");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/cards");
 
     private static readonly IReadOnlyList<Type> CardApiTypes = [typeof(Card), typeof(CardGrid)];
     private static readonly IReadOnlyList<Type> ActionCardApiTypes = [typeof(ActionCard)];

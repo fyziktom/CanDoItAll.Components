@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/navigation"
+@page "/navigation"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Navigation
 
@@ -240,7 +240,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Navigation);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Navigation);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/navigation");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/navigation");
 
     private static readonly IReadOnlyList<Type> TabsApiTypes = [typeof(Tabs), typeof(TabsItem)];
     private static readonly IReadOnlyList<Type> ToolbarApiTypes = [typeof(Toolbar)];

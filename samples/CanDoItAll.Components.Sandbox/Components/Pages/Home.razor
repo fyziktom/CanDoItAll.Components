@@ -21,7 +21,7 @@
                     var sections = SandboxCatalogRegistry.GetSections(group.Route);
 
                     <div class="space-y-1">
-                        <a href="@BuildGroupLink(group.Route)" class="sandbox-toc-group block">@group.Title</a>
+                        <a href="@BuildGroupLink(group.Route)" data-sandbox-route class="sandbox-toc-group block">@group.Title</a>
 
                         @if (sections.Count > 0)
                         {
@@ -29,7 +29,7 @@
                                 @for (var i = 0; i < sections.Count; i++)
                                 {
                                     var section = sections[i];
-                                    <a href="@($"{BuildGroupLink(group.Route)}#{section.Anchor}")">@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
+                                    <a href="@BuildGroupLink(group.Route, section.Anchor)" data-sandbox-route>@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
                                 }
                             </p>
                         }
@@ -41,10 +41,11 @@
 </div>
 
 @code {
-    private string BuildGroupLink(string route)
+    private string BuildGroupLink(string route, string? anchor = null)
         => SandboxQueryLinks.BuildCrossPageLink(
             NavigationManager,
             route,
             frame: null,
-            isDark: false);
+            isDark: false,
+            fragment: anchor);
 }

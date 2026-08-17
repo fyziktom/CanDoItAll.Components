@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/identity"
+@page "/identity"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Identity
 
@@ -92,7 +92,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Identity);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Identity);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/identity");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/identity");
 
     private static readonly IReadOnlyList<Type> IconApiTypes = [typeof(Icon)];
     private static readonly IReadOnlyList<Type> AvatarApiTypes = [typeof(Avatar)];

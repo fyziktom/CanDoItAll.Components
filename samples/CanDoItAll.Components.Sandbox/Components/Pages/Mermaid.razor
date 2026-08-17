@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/mermaid"
+@page "/mermaid"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Mermaid
 
@@ -39,7 +39,7 @@
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Mermaid);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/mermaid");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/mermaid");
     private static readonly IReadOnlyList<Type> MermaidDiagramApiTypes = [typeof(MermaidDiagram)];
     private static readonly int ExampleCount = GraphGallery.Examples.Count + 3;
 }

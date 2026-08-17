@@ -15,12 +15,17 @@
 
   <ItemGroup>
     <Content Include="..\CanDoItAll.Components.Sandbox\wwwroot\**\*"
-             Exclude="..\CanDoItAll.Components.Sandbox\wwwroot\assets\logo.svg"
+             Exclude="..\CanDoItAll.Components.Sandbox\wwwroot\assets\logo.svg;..\CanDoItAll.Components.Sandbox\wwwroot\js\sandbox-toolbar.js"
              Link="wwwroot\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
+
+  <Target Name="SyncSandboxToolbarModule" BeforeTargets="PrepareForBuild">
+    <Copy SourceFiles="..\CanDoItAll.Components.Sandbox\wwwroot\js\sandbox-toolbar.js"
+          DestinationFolder="$(MSBuildProjectDirectory)\wwwroot\js\" />
+  </Target>
 
 </Project>

@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/overlays"
+@page "/overlays"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Overlays
 
@@ -61,7 +61,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Overlays);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Overlays);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/overlays");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/overlays");
 
     private static readonly IReadOnlyList<Type> DialogServiceApiTypes = [typeof(DialogService), typeof(DialogHost)];
     private static readonly IReadOnlyList<Type> TooltipServiceApiTypes = [typeof(TooltipService), typeof(TooltipTarget)];

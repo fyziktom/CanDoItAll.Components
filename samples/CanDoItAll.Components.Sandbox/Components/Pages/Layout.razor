@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/layout"
+@page "/layout"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Layout
 
@@ -166,7 +166,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Layout);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Layout);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/layout");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/layout");
 
     private static readonly IReadOnlyList<Type> PageScaffoldApiTypes = [typeof(PageScaffold)];
     private static readonly IReadOnlyList<Type> ZoomPanFrameApiTypes = [typeof(ZoomPanFrame)];

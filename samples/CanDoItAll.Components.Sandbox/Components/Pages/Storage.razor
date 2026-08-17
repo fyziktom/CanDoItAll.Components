@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/storage"
+@page "/storage"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Storage
 
@@ -43,7 +43,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Storage);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Storage);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/storage");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/storage");
 
     private static readonly IReadOnlyList<Type> StorageBadgeStripApiTypes = [typeof(StorageBadgeStrip)];
     private static readonly IReadOnlyList<Type> StorageSummaryCardApiTypes = [typeof(StorageSummaryCard)];

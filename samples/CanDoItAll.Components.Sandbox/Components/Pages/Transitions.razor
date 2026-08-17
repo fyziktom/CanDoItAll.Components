@@ -1,5 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/transitions"
+@page "/transitions"
 @inherits CatalogPageBase
 @using CanDoItAll.Components.Sandbox.Components.Examples.Transitions
 
@@ -34,7 +34,7 @@
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Transitions);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Transitions);
-    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/groups/transitions");
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/transitions");
 
     private static readonly IReadOnlyList<Type> ExpandTransitionTypes = [typeof(ExpandTransition)];
 }
