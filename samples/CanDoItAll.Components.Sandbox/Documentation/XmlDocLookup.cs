@@ -93,7 +93,7 @@ public static partial class XmlDocLookup
                     static group => group.First().Summary!,
                     StringComparer.Ordinal);
         }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Xml.XmlException)
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or PlatformNotSupportedException or System.Xml.XmlException)
         {
             // Documentation is a convenience here; never let a missing or malformed file break the page.
             return Empty;

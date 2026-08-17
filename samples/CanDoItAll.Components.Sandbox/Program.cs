@@ -21,6 +21,7 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
+    .AddAdditionalAssemblies(typeof(Routes).Assembly)
     .AddInteractiveServerRenderMode();
 
 app.MapGet("/api/pages.json", () =>

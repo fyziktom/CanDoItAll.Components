@@ -72,7 +72,7 @@
     {
         if (firstRender)
         {
-            module = await JS.InvokeAsync<IJSObjectReference>("import", "/js/canvasBenchmarkPage.js");
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/canvasBenchmarkPage.js");
         }
 
         if (module is not null && !string.Equals(renderedTierKey, BenchmarkState.SelectedTierKey, StringComparison.Ordinal))

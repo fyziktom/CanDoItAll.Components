@@ -12,8 +12,7 @@ namespace CanDoItAll.Components.Sandbox.Documentation;
 /// other libraries (Charts, Gantt, Mermaid, QRCode) lay them out flat as
 /// <c>Components/{Component}.razor</c>. Everything else (CanvasLib, OverlayLib, BaseLib's nested
 /// <c>Compatibility/</c> folder, and so on) doesn't follow either convention and needs an entry
-/// in <see cref="Overrides"/>. A guessed path that turns out wrong degrades to "no link" rather
-/// than a broken GitHub URL, because it's checked against the actual checkout before use.
+/// in <see cref="Overrides"/>.
 /// </remarks>
 public static class ComponentSourceCatalog
 {
@@ -42,7 +41,7 @@ public static class ComponentSourceCatalog
     {
         if (Overrides.TryGetValue(componentType, out var overridden))
         {
-            return ExistsInRepo(overridden) ? overridden : null;
+            return overridden;
         }
 
         var assemblyName = componentType.Assembly.GetName().Name;
@@ -72,12 +71,6 @@ public static class ComponentSourceCatalog
             return null;
         }
 
-        return ExistsInRepo(candidate) ? candidate : null;
-    }
-
-    private static bool ExistsInRepo(string repoRelativePath)
-    {
-        var root = GitInfo.RepoRoot;
-        return root is not null && File.Exists(Path.Combine(root, repoRelativePath));
+        return candidate;
     }
 }

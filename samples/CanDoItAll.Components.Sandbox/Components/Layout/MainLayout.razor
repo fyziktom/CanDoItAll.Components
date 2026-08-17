@@ -151,9 +151,12 @@
     private void SyncThemeFromQuery()
     {
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-        var isDark = query.TryGetValue("dark", out var value)
-            && string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+        var isDark = uri.Query.TrimStart('?')
+            .Split('&', StringSplitOptions.RemoveEmptyEntries)
+            .Select(static pair => pair.Split('=', 2))
+            .Any(static pair => pair.Length == 2
+                && string.Equals(Uri.UnescapeDataString(pair[0]), "dark", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Uri.UnescapeDataString(pair[1]), "true", StringComparison.OrdinalIgnoreCase));
 
         themeState.SetTheme(isDark ? CadThemes.Dark : CadThemes.Light);
     }
