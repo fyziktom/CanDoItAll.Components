@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loader</title>
+
+    <style>
+    svg {
+        overflow: visible;
+    }
+
+    svg {
+        --wave-duration: 2.6s;
+        --wave-step: calc(var(--wave-duration) / 6);
+    }
+
+    path:nth-child(7), path:nth-child(8), path:nth-child(9),
+    path:nth-child(10), path:nth-child(11), path:nth-child(12) {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: wave var(--wave-duration) ease-out infinite;
+    }
+
+    path:nth-child(1), path:nth-child(2), path:nth-child(3),
+    path:nth-child(4), path:nth-child(5), path:nth-child(6) {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: wave-in var(--wave-duration) ease-out infinite;
+    }
+
+    path:nth-child(7),
+    path:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    path:nth-child(8),
+    path:nth-child(2) {
+        animation-delay: calc(var(--wave-step) * 1);
+    }
+
+    path:nth-child(9),
+    path:nth-child(3) {
+        animation-delay: calc(var(--wave-step) * 2);
+    }
+
+    path:nth-child(10),
+    path:nth-child(4) {
+        animation-delay: calc(var(--wave-step) * 3);
+    }
+
+    path:nth-child(11),
+    path:nth-child(5) {
+        animation-delay: calc(var(--wave-step) * 4);
+    }
+
+    path:nth-child(12),
+    path:nth-child(6) {
+        animation-delay: calc(var(--wave-step) * 5);
+    }
+
+    @keyframes wave {
+        0%, 50%, 100% {
+            transform: scale(1) rotate3d(1, 1, 0, 0) rotate(0);
+            opacity: 1;
+        }
+        25% {
+            transform: scale(1.06) rotate3d(1, 1, 0, 15deg) rotate(1deg);
+            opacity: .9;
+        }
+        75% {
+            transform: scale(1.06) rotate3d(1, 1, 0, 15deg) rotate(-1deg);
+            opacity: .85;
+        }
+    }
+
+    @keyframes wave-in {
+        0%, 50%, 100% {
+            transform: scale(1) rotate3d(1, 1, 0, 0deg) rotate(0);
+            opacity: 1;
+        }
+        25% {
+            transform: scale(.996) rotate3d(1, 1, 0, -15deg) rotate(-2deg);
+            opacity: 0.25;
+        }
+        75% {
+            transform: scale(.996) rotate3d(1, 1, 0, 15deg) rotate(2deg);
+            opacity: 0.35;
+        }
+    }
+
+    body {
+        text-align: center;
+        font-family: sans-serif;
+        color: rgba(0, 0, 0, .4);
+        padding: 60px;
+    }
+
+    p {
+        margin: .75em;
+        padding-left: 1em;
+        text-transform: uppercase;
+    }
+    </style>
+</head>
+<body>
+
+<svg
+    width="160"
+    height="160"
+    viewBox="0 0 24 24"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:svg="http://www.w3.org/2000/svg">
+    <g>
+        <path
+            style="fill:#63b3c8;"
+            d="M 3.3397461,7.0001425 7.3395004,9.3092594 12,6.6185183 3.3397461,7.0001425"
+        />
+        <path
+            style="fill:#6dbfdd;"
+            d="M 12.000247,1.9999997 12,6.6185183 16.6605,9.3092591 Z"
+        />
+        <path
+            style="fill:#5ba3da;"
+            d="M 16.6605,14.690741 V 9.3092591 l 4.000247,-2.3091174 z"
+        />
+        <path
+            style="fill:#3d64d2;"
+            d="M 20.660746,17.000426 16.6605,14.690741 12,17.381482 Z"
+        />
+        <path
+            style="fill:#364dbe;"
+            d="M 12.000246,22.000569 12,17.381482 7.3395001,14.690742 Z"
+        />
+        <path
+            style="fill:#5091d0;"
+            d="m 7.3395001,14.690742 -3.9997545,2.309685 3.9997548,-7.6911676 -3e-7,5.3814826"
+        />
+        <path
+            style="fill:#8fe6ed;"
+            d="M 3.3397461,7.0001425 12,6.6185183 12.000247,1.9999997 Z"
+        />
+        <path
+            style="fill:#8ce0f2;"
+            d="M 12.000247,1.9999997 16.6605,9.3092591 20.660747,7.0001417 Z"
+        />
+        <path
+            style="fill:#74c4ec;"
+            d="m 16.6605,14.690741 4.000246,2.309685 1e-6,-10.0002843 z"
+        />
+        <path
+            style="fill:#5784e6;"
+            d="m 12,17.381482 2.46e-4,4.619087 8.6605,-5.000143 z"
+        />
+        <path
+            style="fill:#4a63d6;"
+            d="M 7.3395001,14.690742 12.000246,22.000569 3.3397456,17.000427 Z"
+        />
+        <path
+            style="fill:#79d0eb;"
+            d="m 7.3395004,9.3092594 -3.9997543,-2.3091169 -5e-7,10.0002845 z"
+        />
+    </g>
+</svg>
+<p>Loading&hellip;</p>
+</body>
+</html>
