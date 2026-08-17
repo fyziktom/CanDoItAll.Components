@@ -19,7 +19,7 @@ public static class SandboxQueryLinks
         SandboxFramePreset? frame,
         bool isDark)
     {
-        var target = navigationManager.ToAbsoluteUri(path).ToString();
+        var target = path == "/" ? "./" : path.TrimStart('/');
         var parameters = new Dictionary<string, object?>();
 
         if (frame is { } frameValue && frameValue != SandboxFramePreset.LiveViewport)
@@ -32,9 +32,17 @@ public static class SandboxQueryLinks
             parameters["dark"] = "true";
         }
 
-        return parameters.Count == 0
-            ? target
-            : navigationManager.GetUriWithQueryParameters(target, parameters);
+        if (parameters.Count == 0)
+        {
+            return target;
+        }
+
+        var query = string.Join(
+            "&",
+            parameters.Select(static parameter =>
+                $"{Uri.EscapeDataString(parameter.Key)}={Uri.EscapeDataString(parameter.Value?.ToString() ?? string.Empty)}"));
+
+        return $"{target}?{query}";
     }
 
     /// <summary>Preserves the current query string verbatim and only changes the #fragment.</summary>

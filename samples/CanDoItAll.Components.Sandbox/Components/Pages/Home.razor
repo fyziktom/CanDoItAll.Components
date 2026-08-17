@@ -1,5 +1,6 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 @page "/"
+@inject NavigationManager NavigationManager
 
 <PageTitle>Components Sandbox</PageTitle>
 
@@ -20,7 +21,7 @@
                     var sections = SandboxCatalogRegistry.GetSections(group.Route);
 
                     <div class="space-y-1">
-                        <a href="@group.Route" class="sandbox-toc-group block">@group.Title</a>
+                        <a href="@BuildGroupLink(group.Route)" class="sandbox-toc-group block">@group.Title</a>
 
                         @if (sections.Count > 0)
                         {
@@ -28,7 +29,7 @@
                                 @for (var i = 0; i < sections.Count; i++)
                                 {
                                     var section = sections[i];
-                                    <a href="@($"{group.Route}#{section.Anchor}")">@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
+                                    <a href="@($"{BuildGroupLink(group.Route)}#{section.Anchor}")">@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
                                 }
                             </p>
                         }
@@ -38,3 +39,12 @@
         </ChildContent>
     </PageScaffold>
 </div>
+
+@code {
+    private string BuildGroupLink(string route)
+        => SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            route,
+            frame: null,
+            isDark: false);
+}
