@@ -36,7 +36,7 @@ else
 
     private void HandleLocationChanged(object? sender, LocationChangedEventArgs args)
     {
-        UpdateQueryRoute();
+        UpdateQueryRoute(NavigationManager.ToAbsoluteUri(args.Location).Fragment);
         _ = InvokeAsync(StateHasChanged);
     }
 
@@ -53,16 +53,14 @@ else
         if (parts.Length == 0 || string.IsNullOrWhiteSpace(parts[0]))
         {
             queryRouteData = null;
-            pendingAnchor = null;
+            pendingAnchor = SandboxQueryLinks.UpdateHashState(routeHash);
             pendingScroll = true;
-            SandboxQueryLinks.CurrentHashRoute = string.Empty;
             return;
         }
 
         var route = Uri.UnescapeDataString(parts[0]).Trim('/');
         var template = $"/{route}";
-        SandboxQueryLinks.CurrentHashRoute = route;
-        pendingAnchor = parts.Length == 2 ? Uri.UnescapeDataString(parts[1]) : null;
+        pendingAnchor = SandboxQueryLinks.UpdateHashState(routeHash);
         var componentType = typeof(Routes).Assembly.ExportedTypes.FirstOrDefault(type =>
             typeof(IComponent).IsAssignableFrom(type)
             && type.GetCustomAttributes<RouteAttribute>()
@@ -70,7 +68,10 @@ else
 
         queryRouteData = componentType is null
             ? null
-            : new RouteData(componentType, new Dictionary<string, object?>());
+            : new RouteData(componentType, new Dictionary<string, object?>
+            {
+                [nameof(CatalogPageBase.HashRouteState)] = routeHash
+            });
         pendingScroll = queryRouteData is not null;
     }
 
