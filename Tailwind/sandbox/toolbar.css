@@ -2,6 +2,13 @@
   @apply fixed inset-x-0 top-0 z-20 flex justify-between items-center gap-3 py-3 px-4;
   border-bottom: 1px solid var(--cad-color-border-soft);
   background: var(--cad-color-surface);
+  @apply @container;
+}
+
+@container (width <= 24rem) {
+.sandbox-toolbar__frame, .sandbox-toolbar__coverage {
+    @apply hidden;
+  }
 }
 
 .sandbox-toolbar__controls {
