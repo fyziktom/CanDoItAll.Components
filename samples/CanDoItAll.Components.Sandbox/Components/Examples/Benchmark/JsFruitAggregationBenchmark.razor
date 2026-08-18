@@ -48,7 +48,7 @@
 </div>
 
 @code {
-    private static readonly int[] ItemCounts = [100, 1_000, 10_000];
+    private static readonly int[] ItemCounts = [100, 1_000, 10_000, 10_000_000];
     private static readonly string[] Fruits = ["Apple", "Banana", "Cherry", "Mango", "Pear"];
     private const string JavaScriptModule = """
         export function aggregateFruitCounts(itemCount) {
@@ -70,7 +70,7 @@
             return { elapsedMilliseconds: performance.now() - start, counts };
         }
         """;
-    private int itemCount = 1_000;
+    private int itemCount = 10_000;
     private Result? result;
     private IJSObjectReference? module;
     private readonly List<double> samples = [];
