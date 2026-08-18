@@ -1,5 +1,9 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Benchmark
 @using System.Diagnostics
+@using System.Text
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 <div class="space-y-4">
     <FormField Text="Items to aggregate" ContainerClass="max-w-xs">
@@ -10,7 +14,7 @@
                   aria-label="C# items to aggregate" />
     </FormField>
 
-    <Button Text="Run C# benchmark" Click="RunBenchmark" data-testid="benchmark-wasm-run" />
+    <Button Text="Run C# benchmark" Click="RunBenchmarkAsync" Disabled="@(pending || module is null)" data-testid="benchmark-wasm-run" />
 
     @if (result is null)
     {
@@ -43,10 +47,17 @@
 </div>
 
 @code {
-    private static readonly int[] ItemCounts = [100, 1_000, 10_000, 10_000_000];
+    private static readonly int[] ItemCounts = [100, 1_000, 10_000, 1_000_000];
     private static readonly string[] Fruits = ["Apple", "Banana", "Cherry", "Mango", "Pear"];
+    private const string JavaScriptModule = """
+        export function nextAnimationFrame() {
+            return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        """;
     private int itemCount = 10_000;
     private Result? result;
+    private bool pending;
+    private IJSObjectReference? module;
     private readonly List<double> samples = [];
 
     private double MinimumMilliseconds => samples.Min();
@@ -60,8 +71,24 @@
         samples.Clear();
     }
 
-    private void RunBenchmark()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var moduleUrl = $"data:text/javascript;base64,{Convert.ToBase64String(Encoding.UTF8.GetBytes(JavaScriptModule))}";
+        module = await JS.InvokeAsync<IJSObjectReference>("import", moduleUrl);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RunBenchmarkAsync()
+    {
+        pending = true;
+        await InvokeAsync(StateHasChanged);
+        await module!.InvokeVoidAsync("nextAnimationFrame");
+
         var selections = CreateSelections(itemCount);
         var start = Stopwatch.GetTimestamp();
         var counts = Fruits.ToDictionary(fruit => fruit, _ => 0, StringComparer.Ordinal);
@@ -73,6 +100,15 @@
 
         result = new Result(Stopwatch.GetElapsedTime(start).TotalMilliseconds, counts);
         samples.Add(result.ElapsedMilliseconds);
+        pending = false;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (module is not null)
+        {
+            await module.DisposeAsync();
+        }
     }
 
     private static string[] CreateSelections(int count)
