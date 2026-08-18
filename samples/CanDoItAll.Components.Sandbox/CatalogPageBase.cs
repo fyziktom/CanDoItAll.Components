@@ -21,6 +21,21 @@ public abstract class CatalogPageBase : ComponentBase, IDisposable
         ? SandboxQueryLinks.GetHashFrame(NavigationManager)
         : SandboxFramePresetExtensions.Parse(FrameQuery);
 
+    protected IReadOnlyList<SandboxPageSection> VisibleSections(IReadOnlyList<SandboxPageSection> sections)
+        => SandboxCatalogRegistry.FilterVisible(sections, ToolbarState is { ShowUnused: true });
+
+    protected static RenderFragment RenderSectionHeading(SandboxPageSection section) => builder =>
+    {
+        var isUnused = SandboxCatalogRegistry.IsUnused(section.ComponentName);
+
+        builder.OpenElement(0, "h2");
+        builder.AddAttribute(1, "class", isUnused
+            ? "sandbox-component-section__heading is-unused"
+            : "sandbox-component-section__heading");
+        builder.AddContent(2, $"<{section.ComponentName}>");
+        builder.CloseElement();
+    };
+
     public override async Task SetParametersAsync(ParameterView parameters)
     {
         await base.SetParametersAsync(parameters);

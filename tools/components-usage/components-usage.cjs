@@ -1,8 +1,10 @@
 // Scans one or more src/*/Components directories (first-level group folders,
 // first-level .razor files within each group; loose top-level .razor files fall
 // under a "(root)" group) and cross-references every component name against
-// .razor files in sibling repos, producing a Markdown usage matrix.
-// Does not touch git. Writes only the configured outputPath.
+// .razor files in sibling repos, producing a Markdown usage matrix plus a
+// machine-readable "unused components" audit (JSON) and a generated C# set
+// consumed by the Sandbox app to filter its catalog.
+// Does not touch git. Writes only the configured output paths.
 // Usage: node components-usage.cjs [--config <path>]
 
 "use strict";
@@ -10,7 +12,15 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const REQUIRED_KEYS = ["componentsPaths", "outputPath", "siblings", "excludeDirs"];
+const REQUIRED_KEYS = [
+  "componentsPaths",
+  "outputPath",
+  "siblings",
+  "excludeDirs",
+  "unusedRequiredSiblings",
+  "unusedJsonOutputPath",
+  "unusedCsOutputPath"
+];
 
 main().catch(error => {
   console.error(error.stack || error.message || String(error));
@@ -28,6 +38,12 @@ async function main() {
     `Discovered ${componentCount} components across ${groups.length} groups in ${config.componentsPaths.length} components paths`
   );
 
+  // TODO: "Self" usage is only computed within BaseLib today (see baseLibFiles below), so
+  // components in CanvasLib, Charts, Gantt, Mermaid, OverlayLib, QRCode, and WebGlLib never get
+  // Self credit for being composed by a sibling component in their own library, even when they
+  // genuinely are. This under-counts usage for those libraries and can make internally-composed
+  // components look unused (including in unusedRequiredSiblings below) when they are not. Revisit
+  // by scoping Self per-library (or globally) if that turns out to matter in practice.
   const baseLibFiles = groups
     .filter(group => group.library === "BaseLib")
     .flatMap(group => group.components)
@@ -43,9 +59,18 @@ async function main() {
     return { name: sibling.name, content };
   });
 
-  const markdown = renderReport(groups, siblingResults, baseLibFiles);
+  const rows = buildComponentRows(groups, siblingResults, baseLibFiles);
+
+  const markdown = renderReport(rows, siblingResults.map(sibling => sibling.name), config.usageExceptions);
   fs.writeFileSync(config.outputPath, markdown);
   console.log(`Report written to ${config.outputPath}`);
+
+  const unused = computeUnused(rows, config.unusedRequiredSiblings, config.usageExceptions);
+  fs.writeFileSync(config.unusedJsonOutputPath, renderUnusedJson(unused.rows));
+  console.log(`Unused component audit written to ${config.unusedJsonOutputPath} (${unused.rows.length} entries)`);
+
+  fs.writeFileSync(config.unusedCsOutputPath, renderUnusedCs(unused.names));
+  console.log(`Unused component set written to ${config.unusedCsOutputPath} (${unused.names.length} names)`);
 }
 
 function parseArgs(values) {
@@ -105,11 +130,24 @@ function loadConfig(configPath) {
     return { name: sibling.name, path: resolvedPath };
   });
 
+  const siblingNames = new Set(siblings.map(sibling => sibling.name));
+  for (const name of config.unusedRequiredSiblings) {
+    if (!siblingNames.has(name)) {
+      throw new Error(
+        `unusedRequiredSiblings entry "${name}" is not a configured sibling in ${configPath}.`
+      );
+    }
+  }
+
   return {
     componentsPaths,
     outputPath: path.resolve(configDir, config.outputPath),
     siblings,
-    excludeDirs: new Set(config.excludeDirs)
+    excludeDirs: new Set(config.excludeDirs),
+    unusedRequiredSiblings: config.unusedRequiredSiblings,
+    usageExceptions: new Set(config.usageExceptions ?? []),
+    unusedJsonOutputPath: path.resolve(configDir, config.unusedJsonOutputPath),
+    unusedCsOutputPath: path.resolve(configDir, config.unusedCsOutputPath)
   };
 }
 
@@ -190,53 +228,80 @@ function countUsages(content, componentName) {
   return content.match(buildUsageRegex(componentName))?.length ?? 0;
 }
 
-function renderReport(groups, siblingResults, baseLibFiles) {
-  const generatedAt = new Date().toISOString();
-  const header = ["Library", "Group", "Component", "Self", ...siblingResults.map(sibling => sibling.name)];
-  const separator = header.map(() => "---");
-
+// One row per discovered component, in stable Library/Group/Component order, with usage counts
+// precomputed so both the Markdown report and the unused-components audit read from the same data.
+function buildComponentRows(groups, siblingResults, baseLibFiles) {
   const sortedGroups = [...groups].sort(
     (a, b) => a.library.localeCompare(b.library) || a.group.localeCompare(b.group)
   );
 
   const rows = [];
-  const usedCounts = siblingResults.map(() => 0);
-  let componentCount = 0;
-  let selfCount = 0;
-
   for (const group of sortedGroups) {
     for (const component of group.components) {
-      componentCount += 1;
       const selfContent = baseLibFiles
         .filter(file => file.filePath !== component.filePath)
         .map(file => file.content)
         .join("\n");
       const selfUsageCount = countUsages(selfContent, component.name);
-      if (selfUsageCount > 0) {
-        selfCount += 1;
+
+      const siblingUsage = {};
+      for (const sibling of siblingResults) {
+        siblingUsage[sibling.name] = countUsages(sibling.content, component.name);
       }
 
-      const cells = siblingResults.map((sibling, index) => {
-        const usageCount = countUsages(sibling.content, component.name);
-        if (usageCount > 0) {
-          usedCounts[index] += 1;
-        }
-        return usageCount > 0 ? `✅\u202F${usageCount}` : " ";
+      rows.push({
+        library: group.library,
+        group: group.group,
+        name: component.name,
+        filePath: component.filePath,
+        selfUsageCount,
+        siblingUsage
       });
-      rows.push([
-        group.library,
-        group.group,
-        component.name,
-        selfUsageCount > 0 ? `⭐\u202F${selfUsageCount}` : " ",
-        ...cells
-      ]);
     }
   }
+
+  return rows;
+}
+
+function renderReport(rows, siblingNames, usageExceptions) {
+  const header = ["Library", "Group", "Component", "Self", ...siblingNames];
+  const separator = header.map(() => "---");
+
+  const usedCounts = siblingNames.map(() => 0);
+  let selfCount = 0;
+
+  const tableRows = rows.map(row => {
+    if (row.selfUsageCount > 0) {
+      selfCount += 1;
+    }
+
+    const cells = siblingNames.map((name, index) => {
+      const usageCount = row.siblingUsage[name] ?? 0;
+      if (usageCount > 0) {
+        usedCounts[index] += 1;
+      }
+      return usageCount > 0 ? `✅\u202F${usageCount}` : " ";
+    });
+
+    const selfCell = usageExceptions.has(row.name)
+      ? "❤️"
+      : row.selfUsageCount > 0
+        ? `⭐\u202F${row.selfUsageCount}`
+        : " ";
+
+    return [
+      row.library,
+      row.group,
+      row.name,
+      selfCell,
+      ...cells
+    ];
+  });
 
   const totalRow = [
     "**Total**",
     "",
-    `${componentCount}`,
+    `${rows.length}`,
     `${selfCount}`,
     ...usedCounts.map(count => `${count}`)
   ];
@@ -249,8 +314,72 @@ function renderReport(groups, siblingResults, baseLibFiles) {
     `| ${header.join(" | ")} |`,
     `| ${separator.join(" | ")} |`,
     `| ${totalRow.join(" | ")} |`,
-    ...rows.map(row => `| ${row.join(" | ")} |`)
+    ...tableRows.map(row => `| ${row.join(" | ")} |`)
   ];
 
   return `${lines.join("\n")}\n`;
+}
+
+// A row is "unused" when it shows zero usage in Self and in every sibling named in
+// unusedRequiredSiblings (currently CanDoItAll and Sandbox) at the same time. Siblings not listed
+// there (e.g. CodeAnalysis) don't factor into this determination, though they still show up in
+// USAGE.md as before. Names listed in usageExceptions are never considered unused, regardless of
+// their actual usage counts.
+function isRowUnused(row, requiredSiblingNames, usageExceptions) {
+  if (usageExceptions.has(row.name)) {
+    return false;
+  }
+  if (row.selfUsageCount > 0) {
+    return false;
+  }
+  return requiredSiblingNames.every(name => (row.siblingUsage[name] ?? 0) === 0);
+}
+
+function computeUnused(rows, requiredSiblingNames, usageExceptions) {
+  const unusedRows = rows.filter(row => isRowUnused(row, requiredSiblingNames, usageExceptions));
+
+  const rowsByName = new Map();
+  for (const row of rows) {
+    const sameName = rowsByName.get(row.name) ?? [];
+    sameName.push(row);
+    rowsByName.set(row.name, sameName);
+  }
+
+  // A name only enters the deduped set if every discovered component sharing that name (across
+  // all libraries/groups) is unused, so two differently-scoped components that happen to share a
+  // name can't cause one to wrongly hide the other.
+  const names = [...rowsByName.entries()]
+    .filter(([, sameNameRows]) => sameNameRows.every(row => isRowUnused(row, requiredSiblingNames, usageExceptions)))
+    .map(([name]) => name)
+    .sort((a, b) => a.localeCompare(b));
+
+  const auditRows = unusedRows
+    .map(row => ({ library: row.library, group: row.group, component: row.name }))
+    .sort(
+      (a, b) =>
+        a.library.localeCompare(b.library) ||
+        a.group.localeCompare(b.group) ||
+        a.component.localeCompare(b.component)
+    );
+
+  return { rows: auditRows, names };
+}
+
+function renderUnusedJson(rows) {
+  return `${JSON.stringify(rows, null, 2)}\n`;
+}
+
+function renderUnusedCs(names) {
+  const entries = names.map(name => `        "${name}",`).join("\n");
+  return `// Auto-generated by tools/components-usage/components-usage.cjs. Do not edit directly.
+namespace CanDoItAll.Components.Sandbox;
+
+public static class SandboxUnusedComponents
+{
+    public static readonly IReadOnlySet<string> Names = new HashSet<string>(StringComparer.Ordinal)
+    {
+${entries}
+    };
+}
+`;
 }

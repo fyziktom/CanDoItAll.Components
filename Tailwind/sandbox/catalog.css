@@ -58,3 +58,16 @@
   @apply text-(--cad-color-text-strong);
   @apply mb-6 text-xl font-bold font-mono tracking-wider;
 }
+
+.sandbox-component-section__heading.is-unused:after {
+  content: '∅';
+  vertical-align: super;
+  margin-top: -1em;
+  margin-left: .125em;
+  display: inline-block;
+  @apply font-normal font-sans;
+}
+
+.sandbox-component-section__heading.is-unused {
+  color: oklch(var(--cad-tone-danger-soft-fg));
+}

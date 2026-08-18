@@ -2,7 +2,7 @@
 
 | Library | Group | Component | Self | CanDoItAll | CodeAnalysis | Sandbox |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Total** |  | 174 | 26 | 93 | 20 | 20 |
+| **Total** |  | 175 | 26 | 93 | 20 | 20 |
 | BaseLib | Badges | Badge |   | ✅ 6 |   |   |
 | BaseLib | Badges | BadgesGroup |   |   |   |   |
 | BaseLib | Badges | Chip |   |   |   |   |
@@ -12,7 +12,7 @@
 | BaseLib | Badges | Pill | ⭐ 2 | ✅ 40 |   |   |
 | BaseLib | Badges | PillList |   |   |   |   |
 | BaseLib | Badges | StatusBadge | ⭐ 2 | ✅ 647 |   | ✅ 3 |
-| BaseLib | Buttons | Button | ⭐ 11 | ✅ 722 | ✅ 6 | ✅ 3 |
+| BaseLib | Buttons | Button | ⭐ 11 | ✅ 722 | ✅ 6 | ✅ 4 |
 | BaseLib | Buttons | CopyButton | ⭐ 4 | ✅ 17 |   | ✅ 1 |
 | BaseLib | Cards | ActionCard |   | ✅ 4 |   |   |
 | BaseLib | Cards | ActionReviewPanel |   |   |   |   |
@@ -136,6 +136,7 @@
 | BaseLib | Navigation | TreeViewNodeRow | ⭐ 1 |   |   |   |
 | BaseLib | Storage | StorageBadgeStrip | ⭐ 1 |   |   |   |
 | BaseLib | Storage | StorageSummaryCard |   | ✅ 3 |   |   |
+| BaseLib | Transitions | ExpandTransition | ❤️ |   |   |   |
 | BaseLib | Typography | CopyableMonoValue | ⭐ 1 | ✅ 1 |   |   |
 | BaseLib | Typography | Divider |   |   |   |   |
 | BaseLib | Typography | Eyebrow |   |   |   |   |

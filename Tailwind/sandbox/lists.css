@@ -42,11 +42,29 @@
 
 .sandbox-toc-items a {
   @apply text-(--cad-tone-info-soft-fg) no-underline;
+  line-height: 1.8;
 }
 
 .sandbox-toc-items a:hover,
 .sandbox-toc-items a:focus-visible {
   @apply underline;
+}
+
+.sandbox-toc-group.is-unused {
+  color: var(--cad-tone-danger-soft-fg);
+}
+
+.sandbox-toc-items a.is-unused:after {
+  content: '∅';
+  vertical-align: super;
+  margin-top: -1em;
+  margin-left: .125em;
+  display: inline-block;
+  @apply font-normal;
+}
+
+.sandbox-toc-items a.is-unused {
+  color: oklch(var(--cad-tone-danger-soft-fg));
 }
 
 .sandbox-proof-list {

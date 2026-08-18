@@ -65,6 +65,19 @@ body {
   background: color-mix(in srgb, var(--cad-tone-primary-soft-bg) 55%, transparent);
 }
 
+.sandbox-nav__link.is-unused .sandbox-nav__title:after {
+  content: '∅';
+  vertical-align: super;
+  margin-top: -1em;
+  margin-left: .125em;
+  display: inline-block;
+  @apply font-normal;
+}
+
+.sandbox-nav__link.is-unused .sandbox-nav__title {
+  color: oklch(var(--cad-tone-danger-soft-fg));
+}
+
 .sandbox-nav__title {
   @apply text-[0.95rem] font-semibold text-(--cad-color-text-strong);
 }

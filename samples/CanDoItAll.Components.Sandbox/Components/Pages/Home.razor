@@ -9,7 +9,7 @@
         <Header>
             <PageHeader Title="Components Sandbox">
                 <Actions>
-                    <StatusBadge Text="@($"{SandboxCatalogRegistry.UniqueComponentCount} components")" />
+                    <StatusBadge Text="@($"{VisibleComponentCount} components")" />
                 </Actions>
             </PageHeader>
         </Header>
@@ -18,21 +18,24 @@
             <div class="sandbox-list">
                 @foreach (var group in SandboxCatalogRegistry.Groups)
                 {
-                    var sections = SandboxCatalogRegistry.GetSections(group.Route);
+                    var sections = VisibleSections(SandboxCatalogRegistry.GetSections(group.Route));
+                    if (sections.Count == 0)
+                    {
+                        continue;
+                    }
 
                     <div class="space-y-1">
-                        <a href="@BuildGroupLink(group.Route)" data-sandbox-route class="sandbox-toc-group block">@group.Title</a>
+                        <a href="@BuildGroupLink(group.Route)" data-sandbox-route
+                           class="sandbox-toc-group block @(SandboxCatalogRegistry.IsGroupUnused(group.Route) ? "is-unused" : string.Empty)">@group.Title</a>
 
-                        @if (sections.Count > 0)
-                        {
-                            <p class="sandbox-toc-items">
-                                @for (var i = 0; i < sections.Count; i++)
-                                {
-                                    var section = sections[i];
-                                    <a href="@BuildGroupLink(group.Route, section.Anchor)" data-sandbox-route>@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
-                                }
-                            </p>
-                        }
+                        <p class="sandbox-toc-items">
+                            @for (var i = 0; i < sections.Count; i++)
+                            {
+                                var section = sections[i];
+                                <a href="@BuildGroupLink(group.Route, section.Anchor)" data-sandbox-route
+                                   class="@(SandboxCatalogRegistry.IsUnused(section.ComponentName) ? "is-unused" : string.Empty)">@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
+                            }
+                        </p>
                     </div>
                 }
             </div>
@@ -41,6 +44,14 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    public SandboxToolbarState? ToolbarState { get; set; }
+
+    /// <summary>Unused directly; accepted so the hash-routing shim in Routes.razor can route
+    /// here (as it does for every other catalog page) without an unknown-parameter error.</summary>
+    [Parameter]
+    public string? HashRouteState { get; set; }
+
     private string BuildGroupLink(string route, string? anchor = null)
         => SandboxQueryLinks.BuildCrossPageLink(
             NavigationManager,
@@ -48,4 +59,10 @@
             frame: SandboxQueryLinks.GetCurrentFrame(NavigationManager),
             isDark: false,
             fragment: anchor);
+
+    private IReadOnlyList<SandboxPageSection> VisibleSections(IReadOnlyList<SandboxPageSection> sections)
+        => SandboxCatalogRegistry.FilterVisible(sections, ToolbarState is { ShowUnused: true });
+
+    private int VisibleComponentCount
+        => SandboxCatalogRegistry.VisibleComponentCount(ToolbarState is { ShowUnused: true });
 }

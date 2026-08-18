@@ -27,6 +27,18 @@
                     data-testid="sandbox-toolbar-coverage-toggle"/>
         }
 
+        @if (ToolbarState is not null)
+        {
+            <Button Text="Unused"
+                    ButtonStyle="@(ToolbarState.ShowUnused ? ButtonStyle.Danger : ButtonStyle.Light)"
+                    Variant="@(ToolbarState.ShowUnused ? Variant.Filled : Variant.Outlined)"
+                    Size="ButtonSize.Small"
+                    class="@(ToolbarState.ShowUnused ? "sandbox-toolbar__controls--unused" : "")"
+                    Click="@(() => ToolbarState.ToggleShowUnused())"
+                    aria-pressed="@(ToolbarState.ShowUnused ? "true" : "false")"
+                    data-testid="sandbox-toolbar-unused-toggle"/>
+        }
+
         @if (ThemeState is not null)
         {
             <Button Text="@(ThemeState.IsDark ? "Dark" : "Light")"

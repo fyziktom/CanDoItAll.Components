@@ -50,16 +50,14 @@ else
 
         var routeHash = (hash ?? NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Fragment).TrimStart('#');
         var parts = routeHash.Split('?', 2);
-        if (parts.Length == 0 || string.IsNullOrWhiteSpace(parts[0]))
-        {
-            queryRouteData = null;
-            pendingAnchor = SandboxQueryLinks.UpdateHashState(routeHash);
-            pendingScroll = true;
-            return;
-        }
 
-        var route = Uri.UnescapeDataString(parts[0]).Trim('/');
-        var template = $"/{route}";
+        // An empty route (home) still needs to resolve to a component below so it renders
+        // through the same RouteView branch as every other hash-routed page. Falling back to
+        // the plain <Router> for "/" would mount a second MainLayout/ToolbarState instance,
+        // silently resetting the Unused/Coverage toggles and theme whenever navigation crosses
+        // between home and any other page.
+        var route = parts.Length > 0 ? Uri.UnescapeDataString(parts[0]).Trim('/') : string.Empty;
+        var template = string.IsNullOrWhiteSpace(route) ? "/" : $"/{route}";
         pendingAnchor = SandboxQueryLinks.UpdateHashState(routeHash);
         var componentType = typeof(Routes).Assembly.ExportedTypes.FirstOrDefault(type =>
             typeof(IComponent).IsAssignableFrom(type)

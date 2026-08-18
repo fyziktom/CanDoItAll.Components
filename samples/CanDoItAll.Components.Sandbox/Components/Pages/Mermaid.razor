@@ -9,10 +9,10 @@
                   ExampleCount="@ExampleCount" FrameChanged="NavigateFrame">
     <ChildContent>
 
-            @foreach (var section in Sections)
+            @foreach (var section in VisibleSections(Sections))
             {
                 <section id="@(section.Anchor)" class="sandbox-component-section">
-                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                    @RenderSectionHeading(section)
                     @if (section.ComponentName == "MermaidDiagram")
                     {
                         <ExampleBlock Title="Clickable flowchart" Description="Click a node to see its .NET event payload. Pan and zoom controls stay with the diagram."

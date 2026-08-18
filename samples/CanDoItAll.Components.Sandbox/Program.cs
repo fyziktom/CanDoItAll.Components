@@ -18,6 +18,26 @@ builder.Services.AddCanDoItAllQrCode();
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
+{
+    // Fingerprinted static assets are served with long-lived, immutable cache headers by
+    // MapStaticAssets, which is correct for production but makes it easy to chase a stale
+    // cached response while iterating locally (especially after restarting dotnet watch or
+    // switching branches). Force no-store in Development so every request always hits disk.
+    app.Use(async (context, next) =>
+    {
+        context.Response.OnStarting(() =>
+        {
+            context.Response.Headers.CacheControl = "no-store";
+            context.Response.Headers.Remove("ETag");
+            return Task.CompletedTask;
+        });
+
+        await next();
+    });
+}
+
 app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()

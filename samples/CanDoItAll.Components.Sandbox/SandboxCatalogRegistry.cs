@@ -548,9 +548,29 @@ public static class SandboxCatalogRegistry
     public static IReadOnlyList<SandboxPageSection> GetSections(string route)
         => PageSections.TryGetValue(route, out var sections) ? sections : [];
 
+    public static bool IsUnused(string componentName)
+        => SandboxUnusedComponents.Names.Contains(componentName);
+
+    public static bool IsGroupUnused(string route)
+    {
+        var sections = GetSections(route);
+        return sections.Count > 0 && sections.All(section => IsUnused(section.ComponentName));
+    }
+
+    public static IReadOnlyList<SandboxPageSection> FilterVisible(IReadOnlyList<SandboxPageSection> sections, bool showUnused)
+        => showUnused ? sections : sections.Where(section => !IsUnused(section.ComponentName)).ToList();
+
     public static int UniqueComponentCount { get; } =
         PageSections.Values
             .SelectMany(sections => sections)
+            .Select(section => section.ComponentType)
+            .Distinct()
+            .Count();
+
+    public static int VisibleComponentCount(bool showUnused)
+        => PageSections.Values
+            .SelectMany(sections => sections)
+            .Where(section => showUnused || !IsUnused(section.ComponentName))
             .Select(section => section.ComponentType)
             .Distinct()
             .Count();

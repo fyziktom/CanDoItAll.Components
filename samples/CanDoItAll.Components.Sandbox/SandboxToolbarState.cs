@@ -14,6 +14,8 @@ public sealed class SandboxToolbarState
 
     public bool ShowCoverage { get; private set; }
 
+    public bool ShowUnused { get; private set; }
+
     public SandboxFramePreset Frame { get; private set; }
 
     public EventCallback<SandboxFramePreset> FrameChanged { get; private set; }
@@ -46,6 +48,12 @@ public sealed class SandboxToolbarState
     public void ToggleCoverage()
     {
         ShowCoverage = !ShowCoverage;
+        Changed?.Invoke();
+    }
+
+    public void ToggleShowUnused()
+    {
+        ShowUnused = !ShowUnused;
         Changed?.Invoke();
     }
 

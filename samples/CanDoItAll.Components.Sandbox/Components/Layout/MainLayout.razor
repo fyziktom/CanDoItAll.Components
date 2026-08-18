@@ -38,7 +38,7 @@
                                 }
 
                                 <a href="@BuildSidebarLink(group.Route)" data-sandbox-route
-                                   class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
+                                   class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty) @(SandboxCatalogRegistry.IsGroupUnused(group.Route) ? "is-unused" : string.Empty)">
                                     <span class="sandbox-nav__title">@group.Title</span>
                                     <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
                                 </a>
@@ -52,7 +52,7 @@
                                             @foreach (var section in sections)
                                             {
                                                 <a href="@BuildSectionLink(group.Route, section.Anchor)" data-sandbox-route
-                                                   class="sandbox-nav__link sandbox-nav__link--sub">
+                                                   class="sandbox-nav__link sandbox-nav__link--sub @(SandboxCatalogRegistry.IsUnused(section.ComponentName) ? "is-unused" : string.Empty)">
                                                     <span class="sandbox-nav__title">@BuildHighlightedName(section.ComponentName)</span>
                                                 </a>
                                             }
@@ -169,7 +169,7 @@
 
     private IReadOnlyList<SandboxPageSection> GetVisibleSections(SandboxGroupDefinition group)
     {
-        var sections = SandboxCatalogRegistry.GetSections(group.Route);
+        var sections = SandboxCatalogRegistry.FilterVisible(SandboxCatalogRegistry.GetSections(group.Route), toolbarState.ShowUnused);
         if (!IsSearching)
         {
             return sections;
@@ -181,7 +181,7 @@
     }
 
     private bool ShouldShowGroup(SandboxGroupDefinition group)
-        => !IsSearching || GetVisibleSections(group).Count > 0;
+        => GetVisibleSections(group).Count > 0;
 
     private bool ShouldExpandGroup(SandboxGroupDefinition group)
         => IsActive(group) || (IsSearching && GetVisibleSections(group).Count > 0);

@@ -11,10 +11,10 @@
                   FrameChanged="NavigateFrame">
     <ChildContent>
 
-            @foreach (var section in Sections)
+            @foreach (var section in VisibleSections(Sections))
             {
                 <section id="@(section.Anchor)" class="sandbox-component-section">
-                    <h2 class="sandbox-component-section__heading">@($"<{section.ComponentName}>")</h2>
+                    @RenderSectionHeading(section)
 
                     @if (section.ComponentName == "TextBlock")
                     {
