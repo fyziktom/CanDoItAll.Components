@@ -1,4 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Benchmark
+@using System.Diagnostics
 @using System.Text
 @using System.Text.Json
 @using Microsoft.JSInterop
@@ -28,7 +29,10 @@
     {
         <div class="space-y-3" data-testid="benchmark-worker-wasm-result">
             <div class="flex justify-between items-baseline">
-                <div class="text-2xl font-semibold whitespace-nowrap">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                <div class="whitespace-nowrap">
+                    <div class="text-base">Roundtrip penalty: @($"{roundtripPenaltyMilliseconds:F1} ms")</div>
+                    <div class="text-2xl font-semibold">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                </div>
                 <div class="flex flex-wrap justify-end gap-x-3 gap-y-1 text-base">
                     <span class="whitespace-nowrap">Runs: @samples.Count</span>
                     <span class="whitespace-nowrap">Min: @($"{MinimumMilliseconds:F1} ms")</span>
@@ -141,6 +145,7 @@
     private IJSObjectReference? module;
     private IJSObjectReference? worker;
     private readonly List<double> samples = [];
+    private double roundtripPenaltyMilliseconds;
 
     private double MinimumMilliseconds => samples.Min();
     private double MaximumMilliseconds => samples.Max();
@@ -181,10 +186,12 @@
             return;
         }
 
+        var outsideStart = Stopwatch.GetTimestamp();
         var resultJson = await worker.InvokeAsync<string>("aggregateFruitCounts", itemCount);
         result = JsonSerializer.Deserialize<Result>(resultJson);
         if (result is not null)
         {
+            roundtripPenaltyMilliseconds = Stopwatch.GetElapsedTime(outsideStart).TotalMilliseconds - result.ElapsedMilliseconds;
             samples.Add(result.ElapsedMilliseconds);
         }
     }

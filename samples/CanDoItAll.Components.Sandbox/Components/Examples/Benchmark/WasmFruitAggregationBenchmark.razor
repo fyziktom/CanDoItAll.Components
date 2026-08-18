@@ -24,7 +24,10 @@
     {
         <div class="space-y-3" data-testid="benchmark-wasm-result">
             <div class="flex justify-between items-baseline">
-                <div class="text-2xl font-semibold whitespace-nowrap">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                <div class="whitespace-nowrap">
+                    <div class="text-base">Roundtrip penalty: @($"{roundtripPenaltyMilliseconds:F1} ms")</div>
+                    <div class="text-2xl font-semibold">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                </div>
                 <div class="flex flex-wrap justify-end gap-x-3 gap-y-1 text-base">
                     <span class="whitespace-nowrap">Runs: @samples.Count</span>
                     <span class="whitespace-nowrap">Min: @($"{MinimumMilliseconds:F1} ms")</span>
@@ -59,6 +62,7 @@
     private bool pending;
     private IJSObjectReference? module;
     private readonly List<double> samples = [];
+    private double roundtripPenaltyMilliseconds;
 
     private double MinimumMilliseconds => samples.Min();
     private double MaximumMilliseconds => samples.Max();
@@ -89,8 +93,9 @@
         await InvokeAsync(StateHasChanged);
         await module!.InvokeVoidAsync("nextAnimationFrame");
 
+        var outsideStart = Stopwatch.GetTimestamp();
         var selections = CreateSelections(itemCount);
-        var start = Stopwatch.GetTimestamp();
+        var insideStart = Stopwatch.GetTimestamp();
         var counts = Fruits.ToDictionary(fruit => fruit, _ => 0, StringComparer.Ordinal);
 
         foreach (var selection in selections)
@@ -98,7 +103,8 @@
             counts[selection]++;
         }
 
-        result = new Result(Stopwatch.GetElapsedTime(start).TotalMilliseconds, counts);
+        result = new Result(Stopwatch.GetElapsedTime(insideStart).TotalMilliseconds, counts);
+        roundtripPenaltyMilliseconds = Stopwatch.GetElapsedTime(outsideStart).TotalMilliseconds - result.ElapsedMilliseconds;
         samples.Add(result.ElapsedMilliseconds);
         pending = false;
     }

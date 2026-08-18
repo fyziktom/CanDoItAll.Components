@@ -1,4 +1,5 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Benchmark
+@using System.Diagnostics
 @using Microsoft.JSInterop
 @using System.Text
 @implements IAsyncDisposable
@@ -25,7 +26,10 @@
     {
         <div class="space-y-3" data-testid="benchmark-js-result">
             <div class="flex justify-between items-baseline">
-                <div class="text-2xl font-semibold whitespace-nowrap">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                <div class="whitespace-nowrap">
+                    <div class="text-base pr-6">Roundtrip penalty: @($"{roundtripPenaltyMilliseconds:F1} ms")</div>
+                    <div class="text-2xl font-semibold">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                </div>
                 <div class="flex flex-wrap justify-end gap-x-3 gap-y-1 text-base">
                     <span class="whitespace-nowrap">Runs: @samples.Count</span>
                     <span class="whitespace-nowrap">Min: @($"{MinimumMilliseconds:F1} ms")</span>
@@ -74,6 +78,7 @@
     private Result? result;
     private IJSObjectReference? module;
     private readonly List<double> samples = [];
+    private double roundtripPenaltyMilliseconds;
 
     private double MinimumMilliseconds => samples.Min();
     private double MaximumMilliseconds => samples.Max();
@@ -102,7 +107,9 @@
     {
         if (module is not null)
         {
+            var outsideStart = Stopwatch.GetTimestamp();
             result = await module.InvokeAsync<Result>("aggregateFruitCounts", itemCount);
+            roundtripPenaltyMilliseconds = Stopwatch.GetElapsedTime(outsideStart).TotalMilliseconds - result.ElapsedMilliseconds;
             samples.Add(result.ElapsedMilliseconds);
         }
     }
