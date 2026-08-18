@@ -32,6 +32,7 @@ public enum SandboxGroupKey
     Gantt,
     Overlays,
     Canvas,
+    Benchmark,
     Transitions
 }
 
@@ -212,6 +213,13 @@ public static class SandboxCatalogRegistry
             "Typed workbench and calendar surfaces plus runtime primitives and sandbox-only preview assets.",
             ["workbench", "calendars"],
             ["Canvas contracts stay typed.", "Runtime workbench stays distinct from sandbox previews.", "Desktop width should be used aggressively without losing orientation.", "The runtime workbench should stay focused on authoring behavior rather than carrying preview-only diagnostics.", "Floating windows, selection state, and viewport updates must stay typed across the shared contracts.", "Canvas proof assets belong in the sandbox so dense and empty scenarios can be reviewed without touching the runtime pages."]),
+        new(
+            SandboxGroupKey.Benchmark,
+            "Benchmark",
+            "/benchmark",
+            "A small, repeatable browser-side comparison of equivalent C# WebAssembly and JavaScript aggregation work.",
+            ["WebAssembly", "JS interop"],
+            ["Open this page in the SandboxWasm host to measure browser-side .NET WebAssembly.", "Both cases use the same deterministic generator, 1,000 strings, and fruit-count aggregation.", "Treat a single short run as an illustrative microbenchmark; browser, runtime, warm-up, and device affect timings."]),
         new(
             SandboxGroupKey.Transitions,
             "Transitions",
@@ -538,6 +546,10 @@ public static class SandboxCatalogRegistry
                 new("calendar-mini-month-navigator", "CalendarMiniMonthNavigator", typeof(CalendarMiniMonthNavigator)),
                 new("calendar-time-grid-renderer", "CalendarTimeGridRenderer", typeof(CalendarTimeGridRenderer)),
                 new("preview-assets", "CanvasSceneHostPreview", typeof(CanvasSceneHostPreview))
+            ],
+            ["/benchmark"] =
+            [
+                new("fruit-aggregation", "Fruit aggregation", typeof(Benchmark))
             ],
             ["/transitions"] =
             [

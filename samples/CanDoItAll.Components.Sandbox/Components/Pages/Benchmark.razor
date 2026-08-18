@@ -1,0 +1,33 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/benchmark"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Sandbox.Components.Examples.Benchmark
+
+<PageTitle>Benchmark</PageTitle>
+
+<CatalogPageFrame Group="@Group" Frame="@CurrentFrame" FrameChanged="NavigateFrame">
+    <ChildContent>
+        <section id="fruit-aggregation" class="sandbox-component-section">
+            <h2 class="sandbox-component-section__heading">Fruit aggregation</h2>
+            <p class="max-w-4xl text-sm text-slate-600">Each case creates the same deterministic fruit-name array before timing only the aggregation into five counts. Open this route in SandboxWasm for the C# case to execute as .NET WebAssembly in the browser.</p>
+
+            <div class="mt-4 grid gap-4 lg:grid-cols-2">
+                <ExampleBlock Title="Blazor WebAssembly"
+                              Description="C# creates the array, then measures only its count aggregation."
+                              SourceId="examples/Benchmark/WasmFruitAggregationBenchmark.razor">
+                    <WasmFruitAggregationBenchmark />
+                </ExampleBlock>
+
+                <ExampleBlock Title="JavaScript via JS interop"
+                              Description="JavaScript creates the same array, then measures only its count aggregation."
+                              SourceId="examples/Benchmark/JsFruitAggregationBenchmark.razor">
+                    <JsFruitAggregationBenchmark />
+                </ExampleBlock>
+            </div>
+        </section>
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Benchmark);
+}
