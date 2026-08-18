@@ -19,7 +19,8 @@
 - added missing components to sandbox (around 110+ ones)
 - replaced home page / with TOC and direct links to component examples
 - added wasm version of the app
-- add GitHub pages deploy script
+- added GitHub pages deploy script
+- added Usage filter
 
 ## Sanbox App Examples
 
