@@ -33,7 +33,7 @@
     "deploy:sandbox-wasm-gh-pages": "npm run build:sandbox-wasm-static && gh-pages --dist ./artifacts/sandbox-wasm-publish/wwwroot --branch gh-pages --dotfiles",
     "watch:tailwind": "npm --prefix Tailwind run watch",
     "watch:sandbox": "dotnet watch --project ./samples/CanDoItAll.Components.Sandbox",
-    "watch:sandbox-wasm": "dotnet watch --project ./samples/CanDoItAll.Components.SandboxWasm",
+    "watch:sandbox-wasm": "dotnet watch --no-restore -v:minimal --project ./samples/CanDoItAll.Components.SandboxWasm",
     "watch:sandbox-wasm:release": "dotnet watch -c Release --project ./samples/CanDoItAll.Components.SandboxWasm",
     "screenshots": "node tools/screenshots/snapshot.cjs",
     "screenshots:capture": "node tools/screenshots/capture.cjs",
