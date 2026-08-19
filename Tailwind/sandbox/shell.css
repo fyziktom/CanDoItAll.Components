@@ -6,6 +6,43 @@ body {
   @apply m-0;
 }
 
+/* TODO: V2: keep the refactoring palette scoped to Sandbox until it becomes the
+   shared component-library default. The main app retains the established tokens. */
+.sandbox-theme-host[data-cad-theme="light"] {
+  --cad-color-page-bg: #fff;
+  --cad-color-surface: #fff;
+  --cad-color-surface-soft: #fff;
+  --cad-color-border: #e0e0e0;
+  --cad-color-border-soft: #aaa;
+  --cad-color-text-strong: rgba(0, 0, 0, 0.7);
+  --cad-color-text: rgba(0, 0, 0, 0.87);
+  --cad-color-text-muted: rgba(64, 64, 64, 0.87);
+  --cad-color-text-soft: rgba(96, 96, 96, 0.87);
+  --cad-color-inverse: #fafafa;
+}
+
+/* TODO: V2: retain the Sandbox header and tab geometry without changing shared
+   component consumers. */
+.sandbox-theme-host .cda-page-header:not(.cda-page-header--compact) {
+  border-bottom-width: 0;
+}
+
+.sandbox-theme-host .cda-page-header__description:not(.cda-page-header__description--compact) {
+  margin-top: 1rem;
+}
+
+.sandbox-theme-host .cad-tabs {
+  --cad-tabs-tab-radius: 0;
+}
+
+.sandbox-theme-host .cad-tabs__list {
+  padding: 0;
+}
+
+.sandbox-theme-host .cad-tabs--variant-modal-compact {
+  --cad-tabs-tab-radius: 0;
+}
+
 .sandbox-layout {
   @apply min-h-screen text-(--cad-color-text);
 }
@@ -75,7 +112,7 @@ body {
 }
 
 .sandbox-nav__link.is-unused .sandbox-nav__title {
-  color: oklch(var(--cad-tone-danger-soft-fg));
+  color: var(--cad-tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
 }
 
 .sandbox-nav__title {
