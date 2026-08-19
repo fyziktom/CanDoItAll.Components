@@ -12,6 +12,8 @@ const { parseArgs } = require("./lib/args.cjs");
 const args = parseArgs(process.argv.slice(2));
 const configPath = args.config || path.join(__dirname, "screenshots.config.json");
 
+console.log(`Config file: ${configPath}`);
+
 main().catch(error => {
   console.error(error.stack || error.message || String(error));
   process.exitCode = 1;
@@ -68,6 +70,11 @@ async function captureJob(browser, config, job) {
     reducedMotion: "reduce",
     ignoreHTTPSErrors: true,
   });
+  await context.addInitScript(storage => {
+    for (const [key, value] of Object.entries(storage)) {
+      window.sessionStorage.setItem(key, value);
+    }
+  }, config.sessionStorage ?? {});
 
   const consoleErrors = [];
   const base = {

@@ -45,6 +45,12 @@ function validateConfig(config, resolvedPath) {
   if (typeof config.alternatives !== "object" || config.alternatives === null || Array.isArray(config.alternatives) || Object.keys(config.alternatives).length === 0) {
     throw new Error(`Config "alternatives" must be a non-empty object mapping alternative name to a query-string fragment (e.g. {"default": "", "dense": "scenario=dense-content"}) in ${resolvedPath}`);
   }
+
+  if (config.sessionStorage !== undefined &&
+      (typeof config.sessionStorage !== "object" || config.sessionStorage === null || Array.isArray(config.sessionStorage) ||
+       Object.values(config.sessionStorage).some(value => typeof value !== "string"))) {
+    throw new Error(`Config "sessionStorage" must be an object mapping storage keys to string values in ${resolvedPath}`);
+  }
 }
 
 const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1"]);

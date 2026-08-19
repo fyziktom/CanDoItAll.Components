@@ -99,6 +99,9 @@ they're omitted.
 - `defaultSettleMs` — extra pause after the ready selector appears, to let any last layout
   settle. Screenshots are also taken with `animations: "disabled"` and the page's
   `reducedMotion` set to `"reduce"`.
+- `sessionStorage` — optional map of session-storage keys to string values, seeded before each
+  route loads. Use this for target-specific, session-scoped UI state such as a dismissed startup
+  notice, without changing the application itself.
 - `storageRepoPath` — the separate git repo screenshots are committed to.
 - `gitignore` — optional array of `.gitignore` patterns (default: `[".idea/", ".vscode/", ".DS_Store", "Thumbs.db"]`). Each `screenshots_*` branch is an orphan root with its own tree, so a `.gitignore` in one branch (e.g. on `master`) doesn't cover any other — `store.cjs` writes this list as a `.gitignore` into every new run before committing it, so IDE/OS cruft stays out regardless of which branch happens to be checked out. Set to `[]` to skip writing one.
 

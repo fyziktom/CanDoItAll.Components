@@ -52,7 +52,8 @@
 
 ## Tools
 
-- added screenshoting diff, visual, regression check tool
+- added screenshoting diff, visual, regression check tool: https://github.com/darosh/CanDoItAll.Components.Screenshots
+- added screenshoting for the main app: https://github.com/darosh/CanDoItAll.Screenshots
 - added `componets-usage` tool generating [./USAGE.md](./USAGE.md) report
 
 ## Repo
