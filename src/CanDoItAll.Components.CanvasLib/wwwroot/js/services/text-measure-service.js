@@ -2,6 +2,7 @@
     const root = window.CanDoItAll = window.CanDoItAll || {};
     const cache = new Map();
     const cacheLimit = 400;
+    let cacheHits = 0;
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
@@ -142,6 +143,7 @@
         const cacheKey = buildCacheKey({ text, font, maxWidth, maxLines, truncationMode });
 
         if (cache.has(cacheKey)) {
+            cacheHits++
             return cache.get(cacheKey);
         }
 
@@ -240,7 +242,7 @@
         };
 
         cache.set(cacheKey, result);
-        evictCache();
+        // evictCache();
         return result;
     }
 
@@ -334,7 +336,8 @@
     function getCacheMetrics() {
         return {
             entries: cache.size,
-            limit: cacheLimit
+            limit: cacheLimit,
+            cacheHits
         };
     }
 
