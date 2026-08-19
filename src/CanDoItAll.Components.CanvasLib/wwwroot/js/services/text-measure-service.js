@@ -242,7 +242,7 @@
         };
 
         cache.set(cacheKey, result);
-        // evictCache();
+        evictCache();
         return result;
     }
 
