@@ -3,6 +3,7 @@
     const cache = new Map();
     const cacheLimit = 400;
     let cacheHits = 0;
+    let cacheGeneration = 0;
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
@@ -331,13 +332,15 @@
 
     function clearCache() {
         cache.clear();
+        cacheGeneration += 1;
     }
 
     function getCacheMetrics() {
         return {
             entries: cache.size,
             limit: cacheLimit,
-            cacheHits
+            cacheHits,
+            cacheGeneration
         };
     }
 
@@ -353,6 +356,7 @@
         wrapText,
         fitElementText,
         clearCache,
-        getCacheMetrics
+        getCacheMetrics,
+        getCacheGeneration: () => cacheGeneration
     };
 })();
