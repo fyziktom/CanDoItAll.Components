@@ -195,12 +195,13 @@
     .group h2 { margin: 0; font-size: 1rem; }
     .count { color: #777; font-size: .875rem; }
     .swatches { column-width: 17.5rem; column-gap: .75rem; width: 100%; }
-    .swatch { display: flex; align-items: center; min-width: 0; min-height: 3.5rem; margin-bottom: .75rem; break-inside: avoid; background: transparent; }
+    .swatch { display: flex; align-items: start; min-width: 0; min-height: 3.5rem; margin-bottom: .75rem; break-inside: avoid; background: transparent; }
     .swatch-color { flex: 0 0 3.5rem; width: 3.5rem; height: 3.5rem; border: 1px solid rgba(0, 0, 0, .12); background: repeating-conic-gradient(#f2f2f2 0 25%, #fff 0 50%) 50% / 1rem 1rem; }
     .swatch-color::before { content: ""; display: block; width: 100%; height: 100%; background: var(--swatch-color); }
-    .swatch-details { display: flex; flex: 1; min-width: 0; flex-direction: column; justify-content: center; padding: .45rem .65rem; }
+    .swatch-details { display: flex; flex: 1; min-width: 0; flex-direction: column; justify-content: start; padding: .2rem .65rem; }
     code { display: block; overflow-wrap: anywhere; color: #252525; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; font-weight: 600; }
     .value { margin-top: .25rem; color: #666; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72rem; overflow-wrap: anywhere; }
+    .oklch-value { margin-top: .2rem; color: #666; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .6rem; overflow-wrap: break-word; line-height: 1.6; }
     @media (max-width: 36rem) { main { padding: 1rem; } }
     </style>
 </head>
@@ -208,6 +209,7 @@
 <main>
     <div class="report" id="report"></div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/culori@4.0.1/bundled/culori.min.js"></script>
 <script>
 (() => {
     const report = document.querySelector('#report');
@@ -215,6 +217,24 @@
     const groupLabels = { logo: 'Logo', site: 'Site', doc: 'Doc', graphics: 'Graphics', cw: 'Canvas', cad: 'App' };
     const groupOrder = ['logo', 'site', 'doc', 'graphics', 'cw', 'cad'];
     const declared = new Set();
+    const colorProbe = document.createElement('span');
+    colorProbe.hidden = true;
+    document.body.append(colorProbe);
+
+    const formatOklch = value => {
+        colorProbe.style.color = '';
+        colorProbe.style.color = value;
+        const color = culori.converter('oklch')(culori.parse(getComputedStyle(colorProbe).color));
+        if (!color) return '';
+
+        const parts = [
+            `L:\u00A0${(color.l * 100).toFixed(1)}%`,
+            `C:\u00A0${color.c.toFixed(3)}`,
+            `H:\u00A0${(color.h ?? 0).toFixed(1)}°`
+        ];
+        // if (color.alpha !== undefined && color.alpha < 1) parts.push(`A:\u00A0${color.alpha.toFixed(2)}`);
+        return parts.join(', ');
+    };
 
     for (const sheet of document.styleSheets) {
         for (const rule of sheet.cssRules) {
@@ -245,10 +265,11 @@
             const value = rootStyles.getPropertyValue(name).trim();
             const card = document.createElement('article');
             card.className = 'swatch';
-            card.innerHTML = `<div class="swatch-color"></div><div class="swatch-details"><code></code><div class="value"></div></div>`;
+            card.innerHTML = `<div class="swatch-color"></div><div class="swatch-details"><code></code><div class="value"></div><div class="oklch-value"></div></div>`;
             card.style.setProperty('--swatch-color', `var(${name})`);
             card.querySelector('code').textContent = name;
             card.querySelector('.value').textContent = value;
+            card.querySelector('.oklch-value').textContent = formatOklch(value);
             swatches.append(card);
         }
         report.append(section);
