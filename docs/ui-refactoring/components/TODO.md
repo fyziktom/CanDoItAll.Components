@@ -192,6 +192,9 @@ Button, CopyButton
 # DEV NOTES
 
 - [ ] radzen-layout.css?
+- [ ] svgo
+- [ ] loader animation fix
+- [ ] loader/spinner sandbox blocks
 - [ ] favicon + states
 - [ ] full dark theme html level, disable animation during transition
 - [ ] btn mouse over, pointer
