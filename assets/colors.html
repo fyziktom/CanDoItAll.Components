@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Color overview</title>
+    <style>
+    :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+        color: #252525;
+        background: #fcfcfc;
+
+        /* Logo spinner palette, sourced from loader-spinner-background.html. */
+        --logo-color-inner-1: #63b3c8;
+        --logo-color-inner-2: #6dbfdd;
+        --logo-color-inner-3: #5ba3da;
+        --logo-color-inner-4: #3d64d2;
+        --logo-color-inner-5: #364dbe;
+        --logo-color-inner-6: #5091d0;
+        --logo-color-outer-1: #8fe6ed;
+        --logo-color-outer-2: #8ce0f2;
+        --logo-color-outer-3: #74c4ec;
+        --logo-color-outer-4: #5784e6;
+        --logo-color-outer-5: #4a63d6;
+        --logo-color-outer-6: #79d0eb;
+        --logo-grey-inner-1: #a8a8a8;
+        --logo-grey-inner-2: #b4b4b4;
+        --logo-grey-inner-3: #9c9c9c;
+        --logo-grey-inner-4: #6b6b6b;
+        --logo-grey-inner-5: #58585a;
+        --logo-grey-inner-6: #8d8d8d;
+        --logo-grey-outer-1: #d7d7d7;
+        --logo-grey-outer-2: #d3d3d3;
+        --logo-grey-outer-3: #bababa;
+        --logo-grey-outer-4: #878787;
+        --logo-grey-outer-5: #6d6d6d;
+        --logo-grey-outer-6: #c4c4c4;
+
+        /* Site palette. Gradients are individual stops so they can be reused freely. */
+        --site-color-canvas: oklch(15.5% .046 276);
+        --site-color-canvas-soft: oklch(19% .055 275);
+        --site-color-surface: oklch(23.5% .065 274 / .72);
+        --site-color-surface-strong: oklch(28% .08 273);
+        --site-color-ink: oklch(98.5% .008 270);
+        --site-color-ink-muted: oklch(79% .035 272);
+        --site-color-line: oklch(72% .08 274 / .2);
+        --site-color-brand: oklch(69% .18 274);
+        --site-color-brand-bright: oklch(80% .14 268);
+        --site-color-accent: oklch(80% .17 186);
+        --site-color-warning: oklch(78% .15 78);
+        --site-color-warning-soft: oklch(78% .15 78 / .12);
+        --site-color-focus: oklch(86% .15 191);
+        --site-color-focus-paper: oklch(42% .17 264);
+        --site-color-paper: oklch(97% .012 255);
+        --site-color-paper-strong: oklch(99.5% .004 255);
+        --site-color-paper-ink: oklch(19% .045 265);
+        --site-color-paper-muted: oklch(48% .035 260);
+        --site-color-paper-line: oklch(84% .025 260);
+        --site-color-link-paper: oklch(43% .17 262);
+        --site-gradient-brand-1: oklch(70% .19 276);
+        --site-gradient-brand-2: oklch(81% .15 230);
+
+        /* CanDoItAll light theme colors, sourced from Tailwind/foundation/theme.css. */
+        --cad-color-page-bg: #f8fafc;
+        --cad-color-surface: rgba(255, 255, 255, 0.96);
+        --cad-color-surface-soft: rgba(248, 250, 252, 0.88);
+        --cad-color-border: #cbd5e1;
+        --cad-color-border-soft: #e2e8f0;
+        --cad-color-text-strong: #020617;
+        --cad-color-text: #0f172a;
+        --cad-color-text-muted: #475569;
+        --cad-color-text-soft: #64748b;
+        --cad-color-inverse: #f8fafc;
+        --cad-tone-primary-solid-bg: #0f172a;
+        --cad-tone-primary-solid-hover: #1e293b;
+        --cad-tone-primary-solid-border: #0f172a;
+        --cad-tone-primary-solid-fg: #ffffff;
+        --cad-tone-primary-soft-bg: rgba(255, 255, 255, 0.96);
+        --cad-tone-primary-soft-hover: #f8fafc;
+        --cad-tone-primary-soft-border: #cbd5e1;
+        --cad-tone-primary-soft-fg: #0f172a;
+        --cad-tone-secondary-soft-bg: #fae8ff;
+        --cad-tone-secondary-soft-hover: #f5d0fe;
+        --cad-tone-secondary-soft-border: #f0abfc;
+        --cad-tone-secondary-soft-fg: #86198f;
+        --cad-tone-success-soft-bg: #d1fae5;
+        --cad-tone-success-soft-hover: #a7f3d0;
+        --cad-tone-success-soft-border: #6ee7b7;
+        --cad-tone-success-soft-fg: #065f46;
+        --cad-tone-info-soft-bg: #e0f2fe;
+        --cad-tone-info-soft-hover: #bae6fd;
+        --cad-tone-info-soft-border: #7dd3fc;
+        --cad-tone-info-soft-fg: #075985;
+        --cad-tone-warning-soft-bg: #fef3c7;
+        --cad-tone-warning-soft-hover: #fde68a;
+        --cad-tone-warning-soft-border: #fcd34d;
+        --cad-tone-warning-soft-fg: #92400e;
+        --cad-tone-danger-soft-bg: #ffe4e6;
+        --cad-tone-danger-soft-hover: #fecdd3;
+        --cad-tone-danger-soft-border: #fda4af;
+        --cad-tone-danger-soft-fg: #9f1239;
+        --cad-tone-light-soft-bg: rgba(255, 255, 255, 0.96);
+        --cad-tone-light-soft-hover: #f8fafc;
+        --cad-tone-light-soft-border: #cbd5e1;
+        --cad-tone-light-soft-fg: #475569;
+        --cad-tone-base-soft-bg: rgba(255, 255, 255, 0.96);
+        --cad-tone-base-soft-hover: #f8fafc;
+        --cad-tone-base-soft-border: #cbd5e1;
+        --cad-tone-base-soft-fg: #475569;
+        --cad-tone-dark-soft-bg: #e2e8f0;
+        --cad-tone-dark-soft-hover: #cbd5e1;
+        --cad-tone-dark-soft-border: #94a3b8;
+        --cad-tone-dark-soft-fg: #0f172a;
+
+        --doc-color-1: #00142e;
+        --doc-color-2: #1e3862;
+        --doc-color-3: #5d4fcb;
+        --doc-color-4: #0294e4;
+        --doc-color-5: #3ae2f3;
+        --doc-color-6: #f3f3f5;
+
+        --graphics-color-1: #000008;
+        --graphics-color-2: #000b2b;
+        --graphics-color-3: #031f6a;
+        --graphics-color-4: #0335b9;
+        --graphics-color-5: #0237f4;
+        --graphics-color-6: #0d60e5;
+        --graphics-color-7: #1a91f9;
+        --graphics-color-8: #1eb4fd;
+        --graphics-color-9: #3edefd;
+        --graphics-color-10: #9af7fb;
+        --graphics-color-11: #f6f6f8;
+        --graphics-color-12: #cccdd2;
+        --graphics-color-13: #9ca2ba;
+        --graphics-color-14: #46475b;
+        --graphics-color-15: #26283c;
+        --graphics-color-16: #7a7e8a;
+
+        /* Canvas workbench node palettes, sourced from 04-scene-and-nodes.css. */
+        --cw-node-default-surface-bg: rgba(255, 255, 255, 0.94);
+        --cw-node-default-surface-bg-soft: rgba(248, 250, 252, 0.92);
+        --cw-node-default-surface-overlay: rgba(15, 23, 42, 0.04);
+        --cw-node-default-surface-border: rgba(15, 23, 42, 0.08);
+        --cw-node-default-surface-text: #0f172a;
+        --cw-node-primary-surface-bg: #111827;
+        --cw-node-primary-surface-bg-soft: #0f172a;
+        --cw-node-primary-surface-overlay: rgba(255, 255, 255, 0.05);
+        --cw-node-primary-surface-border: rgba(51, 65, 85, 0.92);
+        --cw-node-primary-surface-text: #f8fafc;
+        --cw-node-secondary-surface-bg: #ede9fe;
+        --cw-node-secondary-surface-bg-soft: #ddd6fe;
+        --cw-node-secondary-surface-overlay: rgba(124, 58, 237, 0.08);
+        --cw-node-secondary-surface-border: rgba(167, 139, 250, 0.7);
+        --cw-node-secondary-surface-text: #581c87;
+        --cw-node-success-surface-bg: #dcfce7;
+        --cw-node-success-surface-bg-soft: #bbf7d0;
+        --cw-node-success-surface-overlay: rgba(22, 163, 74, 0.08);
+        --cw-node-success-surface-border: rgba(74, 222, 128, 0.72);
+        --cw-node-success-surface-text: #14532d;
+        --cw-node-info-surface-bg: #e0f2fe;
+        --cw-node-info-surface-bg-soft: #bae6fd;
+        --cw-node-info-surface-overlay: rgba(2, 132, 199, 0.08);
+        --cw-node-info-surface-border: rgba(125, 211, 252, 0.74);
+        --cw-node-info-surface-text: #0c4a6e;
+        --cw-node-warning-surface-bg: #fef3c7;
+        --cw-node-warning-surface-bg-soft: #fde68a;
+        --cw-node-warning-surface-overlay: rgba(217, 119, 6, 0.08);
+        --cw-node-warning-surface-border: rgba(251, 191, 36, 0.74);
+        --cw-node-warning-surface-text: #78350f;
+        --cw-node-danger-surface-bg: #fee2e2;
+        --cw-node-danger-surface-bg-soft: #fecaca;
+        --cw-node-danger-surface-overlay: rgba(220, 38, 38, 0.08);
+        --cw-node-danger-surface-border: rgba(252, 165, 165, 0.78);
+        --cw-node-danger-surface-text: #7f1d1d;
+        --cw-node-neutral-surface-bg: #f1f5f9;
+        --cw-node-neutral-surface-bg-soft: #e2e8f0;
+        --cw-node-neutral-surface-overlay: rgba(71, 85, 105, 0.04);
+        --cw-node-neutral-surface-border: rgba(148, 163, 184, 0.48);
+        --cw-node-neutral-surface-text: #0f172a;
+        --cw-node-custom-surface-bg: color-mix(in srgb, #7c3aed 16%, white);
+        --cw-node-custom-surface-bg-soft: color-mix(in srgb, #7c3aed 24%, white);
+        --cw-node-custom-surface-overlay: color-mix(in srgb, #7c3aed 12%, transparent);
+        --cw-node-custom-surface-border: color-mix(in srgb, #7c3aed 36%, white);
+        --cw-node-custom-surface-text: color-mix(in srgb, #7c3aed 72%, #0f172a);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 110rem; margin: 0 auto; padding: 2rem; }
+    h2 { margin-top: 0; }
+    .report { display: grid; gap: 3.5rem; }
+    .group { min-width: 0; }
+    .group-heading { display: flex; align-items: baseline; gap: .75rem; margin-bottom: .75rem; }
+    .group h2 { margin: 0; font-size: 1rem; }
+    .count { color: #777; font-size: .875rem; }
+    .swatches { column-width: 17.5rem; column-gap: .75rem; width: 100%; }
+    .swatch { display: flex; align-items: center; min-width: 0; min-height: 3.5rem; margin-bottom: .75rem; break-inside: avoid; background: transparent; }
+    .swatch-color { flex: 0 0 3.5rem; width: 3.5rem; height: 3.5rem; border: 1px solid rgba(0, 0, 0, .12); background: repeating-conic-gradient(#f2f2f2 0 25%, #fff 0 50%) 50% / 1rem 1rem; }
+    .swatch-color::before { content: ""; display: block; width: 100%; height: 100%; background: var(--swatch-color); }
+    .swatch-details { display: flex; flex: 1; min-width: 0; flex-direction: column; justify-content: center; padding: .45rem .65rem; }
+    code { display: block; overflow-wrap: anywhere; color: #252525; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; font-weight: 600; }
+    .value { margin-top: .25rem; color: #666; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72rem; overflow-wrap: anywhere; }
+    @media (max-width: 36rem) { main { padding: 1rem; } }
+    </style>
+</head>
+<body>
+<main>
+    <div class="report" id="report"></div>
+</main>
+<script>
+(() => {
+    const report = document.querySelector('#report');
+    const rootStyles = getComputedStyle(document.documentElement);
+    const groupLabels = { logo: 'Logo', site: 'Site', doc: 'Doc', graphics: 'Graphics', cw: 'Canvas', cad: 'App' };
+    const groupOrder = ['logo', 'site', 'doc', 'graphics', 'cw', 'cad'];
+    const declared = new Set();
+
+    for (const sheet of document.styleSheets) {
+        for (const rule of sheet.cssRules) {
+            if (rule.selectorText === ':root') {
+                for (const property of rule.style) {
+                    if (property.startsWith('--')) declared.add(property);
+                }
+            }
+        }
+    }
+
+    const groups = new Map();
+    for (const name of [...declared].sort()) {
+        const group = name.slice(2).split('-')[0];
+        groups.set(group, [...(groups.get(group) ?? []), name]);
+    }
+    for (const [group, names] of [...groups].sort(([a], [b]) => {
+        const aOrder = groupOrder.indexOf(a);
+        const bOrder = groupOrder.indexOf(b);
+        return (aOrder < 0 ? Number.MAX_SAFE_INTEGER : aOrder) - (bOrder < 0 ? Number.MAX_SAFE_INTEGER : bOrder);
+    })) {
+        const section = document.createElement('section');
+        section.className = 'group';
+        section.innerHTML = `<div class="group-heading"><h2>${groupLabels[group] ?? group}</h2><span class="count">${names.length} colors</span></div><div class="swatches"></div>`;
+        const swatches = section.querySelector('.swatches');
+
+        for (const name of names) {
+            const value = rootStyles.getPropertyValue(name).trim();
+            const card = document.createElement('article');
+            card.className = 'swatch';
+            card.innerHTML = `<div class="swatch-color"></div><div class="swatch-details"><code></code><div class="value"></div></div>`;
+            card.style.setProperty('--swatch-color', `var(${name})`);
+            card.querySelector('code').textContent = name;
+            card.querySelector('.value').textContent = value;
+            swatches.append(card);
+        }
+        report.append(section);
+    }
+})();
+</script>
+</body>
+</html>
