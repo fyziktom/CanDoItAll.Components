@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asset Gallery</title>
+    <style>
+    :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+        color: #252525;
+        background: #fcfcfc;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    main {
+        max-width: 110rem;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .asset-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+        gap: 1rem;
+    }
+
+    .asset-card {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        background: #fff;
+    }
+
+    .asset-card h2 {
+        display: none;
+        margin: 0;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #e6e6e6;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .asset-card iframe {
+        display: block;
+        width: 100%;
+        height: 24rem;
+        border: 0;
+        background: #fff;
+    }
+
+    .logo-preview {
+        display: grid;
+        place-items: center;
+        min-height: 26rem;
+        padding: 1rem;
+        box-sizing: border-box;
+        background: repeating-conic-gradient(#f2f2f2 0 25%, #fff 0 50%) 50% / 1.5rem 1.5rem;
+    }
+
+    .logo-preview img {
+        width: 128px;
+        height: 128px;
+        object-fit: contain;
+    }
+    </style>
+</head>
+<body>
+<main>
+    <section class="asset-grid" aria-label="Asset previews">
+        <article class="asset-card">
+            <h2>Loader</h2>
+            <iframe src="loader.html" title="Loader preview"></iframe>
+        </article>
+        <article class="asset-card">
+            <h2>Data loader</h2>
+            <iframe src="loader-data.html" title="Data loader preview"></iframe>
+        </article>
+        <article class="asset-card">
+            <h2>Indeterminate loader</h2>
+            <iframe src="loader-indeterminate.html" title="Indeterminate loader preview"></iframe>
+        </article>
+        <article class="asset-card">
+            <h2>Spinner background loader</h2>
+            <iframe src="loader-spinner-background.html" title="Spinner background loader preview"></iframe>
+        </article>
+        <article class="asset-card">
+            <h2>Logo</h2>
+            <div class="logo-preview">
+                <img src="logo/optimized/logo.svg" width="128" height="128" alt="CanDoItAll logo">
+            </div>
+        </article>
+        <article class="asset-card">
+            <h2>Grey logo</h2>
+            <div class="logo-preview">
+                <img src="logo/optimized/logo-grey.svg" width="128" height="128" alt="CanDoItAll grey logo">
+            </div>
+        </article>
+    </section>
+</main>
+</body>
+</html>
