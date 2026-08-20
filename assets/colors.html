@@ -191,7 +191,9 @@
     h2 { margin-top: 0; }
     .report { display: grid; gap: 3.5rem; }
     .group { min-width: 0; }
-    .group-heading { display: flex; align-items: baseline; gap: .75rem; margin-bottom: .75rem; }
+    .group-heading { display: flex; align-items: baseline; gap: .75rem; width: 100%; margin-bottom: .75rem; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: copy; }
+    .group-heading:hover h2, .group-heading:focus-visible h2 { text-decoration: underline; }
+    .group-heading:focus-visible { outline: 2px solid #2563eb; outline-offset: .2rem; }
     .group h2 { margin: 0; font-size: 1rem; }
     .count { color: #777; font-size: .875rem; }
     .swatch-groups { column-width: 17.5rem; column-gap: .75rem; width: 100%; }
@@ -234,14 +236,7 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
     const customColors = [
         'oklch(69% .18 274)',
         '#0294e4',
-        {
-            color: 'oklch(43% .17 262)',
-            minLightness: 0.28,
-            maxLightness: 0.97,
-            lightnessCurve: { low: 1.3, high: 1.05 },
-            chromaCurve: { low: 0.75, high: 0.83 },
-            hueShift: 0
-        },
+        '#5d4fcb',
         {
             color: 'oklch(86% .15 191)',
             minLightness: 0.28,
@@ -252,13 +247,22 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
             hueShift: 0,
         },
         {
+            color: 'oklch(43% .17 262)',
+            minLightness: 0.28,
+            maxLightness: 0.97,
+            lightnessCurve: { low: 1.3, high: 1.05 },
+            chromaCurve: { low: 0.75, high: 0.83 },
+            hueShift: 0
+        },
+        {
             color: '#8ce0f2',
             minLightness: 0.28,
             maxLightness: 0.99,
             lightnessCurve: { low: 1.3, high: 1.05 },
             chromaCurve: { low: 0.75, high: 0.83 },
             hueShift: 0
-        }
+        },
+        'oklch(80% .17 186)'
     ];
     const customScaleOptions = { lock: 500 };
     // Concrete palette from Tailwind/node_modules/tailwindcss/dist/colors.mjs.
@@ -415,6 +419,33 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
         return parts.join(', ');
     };
 
+    const formatCssOklch = value => {
+        const color = toOklch(value);
+        if (!color) return value;
+
+        const alpha = color.alpha ?? 1;
+        const hue = color.h === undefined || Number.isNaN(color.h) ? 'none' : color.h.toFixed(1);
+        const alphaSuffix = alpha < 1 ? ` / ${alpha.toFixed(2)}` : '';
+        return `oklch(${(color.l * 100).toFixed(1)}% ${color.c.toFixed(3)} ${hue}${alphaSuffix})`;
+    };
+
+    const copyToClipboard = async text => {
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            return;
+        }
+
+        const input = document.createElement('textarea');
+        input.value = text;
+        input.style.position = 'fixed';
+        input.style.opacity = '0';
+        document.body.append(input);
+        input.select();
+        const copied = document.execCommand('copy');
+        input.remove();
+        if (!copied) throw new Error('Clipboard access is unavailable.');
+    };
+
     for (const sheet of document.styleSheets) {
         for (const rule of sheet.cssRules) {
             if (rule.selectorText === ':root') {
@@ -467,10 +498,20 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
         }
     };
 
-    const appendSection = (label, count, addSwatches) => {
+    const appendSection = (label, items, addSwatches) => {
         const section = document.createElement('section');
         section.className = 'group';
-        section.innerHTML = `<div class="group-heading"><h2>${label}</h2><span class="count">${count} colors</span></div><div class="swatch-groups"></div>`;
+        const css = `:root {\n${items.map(({ name, value }) => `  ${name}: ${formatCssOklch(value)};`).join('\n')}\n}`;
+        section.innerHTML = `<button class="group-heading" type="button" title="Copy CSS variables" aria-label="Copy ${label} CSS variables"><h2>${label}</h2><span class="count">${items.length} colors</span></button><div class="swatch-groups"></div>`;
+        const heading = section.querySelector('.group-heading');
+        heading.addEventListener('click', async () => {
+            try {
+                await copyToClipboard(css);
+                heading.title = 'Copied CSS variables';
+            } catch {
+                heading.title = 'Unable to copy CSS variables';
+            }
+        });
         addSwatches(section.querySelector('.swatch-groups'));
         report.append(section);
     };
@@ -485,22 +526,22 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
         const bOrder = groupOrder.indexOf(b);
         return (aOrder < 0 ? Number.MAX_SAFE_INTEGER : aOrder) - (bOrder < 0 ? Number.MAX_SAFE_INTEGER : bOrder);
     })) {
-        appendSection(groupLabels[group] ?? group, names.length, swatchGroups => {
-            appendGroupedSwatches(swatchGroups, names.map(name => ({ name })), (swatches, { name }) => {
-                const value = rootStyles.getPropertyValue(name).trim();
+        const items = names.map(name => ({ name, value: rootStyles.getPropertyValue(name).trim() }));
+        appendSection(groupLabels[group] ?? group, items, swatchGroups => {
+            appendGroupedSwatches(swatchGroups, items, (swatches, { name, value }) => {
                 const match = findPaletteMatch(value);
                 appendSwatch(swatches, name, value, { isTailwind: Boolean(match.exact), match });
             });
         });
     }
 
-    appendSection('Custom', customPalette.length, swatchGroups => {
+    appendSection('Custom', customPalette.map(color => ({ name: `--${color.name}`, value: color.value })), swatchGroups => {
         appendGroupedSwatches(swatchGroups, customPalette, (swatches, color) => {
             appendSwatch(swatches, `--${color.name}`, color.value, { scaleName: color.scaleName });
         });
     });
 
-    appendSection('Tailwind', tailwindColors.length, swatchGroups => {
+    appendSection('Tailwind', tailwindPalette.map(color => ({ name: `--color-${color.name}`, value: color.value })), swatchGroups => {
         appendGroupedSwatches(swatchGroups, tailwindPalette, (swatches, color) => {
             const match = findPaletteMatch(color.value, color.name);
             appendSwatch(swatches, `--color-${color.name}`, color.value, { isTailwind: true, scaleName: color.scaleName, match });
