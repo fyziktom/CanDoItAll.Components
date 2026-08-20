@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spinner</title>
+
+    <style>
+    svg {
+        --step-duration: 1s;
+        --cycle-duration: calc(var(--step-duration) * 6);
+        --colour-step: calc(var(--cycle-duration) / 6);
+
+        /* Colours are ordered clockwise, beginning at the upper-left segment. */
+        --inner-0: #63b3c8;
+        --inner-1: #6dbfdd;
+        --inner-2: #5ba3da;
+        --inner-3: #3d64d2;
+        --inner-4: #364dbe;
+        --inner-5: #5091d0;
+        --outer-0: #8fe6ed;
+        --outer-1: #8ce0f2;
+        --outer-2: #74c4ec;
+        --outer-3: #5784e6;
+        --outer-4: #4a63d6;
+        --outer-5: #79d0eb;
+        --inner-grey-0: #a8a8a8;
+        --inner-grey-1: #b4b4b4;
+        --inner-grey-2: #9c9c9c;
+        --inner-grey-3: #6b6b6b;
+        --inner-grey-4: #58585a;
+        --inner-grey-5: #8d8d8d;
+        --outer-grey-0: #d7d7d7;
+        --outer-grey-1: #d3d3d3;
+        --outer-grey-2: #bababa;
+        --outer-grey-3: #878787;
+        --outer-grey-4: #6d6d6d;
+        --outer-grey-5: #c4c4c4;
+
+        overflow: visible;
+    }
+
+    .loader__rotor {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: rotate-step var(--cycle-duration) ease-out infinite;
+        transition: opacity 150ms linear;
+    }
+
+    .loader__inner.loader__segment--0 { fill: var(--inner-0); }
+    .loader__inner.loader__segment--1 { fill: var(--inner-1); }
+    .loader__inner.loader__segment--2 { fill: var(--inner-2); }
+    .loader__inner.loader__segment--3 { fill: var(--inner-3); }
+    .loader__inner.loader__segment--4 { fill: var(--inner-4); }
+    .loader__inner.loader__segment--5 { fill: var(--inner-5); }
+    .loader__outer.loader__segment--0 { fill: var(--outer-0); }
+    .loader__outer.loader__segment--1 { fill: var(--outer-1); }
+    .loader__outer.loader__segment--2 { fill: var(--outer-2); }
+    .loader__outer.loader__segment--3 { fill: var(--outer-3); }
+    .loader__outer.loader__segment--4 { fill: var(--outer-4); }
+    .loader__outer.loader__segment--5 { fill: var(--outer-5); }
+
+    .loader__inner,
+    .loader__outer {
+        animation-duration: calc(var(--cycle-duration) * 1);
+        animation-timing-function: cubic-bezier(0.1, 0.5, 0.2, 1);
+        /*animation-timing-function: ease-in-out;*/
+        animation-iteration-count: infinite;
+    }
+
+    .loader__inner { animation-name: inner-colours; }
+    .loader__outer { animation-name: outer-colours; }
+
+    .loader__segment--0 { animation-delay: calc(var(--colour-step) *  0); }
+    .loader__segment--1 { animation-delay: calc(var(--colour-step) * -1); }
+    .loader__segment--2 { animation-delay: calc(var(--colour-step) * -2); }
+    .loader__segment--3 { animation-delay: calc(var(--colour-step) * -3); }
+    .loader__segment--4 { animation-delay: calc(var(--colour-step) * -4); }
+    .loader__segment--5 { animation-delay: calc(var(--colour-step) * -5); }
+
+    /* Each 60-degree turn occupies 65% of its slot; the rest is the pause. */
+    @keyframes rotate-step {
+        0%       { transform: rotate(0deg); animation-timing-function: cubic-bezier(.25, .8, .25, 1); }
+        10.833%  { transform: rotate(60deg); animation-timing-function: steps(1, end); }
+        16.667%  { transform: rotate(60deg); animation-timing-function: cubic-bezier(.25, .8, .25, 1); }
+        27.5%   { transform: rotate(120deg); animation-timing-function: steps(1, end); }
+        33.333%  { transform: rotate(120deg); animation-timing-function: cubic-bezier(.25, .8, .25, 1); }
+        44.167%  { transform: rotate(180deg); animation-timing-function: steps(1, end); }
+        50%      { transform: rotate(180deg); animation-timing-function: cubic-bezier(.25, .8, .25, 1); }
+        60.833%  { transform: rotate(240deg); animation-timing-function: steps(1, end); }
+        66.667%  { transform: rotate(240deg); animation-timing-function: cubic-bezier(.25, .8, .25, 1); }
+        77.5%   { transform: rotate(300deg); animation-timing-function: steps(1, end); }
+        83.333%  { transform: rotate(300deg); animation-timing-function: cubic-bezier(.25, .8, .25, 1); }
+        94.167%  { transform: rotate(360deg); animation-timing-function: steps(1, end); }
+        100%     { transform: rotate(360deg); }
+    }
+
+    @keyframes inner-colours {
+        0%      { fill: var(--inner-0); }
+        /*10.833% { fill: var(--inner-0); }*/
+        16.667% { fill: var(--inner-1); }
+        /*27.5%   { fill: var(--inner-1); }*/
+        33.333% { fill: var(--inner-2); }
+        /*44.167% { fill: var(--inner-2); }*/
+        50%     { fill: var(--inner-3); }
+        /*60.833% { fill: var(--inner-3); }*/
+        66.667% { fill: var(--inner-4); }
+        /*77.5%   { fill: var(--inner-4); }*/
+        83.333% { fill: var(--inner-5); }
+        /*94.167% { fill: var(--inner-5); }*/
+        100%    { fill: var(--inner-0); }
+    }
+
+    @keyframes outer-colours {
+        0%      { fill: var(--outer-0); }
+        /*10.833% { fill: var(--outer-0); }*/
+        16.667% { fill: var(--outer-1); }
+        /*27.5%   { fill: var(--outer-1); }*/
+        33.333% { fill: var(--outer-2); }
+        /*44.167% { fill: var(--outer-2); }*/
+        50%     { fill: var(--outer-3); }
+        /*60.833% { fill: var(--outer-3); }*/
+        66.667% { fill: var(--outer-4); }
+        /*77.5%   { fill: var(--outer-4); }*/
+        83.333% { fill: var(--outer-5); }
+        /*94.167% { fill: var(--outer-5); }*/
+        100%    { fill: var(--outer-0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .loader__rotor,
+        .loader__inner,
+        .loader__outer { animation: none; }
+    }
+
+    body {
+        font-family: sans-serif;
+        color: rgba(0, 0, 0, .4);
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-header {
+        height: 56px;
+        border-bottom: 1px solid rgba(0, 0, 0, .12);
+        position: absolute;
+        top: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .page-header > svg {
+        margin: 0 8px;
+    }
+
+    .spinner {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        margin: 0 8px;
+    }
+
+    .spinner__layer {
+        position: absolute;
+        inset: 0;
+        transition: opacity 240ms ease-in-out;
+    }
+
+    .spinner-toggle-input {
+        position: fixed;
+        inline-size: 1px;
+        block-size: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .spin-toggle {
+        position: fixed;
+        text-align: center;
+        top: 160px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        appearance: none;
+        border: 0;
+        border-radius: 24px;
+        background: rgba(0, 0, 0, .06);
+        border: 1px solid rgba(0, 0, 0, .09);
+        color: rgba(0, 0, 0, .4);
+        cursor: pointer;
+        font-weight: bolder;
+        letter-spacing: .18em;
+        padding: 14px 24px;
+        min-width: 7rem;
+    }
+
+    .spin-toggle:hover {
+        background: rgba(0, 0, 0, .09);
+    }
+
+    .spin-toggle:focus-visible {
+        outline: 3px solid rgba(0, 0, 0, .09);
+        outline-offset: 3px;
+    }
+
+    .spinner-toggle-input:focus-visible + .spin-toggle {
+        outline: 3px solid rgba(0, 0, 0, .09);
+        outline-offset: 3px;
+    }
+
+    .spin-toggle__spin {
+        display: none;
+    }
+
+    .spinner-toggle-input:not(:checked) + .spin-toggle .spin-toggle__stop {
+        display: none;
+    }
+
+    .spinner-toggle-input:not(:checked) + .spin-toggle .spin-toggle__spin {
+        display: inline;
+    }
+
+    .spinner-toggle-input:not(:checked) ~ .page-header .loader__rotor {
+        animation-play-state: paused;
+        opacity: .5;
+    }
+
+    .spinner-toggle-input:not(:checked) ~ .page-header .spinner__animated {
+        --inner-0: var(--inner-grey-0);
+        --inner-1: var(--inner-grey-1);
+        --inner-2: var(--inner-grey-2);
+        --inner-3: var(--inner-grey-3);
+        --inner-4: var(--inner-grey-4);
+        --inner-5: var(--inner-grey-5);
+        --outer-0: var(--outer-grey-0);
+        --outer-1: var(--outer-grey-1);
+        --outer-2: var(--outer-grey-2);
+        --outer-3: var(--outer-grey-3);
+        --outer-4: var(--outer-grey-4);
+        --outer-5: var(--outer-grey-5);
+    }
+
+    .spinner-toggle-input:not(:checked) ~ .page-header .loader__inner,
+    .spinner-toggle-input:not(:checked) ~ .page-header .loader__outer {
+        animation-play-state: paused;
+    }
+    </style>
+</head>
+<body>
+<input class="spinner-toggle-input" id="spin-toggle" type="checkbox" checked>
+<label class="spin-toggle" for="spin-toggle">
+    <span class="spin-toggle__spin">SPIN</span>
+    <span class="spin-toggle__stop">STOP</span>
+</label>
+<div class="page-header">
+<div class="spinner">
+<svg class="spinner__layer spinner__animated"
+    width="40"
+    height="40"
+    viewBox="0 0 24 24"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:svg="http://www.w3.org/2000/svg">
+    <g class="loader__rotor">
+        <path class="loader__inner loader__segment--0"
+            d="M 3.3397461,7.0001425 7.3395004,9.3092594 12,6.6185183 3.3397461,7.0001425"
+        />
+        <path class="loader__inner loader__segment--1"
+            d="M 12.000247,1.9999997 12,6.6185183 16.6605,9.3092591 Z"
+        />
+        <path class="loader__inner loader__segment--2"
+            d="M 16.6605,14.690741 V 9.3092591 l 4.000247,-2.3091174 z"
+        />
+        <path class="loader__inner loader__segment--3"
+            d="M 20.660746,17.000426 16.6605,14.690741 12,17.381482 Z"
+        />
+        <path class="loader__inner loader__segment--4"
+            d="M 12.000246,22.000569 12,17.381482 7.3395001,14.690742 Z"
+        />
+        <path class="loader__inner loader__segment--5"
+            d="m 7.3395001,14.690742 -3.9997545,2.309685 3.9997548,-7.6911676 -3e-7,5.3814826"
+        />
+        <path class="loader__outer loader__segment--0"
+            d="M 3.3397461,7.0001425 12,6.6185183 12.000247,1.9999997 Z"
+        />
+        <path class="loader__outer loader__segment--1"
+            d="M 12.000247,1.9999997 16.6605,9.3092591 20.660747,7.0001417 Z"
+        />
+        <path class="loader__outer loader__segment--2"
+            d="m 16.6605,14.690741 4.000246,2.309685 1e-6,-10.0002843 z"
+        />
+        <path class="loader__outer loader__segment--3"
+            d="m 12,17.381482 2.46e-4,4.619087 8.6605,-5.000143 z"
+        />
+        <path class="loader__outer loader__segment--4"
+            d="M 7.3395001,14.690742 12.000246,22.000569 3.3397456,17.000427 Z"
+        />
+        <path class="loader__outer loader__segment--5"
+            d="m 7.3395004,9.3092594 -3.9997543,-2.3091169 -5e-7,10.0002845 z"
+        />
+    </g>
+</svg>
+</div>
+<span>Spinner Concept</span>
+</div>
+</body>
+</html>
