@@ -10,7 +10,6 @@
         --cycle-duration: calc(var(--step-duration) * 6);
         --colour-step: calc(var(--cycle-duration) / 6);
 
-        /* Colours are ordered clockwise, beginning at the upper-left segment. */
         --inner-0: #63b3c8;
         --inner-1: #6dbfdd;
         --inner-2: #5ba3da;
@@ -39,43 +38,51 @@
         overflow: visible;
     }
 
-    .loader__rotor {
+    svg > g {
         transform-origin: 12px 12px;
         transform-box: view-box;
         animation: rotate-step var(--cycle-duration) ease-out infinite;
         transition: opacity 150ms linear;
     }
 
-    .loader__inner.loader__segment--0 { fill: var(--inner-0); }
-    .loader__inner.loader__segment--1 { fill: var(--inner-1); }
-    .loader__inner.loader__segment--2 { fill: var(--inner-2); }
-    .loader__inner.loader__segment--3 { fill: var(--inner-3); }
-    .loader__inner.loader__segment--4 { fill: var(--inner-4); }
-    .loader__inner.loader__segment--5 { fill: var(--inner-5); }
-    .loader__outer.loader__segment--0 { fill: var(--outer-0); }
-    .loader__outer.loader__segment--1 { fill: var(--outer-1); }
-    .loader__outer.loader__segment--2 { fill: var(--outer-2); }
-    .loader__outer.loader__segment--3 { fill: var(--outer-3); }
-    .loader__outer.loader__segment--4 { fill: var(--outer-4); }
-    .loader__outer.loader__segment--5 { fill: var(--outer-5); }
+    path:nth-child(1)  { fill: var(--inner-0); }
+    path:nth-child(2)  { fill: var(--inner-1); }
+    path:nth-child(3)  { fill: var(--inner-2); }
+    path:nth-child(4)  { fill: var(--inner-3); }
+    path:nth-child(5)  { fill: var(--inner-4); }
+    path:nth-child(6)  { fill: var(--inner-5); }
+    path:nth-child(7)  { fill: var(--outer-0); }
+    path:nth-child(8)  { fill: var(--outer-1); }
+    path:nth-child(9)  { fill: var(--outer-2); }
+    path:nth-child(10) { fill: var(--outer-3); }
+    path:nth-child(11) { fill: var(--outer-4); }
+    path:nth-child(12) { fill: var(--outer-5); }
 
-    .loader__inner,
-    .loader__outer {
+    path:nth-child(1), path:nth-child(2), path:nth-child(3),
+    path:nth-child(4), path:nth-child(5), path:nth-child(6),
+    path:nth-child(7), path:nth-child(8), path:nth-child(9),
+    path:nth-child(10), path:nth-child(11), path:nth-child(12) {
         animation-duration: calc(var(--cycle-duration) * 1);
         animation-timing-function: cubic-bezier(0.1, 0.5, 0.2, 1);
-        /*animation-timing-function: ease-in-out;*/
         animation-iteration-count: infinite;
     }
 
-    .loader__inner { animation-name: inner-colours; }
-    .loader__outer { animation-name: outer-colours; }
+    path:nth-child(1), path:nth-child(2), path:nth-child(3),
+    path:nth-child(4), path:nth-child(5), path:nth-child(6) {
+        animation-name: inner-colours;
+    }
 
-    .loader__segment--0 { animation-delay: calc(var(--colour-step) *  0); }
-    .loader__segment--1 { animation-delay: calc(var(--colour-step) * -1); }
-    .loader__segment--2 { animation-delay: calc(var(--colour-step) * -2); }
-    .loader__segment--3 { animation-delay: calc(var(--colour-step) * -3); }
-    .loader__segment--4 { animation-delay: calc(var(--colour-step) * -4); }
-    .loader__segment--5 { animation-delay: calc(var(--colour-step) * -5); }
+    path:nth-child(7), path:nth-child(8), path:nth-child(9),
+    path:nth-child(10), path:nth-child(11), path:nth-child(12) {
+        animation-name: outer-colours;
+    }
+
+    path:nth-child(1), path:nth-child(7)   { animation-delay: calc(var(--colour-step) *  0); }
+    path:nth-child(2), path:nth-child(8)   { animation-delay: calc(var(--colour-step) * -1); }
+    path:nth-child(3), path:nth-child(9)   { animation-delay: calc(var(--colour-step) * -2); }
+    path:nth-child(4), path:nth-child(10)  { animation-delay: calc(var(--colour-step) * -3); }
+    path:nth-child(5), path:nth-child(11)  { animation-delay: calc(var(--colour-step) * -4); }
+    path:nth-child(6), path:nth-child(12)  { animation-delay: calc(var(--colour-step) * -5); }
 
     /* Each 60-degree turn occupies 65% of its slot; the rest is the pause. */
     @keyframes rotate-step {
@@ -96,40 +103,27 @@
 
     @keyframes inner-colours {
         0%      { fill: var(--inner-0); }
-        /*10.833% { fill: var(--inner-0); }*/
         16.667% { fill: var(--inner-1); }
-        /*27.5%   { fill: var(--inner-1); }*/
         33.333% { fill: var(--inner-2); }
-        /*44.167% { fill: var(--inner-2); }*/
         50%     { fill: var(--inner-3); }
-        /*60.833% { fill: var(--inner-3); }*/
         66.667% { fill: var(--inner-4); }
-        /*77.5%   { fill: var(--inner-4); }*/
         83.333% { fill: var(--inner-5); }
-        /*94.167% { fill: var(--inner-5); }*/
         100%    { fill: var(--inner-0); }
     }
 
     @keyframes outer-colours {
         0%      { fill: var(--outer-0); }
-        /*10.833% { fill: var(--outer-0); }*/
         16.667% { fill: var(--outer-1); }
-        /*27.5%   { fill: var(--outer-1); }*/
         33.333% { fill: var(--outer-2); }
-        /*44.167% { fill: var(--outer-2); }*/
         50%     { fill: var(--outer-3); }
-        /*60.833% { fill: var(--outer-3); }*/
         66.667% { fill: var(--outer-4); }
-        /*77.5%   { fill: var(--outer-4); }*/
         83.333% { fill: var(--outer-5); }
-        /*94.167% { fill: var(--outer-5); }*/
         100%    { fill: var(--outer-0); }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .loader__rotor,
-        .loader__inner,
-        .loader__outer { animation: none; }
+        svg > g,
+        svg path { animation: none; }
     }
 
     body {
@@ -151,19 +145,6 @@
 
     .page-header > svg {
         margin: 0 8px;
-    }
-
-    .spinner {
-        position: relative;
-        width: 40px;
-        height: 40px;
-        margin: 0 8px;
-    }
-
-    .spinner__layer {
-        position: absolute;
-        inset: 0;
-        transition: opacity 240ms ease-in-out;
     }
 
     .spinner-toggle-input {
@@ -219,12 +200,12 @@
         display: inline;
     }
 
-    .spinner-toggle-input:not(:checked) ~ .page-header .loader__rotor {
+    .spinner-toggle-input:not(:checked) ~ .page-header > svg > g {
         animation-play-state: paused;
         opacity: .5;
     }
 
-    .spinner-toggle-input:not(:checked) ~ .page-header .spinner__animated {
+    .spinner-toggle-input:not(:checked) ~ .page-header > svg {
         --inner-0: var(--inner-grey-0);
         --inner-1: var(--inner-grey-1);
         --inner-2: var(--inner-grey-2);
@@ -239,8 +220,7 @@
         --outer-5: var(--outer-grey-5);
     }
 
-    .spinner-toggle-input:not(:checked) ~ .page-header .loader__inner,
-    .spinner-toggle-input:not(:checked) ~ .page-header .loader__outer {
+    .spinner-toggle-input:not(:checked) ~ .page-header > svg path {
         animation-play-state: paused;
     }
     </style>
@@ -252,54 +232,52 @@
     <span class="spin-toggle__stop">STOP</span>
 </label>
 <div class="page-header">
-<div class="spinner">
-<svg class="spinner__layer spinner__animated"
+<svg
     width="40"
     height="40"
     viewBox="0 0 24 24"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:svg="http://www.w3.org/2000/svg">
-    <g class="loader__rotor">
-        <path class="loader__inner loader__segment--0"
+    <g>
+        <path
             d="M 3.3397461,7.0001425 7.3395004,9.3092594 12,6.6185183 3.3397461,7.0001425"
         />
-        <path class="loader__inner loader__segment--1"
+        <path
             d="M 12.000247,1.9999997 12,6.6185183 16.6605,9.3092591 Z"
         />
-        <path class="loader__inner loader__segment--2"
+        <path
             d="M 16.6605,14.690741 V 9.3092591 l 4.000247,-2.3091174 z"
         />
-        <path class="loader__inner loader__segment--3"
+        <path
             d="M 20.660746,17.000426 16.6605,14.690741 12,17.381482 Z"
         />
-        <path class="loader__inner loader__segment--4"
+        <path
             d="M 12.000246,22.000569 12,17.381482 7.3395001,14.690742 Z"
         />
-        <path class="loader__inner loader__segment--5"
+        <path
             d="m 7.3395001,14.690742 -3.9997545,2.309685 3.9997548,-7.6911676 -3e-7,5.3814826"
         />
-        <path class="loader__outer loader__segment--0"
+        <path
             d="M 3.3397461,7.0001425 12,6.6185183 12.000247,1.9999997 Z"
         />
-        <path class="loader__outer loader__segment--1"
+        <path
             d="M 12.000247,1.9999997 16.6605,9.3092591 20.660747,7.0001417 Z"
         />
-        <path class="loader__outer loader__segment--2"
+        <path
             d="m 16.6605,14.690741 4.000246,2.309685 1e-6,-10.0002843 z"
         />
-        <path class="loader__outer loader__segment--3"
+        <path
             d="m 12,17.381482 2.46e-4,4.619087 8.6605,-5.000143 z"
         />
-        <path class="loader__outer loader__segment--4"
+        <path
             d="M 7.3395001,14.690742 12.000246,22.000569 3.3397456,17.000427 Z"
         />
-        <path class="loader__outer loader__segment--5"
+        <path
             d="m 7.3395004,9.3092594 -3.9997543,-2.3091169 -5e-7,10.0002845 z"
         />
     </g>
 </svg>
-</div>
 <span>Spinner Concept</span>
 </div>
 </body>
