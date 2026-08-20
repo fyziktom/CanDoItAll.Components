@@ -371,11 +371,8 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
     }
     const matchingPalette = [...tailwindPalette, ...customPalette];
 
-    const findPaletteMatch = (value, excludedName = null) => {
+    const findPaletteMatch = (value, candidates = matchingPalette) => {
         const color = toOklch(value);
-        const candidates = excludedName === null
-            ? matchingPalette
-            : matchingPalette.filter(candidate => candidate.name !== excludedName);
         const exact = candidates.find(candidate => sameColor(color, candidate.color));
         if (exact) return { exact };
 
@@ -537,14 +534,14 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
 
     appendSection('Custom', customPalette.map(color => ({ name: `--${color.name}`, value: color.value })), swatchGroups => {
         appendGroupedSwatches(swatchGroups, customPalette, (swatches, color) => {
-            appendSwatch(swatches, `--${color.name}`, color.value, { scaleName: color.scaleName });
+            const match = findPaletteMatch(color.value, tailwindPalette);
+            appendSwatch(swatches, `--${color.name}`, color.value, { scaleName: color.scaleName, match });
         });
     });
 
     appendSection('Tailwind', tailwindPalette.map(color => ({ name: `--color-${color.name}`, value: color.value })), swatchGroups => {
         appendGroupedSwatches(swatchGroups, tailwindPalette, (swatches, color) => {
-            const match = findPaletteMatch(color.value, color.name);
-            appendSwatch(swatches, `--color-${color.name}`, color.value, { isTailwind: true, scaleName: color.scaleName, match });
+            appendSwatch(swatches, `--color-${color.name}`, color.value, { isTailwind: true, scaleName: color.scaleName });
         });
     });
 })();
