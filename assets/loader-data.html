@@ -5,14 +5,22 @@
     <title>Loader</title>
 
     <style>
-    svg {
+    svg, p {
         overflow: visible;
-        opacity: .6;
+        --wave-duration: calc(2.6s * 1.5);
+        --wave-step: calc(var(--wave-duration) / 6);
+        --pulse-duration: calc(2s);
+        --pulse-min: .2;
+        --pulse-max: .5;
+        animation: pulse var(--pulse-duration) cubic-bezier(.45, 0, .55, 1) infinite;
+        /*animation: pulse var(--pulse-duration) ease-in infinite;*/
+        animation-direction: alternate-reverse;
     }
 
-    svg {
-        --wave-duration: 2.6s;
-        --wave-step: calc(var(--wave-duration) / 6);
+    p {
+        animation-timing-function: linear;
+        --pulse-min: .4;
+        --pulse-max: 1;
     }
 
     path:nth-child(7), path:nth-child(8), path:nth-child(9),
@@ -86,6 +94,15 @@
         75% {
             transform: scale(.996) rotate3d(1, 1, 0, 15deg) rotate(2deg);
             opacity: 0.35;
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: var(--pulse-min);
+        }
+        50% {
+            opacity: var(--pulse-max);
         }
     }
 
