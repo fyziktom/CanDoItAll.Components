@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" data-cad-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Semantic Tailwind demo</title>
+    <script>
+        document.documentElement.dataset.cadTheme = localStorage.getItem('semantic-demo-theme') === 'dark' ? 'dark' : 'light';
+    </script>
+    <link rel="stylesheet" href="./output-test.css">
+</head>
+<body>
+    <div id="app"></div>
+
+    <template id="button-row-template">
+        <section class="demo-card" :class="`demo-role--${role.key}`">
+            <div class="mb-5 flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-chrome-900">{{ role.name }}</h2>
+                    <p class="mt-1 text-sm text-chrome-600">{{ role.description }}</p>
+                </div>
+                <span class="rounded-full bg-chrome-100 px-2.5 py-1 text-xs font-medium text-chrome-600">semantic role</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button class="demo-button demo-button--solid" type="button">Solid</button>
+                <button class="demo-button demo-button--tonal" type="button">Tonal</button>
+                <button class="demo-button demo-button--outline" type="button">Outlined</button>
+                <button class="demo-button demo-button--plain" type="button">Plain</button>
+            </div>
+        </section>
+    </template>
+
+    <template id="alert-template">
+        <article class="demo-alert" :class="`demo-alert--${alert.key}`">
+            <div class="flex gap-3">
+                <span class="mt-0.5 text-lg" aria-hidden="true">{{ alert.icon }}</span>
+                <div>
+                    <h3 class="font-bold">{{ alert.title }}</h3>
+                    <p class="mt-1 text-sm leading-6 opacity-80">{{ alert.message }}</p>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <template id="app-template">
+        <main class="demo-page">
+            <div class="demo-shell">
+                <header class="mb-8 border-b border-chrome-200 pb-8">
+                    <p class="text-sm font-semibold uppercase tracking-widest text-primary-600">Tailwind semantic roles</p>
+                    <h1 class="mt-2 text-3xl font-bold tracking-tight text-chrome-950">Action and feedback palette</h1>
+                    <p class="mt-3 max-w-3xl text-chrome-600">The palette names describe intent. Chrome stays neutral for the page, cards, separators, and metadata; actions and feedback use primary, info, success, warn, and danger.</p>
+                </header>
+                <div class="mb-6 flex justify-end">
+                    <button class="demo-theme-toggle" type="button" :aria-pressed="darkMode" @click="toggleTheme">
+                        <span aria-hidden="true">{{ darkMode ? '☀' : '☾' }}</span>
+                        {{ darkMode ? 'Light theme' : 'Dark theme' }}
+                    </button>
+                </div>
+
+                <section aria-labelledby="buttons-heading">
+                    <div class="mb-4">
+                        <h2 id="buttons-heading" class="text-xl font-bold text-chrome-900">Button treatments</h2>
+                        <p class="mt-1 text-sm text-chrome-600">The same four treatments work for every semantic role.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                        <button-row v-for="role in roles" :key="role.key" :role="role"></button-row>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="alerts-heading">
+                    <div class="mb-4">
+                        <h2 id="alerts-heading" class="text-xl font-bold text-chrome-900">Feedback</h2>
+                        <p class="mt-1 text-sm text-chrome-600">Alerts use the same role token family without borrowing chrome colors.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <demo-alert v-for="alert in alerts" :key="alert.key" :alert="alert"></demo-alert>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="nested-theme-heading">
+                    <div class="mb-4">
+                        <h2 id="nested-theme-heading" class="text-xl font-bold text-chrome-900">Scoped opposite theme</h2>
+                        <p class="mt-1 text-sm text-chrome-600">This card resolves its own theme tokens without changing the surrounding page.</p>
+                    </div>
+                    <article class="demo-card demo-role--info" :data-cad-theme="darkMode ? 'light' : 'dark'">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <p class="text-sm font-semibold uppercase tracking-widest text-[var(--cad-tone-info-soft-fg)]">Nested theme boundary</p>
+                                <h3 class="mt-1 text-lg font-bold text-chrome-950">{{ darkMode ? 'Light' : 'Dark' }} card inside the {{ darkMode ? 'dark' : 'light' }} page</h3>
+                                <p class="mt-2 max-w-2xl text-sm leading-6 text-chrome-600">Its chrome, surface, text, semantic button treatment, and native controls inherit from this card’s <code>data-cad-theme</code> boundary.</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="demo-button demo-button--tonal" type="button">Tonal action</button>
+                                <button class="demo-button demo-button--outline" type="button">Outlined action</button>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="mt-10" aria-labelledby="padding-heading">
+                    <div class="mb-4">
+                        <h2 id="padding-heading" class="text-xl font-bold text-chrome-900">Layout flexibility</h2>
+                        <p class="mt-1 text-sm text-chrome-600">The component owns its themed surface; page markup chooses the spacing appropriate to its layout.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-3">
+                        <article class="demo-card">
+                            <p class="text-sm font-semibold text-chrome-900">Default padding</p>
+                            <p class="mt-2 text-sm leading-6 text-chrome-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+                        </article>
+                        <article class="demo-card p-8">
+                            <p class="text-sm font-semibold text-chrome-900">Larger padding</p>
+                            <p class="mt-2 text-sm leading-6 text-chrome-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+                        </article>
+                        <article class="demo-card p-12">
+                            <p class="text-sm font-semibold text-chrome-900">Large padding</p>
+                            <p class="mt-2 text-sm leading-6 text-chrome-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </template>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            template: '#app-template',
+            components: {
+                'button-row': { template: '#button-row-template', props: ['role'] },
+                'demo-alert': { template: '#alert-template', props: ['alert'] }
+            },
+            data: () => ({
+                darkMode: false,
+                roles: [
+                    { key: 'primary', name: 'Primary', description: 'The default action in a workflow.' },
+                    { key: 'info', name: 'Info', description: 'Helpful or contextual actions.' },
+                    { key: 'success', name: 'Success', description: 'Confirmation and positive outcomes.' },
+                    { key: 'warn', name: 'Warning', description: 'Proceed with care or review needed.' },
+                    { key: 'danger', name: 'Danger', description: 'Destructive or irreversible actions.' }
+                ],
+                alerts: [
+                    { key: 'info', icon: 'i', title: 'New information', message: 'A newer version of this template is available.' },
+                    { key: 'success', icon: '✓', title: 'Changes saved', message: 'Your settings were saved successfully.' },
+                    { key: 'warn', icon: '!', title: 'Review required', message: 'Two fields need attention before you can continue.' },
+                    { key: 'danger', icon: '×', title: 'Action failed', message: 'We could not complete the requested operation.' }
+                ]
+            }),
+            mounted() {
+                this.darkMode = document.documentElement.dataset.cadTheme === 'dark';
+            },
+            methods: {
+                toggleTheme() {
+                    this.darkMode = !this.darkMode;
+                    document.documentElement.dataset.cadTheme = this.darkMode ? 'dark' : 'light';
+                    localStorage.setItem('semantic-demo-theme', this.darkMode ? 'dark' : 'light');
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
