@@ -338,6 +338,7 @@
 
   .demo-button {
     @apply inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    @apply cursor-pointer;
   }
 
   .demo-button--solid {
@@ -446,7 +447,7 @@
  */
 .cad-input,
 .cad-select {
-  @apply w-full rounded-lg px-3 py-2 text-sm transition focus:border-[var(--cad-tone-primary-soft-border)] focus:outline-none focus:ring-2 focus:ring-[var(--cad-tone-primary-soft-border)];
+  @apply w-full rounded-md px-3 py-2 text-sm transition focus:border-[var(--cad-tone-primary-soft-border)] focus:outline-none focus:ring-2 focus:ring-[var(--cad-tone-primary-soft-border)];
   border-color: var(--cad-color-border);
   color: var(--cad-color-text);
 }
@@ -482,4 +483,23 @@
 
 .cad-checkbox--filled {
   background: var(--cad-color-surface-soft);
+}
+
+.demo-button[disabled],
+.cad-input[disabled],
+.cad-select[disabled],
+.cad-checkbox[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.cad-disabled {
+  opacity: 0.55;
+}
+
+.cad-input[disabled],
+.cad-select[disabled] {
+  border-color: color-mix(in oklch, var(--cad-color-border) 65%, transparent);
+  background: color-mix(in oklch, var(--cad-color-surface-soft) 65%, transparent);
+  color: color-mix(in oklch, var(--cad-color-text) 65%, transparent);
 }
