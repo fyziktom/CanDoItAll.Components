@@ -188,6 +188,24 @@ Custom components have states and reuse, so their CSS should use
 utilities or semantic scale steps. Keep focus indicators semantic and visibly
 contrasting in both production themes.
 
+## Native form controls
+
+The demo uses [@tailwindcss/forms](https://github.com/tailwindlabs/tailwindcss-forms)
+as an opt-in reset with its `class` strategy. Markup composes the plugin base
+with the semantic CAD class:
+
+```html
+<input class="form-input cad-input cad-input--outlined">
+<select class="form-select cad-select cad-select--filled">...</select>
+<input class="form-checkbox cad-checkbox cad-checkbox--outlined" type="checkbox">
+```
+
+`cad-input`, `cad-select`, and `cad-checkbox` own the theme-aware surface,
+border, text, and focus treatments. The forms plugin emits its `.form-*`
+classes outside cascade layers, so CAD overrides must also remain unlayered and
+appear later in the stylesheet; a rule in `@layer components` loses to the
+plugin regardless of source order. Do not solve this with `!important`.
+
 ## JavaScript and canvas consumers
 
 CSS custom properties are not a practical palette API for canvas, WebGL, or

@@ -118,6 +118,51 @@
                         </article>
                     </div>
                 </section>
+
+                <section class="mt-10" aria-labelledby="forms-heading">
+                    <div class="mb-4">
+                        <h2 id="forms-heading" class="text-xl font-bold text-chrome-900">Semantic form controls</h2>
+                        <p class="mt-1 text-sm text-chrome-600">The forms plugin supplies the opt-in reset; CAD classes supply the theme-aware surface, border, text, and focus treatment.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <form class="demo-card space-y-4" @submit.prevent>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="outlined-email">Outlined input</label>
+                                <input id="outlined-email" class="form-input cad-input cad-input--outlined" type="email" placeholder="you@example.com">
+                            </div>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="outlined-role">Outlined select</label>
+                                <select id="outlined-role" class="form-select cad-select cad-select--outlined">
+                                    <option>Choose a role</option>
+                                    <option>Designer</option>
+                                    <option>Developer</option>
+                                </select>
+                            </div>
+                            <label class="flex items-center gap-2 text-sm text-chrome-700">
+                                <input class="form-checkbox cad-checkbox cad-checkbox--outlined" type="checkbox" checked>
+                                Send product updates
+                            </label>
+                        </form>
+                        <form class="demo-card space-y-4" @submit.prevent>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="filled-name">Filled input</label>
+                                <input id="filled-name" class="form-input cad-input cad-input--filled" type="text" value="Ada Lovelace">
+                            </div>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="filled-team">Filled select</label>
+                                <select id="filled-team" class="form-select cad-select cad-select--filled">
+                                    <option>Platform team</option>
+                                    <option>Product team</option>
+                                    <option>Design team</option>
+                                </select>
+                            </div>
+                            <label class="flex items-center gap-2 text-sm text-chrome-700">
+                                <input class="form-checkbox cad-checkbox cad-checkbox--filled" type="checkbox">
+                                Enable weekly summary
+                            </label>
+                        </form>
+                    </div>
+                </section>
             </div>
         </main>
     </template>

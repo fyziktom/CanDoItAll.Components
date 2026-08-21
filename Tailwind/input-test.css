@@ -5,6 +5,10 @@
 
 @tailwind utilities;
 
+@plugin "@tailwindcss/forms" {
+  strategy: "class";
+}
+
 @source "../assets/test.html";
 
 /*CUSTOM COLORS, Should not be used directly*/
@@ -210,6 +214,7 @@
     color-scheme: light;
 
     --cad-color-surface: var(--color-white);
+    --cad-color-surface-soft: var(--color-chrome-100);
     --cad-color-border: var(--color-chrome-400);
     --cad-color-text: var(--color-chrome-900);
 
@@ -271,6 +276,7 @@
     --color-chrome-950: var(--color-neutral-50);
 
     --cad-color-surface: var(--color-chrome-100);
+    --cad-color-surface-soft: var(--color-chrome-200);
     --cad-color-border: var(--color-chrome-400);
     --cad-color-text: var(--color-chrome-900);
 
@@ -432,4 +438,48 @@
   .demo-theme-toggle {
     @apply inline-flex items-center gap-2 rounded-lg border border-chrome-300 bg-chrome-100 px-3 py-2 text-sm font-semibold text-chrome-800 transition hover:bg-chrome-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chrome-500;
   }
+}
+
+/*
+ * `@tailwindcss/forms` emits unlayered `.form-*` classes. These overrides must
+ * remain unlayered too; otherwise the plugin wins by cascade-layer precedence.
+ */
+.cad-input,
+.cad-select {
+  @apply w-full rounded-lg px-3 py-2 text-sm transition focus:border-[var(--cad-tone-primary-soft-border)] focus:outline-none focus:ring-2 focus:ring-[var(--cad-tone-primary-soft-border)];
+  border-color: var(--cad-color-border);
+  color: var(--cad-color-text);
+}
+
+.cad-select {
+  appearance: auto;
+  background-image: none;
+}
+
+.cad-input::placeholder {
+  color: var(--color-chrome-500);
+}
+
+.cad-input--outlined,
+.cad-select--outlined {
+  background: var(--cad-color-surface);
+}
+
+.cad-input--filled,
+.cad-select--filled {
+  background: var(--cad-color-surface-soft);
+}
+
+.cad-checkbox {
+  @apply size-4 rounded border transition focus:ring-2 focus:ring-[var(--cad-tone-primary-soft-border)];
+  border-color: var(--cad-color-border);
+  color: var(--cad-tone-primary-solid-bg);
+}
+
+.cad-checkbox--outlined {
+  background: var(--cad-color-surface);
+}
+
+.cad-checkbox--filled {
+  background: var(--cad-color-surface-soft);
 }
