@@ -154,8 +154,18 @@
             methods: {
                 toggleTheme() {
                     this.darkMode = !this.darkMode;
-                    document.documentElement.dataset.cadTheme = this.darkMode ? 'dark' : 'light';
-                    localStorage.setItem('semantic-demo-theme', this.darkMode ? 'dark' : 'light');
+                    const theme = this.darkMode ? 'dark' : 'light';
+                    const root = document.documentElement;
+
+                    root.classList.add('demo-theme-switching');
+                    requestAnimationFrame(() => {
+                        root.dataset.cadTheme = theme;
+                        localStorage.setItem('semantic-demo-theme', theme);
+
+                        requestAnimationFrame(() => {
+                            root.classList.remove('demo-theme-switching');
+                        });
+                    });
                 }
             }
         }).mount('#app');
