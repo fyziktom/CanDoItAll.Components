@@ -223,7 +223,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/culori@4.0.1/bundled/culori.min.js"></script>
 <script type="module">
-import { scale } from 'https://cdn.jsdelivr.net/npm/colorizr@5.1.1/+esm';
+import { getScaleStepKeys, scale } from 'https://cdn.jsdelivr.net/npm/colorizr@5.1.1/+esm';
 import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0/+esm';
 
 (() => {
@@ -262,7 +262,47 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
             chromaCurve: { low: 0.75, high: 0.83 },
             hueShift: 0
         },
-        'oklch(80% .17 186)'
+        'oklch(80% .17 186)',
+        // https://www.tailwindhues.com/
+        [
+            'oklch(98.667% 0.02187 91.619)',
+            'oklch(95.696% 0.06561 90.652)',
+            'oklch(91.392% 0.13321 90.781)',
+            'oklch(86.387% 0.18882 86.64)',
+            'oklch(80.949% 0.1953 76.241)',
+            'oklch(74.545% 0.19823 60.856)',
+            'oklch(64.726% 0.19717 49.071)',
+            'oklch(54.02% 0.18143 42.922)',
+            'oklch(46.292% 0.15021 41.236)',
+            'oklch(40.896% 0.11861 40.939)',
+            'oklch(27.9% 0.077 40.67)',
+        ],
+        [
+            'oklch(98.4% 0.014 195.96)',
+            'oklch(95.657% 0.05091 196.04)',
+            'oklch(91.714% 0.09582 195.66)',
+            'oklch(86.572% 0.13773 196.31)',
+            'oklch(79.129% 0.15164 197.15)',
+            'oklch(72.186% 0.13955 197.74)',
+            'oklch(62.143% 0.11746 199.94)',
+            'oklch(52.707% 0.0956 201.63)',
+            'oklch(44.772% 0.07773 203.45)',
+            'oklch(39.136% 0.06287 203.65)',
+            'oklch(27.7% 0.046 207.76)'
+        ],
+        [
+            'oklch(98.365% 0.01873 203.88)',
+            'oklch(92.721% 0.04758 211.15)',
+            'oklch(85.942% 0.08517 212.8)',
+            'oklch(81.462% 0.13152 214.84)',
+            'oklch(74.582% 0.15788 219.29)',
+            'oklch(67.901% 0.14623 222.98)',
+            'oklch(58.021% 0.12858 229.49)',
+            'oklch(49.841% 0.10694 230.89)',
+            'oklch(43.561% 0.08629 232.05)',
+            'oklch(39.08% 0.07065 235.16)',
+            'oklch(30.2% 0.056 237.46)'
+        ]
     ];
     const customScaleOptions = { lock: 500 };
     // Concrete palette from Tailwind/node_modules/tailwindcss/dist/colors.mjs.
@@ -350,15 +390,21 @@ import { colornames } from 'https://cdn.jsdelivr.net/npm/color-name-list@14.47.0
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
 
-    const normalizeCustomColor = customColor => typeof customColor === 'string'
-        ? { color: customColor }
-        : customColor;
+    const normalizeCustomColor = customColor => {
+        if (typeof customColor === 'string') return { color: customColor };
+        if (Array.isArray(customColor)) return { colors: customColor };
+        return customColor;
+    };
 
     const customPalette = customColors.flatMap((customColor, paletteIndex) => {
-        const { color, ...scaleOptions } = normalizeCustomColor(customColor);
-        const customScale = scale(color, { ...customScaleOptions, ...scaleOptions, format: 'oklch' });
-        const customPaletteName = toCustomPropertyName(findClosestColorName(customScale[500]));
+        const { color, colors, ...scaleOptions } = normalizeCustomColor(customColor);
+        const customScale = colors
+            ? Object.fromEntries(getScaleStepKeys(colors.length).map((shade, index) => [shade, colors[index]]))
+            : scale(color, { ...customScaleOptions, ...scaleOptions, format: 'oklch' });
+        const paletteColor = customScale[500] ?? colors?.[Math.floor(colors.length / 2)];
+        const customPaletteName = toCustomPropertyName(findClosestColorName(paletteColor));
         const scaleLabel = scaleLetter(paletteIndex).toLowerCase();
+
         return Object.entries(customScale).map(([shade, value], shadeIndex) => ({
             name: `cus-${customPaletteName}-${shade}`,
             value,
