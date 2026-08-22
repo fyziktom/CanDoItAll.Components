@@ -24,18 +24,18 @@
                 <span class="rounded-full bg-chrome-100 px-2.5 py-1 text-xs font-medium text-chrome-600">semantic role</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <div><button class="ui-button ui-button--solid ui-button--pill ui-button--compact" type="button"><span class="ui-icon text-2xl" aria-hidden="true">search</span></button></div>
-                <div><button class="ui-button ui-button--outline ui-button--compact" type="button"><span class="ui-icon text-md" aria-hidden="true">search</span></button></div>
-                <div><button class="ui-button ui-button--solid ui-button--pill min-w-20" type="button">Solid</button></div>
-                <div><button class="ui-button ui-button--tonal ui-button--compact" type="button">Tonal</button></div>
-                <div><button class="ui-button ui-button--outline ui-button--dense" type="button">Outlined</button></div>
-                <div><button class="ui-button ui-button--plain ui-button--dense" type="button">Plain</button></div>
+                <div><button class="ui-ripple ui-button ui-button--solid ui-button--pill ui-button--compact" type="button"><span class="ui-icon text-2xl" aria-hidden="true">search</span></button></div>
+                <div><button class="ui-ripple ui-button ui-button--outline ui-button--compact" type="button"><span class="ui-icon text-md" aria-hidden="true">search</span></button></div>
+                <div><button class="ui-ripple ui-button ui-button--solid ui-button--pill min-w-20" type="button">Solid</button></div>
+                <div><button class="ui-ripple ui-button ui-button--tonal ui-button--compact" type="button">Tonal</button></div>
+                <div><button class="ui-ripple ui-button ui-button--outline ui-button--dense" type="button">Outlined</button></div>
+                <div><button class="ui-ripple ui-button ui-button--plain ui-button--dense" type="button">Plain</button></div>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <div><button class="ui-button ui-button--solid ui-button--rounded" type="button" disabled>Disabled</button></div>
-                <div><button class="ui-button ui-button--tonal" type="button" disabled>Disabled</button></div>
-                <div><button class="ui-button ui-button--outline" type="button" disabled>Disabled</button></div>
-                <div><button class="ui-button ui-button--plain" type="button" disabled>Disabled</button></div>
+                <div><button class="ui-ripple ui-button ui-button--solid ui-button--rounded" type="button" disabled>Disabled</button></div>
+                <div><button class="ui-ripple ui-button ui-button--tonal" type="button" disabled>Disabled</button></div>
+                <div><button class="ui-ripple ui-button ui-button--outline" type="button" disabled>Disabled</button></div>
+                <div><button class="ui-ripple ui-button ui-button--plain" type="button" disabled>Disabled</button></div>
             </div>
         </section>
     </template>
@@ -62,7 +62,7 @@
                 </header>
 
                 <div class="mb-6 flex justify-end">
-                    <button class="ui-button ui-button--outline role--primary" type="button" :aria-pressed="darkMode" @click="toggleTheme">
+                    <button class="ui-ripple ui-button ui-button--outline role--primary" type="button" :aria-pressed="darkMode" @click="toggleTheme">
                         <span class="ui-icon mr-2" aria-hidden="true">{{ darkMode ? 'light_mode' : 'dark_mode' }}</span>
                         {{ darkMode ? 'Light theme' : 'Dark theme' }}
                     </button>
@@ -387,6 +387,19 @@
                 window.addEventListener('keydown', ({key}) => {
                     if (key === 'd') this.toggleTheme();
                 });
+                this.rippleClickHandler = (event) => {
+                    const button = event.target.closest('.ui-ripple:not(:disabled)');
+                    if (!button) return;
+
+                    button.classList.remove('is-rippling');
+                    void button.offsetWidth;
+                    button.classList.add('is-rippling');
+                    setTimeout(() => button.classList.remove('is-rippling'), 500)
+                };
+                document.addEventListener('click', this.rippleClickHandler);
+            },
+            beforeUnmount() {
+                document.removeEventListener('click', this.rippleClickHandler);
             },
             methods: {
                 toggleTheme() {

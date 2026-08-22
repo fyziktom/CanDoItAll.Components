@@ -577,7 +577,7 @@
   }
 
   .ui-button--plain {
-    @apply text-(--role-text) hover:bg-(--role-soft) focus-visible:outline---role-strong)  active:bg-(--role-border)/20;
+    @apply text-(--role-text) hover:bg-(--role-soft) focus-visible:outline-(--role-strong) active:bg-(--role-border)/20;
   }
 
   /* Alert */
@@ -733,5 +733,36 @@
   .ui-no-transition *::before,
   .ui-no-transition *::after {
     transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Ripple */
+
+.ui-ripple {
+  --ripple-color: var(--role-strong);
+  --ripple-growth: 12px;
+  position: relative;
+}
+
+/* based on https://github.com/Jackthomsonn/ripples */
+.ui-ripple.is-rippling::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: inherit;
+  pointer-events: none;
+  animation: ui-ripple 0.5s ease-out;
+}
+
+@keyframes ui-ripple {
+  0% {
+    box-shadow: 0 0 0 1px var(--ripple-color);
+    opacity: .8;
+  }
+
+  100% {
+    box-shadow: 0 0 0 var(--ripple-growth) var(--ripple-color);
+    opacity: 0;
   }
 }
