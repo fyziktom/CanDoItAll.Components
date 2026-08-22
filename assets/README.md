@@ -334,3 +334,6 @@ HTML, while the card’s surface, border, and text remain component tokens.
    - Create one Sandbox page will all simple components and variations, no side menu, no toolbar, no canvas components.
    - Create script watching the page and taking snapshot, save when changed, modify linked resources to have it standalone / cdn page, consume new css TW output.
    - Adjust the styles for the exported page with IDE or vite hot reload.
+6. Migrate JS component CSS styles to TW, shared @theme
+7. Move JS component color definition to shared js/json config
+8. Make build time CSS -> JS sync script
