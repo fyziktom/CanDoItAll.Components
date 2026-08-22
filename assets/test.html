@@ -215,6 +215,66 @@
 
                 </section>
 
+                <section class="mt-10" aria-labelledby="typography-heading">
+                    <div class="mb-4">
+                        <h2 id="typography-heading" class="text-xl font-bold text-chrome-900">Typography</h2>
+                        <p class="mt-1 max-w-3xl text-sm text-chrome-600">The @tailwindcss/typography plugin takes all of its colors from the active chrome theme. The same <code class="font-mono">prose prose-theme</code> class is used in light and dark modes.</p>
+                    </div>
+
+                    <article class="grid gap-6 lg:grid-cols-2">
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Headings</h3>
+                            <div class="demo-card prose prose-theme max-w-none flex-1">
+                                <h1>H1 heading</h1>
+                                <h2>H2 heading</h2>
+                                <h3>H3 heading</h3>
+                                <h4>H4 heading</h4>
+                                <h5>H5 heading</h5>
+                                <p>A paragraph establishes the standard reading rhythm for rich content.</p>
+                                <small>Small text is available for supporting detail and metadata.</small>
+                            </div>
+                        </section>
+
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Inline markup</h3>
+                            <div class="demo-card prose prose-theme max-w-none flex-1">
+                                <p>Chrome supplies the surrounding UI and content foregrounds. <a href="#typography-heading">Links</a> stay intentionally understated, while <strong>strong text remains clear</strong> in either theme.</p>
+                                <p><em>Emphasis</em>, <mark>highlighted text</mark>, <del>deleted text</del>, and <code>--tw-prose-body</code> retain their native meaning.</p>
+                                <p>Use <kbd>⌘</kbd> + <kbd>K</kbd> to open the command palette.</p>
+                            </div>
+                        </section>
+
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Lists</h3>
+                            <div class="demo-card prose prose-theme max-w-none flex-1">
+                                <p>Unordered and ordered lists.</p>
+                                <ul>
+                                    <li>Semantic chrome colors drive ordinary reading content.</li>
+                                    <li>Theme scopes replace the values, not the markup.</li>
+                                </ul>
+                                <ol>
+                                    <li>Write normal HTML.</li>
+                                    <li>Apply <code>.prose</code> at the content boundary.</li>
+                                </ol>
+                            </div>
+                        </section>
+
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Code, and data</h3>
+                            <div class="demo-card prose prose-theme max-w-none flex-1">
+                                <pre><code>const proseTheme = {
+  palette: "chrome",
+  invert: false,
+};</code></pre>
+                                <table>
+                                    <thead><tr><th>Token</th><th>Role</th></tr></thead>
+                                    <tbody><tr><td><code>--tw-prose-body</code></td><td>Reading text</td></tr><tr><td><code>--tw-prose-headings</code></td><td>Headings</td></tr></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </article>
+                </section>
+
                 <section class="mt-10" aria-labelledby="nested-theme-heading">
                     <div class="mb-4">
                         <h2 id="nested-theme-heading" class="text-xl font-bold text-chrome-900">Scoped opposite theme</h2>

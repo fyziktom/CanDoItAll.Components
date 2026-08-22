@@ -206,6 +206,27 @@ classes outside cascade layers, so CAD overrides must also remain unlayered and
 appear later in the stylesheet; a rule in `@layer components` loses to the
 plugin regardless of source order. Do not solve this with `!important`.
 
+## Typography proof
+
+The experiment loads **Noto Sans** and **Noto Sans Mono** from Google Fonts,
+then assigns them to Tailwind’s `--font-sans` and `--font-mono` theme tokens.
+That makes `font-sans` and `font-mono` available to the demo and ensures code
+within `@tailwindcss/typography` uses the same mono face.
+
+The typography plugin is enabled in `input-test.css`. Its full normal prose
+contract is defined explicitly in both the light and dark `data-cad-theme`
+scopes: `--tw-prose-body`, headings, lead, links, bold text, lists, rules,
+quotes, captions, keyboard keys, inline and block code, and table borders.
+They resolve from the local `chrome` scale; dark mode remaps the ordinary
+variables directly, including the code-block foreground and background.
+
+Consequently content needs only `class="prose"` (and normally
+`max-w-none` inside a card). Do not add `prose-invert`: that modifier activates
+the plugin’s separate invert variable family, which this prototype deliberately
+does not use. The typography section in [`test.html`](./test.html) includes
+light/dark-safe specimens for prose, headings, links, lists, blockquotes,
+inline code, code blocks, and tables.
+
 ## JavaScript and canvas consumers
 
 CSS custom properties are not a practical palette API for canvas, WebGL, or

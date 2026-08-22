@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Mono:wght@100..900&display=swap");
+
 @layer theme, base, components, utilities;
 
 @import "tailwindcss/theme.css" layer(theme);
@@ -9,10 +11,15 @@
   strategy: "class";
 }
 
+@plugin "@tailwindcss/typography";
+
 @source "../assets/test.html";
 
 /*CUSTOM COLORS, Should not be used directly*/
 @theme {
+  --font-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Noto Sans Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
   --cus-lavender-blue-50: oklch(97.0% 0.016 274.0);
   --cus-lavender-blue-100: oklch(94.5% 0.029 274.0);
   --cus-lavender-blue-200: oklch(89.9% 0.054 274.0);
@@ -197,6 +204,32 @@
   --color-tertiary-950: var(--cus-photon-barrier-950);
 }
 
+@utility prose-theme {
+  /*
+   * Typography deliberately uses the normal prose variables in both modes.
+   * `chrome` reverses at a theme boundary, so `.prose` follows the active
+   * theme without coupling markup to Tailwind Typography's `prose-invert`.
+   */
+  --tw-prose-body: var(--color-chrome-700);
+  --tw-prose-headings: var(--color-chrome-950);
+  --tw-prose-lead: var(--color-chrome-600);
+  --tw-prose-links: var(--color-chrome-950);
+  --tw-prose-bold: var(--color-chrome-900);
+  --tw-prose-counters: var(--color-chrome-600);
+  --tw-prose-bullets: var(--color-chrome-400);
+  --tw-prose-hr: var(--color-chrome-200);
+  --tw-prose-quotes: var(--color-chrome-900);
+  --tw-prose-quote-borders: var(--color-chrome-300);
+  --tw-prose-captions: var(--color-chrome-600);
+  --tw-prose-kbd: var(--color-chrome-950);
+  --tw-prose-kbd-shadows: var(--color-chrome-400);
+  --tw-prose-code: var(--color-chrome-900);
+  --tw-prose-pre-code: var(--color-chrome-100);
+  --tw-prose-pre-bg: var(--color-chrome-800);
+  --tw-prose-th-borders: var(--color-chrome-300);
+  --tw-prose-td-borders: var(--color-chrome-200);
+}
+
 /*
  * Component recipes use semantic roles exclusively. `chrome` is deliberately
  * reserved for the page, cards, dividers, and other neutral UI structure.
@@ -213,7 +246,7 @@
   [data-cad-theme="light"] {
     color-scheme: light;
 
-    /*Required for theme nesting*/
+    /* Duplicate required for theme nesting */
     --color-chrome-50: var(--color-neutral-50);
     --color-chrome-100: var(--color-neutral-100);
     --color-chrome-200: var(--color-neutral-200);
@@ -335,7 +368,7 @@
   }
 
   .demo-page {
-    @apply min-h-screen bg-chrome-50 px-6 py-10 text-chrome-900 sm:px-10;
+    @apply min-h-screen bg-chrome-50 px-6 py-10 font-sans text-chrome-900 sm:px-10;
   }
 
   .demo-shell {
