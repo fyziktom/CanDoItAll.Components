@@ -24,10 +24,12 @@
                 <span class="rounded-full bg-chrome-100 px-2.5 py-1 text-xs font-medium text-chrome-600">semantic role</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
+                <div><button class="demo-button demo-button--solid demo-button--pill demo-button--compact" type="button"><span class="icon text-2xl" aria-hidden="true">search</span></button></div>
+                <div><button class="demo-button demo-button--outline demo-button--compact" type="button"><span class="icon text-md" aria-hidden="true">search</span></button></div>
                 <div><button class="demo-button demo-button--solid demo-button--pill min-w-20" type="button">Solid</button></div>
                 <div><button class="demo-button demo-button--tonal demo-button--compact" type="button">Tonal</button></div>
                 <div><button class="demo-button demo-button--outline demo-button--dense" type="button">Outlined</button></div>
-                <div><button class="demo-button demo-button--plain" type="button">Plain</button></div>
+                <div><button class="demo-button demo-button--plain demo-button--dense" type="button">Plain</button></div>
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <div><button class="demo-button demo-button--solid demo-button--rounded" type="button" disabled>Disabled</button></div>
@@ -41,7 +43,7 @@
     <template id="alert-template">
         <article class="demo-alert" :class="`demo-alert--${alert.key}`">
             <div class="flex gap-3 items-center">
-                <span class="material-symbols-rounded material-symbols-rounded--filled min-w-8 text-3xl" aria-hidden="true">{{ alert.icon }}</span>
+                <span class="icon icon--filled min-w-8 text-3xl" aria-hidden="true">{{ alert.icon }}</span>
                 <div>
                     <h3 class="font-bold">{{ alert.title }}</h3>
                     <p class="mt-1 text-sm leading-6 opacity-80">{{ alert.message }}</p>
@@ -61,7 +63,7 @@
 
                 <div class="mb-6 flex justify-end">
                     <button class="demo-theme-toggle" type="button" :aria-pressed="darkMode" @click="toggleTheme">
-                        <span class="material-symbols-rounded" aria-hidden="true">{{ darkMode ? 'light_mode' : 'dark_mode' }}</span>
+                        <span class="icon" aria-hidden="true">{{ darkMode ? 'light_mode' : 'dark_mode' }}</span>
                         {{ darkMode ? 'Light theme' : 'Dark theme' }}
                     </button>
                 </div>
@@ -295,8 +297,8 @@
                             <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
                                 <div v-for="icon in icons" :key="icon" class="flex min-w-0 items-center gap-4">
                                     <div class="flex shrink-0 items-center gap-2 text-chrome-900" aria-label="Outlined and filled icon">
-                                        <span class="material-symbols-rounded text-2xl [--cad-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
-                                        <span class="material-symbols-rounded material-symbols-rounded--filled text-2xl [--cad-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="icon text-2xl [--cad-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="icon icon--filled text-2xl [--cad-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
                                     </div>
                                     <code class="truncate font-mono text-xs text-chrome-600">{{ icon }}</code>
                                 </div>
@@ -313,8 +315,8 @@
                             <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                                 <div v-for="icon in icons" :key="icon" class="flex min-w-0 items-center gap-4">
                                     <div class="flex shrink-0 items-center gap-2 text-chrome-900" aria-label="Outlined and filled icon">
-                                        <span class="material-symbols-rounded text-5xl [--cad-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
-                                        <span class="material-symbols-rounded material-symbols-rounded--filled text-5xl [--cad-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="icon text-5xl [--cad-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="icon icon--filled text-5xl [--cad-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
                                     </div>
                                     <code class="truncate font-mono text-xs text-chrome-600">{{ icon }}</code>
                                 </div>
