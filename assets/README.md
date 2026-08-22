@@ -332,6 +332,7 @@ HTML, while the card’s surface, border, and text remain component tokens.
    chrome and surface tokens, preserving intentional visual-content colours.
 5. Speed up workflow:
    - Create one Sandbox page will all simple components and variations, no side menu, no toolbar, no canvas components.
+   - Priority components are listed in [../priority-components.json](../priority-components.json)
    - Create script watching the page and taking snapshot, save when changed, modify linked resources to have it standalone / cdn page, consume new css TW output.
    - Adjust the styles for the exported page with IDE or vite hot reload.
 6. Migrate JS component CSS styles to TW, shared @theme
