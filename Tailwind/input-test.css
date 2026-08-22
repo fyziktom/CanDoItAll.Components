@@ -1,3 +1,20 @@
+/**
+  Namespaces
+
+  --cus-          custom colors
+  --color-chrome- chrome colors
+  --color-        TailWind color utilities
+  --tw-prose-     TailWind typography plugin
+  --tone-         component colors
+  --ui-           component variables
+  --role-         role variables
+
+  .ui-            ui components
+  .role-          role settings
+  .form-          TailWind forms
+  .prose          TailWind typography
+ */
+
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Mono:wght@100..900&display=swap");
 
 @layer theme, base, components, utilities;
@@ -271,17 +288,10 @@
  * reserved for the page, cards, dividers, and other neutral UI structure.
  */
 @layer components {
-  .demo-theme-switching,
-  .demo-theme-switching *,
-  .demo-theme-switching *::before,
-  .demo-theme-switching *::after {
-    transition: none !important;
-  }
-
   :root,
-  [data-cad-theme="light"] {
+  [data-ui-theme="light"] {
     color-scheme: light;
-    --cad-symbol-grade: 0;
+    --ui-symbol-grade: 0;
 
     /* Duplicate required for theme nesting */
     --color-chrome-50: var(--color-neutral-50);
@@ -296,72 +306,72 @@
     --color-chrome-900: var(--color-neutral-900);
     --color-chrome-950: var(--color-neutral-950);
 
-    --cad-color-surface: var(--color-white);
-    --cad-color-surface-soft: var(--color-chrome-100);
-    --cad-color-border: var(--color-chrome-400);
-    --cad-color-text: var(--color-chrome-900);
+    --tone-surface: var(--color-white);
+    --tone-surface-soft: var(--color-chrome-100);
+    --tone-border: var(--color-chrome-400);
+    --tone-text: var(--color-chrome-900);
 
-    --cad-tone-primary-solid-bg: var(--color-primary-600);
-    --cad-tone-primary-solid-hover: var(--color-primary-700);
-    --cad-tone-primary-solid-fg: var(--color-white);
-    --cad-tone-primary-soft-bg: var(--color-primary-100);
-    --cad-tone-primary-soft-hover: var(--color-primary-200);
-    --cad-tone-primary-soft-border: var(--color-primary-700);
-    --cad-tone-primary-soft-fg: var(--color-primary-800);
+    --tone-primary-solid-bg: var(--color-primary-600);
+    --tone-primary-solid-hover: var(--color-primary-700);
+    --tone-primary-solid-fg: var(--color-white);
+    --tone-primary-soft-bg: var(--color-primary-100);
+    --tone-primary-soft-hover: var(--color-primary-200);
+    --tone-primary-soft-border: var(--color-primary-700);
+    --tone-primary-soft-fg: var(--color-primary-800);
 
-    --cad-tone-secondary-solid-bg: var(--color-secondary-600);
-    --cad-tone-secondary-solid-hover: var(--color-secondary-700);
-    --cad-tone-secondary-solid-fg: var(--color-white);
-    --cad-tone-secondary-soft-bg: var(--color-secondary-100);
-    --cad-tone-secondary-soft-hover: var(--color-secondary-200);
-    --cad-tone-secondary-soft-border: var(--color-secondary-700);
-    --cad-tone-secondary-soft-fg: var(--color-secondary-800);
+    --tone-secondary-solid-bg: var(--color-secondary-600);
+    --tone-secondary-solid-hover: var(--color-secondary-700);
+    --tone-secondary-solid-fg: var(--color-white);
+    --tone-secondary-soft-bg: var(--color-secondary-100);
+    --tone-secondary-soft-hover: var(--color-secondary-200);
+    --tone-secondary-soft-border: var(--color-secondary-700);
+    --tone-secondary-soft-fg: var(--color-secondary-800);
 
-    --cad-tone-tertiary-solid-bg: var(--color-tertiary-600);
-    --cad-tone-tertiary-solid-hover: var(--color-tertiary-700);
-    --cad-tone-tertiary-solid-fg: var(--color-white);
-    --cad-tone-tertiary-soft-bg: var(--color-tertiary-100);
-    --cad-tone-tertiary-soft-hover: var(--color-tertiary-200);
-    --cad-tone-tertiary-soft-border: var(--color-tertiary-700);
-    --cad-tone-tertiary-soft-fg: var(--color-tertiary-800);
+    --tone-tertiary-solid-bg: var(--color-tertiary-600);
+    --tone-tertiary-solid-hover: var(--color-tertiary-700);
+    --tone-tertiary-solid-fg: var(--color-white);
+    --tone-tertiary-soft-bg: var(--color-tertiary-100);
+    --tone-tertiary-soft-hover: var(--color-tertiary-200);
+    --tone-tertiary-soft-border: var(--color-tertiary-700);
+    --tone-tertiary-soft-fg: var(--color-tertiary-800);
 
-    --cad-tone-info-solid-bg: var(--color-info-600);
-    --cad-tone-info-solid-hover: var(--color-info-700);
-    --cad-tone-info-solid-fg: var(--color-white);
-    --cad-tone-info-soft-bg: var(--color-info-100);
-    --cad-tone-info-soft-hover: var(--color-info-200);
-    --cad-tone-info-soft-border: var(--color-info-900);
-    --cad-tone-info-soft-fg: var(--color-info-800);
+    --tone-info-solid-bg: var(--color-info-600);
+    --tone-info-solid-hover: var(--color-info-700);
+    --tone-info-solid-fg: var(--color-white);
+    --tone-info-soft-bg: var(--color-info-100);
+    --tone-info-soft-hover: var(--color-info-200);
+    --tone-info-soft-border: var(--color-info-900);
+    --tone-info-soft-fg: var(--color-info-800);
 
-    --cad-tone-success-solid-bg: var(--color-success-700);
-    --cad-tone-success-solid-hover: var(--color-success-800);
-    --cad-tone-success-solid-fg: var(--color-white);
-    --cad-tone-success-soft-bg: var(--color-success-100);
-    --cad-tone-success-soft-hover: var(--color-success-200);
-    --cad-tone-success-soft-border: var(--color-success-900);
-    --cad-tone-success-soft-fg: var(--color-success-900);
+    --tone-success-solid-bg: var(--color-success-700);
+    --tone-success-solid-hover: var(--color-success-800);
+    --tone-success-solid-fg: var(--color-white);
+    --tone-success-soft-bg: var(--color-success-100);
+    --tone-success-soft-hover: var(--color-success-200);
+    --tone-success-soft-border: var(--color-success-900);
+    --tone-success-soft-fg: var(--color-success-900);
 
-    --cad-tone-warn-solid-bg: var(--color-warn-600);
-    --cad-tone-warn-solid-hover: var(--color-warn-700);
-    --cad-tone-warn-solid-fg: var(--color-white);
-    --cad-tone-warn-soft-bg: var(--color-warn-100);
-    --cad-tone-warn-soft-hover: var(--color-warn-200);
-    --cad-tone-warn-soft-border: var(--color-warn-900);
-    --cad-tone-warn-soft-fg: var(--color-warn-900);
+    --tone-warn-solid-bg: var(--color-warn-600);
+    --tone-warn-solid-hover: var(--color-warn-700);
+    --tone-warn-solid-fg: var(--color-white);
+    --tone-warn-soft-bg: var(--color-warn-100);
+    --tone-warn-soft-hover: var(--color-warn-200);
+    --tone-warn-soft-border: var(--color-warn-900);
+    --tone-warn-soft-fg: var(--color-warn-900);
 
-    --cad-tone-danger-solid-bg: var(--color-danger-600);
-    --cad-tone-danger-solid-hover: var(--color-danger-700);
-    --cad-tone-danger-solid-fg: var(--color-white);
-    --cad-tone-danger-soft-bg: var(--color-danger-100);
-    --cad-tone-danger-soft-hover: var(--color-danger-200);
-    --cad-tone-danger-soft-border: var(--color-danger-900);
-    --cad-tone-danger-soft-fg: var(--color-danger-900);
+    --tone-danger-solid-bg: var(--color-danger-600);
+    --tone-danger-solid-hover: var(--color-danger-700);
+    --tone-danger-solid-fg: var(--color-white);
+    --tone-danger-soft-bg: var(--color-danger-100);
+    --tone-danger-soft-hover: var(--color-danger-200);
+    --tone-danger-soft-border: var(--color-danger-900);
+    --tone-danger-soft-fg: var(--color-danger-900);
   }
 
-  [data-cad-theme="dark"] {
+  [data-ui-theme="dark"] {
     color-scheme: dark;
     /* A positive grade restores some perceived stroke weight on dark surfaces. */
-    --cad-symbol-grade: -25;
+    --ui-symbol-grade: -25;
 
     /* Chrome is structural, so it inverts with the application surface. */
     --color-chrome-50: var(--color-neutral-950);
@@ -376,244 +386,254 @@
     --color-chrome-900: var(--color-neutral-100);
     --color-chrome-950: var(--color-neutral-50);
 
-    --cad-color-surface: var(--color-chrome-100);
-    --cad-color-surface-soft: var(--color-chrome-200);
-    --cad-color-border: var(--color-chrome-400);
-    --cad-color-text: var(--color-chrome-900);
+    --tone-surface: var(--color-chrome-100);
+    --tone-surface-soft: var(--color-chrome-200);
+    --tone-border: var(--color-chrome-400);
+    --tone-text: var(--color-chrome-900);
 
-    --cad-tone-primary-solid-bg: var(--color-primary-500);
-    --cad-tone-primary-solid-hover: var(--color-primary-400);
-    --cad-tone-primary-solid-fg: var(--color-white);
-    --cad-tone-primary-soft-bg: var(--color-primary-700);
-    --cad-tone-primary-soft-hover: var(--color-primary-600);
-    --cad-tone-primary-soft-border: var(--color-primary-500);
-    --cad-tone-primary-soft-fg: var(--color-primary-200);
+    --tone-primary-solid-bg: var(--color-primary-500);
+    --tone-primary-solid-hover: var(--color-primary-400);
+    --tone-primary-solid-fg: var(--color-white);
+    --tone-primary-soft-bg: var(--color-primary-700);
+    --tone-primary-soft-hover: var(--color-primary-600);
+    --tone-primary-soft-border: var(--color-primary-500);
+    --tone-primary-soft-fg: var(--color-primary-200);
 
-    --cad-tone-secondary-solid-bg: var(--color-secondary-500);
-    --cad-tone-secondary-solid-hover: var(--color-secondary-400);
-    --cad-tone-secondary-solid-fg: var(--color-white);
-    --cad-tone-secondary-soft-bg: var(--color-secondary-700);
-    --cad-tone-secondary-soft-hover: var(--color-secondary-600);
-    --cad-tone-secondary-soft-border: var(--color-secondary-500);
-    --cad-tone-secondary-soft-fg: var(--color-secondary-200);
+    --tone-secondary-solid-bg: var(--color-secondary-500);
+    --tone-secondary-solid-hover: var(--color-secondary-400);
+    --tone-secondary-solid-fg: var(--color-white);
+    --tone-secondary-soft-bg: var(--color-secondary-700);
+    --tone-secondary-soft-hover: var(--color-secondary-600);
+    --tone-secondary-soft-border: var(--color-secondary-500);
+    --tone-secondary-soft-fg: var(--color-secondary-200);
 
-    --cad-tone-tertiary-solid-bg: var(--color-tertiary-500);
-    --cad-tone-tertiary-solid-hover: var(--color-tertiary-400);
-    --cad-tone-tertiary-solid-fg: var(--color-white);
-    --cad-tone-tertiary-soft-bg: var(--color-tertiary-700);
-    --cad-tone-tertiary-soft-hover: var(--color-tertiary-600);
-    --cad-tone-tertiary-soft-border: var(--color-tertiary-500);
-    --cad-tone-tertiary-soft-fg: var(--color-tertiary-200);
+    --tone-tertiary-solid-bg: var(--color-tertiary-500);
+    --tone-tertiary-solid-hover: var(--color-tertiary-400);
+    --tone-tertiary-solid-fg: var(--color-white);
+    --tone-tertiary-soft-bg: var(--color-tertiary-700);
+    --tone-tertiary-soft-hover: var(--color-tertiary-600);
+    --tone-tertiary-soft-border: var(--color-tertiary-500);
+    --tone-tertiary-soft-fg: var(--color-tertiary-200);
 
-    --cad-tone-info-solid-bg: var(--color-info-500);
-    --cad-tone-info-solid-hover: var(--color-info-400);
-    --cad-tone-info-solid-fg: var(--color-white);
-    --cad-tone-info-soft-bg: var(--color-info-900);
-    --cad-tone-info-soft-hover: var(--color-info-800);
-    --cad-tone-info-soft-border: var(--color-info-700);
-    --cad-tone-info-soft-fg: var(--color-info-200);
+    --tone-info-solid-bg: var(--color-info-500);
+    --tone-info-solid-hover: var(--color-info-400);
+    --tone-info-solid-fg: var(--color-white);
+    --tone-info-soft-bg: var(--color-info-900);
+    --tone-info-soft-hover: var(--color-info-800);
+    --tone-info-soft-border: var(--color-info-700);
+    --tone-info-soft-fg: var(--color-info-200);
 
-    --cad-tone-success-solid-bg: var(--color-success-600);
-    --cad-tone-success-solid-hover: var(--color-success-500);
-    --cad-tone-success-solid-fg: var(--color-white);
-    --cad-tone-success-soft-bg: var(--color-success-900);
-    --cad-tone-success-soft-hover: var(--color-success-800);
-    --cad-tone-success-soft-border: var(--color-success-700);
-    --cad-tone-success-soft-fg: var(--color-success-200);
+    --tone-success-solid-bg: var(--color-success-600);
+    --tone-success-solid-hover: var(--color-success-500);
+    --tone-success-solid-fg: var(--color-white);
+    --tone-success-soft-bg: var(--color-success-900);
+    --tone-success-soft-hover: var(--color-success-800);
+    --tone-success-soft-border: var(--color-success-700);
+    --tone-success-soft-fg: var(--color-success-200);
 
-    --cad-tone-warn-solid-bg: var(--color-warn-500);
-    --cad-tone-warn-solid-hover: var(--color-warn-400);
-    --cad-tone-warn-solid-fg: var(--color-white);
-    --cad-tone-warn-soft-bg: var(--color-warn-900);
-    --cad-tone-warn-soft-hover: var(--color-warn-800);
-    --cad-tone-warn-soft-border: var(--color-warn-700);
-    --cad-tone-warn-soft-fg: var(--color-warn-200);
+    --tone-warn-solid-bg: var(--color-warn-500);
+    --tone-warn-solid-hover: var(--color-warn-400);
+    --tone-warn-solid-fg: var(--color-white);
+    --tone-warn-soft-bg: var(--color-warn-900);
+    --tone-warn-soft-hover: var(--color-warn-800);
+    --tone-warn-soft-border: var(--color-warn-700);
+    --tone-warn-soft-fg: var(--color-warn-200);
 
-    --cad-tone-danger-solid-bg: var(--color-danger-500);
-    --cad-tone-danger-solid-hover: var(--color-danger-400);
-    --cad-tone-danger-solid-fg: var(--color-white);
-    --cad-tone-danger-soft-bg: var(--color-danger-900);
-    --cad-tone-danger-soft-hover: var(--color-danger-800);
-    --cad-tone-danger-soft-border: var(--color-danger-700);
-    --cad-tone-danger-soft-fg: var(--color-danger-200);
+    --tone-danger-solid-bg: var(--color-danger-500);
+    --tone-danger-solid-hover: var(--color-danger-400);
+    --tone-danger-solid-fg: var(--color-white);
+    --tone-danger-soft-bg: var(--color-danger-900);
+    --tone-danger-soft-hover: var(--color-danger-800);
+    --tone-danger-soft-border: var(--color-danger-700);
+    --tone-danger-soft-fg: var(--color-danger-200);
   }
 
-  .demo-page {
-    @apply min-h-screen bg-chrome-50 px-6 py-10 font-sans text-chrome-900 sm:px-10;
+  /* Roles */
+
+  .role--primary {
+    --role-strong: var(--tone-primary-solid-bg);
+    --role-strong-hover: var(--tone-primary-solid-hover);
+    --role-strong-fg: var(--tone-primary-solid-fg);
+    --role-soft: var(--tone-primary-soft-bg);
+    --role-soft-hover: var(--tone-primary-soft-hover);
+    --role-border: var(--tone-primary-soft-border);
+    --role-text: var(--tone-primary-soft-fg);
   }
 
-  .demo-shell {
-    @apply mx-auto max-w-7xl;
+  .role--secondary {
+    --role-strong: var(--tone-secondary-solid-bg);
+    --role-strong-hover: var(--tone-secondary-solid-hover);
+    --role-strong-fg: var(--tone-secondary-solid-fg);
+    --role-soft: var(--tone-secondary-soft-bg);
+    --role-soft-hover: var(--tone-secondary-soft-hover);
+    --role-border: var(--tone-secondary-soft-border);
+    --role-text: var(--tone-secondary-soft-fg);
   }
 
-  .demo-card {
+  .role--tertiary {
+    --role-strong: var(--tone-tertiary-solid-bg);
+    --role-strong-hover: var(--tone-tertiary-solid-hover);
+    --role-strong-fg: var(--tone-tertiary-solid-fg);
+    --role-soft: var(--tone-tertiary-soft-bg);
+    --role-soft-hover: var(--tone-tertiary-soft-hover);
+    --role-border: var(--tone-tertiary-soft-border);
+    --role-text: var(--tone-tertiary-soft-fg);
+  }
+
+  .role--info {
+    --role-strong: var(--tone-info-solid-bg);
+    --role-strong-hover: var(--tone-info-solid-hover);
+    --role-strong-fg: var(--tone-info-solid-fg);
+    --role-soft: var(--tone-info-soft-bg);
+    --role-soft-hover: var(--tone-info-soft-hover);
+    --role-border: var(--tone-info-soft-border);
+    --role-text: var(--tone-info-soft-fg);
+  }
+
+  .role--success {
+    --role-strong: var(--tone-success-solid-bg);
+    --role-strong-hover: var(--tone-success-solid-hover);
+    --role-strong-fg: var(--tone-success-solid-fg);
+    --role-soft: var(--tone-success-soft-bg);
+    --role-soft-hover: var(--tone-success-soft-hover);
+    --role-border: var(--tone-success-soft-border);
+    --role-text: var(--tone-success-soft-fg);
+  }
+
+  .role--warn {
+    --role-strong: var(--tone-warn-solid-bg);
+    --role-strong-hover: var(--tone-warn-solid-hover);
+    --role-strong-fg: var(--tone-warn-solid-fg);
+    --role-soft: var(--tone-warn-soft-bg);
+    --role-soft-hover: var(--tone-warn-soft-hover);
+    --role-border: var(--tone-warn-soft-border);
+    --role-text: var(--tone-warn-soft-fg);
+  }
+
+  .role--danger {
+    --role-strong: var(--tone-danger-solid-bg);
+    --role-strong-hover: var(--tone-danger-solid-hover);
+    --role-strong-fg: var(--tone-danger-solid-fg);
+    --role-soft: var(--tone-danger-soft-bg);
+    --role-soft-hover: var(--tone-danger-soft-hover);
+    --role-border: var(--tone-danger-soft-border);
+    --role-text: var(--tone-danger-soft-fg);
+  }
+
+  /* HTML */
+
+  mark {
+    background-color: var(--color-warn-300);
+  }
+
+  /* Card */
+
+  .ui-card {
     @apply rounded-2xl border p-6;
-    border-color: var(--cad-color-border);
-    background: var(--cad-color-surface);
-    color: var(--cad-color-text);
+    border-color: var(--tone-border);
+    background: var(--tone-surface);
+    color: var(--tone-text);
   }
 
-  .demo-button {
+  /* Button */
+
+  .ui-button {
     @apply inline-flex items-center justify-center rounded-sm px-3 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50;
     @apply cursor-pointer;
   }
 
-  .demo-button.demo-button--pill {
+  .ui-button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .ui-button.ui-button--pill {
     @apply rounded-3xl;
   }
 
-  .demo-button.demo-button--rounded {
+  .ui-button.ui-button--rounded {
     @apply rounded-lg;
   }
 
-  .demo-button.demo-button--dense {
+  .ui-button.ui-button--dense {
     @apply px-1 py-0;
   }
 
-  .demo-button.demo-button--compact {
+  .ui-button.ui-button--compact {
     @apply px-2 py-1;
   }
 
-  .demo-button--solid {
-    @apply bg-[var(--button-strong)] text-[var(--button-strong-fg)] hover:bg-[var(--button-strong-hover)] focus-visible:outline-[var(--button-strong)] active:bg-[var(--button-strong)]/80;
+  .ui-button--solid {
+    @apply bg-[var(--role-strong)] text-[var(--role-strong-fg)] hover:bg-[var(--role-strong-hover)] focus-visible:outline-[var(--role-strong)] active:bg-[var(--role-strong)]/80;
   }
 
-  .demo-button--tonal {
-    @apply bg-[var(--button-soft)] text-[var(--button-text)] hover:bg-[var(--button-soft-hover)] focus-visible:outline-[var(--button-strong)] active:bg-[var(--button-strong)]/40;
+  .ui-button--tonal {
+    @apply bg-[var(--role-soft)] text-[var(--role-text)] hover:bg-[var(--role-soft-hover)] focus-visible:outline-[var(--role-strong)] active:bg-[var(--role-strong)]/40;
   }
 
-  .demo-button--outline {
-    @apply border border-[var(--button-border)]/80 text-[var(--button-text)] hover:bg-[var(--button-soft)] focus-visible:outline-[var(--button-strong)] active:bg-[var(--button-border)]/20;
-    background: color-mix(in oklch, var(--cad-color-surface) 65%, var(--button-soft));
+  .ui-button--outline {
+    @apply border border-[var(--role-border)]/30 text-[var(--role-text)] hover:bg-[var(--role-soft)] focus-visible:outline-[var(--role-strong)] active:bg-[var(--role-border)]/20;
+    background: color-mix(in oklch, var(--tone-surface) 65%, var(--role-soft));
   }
 
-  .demo-button--plain {
-    @apply text-[var(--button-text)] hover:bg-[var(--button-soft)] focus-visible:outline-[var(--button-strong)]  active:bg-[var(--button-border)]/20;
+  .ui-button--plain {
+    @apply text-[var(--role-text)] hover:bg-[var(--role-soft)] focus-visible:outline-[var(--role-strong)]  active:bg-[var(--role-border)]/20;
   }
 
-  .demo-alert {
+  /* Alert */
+
+  .ui-alert {
     @apply rounded-xl border p-4;
   }
 
-  .demo-role--primary {
-    --button-strong: var(--cad-tone-primary-solid-bg);
-    --button-strong-hover: var(--cad-tone-primary-solid-hover);
-    --button-strong-fg: var(--cad-tone-primary-solid-fg);
-    --button-soft: var(--cad-tone-primary-soft-bg);
-    --button-soft-hover: var(--cad-tone-primary-soft-hover);
-    --button-border: var(--cad-tone-primary-soft-border);
-    --button-text: var(--cad-tone-primary-soft-fg);
+  .ui-alert--primary {
+    border-color: var(--tone-primary-soft-border);
+    background: var(--tone-primary-soft-bg);
+    color: var(--tone-primary-soft-fg);
   }
 
-  .demo-role--secondary {
-    --button-strong: var(--cad-tone-secondary-solid-bg);
-    --button-strong-hover: var(--cad-tone-secondary-solid-hover);
-    --button-strong-fg: var(--cad-tone-secondary-solid-fg);
-    --button-soft: var(--cad-tone-secondary-soft-bg);
-    --button-soft-hover: var(--cad-tone-secondary-soft-hover);
-    --button-border: var(--cad-tone-secondary-soft-border);
-    --button-text: var(--cad-tone-secondary-soft-fg);
+  .ui-alert--secondary {
+    border-color: var(--tone-secondary-soft-border);
+    background: var(--tone-secondary-soft-bg);
+    color: var(--tone-secondary-soft-fg);
   }
 
-  .demo-role--tertiary {
-    --button-strong: var(--cad-tone-tertiary-solid-bg);
-    --button-strong-hover: var(--cad-tone-tertiary-solid-hover);
-    --button-strong-fg: var(--cad-tone-tertiary-solid-fg);
-    --button-soft: var(--cad-tone-tertiary-soft-bg);
-    --button-soft-hover: var(--cad-tone-tertiary-soft-hover);
-    --button-border: var(--cad-tone-tertiary-soft-border);
-    --button-text: var(--cad-tone-tertiary-soft-fg);
+  .ui-alert--tertiary {
+    border-color: var(--tone-tertiary-soft-border);
+    background: var(--tone-tertiary-soft-bg);
+    color: var(--tone-tertiary-soft-fg);
   }
 
-  .demo-role--info {
-    --button-strong: var(--cad-tone-info-solid-bg);
-    --button-strong-hover: var(--cad-tone-info-solid-hover);
-    --button-strong-fg: var(--cad-tone-info-solid-fg);
-    --button-soft: var(--cad-tone-info-soft-bg);
-    --button-soft-hover: var(--cad-tone-info-soft-hover);
-    --button-border: var(--cad-tone-info-soft-border);
-    --button-text: var(--cad-tone-info-soft-fg);
+  .ui-alert--info {
+    border-color: var(--tone-info-soft-border);
+    background: var(--tone-info-soft-bg);
+    color: var(--tone-info-soft-fg);
   }
 
-  .demo-role--success {
-    --button-strong: var(--cad-tone-success-solid-bg);
-    --button-strong-hover: var(--cad-tone-success-solid-hover);
-    --button-strong-fg: var(--cad-tone-success-solid-fg);
-    --button-soft: var(--cad-tone-success-soft-bg);
-    --button-soft-hover: var(--cad-tone-success-soft-hover);
-    --button-border: var(--cad-tone-success-soft-border);
-    --button-text: var(--cad-tone-success-soft-fg);
+  .ui-alert--success {
+    border-color: var(--tone-success-soft-border);
+    background: var(--tone-success-soft-bg);
+    color: var(--tone-success-soft-fg);
   }
 
-  .demo-role--warn {
-    --button-strong: var(--cad-tone-warn-solid-bg);
-    --button-strong-hover: var(--cad-tone-warn-solid-hover);
-    --button-strong-fg: var(--cad-tone-warn-solid-fg);
-    --button-soft: var(--cad-tone-warn-soft-bg);
-    --button-soft-hover: var(--cad-tone-warn-soft-hover);
-    --button-border: var(--cad-tone-warn-soft-border);
-    --button-text: var(--cad-tone-warn-soft-fg);
+  .ui-alert--warn {
+    border-color: var(--tone-warn-soft-border);
+    background: var(--tone-warn-soft-bg);
+    color: var(--tone-warn-soft-fg);
   }
 
-  .demo-role--danger {
-    --button-strong: var(--cad-tone-danger-solid-bg);
-    --button-strong-hover: var(--cad-tone-danger-solid-hover);
-    --button-strong-fg: var(--cad-tone-danger-solid-fg);
-    --button-soft: var(--cad-tone-danger-soft-bg);
-    --button-soft-hover: var(--cad-tone-danger-soft-hover);
-    --button-border: var(--cad-tone-danger-soft-border);
-    --button-text: var(--cad-tone-danger-soft-fg);
+  .ui-alert--danger {
+    border-color: var(--tone-danger-soft-border);
+    background: var(--tone-danger-soft-bg);
+    color: var(--tone-danger-soft-fg);
   }
 
-  .demo-alert--primary {
-    border-color: var(--cad-tone-primary-soft-border);
-    background: var(--cad-tone-primary-soft-bg);
-    color: var(--cad-tone-primary-soft-fg);
-  }
+  /* Icon */
 
-  .demo-alert--secondary {
-    border-color: var(--cad-tone-secondary-soft-border);
-    background: var(--cad-tone-secondary-soft-bg);
-    color: var(--cad-tone-secondary-soft-fg);
-  }
-
-  .demo-alert--tertiary {
-    border-color: var(--cad-tone-tertiary-soft-border);
-    background: var(--cad-tone-tertiary-soft-bg);
-    color: var(--cad-tone-tertiary-soft-fg);
-  }
-
-  .demo-alert--info {
-    border-color: var(--cad-tone-info-soft-border);
-    background: var(--cad-tone-info-soft-bg);
-    color: var(--cad-tone-info-soft-fg);
-  }
-
-  .demo-alert--success {
-    border-color: var(--cad-tone-success-soft-border);
-    background: var(--cad-tone-success-soft-bg);
-    color: var(--cad-tone-success-soft-fg);
-  }
-
-  .demo-alert--warn {
-    border-color: var(--cad-tone-warn-soft-border);
-    background: var(--cad-tone-warn-soft-bg);
-    color: var(--cad-tone-warn-soft-fg);
-  }
-
-  .demo-alert--danger {
-    border-color: var(--cad-tone-danger-soft-border);
-    background: var(--cad-tone-danger-soft-bg);
-    color: var(--cad-tone-danger-soft-fg);
-  }
-
-  .demo-theme-toggle {
-    @apply inline-flex items-center gap-2 rounded-lg border border-chrome-300 bg-chrome-100 px-3 py-2 text-sm font-semibold text-chrome-800 transition hover:bg-chrome-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chrome-500;
-  }
-
-  .icon {
+  .ui-icon {
     display: inline-block;
     direction: ltr;
+    /*noinspection CssNoGenericFontName*/
     font-family: "Material Symbols Rounded";
     font-size: 1em;
     font-style: normal;
@@ -626,80 +646,92 @@
     -webkit-font-feature-settings: "liga";
     -webkit-font-smoothing: antialiased;
     font-variation-settings:
-      "FILL" var(--cad-symbol-fill, 0),
-      "wght" var(--cad-symbol-weight, 300),
-      "GRAD" var(--cad-symbol-grade),
-      "opsz" var(--cad-symbol-optical-size, 24);
+      "FILL" var(--ui-symbol-fill, 0),
+      "wght" var(--ui-symbol-weight, 300),
+      "GRAD" var(--ui-symbol-grade),
+      "opsz" var(--ui-symbol-optical-size, 24);
   }
 
-  .icon--filled {
-    --cad-symbol-fill: 1;
+  .ui-icon--filled {
+    --ui-symbol-fill: 1;
   }
 }
+
+/* Forms */
 
 /*
- * `@tailwindcss/forms` emits unlayered `.form-*` classes. These overrides must
- * remain unlayered too; otherwise the plugin wins by cascade-layer precedence.
+  @tailwindcss/forms emits unlayered .form-* classes.
+  These overrides must remain unlayered too;
+  otherwise the plugin wins by cascade-layer precedence.
  */
-.cad-input,
-.cad-select {
-  @apply w-full rounded-md px-3 py-2 text-sm transition focus:border-[var(--cad-tone-primary-soft-border)] focus:outline-none focus:ring-2 focus:ring-[var(--cad-tone-primary-soft-border)];
-  border-color: var(--cad-color-border);
-  color: var(--cad-color-text);
+
+.ui-input,
+.ui-select {
+  @apply w-full rounded-md px-3 py-2 text-sm transition focus:border-[var(--tone-primary-soft-border)] focus:outline-none focus:ring-2 focus:ring-[var(--tone-primary-soft-border)];
+  border-color: var(--tone-border);
+  color: var(--tone-text);
 }
 
-.cad-select {
+.ui-select {
   appearance: auto;
   background-image: none;
 }
 
-.cad-input::placeholder {
+.ui-input::placeholder {
   color: var(--color-chrome-500);
 }
 
-.cad-input--outlined,
-.cad-select--outlined {
-  background: var(--cad-color-surface);
+.ui-input--outlined,
+.ui-select--outlined {
+  background: var(--tone-surface);
 }
 
-.cad-input--filled,
-.cad-select--filled {
-  background: var(--cad-color-surface-soft);
+.ui-input--filled,
+.ui-select--filled {
+  background: var(--tone-surface-soft);
 }
 
-.cad-checkbox {
-  @apply size-4 rounded border transition focus:ring-2 focus:ring-[var(--cad-tone-primary-soft-border)];
-  border-color: var(--cad-color-border);
-  color: var(--cad-tone-primary-solid-bg);
+.ui-checkbox {
+  @apply size-4 rounded border transition focus:ring-2 focus:ring-[var(--tone-primary-soft-border)];
+  border-color: var(--tone-border);
+  color: var(--tone-primary-solid-bg);
 }
 
-.cad-checkbox--outlined {
-  background: var(--cad-color-surface);
+.ui-checkbox--outlined {
+  background: var(--tone-surface);
 }
 
-.cad-checkbox--filled {
-  background: var(--cad-color-surface-soft);
+.ui-checkbox--filled {
+  background: var(--tone-surface-soft);
 }
 
-.demo-button[disabled],
-.cad-input[disabled],
-.cad-select[disabled],
-.cad-checkbox[disabled] {
+.ui-input[disabled],
+.ui-select[disabled],
+.ui-checkbox[disabled] {
   cursor: not-allowed;
   opacity: 0.55;
 }
 
-.cad-disabled {
-  opacity: 0.55;
+.ui-input[disabled],
+.ui-select[disabled] {
+  border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
+  background: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
+  color: color-mix(in oklch, var(--tone-text) 65%, transparent);
 }
 
-.cad-input[disabled],
-.cad-select[disabled] {
-  border-color: color-mix(in oklch, var(--cad-color-border) 65%, transparent);
-  background: color-mix(in oklch, var(--cad-color-surface-soft) 65%, transparent);
-  color: color-mix(in oklch, var(--cad-color-text) 65%, transparent);
-}
+@layer components {
+  /* Utility */
 
-mark {
-  background-color: var(--color-warn-300);
+  .ui-disabled {
+    opacity: 0.55;
+  }
+
+  /* Theme switching */
+
+  .ui-no-transition,
+  .ui-no-transition *,
+  .ui-no-transition *::before,
+  .ui-no-transition *::after {
+    transition: none !important;
+  }
 }

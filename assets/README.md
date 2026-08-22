@@ -14,6 +14,31 @@ Build the demo stylesheet once with:
 
 Or keep `npm --prefix Tailwind run watch:test` running while editing.
 
+## Demo naming and theme scopes
+
+The proof deliberately uses a small, self-contained UI vocabulary. It is not
+the production `--cad-*` API described below:
+
+- `data-ui-theme="light"` and `data-ui-theme="dark"` establish a theme
+  boundary, including `color-scheme` for native controls.
+- `--tone-*` tokens resolve the active theme's structural surface and semantic
+  palette values.
+- `.role--primary`, `.role--info`, and the other `.role--*` classes map one
+  semantic role to the generic `--role-*` values consumed by interactive
+  components.
+- `.ui-*` classes are the proof components: `.ui-card`, `.ui-button`,
+  `.ui-alert`, `.ui-input`, `.ui-select`, `.ui-checkbox`, `.ui-icon`, and
+  `.ui-disabled`.
+
+For example, a role is assigned at the component boundary while the button
+treatment stays reusable:
+
+```html
+<button class="ui-button ui-button--outline role--primary" type="button">
+  Save changes
+</button>
+```
+
 ## What production already does well
 
 [`foundation/theme.css`](../Tailwind/foundation/theme.css) already owns the
@@ -88,7 +113,7 @@ scales; they are component-facing CSS variables and should be consumed through
 --cad-tone-info-soft-fg: var(--color-info-800);
 ```
 
-The demo uses Tailwind's `--color-white` token for its white surface because
+The proof uses Tailwind's `--color-white` token for its white surface because
 the custom `chrome` scale begins at `50`; the surface is distinct from the
 neutral chrome ramp.
 
@@ -192,17 +217,17 @@ contrasting in both production themes.
 
 The demo uses [@tailwindcss/forms](https://github.com/tailwindlabs/tailwindcss-forms)
 as an opt-in reset with its `class` strategy. Markup composes the plugin base
-with the semantic CAD class:
+with a theme-aware proof class:
 
 ```html
-<input class="form-input cad-input cad-input--outlined">
-<select class="form-select cad-select cad-select--filled">...</select>
-<input class="form-checkbox cad-checkbox cad-checkbox--outlined" type="checkbox">
+<input class="form-input ui-input ui-input--outlined">
+<select class="form-select ui-select ui-select--filled">...</select>
+<input class="form-checkbox ui-checkbox ui-checkbox--outlined" type="checkbox">
 ```
 
-`cad-input`, `cad-select`, and `cad-checkbox` own the theme-aware surface,
+`ui-input`, `ui-select`, and `ui-checkbox` own the theme-aware surface,
 border, text, and focus treatments. The forms plugin emits its `.form-*`
-classes outside cascade layers, so CAD overrides must also remain unlayered and
+classes outside cascade layers, so the proof overrides must also remain unlayered and
 appear later in the stylesheet; a rule in `@layer components` loses to the
 plugin regardless of source order. Do not solve this with `!important`.
 
@@ -214,7 +239,7 @@ That makes `font-sans` and `font-mono` available to the demo and ensures code
 within `@tailwindcss/typography` uses the same mono face.
 
 The typography plugin is enabled in `input-test.css`. Its full normal prose
-contract is defined explicitly in both the light and dark `data-cad-theme`
+contract is defined explicitly in both the light and dark `data-ui-theme`
 scopes: `--tw-prose-body`, headings, lead, links, bold text, lists, rules,
 quotes, captions, keyboard keys, inline and block code, and table borders.
 They resolve from the local `chrome` scale; dark mode remaps the ordinary
@@ -230,18 +255,18 @@ inline code, code blocks, and tables.
 ## Material Symbols Rounded proof
 
 The demo loads the [Material Symbols Rounded variable font](https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200)
-from Google Fonts in `test.html`. Use the `material-symbols-rounded` class with
+from Google Fonts in `test.html`. Use the `ui-icon` class with
 the icon's ligature name as its text content. It defaults to an outlined,
 300-weight, 24px optical-size glyph; add
-`material-symbols-rounded--filled` for the filled variant.
+`ui-icon--filled` for the filled variant.
 
 Set an icon's rendered size directly in markup with a Tailwind text-size
 utility, such as `text-2xl` or `text-6xl`, and set the font's optical size
-alongside it with `[--cad-symbol-optical-size:24]` or
-`[--cad-symbol-optical-size:48]`. The only icon-specific CSS is the font
+alongside it with `[--ui-symbol-optical-size:24]` or
+`[--ui-symbol-optical-size:48]`. The only icon-specific CSS is the font
 primitive and its fill modifier; gallery layout stays in the proof markup.
 
-`--cad-symbol-grade` supplies the theme-specific `GRAD` axis value without
+`--ui-symbol-grade` supplies the theme-specific `GRAD` axis value without
 increasing `wght`, so glyph proportions remain stable while perceived stroke
 weight can be tuned per theme.
 
@@ -316,9 +341,9 @@ padding utilities changed. This is intentional: layout flexibility stays in
 HTML, while the card’s surface, border, and text remain component tokens.
 
 ```html
-<article class="demo-card">...</article>
-<article class="demo-card p-8">...</article>
-<article class="demo-card p-12">...</article>
+<article class="ui-card">...</article>
+<article class="ui-card p-8">...</article>
+<article class="ui-card p-12">...</article>
 ```
 
 ## Suggested next steps
