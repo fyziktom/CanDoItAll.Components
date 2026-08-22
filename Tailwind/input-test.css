@@ -454,8 +454,24 @@
   }
 
   .demo-button {
-    @apply inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-sm px-3 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50;
     @apply cursor-pointer;
+  }
+
+  .demo-button.demo-button--pill {
+    @apply rounded-3xl;
+  }
+
+  .demo-button.demo-button--rounded {
+    @apply rounded-lg;
+  }
+
+  .demo-button.demo-button--dense {
+    @apply px-1 py-0;
+  }
+
+  .demo-button.demo-button--compact {
+    @apply px-2 py-1;
   }
 
   .demo-button--solid {

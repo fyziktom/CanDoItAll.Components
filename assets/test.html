@@ -15,23 +15,25 @@
     <div id="app"></div>
 
     <template id="button-row-template">
-        <section class="demo-card" :class="`demo-role--${role.key}`">
-            <div class="mb-5 flex items-start justify-between gap-4">
+        <section class="demo-card space-y-3" :class="`demo-role--${role.key}`">
+            <div class="mb-4 flex items-start justify-between gap-4">
                 <div>
                     <h2 class="text-lg font-bold text-chrome-900">{{ role.name }}</h2>
                     <p class="mt-1 text-sm text-chrome-600">{{ role.description }}</p>
                 </div>
                 <span class="rounded-full bg-chrome-100 px-2.5 py-1 text-xs font-medium text-chrome-600">semantic role</span>
             </div>
-            <div class="flex flex-wrap gap-2">
-                <button class="demo-button demo-button--solid" type="button">Solid</button>
-                <button class="demo-button demo-button--tonal" type="button">Tonal</button>
-                <button class="demo-button demo-button--outline" type="button">Outlined</button>
-                <button class="demo-button demo-button--plain" type="button">Plain</button>
-                <button class="demo-button demo-button--solid" type="button" disabled>Disabled</button>
-                <button class="demo-button demo-button--tonal" type="button" disabled>Disabled</button>
-                <button class="demo-button demo-button--outline" type="button" disabled>Disabled</button>
-                <button class="demo-button demo-button--plain" type="button" disabled>Disabled</button>
+            <div class="flex flex-wrap items-center gap-2">
+                <div><button class="demo-button demo-button--solid demo-button--pill min-w-20" type="button">Solid</button></div>
+                <div><button class="demo-button demo-button--tonal demo-button--compact" type="button">Tonal</button></div>
+                <div><button class="demo-button demo-button--outline demo-button--dense" type="button">Outlined</button></div>
+                <div><button class="demo-button demo-button--plain" type="button">Plain</button></div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <div><button class="demo-button demo-button--solid demo-button--rounded" type="button" disabled>Disabled</button></div>
+                <div><button class="demo-button demo-button--tonal" type="button" disabled>Disabled</button></div>
+                <div><button class="demo-button demo-button--outline" type="button" disabled>Disabled</button></div>
+                <div><button class="demo-button demo-button--plain" type="button" disabled>Disabled</button></div>
             </div>
         </section>
     </template>
