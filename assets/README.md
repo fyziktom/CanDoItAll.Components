@@ -227,6 +227,24 @@ does not use. The typography section in [`test.html`](./test.html) includes
 light/dark-safe specimens for prose, headings, links, lists, blockquotes,
 inline code, code blocks, and tables.
 
+## Material Symbols Rounded proof
+
+The demo loads the [Material Symbols Rounded variable font](https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200)
+from Google Fonts in `test.html`. Use the `material-symbols-rounded` class with
+the icon's ligature name as its text content. It defaults to an outlined,
+300-weight, 24px optical-size glyph; add
+`material-symbols-rounded--filled` for the filled variant.
+
+Set an icon's rendered size directly in markup with a Tailwind text-size
+utility, such as `text-2xl` or `text-6xl`, and set the font's optical size
+alongside it with `[--cad-symbol-optical-size:24]` or
+`[--cad-symbol-optical-size:48]`. The only icon-specific CSS is the font
+primitive and its fill modifier; gallery layout stays in the proof markup.
+
+`--cad-symbol-grade` supplies the theme-specific `GRAD` axis value without
+increasing `wght`, so glyph proportions remain stable while perceived stroke
+weight can be tuned per theme.
+
 ## JavaScript and canvas consumers
 
 CSS custom properties are not a practical palette API for canvas, WebGL, or

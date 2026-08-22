@@ -245,6 +245,7 @@
   :root,
   [data-cad-theme="light"] {
     color-scheme: light;
+    --cad-symbol-grade: 50;
 
     /* Duplicate required for theme nesting */
     --color-chrome-50: var(--color-neutral-50);
@@ -307,6 +308,8 @@
 
   [data-cad-theme="dark"] {
     color-scheme: dark;
+    /* A positive grade restores some perceived stroke weight on dark surfaces. */
+    --cad-symbol-grade: -25;
 
     /* Chrome is structural, so it inverts with the application surface. */
     --color-chrome-50: var(--color-neutral-950);
@@ -484,6 +487,31 @@
 
   .demo-theme-toggle {
     @apply inline-flex items-center gap-2 rounded-lg border border-chrome-300 bg-chrome-100 px-3 py-2 text-sm font-semibold text-chrome-800 transition hover:bg-chrome-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chrome-500;
+  }
+
+  .material-symbols-rounded {
+    display: inline-block;
+    direction: ltr;
+    font-family: "Material Symbols Rounded";
+    font-size: 1em;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings:
+      "FILL" var(--cad-symbol-fill, 0),
+      "wght" var(--cad-symbol-weight, 300),
+      "GRAD" var(--cad-symbol-grade),
+      "opsz" var(--cad-symbol-optical-size, 24);
+  }
+
+  .material-symbols-rounded--filled {
+    --cad-symbol-fill: 1;
   }
 }
 

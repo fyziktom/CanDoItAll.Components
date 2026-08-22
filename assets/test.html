@@ -8,6 +8,7 @@
     <script>
         document.documentElement.dataset.cadTheme = localStorage.getItem('semantic-demo-theme') === 'dark' ? 'dark' : 'light';
     </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="./output-test.css">
 </head>
 <body>
@@ -38,7 +39,7 @@
     <template id="alert-template">
         <article class="demo-alert" :class="`demo-alert--${alert.key}`">
             <div class="flex gap-3 items-center">
-                <div class="pb-2 items-center text-center text-3xl min-w-8 font-bold" aria-hidden="true">{{ alert.icon }}</div>
+                <span class="material-symbols-rounded material-symbols-rounded--filled min-w-8 text-3xl" aria-hidden="true">{{ alert.icon }}</span>
                 <div>
                     <h3 class="font-bold">{{ alert.title }}</h3>
                     <p class="mt-1 text-sm leading-6 opacity-80">{{ alert.message }}</p>
@@ -58,7 +59,7 @@
 
                 <div class="mb-6 flex justify-end">
                     <button class="demo-theme-toggle" type="button" :aria-pressed="darkMode" @click="toggleTheme">
-                        <span aria-hidden="true">{{ darkMode ? '☀' : '☾' }}</span>
+                        <span class="material-symbols-rounded" aria-hidden="true">{{ darkMode ? 'light_mode' : 'dark_mode' }}</span>
                         {{ darkMode ? 'Light theme' : 'Dark theme' }}
                     </button>
                 </div>
@@ -275,6 +276,51 @@
                     </article>
                 </section>
 
+                <section class="mt-10" aria-labelledby="icons-heading">
+                    <div class="mb-4">
+                        <h2 id="icons-heading" class="text-xl font-bold text-chrome-900">Material Symbols Rounded</h2>
+                        <p class="mt-1 max-w-3xl text-sm text-chrome-600">Outlined and filled variants use the same ligature name. Icons render at their optical size, with a positive grade in dark theme to compensate for the lighter perceived stroke.</p>
+                    </div>
+                    <div class="grid gap-4 lg:grid-cols-2">
+                        <section class="rounded-2xl border border-[var(--cad-color-border)] bg-[var(--cad-color-surface)] p-4" aria-labelledby="small-icons-heading">
+                            <div class="flex items-baseline justify-between gap-4">
+                                <div>
+                                    <h3 id="small-icons-heading" class="font-bold text-chrome-900">Small</h3>
+                                    <p class="mt-1 text-sm text-chrome-600">24px / opsz 24</p>
+                                </div>
+                                <span class="text-xs font-medium text-chrome-600">Outline · Filled</span>
+                            </div>
+                            <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                                <div v-for="icon in icons" :key="icon" class="flex min-w-0 items-center gap-3 rounded-xl border border-[var(--cad-color-border)] bg-[var(--cad-color-surface-soft)] px-3 py-2">
+                                    <div class="flex shrink-0 items-center gap-1.5 text-chrome-900" aria-label="Outlined and filled icon">
+                                        <span class="material-symbols-rounded text-2xl [--cad-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="material-symbols-rounded material-symbols-rounded--filled text-2xl [--cad-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
+                                    </div>
+                                    <code class="truncate font-mono text-xs text-chrome-600">{{ icon }}</code>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="rounded-2xl border border-[var(--cad-color-border)] bg-[var(--cad-color-surface)] p-4" aria-labelledby="large-icons-heading">
+                            <div class="flex items-baseline justify-between gap-4">
+                                <div>
+                                    <h3 id="large-icons-heading" class="font-bold text-chrome-900">Large</h3>
+                                    <p class="mt-1 text-sm text-chrome-600">48px / opsz 48</p>
+                                </div>
+                                <span class="text-xs font-medium text-chrome-600">Outline · Filled</span>
+                            </div>
+                            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                <div v-for="icon in icons" :key="icon" class="flex min-w-0 items-center gap-4 rounded-xl border border-[var(--cad-color-border)] bg-[var(--cad-color-surface-soft)] px-4 py-3">
+                                    <div class="flex shrink-0 items-center gap-3 text-chrome-900" aria-label="Outlined and filled icon">
+                                        <span class="material-symbols-rounded text-5xl [--cad-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="material-symbols-rounded material-symbols-rounded--filled text-5xl [--cad-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
+                                    </div>
+                                    <code class="truncate font-mono text-xs text-chrome-600">{{ icon }}</code>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+
                 <section class="mt-10" aria-labelledby="nested-theme-heading">
                     <div class="mb-4">
                         <h2 id="nested-theme-heading" class="text-xl font-bold text-chrome-900">Scoped opposite theme</h2>
@@ -310,6 +356,7 @@
             },
             data: () => ({
                 darkMode: false,
+                icons: ['menu', 'search', 'close', 'add', 'more_vert', 'home', 'settings', 'notifications', 'person', 'edit', 'delete', 'favorite'],
                 semanticScaleNames: ['chrome', 'primary', 'info', 'success', 'warn', 'danger'],
                 semanticShades: [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950],
                 roles: [
@@ -320,10 +367,10 @@
                     { key: 'danger', name: 'Danger', description: 'Destructive or irreversible actions.' }
                 ],
                 alerts: [
-                    { key: 'info', icon: 'i', title: 'New information', message: 'A newer version of this template is available.' },
-                    { key: 'success', icon: '✓', title: 'Changes saved', message: 'Your settings were saved successfully.' },
-                    { key: 'warn', icon: '!', title: 'Review required', message: 'Two fields need attention before you can continue.' },
-                    { key: 'danger', icon: '×', title: 'Action failed', message: 'We could not complete the requested operation.' }
+                    { key: 'info', icon: 'info', title: 'New information', message: 'A newer version of this template is available.' },
+                    { key: 'success', icon: 'check_circle', title: 'Changes saved', message: 'Your settings were saved successfully.' },
+                    { key: 'warn', icon: 'warning', title: 'Review required', message: 'Two fields need attention before you can continue.' },
+                    { key: 'danger', icon: 'error', title: 'Action failed', message: 'We could not complete the requested operation.' }
                 ]
             }),
             mounted() {
