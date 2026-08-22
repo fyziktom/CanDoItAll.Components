@@ -19,6 +19,7 @@ const REQUIRED_KEYS = [
   "excludeDirs",
   "unusedRequiredSiblings",
   "unusedJsonOutputPath",
+  "priorityJsonOutputPath",
   "unusedCsOutputPath"
 ];
 
@@ -33,6 +34,7 @@ async function main() {
   const config = loadConfig(configPath);
 
   const groups = config.componentsPaths.flatMap(componentsPath => discoverComponents(componentsPath));
+  validateComponentCategories(config, groups);
   const componentCount = groups.reduce((sum, group) => sum + group.components.length, 0);
   console.log(
     `Discovered ${componentCount} components across ${groups.length} groups in ${config.componentsPaths.length} components paths`
@@ -61,13 +63,23 @@ async function main() {
 
   const rows = buildComponentRows(groups, siblingResults, baseLibFiles);
 
-  const markdown = renderReport(rows, siblingResults.map(sibling => sibling.name), config.usageExceptions);
+  const markdown = renderReport(
+    rows,
+    siblingResults.map(sibling => sibling.name),
+    config.usageExceptions,
+    config.blocks,
+    config.heavyBlocks
+  );
   fs.writeFileSync(config.outputPath, markdown);
   console.log(`Report written to ${config.outputPath}`);
 
   const unused = computeUnused(rows, config.unusedRequiredSiblings, config.usageExceptions);
   fs.writeFileSync(config.unusedJsonOutputPath, renderUnusedJson(unused.rows));
   console.log(`Unused component audit written to ${config.unusedJsonOutputPath} (${unused.rows.length} entries)`);
+
+  const priorityComponents = computePriorityComponents(rows, config.blocks, config.heavyBlocks);
+  fs.writeFileSync(config.priorityJsonOutputPath, renderPriorityComponentsJson(priorityComponents));
+  console.log(`Priority component list written to ${config.priorityJsonOutputPath} (${priorityComponents.count} entries)`);
 
   fs.writeFileSync(config.unusedCsOutputPath, renderUnusedCs(unused.names));
   console.log(`Unused component set written to ${config.unusedCsOutputPath} (${unused.names.length} names)`);
@@ -139,6 +151,9 @@ function loadConfig(configPath) {
     }
   }
 
+  const blocks = new Set(config.blocks ?? []);
+  const heavyBlocks = new Set(config.heavyBlocks ?? []);
+
   return {
     componentsPaths,
     outputPath: path.resolve(configDir, config.outputPath),
@@ -146,7 +161,10 @@ function loadConfig(configPath) {
     excludeDirs: new Set(config.excludeDirs),
     unusedRequiredSiblings: config.unusedRequiredSiblings,
     usageExceptions: new Set(config.usageExceptions ?? []),
+    blocks,
+    heavyBlocks,
     unusedJsonOutputPath: path.resolve(configDir, config.unusedJsonOutputPath),
+    priorityJsonOutputPath: path.resolve(configDir, config.priorityJsonOutputPath),
     unusedCsOutputPath: path.resolve(configDir, config.unusedCsOutputPath)
   };
 }
@@ -155,6 +173,18 @@ function libraryNameFor(componentsPath) {
   const projectName = path.basename(path.dirname(componentsPath));
   const prefix = "CanDoItAll.Components.";
   return projectName.startsWith(prefix) ? projectName.slice(prefix.length) : projectName;
+}
+
+function validateComponentCategories(config, groups) {
+  const componentNames = new Set(groups.flatMap(group => group.components.map(component => component.name)));
+  const unknownBlockNames = [...config.blocks, ...config.heavyBlocks]
+    .filter(name => !componentNames.has(name));
+
+  if (unknownBlockNames.length > 0) {
+    throw new Error(
+      `Block classification contains unknown component names: ${[...new Set(unknownBlockNames)].join(", ")}.`
+    );
+  }
 }
 
 function discoverComponents(componentsPath) {
@@ -263,7 +293,7 @@ function buildComponentRows(groups, siblingResults, baseLibFiles) {
   return rows;
 }
 
-function renderReport(rows, siblingNames, usageExceptions) {
+function renderReport(rows, siblingNames, usageExceptions, blocks, heavyBlocks) {
   const header = ["Library", "Group", "Component", "Self", ...siblingNames];
   const separator = header.map(() => "---");
 
@@ -292,7 +322,7 @@ function renderReport(rows, siblingNames, usageExceptions) {
     return [
       row.library,
       row.group,
-      row.name,
+      `${heavyBlocks.has(row.name) ? "🚀\u202F" : blocks.has(row.name) ? "" : "🧩\u202F"}${row.name}`,
       selfCell,
       ...cells
     ];
@@ -365,8 +395,33 @@ function computeUnused(rows, requiredSiblingNames, usageExceptions) {
   return { rows: auditRows, names };
 }
 
+// Priority components are the light, reusable components that have proven use either in BaseLib
+// composition (Self) or in the CanDoItAll application. They are grouped by their report group.
+function computePriorityComponents(rows, blocks, heavyBlocks) {
+  const groups = {};
+  let count = 0;
+
+  for (const row of rows) {
+    if (blocks.has(row.name) || heavyBlocks.has(row.name)) {
+      continue;
+    }
+    if (row.selfUsageCount === 0 && (row.siblingUsage.CanDoItAll ?? 0) === 0) {
+      continue;
+    }
+
+    (groups[row.group] ??= []).push(row.name);
+    count += 1;
+  }
+
+  return { groups, count };
+}
+
 function renderUnusedJson(rows) {
   return `${JSON.stringify(rows, null, 2)}\n`;
+}
+
+function renderPriorityComponentsJson(priorityComponents) {
+  return `${JSON.stringify(priorityComponents.groups, null, 2)}\n`;
 }
 
 function renderUnusedCs(names) {
