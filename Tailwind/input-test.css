@@ -564,20 +564,20 @@
   }
 
   .ui-button--solid {
-    @apply bg-[var(--role-strong)] text-[var(--role-strong-fg)] hover:bg-[var(--role-strong-hover)] focus-visible:outline-[var(--role-strong)] active:bg-[var(--role-strong)]/80;
+    @apply bg-(--role-strong) text-(--role-strong-fg) hover:bg-(--role-strong-hover) focus-visible:outline-(--role-strong) active:bg-(--role-strong)/80;
   }
 
   .ui-button--tonal {
-    @apply bg-[var(--role-soft)] text-[var(--role-text)] hover:bg-[var(--role-soft-hover)] focus-visible:outline-[var(--role-strong)] active:bg-[var(--role-strong)]/40;
+    @apply bg-(--role-soft) text-(--role-text) hover:bg-(--role-soft-hover) focus-visible:outline-(--role-strong) active:bg-(--role-strong)/40;
   }
 
   .ui-button--outline {
-    @apply border border-[var(--role-border)]/30 text-[var(--role-text)] hover:bg-[var(--role-soft)] focus-visible:outline-[var(--role-strong)] active:bg-[var(--role-border)]/20;
+    @apply border border-(--role-border)/30 text-(--role-text) hover:bg-(--role-soft) focus-visible:outline-(--role-strong) active:bg-(--role-border)/20;
     background: color-mix(in oklch, var(--tone-surface) 65%, var(--role-soft));
   }
 
   .ui-button--plain {
-    @apply text-[var(--role-text)] hover:bg-[var(--role-soft)] focus-visible:outline-[var(--role-strong)]  active:bg-[var(--role-border)]/20;
+    @apply text-(--role-text) hover:bg-(--role-soft) focus-visible:outline---role-strong)  active:bg-(--role-border)/20;
   }
 
   /* Alert */
@@ -667,7 +667,7 @@
 
 .ui-input,
 .ui-select {
-  @apply w-full rounded-md px-3 py-2 text-sm transition focus:border-[var(--tone-primary-soft-border)] focus:outline-none focus:ring-2 focus:ring-[var(--tone-primary-soft-border)];
+  @apply w-full rounded-md px-3 py-2 text-sm transition focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
   border-color: var(--tone-border);
   color: var(--tone-text);
 }
@@ -692,7 +692,7 @@
 }
 
 .ui-checkbox {
-  @apply size-4 rounded border transition focus:ring-2 focus:ring-[var(--tone-primary-soft-border)];
+  @apply size-4 rounded border transition focus:ring-2 focus:ring-(--tone-primary-soft-border);
   border-color: var(--tone-border);
   color: var(--tone-primary-solid-bg);
 }
