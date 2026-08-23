@@ -24,6 +24,18 @@
 
 @tailwind utilities;
 
+@custom-variant dark {
+  @container style(--ui-theme: dark) {
+    @slot;
+  }
+}
+
+@custom-variant light {
+  @container style(--ui-theme: light) {
+    @slot;
+  }
+}
+
 @plugin "@tailwindcss/forms" {
   strategy: "class";
 }
@@ -291,6 +303,7 @@
   :root,
   [data-ui-theme="light"] {
     color-scheme: light;
+    --ui-theme: light;
     --ui-symbol-grade: 0;
 
     /* Duplicate required for theme nesting */
@@ -370,6 +383,7 @@
 
   [data-ui-theme="dark"] {
     color-scheme: dark;
+    --ui-theme: dark;
     /* A positive grade restores some perceived stroke weight on dark surfaces. */
     --ui-symbol-grade: -25;
 

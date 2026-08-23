@@ -59,6 +59,7 @@
                     <p class="text-sm font-semibold uppercase tracking-widest text-primary-600">Tailwind semantic roles</p>
                     <h1 class="mt-2 text-3xl font-bold tracking-tight text-chrome-950">Action and feedback palette</h1>
                     <p class="mt-3 max-w-3xl text-chrome-600">The palette names describe intent. Chrome stays neutral for the page, cards, separators, and metadata; actions and feedback use primary, info, success, warn, and danger.</p>
+                    <p class="mt-3 max-w-3xl text-info-600 dark:text-danger-500">Informative in light, dangerous in dark.</p>
                 </header>
 
                 <div class="mb-6 flex justify-end">
@@ -331,15 +332,15 @@
                         <p class="mt-1 text-sm text-chrome-600">This card resolves its own theme tokens without changing the surrounding page.</p>
                     </div>
                     <article :data-ui-theme="darkMode ? 'light' : 'dark'">
-                        <div class="ui-card bg-chrome-100/87 role--info flex flex-wrap items-start justify-between gap-4">
+                        <div class="ui-card bg-chrome-100/87 flex flex-wrap items-start justify-between gap-4">
                             <div>
-                                <p class="text-sm font-semibold uppercase tracking-widest text-[var(--tone-info-soft-fg)]">Nested theme boundary</p>
+                                <p class="text-sm font-semibold uppercase tracking-widest text-[var(--color-info-700)] dark:text-[var(--color-danger-400)]">Nested theme boundary (Info in light, Dage in dark)</p>
                                 <h3 class="mt-1 text-lg font-bold text-chrome-950">{{ darkMode ? 'Light' : 'Dark' }} card inside the {{ darkMode ? 'dark' : 'light' }} page</h3>
                                 <p class="mt-2 max-w-2xl text-sm leading-6 text-chrome-600">Its chrome, surface, text, semantic button treatment, and native controls inherit from this card’s <code>data-ui-theme</code> boundary.</p>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="ui-button ui-button--tonal" type="button">Tonal action</button>
-                                <button class="ui-button ui-button--outline" type="button">Outlined action</button>
+                            <div class="flex flex-wrap gap-2 role--primary">
+                                <button class="ui-button ui-button--plain" type="button">Plain action</button>
+                                <button class="ui-button ui-button--solid" type="button">Solid action</button>
                             </div>
                         </div>
                     </article>
