@@ -39,6 +39,50 @@ treatment stays reusable:
 </button>
 ```
 
+### Nested `dark:` and `light:` utilities
+
+The demo also supports Tailwind's `dark:` and `light:` prefixes. Theme roots
+set an inherited `--ui-theme` token, and the custom variants use style
+container queries:
+
+```css
+@custom-variant dark {
+  @container style(--ui-theme: dark) {
+    @slot;
+  }
+}
+
+@custom-variant light {
+  @container style(--ui-theme: light) {
+    @slot;
+  }
+}
+
+:root,
+[data-ui-theme="light"] {
+  --ui-theme: light;
+}
+
+[data-ui-theme="dark"] {
+  --ui-theme: dark;
+}
+```
+
+Unlike a descendant selector such as `[data-ui-theme="dark"] *`, a style
+query resolves the inherited token from the nearest theme boundary. This keeps
+the following utility correct in both a dark page containing a light card and
+a light page containing a dark card:
+
+```html
+<p class="text-info-600 dark:text-danger-500">
+  Informative in light, dangerous in dark.
+</p>
+```
+
+Use theme tokens such as `--tone-*` for reusable component contracts. Use
+`dark:` or `light:` for local, one-off presentation differences where keeping
+the two utilities in markup is clearer.
+
 ## What production already does well
 
 [`foundation/theme.css`](../Tailwind/foundation/theme.css) already owns the
