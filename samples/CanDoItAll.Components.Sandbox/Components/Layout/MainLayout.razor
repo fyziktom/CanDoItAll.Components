@@ -105,6 +105,14 @@
                                 </nav>
                             </div>
                         }
+
+                        <nav class="sandbox-nav" aria-label="Test page">
+                            <a href="@BuildSidebarLink("/test")" data-sandbox-route
+                               class="@GetTestNavClass()">
+                                <span class="sandbox-nav__title">Test</span>
+                                <span class="sandbox-nav__meta">All / All (raw)</span>
+                            </a>
+                        </nav>
                     </aside>
 
                     <main class="sandbox-main">
@@ -221,6 +229,9 @@
 
     private bool IsActive(SandboxGroupDefinition group)
         => IsActiveRoute(group.Route);
+
+    private string GetTestNavClass()
+        => $"sandbox-nav__link {(IsActiveRoute("/test") ? "is-active" : string.Empty)}";
 
     private bool IsActiveRoute(string route)
     {

@@ -8,14 +8,14 @@
 
 @if (queryRouteData is { } routeData)
 {
-    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    <RouteView RouteData="@routeData" DefaultLayout="@GetDefaultLayout()" />
     <FocusOnNavigate RouteData="@routeData" Selector="h1" />
 }
 else
 {
     <Router AppAssembly="@typeof(Routes).Assembly">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <RouteView RouteData="@routeData" DefaultLayout="@GetDefaultLayout()" />
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
     </Router>
@@ -27,6 +27,19 @@ else
     private bool pendingScroll;
     private IJSObjectReference? toolbarModule;
     private DotNetObjectReference<Routes>? dotNetReference;
+
+    private Type GetDefaultLayout()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var isTestRoute = uri.AbsolutePath.TrimEnd('/').EndsWith("/test", StringComparison.OrdinalIgnoreCase)
+            || uri.Fragment.StartsWith("#test", StringComparison.OrdinalIgnoreCase);
+        var isRaw = uri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
+            || uri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
+
+        return isTestRoute && isRaw
+            ? typeof(RawTestLayout)
+            : typeof(MainLayout);
+    }
 
     protected override void OnInitialized()
     {
@@ -48,7 +61,14 @@ else
             return;
         }
 
-        var routeHash = (hash ?? NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Fragment).TrimStart('#');
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var routeHash = (hash ?? uri.Fragment).TrimStart('#');
+        if (string.IsNullOrWhiteSpace(routeHash))
+        {
+            routeHash = NavigationManager.ToBaseRelativePath(uri.AbsoluteUri)
+                .Split('?', 2)[0]
+                .Trim('/');
+        }
         var parts = routeHash.Split('?', 2);
 
         // An empty route (home) still needs to resolve to a component below so it renders

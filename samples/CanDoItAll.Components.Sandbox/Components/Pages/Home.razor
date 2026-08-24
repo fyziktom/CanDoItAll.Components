@@ -38,6 +38,10 @@
                         </p>
                     </div>
                 }
+                <div class="space-y-1">
+                    <a href="test" data-sandbox-route class="sandbox-toc-group block">Test</a>
+                    <p class="sandbox-toc-items"><a href="@BuildGroupLink("/test")" data-sandbox-route>All</a>, <a href="@BuildRawTestLink()" data-sandbox-route>All (raw)</a></p>
+                </div>
             </div>
         </ChildContent>
     </PageScaffold>
@@ -59,6 +63,9 @@
             frame: SandboxQueryLinks.GetCurrentFrame(NavigationManager),
             isDark: false,
             fragment: anchor);
+
+    private static string BuildRawTestLink()
+        => SandboxQueryLinks.UseHashRouting ? "#test?raw" : "test?raw";
 
     private IReadOnlyList<SandboxPageSection> VisibleSections(IReadOnlyList<SandboxPageSection> sections)
         => SandboxCatalogRegistry.FilterVisible(sections, ToolbarState is { ShowUnused: true });
