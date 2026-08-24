@@ -26,8 +26,8 @@
       color-mix(in srgb, var(--cad-color-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
       color-mix(in srgb, var(--cad-color-surface-soft) 58%, var(--cad-tabs-accent-bg) 42%) 100%
     );
-    --cad-tabs-tab-shadow: 0 8px 20px -22px rgba(15, 23, 42, 0.18);
-    --cad-tabs-tab-active-shadow: 0 18px 36px -28px rgba(15, 23, 42, 0.28);
+    --cad-tabs-tab-shadow: 0 8px 20px -22px color-mix(in srgb, var(--cad-color-text) 18%, transparent);
+    --cad-tabs-tab-active-shadow: 0 18px 36px -28px color-mix(in srgb, var(--cad-color-text) 28%, transparent);
     --cad-tabs-tab-indicator: color-mix(in srgb, var(--cad-tabs-accent-border) 72%, var(--cad-tabs-accent-fg) 28%);
     --cad-tabs-tab-font-size: 0.875rem;
     --cad-tabs-tab-font-weight: 650;
@@ -41,7 +41,7 @@
       color-mix(in srgb, var(--cad-color-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
       color-mix(in srgb, var(--cad-color-surface-soft) 62%, var(--cad-tabs-accent-bg) 38%) 100%
     );
-    --cad-tabs-panel-shadow: 0 18px 42px -30px rgba(15, 23, 42, 0.2);
+    --cad-tabs-panel-shadow: 0 18px 42px -30px color-mix(in srgb, var(--cad-color-text) 20%, transparent);
     --cad-tabs-panel-padding: 1rem;
     --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
     --cad-tabs-badge-background: var(--cad-tabs-accent-bg);
@@ -382,29 +382,30 @@
   }
 
   .cad-tabs--variant-workstation {
-    --cad-color-text-strong: #f8fcfb;
-    --cad-color-text: #e7f0ed;
-    --cad-color-text-muted: #bdd0cb;
-    --cad-color-text-soft: #93aba5;
-    --cad-tabs-accent-bg: rgba(242, 198, 109, 0.18);
-    --cad-tabs-accent-hover-bg: rgba(242, 198, 109, 0.26);
-    --cad-tabs-accent-border: rgba(242, 198, 109, 0.46);
-    --cad-tabs-accent-fg: #fff8e9;
-    --cad-tabs-list-border: rgba(157, 194, 186, 0.28);
-    --cad-tabs-tab-border: rgba(157, 194, 186, 0.24);
-    --cad-tabs-tab-hover-border: rgba(157, 194, 186, 0.42);
-    --cad-tabs-tab-active-border: rgba(242, 198, 109, 0.48);
+    --cad-color-text-strong: var(--cad-workstation-text-strong);
+    --cad-color-text: var(--cad-workstation-text);
+    --cad-color-text-muted: var(--cad-workstation-text-muted);
+    --cad-color-text-soft: var(--cad-workstation-text-soft);
+    --cad-tabs-accent-bg: var(--cad-workstation-accent-bg);
+    --cad-tabs-accent-hover-bg: var(--cad-workstation-accent-hover-bg);
+    --cad-tabs-accent-border: var(--cad-workstation-accent-border);
+    --cad-tabs-accent-fg: var(--cad-workstation-accent-fg);
+    --cad-tabs-tab-shadow: var(--cad-workstation-tab-shadow);
+    --cad-tabs-list-border: var(--cad-workstation-list-border);
+    --cad-tabs-tab-border: var(--cad-workstation-tab-border);
+    --cad-tabs-tab-hover-border: var(--cad-workstation-tab-hover-border);
+    --cad-tabs-tab-active-border: var(--cad-workstation-tab-active-border);
     --cad-tabs-tab-color: var(--cad-color-text);
     --cad-tabs-tab-hover-color: var(--cad-color-text-strong);
     --cad-tabs-tab-active-color: var(--cad-tabs-accent-fg);
-    --cad-tabs-tab-background: linear-gradient(180deg, rgba(23, 42, 46, 0.82) 0%, rgba(17, 31, 35, 0.76) 100%);
-    --cad-tabs-tab-hover-background: linear-gradient(180deg, rgba(30, 53, 58, 0.94) 0%, rgba(22, 40, 45, 0.88) 100%);
-    --cad-tabs-tab-active-background: linear-gradient(180deg, rgba(41, 64, 70, 0.98) 0%, rgba(24, 40, 45, 0.94) 100%);
-    --cad-tabs-tab-active-shadow: 0 22px 44px -30px rgba(2, 6, 23, 0.6);
-    --cad-tabs-tab-indicator: rgba(242, 198, 109, 0.92);
-    --cad-tabs-panel-border: rgba(157, 194, 186, 0.28);
-    --cad-tabs-panel-background: linear-gradient(180deg, rgba(18, 31, 35, 0.96) 0%, rgba(14, 28, 31, 0.92) 100%);
-    --cad-tabs-panel-shadow: 0 24px 52px -32px rgba(2, 6, 23, 0.65);
+    --cad-tabs-tab-background: var(--cad-workstation-tab-bg);
+    --cad-tabs-tab-hover-background: var(--cad-workstation-tab-hover-bg);
+    --cad-tabs-tab-active-background: var(--cad-workstation-tab-active-bg);
+    --cad-tabs-tab-active-shadow: var(--cad-workstation-tab-active-shadow);
+    --cad-tabs-tab-indicator: var(--cad-workstation-accent-indicator);
+    --cad-tabs-panel-border: var(--cad-workstation-panel-border);
+    --cad-tabs-panel-background: var(--cad-workstation-panel-bg);
+    --cad-tabs-panel-shadow: var(--cad-workstation-panel-shadow);
     --cad-tabs-panel-padding: 1rem;
     --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
   }

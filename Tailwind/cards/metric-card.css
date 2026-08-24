@@ -1,13 +1,17 @@
 @layer components {
   .cda-metric-card {
-    @apply rounded-xl border border-slate-100 bg-white/90 px-3 py-2.5;
+    @apply rounded-xl border px-3 py-2.5;
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface);
   }
 
   .cda-metric-card__label {
-    @apply m-0 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400;
+    @apply m-0 text-[10px] font-semibold uppercase tracking-[0.22em];
+    color: var(--cad-color-text-soft);
   }
 
   .cda-metric-card__value {
-    @apply mb-0 mt-1 text-sm font-semibold text-slate-950;
+    @apply mb-0 mt-1 text-sm font-semibold;
+    color: var(--cad-color-text-strong);
   }
 }

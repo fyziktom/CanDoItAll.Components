@@ -1,7 +1,8 @@
 @layer components {
   .cda-entity-picker {
-    @apply flex w-full min-w-0 flex-col gap-3 rounded-2xl border bg-white p-4;
+    @apply flex w-full min-w-0 flex-col gap-3 rounded-2xl border p-4;
     border-color: var(--cad-color-border);
+    background: var(--cad-color-surface);
     box-shadow: var(--cad-shadow-soft);
   }
 
@@ -15,17 +16,20 @@
   }
 
   .cda-entity-picker__header h4 {
-    @apply m-0 text-sm font-semibold text-slate-950;
+    @apply m-0 text-sm font-semibold;
+    color: var(--cad-color-text-strong);
   }
 
   .cda-entity-picker__header p {
-    @apply m-0 text-sm leading-6 text-slate-600;
+    @apply m-0 text-sm leading-6;
+    color: var(--cad-color-text-muted);
   }
 
   .cda-entity-picker__empty {
-    @apply rounded-xl border border-dashed px-4 py-5 text-sm text-slate-500;
+    @apply rounded-xl border border-dashed px-4 py-5 text-sm;
     border-color: var(--cad-color-border-soft);
     background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text-soft);
   }
 
   .cda-entity-picker__list {
@@ -60,7 +64,8 @@
   }
 
   .cda-entity-picker__item .material-symbols-rounded {
-    @apply mt-0.5 shrink-0 text-xl text-slate-500;
+    @apply mt-0.5 shrink-0 text-xl;
+    color: var(--cad-color-text-soft);
   }
 
   .cda-entity-picker__item > span:not(.material-symbols-rounded) {
@@ -68,14 +73,18 @@
   }
 
   .cda-entity-picker__item strong {
-    @apply min-w-0 break-words text-sm font-semibold text-slate-950;
+    @apply min-w-0 break-words text-sm font-semibold;
+    color: var(--cad-color-text-strong);
   }
 
   .cda-entity-picker__item small {
-    @apply min-w-0 break-words text-xs leading-5 text-slate-600;
+    @apply min-w-0 break-words text-xs leading-5;
+    color: var(--cad-color-text-muted);
   }
 
   .cda-entity-picker__item em {
-    @apply ml-8 shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[0.68rem] not-italic text-slate-600 sm:ml-auto;
+    @apply ml-8 shrink-0 rounded-full px-2 py-1 text-[0.68rem] not-italic sm:ml-auto;
+    background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text-muted);
   }
 }

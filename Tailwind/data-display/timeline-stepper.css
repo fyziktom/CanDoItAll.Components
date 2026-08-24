@@ -3,11 +3,11 @@
     display: grid;
     min-width: 0;
     gap: 0.85rem;
-    border: 1px solid #dbe4ef;
+    border: 1px solid var(--cad-color-border-soft);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--cad-color-surface);
     padding: 0.9rem;
-    color: #0f172a;
+    color: var(--cad-color-text);
   }
 
   .cda-timeline-stepper__summary,
@@ -32,9 +32,9 @@
     display: inline-flex;
     min-width: 0;
     overflow: hidden;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--cad-color-border);
     border-radius: 0.45rem;
-    background: #f8fafc;
+    background: var(--cad-color-page-bg);
   }
 
   .cda-timeline-stepper__mode-button {
@@ -45,15 +45,15 @@
     border: 0;
     background: transparent;
     padding: 0.42rem 0.7rem;
-    color: #475569;
+    color: var(--cad-color-text-muted);
     font-size: 0.78rem;
     font-weight: 700;
     line-height: 1;
   }
 
   .cda-timeline-stepper__mode-button--active {
-    background: #0f62d6;
-    color: #ffffff;
+    background: var(--cad-tone-info-solid-bg);
+    color: var(--cad-tone-info-solid-fg);
   }
 
   .cda-timeline-stepper__mode-button .material-symbols-rounded {
@@ -64,11 +64,11 @@
     display: inline-flex;
     min-height: 1.8rem;
     align-items: center;
-    border: 1px solid #bfdbfe;
+    border: 1px solid var(--cad-tone-info-soft-border);
     border-radius: 999px;
-    background: #eff6ff;
+    background: var(--cad-tone-info-soft-bg);
     padding: 0.3rem 0.7rem;
-    color: #1d4ed8;
+    color: var(--cad-tone-info-soft-fg);
     font-size: 0.76rem;
     font-weight: 700;
   }
@@ -81,14 +81,14 @@
 
   .cda-timeline-stepper__copy span,
   .cda-timeline-stepper__copy small {
-    color: #64748b;
+    color: var(--cad-color-text-soft);
     font-size: 0.74rem;
     font-weight: 700;
     text-transform: uppercase;
   }
 
   .cda-timeline-stepper__copy strong {
-    color: #0f172a;
+    color: var(--cad-color-text);
     font-size: 1rem;
     line-height: 1.2;
   }
@@ -104,7 +104,7 @@
 
   .cda-timeline-stepper__status {
     gap: 0.42rem;
-    color: #334155;
+    color: var(--cad-color-text-muted);
     font-size: 0.82rem;
     font-weight: 700;
   }
@@ -113,23 +113,23 @@
     width: 0.58rem;
     height: 0.58rem;
     border-radius: 999px;
-    background: #64748b;
+    background: var(--cad-color-text-soft);
   }
 
   .cda-timeline-stepper__status-dot--success {
-    background: #16a34a;
+    background: var(--cad-tone-success-solid-bg);
   }
 
   .cda-timeline-stepper__status-dot--info {
-    background: #0f62d6;
+    background: var(--cad-tone-info-solid-bg);
   }
 
   .cda-timeline-stepper__status-dot--warning {
-    background: #d97706;
+    background: var(--cad-tone-warning-solid-bg);
   }
 
   .cda-timeline-stepper__status-dot--danger {
-    background: #dc2626;
+    background: var(--cad-tone-danger-solid-bg);
   }
 
   .cda-timeline-stepper__rail-wrap {
@@ -142,7 +142,7 @@
     min-width: 0;
     height: 0.56rem;
     border-radius: 999px;
-    background: linear-gradient(90deg, #e2e8f0, #f1f5f9);
+    background: linear-gradient(90deg, var(--cad-color-border-soft), var(--cad-color-page-bg));
     outline: none;
   }
 
@@ -154,11 +154,15 @@
   }
 
   .cda-timeline-stepper__rail-fill--available {
-    background: #bbf7d0;
+    background: var(--cad-tone-success-soft-hover);
   }
 
   .cda-timeline-stepper__rail-fill--selected {
-    background: linear-gradient(90deg, #0f62d6, #0284c7);
+    background: linear-gradient(
+      90deg,
+      var(--cad-tone-info-solid-bg),
+      color-mix(in srgb, var(--cad-tone-info-solid-bg) 70%, var(--cad-color-text-strong) 30%)
+    );
   }
 
   .cda-timeline-stepper__marker {
@@ -167,12 +171,12 @@
     width: 1.1rem;
     height: 1.1rem;
     transform: translate(-50%, -50%);
-    border: 3px solid #ffffff;
+    border: 3px solid var(--cad-color-surface);
     border-radius: 999px;
-    background: #0f62d6;
+    background: var(--cad-tone-info-solid-bg);
     box-shadow:
-      0 0 0 2px #0f62d6,
-      0 8px 18px rgba(15, 98, 214, 0.28);
+      0 0 0 2px var(--cad-tone-info-solid-bg),
+      0 8px 18px color-mix(in srgb, var(--cad-tone-info-solid-bg) 28%, transparent);
   }
 
   .cda-timeline-stepper__tick {
@@ -182,7 +186,7 @@
     border: 0;
     background: transparent;
     padding: 0;
-    color: #64748b;
+    color: var(--cad-color-text-soft);
     font-size: 0.68rem;
     font-weight: 700;
     line-height: 1.1;
@@ -193,20 +197,20 @@
     width: 1px;
     height: 0.55rem;
     margin: 0 auto 0.25rem;
-    background: #94a3b8;
+    background: var(--cad-tone-dark-soft-border);
     content: "";
   }
 
   .cda-timeline-stepper__tick--available {
-    color: #166534;
+    color: var(--cad-tone-success-soft-fg);
   }
 
   .cda-timeline-stepper__tick--future {
-    color: #b45309;
+    color: var(--cad-tone-warning-soft-fg);
   }
 
   .cda-timeline-stepper__tick--selected {
-    color: #0f62d6;
+    color: var(--cad-tone-info-solid-bg);
   }
 
   .cda-timeline-stepper__tick--major span {
@@ -216,7 +220,7 @@
   .cda-timeline-stepper__legend {
     flex-wrap: wrap;
     gap: 0.7rem;
-    color: #475569;
+    color: var(--cad-color-text-muted);
     font-size: 0.74rem;
     font-weight: 700;
   }
@@ -232,11 +236,11 @@
   }
 
   .cda-timeline-stepper__legend-swatch--available {
-    background: #22c55e;
+    background: var(--cad-tone-success-solid-bg);
   }
 
   .cda-timeline-stepper__legend-swatch--future {
-    background: #f59e0b;
+    background: var(--cad-tone-warning-solid-bg);
   }
 
   .cda-timeline-stepper__actions {

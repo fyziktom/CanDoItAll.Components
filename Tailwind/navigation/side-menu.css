@@ -1,12 +1,12 @@
 @layer components {
   .cad-side-menu {
-    --cad-side-menu-bg: #07111f;
-    --cad-side-menu-bg-soft: #0d1b2d;
-    --cad-side-menu-border: rgba(148, 163, 184, 0.18);
-    --cad-side-menu-fg: #e2e8f0;
-    --cad-side-menu-muted: #94a3b8;
-    --cad-side-menu-accent: #38bdf8;
-    --cad-side-menu-accent-soft: rgba(56, 189, 248, 0.14);
+    --cad-side-menu-bg: var(--cad-nav-bg);
+    --cad-side-menu-bg-soft: var(--cad-nav-bg-soft);
+    --cad-side-menu-border: var(--cad-nav-border);
+    --cad-side-menu-fg: var(--cad-nav-fg);
+    --cad-side-menu-muted: var(--cad-nav-muted);
+    --cad-side-menu-accent: var(--cad-nav-accent);
+    --cad-side-menu-accent-soft: var(--cad-nav-accent-soft);
 
     @apply relative isolate shrink-0 overflow-visible border text-sm;
     z-index: 41;
@@ -16,10 +16,10 @@
     border-color: var(--cad-side-menu-border);
     border-radius: var(--cad-radius-panel);
     background:
-      radial-gradient(circle at 18% 0%, rgba(56, 189, 248, 0.16), transparent 28%),
+      radial-gradient(circle at 18% 0%, var(--cad-nav-accent-soft-strong), transparent 28%),
       linear-gradient(180deg, var(--cad-side-menu-bg-soft) 0%, var(--cad-side-menu-bg) 72%);
     color: var(--cad-side-menu-fg);
-    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.24);
+    box-shadow: var(--cad-nav-shadow);
     transition:
       width 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
       box-shadow 180ms ease;
@@ -59,9 +59,9 @@
 
   .cad-side-menu__brand-mark {
     @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg;
-    border-color: rgba(125, 211, 252, 0.2);
-    background: rgba(255, 255, 255, 0.08);
-    color: #bae6fd;
+    border-color: var(--cad-nav-accent-border);
+    background: var(--cad-nav-overlay-soft-strong);
+    color: var(--cad-nav-accent-fg);
   }
 
   .cad-side-menu__identity-copy {
@@ -69,7 +69,8 @@
   }
 
   .cad-side-menu__title {
-    @apply truncate text-sm font-semibold tracking-tight text-white;
+    @apply truncate text-sm font-semibold tracking-tight;
+    color: var(--cad-nav-fg-strong);
   }
 
   .cad-side-menu__subtitle {
@@ -83,14 +84,14 @@
   }
 
   .cad-side-menu__collapse {
-    border-color: rgba(148, 163, 184, 0.18);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--cad-nav-border);
+    background: var(--cad-nav-overlay-soft);
     color: var(--cad-side-menu-muted);
   }
 
   .cad-side-menu__collapse:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
+    background: var(--cad-nav-overlay-soft-hover);
+    color: var(--cad-nav-fg-strong);
   }
 
   .cad-side-menu__items-viewport {
@@ -130,16 +131,16 @@
   }
 
   .cad-side-menu__item:not(:disabled):hover {
-    border-color: rgba(148, 163, 184, 0.16);
-    background: rgba(255, 255, 255, 0.07);
-    color: #ffffff;
+    border-color: var(--cad-nav-hover-border);
+    background: var(--cad-nav-hover-bg);
+    color: var(--cad-nav-fg-strong);
     transform: translateX(2px);
   }
 
   .cad-side-menu__item.is-selected {
-    border-color: rgba(125, 211, 252, 0.28);
+    border-color: var(--cad-nav-accent-border-strong);
     background: var(--cad-side-menu-accent-soft);
-    color: #ffffff;
+    color: var(--cad-nav-fg-strong);
     box-shadow: inset 3px 0 0 var(--cad-side-menu-accent);
   }
 
@@ -150,12 +151,12 @@
 
   .cad-side-menu__item-icon {
     @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg;
-    background: rgba(255, 255, 255, 0.07);
+    background: var(--cad-nav-hover-bg);
   }
 
   .cad-side-menu__item.is-selected .cad-side-menu__item-icon {
-    background: rgba(56, 189, 248, 0.16);
-    color: #bae6fd;
+    background: var(--cad-nav-accent-soft-strong);
+    color: var(--cad-nav-accent-fg);
   }
 
   .cad-side-menu__item-label {
@@ -171,8 +172,8 @@
     min-width: 1.35rem;
     height: 1.35rem;
     padding-inline: 0.35rem;
-    background: rgba(56, 189, 248, 0.16);
-    color: #bae6fd;
+    background: var(--cad-nav-accent-soft-strong);
+    color: var(--cad-nav-accent-fg);
     font-size: 0.62rem;
   }
 
@@ -181,8 +182,8 @@
     min-width: 1rem;
     height: 1rem;
     padding-inline: 0.2rem;
-    background: #7dd3fc;
-    color: #082f49;
+    background: var(--cad-nav-accent-fg-strong);
+    color: var(--cad-nav-accent-fg-inverse);
     font-size: 0.52rem;
   }
 
@@ -335,7 +336,7 @@
   .cad-side-menu__backdrop {
     @apply fixed inset-0 m-0 border-0 bg-transparent p-0;
     z-index: 40;
-    background: rgba(2, 6, 23, 0.08);
+    background: var(--cad-nav-backdrop);
     backdrop-filter: blur(1px);
   }
 
@@ -358,12 +359,12 @@
   .cad-side-menu__mobile-chevron,
   .cad-side-menu__mobile-item-icon {
     @apply inline-flex shrink-0 items-center justify-center rounded-xl;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--cad-nav-overlay-soft-strong);
   }
 
   .cad-side-menu__mobile-leading {
     @apply h-10 w-10 text-lg;
-    color: #bae6fd;
+    color: var(--cad-nav-accent-fg);
   }
 
   .cad-side-menu__mobile-chevron {
@@ -382,7 +383,8 @@
   }
 
   .cad-side-menu__mobile-copy strong {
-    @apply truncate text-sm font-semibold text-white;
+    @apply truncate text-sm font-semibold;
+    color: var(--cad-nav-fg-strong);
   }
 
   .cad-side-menu__mobile-dropdown {
@@ -392,8 +394,8 @@
     max-height: calc(100dvh - 6rem);
     border-color: var(--cad-side-menu-border);
     border-radius: var(--cad-radius-panel);
-    background: radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.13), transparent 30%), var(--cad-side-menu-bg);
-    box-shadow: 0 28px 64px rgba(2, 6, 23, 0.34);
+    background: radial-gradient(circle at 12% 0%, var(--cad-nav-accent-soft), transparent 30%), var(--cad-side-menu-bg);
+    box-shadow: var(--cad-nav-shadow-strong);
     animation: cad-side-menu-dropdown-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -420,15 +422,15 @@
   }
 
   .cad-side-menu__mobile-item:not(:disabled):hover {
-    border-color: rgba(148, 163, 184, 0.18);
-    background: rgba(255, 255, 255, 0.07);
-    color: #ffffff;
+    border-color: var(--cad-nav-border);
+    background: var(--cad-nav-hover-bg);
+    color: var(--cad-nav-fg-strong);
   }
 
   .cad-side-menu__mobile-item.is-selected {
-    border-color: rgba(125, 211, 252, 0.26);
+    border-color: var(--cad-nav-accent-border);
     background: var(--cad-side-menu-accent-soft);
-    color: #ffffff;
+    color: var(--cad-nav-fg-strong);
   }
 
   .cad-side-menu__mobile-item:disabled,
@@ -451,7 +453,7 @@
 
   .cad-side-menu__mobile-inline-panel {
     @apply ml-3 grid gap-1.5 border-l py-1 pl-3;
-    border-color: rgba(125, 211, 252, 0.2);
+    border-color: var(--cad-nav-accent-border);
   }
 
   .cad-side-menu__mobile-inline-panel .cad-side-menu__panel-item {

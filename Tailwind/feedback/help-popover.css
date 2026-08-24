@@ -8,19 +8,25 @@
   }
 
   .pf-help-popover__toggle {
-    @apply relative z-[81] inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-0 text-white shadow-lg transition duration-150 ease-out;
-    background: linear-gradient(135deg, #0284c7, #2563eb);
-    box-shadow: 0 14px 26px rgba(37, 99, 235, 0.18);
+    @apply relative z-[81] inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-0 shadow-lg transition duration-150 ease-out;
+    color: var(--cad-tone-info-solid-fg);
+    background: linear-gradient(
+      135deg,
+      var(--cad-tone-info-solid-bg),
+      color-mix(in srgb, var(--cad-tone-info-solid-bg) 60%, var(--cad-color-text-strong) 40%)
+    );
+    box-shadow: 0 14px 26px color-mix(in srgb, var(--cad-tone-info-solid-bg) 18%, transparent);
   }
 
   .pf-help-popover__toggle:hover {
     @apply -translate-y-px;
     filter: saturate(1.05);
-    box-shadow: 0 16px 28px rgba(37, 99, 235, 0.24);
+    box-shadow: 0 16px 28px color-mix(in srgb, var(--cad-tone-info-solid-bg) 24%, transparent);
   }
 
   .pf-help-popover__toggle:focus-visible {
-    @apply outline outline-2 outline-offset-2 outline-sky-400/40;
+    @apply outline outline-2 outline-offset-2;
+    outline-color: color-mix(in srgb, var(--cad-tone-info-solid-bg) 40%, transparent);
   }
 
   .pf-help-popover__toggle span {
@@ -36,7 +42,11 @@
   }
 
   .pf-help-popover__panel {
-    @apply absolute right-0 top-[calc(100%+0.45rem)] z-[82] grid w-[min(18rem,78vw)] max-w-[calc(100vw-2rem)] gap-2 rounded-2xl border border-slate-900/10 bg-slate-950/95 px-4 py-3 text-slate-100 shadow-2xl shadow-slate-950/25;
+    @apply absolute right-0 top-[calc(100%+0.45rem)] z-[82] grid w-[min(18rem,78vw)] max-w-[calc(100vw-2rem)] gap-2 rounded-2xl border px-4 py-3 shadow-2xl;
+    border-color: var(--cad-nav-border);
+    background: color-mix(in srgb, var(--cad-nav-bg) 95%, transparent);
+    color: var(--cad-nav-fg);
+    box-shadow: var(--cad-nav-shadow-strong);
   }
 
   .pf-help-popover__panel--above-end {
@@ -44,17 +54,20 @@
   }
 
   .pf-help-popover__panel strong {
-    @apply min-w-0 break-words text-xs font-extrabold uppercase tracking-wide text-white;
+    @apply min-w-0 break-words text-xs font-extrabold uppercase tracking-wide;
+    color: var(--cad-nav-fg-strong);
   }
 
   .pf-help-popover__panel p,
   .pf-help-popover__panel small {
-    @apply m-0 min-w-0 break-words text-sm leading-6 text-slate-200/90;
+    @apply m-0 min-w-0 break-words text-sm leading-6;
+    color: var(--cad-nav-fg);
     overflow-wrap: anywhere;
   }
 
   .pf-help-popover__panel small {
-    @apply text-xs text-sky-200;
+    @apply text-xs;
+    color: var(--cad-nav-accent-fg);
   }
 
   .pf-help-popover--header {
