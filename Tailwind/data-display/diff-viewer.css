@@ -1,0 +1,28 @@
+@layer components {
+  .cda-diff-viewer__grid {
+    @apply grid min-w-0 grid-cols-1 gap-2 md:grid-cols-2;
+  }
+
+  .cda-diff-viewer__grid > section {
+    @apply min-w-0 overflow-hidden border;
+    border-radius: var(--cad-radius-control);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface);
+  }
+
+  .cda-diff-viewer__grid strong {
+    @apply block border-b px-3 py-2 text-xs font-semibold;
+    border-color: var(--cad-color-border-soft);
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-diff-viewer__grid pre {
+    @apply m-0 max-h-72 overflow-auto whitespace-pre p-3 font-mono text-xs leading-5;
+    color: var(--cad-color-text);
+  }
+
+  .cda-diff-viewer__summary {
+    @apply text-xs font-medium;
+    color: var(--cad-color-text-muted);
+  }
+}

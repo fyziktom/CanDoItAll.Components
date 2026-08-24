@@ -12,7 +12,7 @@ import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve, relative } from 'node:path';
 
 const packageRoot = new URL('..', import.meta.url);
-const themeCSS = readFileSync(new URL('foundation/theme.css', packageRoot), 'utf8');
+const themeCSS = readFileSync(new URL('theme.css', packageRoot), 'utf8');
 const { printWidth = 80 } = JSON.parse(readFileSync(new URL('.prettierrc.json', packageRoot), 'utf8'));
 
 // Group key = the variant chain before the utility itself, e.g. "sm:" or

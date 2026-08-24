@@ -1,0 +1,73 @@
+@layer components {
+  .cda-action-review-panel,
+  .cda-diff-viewer {
+    @apply flex min-w-0 flex-col border;
+    gap: var(--cad-space-content-gap);
+    padding: var(--cad-space-surface-padding);
+    border-radius: var(--cad-radius-surface);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text);
+  }
+
+  .cda-action-review-panel__header,
+  .cda-diff-viewer__header {
+    @apply flex min-w-0 flex-wrap items-start justify-between gap-2;
+  }
+
+  .cda-action-review-panel__header > div,
+  .cda-diff-viewer__header > div {
+    @apply flex min-w-0 flex-col gap-0.5;
+  }
+
+  .cda-action-review-panel__header > .material-symbols-rounded {
+    @apply inline-flex size-8 shrink-0 items-center justify-center text-base;
+    border-radius: var(--cad-radius-control);
+    background: var(--cad-tone-info-soft-bg);
+    color: var(--cad-tone-info-soft-fg);
+  }
+
+  .cda-action-review-panel__header span:not(.material-symbols-rounded),
+  .cda-diff-viewer__header span {
+    @apply text-[10px] font-semibold uppercase tracking-[0.18em];
+    color: var(--cad-color-text-soft);
+  }
+
+  .cda-action-review-panel h4,
+  .cda-diff-viewer h4 {
+    @apply m-0 text-base font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-action-review-panel > p,
+  .cda-diff-viewer__header > p {
+    @apply m-0 max-w-3xl text-sm leading-5;
+    color: var(--cad-color-text-muted);
+  }
+
+  .cda-action-review-panel__facts {
+    @apply m-0 grid min-w-0 gap-2;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  }
+
+  .cda-action-review-panel__facts > div {
+    @apply min-w-0 border px-3 py-2;
+    border-radius: var(--cad-radius-control);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface);
+  }
+
+  .cda-action-review-panel__facts dt {
+    @apply text-[10px] font-semibold uppercase tracking-[0.16em];
+    color: var(--cad-color-text-soft);
+  }
+
+  .cda-action-review-panel__facts dd {
+    @apply m-0 mt-0.5 break-words text-sm font-medium;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-action-review-panel__content {
+    @apply min-w-0;
+  }
+}

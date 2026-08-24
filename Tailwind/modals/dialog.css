@@ -1,0 +1,96 @@
+@layer components {
+  .cda-dialog-layer {
+    @apply fixed inset-0 z-[70] p-2 sm:p-3;
+  }
+
+  .cda-dialog__backdrop {
+    @apply absolute inset-0 bg-slate-950/55 backdrop-blur-sm;
+  }
+
+  .cda-dialog {
+    @apply relative z-[71] flex w-full flex-col overflow-hidden border;
+    max-height: calc(100dvh - 1.5rem);
+    border-radius: var(--cad-radius-panel);
+    border-color: color-mix(in srgb, var(--cad-color-border-soft) 72%, transparent);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text);
+    box-shadow: var(--cad-shadow-strong);
+  }
+
+  .cda-dialog--compact {
+    max-width: min(32rem, 100%);
+  }
+
+  .cda-dialog--medium {
+    max-width: min(48rem, 100%);
+  }
+
+  .cda-dialog--wide {
+    max-width: min(72rem, 100%);
+  }
+
+  .cda-dialog--full {
+    width: min(96rem, 100%);
+    height: calc(100dvh - 1.5rem);
+  }
+
+  .cda-dialog__header {
+    @apply shrink-0 border-b px-4 py-3.5;
+    border-color: var(--cad-color-border-soft);
+  }
+
+  .cda-dialog__header--dense {
+    @apply px-3 py-2.5;
+  }
+
+  .cda-dialog__title {
+    @apply m-0 text-lg font-semibold tracking-tight xl:text-xl;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-dialog__subtitle {
+    @apply m-0 max-w-3xl text-sm leading-5;
+    color: var(--cad-color-text-muted);
+  }
+
+  .cda-dialog__copy {
+    @apply flex-1;
+    min-width: min(12rem, 100%);
+  }
+
+  .cda-dialog__header-actions {
+    @apply max-w-full shrink-0;
+  }
+
+  .cda-dialog__close {
+    @apply inline-flex min-h-9 items-center gap-1.5 border px-2.5 py-1.5 text-sm font-semibold transition;
+    border-radius: var(--cad-radius-control);
+    border-color: var(--cad-color-border);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text-muted);
+  }
+
+  .cda-dialog__close:hover {
+    background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-dialog__body {
+    @apply min-h-0 flex-1 overflow-y-auto;
+    padding: var(--cad-space-dialog-padding);
+  }
+
+  .cda-dialog__body--dense {
+    @apply p-3;
+  }
+
+  .cda-dialog__footer {
+    @apply flex shrink-0 flex-wrap items-center justify-end gap-2 border-t px-4 py-3;
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cda-dialog__footer--dense {
+    @apply px-3 py-2.5;
+  }
+}

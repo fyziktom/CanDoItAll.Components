@@ -1,0 +1,36 @@
+@layer components {
+  .cda-board-card {
+    @apply flex min-h-[13.75rem] flex-col border p-4 transition hover:-translate-y-0.5;
+    border-radius: var(--cad-radius-panel);
+    border-color: var(--cad-color-border-soft);
+    background: linear-gradient(180deg, var(--cad-color-surface) 0%, var(--cad-color-surface-soft) 100%);
+    color: var(--cad-color-text);
+    box-shadow: var(--cad-shadow-soft);
+  }
+
+  .cda-board-card:hover {
+    box-shadow: var(--cad-shadow-strong);
+  }
+
+  .cda-modal-shell {
+    @apply relative flex w-full max-w-6xl flex-col overflow-hidden border;
+    border-radius: var(--cad-radius-panel);
+    border-color: color-mix(in srgb, var(--cad-color-border-soft) 70%, transparent);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text);
+    box-shadow: var(--cad-shadow-strong);
+  }
+
+  .cda-action-card {
+    @apply border p-4 text-left transition;
+    border-radius: var(--cad-radius-surface);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text);
+  }
+
+  .cda-action-card:hover {
+    border-color: var(--cad-color-border);
+    background: var(--cad-color-surface);
+  }
+}

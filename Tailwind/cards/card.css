@@ -1,0 +1,47 @@
+@layer components {
+  .cda-card {
+    @apply min-w-0 border;
+    padding: var(--cad-space-surface-padding);
+    border-radius: var(--cad-radius-surface);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text);
+    box-shadow: var(--cad-shadow-soft);
+  }
+
+  .cda-card--structured {
+    @apply flex h-full flex-col overflow-hidden p-0;
+  }
+
+  .cda-card__media {
+    @apply flex min-h-28 w-full shrink-0 items-center justify-center border-b p-3;
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cda-card__media :where(img, picture, svg) {
+    @apply mx-auto max-h-36 w-auto max-w-full object-contain;
+  }
+
+  .cda-card__body {
+    @apply flex min-w-0 flex-1 flex-col;
+    gap: var(--cad-space-content-gap);
+    padding: var(--cad-space-surface-padding);
+  }
+
+  .cda-card__header,
+  .cda-card__content {
+    @apply min-w-0;
+  }
+
+  .cda-card__tags {
+    @apply flex min-w-0 flex-wrap items-center;
+    gap: var(--cad-space-compact-gap);
+  }
+
+  .cda-card__actions {
+    @apply mt-auto flex min-w-0 flex-wrap items-center justify-end border-t pt-3;
+    gap: var(--cad-space-compact-gap);
+    border-color: var(--cad-color-border-soft);
+  }
+}

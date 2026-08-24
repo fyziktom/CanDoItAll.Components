@@ -1,0 +1,117 @@
+@layer components {
+  .cda-copy-button {
+    @apply relative;
+  }
+
+  .cda-copy-button .cda-material-icon {
+    @apply leading-none;
+  }
+
+  .cda-copy-button.cda-copy-button--icon-button {
+    @apply justify-center px-0;
+  }
+
+  .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-xs {
+    @apply min-h-7 min-w-7 p-0;
+  }
+
+  .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-sm {
+    @apply min-h-8 min-w-8;
+  }
+
+  .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-md {
+    @apply min-h-10 min-w-10;
+  }
+
+  .cda-copy-button.cda-copy-button--icon-button.cda-copy-button--size-lg {
+    @apply min-h-12 min-w-12;
+  }
+
+  .cda-copy-button.cda-copy-button--size-xs {
+    @apply gap-[0.35rem] px-[0.6rem] py-[0.35rem] text-[0.72rem];
+  }
+
+  .cda-copy-button.cda-copy-button--size-xs .cda-material-icon {
+    @apply text-[0.95rem];
+  }
+
+  .cda-copy-button.cda-copy-button--size-sm .cda-material-icon {
+    @apply text-base;
+  }
+
+  .cda-copy-button.cda-copy-button--size-md .cda-material-icon {
+    @apply text-[1.1rem];
+  }
+
+  .cda-copy-button.cda-copy-button--size-lg .cda-material-icon {
+    @apply text-xl;
+  }
+
+  .cda-copy-button[data-copy-state="copied"] {
+    border-color: var(--cad-tone-success-soft-border);
+    color: var(--cad-tone-success-soft-fg);
+  }
+
+  .cda-copy-button-icon {
+    @apply inline-flex cursor-pointer items-center justify-center border-0 bg-transparent;
+    border-radius: var(--cad-radius-control);
+    color: var(--cad-tone-light-soft-fg);
+    transition:
+      background-color 140ms ease,
+      color 140ms ease,
+      transform 140ms ease;
+  }
+
+  .cda-copy-button-icon:hover:not(:disabled) {
+    background: var(--cad-tone-light-soft-bg);
+    color: var(--cad-tone-primary-soft-fg);
+  }
+
+  .cda-copy-button-icon:active:not(:disabled) {
+    @apply translate-y-px;
+  }
+
+  .cda-copy-button-icon:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  .cda-copy-button-icon--copied {
+    color: var(--cad-tone-success-soft-fg);
+  }
+
+  .cda-copy-button__glyph {
+    @apply leading-none;
+  }
+
+  .cda-copy-button-icon.cda-copy-button--size-xs {
+    @apply h-7 w-7;
+  }
+
+  .cda-copy-button-icon.cda-copy-button--size-sm {
+    @apply h-8 w-8;
+  }
+
+  .cda-copy-button-icon.cda-copy-button--size-md {
+    @apply h-10 w-10;
+  }
+
+  .cda-copy-button-icon.cda-copy-button--size-lg {
+    @apply h-12 w-12;
+  }
+
+  .cda-copy-button__glyph.cda-copy-button--size-xs {
+    @apply text-[0.95rem];
+  }
+
+  .cda-copy-button__glyph.cda-copy-button--size-sm {
+    @apply text-base;
+  }
+
+  .cda-copy-button__glyph.cda-copy-button--size-md {
+    @apply text-[1.15rem];
+  }
+
+  .cda-copy-button__glyph.cda-copy-button--size-lg {
+    @apply text-[1.3rem];
+  }
+}
