@@ -248,6 +248,20 @@
     --ui-mermaid-error-text: #7c2d12;
     --ui-mermaid-error-code-bg: rgba(124, 45, 18, 0.08);
     --ui-mermaid-error-code-text: #431407;
+
+    /* ZoomPanFrame component tokens (--ui-zoom-pan-*): the public override
+       surface for ZoomPanFrame.razor.css's own --cda-zoom-pan-* tokens (see
+       CLAUDE.md rule 9). All structural/chrome tokens derive from
+       --color-chrome-* and self-invert per theme; only the two pure-white
+       surface tokens need an explicit dark override below. */
+    --ui-zoom-pan-toolbar-background: var(--color-chrome-50);
+    --ui-zoom-pan-border: var(--color-chrome-300);
+    --ui-zoom-pan-tool-background: var(--color-white);
+    --ui-zoom-pan-foreground: var(--color-chrome-900);
+    --ui-zoom-pan-tool-hover-background: var(--color-chrome-100);
+    --ui-zoom-pan-border-strong: var(--color-chrome-400);
+    --ui-zoom-pan-focus: var(--cad-tone-primary-soft-border);
+    --ui-zoom-pan-background: var(--color-white);
   }
 
   [data-cad-theme="dark"] {
@@ -361,6 +375,11 @@
     --ui-mermaid-error-text: #fed7aa;
     --ui-mermaid-error-code-bg: rgba(254, 215, 170, 0.12);
     --ui-mermaid-error-code-text: #ffedd5;
+
+    /* Only the pure-white --ui-zoom-pan-* surfaces need a dark override —
+       the rest derive from --color-chrome-* above and self-invert. */
+    --ui-zoom-pan-tool-background: var(--color-chrome-50);
+    --ui-zoom-pan-background: var(--color-chrome-50);
   }
 
   .cad-theme-host {
