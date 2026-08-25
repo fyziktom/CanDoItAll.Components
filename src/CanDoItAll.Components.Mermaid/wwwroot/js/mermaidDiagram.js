@@ -33,7 +33,7 @@ async function renderCore(container, dotNetReference, request) {
   }
 
   try {
-    mermaid.initialize(buildConfig(request?.options));
+    mermaid.initialize(buildConfig(request?.options, container));
     const svgId = `${diagramId}-svg`;
     const renderResult = await mermaid.render(svgId, source);
     removeMermaidRenderArtifacts(svgId, container);
@@ -97,11 +97,11 @@ function removeMermaidRenderArtifacts(svgId, container) {
   }
 }
 
-function buildConfig(options) {
+function buildConfig(options, container) {
   const baseConfig = {
     startOnLoad: false,
     securityLevel: options?.securityLevel ?? 'strict',
-    theme: options?.theme ?? 'default',
+    theme: resolveTheme(options?.theme, container),
     htmlLabels: options?.htmlLabels ?? false,
     flowchart: {
       useMaxWidth: options?.flowchartUseMaxWidth ?? true,
@@ -113,6 +113,46 @@ function buildConfig(options) {
   };
 
   return deepMerge(baseConfig, options?.additionalConfig ?? {});
+}
+
+// A "auto"/unset theme follows the nearest data-cad-theme ancestor's dark/light state directly
+// off the attribute (a discrete mode name, not a CSS color, so this doesn't go through the
+// shared theme-tokens readTokens helper). An explicit theme name always wins.
+function resolveTheme(requestedTheme, container) {
+  if (requestedTheme && requestedTheme !== 'auto') {
+    return requestedTheme;
+  }
+
+  const owner = container?.closest?.('[data-cad-theme]');
+  return owner?.getAttribute('data-cad-theme') === 'dark' ? 'dark' : 'default';
+}
+
+const themeWatchers = new WeakMap();
+
+// Live-flips the rendered diagram's theme when data-cad-theme changes, via the shared
+// window.CanDoItAll.themeTokens module (CLAUDE.md rule 8). No-ops when that module isn't loaded
+// (MermaidBodyAssets IncludeThemeTokens="false") — the diagram still resolves the correct theme
+// on each render via resolveTheme() above, it just won't live-update without a re-render.
+export function watchTheme(container, dotNetReference) {
+  if (!container || themeWatchers.has(container) || !window.CanDoItAll?.themeTokens) {
+    return;
+  }
+
+  const subscription = window.CanDoItAll.themeTokens.watchTheme(container, () => {
+    dotNetReference?.invokeMethodAsync('HandleThemeChangedAsync')
+      .catch((error) => console.warn('Mermaid theme change callback failed.', error));
+  });
+  themeWatchers.set(container, subscription);
+}
+
+export function unwatchTheme(container) {
+  const subscription = themeWatchers.get(container);
+  if (!subscription) {
+    return;
+  }
+
+  subscription.disconnect();
+  themeWatchers.delete(container);
 }
 
 function deepMerge(target, source) {

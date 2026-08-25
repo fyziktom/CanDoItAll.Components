@@ -1,4 +1,24 @@
 .cda-mermaid {
+    /* Each --mermaid-* token reads CanDoItAll.Components.BaseLib's public
+       --ui-mermaid-* override (Tailwind/theme.css) when present, falling back
+       to this literal when it isn't (e.g. MermaidHeadAssets IncludeBaseLibStyles
+       ="false") — see CLAUDE.md rule 9. --ui-mermaid-* already resolves per
+       data-cad-theme on its own, so no dark-mode override is needed here for
+       any of these custom properties. */
+    --mermaid-title-text: var(--ui-mermaid-title-text, #0f172a);
+    --mermaid-description-text: var(--ui-mermaid-description-text, #475569);
+    --mermaid-tool-bg: var(--ui-mermaid-tool-bg, #ffffff);
+    --mermaid-tool-border: var(--ui-mermaid-tool-border, #cbd5e1);
+    --mermaid-tool-text: var(--ui-mermaid-tool-text, #0f172a);
+    --mermaid-tool-hover-bg: var(--ui-mermaid-tool-hover-bg, #f8fafc);
+    --mermaid-tool-hover-border: var(--ui-mermaid-tool-hover-border, #94a3b8);
+    --mermaid-viewport-bg: var(--ui-mermaid-viewport-bg, #ffffff);
+    --mermaid-state-text: var(--ui-mermaid-state-text, #64748b);
+    --mermaid-error-bg: var(--ui-mermaid-error-bg, #fff7ed);
+    --mermaid-error-border: var(--ui-mermaid-error-border, #fed7aa);
+    --mermaid-error-text: var(--ui-mermaid-error-text, #7c2d12);
+    --mermaid-error-code-bg: var(--ui-mermaid-error-code-bg, rgba(124, 45, 18, 0.08));
+    --mermaid-error-code-text: var(--ui-mermaid-error-code-text, #431407);
     display: grid;
     gap: 0.75rem;
     min-width: 0;
@@ -19,7 +39,7 @@
 }
 
 .cda-mermaid__title {
-    color: #0f172a;
+    color: var(--mermaid-title-text);
     font-size: 1rem;
     font-weight: 650;
     line-height: 1.35;
@@ -27,7 +47,7 @@
 }
 
 .cda-mermaid__description {
-    color: #475569;
+    color: var(--mermaid-description-text);
     font-size: 0.875rem;
     line-height: 1.5;
     margin: 0;
@@ -42,10 +62,10 @@
 
 .cda-mermaid__tool {
     align-items: center;
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
+    background: var(--mermaid-tool-bg);
+    border: 1px solid var(--mermaid-tool-border);
     border-radius: 0.375rem;
-    color: #0f172a;
+    color: var(--mermaid-tool-text);
     cursor: pointer;
     display: inline-flex;
     font-size: 0.8125rem;
@@ -57,8 +77,8 @@
 }
 
 .cda-mermaid__tool:hover {
-    background: #f8fafc;
-    border-color: #94a3b8;
+    background: var(--mermaid-tool-hover-bg);
+    border-color: var(--mermaid-tool-hover-border);
 }
 
 .cda-mermaid__viewport-shell {
@@ -68,7 +88,7 @@
 }
 
 .cda-mermaid__viewport {
-    background: #ffffff;
+    background: var(--mermaid-viewport-bg);
     height: 100%;
     inline-size: 100%;
     min-height: 0;
@@ -86,7 +106,7 @@
 
 .cda-mermaid__state {
     align-items: center;
-    color: #64748b;
+    color: var(--mermaid-state-text);
     display: flex;
     font-size: 0.875rem;
     inset: 0;
@@ -97,10 +117,10 @@
 }
 
 .cda-mermaid__error {
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
+    background: var(--mermaid-error-bg);
+    border: 1px solid var(--mermaid-error-border);
     border-radius: 0.5rem;
-    color: #7c2d12;
+    color: var(--mermaid-error-text);
     display: grid;
     gap: 0.35rem;
     padding: 0.85rem 1rem;
@@ -113,9 +133,9 @@
 }
 
 .cda-mermaid__error pre {
-    background: rgba(124, 45, 18, 0.08);
+    background: var(--mermaid-error-code-bg);
     border-radius: 0.35rem;
-    color: #431407;
+    color: var(--mermaid-error-code-text);
     margin: 0.25rem 0;
     overflow-x: auto;
     padding: 0.55rem;
@@ -132,3 +152,11 @@
         justify-content: flex-start;
     }
 }
+
+/* data-cad-theme is the single source of truth for dark/light here, matching
+   --color-chrome-*'s attribute-only convention (CLAUDE.md rule 3) instead of
+   following the OS's prefers-color-scheme independently of the app's own
+   ThemeHost state. Every --mermaid-* custom property reads --ui-mermaid-*
+   (Tailwind/theme.css), which already resolves per data-cad-theme on its own
+   — so no [data-cad-theme="dark"] override rule is needed anywhere in this
+   file. */

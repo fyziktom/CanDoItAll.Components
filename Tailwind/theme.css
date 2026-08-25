@@ -228,6 +228,26 @@
     --ui-gantt-assignment-tooltip-bg: #3b0764;
     --ui-gantt-assignment-tooltip-border: #6b21a8;
     --ui-gantt-assignment-tooltip-shadow-color: rgba(30, 41, 59, 0.22);
+
+    /* Mermaid component tokens (--ui-mermaid-*): the public override surface
+       for CanDoItAll.Components.Mermaid's own --mermaid-* tokens (see
+       MermaidDiagram.razor.css and CLAUDE.md rule 9). All of these are
+       structural chrome (title/description/toolbar/viewport/error surface),
+       so every one gets a dark-mode override below. */
+    --ui-mermaid-title-text: #0f172a;
+    --ui-mermaid-description-text: #475569;
+    --ui-mermaid-tool-bg: #ffffff;
+    --ui-mermaid-tool-border: #cbd5e1;
+    --ui-mermaid-tool-text: #0f172a;
+    --ui-mermaid-tool-hover-bg: #f8fafc;
+    --ui-mermaid-tool-hover-border: #94a3b8;
+    --ui-mermaid-viewport-bg: #ffffff;
+    --ui-mermaid-state-text: #64748b;
+    --ui-mermaid-error-bg: #fff7ed;
+    --ui-mermaid-error-border: #fed7aa;
+    --ui-mermaid-error-text: #7c2d12;
+    --ui-mermaid-error-code-bg: rgba(124, 45, 18, 0.08);
+    --ui-mermaid-error-code-text: #431407;
   }
 
   [data-cad-theme="dark"] {
@@ -324,6 +344,23 @@
     --ui-gantt-title-editor-bg: #0f172a;
     --ui-gantt-title-editor-text: #f8fafc;
     --ui-gantt-shadow-color: rgba(0, 0, 0, 0.28);
+
+    /* All --ui-mermaid-* tokens are structural chrome, so every one declared
+       in the light block above gets a dark override here — see that comment. */
+    --ui-mermaid-title-text: #f1f5f9;
+    --ui-mermaid-description-text: #94a3b8;
+    --ui-mermaid-tool-bg: #1e293b;
+    --ui-mermaid-tool-border: #334155;
+    --ui-mermaid-tool-text: #f1f5f9;
+    --ui-mermaid-tool-hover-bg: #273449;
+    --ui-mermaid-tool-hover-border: #475569;
+    --ui-mermaid-viewport-bg: #0f172a;
+    --ui-mermaid-state-text: #94a3b8;
+    --ui-mermaid-error-bg: #431407;
+    --ui-mermaid-error-border: #9a3412;
+    --ui-mermaid-error-text: #fed7aa;
+    --ui-mermaid-error-code-bg: rgba(254, 215, 170, 0.12);
+    --ui-mermaid-error-code-text: #ffedd5;
   }
 
   .cad-theme-host {

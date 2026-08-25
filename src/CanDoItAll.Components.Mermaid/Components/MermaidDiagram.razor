@@ -88,6 +88,7 @@
     private DotNetObjectReference<MermaidDiagram>? _dotNetReference;
     private string? _lastRenderKey;
     private MermaidRenderError? _currentError;
+    private int _themeEpoch;
     private bool _isRendering;
     private bool _renderingStateWasRendered;
     private bool _disposed;
@@ -190,6 +191,17 @@
 
                 _module = importedModule;
                 _dotNetReference = DotNetObjectReference.Create(this);
+
+                if (IsAutoTheme)
+                {
+                    try
+                    {
+                        await _module.InvokeVoidAsync("watchTheme", _diagramElement, _dotNetReference);
+                    }
+                    catch (Exception exception) when (IsLifecycleException(exception))
+                    {
+                    }
+                }
             }
 
             var renderKey = BuildRenderKey();
@@ -202,6 +214,27 @@
         {
             _lifecycleGate.Release();
         }
+    }
+
+    [JSInvokable]
+    public async Task HandleThemeChangedAsync()
+    {
+        await _lifecycleGate.WaitAsync();
+        try
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _themeEpoch++;
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+
+        await InvokeAsync(StateHasChanged);
     }
 
     [JSInvokable]
@@ -307,13 +340,16 @@
         }
     }
 
+    private bool IsAutoTheme => string.IsNullOrEmpty(Options.Theme) || string.Equals(Options.Theme, "auto", StringComparison.OrdinalIgnoreCase);
+
     private string BuildRenderKey()
     {
         return JsonSerializer.Serialize(
             new
             {
                 Source = NormalizedSource,
-                Options
+                Options,
+                ThemeEpoch = IsAutoTheme ? _themeEpoch : 0
             },
             KeySerializerOptions);
     }
@@ -390,6 +426,14 @@
             if (currentModule is null)
             {
                 return;
+            }
+
+            try
+            {
+                await currentModule.InvokeVoidAsync("unwatchTheme", _diagramElement);
+            }
+            catch (Exception exception) when (IsLifecycleException(exception))
+            {
             }
 
             try

@@ -4357,6 +4357,17 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.Mermaid.MermaidBodyAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeThemeTokens {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.Mermaid.MermaidDiagram",
         "kind": "class",
         "isAbstract": false,
@@ -4365,6 +4376,7 @@
         "members": [
           "ctor()",
           "method System.Threading.Tasks.Task HandleNodeClickedAsync(CanDoItAll.Components.Mermaid.MermaidNodeClickEventArgs args)",
+          "method System.Threading.Tasks.Task HandleThemeChangedAsync()",
           "method System.Threading.Tasks.ValueTask DisposeAsync()",
           "property CanDoItAll.Components.Mermaid.MermaidDiagramOptions Options {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Mermaid.MermaidNodeClickEventArgs\u003E NodeClicked {get;set;}",
@@ -4403,7 +4415,8 @@
         "isSealed": false,
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
-          "ctor()"
+          "ctor()",
+          "property System.Boolean IncludeBaseLibStyles {get;set;}"
         ]
       },
       {
@@ -4585,7 +4598,8 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
-          "property System.Boolean IncludeCanvasRuntimeAssets {get;set;}"
+          "property System.Boolean IncludeCanvasRuntimeAssets {get;set;}",
+          "property System.Boolean IncludeThemeTokens {get;set;}"
         ]
       },
       {
