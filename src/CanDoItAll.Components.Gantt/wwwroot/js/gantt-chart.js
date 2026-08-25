@@ -323,24 +323,49 @@
         };
     }
 
-    function resolveColors(host) {
+    const ganttColorTokenMap = {
+        surface: { cssVar: "--gantt-surface", fallback: "#ffffff" },
+        surfaceMuted: { cssVar: "--gantt-surface-muted", fallback: "#f7f9fc" },
+        grid: { cssVar: "--gantt-grid", fallback: "#e7edf5" },
+        border: { cssVar: "--gantt-border", fallback: "#dbe3ef" },
+        text: { cssVar: "--gantt-text", fallback: "#172033" },
+        textMuted: { cssVar: "--gantt-text-muted", fallback: "#657087" },
+        accent: { cssVar: "--gantt-accent", fallback: "#236887" },
+        critical: { cssVar: "--gantt-critical", fallback: "#d97706" },
+        handle: { cssVar: "--gantt-handle", fallback: "#4d9f38" },
+        connector: { cssVar: "--gantt-connector", fallback: "#0ea5e9" },
+        progressComplete: { cssVar: "--gantt-progress-complete", fallback: "#4d9f38" },
+        progressRemaining: { cssVar: "--gantt-progress-remaining", fallback: "#dc2626" },
+        effort: { cssVar: "--gantt-effort", fallback: "#a02b93" },
+        handleOutline: { cssVar: "--gantt-handle-outline", fallback: "rgba(20, 67, 36, 0.9)" },
+        taskBorderDefault: { cssVar: "--gantt-task-border-default", fallback: "rgba(15, 23, 42, 0.72)" },
+        taskTitleText: { cssVar: "--gantt-task-title-text", fallback: "#ffffff" },
+        assignmentBadgeBg: { cssVar: "--gantt-assignment-badge-bg", fallback: "rgba(255, 255, 255, 0.2)" },
+        assignmentGlyphText: { cssVar: "--gantt-assignment-glyph-text", fallback: "#ffffff" },
+        dependencyPortStroke: { cssVar: "--gantt-dependency-port-stroke", fallback: "rgba(3, 78, 112, 0.92)" },
+        popoverBg: { cssVar: "--gantt-popover-bg", fallback: "rgba(15, 23, 42, 0.96)" },
+        popoverTitleText: { cssVar: "--gantt-popover-title-text", fallback: "#ffffff" },
+        popoverSubtitleText: { cssVar: "--gantt-popover-subtitle-text", fallback: "#b8c5d8" }
+    };
+
+    // Falls back to an inline getComputedStyle read (Gantt's pre-theme-tokens.js behavior)
+    // when BaseLib's shared module isn't loaded, so Gantt degrades gracefully instead of
+    // throwing when used without <GanttChartBodyAssets /> or with IncludeThemeTokens="false".
+    function readTokensInline(host, tokenMap) {
         const style = window.getComputedStyle(host);
-        const read = (name, fallback) => style.getPropertyValue(name).trim() || fallback;
-        return {
-            surface: read("--gantt-surface", "#ffffff"),
-            surfaceMuted: read("--gantt-surface-muted", "#f7f9fc"),
-            grid: read("--gantt-grid", "#e7edf5"),
-            border: read("--gantt-border", "#dbe3ef"),
-            text: read("--gantt-text", "#172033"),
-            textMuted: read("--gantt-text-muted", "#657087"),
-            accent: read("--gantt-accent", "#236887"),
-            critical: read("--gantt-critical", "#d97706"),
-            handle: read("--gantt-handle", "#4d9f38"),
-            connector: read("--gantt-connector", "#0ea5e9"),
-            progressComplete: read("--gantt-progress-complete", "#4d9f38"),
-            progressRemaining: read("--gantt-progress-remaining", "#dc2626"),
-            effort: read("--gantt-effort", "#a02b93")
-        };
+        const resolved = {};
+        for (const propertyName of Object.keys(tokenMap)) {
+            const { cssVar, fallback } = tokenMap[propertyName];
+            resolved[propertyName] = style.getPropertyValue(cssVar).trim() || fallback;
+        }
+
+        return resolved;
+    }
+
+    function resolveColors(host) {
+        return root.themeTokens
+            ? root.themeTokens.readTokens(host, ganttColorTokenMap)
+            : readTokensInline(host, ganttColorTokenMap);
     }
 
     function roundTo(value, interval) {
@@ -1000,7 +1025,7 @@
     function drawResizeHandle(context, x, y, height, isStart, colors) {
         const direction = isStart ? 1 : -1;
         context.fillStyle = colors.handle;
-        context.strokeStyle = "rgba(20, 67, 36, 0.9)";
+        context.strokeStyle = colors.handleOutline;
         context.lineWidth = 1;
         context.beginPath();
         context.moveTo(x, y + 2);
@@ -1062,7 +1087,7 @@
 
             context.fillStyle = fill;
             fillRoundedRect(context, rect.x, rect.y, rect.width, rect.height, 6);
-            context.strokeStyle = task.isCritical ? colors.critical : "rgba(15, 23, 42, 0.72)";
+            context.strokeStyle = task.isCritical ? colors.critical : colors.taskBorderDefault;
             context.lineWidth = task.isCritical ? 2.5 : 1.2;
             if (task.isProjectionOnly) {
                 context.setLineDash([5, 4]);
@@ -1089,7 +1114,7 @@
             const assignmentCount = renderedAssignments.length;
             const assignmentWidth = assignmentCount * 19;
             context.font = '700 12px "Segoe UI", sans-serif';
-            context.fillStyle = "#ffffff";
+            context.fillStyle = colors.taskTitleText;
             const title = fitText(context, task.title, Math.max(0, rect.width - assignmentWidth - 28));
             context.fillText(title, rect.x + 14, rect.y + rect.height / 2);
 
@@ -1099,11 +1124,11 @@
                     ? rect.x + rect.width / 2
                     : rect.x + rect.width - 24 - (assignmentIndex * 19);
                 const centerY = rect.y + rect.height / 2;
-                context.fillStyle = "rgba(255, 255, 255, 0.2)";
+                context.fillStyle = colors.assignmentBadgeBg;
                 context.beginPath();
                 context.arc(centerX, centerY, 7.5, 0, Math.PI * 2);
                 context.fill();
-                context.fillStyle = "#ffffff";
+                context.fillStyle = colors.assignmentGlyphText;
                 context.font = '800 8px "Segoe UI", sans-serif';
                 context.textAlign = "center";
                 context.fillText(assignment.glyph || assignmentGlyph(assignment.kind), centerX, centerY + 0.5);
@@ -1121,7 +1146,7 @@
             const portY = rect.y + rect.height - 2;
             if (model.options.allowDependencyEditing && !task.isDependencyReadOnly) {
                 context.fillStyle = colors.connector;
-                context.strokeStyle = "rgba(3, 78, 112, 0.92)";
+                context.strokeStyle = colors.dependencyPortStroke;
                 context.lineWidth = 1.4;
                 for (const portX of [rect.x + 7, rect.x + rect.width - 7]) {
                     context.beginPath();
@@ -1165,12 +1190,12 @@
         const x = Math.min(state.model.options.timelineWidth - width - 8, hit.bounds.x + 14);
         const y = Math.max(8, hit.bounds.y - height - 8);
 
-        context.fillStyle = "rgba(15, 23, 42, 0.96)";
+        context.fillStyle = colors.popoverBg;
         fillRoundedRect(context, x, y, width, height, 8);
-        context.fillStyle = "#ffffff";
+        context.fillStyle = colors.popoverTitleText;
         context.font = '700 12px "Segoe UI", sans-serif';
         context.fillText(fitText(context, hit.assignment.label, width - padding * 2), x + padding, y + 19);
-        context.fillStyle = "#b8c5d8";
+        context.fillStyle = colors.popoverSubtitleText;
         context.font = '600 10px "Segoe UI", sans-serif';
         context.fillText(kindLabel, x + padding, y + 37);
     }
@@ -1879,6 +1904,7 @@
         state.disposed = true;
         state.canvas.classList.remove("cda-gantt__canvas--panning");
         state.canvas.style.removeProperty("cursor");
+        state.themeWatcher?.disconnect();
         try {
             detachDomEvents(state);
         }
@@ -1962,6 +1988,16 @@
             });
             attachDomEvents(state);
             chartStates.set(host, state);
+            state.themeWatcher = root.themeTokens
+                ? root.themeTokens.watchTheme(host, () => {
+                    if (state.disposed) {
+                        return;
+                    }
+
+                    state.colors = resolveColors(state.host);
+                    state.surface.requestRender();
+                })
+                : null;
             updateCursor(state);
             state.surface.measure();
             state.surface.requestRender();

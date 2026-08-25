@@ -1,17 +1,45 @@
 .cda-gantt {
-    --gantt-border: #dbe3ef;
-    --gantt-grid: #e7edf5;
-    --gantt-surface: #ffffff;
-    --gantt-surface-muted: #f7f9fc;
-    --gantt-text: #172033;
-    --gantt-text-muted: #657087;
-    --gantt-accent: #236887;
-    --gantt-critical: #d97706;
-    --gantt-handle: #4d9f38;
-    --gantt-connector: #0ea5e9;
-    --gantt-progress-complete: #4d9f38;
-    --gantt-progress-remaining: #dc2626;
-    --gantt-effort: #a02b93;
+    /* Each --gantt-* token reads CanDoItAll.Components.BaseLib's public
+       --ui-gantt-* override (Tailwind/theme.css) when present, falling back to
+       this literal when it isn't (e.g. GanttChartHeadAssets IncludeBaseLibStyles
+       ="false") — see CLAUDE.md rule 9. --ui-gantt-* already resolves per
+       data-cad-theme on its own, so no dark-mode override is needed here for
+       any of these custom properties. */
+    --gantt-border: var(--ui-gantt-border, #dbe3ef);
+    --gantt-grid: var(--ui-gantt-grid, #e7edf5);
+    --gantt-surface: var(--ui-gantt-surface, #ffffff);
+    --gantt-surface-muted: var(--ui-gantt-surface-muted, #f7f9fc);
+    --gantt-text: var(--ui-gantt-text, #172033);
+    --gantt-text-muted: var(--ui-gantt-text-muted, #657087);
+    --gantt-accent: var(--ui-gantt-accent, #236887);
+    --gantt-critical: var(--ui-gantt-critical, #d97706);
+    --gantt-handle: var(--ui-gantt-handle, #4d9f38);
+    --gantt-connector: var(--ui-gantt-connector, #0ea5e9);
+    --gantt-progress-complete: var(--ui-gantt-progress-complete, #4d9f38);
+    --gantt-progress-remaining: var(--ui-gantt-progress-remaining, #dc2626);
+    --gantt-effort: var(--ui-gantt-effort, #a02b93);
+    --gantt-handle-outline: var(--ui-gantt-handle-outline, rgba(20, 67, 36, 0.9));
+    --gantt-task-border-default: var(--ui-gantt-task-border-default, rgba(15, 23, 42, 0.72));
+    --gantt-task-title-text: var(--ui-gantt-task-title-text, #ffffff);
+    --gantt-assignment-badge-bg: var(--ui-gantt-assignment-badge-bg, rgba(255, 255, 255, 0.2));
+    --gantt-assignment-glyph-text: var(--ui-gantt-assignment-glyph-text, #ffffff);
+    --gantt-dependency-port-stroke: var(--ui-gantt-dependency-port-stroke, rgba(3, 78, 112, 0.92));
+    --gantt-popover-bg: var(--ui-gantt-popover-bg, rgba(15, 23, 42, 0.96));
+    --gantt-popover-title-text: var(--ui-gantt-popover-title-text, #ffffff);
+    --gantt-popover-subtitle-text: var(--ui-gantt-popover-subtitle-text, #b8c5d8);
+    --gantt-header-bg: var(--ui-gantt-header-bg, #eef3f8);
+    --gantt-header-border: var(--ui-gantt-header-border, #cbd6e4);
+    --gantt-title-editor-bg: var(--ui-gantt-title-editor-bg, #ffffff);
+    --gantt-title-editor-text: var(--ui-gantt-title-editor-text, #172033);
+    --gantt-shadow-color: var(--ui-gantt-shadow-color, rgba(30, 41, 59, 0.08));
+    --gantt-table-shadow-color: var(--ui-gantt-table-shadow-color, rgba(30, 41, 59, 0.06));
+    --gantt-assignment-indicator-text: var(--ui-gantt-assignment-indicator-text, #ffffff);
+    --gantt-assignment-indicator-bg: var(--ui-gantt-assignment-indicator-bg, #7c3aed);
+    --gantt-assignment-indicator-border: var(--ui-gantt-assignment-indicator-border, #5b21b6);
+    --gantt-assignment-tooltip-text: var(--ui-gantt-assignment-tooltip-text, #ffffff);
+    --gantt-assignment-tooltip-bg: var(--ui-gantt-assignment-tooltip-bg, #3b0764);
+    --gantt-assignment-tooltip-border: var(--ui-gantt-assignment-tooltip-border, #6b21a8);
+    --gantt-assignment-tooltip-shadow-color: var(--ui-gantt-assignment-tooltip-shadow-color, rgba(30, 41, 59, 0.22));
     width: 100%;
     max-width: 100%;
     min-width: 0;
@@ -20,7 +48,7 @@
     border: 1px solid var(--gantt-border);
     border-radius: 1rem;
     overflow: hidden;
-    box-shadow: 0 18px 44px rgba(30, 41, 59, 0.08);
+    box-shadow: 0 18px 44px var(--gantt-shadow-color);
 }
 
 .cda-gantt ::deep .cda-gantt__toolbar {
@@ -82,7 +110,7 @@
     align-content: start;
     background: var(--gantt-surface);
     border-right: 1px solid var(--gantt-border);
-    box-shadow: 12px 0 22px rgba(30, 41, 59, 0.06);
+    box-shadow: 12px 0 22px var(--gantt-table-shadow-color);
 }
 
 .cda-gantt__table-row {
@@ -95,8 +123,8 @@
 
 .cda-gantt__table-row--header {
     color: var(--gantt-text-muted);
-    background: #eef3f8;
-    border-bottom-color: #cbd6e4;
+    background: var(--gantt-header-bg);
+    border-bottom-color: var(--gantt-header-border);
     font-size: 0.7rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -199,9 +227,9 @@
     width: 1.35rem;
     height: 1.35rem;
     place-items: center;
-    color: #ffffff;
-    background: #7c3aed;
-    border: 1px solid #5b21b6;
+    color: var(--gantt-assignment-indicator-text);
+    background: var(--gantt-assignment-indicator-bg);
+    border: 1px solid var(--gantt-assignment-indicator-border);
     border-radius: 999px;
     font-size: 0.5rem;
     font-weight: 850;
@@ -223,11 +251,11 @@
     width: max-content;
     max-width: 18rem;
     padding: 0.4rem 0.55rem;
-    color: #ffffff;
-    background: #3b0764;
-    border: 1px solid #6b21a8;
+    color: var(--gantt-assignment-tooltip-text);
+    background: var(--gantt-assignment-tooltip-bg);
+    border: 1px solid var(--gantt-assignment-tooltip-border);
     border-radius: 0.45rem;
-    box-shadow: 0 8px 22px rgba(30, 41, 59, 0.22);
+    box-shadow: 0 8px 22px var(--gantt-assignment-tooltip-shadow-color);
     font-size: 0.72rem;
     font-weight: 650;
     line-height: 1.25;
@@ -253,8 +281,8 @@
     min-width: 0;
     height: 2rem;
     padding: 0 0.45rem;
-    color: var(--gantt-text);
-    background: #ffffff;
+    color: var(--gantt-title-editor-text);
+    background: var(--gantt-title-editor-bg);
     border: 1px solid var(--gantt-connector);
     border-radius: 0.4rem;
     outline: none;
@@ -317,24 +345,12 @@
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    .cda-gantt {
-        --gantt-border: #334155;
-        --gantt-grid: #273449;
-        --gantt-surface: #111827;
-        --gantt-surface-muted: #172033;
-        --gantt-text: #f1f5f9;
-        --gantt-text-muted: #a9b5c8;
-        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
-    }
-
-    .cda-gantt__table-row--header {
-        background: #1e293b;
-        border-bottom-color: #475569;
-    }
-
-    .cda-gantt__title-editor {
-        color: #f8fafc;
-        background: #0f172a;
-    }
-}
+/* data-cad-theme is the single source of truth for dark/light here, matching
+   --color-chrome-*'s attribute-only convention (CLAUDE.md rule 3) instead of
+   following the OS's prefers-color-scheme independently of the app's own
+   ThemeHost state. Without a data-cad-theme="dark" ancestor, the light values
+   declared above on .cda-gantt apply by default. Every --gantt-* custom
+   property (including the shadow/header/title-editor ones this file used to
+   override here directly) now reads --ui-gantt-* (Tailwind/theme.css), which
+   already resolves per data-cad-theme on its own — so no [data-cad-theme=
+   "dark"] override rule is needed anywhere in this file any more. */

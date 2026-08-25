@@ -5,9 +5,16 @@
 {
     <CanvasRuntimeBodyAssets />
 }
+@if (IncludeThemeTokens)
+{
+    <script src="@Assets["_content/CanDoItAll.Components.BaseLib/js/theme/theme-tokens.js"]"></script>
+}
 <script src="@Assets["_content/CanDoItAll.Components.Gantt/js/gantt-chart.js"]"></script>
 
 @code {
     [Parameter]
     public bool IncludeCanvasRuntimeAssets { get; set; } = true;
+
+    [Parameter]
+    public bool IncludeThemeTokens { get; set; } = true;
 }

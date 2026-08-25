@@ -186,6 +186,48 @@
     --cad-nav-shadow: 0 24px 60px color-mix(in srgb, var(--color-neutral-950) 24%, transparent);
     --cad-nav-shadow-strong: 0 28px 64px color-mix(in srgb, var(--color-neutral-950) 34%, transparent);
     --cad-nav-backdrop: color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
+
+    /* Gantt component tokens (--ui-gantt-*): the public override surface for
+       CanDoItAll.Components.Gantt's own --gantt-* tokens (see GanttChart.razor.css
+       and CLAUDE.md rule 9). Structural tokens (surface/grid/border/text) get a
+       dark-mode override below; the rest are painted atop colored bars/badges
+       rather than page chrome, so — like --cad-tone-* solid colors — they don't
+       invert and are declared once. */
+    --ui-gantt-surface: #ffffff;
+    --ui-gantt-surface-muted: #f7f9fc;
+    --ui-gantt-grid: #e7edf5;
+    --ui-gantt-border: #dbe3ef;
+    --ui-gantt-text: #172033;
+    --ui-gantt-text-muted: #657087;
+    --ui-gantt-accent: #236887;
+    --ui-gantt-critical: #d97706;
+    --ui-gantt-handle: #4d9f38;
+    --ui-gantt-connector: #0ea5e9;
+    --ui-gantt-progress-complete: #4d9f38;
+    --ui-gantt-progress-remaining: #dc2626;
+    --ui-gantt-effort: #a02b93;
+    --ui-gantt-handle-outline: rgba(20, 67, 36, 0.9);
+    --ui-gantt-task-border-default: rgba(15, 23, 42, 0.72);
+    --ui-gantt-task-title-text: #ffffff;
+    --ui-gantt-assignment-badge-bg: rgba(255, 255, 255, 0.2);
+    --ui-gantt-assignment-glyph-text: #ffffff;
+    --ui-gantt-dependency-port-stroke: rgba(3, 78, 112, 0.92);
+    --ui-gantt-popover-bg: rgba(15, 23, 42, 0.96);
+    --ui-gantt-popover-title-text: #ffffff;
+    --ui-gantt-popover-subtitle-text: #b8c5d8;
+    --ui-gantt-header-bg: #eef3f8;
+    --ui-gantt-header-border: #cbd6e4;
+    --ui-gantt-title-editor-bg: #ffffff;
+    --ui-gantt-title-editor-text: #172033;
+    --ui-gantt-shadow-color: rgba(30, 41, 59, 0.08);
+    --ui-gantt-table-shadow-color: rgba(30, 41, 59, 0.06);
+    --ui-gantt-assignment-indicator-text: #ffffff;
+    --ui-gantt-assignment-indicator-bg: #7c3aed;
+    --ui-gantt-assignment-indicator-border: #5b21b6;
+    --ui-gantt-assignment-tooltip-text: #ffffff;
+    --ui-gantt-assignment-tooltip-bg: #3b0764;
+    --ui-gantt-assignment-tooltip-border: #6b21a8;
+    --ui-gantt-assignment-tooltip-shadow-color: rgba(30, 41, 59, 0.22);
   }
 
   [data-cad-theme="dark"] {
@@ -268,6 +310,20 @@
     --cad-tone-danger-solid-bg: var(--color-red-400);
     --cad-tone-danger-solid-fg: var(--color-red-950);
     --cad-color-scrim: color-mix(in srgb, var(--color-neutral-950) 70%, transparent);
+
+    /* Structural --ui-gantt-* tokens only — the paint tokens declared in the
+       light block above intentionally have no dark override, see that comment. */
+    --ui-gantt-surface: #111827;
+    --ui-gantt-surface-muted: #172033;
+    --ui-gantt-grid: #273449;
+    --ui-gantt-border: #334155;
+    --ui-gantt-text: #f1f5f9;
+    --ui-gantt-text-muted: #a9b5c8;
+    --ui-gantt-header-bg: #1e293b;
+    --ui-gantt-header-border: #475569;
+    --ui-gantt-title-editor-bg: #0f172a;
+    --ui-gantt-title-editor-text: #f8fafc;
+    --ui-gantt-shadow-color: rgba(0, 0, 0, 0.28);
   }
 
   .cad-theme-host {
