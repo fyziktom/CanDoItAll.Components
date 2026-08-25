@@ -15,10 +15,10 @@
                    JustifyContent="JustifyContent.SpaceBetween"
                    Wrap="FlexWrap.Wrap">
                 <Stack GapScale="LayoutGap.Tiny" Class="min-w-0">
-                    <p class="m-0 text-base font-semibold text-slate-950">@Model.Title</p>
+                    <p class="m-0 text-base font-semibold text-chrome-950">@Model.Title</p>
                     @if (!string.IsNullOrWhiteSpace(Model.Description))
                     {
-                        <p class="m-0 text-sm leading-5 text-slate-600">@Model.Description</p>
+                        <p class="m-0 text-sm leading-5 text-chrome-600">@Model.Description</p>
                     }
                 </Stack>
 
@@ -32,8 +32,8 @@
                         @foreach (var fact in Model.Facts)
                         {
                             <div class="min-w-0">
-                                <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">@fact.Label</p>
-                                <p class="mb-0 mt-1 break-words text-sm text-slate-700">@fact.Value</p>
+                                <p class="m-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-chrome-500">@fact.Label</p>
+                                <p class="mb-0 mt-1 break-words text-sm text-chrome-700">@fact.Value</p>
                             </div>
                         }
                     </div>
@@ -42,7 +42,7 @@
 
             @if (!string.IsNullOrWhiteSpace(Model.Footnote))
             {
-                <p class="m-0 text-xs leading-5 text-slate-500">@Model.Footnote</p>
+                <p class="m-0 text-xs leading-5 text-chrome-500">@Model.Footnote</p>
             }
         </Stack>
     </div>
@@ -62,6 +62,6 @@
     {
         return Emphasized
             ? "rounded-[1.5rem] border border-sky-200 bg-sky-50/70 p-4 shadow-sm"
-            : "rounded-[1.5rem] border border-slate-200 bg-slate-50/80 p-4";
+            : "rounded-[1.5rem] border border-chrome-200 bg-chrome-50/80 p-4";
     }
 }

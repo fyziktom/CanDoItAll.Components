@@ -1,3 +1,26 @@
+/*
+ * Chrome is the theme-aware neutral scale for structural application chrome:
+ * page backgrounds, surfaces, borders, headings, muted text, dividers, and
+ * metadata. It intentionally inverts at each `data-cad-theme` boundary (step
+ * 50 <-> 950, 100 <-> 900, ...), so `--color-chrome-500` is the only step
+ * that resolves to the same color in both themes. Do not use it for values
+ * that must stay fixed across themes (shadows, the permanently-dark nav
+ * rail) -- those consume `--color-neutral-*` directly instead.
+ */
+@theme {
+  --color-chrome-50: var(--color-neutral-50);
+  --color-chrome-100: var(--color-neutral-100);
+  --color-chrome-200: var(--color-neutral-200);
+  --color-chrome-300: var(--color-neutral-300);
+  --color-chrome-400: var(--color-neutral-400);
+  --color-chrome-500: var(--color-neutral-500);
+  --color-chrome-600: var(--color-neutral-600);
+  --color-chrome-700: var(--color-neutral-700);
+  --color-chrome-800: var(--color-neutral-800);
+  --color-chrome-900: var(--color-neutral-900);
+  --color-chrome-950: var(--color-neutral-950);
+}
+
 @layer base {
   .cad-theme-host,
   .cad-theme-host *,
@@ -35,26 +58,41 @@
     --cad-space-section-gap: 1rem;
     --cad-space-surface-padding: 1rem;
     --cad-space-dialog-padding: 1rem;
-    --cad-color-page-bg: var(--color-slate-50);
-    --cad-color-surface: color-mix(in srgb, var(--color-white) 96%, transparent);
-    --cad-color-surface-soft: color-mix(in srgb, var(--color-slate-50) 88%, transparent);
-    --cad-color-border: var(--color-slate-300);
-    --cad-color-border-soft: var(--color-slate-200);
-    --cad-color-text-strong: var(--color-slate-950);
-    --cad-color-text: var(--color-slate-900);
-    --cad-color-text-muted: var(--color-slate-600);
-    --cad-color-text-soft: var(--color-slate-500);
-    --cad-color-inverse: var(--color-slate-50);
-    --cad-shadow-soft: 0 6px 18px color-mix(in srgb, var(--color-slate-900) 7%, transparent);
-    --cad-shadow-strong: 0 14px 36px color-mix(in srgb, var(--color-slate-900) 14%, transparent);
-    --cad-tone-primary-solid-bg: var(--color-slate-900);
-    --cad-tone-primary-solid-hover: var(--color-slate-800);
-    --cad-tone-primary-solid-border: var(--color-slate-900);
+
+    /* Duplicate required for theme nesting: a nested light scope must
+       restate the light mapping rather than inherit the `@theme` default. */
+    --color-chrome-50: var(--color-neutral-50);
+    --color-chrome-100: var(--color-neutral-100);
+    --color-chrome-200: var(--color-neutral-200);
+    --color-chrome-300: var(--color-neutral-300);
+    --color-chrome-400: var(--color-neutral-400);
+    --color-chrome-500: var(--color-neutral-500);
+    --color-chrome-600: var(--color-neutral-600);
+    --color-chrome-700: var(--color-neutral-700);
+    --color-chrome-800: var(--color-neutral-800);
+    --color-chrome-900: var(--color-neutral-900);
+    --color-chrome-950: var(--color-neutral-950);
+
+    --cad-color-page-bg: var(--color-white);
+    --cad-color-surface: var(--color-white);
+    --cad-color-surface-soft: var(--color-chrome-50);
+    --cad-color-border: var(--color-chrome-400);
+    --cad-color-border-soft: var(--color-chrome-300);
+    --cad-color-text-strong: color-mix(in srgb, var(--color-chrome-950) 87%, transparent);
+    --cad-color-text: color-mix(in srgb, var(--color-chrome-900) 87%, transparent);
+    --cad-color-text-muted: var(--color-chrome-600);
+    --cad-color-text-soft: var(--color-chrome-500);
+    --cad-color-inverse: var(--color-chrome-50);
+    --cad-shadow-soft: 0 6px 18px color-mix(in srgb, var(--color-neutral-900) 7%, transparent);
+    --cad-shadow-strong: 0 14px 36px color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
+    --cad-tone-primary-solid-bg: var(--color-chrome-900);
+    --cad-tone-primary-solid-hover: var(--color-chrome-800);
+    --cad-tone-primary-solid-border: var(--color-chrome-900);
     --cad-tone-primary-solid-fg: var(--color-white);
     --cad-tone-primary-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
-    --cad-tone-primary-soft-hover: var(--color-slate-50);
-    --cad-tone-primary-soft-border: var(--color-slate-300);
-    --cad-tone-primary-soft-fg: var(--color-slate-900);
+    --cad-tone-primary-soft-hover: var(--color-chrome-50);
+    --cad-tone-primary-soft-border: var(--color-chrome-300);
+    --cad-tone-primary-soft-fg: var(--color-chrome-900);
     --cad-tone-secondary-soft-bg: var(--color-fuchsia-100);
     --cad-tone-secondary-soft-hover: var(--color-fuchsia-200);
     --cad-tone-secondary-soft-border: var(--color-fuchsia-300);
@@ -76,17 +114,17 @@
     --cad-tone-danger-soft-border: var(--color-rose-300);
     --cad-tone-danger-soft-fg: var(--color-rose-800);
     --cad-tone-light-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
-    --cad-tone-light-soft-hover: var(--color-slate-50);
-    --cad-tone-light-soft-border: var(--color-slate-300);
-    --cad-tone-light-soft-fg: var(--color-slate-600);
+    --cad-tone-light-soft-hover: var(--color-chrome-50);
+    --cad-tone-light-soft-border: var(--color-chrome-300);
+    --cad-tone-light-soft-fg: var(--color-chrome-600);
     --cad-tone-base-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
-    --cad-tone-base-soft-hover: var(--color-slate-50);
-    --cad-tone-base-soft-border: var(--color-slate-300);
-    --cad-tone-base-soft-fg: var(--color-slate-600);
-    --cad-tone-dark-soft-bg: var(--color-slate-200);
-    --cad-tone-dark-soft-hover: var(--color-slate-300);
-    --cad-tone-dark-soft-border: var(--color-slate-400);
-    --cad-tone-dark-soft-fg: var(--color-slate-900);
+    --cad-tone-base-soft-hover: var(--color-chrome-50);
+    --cad-tone-base-soft-border: var(--color-chrome-300);
+    --cad-tone-base-soft-fg: var(--color-chrome-600);
+    --cad-tone-dark-soft-bg: var(--color-chrome-200);
+    --cad-tone-dark-soft-hover: var(--color-chrome-300);
+    --cad-tone-dark-soft-border: var(--color-chrome-400);
+    --cad-tone-dark-soft-fg: var(--color-chrome-900);
     --cad-tone-success-solid-bg: var(--color-green-600);
     --cad-tone-success-solid-fg: var(--color-white);
     --cad-tone-info-solid-bg: #0f62d6;
@@ -95,7 +133,7 @@
     --cad-tone-warning-solid-fg: var(--color-white);
     --cad-tone-danger-solid-bg: var(--color-red-600);
     --cad-tone-danger-solid-fg: var(--color-white);
-    --cad-color-scrim: color-mix(in srgb, var(--color-slate-950) 55%, transparent);
+    --cad-color-scrim: color-mix(in srgb, var(--color-neutral-950) 55%, transparent);
     --cad-chip-0-bg: var(--color-sky-100);
     --cad-chip-0-border: var(--color-sky-300);
     --cad-chip-0-fg: var(--color-sky-900);
@@ -128,10 +166,10 @@
     --cad-chip-9-fg: #1b5e20;
     --cad-nav-bg: #07111f;
     --cad-nav-bg-soft: #0d1b2d;
-    --cad-nav-border: color-mix(in srgb, var(--color-slate-400) 18%, transparent);
-    --cad-nav-fg: var(--color-slate-200);
+    --cad-nav-border: color-mix(in srgb, var(--color-neutral-400) 18%, transparent);
+    --cad-nav-fg: var(--color-neutral-200);
     --cad-nav-fg-strong: var(--color-white);
-    --cad-nav-muted: var(--color-slate-400);
+    --cad-nav-muted: var(--color-neutral-400);
     --cad-nav-accent: var(--color-sky-400);
     --cad-nav-accent-soft: color-mix(in srgb, var(--color-sky-400) 14%, transparent);
     --cad-nav-accent-soft-strong: color-mix(in srgb, var(--color-sky-400) 16%, transparent);
@@ -140,38 +178,55 @@
     --cad-nav-accent-fg: var(--color-sky-200);
     --cad-nav-accent-fg-strong: var(--color-sky-300);
     --cad-nav-accent-fg-inverse: var(--color-sky-950);
-    --cad-nav-hover-border: color-mix(in srgb, var(--color-slate-400) 16%, transparent);
+    --cad-nav-hover-border: color-mix(in srgb, var(--color-neutral-400) 16%, transparent);
     --cad-nav-hover-bg: color-mix(in srgb, var(--color-white) 7%, transparent);
     --cad-nav-overlay-soft: color-mix(in srgb, var(--color-white) 5%, transparent);
     --cad-nav-overlay-soft-strong: color-mix(in srgb, var(--color-white) 8%, transparent);
     --cad-nav-overlay-soft-hover: color-mix(in srgb, var(--color-white) 10%, transparent);
-    --cad-nav-shadow: 0 24px 60px color-mix(in srgb, var(--color-slate-950) 24%, transparent);
-    --cad-nav-shadow-strong: 0 28px 64px color-mix(in srgb, var(--color-slate-950) 34%, transparent);
-    --cad-nav-backdrop: color-mix(in srgb, var(--color-slate-950) 8%, transparent);
+    --cad-nav-shadow: 0 24px 60px color-mix(in srgb, var(--color-neutral-950) 24%, transparent);
+    --cad-nav-shadow-strong: 0 28px 64px color-mix(in srgb, var(--color-neutral-950) 34%, transparent);
+    --cad-nav-backdrop: color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
   }
 
   [data-cad-theme="dark"] {
     color-scheme: dark;
-    --cad-color-page-bg: var(--color-slate-950);
-    --cad-color-surface: color-mix(in srgb, var(--color-slate-900) 92%, transparent);
-    --cad-color-surface-soft: color-mix(in srgb, var(--color-slate-800) 82%, transparent);
-    --cad-color-border: color-mix(in srgb, var(--color-slate-400) 35%, transparent);
-    --cad-color-border-soft: color-mix(in srgb, var(--color-slate-600) 45%, transparent);
-    --cad-color-text-strong: var(--color-slate-50);
-    --cad-color-text: var(--color-slate-200);
-    --cad-color-text-muted: var(--color-slate-300);
-    --cad-color-text-soft: var(--color-slate-400);
-    --cad-color-inverse: var(--color-slate-950);
-    --cad-shadow-soft: 0 8px 22px color-mix(in srgb, var(--color-slate-950) 40%, transparent);
-    --cad-shadow-strong: 0 16px 40px color-mix(in srgb, var(--color-slate-950) 55%, transparent);
-    --cad-tone-primary-solid-bg: var(--color-slate-300);
-    --cad-tone-primary-solid-hover: var(--color-slate-200);
-    --cad-tone-primary-solid-border: var(--color-slate-300);
-    --cad-tone-primary-solid-fg: var(--color-slate-900);
-    --cad-tone-primary-soft-bg: color-mix(in srgb, var(--color-slate-800) 78%, transparent);
-    --cad-tone-primary-soft-hover: color-mix(in srgb, var(--color-slate-700) 84%, transparent);
-    --cad-tone-primary-soft-border: color-mix(in srgb, var(--color-slate-400) 35%, transparent);
-    --cad-tone-primary-soft-fg: var(--color-slate-200);
+
+    /* Chrome is structural, so it inverts with the application surface:
+       step 50 <-> 950, 100 <-> 900, ... A dark-scope reference to
+       `--color-chrome-X` therefore resolves to `--color-neutral-(1000-X)`,
+       which is how each mapping below reproduces its original slate step. */
+    --color-chrome-50: var(--color-neutral-950);
+    --color-chrome-100: var(--color-neutral-900);
+    --color-chrome-200: var(--color-neutral-800);
+    --color-chrome-300: var(--color-neutral-700);
+    --color-chrome-400: var(--color-neutral-600);
+    --color-chrome-500: var(--color-neutral-500);
+    --color-chrome-600: var(--color-neutral-400);
+    --color-chrome-700: var(--color-neutral-300);
+    --color-chrome-800: var(--color-neutral-200);
+    --color-chrome-900: var(--color-neutral-100);
+    --color-chrome-950: var(--color-neutral-50);
+
+    --cad-color-page-bg: var(--color-chrome-50);
+    --cad-color-surface: var(--color-chrome-50);
+    --cad-color-surface-soft: var(--color-chrome-100);
+    --cad-color-border: color-mix(in srgb, var(--color-chrome-600) 35%, transparent);
+    --cad-color-border-soft: color-mix(in srgb, var(--color-chrome-400) 45%, transparent);
+    --cad-color-text-strong: var(--color-chrome-950);
+    --cad-color-text: var(--color-chrome-800);
+    --cad-color-text-muted: var(--color-chrome-700);
+    --cad-color-text-soft: var(--color-chrome-600);
+    --cad-color-inverse: var(--color-chrome-50);
+    --cad-shadow-soft: 0 8px 22px color-mix(in srgb, var(--color-neutral-950) 40%, transparent);
+    --cad-shadow-strong: 0 16px 40px color-mix(in srgb, var(--color-neutral-950) 55%, transparent);
+    --cad-tone-primary-solid-bg: var(--color-chrome-700);
+    --cad-tone-primary-solid-hover: var(--color-chrome-800);
+    --cad-tone-primary-solid-border: var(--color-chrome-700);
+    --cad-tone-primary-solid-fg: var(--color-neutral-900);
+    --cad-tone-primary-soft-bg: color-mix(in srgb, var(--color-chrome-200) 78%, transparent);
+    --cad-tone-primary-soft-hover: color-mix(in srgb, var(--color-chrome-300) 84%, transparent);
+    --cad-tone-primary-soft-border: color-mix(in srgb, var(--color-chrome-600) 35%, transparent);
+    --cad-tone-primary-soft-fg: var(--color-chrome-800);
     --cad-tone-secondary-soft-bg: color-mix(in srgb, var(--color-fuchsia-900) 32%, transparent);
     --cad-tone-secondary-soft-hover: color-mix(in srgb, var(--color-fuchsia-800) 40%, transparent);
     --cad-tone-secondary-soft-border: color-mix(in srgb, var(--color-fuchsia-400) 38%, transparent);
@@ -192,18 +247,18 @@
     --cad-tone-danger-soft-hover: color-mix(in srgb, var(--color-pink-700) 42%, transparent);
     --cad-tone-danger-soft-border: color-mix(in srgb, var(--color-rose-400) 35%, transparent);
     --cad-tone-danger-soft-fg: var(--color-rose-200); /* TODO: V2 used bare OKLCH channels (0.892 0.056 10.001), which are not a CSS color token. */
-    --cad-tone-light-soft-bg: color-mix(in srgb, var(--color-slate-800) 74%, transparent);
-    --cad-tone-light-soft-hover: color-mix(in srgb, var(--color-slate-700) 82%, transparent);
-    --cad-tone-light-soft-border: color-mix(in srgb, var(--color-slate-400) 28%, transparent);
-    --cad-tone-light-soft-fg: var(--color-slate-200);
-    --cad-tone-base-soft-bg: color-mix(in srgb, var(--color-slate-800) 74%, transparent);
-    --cad-tone-base-soft-hover: color-mix(in srgb, var(--color-slate-700) 82%, transparent);
-    --cad-tone-base-soft-border: color-mix(in srgb, var(--color-slate-400) 28%, transparent);
-    --cad-tone-base-soft-fg: var(--color-slate-200);
-    --cad-tone-dark-soft-bg: color-mix(in srgb, var(--color-slate-200) 14%, transparent);
-    --cad-tone-dark-soft-hover: color-mix(in srgb, var(--color-slate-200) 20%, transparent);
-    --cad-tone-dark-soft-border: color-mix(in srgb, var(--color-slate-400) 32%, transparent);
-    --cad-tone-dark-soft-fg: var(--color-slate-50);
+    --cad-tone-light-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+    --cad-tone-light-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+    --cad-tone-light-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+    --cad-tone-light-soft-fg: var(--color-chrome-800);
+    --cad-tone-base-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+    --cad-tone-base-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+    --cad-tone-base-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+    --cad-tone-base-soft-fg: var(--color-chrome-800);
+    --cad-tone-dark-soft-bg: color-mix(in srgb, var(--color-chrome-800) 14%, transparent);
+    --cad-tone-dark-soft-hover: color-mix(in srgb, var(--color-chrome-800) 20%, transparent);
+    --cad-tone-dark-soft-border: color-mix(in srgb, var(--color-chrome-600) 32%, transparent);
+    --cad-tone-dark-soft-fg: var(--color-chrome-950);
     --cad-tone-success-solid-bg: var(--color-green-500);
     --cad-tone-success-solid-fg: var(--color-green-950);
     --cad-tone-info-solid-bg: var(--color-sky-400);
@@ -212,7 +267,7 @@
     --cad-tone-warning-solid-fg: var(--color-amber-950);
     --cad-tone-danger-solid-bg: var(--color-red-400);
     --cad-tone-danger-solid-fg: var(--color-red-950);
-    --cad-color-scrim: color-mix(in srgb, var(--color-slate-950) 70%, transparent);
+    --cad-color-scrim: color-mix(in srgb, var(--color-neutral-950) 70%, transparent);
   }
 
   .cad-theme-host {

@@ -68,7 +68,7 @@
     {
         var usesExplicitMinHeight = HasExplicitMinHeight(customClass);
         var baseClass = CssClassBuilder.Join(
-            "flex min-w-0 flex-col overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white/90 shadow-sm shadow-slate-200/60",
+            "flex min-w-0 flex-col overflow-hidden rounded-[1.75rem] border border-chrome-200 bg-white/90 shadow-sm shadow-chrome-200/60",
             usesExplicitMinHeight ? null : "min-h-[26rem]");
         return CssClassBuilder.Join(baseClass, customClass);
     }
@@ -95,8 +95,8 @@
     private string ResolveHeaderClass()
     {
         return Dense
-            ? "border-b border-slate-200 px-3 py-2.5"
-            : "border-b border-slate-200 px-4 py-3.5";
+            ? "border-b border-chrome-200 px-3 py-2.5"
+            : "border-b border-chrome-200 px-4 py-3.5";
     }
 
     private string ResolveContentClass()

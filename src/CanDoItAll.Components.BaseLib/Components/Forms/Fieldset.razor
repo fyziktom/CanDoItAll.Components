@@ -1,8 +1,8 @@
 @namespace CanDoItAll.Components.BaseLib
 @if (AllowCollapse)
 {
-    <details class="rz-fieldset rounded-lg border border-slate-200 bg-white p-3" open>
-        <summary title="@CollapseTitle" aria-label="@CollapseAriaLabel" class="cursor-pointer select-none text-sm font-semibold text-slate-700">
+    <details class="rz-fieldset rounded-lg border border-chrome-200 bg-white p-3" open>
+        <summary title="@CollapseTitle" aria-label="@CollapseAriaLabel" class="cursor-pointer select-none text-sm font-semibold text-chrome-700">
             @if (HeaderTemplate is not null)
             {
                 @HeaderTemplate
@@ -15,10 +15,10 @@
 }
 else
 {
-    <fieldset class="rz-fieldset rounded-lg border border-slate-200 bg-white p-3">
+    <fieldset class="rz-fieldset rounded-lg border border-chrome-200 bg-white p-3">
         @if (HeaderTemplate is not null)
         {
-            <legend class="px-1 text-sm font-semibold text-slate-700">@HeaderTemplate</legend>
+            <legend class="px-1 text-sm font-semibold text-chrome-700">@HeaderTemplate</legend>
         }
         @ChildContent
     </fieldset>

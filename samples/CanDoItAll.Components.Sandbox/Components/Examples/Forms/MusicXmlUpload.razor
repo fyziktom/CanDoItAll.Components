@@ -40,7 +40,7 @@
                          Tone="warning" />
         </SummaryTiles>
 
-        <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-4">
+        <div class="rounded-[1rem] border border-chrome-200 bg-white px-4 py-4">
             <div class="space-y-1">
                 <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Latest selection" />
                 <TextBlock TextStyle="@(TextStyle.Caption)"
@@ -49,14 +49,14 @@
 
             @if (uploadedFileNames.Count == 0)
             {
-                <p class="mt-3 text-sm leading-6 text-slate-500">No files selected yet.</p>
+                <p class="mt-3 text-sm leading-6 text-chrome-500">No files selected yet.</p>
             }
             else
             {
-                <ul class="mt-3 space-y-2 text-sm text-slate-700" data-testid="sandbox-inputs-file-upload-files">
+                <ul class="mt-3 space-y-2 text-sm text-chrome-700" data-testid="sandbox-inputs-file-upload-files">
                     @foreach (var fileName in uploadedFileNames)
                     {
-                        <li class="rounded-[0.85rem] bg-slate-50 px-3 py-2">@fileName</li>
+                        <li class="rounded-[0.85rem] bg-chrome-50 px-3 py-2">@fileName</li>
                     }
                 </ul>
             }

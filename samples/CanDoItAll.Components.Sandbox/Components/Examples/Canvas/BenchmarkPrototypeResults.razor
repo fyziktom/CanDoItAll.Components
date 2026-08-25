@@ -20,8 +20,8 @@
     else
     {
         <div class="overflow-x-auto" data-testid="canvas-example-results">
-            <table class="min-w-full divide-y divide-slate-200 text-sm">
-                <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+            <table class="min-w-full divide-y divide-chrome-200 text-sm">
+                <thead class="bg-chrome-50 text-left text-xs font-semibold uppercase tracking-[0.16em] text-chrome-500">
                 <tr>
                     <th class="px-4 py-3">Tier</th>
                     <th class="px-4 py-3">Scene</th>
@@ -31,19 +31,19 @@
                     <th class="px-4 py-3">Workbench DOM</th>
                 </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 bg-white">
+                <tbody class="divide-y divide-chrome-100 bg-white">
                 @foreach (var measurement in BenchmarkState.Result.Tiers)
                 {
                     <tr>
-                        <td class="px-4 py-3 font-semibold text-slate-900">@measurement.Label</td>
-                        <td class="px-4 py-3 text-slate-600">@($"{measurement.NodeCount} nodes / {measurement.LinkCount} links")</td>
-                        <td class="px-4 py-3 text-slate-900">@FormatDuration(measurement.RetainedAverageMs)</td>
-                        <td class="px-4 py-3 text-slate-900">@FormatDuration(measurement.CanvasAverageMs)</td>
+                        <td class="px-4 py-3 font-semibold text-chrome-900">@measurement.Label</td>
+                        <td class="px-4 py-3 text-chrome-600">@($"{measurement.NodeCount} nodes / {measurement.LinkCount} links")</td>
+                        <td class="px-4 py-3 text-chrome-900">@FormatDuration(measurement.RetainedAverageMs)</td>
+                        <td class="px-4 py-3 text-chrome-900">@FormatDuration(measurement.CanvasAverageMs)</td>
                         <td class="px-4 py-3">
                             <StatusBadge Text="@FormatDelta(measurement.ImprovementRatio)"
                                          Tone="@(measurement.ImprovementRatio >= 0 ? "success" : "warning")" />
                         </td>
-                        <td class="px-4 py-3 text-slate-600">@measurement.RetainedDomNodeCount.ToString(System.Globalization.CultureInfo.InvariantCulture)</td>
+                        <td class="px-4 py-3 text-chrome-600">@measurement.RetainedDomNodeCount.ToString(System.Globalization.CultureInfo.InvariantCulture)</td>
                     </tr>
                 }
                 </tbody>

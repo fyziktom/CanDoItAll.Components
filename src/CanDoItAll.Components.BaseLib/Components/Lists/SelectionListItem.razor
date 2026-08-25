@@ -90,7 +90,7 @@
             <Stack GapScale="LayoutGap.Tiny"
                    Class="min-w-0">
                 <Cluster>
-                    <p class="cda-selection-list-item__title m-0 text-sm font-semibold leading-5 text-slate-950">@Title</p>
+                    <p class="cda-selection-list-item__title m-0 text-sm font-semibold leading-5 text-chrome-950">@Title</p>
                     @if (!string.IsNullOrWhiteSpace(Eyebrow))
                     {
                         <Pill Tone="PillTone.Label" Text="@Eyebrow" />
@@ -99,7 +99,7 @@
 
                 @if (!string.IsNullOrWhiteSpace(Meta))
                 {
-                    <p class="cda-selection-list-item__meta m-0 text-xs text-slate-500">@Meta</p>
+                    <p class="cda-selection-list-item__meta m-0 text-xs text-chrome-500">@Meta</p>
                 }
             </Stack>
 
@@ -144,13 +144,13 @@
                 ? "cda-selection-list-item rounded-xl border border-sky-300 bg-sky-50/80 p-3 shadow-sm shadow-sky-100"
                 : "cda-selection-list-item rounded-2xl border border-sky-300 bg-sky-50/80 p-3.5 shadow-sm shadow-sky-100")
             : (Dense
-                ? "cda-selection-list-item rounded-xl border border-slate-200 bg-slate-50/90 p-3 transition hover:border-slate-300 hover:bg-slate-50"
-                : "cda-selection-list-item rounded-2xl border border-slate-200 bg-slate-50/90 p-3.5 transition hover:border-slate-300 hover:bg-slate-50");
+                ? "cda-selection-list-item rounded-xl border border-chrome-200 bg-chrome-50/90 p-3 transition hover:border-chrome-300 hover:bg-chrome-50"
+                : "cda-selection-list-item rounded-2xl border border-chrome-200 bg-chrome-50/90 p-3.5 transition hover:border-chrome-300 hover:bg-chrome-50");
 
     private string ResolveSummaryClass()
         => Dense
-            ? "cda-selection-list-item__summary mb-0 mt-2 text-sm leading-5 text-slate-600"
-            : "cda-selection-list-item__summary mb-0 mt-2.5 text-sm leading-6 text-slate-600";
+            ? "cda-selection-list-item__summary mb-0 mt-2 text-sm leading-5 text-chrome-600"
+            : "cda-selection-list-item__summary mb-0 mt-2.5 text-sm leading-6 text-chrome-600";
 }
 
 
