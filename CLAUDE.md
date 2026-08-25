@@ -41,7 +41,7 @@ We are working toward **2.0.0**. Two rule sets apply: rules for day-to-day devel
 1. **A refactor that introduces or changes a structural or naming convention must add or update the corresponding rule in this file's Development Rules, in the same change.** Don't apply a new pattern silently — write the rule down so the next refactor (by Claude or a human) converges on it instead of reinventing or contradicting it. This rule applies to itself: it was written because the Tailwind file-layout-by-component-group convention and the `compatibility/` subfolder convention were both applied before being documented here.
 2. Every refactor gets a `CHANGELOG.md` entry per the changelog rule above, even when it only touches `Internal` structure and no `Public interface` changed (e.g. reorganizing Tailwind source files without changing any emitted class name).
 3. When a rule is only partially applied across the codebase, mark it `(target — ...)` in this file rather than omitting it, and keep pushing existing code toward it opportunistically as you touch nearby files. Don't treat a target rule as optional for *new* code just because old code doesn't conform yet.
-4. Prefer moving now-unused code to a `compatibility/` location over deleting it outright, until ownership and safe removal are confirmed — this mirrors the BaseLib compatibility-shim policy in `docs/standard-components-compatibility-policy.md`.
+4. Prefer moving now-unused code to a `compatibility/` location over deleting it outright, until ownership and safe removal are confirmed — this mirrors the BaseLib compatibility-shim policy in `docs/standard-components-compatibility-policy.md`. (The BaseLib component-shim instance of this pattern was retired 2026-08-25 by explicit maintainer override of the SB12 gate; the rule still applies to future cases, e.g. Tailwind CSS.)
 
 ## Commands
 
@@ -93,7 +93,7 @@ Sandbox -> all of the above (visual catalog / regression proof, never the other 
 
 - `StyledComponentBase` (BaseLib) exposes `Class`, `Style`, `AdditionalAttributes` and merges them via `ComponentAttributes`/`CssClassBuilder` (Common). `ComponentAttributeExtensions` is a compatibility wrapper only — do not duplicate merge logic elsewhere.
 - Contract behavior (merge order, empty-attribute cleanup, null handling) is pinned by `tests/CanDoItAll.Components.Common.Tests` and `tests/CanDoItAll.Components.BaseLib.Tests`.
-- `docs/standard-components-compatibility-policy.md` lists BaseLib compatibility shims (e.g. `ProfileTagChip`, `SheetCard`, `ProfileField`) kept for old call sites during publishing prep. Don't remove/rename/change their public params without the SB12 migration gate; new work should use the listed replacement component directly (`Chip`, `Card`/`SectionCard`, `FormField`, etc.).
+- `docs/standard-components-compatibility-policy.md` records BaseLib compatibility shims that were kept for old call sites during publishing prep; the last 21 (`ProfileTagChip`, `SheetCard`, `ProfileField`, etc.) were removed 2026-08-25 ahead of the SB12 gate at explicit maintainer request — see the doc's closure note for replacements. Any future shim added there follows the same don't-remove-without-the-SB12-gate rule unless similarly waived.
 
 ### CanvasLib vs OverlayLib
 

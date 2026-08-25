@@ -14,4 +14,19 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Public interface
 
-_(none yet)_
+- **Breaking:** Removed all 21 remaining `Components/*/Compatibility/*.razor` shims from `CanDoItAll.Components.BaseLib`, ahead of the SB12 consumer-migration gate in `docs/standard-components-compatibility-policy.md` at explicit maintainer request (no remaining call sites in this repo). Replace removed types with their listed successor:
+  - `ProfileTagChip`, `ProfileTagChipRow` → `Chip`, `ChipRow`
+  - `BuilderStatBox`, `BuilderStatStrip` → `Card`/`SummaryTile`, `SummaryTiles`/`Grid`+`SummaryTile`
+  - `SheetCard`, `SheetSection` → `Card` or `SectionCard`
+  - `SheetCardHeading` → `TextBlock` or `SectionCard` title/description
+  - `SheetCardTop` → `Toolbar`, `Stack`, or explicit header layout
+  - `SheetGrid` → `Grid`
+  - `SheetNote` → `Alert`, `EmptyState`, or `TextBlock`
+  - `DebugToggle`, `ProfileToggle` → `Switch` or `CheckBox`
+  - `ProfileField`, `SheetField` → `FormField`
+  - `TagTextEdit` → `TagEditor`
+  - `CreatorAvatar` → `Avatar`
+  - `ZyWorkspaceModal` → `Dialog`
+  - `DashboardActions`, `PageHeaderActions` → `Toolbar`/`Button`/`ButtonGroup`
+  - `ImmersiveRibbonTabs` → `RibbonTabs`
+  - `PageHeaderCopy` → `PageHeader`, `TextBlock`, or page title/description slots
