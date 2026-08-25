@@ -44,6 +44,38 @@
         }
     }
 
+    function getCachedCanvasTextLines(state, node, slot, text, maxWidth, maxLines, fontKey, createLines) {
+        const cache = state?.nodeTextLayouts;
+        const cacheKey = `${node?.id || ""}:${slot}`;
+        const cached = cache?.get(cacheKey);
+        if (cached?.node === node &&
+            cached.text === text &&
+            cached.maxWidth === maxWidth &&
+            cached.maxLines === maxLines &&
+            cached.fontKey === fontKey) {
+            return cached.lines;
+        }
+
+        const lines = createLines();
+        cache?.set(cacheKey, { node, text, maxWidth, maxLines, fontKey, lines });
+        return lines;
+    }
+
+    function wrapCanvasNodeText(state, node, slot, primitives, context, text, maxWidth, maxLines) {
+        const cacheGeneration = getTextMeasureService()?.getCacheGeneration?.() || 0;
+        return getCachedCanvasTextLines(
+            state,
+            node,
+            slot,
+            text,
+            maxWidth,
+            maxLines,
+            `${context.font}|${cacheGeneration}`,
+            () => primitives?.wrapText
+                ? primitives.wrapText(context, text, maxWidth, maxLines)
+                : [text]);
+    }
+
     function wrapCanvasInlineTextParagraphs(primitives, context, text, maxWidth, maxLines) {
         const normalized = typeof text === "string"
             ? text.replace(/\r\n/g, "\n").replace(/\r/g, "\n")
@@ -1690,26 +1722,30 @@
         });
     }
 
-    function measureCanvasWrappedLines(text, maxWidth, maxLines, font) {
+    function measureCanvasWrappedLines(state, node, slot, text, maxWidth, maxLines, font) {
         const normalizedText = (text || "").trim();
         if (!normalizedText) {
             return [];
         }
 
-        const measureService = getTextMeasureService();
-        if (measureService && typeof measureService.measure === "function") {
-            const result = measureService.measure({
-                text: normalizedText,
-                maxWidth,
-                maxLines,
-                font
-            });
-            if (Array.isArray(result?.lines) && result.lines.length > 0) {
-                return result.lines.map(line => line.text);
+        const cacheGeneration = getTextMeasureService()?.getCacheGeneration?.() || 0;
+        const fontKey = `${font?.family || ""}|${font?.sizePx || 0}|${font?.weight || 0}|${font?.lineHeightPx || 0}|${font?.letterSpacingPx || 0}|${cacheGeneration}`;
+        return getCachedCanvasTextLines(state, node, slot, normalizedText, maxWidth, maxLines, fontKey, () => {
+            const measureService = getTextMeasureService();
+            if (measureService && typeof measureService.measure === "function") {
+                const result = measureService.measure({
+                    text: normalizedText,
+                    maxWidth,
+                    maxLines,
+                    font
+                });
+                if (Array.isArray(result?.lines) && result.lines.length > 0) {
+                    return result.lines.map(line => line.text);
+                }
             }
-        }
 
-        return [normalizedText];
+            return [normalizedText];
+        });
     }
 
     function getCanvasAdvancedNodePortLayout(state, node, hostBounds, detailMode) {
@@ -1743,6 +1779,9 @@
         const headerGap = Math.max(5, 6 * zoom);
         const portSectionGap = Math.max(6, 7 * zoom);
         const titleLines = measureCanvasWrappedLines(
+            state,
+            node,
+            "advanced-title",
             node?.title || "Untitled",
             contentWidth,
             resolvedDetailMode === "compact" ? 1 : 2,
@@ -1754,6 +1793,9 @@
             });
         const supportingText = node?.subtitle || node?.leadText || "";
         const supportingLines = measureCanvasWrappedLines(
+            state,
+            node,
+            "advanced-supporting",
             supportingText,
             contentWidth,
             resolvedDetailMode === "compact" ? 1 : 2,
@@ -2112,9 +2154,15 @@
         const primitives = getCanvasRuntimePrimitives();
         context.save();
         setCanvasFont(context, 700, Math.max(10, 15 * state.ui.zoom));
-        const titleLines = primitives?.wrapText
-            ? primitives.wrapText(context, node.title || "Untitled", contentWidth, detailMode === "compact" ? 1 : 2)
-            : [node.title || "Untitled"];
+        const titleLines = wrapCanvasNodeText(
+            state,
+            node,
+            "standard-title",
+            primitives,
+            context,
+            node.title || "Untitled",
+            contentWidth,
+            detailMode === "compact" ? 1 : 2);
         drawCanvasTextLines(
             context,
             titleLines,
@@ -2141,10 +2189,16 @@
         context.save();
         setCanvasFont(context, 500, Math.max(8, 11.5 * state.ui.zoom));
         context.fillStyle = paletteStyle.secondaryText;
-        for (const line of secondaryLines.slice(0, detailMode === "compact" ? 1 : 3)) {
-            const wrapped = primitives?.wrapText
-                ? primitives.wrapText(context, line, contentWidth, detailMode === "compact" ? 1 : 2)
-                : [line];
+        for (const [index, line] of secondaryLines.slice(0, detailMode === "compact" ? 1 : 3).entries()) {
+            const wrapped = wrapCanvasNodeText(
+                state,
+                node,
+                `standard-secondary-${index}`,
+                primitives,
+                context,
+                line,
+                contentWidth,
+                detailMode === "compact" ? 1 : 2);
             drawCanvasTextLines(
                 context,
                 wrapped,
