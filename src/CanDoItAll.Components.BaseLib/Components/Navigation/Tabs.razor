@@ -135,9 +135,9 @@
     [Parameter]
     public TabPosition TabPosition { get; set; } = TabPosition.Top;
 
-    /// <summary>The visual style applied to the tab strip and panels.</summary>
+    /// <summary>The spacing/scale of the tab strip and panels.</summary>
     [Parameter]
-    public TabsVariant Variant { get; set; } = TabsVariant.WorkspacePrimary;
+    public TabsDensity Density { get; set; } = TabsDensity.Normal;
 
     /// <summary>Controls whether a border is drawn around the tab strip.</summary>
     [Parameter]
@@ -356,7 +356,7 @@
             ' ',
             [
                 "cad-tabs",
-                ResolveVariantCssClass(),
+                ResolveDensityCssClass(),
                 ResolvePositionCssClass(),
                 ResolveBorderCssClass(),
                 ResolveToneCssClass(),
@@ -374,15 +374,12 @@
             : "cad-tabs__tab";
     }
 
-    private string ResolveVariantCssClass()
+    private string ResolveDensityCssClass()
     {
-        return Variant switch
+        return Density switch
         {
-            TabsVariant.WorkspaceSecondary => "cad-tabs--variant-workspace-secondary",
-            TabsVariant.WorkspaceTertiary => "cad-tabs--variant-workspace-tertiary",
-            TabsVariant.ModalCompact => "cad-tabs--variant-modal-compact",
-            TabsVariant.Workstation => "cad-tabs--variant-workstation",
-            _ => "cad-tabs--variant-workspace-primary"
+            TabsDensity.Compact => "cad-tabs--density-compact",
+            _ => "cad-tabs--density-normal"
         };
     }
 

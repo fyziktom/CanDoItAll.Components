@@ -33,8 +33,14 @@ We are working toward **2.0.0**. Two rule sets apply: rules for day-to-day devel
 
    New or touched CSS should follow this scheme. When refactoring a file that still uses an older prefix (e.g. `--cad-`), migrate it to the matching namespace above as part of that change rather than leaving it mixed.
 4. **No application-specific semantics in shared components** *(target — not fully applied yet)*. Variant/enum members and other public component vocabulary must describe a generic role or style, never a specific consuming application's concept (e.g. no `TabsVariant.WorkspaceTertiary`). When you find one, replace it with a generic equivalent and record the rename/removal in `CHANGELOG.md` as breaking.
-5. Tailwind folder/file naming mirrors `src/<Package>/Components/<Group>/<Component>.razor`, in lowercase-kebab (e.g. `buttons/copy-button.css` for `Buttons/CopyButton.razor`).
-6. A Tailwind selector with no current component owner moves to that group's `compatibility/` subfolder instead of being deleted, until its removal is proven safe.
+5. **Standardized appearance properties.** A component's visual presentation should be driven primarily by three standardized parameter roles, not by ad hoc or application-specific enum members:
+   - `Size` — physical dimension scale (e.g. `Small`/`Medium`/`Large`), per existing convention (`ButtonSize`, etc.).
+   - `Density` — spacing/scale of a component's own chrome (e.g. `Normal`/`Compact`, some components may add `Comfortable`). `Normal` is always the default. Each component family defines its own `<Component>Density` enum next to its other primitives (mirrors the existing per-family `Size` convention) rather than sharing one repo-wide enum.
+   - `Variant` — a genuinely distinct visual/stylistic treatment (e.g. `Filled`/`Outlined`/`Text`), never a consuming application's concept (ties into rule 4 above).
+
+   When a component's existing `Variant` (or similar) enum mixes spacing concerns with app-specific shell/theme concepts, split it: fold the spacing-only members into a new `Density` parameter and remove the app-specific members, replacing app-level shell theming with consumer-supplied `Class`/`Style`.
+6. Tailwind folder/file naming mirrors `src/<Package>/Components/<Group>/<Component>.razor`, in lowercase-kebab (e.g. `buttons/copy-button.css` for `Buttons/CopyButton.razor`).
+7. A Tailwind selector with no current component owner moves to that group's `compatibility/` subfolder instead of being deleted, until its removal is proven safe.
 
 ### Refactoring rules
 

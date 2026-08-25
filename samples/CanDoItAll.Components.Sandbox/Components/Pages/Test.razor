@@ -230,7 +230,7 @@
                                 <div class="space-y-6">
                                     @foreach (var tone in TabsTones)
                                     {
-                                        <Tabs Variant="TabsVariant.WorkspaceSecondary" Tone="@tone" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{tone} tone tabs")">
+                                        <Tabs Tone="@tone" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{tone} tone tabs")">
                                             <TabsItem Text="@tone.ToString()" Icon="palette">@tone.ToString() tone</TabsItem>
                                             <TabsItem Text="Inactive">Inactive tab</TabsItem>
                                             <TabsItem Text="Disabled" Disabled="true">Disabled tab</TabsItem>
@@ -239,23 +239,23 @@
 
                                     @foreach (var borderMode in TabsBorderModes)
                                     {
-                                        <Tabs Variant="TabsVariant.WorkspacePrimary" Tone="TabsTone.Primary" BorderMode="@borderMode" AriaLabel="@($"{borderMode} border tabs")">
+                                        <Tabs Tone="TabsTone.Primary" BorderMode="@borderMode" AriaLabel="@($"{borderMode} border tabs")">
                                             <TabsItem Text="@borderMode.ToString()">@borderMode.ToString() border</TabsItem>
                                             <TabsItem Text="Border mode">Second tab</TabsItem>
                                         </Tabs>
                                     }
 
-                                    @foreach (var variant in TabsVariants)
+                                    @foreach (var density in TabsDensities)
                                     {
-                                        <Tabs Variant="@variant" Tone="TabsTone.Info" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{variant} variant tabs")">
-                                            <TabsItem Text="@variant.ToString()" Icon="tabs">@variant.ToString() variant</TabsItem>
+                                        <Tabs Density="@density" Tone="TabsTone.Info" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{density} density tabs")">
+                                            <TabsItem Text="@density.ToString()" Icon="tabs">@density.ToString() density</TabsItem>
                                             <TabsItem Text="With badge" BadgeText="3">Badge tab</TabsItem>
                                         </Tabs>
                                     }
 
                                     @foreach (var position in TabPositions)
                                     {
-                                        <Tabs Variant="TabsVariant.WorkspaceTertiary" Tone="TabsTone.Success" BorderMode="TabsBorderMode.Soft" TabPosition="@position" AriaLabel="@($"{position} position tabs")">
+                                        <Tabs Tone="TabsTone.Success" BorderMode="TabsBorderMode.Soft" TabPosition="@position" AriaLabel="@($"{position} position tabs")">
                                             <TabsItem Text="@position.ToString()" Icon="@GetTabPositionIcon(position)">@position.ToString() position</TabsItem>
                                             <TabsItem Text="Details">Positioned panel</TabsItem>
                                         </Tabs>
@@ -315,7 +315,7 @@
     private static readonly AlertStyle[] AlertStyles = Enum.GetValues<AlertStyle>();
     private static readonly TabsTone[] TabsTones = Enum.GetValues<TabsTone>();
     private static readonly TabsBorderMode[] TabsBorderModes = Enum.GetValues<TabsBorderMode>();
-    private static readonly TabsVariant[] TabsVariants = Enum.GetValues<TabsVariant>();
+    private static readonly TabsDensity[] TabsDensities = Enum.GetValues<TabsDensity>();
     private static readonly TabPosition[] TabPositions = Enum.GetValues<TabPosition>();
     private static readonly string[] StatusBadgeTones = ["neutral", "success", "warning", "danger", "info", "accent"];
     private static readonly TextStyle[] TextStyles = Enum.GetValues<TextStyle>();
