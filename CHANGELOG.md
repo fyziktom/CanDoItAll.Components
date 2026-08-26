@@ -56,6 +56,41 @@ All notable changes to this repository's packages are recorded here, per the cha
   new `Tailwind/layout/theme-host.css`, per the Tailwind file-layout convention (CLAUDE.md rule 6) — `theme.css` now
   holds only the shared `--color-chrome-*`/token blocks. Purely a file move at the time; the class itself
   (`.cad-theme-host` → `.ui-theme-host`) was renamed in the same release, see the Public interface entry below.
+- Added a generated-asset convention (new "Bake a Tailwind plugin's static output into a generated,
+  `@layer components` file" development rule in `CLAUDE.md`): `tools/forms/generate-form-plugin-css.cjs`
+  (`npm run generate:forms`) bakes `@tailwindcss/forms`' compiled class-strategy output
+  (`.form-input`/`.form-select`/`.form-checkbox`) into the checked-in, `@layer components`-wrapped
+  `Tailwind/forms/form-plugin.generated.css`, instead of registering the plugin live via `@plugin`. Registering it
+  live would emit those rules unlayered (verified by building `Tailwind/input-test.css`'s prototype and inspecting
+  the compiled CSS), which would permanently defeat any consumer `Class="..."` utility override on the components
+  that use them, regardless of source order. Regenerate via `npm run generate:forms` after editing
+  `tools/forms/fixture.html` or bumping the `@tailwindcss/forms` version.
+- Added `Tailwind/forms/form-controls.css` (`.ui-input`/`.ui-select`/`.ui-checkbox`, `@layer components`), ported
+  from `Tailwind/input-test.css`'s prototype (CLAUDE.md rule 3) and extended with `min-w-0 max-w-full` (the
+  prototype only has `w-full`; the flex containers these inputs sit in — `FormField`, `SecretField`,
+  `PrefixedField` — rely on `min-w-0` to avoid overflow on narrow viewports) and `.ui-input--textarea`/`--mono`/
+  `--toolbar` (folded in from the now-removed `Tailwind/forms/text-area.css`).
+- Removed `Tailwind/forms/text-area.css` (its `.cda-input`/`.cda-input--textarea`/`--mono`/`--toolbar` rules moved
+  into `form-controls.css` as `.ui-input`/`.ui-input--textarea`/`--mono`/`--toolbar`) and its `input-base.css`
+  import.
+- Moved `Tailwind/forms/prefixed-field.css`'s input-descendant override into `form-controls.css`, retargeted from
+  `.cda-input`/`.rz-input`/`.rz-numeric`/`.rz-select` onto `.ui-input`/`.ui-select`.
+- Fixed: `form-controls.css`'s `.ui-input--outlined`/`--filled` and `.ui-checkbox--outlined`/`--filled` (and the
+  `[disabled]` background rule) now set `background-color` instead of the `background` shorthand. The shorthand
+  was clearing `background-image` on any element combining these with a `@tailwindcss/forms` plugin class —
+  `DropDown`'s `form-select ui-input ui-input--outlined` lost its dropdown-arrow icon, and `CheckBox`'s
+  `form-checkbox ui-checkbox ui-checkbox--outlined`/`--filled` would have lost its checked-state checkmark icon
+  the same way.
+- Added `Tailwind/forms/switch.css`, `slider.css`, `fieldset.css`, `settings-switch-row.css`,
+  `settings-switch-label.css`, `file-upload.css` — new `--tone-*`-token-based `.ui-switch`/`.ui-slider`/
+  `.ui-fieldset`/`.ui-settings-row`/`.ui-settings-label`/`.ui-file-upload__*` classes, replacing hardcoded
+  `chrome-*`/`indigo-*`/raw-hex-gradient utility strings that were previously written directly in each
+  component's `.razor` markup rather than a Tailwind file (a pre-existing gap in the file-layout convention this
+  change now closes for these six components).
+- Removed the now-dead `Class="cda-input"` passthrough from five Sandbox Forms example components
+  (`samples/CanDoItAll.Components.Sandbox/Components/Examples/Forms/{FieldSlots,FormRowVariants,
+  FormSectionShowcase,ScoringFieldset,BudgetReference}.razor`) — the class no longer resolves to anything now that
+  `text-area.css` is gone, and each component's own default look already matches it.
 
 #### Public interface
 
@@ -106,6 +141,25 @@ All notable changes to this repository's packages are recorded here, per the cha
   - No values changed — this is a naming-only migration. `Tailwind/input-test.css`'s separate, unrelated `--tone-*`
     prototype block (a different, disjoint palette, not built into production output) was intentionally left
     untouched.
+- **Breaking:** `TextBox`, `Password`, `Numeric`, `DropDown`, `CheckBox`, `SecretField`'s inner input, and
+  `TextArea` now render `@tailwindcss/forms`-plugin classes (`form-input`/`form-select`/`form-checkbox`) plus
+  `.ui-input`/`.ui-checkbox`/`--outlined`/`--filled` (see `form-controls.css`, above) instead of the old
+  untokenized `.rz-input`/`.rz-select`/`.rz-numeric`/`.rz-checkbox` strings — unifying their look with each other
+  and with the rest of the design system. A consumer's `Class="..."` override on one of these six components still
+  wins (verified against the compiled CSS: Tailwind's utility output stays unlayered in this repo's build, which
+  unconditionally beats any `@layer components` content regardless of source order). `TextArea` moves from
+  `.cda-input`/`.cda-input--textarea` to the same `.ui-input` family, which also changes its corner radius to
+  match every other input (was `rounded-xl` via `--cad-radius-control`, now `rounded-md`).
+- Added `InputLook.Filled`, mapping to `.ui-input--filled`/`.ui-checkbox--filled` (a lighter/tinted background),
+  reachable from `TextBox`, `Password`, `Numeric`, `DropDown`, `CheckBox`, `SecretField`, and `TextArea`. The
+  existing `InputLook.Default` now explicitly renders `.ui-input--outlined`/`.ui-checkbox--outlined` (today's
+  `bg-white`-equivalent look, unchanged); `InputLook.Plain` is unchanged (renders no class).
+- Added `--tone-*`-token-based looks for `Switch`, `Slider`, `Fieldset`, `FileUpload`, `SettingsSwitchRow`, and
+  `SettingsSwitchLabel` (new `.ui-switch`/`.ui-slider`/`.ui-fieldset`/`.ui-file-upload__*`/`.ui-settings-row`/
+  `.ui-settings-label` classes), replacing their previous hardcoded `chrome-*`/`indigo-*`/raw-hex-gradient
+  rendering. No parameter changes; only the rendered class names and resulting colors changed. `FileUpload`'s drop
+  zone loses its bespoke gradient/shadow art in favor of flat `--tone-*` fills for the idle/drag-active/disabled
+  states — a deliberate simplification, not a partial port.
 
 #### Internal (chrome color scale)
 

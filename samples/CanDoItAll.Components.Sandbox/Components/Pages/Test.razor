@@ -102,11 +102,19 @@
                             <h3 id="@($"test-{group.Slug}-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl(group.Route, component.Name)">&lt;@component.Name&gt;</a></h3>
                             @if (component.Name == "CheckBox")
                             {
-                                <div class="flex gap-4">
-                                    <CheckBox TValue="bool" Value="true" aria-label="Checked" />
-                                    <CheckBox TValue="bool" Value="false" aria-label="Unchecked" />
-                                    <CheckBox TValue="bool" Value="true" Disabled="true" aria-label="Checked and disabled" />
-                                    <CheckBox TValue="bool" Value="false" Disabled="true" aria-label="Unchecked and disabled" />
+                                <div class="space-y-3">
+                                    <div class="flex gap-4">
+                                        <CheckBox TValue="bool" Value="true" aria-label="Checked" />
+                                        <CheckBox TValue="bool" Value="false" aria-label="Unchecked" />
+                                        <CheckBox TValue="bool" Value="true" Disabled="true" aria-label="Checked and disabled" />
+                                        <CheckBox TValue="bool" Value="false" Disabled="true" aria-label="Unchecked and disabled" />
+                                    </div>
+                                    <div class="flex gap-4">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <CheckBox TValue="bool" Value="true" Look="@look" aria-label="@($"{look} look, checked")" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "Alert")
@@ -155,6 +163,12 @@
                                 <div class="space-y-3">
                                     <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" aria-label="Enabled status" />
                                     <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" Disabled="true" aria-label="Disabled status" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" Look="@look" aria-label="@($"{look} look")" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "EntityPicker")
@@ -183,6 +197,12 @@
                                 <div class="space-y-3">
                                     <Numeric TValue="int" Value="42" aria-label="Enabled quantity" />
                                     <Numeric TValue="int" Value="42" Disabled="true" aria-label="Disabled quantity" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <Numeric TValue="int" Value="42" Look="@look" aria-label="@($"{look} look quantity")" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "PrefixedField")
@@ -223,6 +243,12 @@
                                 <div class="space-y-3">
                                     <SecretField Value="top-secret" />
                                     <SecretField Value="top-secret" Disabled="true" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <SecretField Value="top-secret" Look="@look" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "Tabs")
@@ -280,6 +306,12 @@
                                 <div class="space-y-3">
                                     <TextArea Value="Review notes" />
                                     <TextArea Value="Review notes" Disabled="true" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <TextArea Value="@($"{look} look")" Look="@look" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "TextBox")
@@ -287,6 +319,12 @@
                                 <div class="space-y-3">
                                     <TextBox Value="Project Aurora" />
                                     <TextBox Value="Project Aurora" Disabled="true" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <TextBox Value="@($"{look} look")" Look="@look" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else
@@ -322,6 +360,7 @@
     private static readonly TabPosition[] TabPositions = Enum.GetValues<TabPosition>();
     private static readonly string[] StatusBadgeTones = ["neutral", "success", "warning", "danger", "info", "accent"];
     private static readonly TextStyle[] TextStyles = Enum.GetValues<TextStyle>();
+    private static readonly InputLook[] InputLooks = Enum.GetValues<InputLook>();
     private static readonly TreeViewNode[] TestTreeNodes =
     [
         new()

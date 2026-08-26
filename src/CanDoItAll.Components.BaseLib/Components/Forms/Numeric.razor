@@ -196,7 +196,8 @@
         return Look switch
         {
             InputLook.Plain => string.Empty,
-            _ => "rz-numeric min-w-0 w-full rounded-md border border-chrome-300 bg-white px-3 py-2 text-sm text-chrome-800 disabled:cursor-not-allowed disabled:opacity-60"
+            InputLook.Filled => "form-input ui-input ui-input--filled",
+            _ => "form-input ui-input ui-input--outlined"
         };
     }
 

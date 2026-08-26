@@ -83,7 +83,8 @@ else
         return Look switch
         {
             InputLook.Plain => string.Empty,
-            _ => "cda-input cda-input--textarea"
+            InputLook.Filled => "form-input ui-input ui-input--textarea ui-input--filled",
+            _ => "form-input ui-input ui-input--textarea ui-input--outlined"
         };
     }
 

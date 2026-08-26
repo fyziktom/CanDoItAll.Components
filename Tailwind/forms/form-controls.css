@@ -1,0 +1,91 @@
+/*
+  Ported from Tailwind/input-test.css's prototype (CLAUDE.md rule 3), extended to fold
+  in TextArea's old .cda-input look and PrefixedField's descendant override.
+
+  Unlike input-test.css, these rules stay inside @layer components -- see
+  Tailwind/forms/form-plugin.generated.css's header for why: @tailwindcss/forms emits
+  its .form-* classes unlayered, which would otherwise force these to go unlayered too
+  (to win the cascade), defeating consumer Class="..." overrides. Baking the plugin's
+  output into @layer components (via the generator) removes that requirement, so these
+  can stay properly layered and still win over the plugin's own defaults -- this file
+  is imported after form-plugin.generated.css, so within @layer components its rules
+  come later and win the tie.
+ */
+
+@layer components {
+  .ui-input,
+  .ui-select {
+    @apply min-w-0 w-full max-w-full rounded-md px-3 py-2 text-sm transition focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    border-color: var(--tone-border);
+    color: var(--tone-text);
+  }
+
+  .ui-select {
+    appearance: auto;
+    background-image: none;
+  }
+
+  .ui-input::placeholder {
+    color: var(--color-chrome-500);
+  }
+
+  .ui-input--outlined,
+  .ui-select--outlined {
+    /* background-color, not the `background` shorthand -- `.form-select`'s arrow
+       background-image must survive when this is combined with it (e.g. `form-select
+       ui-input ui-input--outlined`). */
+    background-color: var(--tone-surface);
+  }
+
+  .ui-input--filled,
+  .ui-select--filled {
+    background-color: var(--tone-surface-soft);
+  }
+
+  .ui-input--textarea {
+    @apply block w-full resize-y leading-6;
+  }
+
+  .ui-input--mono {
+    @apply font-mono;
+  }
+
+  .ui-input--toolbar {
+    box-shadow: var(--cad-shadow-soft);
+  }
+
+  .ui-checkbox {
+    @apply size-4 rounded border transition focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    border-color: var(--tone-border);
+    color: var(--tone-primary-solid-bg);
+  }
+
+  .ui-checkbox--outlined {
+    /* background-color, not `background` -- `.form-checkbox`'s checked-state
+       background-image (the checkmark SVG) must survive alongside this. */
+    background-color: var(--tone-surface);
+  }
+
+  .ui-checkbox--filled {
+    background-color: var(--tone-surface-soft);
+  }
+
+  .ui-input[disabled],
+  .ui-select[disabled],
+  .ui-checkbox[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .ui-input[disabled],
+  .ui-select[disabled] {
+    border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
+    background-color: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
+    color: color-mix(in oklch, var(--tone-text) 65%, transparent);
+  }
+
+  .cda-prefixed-field .ui-input,
+  .cda-prefixed-field .ui-select {
+    @apply min-w-0 flex-1 rounded-none border-0 bg-transparent shadow-none;
+  }
+}

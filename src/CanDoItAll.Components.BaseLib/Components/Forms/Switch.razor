@@ -1,7 +1,7 @@
 @namespace CanDoItAll.Components.BaseLib
 @inherits StyledComponentBase
 
-<label @attributes='BuildAttributes("rz-switch inline-flex cursor-pointer items-center gap-2")'>
+<label @attributes='BuildAttributes("ui-switch")'>
     <input type="checkbox"
            class="peer sr-only"
            aria-label="@AriaLabel"
@@ -9,7 +9,7 @@
            checked="@Value"
            disabled="@Disabled"
            @onchange="OnChangedAsync" />
-    <span class="h-5 w-9 rounded-full bg-chrome-300 transition peer-checked:bg-indigo-500 peer-disabled:opacity-40"></span>
+    <span class="ui-switch__track"></span>
 </label>
 
 @code {

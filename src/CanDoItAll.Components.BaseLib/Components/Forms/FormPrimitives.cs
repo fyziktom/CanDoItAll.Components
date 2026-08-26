@@ -3,6 +3,7 @@ namespace CanDoItAll.Components.BaseLib;
 public enum InputLook
 {
     Default,
+    Filled,
     Plain
 }
 
