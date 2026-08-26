@@ -1,33 +1,33 @@
 @layer components {
   .cad-tabs {
-    --cad-tabs-accent-bg: var(--cad-tone-primary-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-primary-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-primary-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-primary-soft-fg);
-    --cad-tabs-list-border: color-mix(in srgb, var(--cad-tabs-accent-border) 34%, var(--cad-color-border-soft) 66%);
-    --cad-tabs-tab-border: color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
-    --cad-tabs-tab-hover-border: color-mix(in srgb, var(--cad-tabs-accent-border) 46%, var(--cad-color-border) 54%);
+    --cad-tabs-accent-bg: var(--tone-primary-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-primary-soft-hover);
+    --cad-tabs-accent-border: var(--tone-primary-soft-border);
+    --cad-tabs-accent-fg: var(--tone-primary-soft-fg);
+    --cad-tabs-list-border: color-mix(in srgb, var(--cad-tabs-accent-border) 34%, var(--tone-border-soft) 66%);
+    --cad-tabs-tab-border: color-mix(in srgb, var(--tone-border-soft) 82%, transparent);
+    --cad-tabs-tab-hover-border: color-mix(in srgb, var(--cad-tabs-accent-border) 46%, var(--tone-border) 54%);
     --cad-tabs-tab-active-border: color-mix(
       in srgb,
       var(--cad-tabs-accent-border) 74%,
-      var(--cad-color-border-soft) 26%
+      var(--tone-border-soft) 26%
     );
-    --cad-tabs-tab-color: var(--cad-color-text);
-    --cad-tabs-tab-hover-color: var(--cad-color-text-strong);
-    --cad-tabs-tab-active-color: var(--cad-color-text-strong);
-    --cad-tabs-tab-background: color-mix(in srgb, var(--cad-color-surface-soft) 86%, transparent);
+    --cad-tabs-tab-color: var(--tone-text);
+    --cad-tabs-tab-hover-color: var(--tone-text-strong);
+    --cad-tabs-tab-active-color: var(--tone-text-strong);
+    --cad-tabs-tab-background: color-mix(in srgb, var(--tone-surface-soft) 86%, transparent);
     --cad-tabs-tab-hover-background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--cad-color-surface) 90%, var(--cad-tabs-accent-bg) 10%) 0%,
-      color-mix(in srgb, var(--cad-color-surface-soft) 74%, var(--cad-tabs-accent-bg) 26%) 100%
+      color-mix(in srgb, var(--tone-surface) 90%, var(--cad-tabs-accent-bg) 10%) 0%,
+      color-mix(in srgb, var(--tone-surface-soft) 74%, var(--cad-tabs-accent-bg) 26%) 100%
     );
     --cad-tabs-tab-active-background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--cad-color-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
-      color-mix(in srgb, var(--cad-color-surface-soft) 58%, var(--cad-tabs-accent-bg) 42%) 100%
+      color-mix(in srgb, var(--tone-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
+      color-mix(in srgb, var(--tone-surface-soft) 58%, var(--cad-tabs-accent-bg) 42%) 100%
     );
-    --cad-tabs-tab-shadow: 0 8px 20px -22px color-mix(in srgb, var(--cad-color-text) 18%, transparent);
-    --cad-tabs-tab-active-shadow: 0 18px 36px -28px color-mix(in srgb, var(--cad-color-text) 28%, transparent);
+    --cad-tabs-tab-shadow: 0 8px 20px -22px color-mix(in srgb, var(--tone-text) 18%, transparent);
+    --cad-tabs-tab-active-shadow: 0 18px 36px -28px color-mix(in srgb, var(--tone-text) 28%, transparent);
     --cad-tabs-tab-indicator: color-mix(in srgb, var(--cad-tabs-accent-border) 72%, var(--cad-tabs-accent-fg) 28%);
     --cad-tabs-tab-font-size: 0.875rem;
     --cad-tabs-tab-font-weight: 650;
@@ -35,13 +35,13 @@
     --cad-tabs-tab-min-height: 2.85rem;
     --cad-tabs-tab-radius: 1rem 1rem 0 0;
     /* TODO: V2 candidate: --cad-tabs-tab-radius: 0; Sandbox overrides it. */
-    --cad-tabs-panel-border: color-mix(in srgb, var(--cad-tabs-accent-border) 56%, var(--cad-color-border-soft) 44%);
+    --cad-tabs-panel-border: color-mix(in srgb, var(--cad-tabs-accent-border) 56%, var(--tone-border-soft) 44%);
     --cad-tabs-panel-background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--cad-color-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
-      color-mix(in srgb, var(--cad-color-surface-soft) 62%, var(--cad-tabs-accent-bg) 38%) 100%
+      color-mix(in srgb, var(--tone-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
+      color-mix(in srgb, var(--tone-surface-soft) 62%, var(--cad-tabs-accent-bg) 38%) 100%
     );
-    --cad-tabs-panel-shadow: 0 18px 42px -30px color-mix(in srgb, var(--cad-color-text) 20%, transparent);
+    --cad-tabs-panel-shadow: 0 18px 42px -30px color-mix(in srgb, var(--tone-text) 20%, transparent);
     --cad-tabs-panel-padding: 1rem;
     --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
     --cad-tabs-badge-background: var(--cad-tabs-accent-bg);
@@ -51,45 +51,45 @@
   }
 
   .cad-tabs--tone-primary {
-    --cad-tabs-accent-bg: var(--cad-tone-primary-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-primary-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-primary-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-primary-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-primary-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-primary-soft-hover);
+    --cad-tabs-accent-border: var(--tone-primary-soft-border);
+    --cad-tabs-accent-fg: var(--tone-primary-soft-fg);
   }
 
   .cad-tabs--tone-secondary {
-    --cad-tabs-accent-bg: var(--cad-tone-secondary-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-secondary-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-secondary-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-secondary-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-secondary-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-secondary-soft-hover);
+    --cad-tabs-accent-border: var(--tone-secondary-soft-border);
+    --cad-tabs-accent-fg: var(--tone-secondary-soft-fg);
   }
 
   .cad-tabs--tone-info {
-    --cad-tabs-accent-bg: var(--cad-tone-info-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-info-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-info-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-info-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-info-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-info-soft-hover);
+    --cad-tabs-accent-border: var(--tone-info-soft-border);
+    --cad-tabs-accent-fg: var(--tone-info-soft-fg);
   }
 
   .cad-tabs--tone-success {
-    --cad-tabs-accent-bg: var(--cad-tone-success-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-success-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-success-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-success-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-success-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-success-soft-hover);
+    --cad-tabs-accent-border: var(--tone-success-soft-border);
+    --cad-tabs-accent-fg: var(--tone-success-soft-fg);
   }
 
   .cad-tabs--tone-warning {
-    --cad-tabs-accent-bg: var(--cad-tone-warning-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-warning-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-warning-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-warning-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-warning-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-warning-soft-hover);
+    --cad-tabs-accent-border: var(--tone-warning-soft-border);
+    --cad-tabs-accent-fg: var(--tone-warning-soft-fg);
   }
 
   .cad-tabs--tone-danger {
-    --cad-tabs-accent-bg: var(--cad-tone-danger-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-danger-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-danger-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-danger-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-danger-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-danger-soft-hover);
+    --cad-tabs-accent-border: var(--tone-danger-soft-border);
+    --cad-tabs-accent-fg: var(--tone-danger-soft-fg);
   }
 
   .cad-tabs--horizontal {
@@ -123,8 +123,8 @@
   }
 
   .cad-tabs--border-soft {
-    --cad-tabs-tab-border: color-mix(in srgb, var(--cad-color-border-soft) 80%, transparent);
-    --cad-tabs-tab-hover-border: var(--cad-color-border);
+    --cad-tabs-tab-border: color-mix(in srgb, var(--tone-border-soft) 80%, transparent);
+    --cad-tabs-tab-hover-border: var(--tone-border);
   }
 
   .cad-tabs__list {
@@ -195,7 +195,7 @@
   }
 
   .cad-tabs__tab:focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--cad-tone-primary-soft-border) 75%, transparent);
+    outline: 2px solid color-mix(in srgb, var(--tone-primary-soft-border) 75%, transparent);
     outline-offset: 2px;
   }
 
@@ -247,9 +247,9 @@
   .cad-tabs__tab[aria-disabled="true"] {
     cursor: not-allowed;
     opacity: 0.72;
-    color: var(--cad-color-text-soft);
-    background: color-mix(in srgb, var(--cad-color-surface-soft) 92%, transparent);
-    border-color: color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
+    color: var(--tone-text-soft);
+    background: color-mix(in srgb, var(--tone-surface-soft) 92%, transparent);
+    border-color: color-mix(in srgb, var(--tone-border-soft) 82%, transparent);
     box-shadow: none;
   }
 
@@ -301,7 +301,7 @@
     border-radius: var(--cad-tabs-panel-radius);
     background: var(--cad-tabs-panel-background);
     box-shadow: var(--cad-tabs-panel-shadow);
-    color: var(--cad-color-text);
+    color: var(--tone-text);
   }
 
   .cad-tabs--fill-height .cad-tabs__panel {
@@ -351,8 +351,8 @@
     --cad-tabs-tab-min-height: 2.35rem;
     --cad-tabs-tab-radius: 9999px;
     /* TODO: V2 candidate: --cad-tabs-tab-radius: 0; Sandbox overrides it. */
-    --cad-tabs-tab-background: color-mix(in srgb, var(--cad-color-surface-soft) 74%, transparent);
-    --cad-tabs-tab-hover-background: color-mix(in srgb, var(--cad-color-surface) 70%, var(--cad-tabs-accent-bg) 30%);
+    --cad-tabs-tab-background: color-mix(in srgb, var(--tone-surface-soft) 74%, transparent);
+    --cad-tabs-tab-hover-background: color-mix(in srgb, var(--tone-surface) 70%, var(--cad-tabs-accent-bg) 30%);
     --cad-tabs-tab-active-background: var(--cad-tabs-accent-bg);
     --cad-tabs-tab-active-color: var(--cad-tabs-accent-fg);
     --cad-tabs-panel-border: transparent;

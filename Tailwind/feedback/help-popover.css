@@ -9,24 +9,24 @@
 
   .pf-help-popover__toggle {
     @apply relative z-[81] inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-0 shadow-lg transition duration-150 ease-out;
-    color: var(--cad-tone-info-solid-fg);
+    color: var(--tone-info-solid-fg);
     background: linear-gradient(
       135deg,
-      var(--cad-tone-info-solid-bg),
-      color-mix(in srgb, var(--cad-tone-info-solid-bg) 60%, var(--cad-color-text-strong) 40%)
+      var(--tone-info-solid-bg),
+      color-mix(in srgb, var(--tone-info-solid-bg) 60%, var(--tone-text-strong) 40%)
     );
-    box-shadow: 0 14px 26px color-mix(in srgb, var(--cad-tone-info-solid-bg) 18%, transparent);
+    box-shadow: 0 14px 26px color-mix(in srgb, var(--tone-info-solid-bg) 18%, transparent);
   }
 
   .pf-help-popover__toggle:hover {
     @apply -translate-y-px;
     filter: saturate(1.05);
-    box-shadow: 0 16px 28px color-mix(in srgb, var(--cad-tone-info-solid-bg) 24%, transparent);
+    box-shadow: 0 16px 28px color-mix(in srgb, var(--tone-info-solid-bg) 24%, transparent);
   }
 
   .pf-help-popover__toggle:focus-visible {
     @apply outline outline-2 outline-offset-2;
-    outline-color: color-mix(in srgb, var(--cad-tone-info-solid-bg) 40%, transparent);
+    outline-color: color-mix(in srgb, var(--tone-info-solid-bg) 40%, transparent);
   }
 
   .pf-help-popover__toggle span {
@@ -43,10 +43,10 @@
 
   .pf-help-popover__panel {
     @apply absolute right-0 top-[calc(100%+0.45rem)] z-[82] grid w-[min(18rem,78vw)] max-w-[calc(100vw-2rem)] gap-2 rounded-2xl border px-4 py-3 shadow-2xl;
-    border-color: var(--cad-nav-border);
-    background: color-mix(in srgb, var(--cad-nav-bg) 95%, transparent);
-    color: var(--cad-nav-fg);
-    box-shadow: var(--cad-nav-shadow-strong);
+    border-color: var(--ui-nav-border);
+    background: color-mix(in srgb, var(--ui-nav-bg) 95%, transparent);
+    color: var(--ui-nav-fg);
+    box-shadow: var(--ui-nav-shadow-strong);
   }
 
   .pf-help-popover__panel--above-end {
@@ -55,19 +55,19 @@
 
   .pf-help-popover__panel strong {
     @apply min-w-0 break-words text-xs font-extrabold uppercase tracking-wide;
-    color: var(--cad-nav-fg-strong);
+    color: var(--ui-nav-fg-strong);
   }
 
   .pf-help-popover__panel p,
   .pf-help-popover__panel small {
     @apply m-0 min-w-0 break-words text-sm leading-6;
-    color: var(--cad-nav-fg);
+    color: var(--ui-nav-fg);
     overflow-wrap: anywhere;
   }
 
   .pf-help-popover__panel small {
     @apply text-xs;
-    color: var(--cad-nav-accent-fg);
+    color: var(--ui-nav-accent-fg);
   }
 
   .pf-help-popover--header {

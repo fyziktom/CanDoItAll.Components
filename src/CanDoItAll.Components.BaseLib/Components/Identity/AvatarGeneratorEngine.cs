@@ -13,7 +13,7 @@ internal static class AvatarGeneratorEngine
     // Follows the BaseLib surface token (flips with the nearest [data-cad-theme] ancestor set by
     // ThemeHost) instead of a literal white, so the mouth/eyes plate doesn't stay white on dark
     // surfaces. Falls back to white outside a ThemeHost, matching the JS default.
-    private const string DefaultBackground = "var(--cad-color-surface, #fff)";
+    private const string DefaultBackground = "var(--tone-surface, #fff)";
 
     public static string TextToAvatarId(string? text, string defaultSeedText, int length)
     {

@@ -20,7 +20,7 @@
 }
 
 .sandbox-demo-stage > .sandbox-component-section + .sandbox-component-section {
-  /*border-top: 1px solid var(--cad-color-border-soft);*/
+  /*border-top: 1px solid var(--tone-border-soft);*/
 }
 
 .sandbox-demo-stage > .sandbox-component-section:not(:last-child) {
@@ -29,7 +29,7 @@
 
 
 .sandbox-component-section > .sandbox-example + .sandbox-example {
-  /*border-top: 1px solid var(--cad-color-border-soft);*/
+  /*border-top: 1px solid var(--tone-border-soft);*/
 }
 
 .sandbox-component-section > .sandbox-example:not(:last-child) {
@@ -69,12 +69,12 @@
 }
 
 .sandbox-example__code {
-  @apply m-0 overflow-x-auto text-[0.8125rem] leading-[1.6] text-(--cad-color-text-strong);
+  @apply m-0 overflow-x-auto text-[0.8125rem] leading-[1.6] text-(--tone-text-strong);
   @apply font-mono;
 }
 
 .sandbox-example__missing {
-  @apply m-0 text-[0.8125rem] text-(--cad-tone-warning-soft-fg);
+  @apply m-0 text-[0.8125rem] text-(--tone-warning-soft-fg);
 }
 
 /* The reference tables can be wider than the page; they scroll inside their
@@ -90,15 +90,15 @@
 .sandbox-api__table th,
 .sandbox-api__table td {
   @apply align-top py-2 px-3;
-  border-bottom: 1px solid var(--cad-color-border);
+  border-bottom: 1px solid var(--tone-border);
 }
 
 .sandbox-api__table thead th {
-  @apply border-b-(--cad-color-border) text-[0.6875rem] font-bold tracking-[0.12em] uppercase text-(--cad-color-text-soft);
+  @apply border-b-(--tone-border) text-[0.6875rem] font-bold tracking-[0.12em] uppercase text-(--tone-text-soft);
 }
 
 .sandbox-api__table tbody th {
-  @apply font-semibold whitespace-nowrap text-(--cad-color-text-strong);
+  @apply font-semibold whitespace-nowrap text-(--tone-text-strong);
 }
 
 .sandbox-api__table tbody tr:last-child th,
@@ -107,7 +107,7 @@
 }
 
 .sandbox-api__row--inherited {
-  background: color-mix(in srgb, var(--cad-color-surface-soft) 55%, transparent);
+  background: color-mix(in srgb, var(--tone-surface-soft) 55%, transparent);
 }
 
 .sandbox-api__name,
@@ -118,33 +118,33 @@
 }
 
 .sandbox-api__type {
-  @apply text-(--cad-tone-info-soft-fg);
+  @apply text-(--tone-info-soft-fg);
 }
 
 .sandbox-api__default {
-  @apply text-(--cad-color-text-muted);
+  @apply text-(--tone-text-muted);
 }
 
 .sandbox-api__enum {
-  @apply block pt-1 text-[0.6875rem] leading-normal text-(--cad-color-text-soft);
+  @apply block pt-1 text-[0.6875rem] leading-normal text-(--tone-text-soft);
 }
 
 .sandbox-api__flag {
-  @apply inline-block ml-1.5 rounded-[999px] py-[0.0625rem] px-1.5 text-[0.625rem] font-semibold tracking-[0.04em] uppercase text-(--cad-color-text-soft);
-  background: var(--cad-color-surface-soft);
+  @apply inline-block ml-1.5 rounded-[999px] py-[0.0625rem] px-1.5 text-[0.625rem] font-semibold tracking-[0.04em] uppercase text-(--tone-text-soft);
+  background: var(--tone-surface-soft);
 }
 
 .sandbox-api__flag--required {
-  @apply text-(--cad-tone-warning-soft-fg);
-  background: var(--cad-tone-warning-soft-bg);
+  @apply text-(--tone-warning-soft-fg);
+  background: var(--tone-warning-soft-bg);
 }
 
 .sandbox-api__none {
-  @apply text-(--cad-color-text-soft);
+  @apply text-(--tone-text-soft);
 }
 
 /* Deliberately visible rather than blank: an undocumented parameter is a gap
    somebody should close, not an empty cell to skip past. */
 .sandbox-api__undocumented {
-  @apply italic text-(--cad-tone-warning-soft-fg);
+  @apply italic text-(--tone-warning-soft-fg);
 }

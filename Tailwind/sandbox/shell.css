@@ -29,7 +29,7 @@ body {
 }
 
 .sandbox-layout {
-  @apply min-h-screen text-(--cad-color-text);
+  @apply min-h-screen text-(--tone-text);
 }
 
 .sandbox-layout__backdrop {
@@ -42,8 +42,8 @@ body {
 
 .sandbox-sidebar {
   @apply hidden flex-col gap-1 p-5;
-  background: var(--cad-color-surface);
-  border-bottom: 1px solid var(--cad-color-border-soft);
+  background: var(--tone-surface);
+  border-bottom: 1px solid var(--tone-border-soft);
 }
 
 .sandbox-nav__search {
@@ -52,20 +52,20 @@ body {
 
 .sandbox-nav__search-input {
   @apply w-full rounded-md border px-3 py-[0.4rem] text-[0.85rem];
-  border-color: var(--cad-color-border-soft);
-  background: var(--cad-color-surface);
-  color: var(--cad-color-text);
+  border-color: var(--tone-border-soft);
+  background: var(--tone-surface);
+  color: var(--tone-text);
 }
 
 .sandbox-nav__search-input:focus-visible {
-  outline: 2px solid var(--cad-tone-primary-soft-border);
+  outline: 2px solid var(--tone-primary-soft-border);
   outline-offset: 1px;
 }
 
 .sandbox-nav__match {
   @apply rounded-[0.2rem] px-[0.15rem];
-  background: var(--cad-tone-warning-soft-bg);
-  color: var(--cad-tone-warning-soft-fg);
+  background: var(--tone-warning-soft-bg);
+  color: var(--tone-warning-soft-fg);
 }
 
 .sandbox-nav {
@@ -79,12 +79,12 @@ body {
 
 .sandbox-nav__link:hover,
 .sandbox-nav__link:focus-visible {
-  background: color-mix(in srgb, var(--cad-tone-info-soft-bg) 55%, transparent);
+  background: color-mix(in srgb, var(--tone-info-soft-bg) 55%, transparent);
 }
 
 .sandbox-nav__link.is-active {
-  @apply shadow-[inset_3px_0_0_var(--cad-tone-primary-soft-border)];
-  background: color-mix(in srgb, var(--cad-tone-primary-soft-bg) 55%, transparent);
+  @apply shadow-[inset_3px_0_0_var(--tone-primary-soft-border)];
+  background: color-mix(in srgb, var(--tone-primary-soft-bg) 55%, transparent);
 }
 
 .sandbox-nav__link.is-unused .sandbox-nav__title:after {
@@ -97,15 +97,15 @@ body {
 }
 
 .sandbox-nav__link.is-unused .sandbox-nav__title {
-  color: var(--cad-tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
+  color: var(--tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
 }
 
 .sandbox-nav__title {
-  @apply text-[0.95rem] font-semibold text-(--cad-color-text-strong);
+  @apply text-[0.95rem] font-semibold text-(--tone-text-strong);
 }
 
 .sandbox-nav__meta {
-  @apply text-[0.72rem] tracking-[0.12em] uppercase text-(--cad-color-text-soft);
+  @apply text-[0.72rem] tracking-[0.12em] uppercase text-(--tone-text-soft);
 }
 
 .sandbox-main {
@@ -132,7 +132,7 @@ body {
     height: calc(100vh - var(--sandbox-toolbar-height, 0px));
     overflow-y: auto;
     border-bottom: 0;
-    border-right: 1px solid var(--cad-color-border-soft);
+    border-right: 1px solid var(--tone-border-soft);
     padding: 1.25rem;
   }
 

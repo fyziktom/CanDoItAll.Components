@@ -1,12 +1,12 @@
 @layer components {
   .cad-side-menu {
-    --cad-side-menu-bg: var(--cad-nav-bg);
-    --cad-side-menu-bg-soft: var(--cad-nav-bg-soft);
-    --cad-side-menu-border: var(--cad-nav-border);
-    --cad-side-menu-fg: var(--cad-nav-fg);
-    --cad-side-menu-muted: var(--cad-nav-muted);
-    --cad-side-menu-accent: var(--cad-nav-accent);
-    --cad-side-menu-accent-soft: var(--cad-nav-accent-soft);
+    --cad-side-menu-bg: var(--ui-nav-bg);
+    --cad-side-menu-bg-soft: var(--ui-nav-bg-soft);
+    --cad-side-menu-border: var(--ui-nav-border);
+    --cad-side-menu-fg: var(--ui-nav-fg);
+    --cad-side-menu-muted: var(--ui-nav-muted);
+    --cad-side-menu-accent: var(--ui-nav-accent);
+    --cad-side-menu-accent-soft: var(--ui-nav-accent-soft);
 
     @apply relative isolate shrink-0 overflow-visible border text-sm;
     z-index: 41;
@@ -16,10 +16,10 @@
     border-color: var(--cad-side-menu-border);
     border-radius: var(--cad-radius-panel);
     background:
-      radial-gradient(circle at 18% 0%, var(--cad-nav-accent-soft-strong), transparent 28%),
+      radial-gradient(circle at 18% 0%, var(--ui-nav-accent-soft-strong), transparent 28%),
       linear-gradient(180deg, var(--cad-side-menu-bg-soft) 0%, var(--cad-side-menu-bg) 72%);
     color: var(--cad-side-menu-fg);
-    box-shadow: var(--cad-nav-shadow);
+    box-shadow: var(--ui-nav-shadow);
     transition:
       width 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
       box-shadow 180ms ease;
@@ -59,9 +59,9 @@
 
   .cad-side-menu__brand-mark {
     @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg;
-    border-color: var(--cad-nav-accent-border);
-    background: var(--cad-nav-overlay-soft-strong);
-    color: var(--cad-nav-accent-fg);
+    border-color: var(--ui-nav-accent-border);
+    background: var(--ui-nav-overlay-soft-strong);
+    color: var(--ui-nav-accent-fg);
   }
 
   .cad-side-menu__identity-copy {
@@ -70,7 +70,7 @@
 
   .cad-side-menu__title {
     @apply truncate text-sm font-semibold tracking-tight;
-    color: var(--cad-nav-fg-strong);
+    color: var(--ui-nav-fg-strong);
   }
 
   .cad-side-menu__subtitle {
@@ -84,14 +84,14 @@
   }
 
   .cad-side-menu__collapse {
-    border-color: var(--cad-nav-border);
-    background: var(--cad-nav-overlay-soft);
+    border-color: var(--ui-nav-border);
+    background: var(--ui-nav-overlay-soft);
     color: var(--cad-side-menu-muted);
   }
 
   .cad-side-menu__collapse:hover {
-    background: var(--cad-nav-overlay-soft-hover);
-    color: var(--cad-nav-fg-strong);
+    background: var(--ui-nav-overlay-soft-hover);
+    color: var(--ui-nav-fg-strong);
   }
 
   .cad-side-menu__items-viewport {
@@ -131,16 +131,16 @@
   }
 
   .cad-side-menu__item:not(:disabled):hover {
-    border-color: var(--cad-nav-hover-border);
-    background: var(--cad-nav-hover-bg);
-    color: var(--cad-nav-fg-strong);
+    border-color: var(--ui-nav-hover-border);
+    background: var(--ui-nav-hover-bg);
+    color: var(--ui-nav-fg-strong);
     transform: translateX(2px);
   }
 
   .cad-side-menu__item.is-selected {
-    border-color: var(--cad-nav-accent-border-strong);
+    border-color: var(--ui-nav-accent-border-strong);
     background: var(--cad-side-menu-accent-soft);
-    color: var(--cad-nav-fg-strong);
+    color: var(--ui-nav-fg-strong);
     box-shadow: inset 3px 0 0 var(--cad-side-menu-accent);
   }
 
@@ -151,12 +151,12 @@
 
   .cad-side-menu__item-icon {
     @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg;
-    background: var(--cad-nav-hover-bg);
+    background: var(--ui-nav-hover-bg);
   }
 
   .cad-side-menu__item.is-selected .cad-side-menu__item-icon {
-    background: var(--cad-nav-accent-soft-strong);
-    color: var(--cad-nav-accent-fg);
+    background: var(--ui-nav-accent-soft-strong);
+    color: var(--ui-nav-accent-fg);
   }
 
   .cad-side-menu__item-label {
@@ -172,8 +172,8 @@
     min-width: 1.35rem;
     height: 1.35rem;
     padding-inline: 0.35rem;
-    background: var(--cad-nav-accent-soft-strong);
-    color: var(--cad-nav-accent-fg);
+    background: var(--ui-nav-accent-soft-strong);
+    color: var(--ui-nav-accent-fg);
     font-size: 0.62rem;
   }
 
@@ -182,8 +182,8 @@
     min-width: 1rem;
     height: 1rem;
     padding-inline: 0.2rem;
-    background: var(--cad-nav-accent-fg-strong);
-    color: var(--cad-nav-accent-fg-inverse);
+    background: var(--ui-nav-accent-fg-strong);
+    color: var(--ui-nav-accent-fg-inverse);
     font-size: 0.52rem;
   }
 
@@ -209,10 +209,10 @@
     left: calc(100% + 0.75rem);
     width: min(23rem, calc(100vw - 7rem));
     max-height: min(34rem, calc(100dvh - 2rem));
-    border-color: var(--cad-color-border-soft);
+    border-color: var(--tone-border-soft);
     border-radius: var(--cad-radius-panel);
-    background: var(--cad-color-surface);
-    color: var(--cad-color-text);
+    background: var(--tone-surface);
+    color: var(--tone-text);
     box-shadow: var(--cad-shadow-strong);
     animation: cad-side-menu-popover-in 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
@@ -229,8 +229,8 @@
 
   .cad-side-menu__popover-header {
     @apply sticky top-0 z-10 flex items-start justify-between gap-3 border-b px-4 py-3;
-    border-color: var(--cad-color-border-soft);
-    background: color-mix(in srgb, var(--cad-color-surface) 94%, transparent);
+    border-color: var(--tone-border-soft);
+    background: color-mix(in srgb, var(--tone-surface) 94%, transparent);
     backdrop-filter: blur(14px);
   }
 
@@ -240,29 +240,29 @@
 
   .cad-side-menu__popover-heading h3 {
     @apply m-0 text-sm font-semibold;
-    color: var(--cad-color-text-strong);
+    color: var(--tone-text-strong);
   }
 
   .cad-side-menu__popover-heading p {
     @apply mb-0 mt-1 text-xs leading-5;
-    color: var(--cad-color-text-muted);
+    color: var(--tone-text-muted);
   }
 
   .cad-side-menu__popover-icon {
     @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl;
-    background: var(--cad-tone-info-soft-bg);
-    color: var(--cad-tone-info-soft-fg);
+    background: var(--tone-info-soft-bg);
+    color: var(--tone-info-soft-fg);
   }
 
   .cad-side-menu__popover-close {
-    border-color: var(--cad-color-border-soft);
-    background: var(--cad-color-surface-soft);
-    color: var(--cad-color-text-soft);
+    border-color: var(--tone-border-soft);
+    background: var(--tone-surface-soft);
+    color: var(--tone-text-soft);
   }
 
   .cad-side-menu__popover-close:hover {
-    border-color: var(--cad-color-border);
-    color: var(--cad-color-text-strong);
+    border-color: var(--tone-border);
+    color: var(--tone-text-strong);
   }
 
   .cad-side-menu__panel-list {
@@ -277,20 +277,20 @@
     @apply relative flex min-w-0 items-center gap-2 rounded-xl border border-transparent px-2.5 py-2 text-left transition;
     min-height: 3.5rem;
     background: transparent;
-    color: var(--cad-color-text);
+    color: var(--tone-text);
     cursor: pointer;
     font: inherit;
   }
 
   .cad-side-menu__panel-item:not(:disabled):hover {
-    border-color: var(--cad-color-border-soft);
-    background: var(--cad-color-surface-soft);
+    border-color: var(--tone-border-soft);
+    background: var(--tone-surface-soft);
   }
 
   .cad-side-menu__panel-item.is-selected {
-    border-color: var(--cad-tone-info-soft-border);
-    background: var(--cad-tone-info-soft-bg);
-    color: var(--cad-tone-info-soft-fg);
+    border-color: var(--tone-info-soft-border);
+    background: var(--tone-info-soft-bg);
+    color: var(--tone-info-soft-fg);
   }
 
   .cad-side-menu__panel-item:disabled,
@@ -300,8 +300,8 @@
 
   .cad-side-menu__panel-item-icon {
     @apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base;
-    background: var(--cad-color-surface-soft);
-    color: var(--cad-color-text-muted);
+    background: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
   }
 
   .cad-side-menu__panel-item-copy {
@@ -310,33 +310,33 @@
 
   .cad-side-menu__panel-item-copy strong {
     @apply truncate text-xs font-semibold;
-    color: var(--cad-color-text-strong);
+    color: var(--tone-text-strong);
   }
 
   .cad-side-menu__panel-item-copy small {
     @apply mt-0.5 line-clamp-2 text-[0.68rem] leading-4;
-    color: var(--cad-color-text-muted);
+    color: var(--tone-text-muted);
   }
 
   .cad-side-menu__panel-badge {
     min-width: 1.3rem;
     height: 1.3rem;
     padding-inline: 0.35rem;
-    background: var(--cad-tone-info-soft-bg);
-    color: var(--cad-tone-info-soft-fg);
+    background: var(--tone-info-soft-bg);
+    color: var(--tone-info-soft-fg);
     font-size: 0.58rem;
   }
 
   .cad-side-menu__custom-panel-content {
     @apply border-t p-3;
-    border-color: var(--cad-color-border-soft);
-    color: var(--cad-color-text);
+    border-color: var(--tone-border-soft);
+    color: var(--tone-text);
   }
 
   .cad-side-menu__backdrop {
     @apply fixed inset-0 m-0 border-0 bg-transparent p-0;
     z-index: 40;
-    background: var(--cad-nav-backdrop);
+    background: var(--ui-nav-backdrop);
     backdrop-filter: blur(1px);
   }
 
@@ -359,12 +359,12 @@
   .cad-side-menu__mobile-chevron,
   .cad-side-menu__mobile-item-icon {
     @apply inline-flex shrink-0 items-center justify-center rounded-xl;
-    background: var(--cad-nav-overlay-soft-strong);
+    background: var(--ui-nav-overlay-soft-strong);
   }
 
   .cad-side-menu__mobile-leading {
     @apply h-10 w-10 text-lg;
-    color: var(--cad-nav-accent-fg);
+    color: var(--ui-nav-accent-fg);
   }
 
   .cad-side-menu__mobile-chevron {
@@ -384,7 +384,7 @@
 
   .cad-side-menu__mobile-copy strong {
     @apply truncate text-sm font-semibold;
-    color: var(--cad-nav-fg-strong);
+    color: var(--ui-nav-fg-strong);
   }
 
   .cad-side-menu__mobile-dropdown {
@@ -394,8 +394,8 @@
     max-height: calc(100dvh - 6rem);
     border-color: var(--cad-side-menu-border);
     border-radius: var(--cad-radius-panel);
-    background: radial-gradient(circle at 12% 0%, var(--cad-nav-accent-soft), transparent 30%), var(--cad-side-menu-bg);
-    box-shadow: var(--cad-nav-shadow-strong);
+    background: radial-gradient(circle at 12% 0%, var(--ui-nav-accent-soft), transparent 30%), var(--cad-side-menu-bg);
+    box-shadow: var(--ui-nav-shadow-strong);
     animation: cad-side-menu-dropdown-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -422,15 +422,15 @@
   }
 
   .cad-side-menu__mobile-item:not(:disabled):hover {
-    border-color: var(--cad-nav-border);
-    background: var(--cad-nav-hover-bg);
-    color: var(--cad-nav-fg-strong);
+    border-color: var(--ui-nav-border);
+    background: var(--ui-nav-hover-bg);
+    color: var(--ui-nav-fg-strong);
   }
 
   .cad-side-menu__mobile-item.is-selected {
-    border-color: var(--cad-nav-accent-border);
+    border-color: var(--ui-nav-accent-border);
     background: var(--cad-side-menu-accent-soft);
-    color: var(--cad-nav-fg-strong);
+    color: var(--ui-nav-fg-strong);
   }
 
   .cad-side-menu__mobile-item:disabled,
@@ -453,11 +453,11 @@
 
   .cad-side-menu__mobile-inline-panel {
     @apply ml-3 grid gap-1.5 border-l py-1 pl-3;
-    border-color: var(--cad-nav-accent-border);
+    border-color: var(--ui-nav-accent-border);
   }
 
   .cad-side-menu__mobile-inline-panel .cad-side-menu__panel-item {
-    background: var(--cad-color-surface);
+    background: var(--tone-surface);
   }
 
   @media (min-width: 768px) and (max-width: 1279px) {

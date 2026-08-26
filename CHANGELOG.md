@@ -36,6 +36,12 @@ All notable changes to this repository's packages are recorded here, per the cha
   - `DashboardActions`, `PageHeaderActions` → `Toolbar`/`Button`/`ButtonGroup`
   - `ImmersiveRibbonTabs` → `RibbonTabs`
   - `PageHeaderCopy` → `PageHeader`, `TextBlock`, or page title/description slots
+- **Breaking:** `Tailwind/theme.css` custom property prefixes standardized onto the target CSS namespacing convention (CLAUDE.md rule 3). Suffixes are unchanged, so update via prefix find-and-replace on any consumer CSS/JS that reads these tokens directly:
+  - `--cad-color-*` → `--tone-*` (e.g. `--cad-color-surface` → `--tone-surface`)
+  - `--cad-tone-*` → `--tone-*` (e.g. `--cad-tone-primary-soft-bg` → `--tone-primary-soft-bg`)
+  - `--cad-chip-{0-9}-*` → `--tone-{0-9}-*` (e.g. `--cad-chip-0-bg` → `--tone-0-bg`)
+  - `--cad-nav-*` → `--ui-nav-*` (e.g. `--cad-nav-bg` → `--ui-nav-bg`; `Tailwind/navigation/side-menu.css`'s `--cad-side-menu-*` alias block now points at `--ui-nav-*` internally, its own names unchanged)
+  - No values changed — this is a naming-only migration. `Tailwind/input-test.css`'s separate, unrelated `--tone-*` prototype block (a different, disjoint palette, not built into production output) was intentionally left untouched.
 
 #### Internal (chrome color scale)
 
