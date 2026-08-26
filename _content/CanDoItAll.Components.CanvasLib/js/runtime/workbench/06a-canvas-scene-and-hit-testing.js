@@ -213,187 +213,189 @@
         };
     }
 
-    function resolveNodeAccentColor(node) {
+    function resolveNodeAccentColor(node, colors) {
         if (typeof node?.accentColor === "string" && node.accentColor.trim().length > 0) {
             return node.accentColor.trim();
         }
 
+        const resolved = colors || {};
         switch ((node?.paletteKey || "").toLowerCase()) {
             case "violet":
-                return "#7c3aed";
+                return resolved.accentViolet || "#7c3aed";
             case "mint":
-                return "#10b981";
+                return resolved.accentMint || "#10b981";
             case "sky":
-                return "#0ea5e9";
+                return resolved.accentSky || "#0ea5e9";
             case "amber":
-                return "#f59e0b";
+                return resolved.accentAmber || "#f59e0b";
             case "rose":
-                return "#e11d48";
+                return resolved.accentRose || "#e11d48";
             case "success":
-                return "#059669";
+                return resolved.accentSuccess || "#059669";
             case "warning":
             case "warn":
-                return "#d97706";
+                return resolved.accentWarning || "#d97706";
             case "danger":
-                return "#dc2626";
+                return resolved.accentDanger || "#dc2626";
             case "info":
-                return "#0284c7";
+                return resolved.accentInfo || "#0284c7";
             case "neutral":
-                return "#475569";
+                return resolved.accentNeutral || "#475569";
             default:
-                return "#7c3aed";
+                return resolved.accentViolet || "#7c3aed";
         }
     }
 
-    function resolveCanvasNodePaletteStyle(node, accent, isSelected) {
+    function resolveCanvasNodePaletteStyle(node, accent, isSelected, colors) {
+        const resolved = colors || {};
         if (node?.isReadOnly) {
             return {
-                surfaceFill: "rgba(248, 250, 252, 0.98)",
-                surfaceStroke: isSelected ? "rgba(71, 85, 105, 0.9)" : "rgba(148, 163, 184, 0.34)",
-                surfaceShadow: "rgba(100, 116, 139, 0.12)",
-                labelText: "rgba(71, 85, 105, 0.76)",
-                titleText: "rgba(51, 65, 85, 0.94)",
-                secondaryText: "rgba(100, 116, 139, 0.92)",
-                iconFill: "rgba(241, 245, 249, 0.94)",
-                iconStroke: "rgba(148, 163, 184, 0.28)",
-                iconText: "rgba(71, 85, 105, 0.96)",
-                subtleFill: "rgba(255, 255, 255, 0.86)",
-                subtleStroke: "rgba(148, 163, 184, 0.3)",
-                subtleText: "rgba(51, 65, 85, 0.9)",
-                progressTrack: "rgba(148, 163, 184, 0.28)",
-                progressText: "rgba(71, 85, 105, 0.9)"
+                surfaceFill: resolved.nodeReadonlySurfaceFill || "rgba(248, 250, 252, 0.98)",
+                surfaceStroke: isSelected ? (resolved.nodeReadonlySurfaceStrokeSelected || "rgba(71, 85, 105, 0.9)") : (resolved.nodeReadonlySurfaceStrokeUnselected || "rgba(148, 163, 184, 0.34)"),
+                surfaceShadow: resolved.nodeReadonlySurfaceShadow || "rgba(100, 116, 139, 0.12)",
+                labelText: resolved.nodeReadonlyLabelText || "rgba(71, 85, 105, 0.76)",
+                titleText: resolved.nodeReadonlyTitleText || "rgba(51, 65, 85, 0.94)",
+                secondaryText: resolved.nodeReadonlySecondaryText || "rgba(100, 116, 139, 0.92)",
+                iconFill: resolved.nodeReadonlyIconFill || "rgba(241, 245, 249, 0.94)",
+                iconStroke: resolved.nodeReadonlyIconStroke || "rgba(148, 163, 184, 0.28)",
+                iconText: resolved.nodeReadonlyIconText || "rgba(71, 85, 105, 0.96)",
+                subtleFill: resolved.nodeReadonlySubtleFill || "rgba(255, 255, 255, 0.86)",
+                subtleStroke: resolved.nodeReadonlySubtleStroke || "rgba(148, 163, 184, 0.3)",
+                subtleText: resolved.nodeReadonlySubtleText || "rgba(51, 65, 85, 0.9)",
+                progressTrack: resolved.nodeReadonlyProgressTrack || "rgba(148, 163, 184, 0.28)",
+                progressText: resolved.nodeReadonlyProgressText || "rgba(71, 85, 105, 0.9)"
             };
         }
 
         const paletteKey = (node?.paletteKey || (node?.family === "root" ? "primary" : "neutral")).toLowerCase();
         const palettes = {
             primary: {
-                surfaceFill: "rgba(15, 23, 42, 0.98)",
-                surfaceStroke: isSelected ? "rgba(248, 250, 252, 0.94)" : "rgba(51, 65, 85, 0.96)",
-                surfaceShadow: "rgba(15, 23, 42, 0.28)",
-                labelText: "rgba(191, 219, 254, 0.78)",
-                titleText: "rgba(248, 250, 252, 0.98)",
-                secondaryText: "rgba(226, 232, 240, 0.84)",
-                iconFill: "rgba(255, 255, 255, 0.14)",
-                iconStroke: "rgba(255, 255, 255, 0.18)",
-                iconText: "rgba(248, 250, 252, 0.96)",
-                subtleFill: "rgba(255, 255, 255, 0.14)",
-                subtleStroke: "rgba(255, 255, 255, 0.18)",
-                subtleText: "rgba(248, 250, 252, 0.94)",
-                progressTrack: "rgba(248, 250, 252, 0.24)",
-                progressText: "rgba(248, 250, 252, 0.92)"
+                    surfaceFill: resolved.nodePrimarySurfaceFill || "rgba(15, 23, 42, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodePrimarySurfaceStrokeSelected || "rgba(248, 250, 252, 0.94)") : (resolved.nodePrimarySurfaceStrokeUnselected || "rgba(51, 65, 85, 0.96)"),
+                    surfaceShadow: resolved.nodePrimarySurfaceShadow || "rgba(15, 23, 42, 0.28)",
+                    labelText: resolved.nodePrimaryLabelText || "rgba(191, 219, 254, 0.78)",
+                    titleText: resolved.nodePrimaryTitleText || "rgba(248, 250, 252, 0.98)",
+                    secondaryText: resolved.nodePrimarySecondaryText || "rgba(226, 232, 240, 0.84)",
+                    iconFill: resolved.nodePrimaryIconFill || "rgba(255, 255, 255, 0.14)",
+                    iconStroke: resolved.nodePrimaryIconStroke || "rgba(255, 255, 255, 0.18)",
+                    iconText: resolved.nodePrimaryIconText || "rgba(248, 250, 252, 0.96)",
+                    subtleFill: resolved.nodePrimarySubtleFill || "rgba(255, 255, 255, 0.14)",
+                    subtleStroke: resolved.nodePrimarySubtleStroke || "rgba(255, 255, 255, 0.18)",
+                    subtleText: resolved.nodePrimarySubtleText || "rgba(248, 250, 252, 0.94)",
+                    progressTrack: resolved.nodePrimaryProgressTrack || "rgba(248, 250, 252, 0.24)",
+                    progressText: resolved.nodePrimaryProgressText || "rgba(248, 250, 252, 0.92)"
             },
             secondary: {
-                surfaceFill: "rgba(237, 233, 254, 0.98)",
-                surfaceStroke: isSelected ? "rgba(124, 58, 237, 0.92)" : "rgba(167, 139, 250, 0.62)",
-                surfaceShadow: "rgba(109, 40, 217, 0.16)",
-                labelText: "rgba(109, 40, 217, 0.72)",
-                titleText: "rgba(88, 28, 135, 0.94)",
-                secondaryText: "rgba(107, 33, 168, 0.82)",
-                iconFill: "rgba(255, 255, 255, 0.64)",
-                iconStroke: "rgba(167, 139, 250, 0.4)",
-                iconText: "rgba(109, 40, 217, 0.94)",
-                subtleFill: "rgba(255, 255, 255, 0.74)",
-                subtleStroke: "rgba(196, 181, 253, 0.44)",
-                subtleText: "rgba(88, 28, 135, 0.88)",
-                progressTrack: "rgba(139, 92, 246, 0.26)",
-                progressText: "rgba(88, 28, 135, 0.88)"
+                    surfaceFill: resolved.nodeSecondarySurfaceFill || "rgba(237, 233, 254, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodeSecondarySurfaceStrokeSelected || "rgba(124, 58, 237, 0.92)") : (resolved.nodeSecondarySurfaceStrokeUnselected || "rgba(167, 139, 250, 0.62)"),
+                    surfaceShadow: resolved.nodeSecondarySurfaceShadow || "rgba(109, 40, 217, 0.16)",
+                    labelText: resolved.nodeSecondaryLabelText || "rgba(109, 40, 217, 0.72)",
+                    titleText: resolved.nodeSecondaryTitleText || "rgba(88, 28, 135, 0.94)",
+                    secondaryText: resolved.nodeSecondarySecondaryText || "rgba(107, 33, 168, 0.82)",
+                    iconFill: resolved.nodeSecondaryIconFill || "rgba(255, 255, 255, 0.64)",
+                    iconStroke: resolved.nodeSecondaryIconStroke || "rgba(167, 139, 250, 0.4)",
+                    iconText: resolved.nodeSecondaryIconText || "rgba(109, 40, 217, 0.94)",
+                    subtleFill: resolved.nodeSecondarySubtleFill || "rgba(255, 255, 255, 0.74)",
+                    subtleStroke: resolved.nodeSecondarySubtleStroke || "rgba(196, 181, 253, 0.44)",
+                    subtleText: resolved.nodeSecondarySubtleText || "rgba(88, 28, 135, 0.88)",
+                    progressTrack: resolved.nodeSecondaryProgressTrack || "rgba(139, 92, 246, 0.26)",
+                    progressText: resolved.nodeSecondaryProgressText || "rgba(88, 28, 135, 0.88)"
             },
             success: {
-                surfaceFill: "rgba(220, 252, 231, 0.98)",
-                surfaceStroke: isSelected ? "rgba(22, 163, 74, 0.92)" : "rgba(74, 222, 128, 0.62)",
-                surfaceShadow: "rgba(22, 163, 74, 0.14)",
-                labelText: "rgba(21, 128, 61, 0.72)",
-                titleText: "rgba(20, 83, 45, 0.95)",
-                secondaryText: "rgba(21, 128, 61, 0.82)",
-                iconFill: "rgba(255, 255, 255, 0.62)",
-                iconStroke: "rgba(74, 222, 128, 0.42)",
-                iconText: "rgba(21, 128, 61, 0.94)",
-                subtleFill: "rgba(255, 255, 255, 0.76)",
-                subtleStroke: "rgba(134, 239, 172, 0.46)",
-                subtleText: "rgba(20, 83, 45, 0.88)",
-                progressTrack: "rgba(22, 163, 74, 0.22)",
-                progressText: "rgba(20, 83, 45, 0.88)"
+                    surfaceFill: resolved.nodeSuccessSurfaceFill || "rgba(220, 252, 231, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodeSuccessSurfaceStrokeSelected || "rgba(22, 163, 74, 0.92)") : (resolved.nodeSuccessSurfaceStrokeUnselected || "rgba(74, 222, 128, 0.62)"),
+                    surfaceShadow: resolved.nodeSuccessSurfaceShadow || "rgba(22, 163, 74, 0.14)",
+                    labelText: resolved.nodeSuccessLabelText || "rgba(21, 128, 61, 0.72)",
+                    titleText: resolved.nodeSuccessTitleText || "rgba(20, 83, 45, 0.95)",
+                    secondaryText: resolved.nodeSuccessSecondaryText || "rgba(21, 128, 61, 0.82)",
+                    iconFill: resolved.nodeSuccessIconFill || "rgba(255, 255, 255, 0.62)",
+                    iconStroke: resolved.nodeSuccessIconStroke || "rgba(74, 222, 128, 0.42)",
+                    iconText: resolved.nodeSuccessIconText || "rgba(21, 128, 61, 0.94)",
+                    subtleFill: resolved.nodeSuccessSubtleFill || "rgba(255, 255, 255, 0.76)",
+                    subtleStroke: resolved.nodeSuccessSubtleStroke || "rgba(134, 239, 172, 0.46)",
+                    subtleText: resolved.nodeSuccessSubtleText || "rgba(20, 83, 45, 0.88)",
+                    progressTrack: resolved.nodeSuccessProgressTrack || "rgba(22, 163, 74, 0.22)",
+                    progressText: resolved.nodeSuccessProgressText || "rgba(20, 83, 45, 0.88)"
             },
             info: {
-                surfaceFill: "rgba(224, 242, 254, 0.98)",
-                surfaceStroke: isSelected ? "rgba(2, 132, 199, 0.92)" : "rgba(125, 211, 252, 0.64)",
-                surfaceShadow: "rgba(2, 132, 199, 0.15)",
-                labelText: "rgba(14, 116, 144, 0.72)",
-                titleText: "rgba(12, 74, 110, 0.95)",
-                secondaryText: "rgba(14, 116, 144, 0.82)",
-                iconFill: "rgba(255, 255, 255, 0.62)",
-                iconStroke: "rgba(125, 211, 252, 0.44)",
-                iconText: "rgba(2, 132, 199, 0.94)",
-                subtleFill: "rgba(255, 255, 255, 0.76)",
-                subtleStroke: "rgba(125, 211, 252, 0.46)",
-                subtleText: "rgba(12, 74, 110, 0.88)",
-                progressTrack: "rgba(2, 132, 199, 0.22)",
-                progressText: "rgba(12, 74, 110, 0.88)"
+                    surfaceFill: resolved.nodeInfoSurfaceFill || "rgba(224, 242, 254, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodeInfoSurfaceStrokeSelected || "rgba(2, 132, 199, 0.92)") : (resolved.nodeInfoSurfaceStrokeUnselected || "rgba(125, 211, 252, 0.64)"),
+                    surfaceShadow: resolved.nodeInfoSurfaceShadow || "rgba(2, 132, 199, 0.15)",
+                    labelText: resolved.nodeInfoLabelText || "rgba(14, 116, 144, 0.72)",
+                    titleText: resolved.nodeInfoTitleText || "rgba(12, 74, 110, 0.95)",
+                    secondaryText: resolved.nodeInfoSecondaryText || "rgba(14, 116, 144, 0.82)",
+                    iconFill: resolved.nodeInfoIconFill || "rgba(255, 255, 255, 0.62)",
+                    iconStroke: resolved.nodeInfoIconStroke || "rgba(125, 211, 252, 0.44)",
+                    iconText: resolved.nodeInfoIconText || "rgba(2, 132, 199, 0.94)",
+                    subtleFill: resolved.nodeInfoSubtleFill || "rgba(255, 255, 255, 0.76)",
+                    subtleStroke: resolved.nodeInfoSubtleStroke || "rgba(125, 211, 252, 0.46)",
+                    subtleText: resolved.nodeInfoSubtleText || "rgba(12, 74, 110, 0.88)",
+                    progressTrack: resolved.nodeInfoProgressTrack || "rgba(2, 132, 199, 0.22)",
+                    progressText: resolved.nodeInfoProgressText || "rgba(12, 74, 110, 0.88)"
             },
             warning: {
-                surfaceFill: "rgba(254, 243, 199, 0.98)",
-                surfaceStroke: isSelected ? "rgba(217, 119, 6, 0.92)" : "rgba(251, 191, 36, 0.64)",
-                surfaceShadow: "rgba(217, 119, 6, 0.15)",
-                labelText: "rgba(180, 83, 9, 0.72)",
-                titleText: "rgba(120, 53, 15, 0.95)",
-                secondaryText: "rgba(146, 64, 14, 0.82)",
-                iconFill: "rgba(255, 255, 255, 0.58)",
-                iconStroke: "rgba(251, 191, 36, 0.42)",
-                iconText: "rgba(180, 83, 9, 0.94)",
-                subtleFill: "rgba(255, 255, 255, 0.76)",
-                subtleStroke: "rgba(252, 211, 77, 0.48)",
-                subtleText: "rgba(120, 53, 15, 0.88)",
-                progressTrack: "rgba(217, 119, 6, 0.22)",
-                progressText: "rgba(120, 53, 15, 0.88)"
+                    surfaceFill: resolved.nodeWarningSurfaceFill || "rgba(254, 243, 199, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodeWarningSurfaceStrokeSelected || "rgba(217, 119, 6, 0.92)") : (resolved.nodeWarningSurfaceStrokeUnselected || "rgba(251, 191, 36, 0.64)"),
+                    surfaceShadow: resolved.nodeWarningSurfaceShadow || "rgba(217, 119, 6, 0.15)",
+                    labelText: resolved.nodeWarningLabelText || "rgba(180, 83, 9, 0.72)",
+                    titleText: resolved.nodeWarningTitleText || "rgba(120, 53, 15, 0.95)",
+                    secondaryText: resolved.nodeWarningSecondaryText || "rgba(146, 64, 14, 0.82)",
+                    iconFill: resolved.nodeWarningIconFill || "rgba(255, 255, 255, 0.58)",
+                    iconStroke: resolved.nodeWarningIconStroke || "rgba(251, 191, 36, 0.42)",
+                    iconText: resolved.nodeWarningIconText || "rgba(180, 83, 9, 0.94)",
+                    subtleFill: resolved.nodeWarningSubtleFill || "rgba(255, 255, 255, 0.76)",
+                    subtleStroke: resolved.nodeWarningSubtleStroke || "rgba(252, 211, 77, 0.48)",
+                    subtleText: resolved.nodeWarningSubtleText || "rgba(120, 53, 15, 0.88)",
+                    progressTrack: resolved.nodeWarningProgressTrack || "rgba(217, 119, 6, 0.22)",
+                    progressText: resolved.nodeWarningProgressText || "rgba(120, 53, 15, 0.88)"
             },
             danger: {
-                surfaceFill: "rgba(254, 226, 226, 0.98)",
-                surfaceStroke: isSelected ? "rgba(220, 38, 38, 0.94)" : "rgba(252, 165, 165, 0.7)",
-                surfaceShadow: "rgba(220, 38, 38, 0.16)",
-                labelText: "rgba(185, 28, 28, 0.72)",
-                titleText: "rgba(127, 29, 29, 0.95)",
-                secondaryText: "rgba(153, 27, 27, 0.82)",
-                iconFill: "rgba(255, 255, 255, 0.6)",
-                iconStroke: "rgba(252, 165, 165, 0.46)",
-                iconText: "rgba(185, 28, 28, 0.95)",
-                subtleFill: "rgba(255, 255, 255, 0.8)",
-                subtleStroke: "rgba(252, 165, 165, 0.48)",
-                subtleText: "rgba(127, 29, 29, 0.88)",
-                progressTrack: "rgba(220, 38, 38, 0.22)",
-                progressText: "rgba(127, 29, 29, 0.88)"
+                    surfaceFill: resolved.nodeDangerSurfaceFill || "rgba(254, 226, 226, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodeDangerSurfaceStrokeSelected || "rgba(220, 38, 38, 0.94)") : (resolved.nodeDangerSurfaceStrokeUnselected || "rgba(252, 165, 165, 0.7)"),
+                    surfaceShadow: resolved.nodeDangerSurfaceShadow || "rgba(220, 38, 38, 0.16)",
+                    labelText: resolved.nodeDangerLabelText || "rgba(185, 28, 28, 0.72)",
+                    titleText: resolved.nodeDangerTitleText || "rgba(127, 29, 29, 0.95)",
+                    secondaryText: resolved.nodeDangerSecondaryText || "rgba(153, 27, 27, 0.82)",
+                    iconFill: resolved.nodeDangerIconFill || "rgba(255, 255, 255, 0.6)",
+                    iconStroke: resolved.nodeDangerIconStroke || "rgba(252, 165, 165, 0.46)",
+                    iconText: resolved.nodeDangerIconText || "rgba(185, 28, 28, 0.95)",
+                    subtleFill: resolved.nodeDangerSubtleFill || "rgba(255, 255, 255, 0.8)",
+                    subtleStroke: resolved.nodeDangerSubtleStroke || "rgba(252, 165, 165, 0.48)",
+                    subtleText: resolved.nodeDangerSubtleText || "rgba(127, 29, 29, 0.88)",
+                    progressTrack: resolved.nodeDangerProgressTrack || "rgba(220, 38, 38, 0.22)",
+                    progressText: resolved.nodeDangerProgressText || "rgba(127, 29, 29, 0.88)"
             },
             "workflow-decision": {
-                surfaceFill: "rgba(240, 253, 250, 0.98)",
-                surfaceStroke: isSelected ? "rgba(15, 118, 110, 0.96)" : "rgba(20, 184, 166, 0.64)",
-                surfaceShadow: "rgba(15, 118, 110, 0.16)",
-                labelText: "rgba(15, 118, 110, 0.78)",
-                titleText: "rgba(19, 78, 74, 0.96)",
-                secondaryText: "rgba(15, 118, 110, 0.84)",
-                iconFill: "rgba(255, 251, 235, 0.86)",
-                iconStroke: "rgba(245, 158, 11, 0.46)",
-                iconText: "rgba(15, 118, 110, 0.96)",
-                subtleFill: "rgba(255, 255, 255, 0.84)",
-                subtleStroke: "rgba(20, 184, 166, 0.4)",
-                subtleText: "rgba(15, 118, 110, 0.9)",
-                progressTrack: "rgba(20, 184, 166, 0.24)",
-                progressText: "rgba(19, 78, 74, 0.9)"
+                    surfaceFill: resolved.nodeWorkflowDecisionSurfaceFill || "rgba(240, 253, 250, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodeWorkflowDecisionSurfaceStrokeSelected || "rgba(15, 118, 110, 0.96)") : (resolved.nodeWorkflowDecisionSurfaceStrokeUnselected || "rgba(20, 184, 166, 0.64)"),
+                    surfaceShadow: resolved.nodeWorkflowDecisionSurfaceShadow || "rgba(15, 118, 110, 0.16)",
+                    labelText: resolved.nodeWorkflowDecisionLabelText || "rgba(15, 118, 110, 0.78)",
+                    titleText: resolved.nodeWorkflowDecisionTitleText || "rgba(19, 78, 74, 0.96)",
+                    secondaryText: resolved.nodeWorkflowDecisionSecondaryText || "rgba(15, 118, 110, 0.84)",
+                    iconFill: resolved.nodeWorkflowDecisionIconFill || "rgba(255, 251, 235, 0.86)",
+                    iconStroke: resolved.nodeWorkflowDecisionIconStroke || "rgba(245, 158, 11, 0.46)",
+                    iconText: resolved.nodeWorkflowDecisionIconText || "rgba(15, 118, 110, 0.96)",
+                    subtleFill: resolved.nodeWorkflowDecisionSubtleFill || "rgba(255, 255, 255, 0.84)",
+                    subtleStroke: resolved.nodeWorkflowDecisionSubtleStroke || "rgba(20, 184, 166, 0.4)",
+                    subtleText: resolved.nodeWorkflowDecisionSubtleText || "rgba(15, 118, 110, 0.9)",
+                    progressTrack: resolved.nodeWorkflowDecisionProgressTrack || "rgba(20, 184, 166, 0.24)",
+                    progressText: resolved.nodeWorkflowDecisionProgressText || "rgba(19, 78, 74, 0.9)"
             },
             neutral: {
-                surfaceFill: "rgba(241, 245, 249, 0.98)",
-                surfaceStroke: isSelected ? "rgba(71, 85, 105, 0.92)" : "rgba(148, 163, 184, 0.44)",
-                surfaceShadow: "rgba(71, 85, 105, 0.1)",
-                labelText: "rgba(71, 85, 105, 0.7)",
-                titleText: "rgba(15, 23, 42, 0.94)",
-                secondaryText: "rgba(71, 85, 105, 0.84)",
-                iconFill: "rgba(255, 255, 255, 0.72)",
-                iconStroke: "rgba(148, 163, 184, 0.34)",
-                iconText: "rgba(71, 85, 105, 0.94)",
-                subtleFill: "rgba(255, 255, 255, 0.82)",
-                subtleStroke: "rgba(148, 163, 184, 0.38)",
-                subtleText: "rgba(30, 41, 59, 0.88)",
-                progressTrack: "rgba(148, 163, 184, 0.28)",
-                progressText: "rgba(51, 65, 85, 0.88)"
+                    surfaceFill: resolved.nodeNeutralSurfaceFill || "rgba(241, 245, 249, 0.98)",
+                    surfaceStroke: isSelected ? (resolved.nodeNeutralSurfaceStrokeSelected || "rgba(71, 85, 105, 0.92)") : (resolved.nodeNeutralSurfaceStrokeUnselected || "rgba(148, 163, 184, 0.44)"),
+                    surfaceShadow: resolved.nodeNeutralSurfaceShadow || "rgba(71, 85, 105, 0.1)",
+                    labelText: resolved.nodeNeutralLabelText || "rgba(71, 85, 105, 0.7)",
+                    titleText: resolved.nodeNeutralTitleText || "rgba(15, 23, 42, 0.94)",
+                    secondaryText: resolved.nodeNeutralSecondaryText || "rgba(71, 85, 105, 0.84)",
+                    iconFill: resolved.nodeNeutralIconFill || "rgba(255, 255, 255, 0.72)",
+                    iconStroke: resolved.nodeNeutralIconStroke || "rgba(148, 163, 184, 0.34)",
+                    iconText: resolved.nodeNeutralIconText || "rgba(71, 85, 105, 0.94)",
+                    subtleFill: resolved.nodeNeutralSubtleFill || "rgba(255, 255, 255, 0.82)",
+                    subtleStroke: resolved.nodeNeutralSubtleStroke || "rgba(148, 163, 184, 0.38)",
+                    subtleText: resolved.nodeNeutralSubtleText || "rgba(30, 41, 59, 0.88)",
+                    progressTrack: resolved.nodeNeutralProgressTrack || "rgba(148, 163, 184, 0.28)",
+                    progressText: resolved.nodeNeutralProgressText || "rgba(51, 65, 85, 0.88)"
             }
         };
 

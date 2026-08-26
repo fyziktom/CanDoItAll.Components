@@ -1,0 +1,371 @@
+/* _content/CanDoItAll.Components.Gantt/Components/GanttChart.razor.rz.scp.css */
+.cda-gantt[b-11a3sae337] {
+    /* Each --gantt-* token reads CanDoItAll.Components.BaseLib's public
+       --ui-gantt-* override (Tailwind/theme.css) when present, falling back to
+       this literal when it isn't (e.g. GanttChartHeadAssets IncludeBaseLibStyles
+       ="false") — see CLAUDE.md rule 9. --ui-gantt-* already resolves per
+       data-ui-theme on its own, so no dark-mode override is needed here for
+       any of these custom properties. */
+    --gantt-border: var(--ui-gantt-border, #dbe3ef);
+    --gantt-grid: var(--ui-gantt-grid, #e7edf5);
+    --gantt-surface: var(--ui-gantt-surface, #ffffff);
+    --gantt-surface-muted: var(--ui-gantt-surface-muted, #f7f9fc);
+    --gantt-text: var(--ui-gantt-text, #172033);
+    --gantt-text-muted: var(--ui-gantt-text-muted, #657087);
+    --gantt-accent: var(--ui-gantt-accent, #236887);
+    --gantt-critical: var(--ui-gantt-critical, #d97706);
+    --gantt-handle: var(--ui-gantt-handle, #4d9f38);
+    --gantt-connector: var(--ui-gantt-connector, #0ea5e9);
+    --gantt-progress-complete: var(--ui-gantt-progress-complete, #4d9f38);
+    --gantt-progress-remaining: var(--ui-gantt-progress-remaining, #dc2626);
+    --gantt-effort: var(--ui-gantt-effort, #a02b93);
+    --gantt-handle-outline: var(--ui-gantt-handle-outline, rgba(20, 67, 36, 0.9));
+    --gantt-task-border-default: var(--ui-gantt-task-border-default, rgba(15, 23, 42, 0.72));
+    --gantt-task-title-text: var(--ui-gantt-task-title-text, #ffffff);
+    --gantt-assignment-badge-bg: var(--ui-gantt-assignment-badge-bg, rgba(255, 255, 255, 0.2));
+    --gantt-assignment-glyph-text: var(--ui-gantt-assignment-glyph-text, #ffffff);
+    --gantt-dependency-port-stroke: var(--ui-gantt-dependency-port-stroke, rgba(3, 78, 112, 0.92));
+    --gantt-popover-bg: var(--ui-gantt-popover-bg, rgba(15, 23, 42, 0.96));
+    --gantt-popover-title-text: var(--ui-gantt-popover-title-text, #ffffff);
+    --gantt-popover-subtitle-text: var(--ui-gantt-popover-subtitle-text, #b8c5d8);
+    --gantt-header-bg: var(--ui-gantt-header-bg, #eef3f8);
+    --gantt-header-border: var(--ui-gantt-header-border, #cbd6e4);
+    --gantt-title-editor-bg: var(--ui-gantt-title-editor-bg, #ffffff);
+    --gantt-title-editor-text: var(--ui-gantt-title-editor-text, #172033);
+    --gantt-shadow-color: var(--ui-gantt-shadow-color, rgba(30, 41, 59, 0.08));
+    --gantt-table-shadow-color: var(--ui-gantt-table-shadow-color, rgba(30, 41, 59, 0.06));
+    --gantt-assignment-indicator-text: var(--ui-gantt-assignment-indicator-text, #ffffff);
+    --gantt-assignment-indicator-bg: var(--ui-gantt-assignment-indicator-bg, #7c3aed);
+    --gantt-assignment-indicator-border: var(--ui-gantt-assignment-indicator-border, #5b21b6);
+    --gantt-assignment-tooltip-text: var(--ui-gantt-assignment-tooltip-text, #ffffff);
+    --gantt-assignment-tooltip-bg: var(--ui-gantt-assignment-tooltip-bg, #3b0764);
+    --gantt-assignment-tooltip-border: var(--ui-gantt-assignment-tooltip-border, #6b21a8);
+    --gantt-assignment-tooltip-shadow-color: var(--ui-gantt-assignment-tooltip-shadow-color, rgba(30, 41, 59, 0.22));
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    color: var(--gantt-text);
+    background: var(--gantt-surface);
+    border: 1px solid var(--gantt-border);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 18px 44px var(--gantt-shadow-color);
+}
+
+.cda-gantt[b-11a3sae337]  .cda-gantt__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--gantt-border);
+    background: var(--gantt-surface-muted);
+}
+
+.cda-gantt[b-11a3sae337]  .cda-gantt__toolbar-primary,
+.cda-gantt[b-11a3sae337]  .cda-gantt__toolbar-secondary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.cda-gantt[b-11a3sae337]  .cda-gantt__time-scale {
+    width: 6.5rem;
+    min-height: 2rem;
+    padding-block: 0.25rem;
+}
+
+.cda-gantt__status[b-11a3sae337] {
+    margin: 0;
+    color: var(--gantt-text-muted);
+    font-size: 0.78rem;
+    font-weight: 650;
+}
+
+.cda-gantt[b-11a3sae337]  .cda-gantt__error {
+    padding: 0.75rem;
+}
+
+.cda-gantt__viewport[b-11a3sae337] {
+    position: relative;
+    max-height: var(--cda-gantt-max-height, 44rem);
+    overflow-x: auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    background: var(--gantt-surface);
+}
+
+.cda-gantt__content[b-11a3sae337] {
+    position: relative;
+    min-width: 100%;
+}
+
+.cda-gantt__table[b-11a3sae337] {
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    display: grid;
+    align-content: start;
+    background: var(--gantt-surface);
+    border-right: 1px solid var(--gantt-border);
+    box-shadow: 12px 0 22px var(--gantt-table-shadow-color);
+}
+
+.cda-gantt__table-row[b-11a3sae337] {
+    display: grid;
+    grid-template-columns: minmax(8rem, 1fr) 6.75rem 6.75rem 5.25rem 5.25rem;
+    align-items: stretch;
+    min-width: 0;
+    border-bottom: 1px solid var(--gantt-grid);
+}
+
+.cda-gantt__table-row--header[b-11a3sae337] {
+    color: var(--gantt-text-muted);
+    background: var(--gantt-header-bg);
+    border-bottom-color: var(--gantt-header-border);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cda-gantt__cell[b-11a3sae337] {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    padding: 0 0.65rem;
+    border-right: 1px solid var(--gantt-grid);
+    overflow: hidden;
+}
+
+.cda-gantt__cell:last-child[b-11a3sae337] {
+    border-right: 0;
+}
+
+.cda-gantt__cell--task[b-11a3sae337] {
+    position: relative;
+    overflow: visible;
+}
+
+.cda-gantt__task-cell-content[b-11a3sae337] {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.cda-gantt__task-order-actions[b-11a3sae337] {
+    display: grid;
+    flex: 0 0 1.35rem;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    width: 1.35rem;
+    height: 2rem;
+    gap: 0;
+}
+
+.cda-gantt[b-11a3sae337]  .cda-gantt__task-order-button {
+    width: 1.35rem;
+    min-width: 1.35rem;
+    height: 1rem;
+    min-height: 1rem;
+    padding: 0;
+    border-radius: 0.2rem;
+}
+
+.cda-gantt[b-11a3sae337]  .cda-gantt__task-order-button .cda-material-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.cda-gantt__task-button[b-11a3sae337] {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: text;
+}
+
+.cda-gantt__task-button:focus-visible[b-11a3sae337] {
+    outline: 2px solid var(--gantt-connector);
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+}
+
+.cda-gantt__assignment-list[b-11a3sae337] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.cda-gantt__assignment-item[b-11a3sae337] {
+    position: relative;
+    display: flex;
+}
+
+.cda-gantt__assignment-item:hover[b-11a3sae337],
+.cda-gantt__assignment-item:focus-within[b-11a3sae337] {
+    z-index: 6;
+}
+
+.cda-gantt__assignment-indicator[b-11a3sae337] {
+    position: relative;
+    z-index: 1;
+    display: inline-grid;
+    width: 1.35rem;
+    height: 1.35rem;
+    place-items: center;
+    color: var(--gantt-assignment-indicator-text);
+    background: var(--gantt-assignment-indicator-bg);
+    border: 1px solid var(--gantt-assignment-indicator-border);
+    border-radius: 999px;
+    font-size: 0.5rem;
+    font-weight: 850;
+    letter-spacing: -0.03em;
+    cursor: help;
+}
+
+.cda-gantt__assignment-indicator:focus-visible[b-11a3sae337] {
+    z-index: 6;
+    outline: 2px solid var(--gantt-connector);
+    outline-offset: 2px;
+}
+
+.cda-gantt__assignment-tooltip[b-11a3sae337] {
+    position: absolute;
+    left: calc(100% + 0.45rem);
+    top: 50%;
+    z-index: 7;
+    width: max-content;
+    max-width: 18rem;
+    padding: 0.4rem 0.55rem;
+    color: var(--gantt-assignment-tooltip-text);
+    background: var(--gantt-assignment-tooltip-bg);
+    border: 1px solid var(--gantt-assignment-tooltip-border);
+    border-radius: 0.45rem;
+    box-shadow: 0 8px 22px var(--gantt-assignment-tooltip-shadow-color);
+    font-size: 0.72rem;
+    font-weight: 650;
+    line-height: 1.25;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(0.2rem, -50%);
+    transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.cda-gantt__assignment-indicator:hover[b-11a3sae337],
+.cda-gantt__assignment-indicator:focus-visible[b-11a3sae337] {
+    z-index: 6;
+}
+
+.cda-gantt__assignment-indicator:hover + .cda-gantt__assignment-tooltip[b-11a3sae337],
+.cda-gantt__assignment-indicator:focus + .cda-gantt__assignment-tooltip[b-11a3sae337] {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
+.cda-gantt__title-editor[b-11a3sae337] {
+    width: 100%;
+    min-width: 0;
+    height: 2rem;
+    padding: 0 0.45rem;
+    color: var(--gantt-title-editor-text);
+    background: var(--gantt-title-editor-bg);
+    border: 1px solid var(--gantt-connector);
+    border-radius: 0.4rem;
+    outline: none;
+}
+
+.cda-gantt__cell--time[b-11a3sae337],
+.cda-gantt__cell--duration[b-11a3sae337] {
+    color: var(--gantt-text-muted);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.76rem;
+    white-space: nowrap;
+}
+
+.cda-gantt__canvas[b-11a3sae337] {
+    position: absolute;
+    top: 0;
+    display: block;
+    touch-action: none;
+    cursor: grab;
+}
+
+.cda-gantt__canvas--panning[b-11a3sae337] {
+    cursor: grabbing;
+}
+
+.cda-gantt__canvas:focus-visible[b-11a3sae337] {
+    outline: 2px solid var(--gantt-connector);
+    outline-offset: -2px;
+}
+
+.cda-gantt__empty[b-11a3sae337] {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    color: var(--gantt-text-muted);
+    text-align: center;
+}
+
+.cda-gantt__sr-only[b-11a3sae337] {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cda-gantt *[b-11a3sae337],
+    .cda-gantt *[b-11a3sae337]::before,
+    .cda-gantt *[b-11a3sae337]::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* data-ui-theme is the single source of truth for dark/light here, matching
+   --color-chrome-*'s attribute-only convention (CLAUDE.md rule 3) instead of
+   following the OS's prefers-color-scheme independently of the app's own
+   ThemeHost state. Without a data-ui-theme="dark" ancestor, the light values
+   declared above on .cda-gantt apply by default. Every --gantt-* custom
+   property (including the shadow/header/title-editor ones this file used to
+   override here directly) now reads --ui-gantt-* (Tailwind/theme.css), which
+   already resolves per data-ui-theme on its own — so no [data-ui-theme=
+   "dark"] override rule is needed anywhere in this file any more. */
+/* _content/CanDoItAll.Components.Gantt/Components/GanttTaskDragSource.razor.rz.scp.css */
+.cda-gantt-drag-source[b-81nvzq2udu] {
+    display: inline-flex;
+    cursor: grab;
+}
+
+.cda-gantt-drag-source:active[b-81nvzq2udu] {
+    cursor: grabbing;
+}
+
+.cda-gantt-drag-source--disabled[b-81nvzq2udu] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
