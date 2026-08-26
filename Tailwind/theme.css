@@ -889,6 +889,57 @@
     --ui-canvas-progress-in-progress-arc: rgba(124, 58, 237, 0.92);
     --ui-canvas-progress-text-default: rgba(15, 23, 42, 0.78);
     --ui-canvas-progress-track-default: rgba(148, 163, 184, 0.28);
+
+    /* CanvasCalendar component tokens (--ui-calendar-*): the public override
+       surface for CanDoItAll.Components.CanvasLib's CanvasCalendar own
+       --zy-cal-* tokens (JS-injected stylesheet, calendar/core/01-foundation.js)
+       and its <canvas>-painted mini-month/timed-grid/month-grid surfaces (see
+       zy-canvas-primitives.js and CLAUDE.md rule 9). A sibling namespace to
+       --ui-canvas-*, not an instance of it, since CanvasCalendar has its own
+       component-scoped palette distinct from the CanvasWorkbench editor pack.
+       Surface/border/text/shadow tokens are structural chrome and get a dark
+       override below; accent/status/event-paint tokens are painted atop
+       already-colored elements (event chips, selection rings) and are
+       declared once. */
+    --ui-calendar-bg: #f5f7fb;
+    --ui-calendar-panel: #ffffff;
+    --ui-calendar-panel-soft: #f8fafc;
+    --ui-calendar-panel-sunken: #fbfcff;
+    --ui-calendar-border: rgba(15, 23, 42, 0.09);
+    --ui-calendar-border-soft: rgba(226, 232, 240, 0.9);
+    --ui-calendar-border-strong: rgba(79, 70, 229, 0.24);
+    --ui-calendar-text: #0f172a;
+    --ui-calendar-text-muted: #64748b;
+    --ui-calendar-text-subtle: #475569;
+    --ui-calendar-text-faint: #94a3b8;
+    --ui-calendar-heading-text: #334155;
+    --ui-calendar-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    --ui-calendar-shadow-strong: 0 26px 80px rgba(15, 23, 42, 0.32);
+    --ui-calendar-grid-major: rgba(148, 163, 184, 0.32);
+    --ui-calendar-grid-header-fill: rgba(248, 250, 252, 0.92);
+    --ui-calendar-canvas-backdrop: #eef2ff;
+
+    /* Paint atop already-colored elements (event chips, selection rings,
+       status accents) — declared once, no dark override, same as
+       --ui-canvas-*'s tone family above. */
+    --ui-calendar-accent: #4f46e5;
+    --ui-calendar-accent-soft: rgba(79, 70, 229, 0.12);
+    --ui-calendar-accent-hover: #4338ca;
+    --ui-calendar-success: #0f766e;
+    --ui-calendar-danger: #dc2626;
+    --ui-calendar-now-indicator: #ef4444;
+    --ui-calendar-current-day-fill: rgba(79, 70, 229, 0.05);
+    --ui-calendar-selected-day-fill: rgba(16, 185, 129, 0.06);
+    --ui-calendar-selected-cell-fill: rgba(79, 70, 229, 0.08);
+    --ui-calendar-preview-target-fill: rgba(16, 185, 129, 0.1);
+    --ui-calendar-range-fill: rgba(79, 70, 229, 0.12);
+    --ui-calendar-range-stroke: rgba(79, 70, 229, 0.24);
+    --ui-calendar-event-title-text: #ffffff;
+    --ui-calendar-event-stroke-selected: rgba(15, 23, 42, 0.42);
+    --ui-calendar-event-stroke: rgba(255, 255, 255, 0.36);
+    --ui-calendar-density-dot: #10b981;
+    --ui-calendar-warn: #92400e;
+    --ui-calendar-warn-soft: rgba(245, 158, 11, 0.16);
   }
 
   [data-ui-theme="dark"] {
@@ -1048,5 +1099,25 @@
     --ui-canvas-action-hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.32);
     --ui-canvas-create-rail-bg: rgba(30, 41, 59, 0.96);
     --ui-canvas-create-rail-shadow: 0 18px 32px rgba(0, 0, 0, 0.32);
+
+    /* Structural --ui-calendar-* tokens only — accent/status/event-paint
+       tokens are declared once in the light block above and stay fixed. */
+    --ui-calendar-bg: #161c26;
+    --ui-calendar-panel: #1e293b;
+    --ui-calendar-panel-soft: #24324a;
+    --ui-calendar-panel-sunken: #182234;
+    --ui-calendar-border: rgba(148, 163, 184, 0.16);
+    --ui-calendar-border-soft: rgba(148, 163, 184, 0.22);
+    --ui-calendar-border-strong: rgba(129, 140, 248, 0.36);
+    --ui-calendar-text: #f1f5f9;
+    --ui-calendar-text-muted: #94a3b8;
+    --ui-calendar-text-subtle: #cbd5e1;
+    --ui-calendar-text-faint: #64748b;
+    --ui-calendar-heading-text: #e2e8f0;
+    --ui-calendar-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+    --ui-calendar-shadow-strong: 0 26px 80px rgba(0, 0, 0, 0.48);
+    --ui-calendar-grid-major: rgba(148, 163, 184, 0.22);
+    --ui-calendar-grid-header-fill: rgba(30, 41, 59, 0.88);
+    --ui-calendar-canvas-backdrop: #1a1f36;
   }
 }

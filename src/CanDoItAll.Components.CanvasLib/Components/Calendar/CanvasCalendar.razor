@@ -3,15 +3,12 @@
 @using CanDoItAll.Components.CanvasLib
 @inject IJSRuntime JsRuntime
 
-<div class="cdi-canvas-calendar-shell"
-     style="@ThemeStyle"
-     data-theme-key="@ThemeTokens.ThemeKey">
+<div class="cdi-canvas-calendar-shell">
     <div @ref="host" class="@BuildHostClass()"></div>
     <AccessibilityMirrorLayer Snapshot="@AccessibilitySnapshot" />
 </div>
 
 @code {
-    private static readonly CanvasThemeTokenPack ThemeTokens = CanvasThemeTokenPack.Default;
     private readonly CanvasSceneHost sceneHost = new();
     private ElementReference host;
     private DotNetObjectReference<CanvasCalendar>? objectReference;
@@ -212,8 +209,6 @@
 
     private static T? Deserialize<T>(string json)
         => SerializationPersistencePack.Deserialize<T>(json);
-
-    private string ThemeStyle => ThemeTokens.ToInlineStyle();
 
     private AccessibilityMirrorSnapshot AccessibilitySnapshot
         => AccessibilityMirrorLayerFactory.CreateForCalendar(Surface);

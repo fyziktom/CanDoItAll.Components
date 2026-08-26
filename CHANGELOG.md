@@ -508,3 +508,37 @@ All notable changes to this repository's packages are recorded here, per the cha
   `data-ui-theme`, following the BaseLib rename (see BaseLib → Public interface). No functional change — CanvasLib's
   dark-mode CSS already resolves through `theme.css`'s `--ui-canvas-*` tokens rather than a
   `[data-cad-theme="dark"]` selector of its own.
+- **Fixed: `CanvasCalendar` was never wired into the theme-token system and always rendered a solid-white,
+  un-themed surface under a dark `ThemeHost`, regardless of the app's theme.** Its DOM chrome was a JS-injected
+  `<style>` string (`calendar/core/01-foundation.js`'s `injectStyles()`) declaring its own `--zy-cal-*` layer with
+  raw literals (never `var(--ui-calendar-*, ...)`), and its `<canvas>`-painted surfaces (mini-month, timed grid,
+  month grid, event chips in `zy-canvas-primitives.js`) hardcoded default fill/stroke colors that were never
+  overridden — no code called `resolveColors`/`watchTheme` the way `gantt-chart.js`/the `CanvasWorkbench` runtime
+  already do. `CanvasCalendar.razor`'s `style="@ThemeStyle"` (from `CanvasThemeTokenPack`, emitting `--cw-*`) was
+  dead code that nothing in the calendar's own CSS/JS ever read.
+  Added a new `--ui-calendar-*` token block to `Tailwind/theme.css` (light block always; dark-block restatement
+  only for structural chrome — panel/border/text/shadow/grid — per CLAUDE.md rule 9; accent/status/event-paint
+  tokens declared once) — a sibling namespace to `--ui-canvas-*`, not an instance of it, since `CanvasCalendar` has
+  its own component-scoped palette distinct from the `CanvasWorkbench` editor pack (documented in CLAUDE.md rule 9).
+  `injectStyles()`'s ~30 raw literals now route through `var(--zy-cal-*)` → `var(--ui-calendar-*, <literal>)`.
+  Added `calendarColorTokenMap`/`resolveCalendarColors(host)` to `01-foundation.js`, mirroring
+  `canvasColorTokenMap`/`resolveCanvasColors`'s `readTokens`-or-inline-`getComputedStyle`-fallback degrade contract
+  (CLAUDE.md rule 8); `CalendarController` (`controller/02-controller-and-dom.js`) resolves `this.state.colors`
+  from `this.host.closest('.cdi-canvas-calendar-shell') || this.host` at construction and wires
+  `window.CanDoItAll.themeTokens.watchTheme(...)` to re-resolve and re-render on every `data-ui-theme` flip,
+  disconnected in `destroy()`. `render/04-render-and-interaction.js`'s hardcoded canvas paint (surface backdrops,
+  now-indicator, event/chip text and outlines, month-cell fills, "+N more" label) now reads `this.state.colors.*`
+  instead of literals, and threads mapped `colors` objects into the `drawMiniMonth`/`drawTimedGrid` calls.
+  Removed `CanvasCalendar.razor`'s dead `style="@ThemeStyle"`/`ThemeTokens`/`ThemeStyle` members — confirmed zero
+  readers of `--cw-*` anywhere in the calendar's own CSS/JS; `.cdi-canvas-calendar-shell` already gets its `--cw-*`
+  fallback chain from `01-layout-and-shell.css` regardless.
+  Also fixed a structural bug introduced mid-pass and caught before landing: `.zy-calendar-backdrop`/
+  `.zy-calendar-editor` (the event editor modal) render as a DOM *sibling* of `.zy-calendar-shell`, not a
+  descendant, so declaring `--zy-cal-*` on `.zy-calendar-shell` alone left the modal unable to inherit them (its
+  panel background resolved to fully transparent). The `--zy-cal-*` declaration block now lives on
+  `.zy-calendar-host-workspace` (the outer host element, always present per `BuildHostClass()`, and the common
+  ancestor of every calendar surface), fixing inheritance for the editor modal, choice dialog, and any future
+  sibling surface.
+  Verified live in the Sandbox (`/canvas` → `<CanvasCalendar>` → `CalendarRuntime`): toolbar, mini-month, timed
+  grid, month grid, event editor modal, and selection panel all now darken correctly under `?dark=true` without a
+  remount.

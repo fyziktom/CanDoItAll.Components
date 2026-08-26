@@ -4,7 +4,7 @@
   }
   var shared = window.ZyCanvasCalendarModule;
   if (!shared) { throw new Error('ZyCanvasCalendar foundation must load before 02-controller-and-dom.js.'); }
-  var { CanvasSurface, HitRegistry, DateMath, drawMiniMonth, drawTimedGrid, fillRoundedPanel, fitText, wrapText, STYLE_ID, DAY_SHORT, MONTH_SHORT, TIMEZONE_FALLBACKS, injectStyles, asText, asNumber, clamp, safeObject, safeArray, copy, escapeHtml, padNumber, ensureDateKey, normalizeIsoString, minutesToClockLabel, formatterKey, getFormatter, getZonedParts, zonedPartsToDateKey, getDateKeyFromIso, getMinutesFromIso, formatDateKeyLabel, formatDateTimeLabel, formatRangeLabel, formatRangeLabelLines, renderListRangeLabel, renderCalendarActionIcon, renderCalendarToolbarIcon, renderCalendarListActionButton, renderCalendarToolbarIconButton, renderCalendarExportMenuItem, renderCalendarAddEventButton, toLocalInputValue, parseLocalInputValue, zonedLocalToUtcIso, localInputToUtcIso, buildUtcIsoFromDateKeyMinutes, addMinutesToIso, addDaysToIso, durationMinutes, createLocalEventId, normalizeEvent, pluralize, formatConnectionLabel, compareEvents, getEventSpan, compareDateKeys, eventSpansDate, eventIntersectsRange, buildDensityMap, buildTimeZoneList, buildDefaultEvent, formatPeriodLabel, scopeRange } = shared;
+  var { CanvasSurface, HitRegistry, DateMath, drawMiniMonth, drawTimedGrid, fillRoundedPanel, fitText, wrapText, STYLE_ID, DAY_SHORT, MONTH_SHORT, TIMEZONE_FALLBACKS, injectStyles, asText, asNumber, clamp, safeObject, safeArray, copy, escapeHtml, padNumber, ensureDateKey, normalizeIsoString, minutesToClockLabel, formatterKey, getFormatter, getZonedParts, zonedPartsToDateKey, getDateKeyFromIso, getMinutesFromIso, formatDateKeyLabel, formatDateTimeLabel, formatRangeLabel, formatRangeLabelLines, renderListRangeLabel, renderCalendarActionIcon, renderCalendarToolbarIcon, renderCalendarListActionButton, renderCalendarToolbarIconButton, renderCalendarExportMenuItem, renderCalendarAddEventButton, toLocalInputValue, parseLocalInputValue, zonedLocalToUtcIso, localInputToUtcIso, buildUtcIsoFromDateKeyMinutes, addMinutesToIso, addDaysToIso, durationMinutes, createLocalEventId, normalizeEvent, pluralize, formatConnectionLabel, compareEvents, getEventSpan, compareDateKeys, eventSpansDate, eventIntersectsRange, buildDensityMap, buildTimeZoneList, buildDefaultEvent, formatPeriodLabel, scopeRange, resolveCalendarColors } = shared;
   function CalendarController(options) {
     injectStyles();
 
@@ -102,6 +102,11 @@
     this.editorPlaylistSearchTimer = 0;
     this.pendingPlaylistChoice = null;
     this.buildDom();
+    this.themeHost = this.host.closest('.cdi-canvas-calendar-shell') || this.host;
+    this.state.colors = resolveCalendarColors(this.themeHost);
+    this.themeWatcher = window.CanDoItAll && window.CanDoItAll.themeTokens
+      ? window.CanDoItAll.themeTokens.watchTheme(this.themeHost, this.onThemeChange.bind(this))
+      : null;
     this.surface = new CanvasSurface({
       canvas: this.canvas,
       resizeTarget: this.canvasShell,
@@ -518,7 +523,16 @@
     this.scheduleRender();
   };
 
+  CalendarController.prototype.onThemeChange = function() {
+    this.state.colors = resolveCalendarColors(this.themeHost);
+    this.scheduleRender();
+  };
+
   CalendarController.prototype.destroy = function() {
+    if (this.themeWatcher) {
+      this.themeWatcher.disconnect();
+      this.themeWatcher = null;
+    }
     if (this.frameHandle) {
       window.cancelAnimationFrame(this.frameHandle);
       this.frameHandle = 0;
