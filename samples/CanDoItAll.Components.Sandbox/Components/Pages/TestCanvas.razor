@@ -17,14 +17,19 @@
             <p class="max-w-3xl text-sm">
                 Proof page for the <code>--ui-canvas-*</code> theme-token consolidation (see <code>CHANGELOG.md</code> → CanvasLib).
                 Toggle <code>?dark=true</code> to verify the workbench shell/toolbar/panel chrome repaints under
-                <code>data-cad-theme="dark"</code>, and that each node below &mdash; one per named accent tone
-                (<code>violet</code>/<code>mint</code>/<code>sky</code>/<code>amber</code>/<code>rose</code>/<code>success</code>/<code>warning</code>/<code>danger</code>/<code>info</code>/<code>neutral</code>) &mdash;
-                resolves its accent color through <code>resolveCanvasColors</code>/<code>watchTheme</code> rather than a hardcoded literal.
+                <code>data-cad-theme="dark"</code>. The row of 10 nodes exercises the named accent tones
+                (<code>violet</code>/<code>mint</code>/<code>sky</code>/<code>amber</code>/<code>rose</code>/<code>success</code>/<code>warning</code>/<code>danger</code>/<code>info</code>/<code>neutral</code>)
+                via <code>resolveCanvasColors</code>/<code>watchTheme</code>. The remaining rows exercise
+                <code>resolveCanvasNodePaletteStyle</code>'s per-tone surface/text/icon shades (including the read-only
+                variant and both the selected and unselected <code>surfaceStroke</code> branches), group-frame tones,
+                port tones, progress-badge states, marker/annotation/media-preview badges, a preview-only outline, and
+                a decision node with ports and a branch label. The links below exercise
+                <code>resolveCanvasLinkStyle</code>/<code>resolveCanvasLinkLabelStyle</code>'s tone/dependency/user-authored/default branches.
             </p>
             <p class="max-w-3xl text-sm">
-                <strong>Known gap, not exercised here:</strong> <code>resolveCanvasNodePaletteStyle</code>'s ~130 precomputed
-                palette shades and the remaining <code>&lt;canvas&gt;</code>-fill literals in <code>06-canvas-renderers.js</code>
-                are not yet token-converted (see the CanvasLib CHANGELOG entry's "Not yet converted" note).
+                <strong>Not exercised here (verified by code review only):</strong> the hovered and in-progress
+                connection-drag link-style branches are interaction-driven, not reachable from static <code>Surface</code>
+                data.
             </p>
         </section>
 
@@ -38,6 +43,8 @@
     /// <summary>Accepted for the WASM hash router; the page reads route state directly from NavigationManager.</summary>
     [Parameter]
     public string? HashRouteState { get; set; }
+
+    private const string SampleMediaPreviewUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 
     private static readonly (string PaletteKey, string Title)[] AccentTones =
     [
@@ -53,20 +60,128 @@
         ("neutral", "Neutral accent")
     ];
 
-    private CanvasWorkbenchSurface Surface => new()
+    private static readonly string[] PaletteOnlyKeys =
+        ["primary", "secondary", "success", "info", "warning", "danger", "workflow-decision", "neutral"];
+
+    private CanvasWorkbenchSurface Surface
     {
-        SurfaceId = "test-canvas",
-        Nodes = [.. AccentTones.Select((tone, index) => new CanvasWorkbenchNode
+        get
         {
-            Id = $"node-{tone.PaletteKey}",
-            Title = tone.Title,
-            Subtitle = tone.PaletteKey,
-            // Empty AccentColor forces resolveNodeAccentColor() to fall through to the
-            // token-resolved PaletteKey lookup instead of returning a literal verbatim.
-            AccentColor = string.Empty,
-            PaletteKey = tone.PaletteKey,
-            X = 40 + (index % 5) * 220,
-            Y = 40 + (index / 5) * 180
-        })]
-    };
+            var accentNodes = AccentTones.Select((tone, index) => new CanvasWorkbenchNode
+            {
+                Id = $"node-{tone.PaletteKey}",
+                Title = tone.Title,
+                Subtitle = tone.PaletteKey,
+                // Empty AccentColor forces resolveNodeAccentColor() to fall through to the
+                // token-resolved PaletteKey lookup instead of returning a literal verbatim.
+                AccentColor = string.Empty,
+                PaletteKey = tone.PaletteKey,
+                X = 40 + (index % 5) * 220,
+                Y = 40 + (index / 5) * 180
+            }).ToList();
+
+            // One node per resolveCanvasNodePaletteStyle palette block (selected, to also
+            // exercise the surfaceStroke-selected branch; the accent nodes above cover the
+            // unselected branch for the 5 keys that overlap both lookups).
+            var paletteNodes = PaletteOnlyKeys.Select((key, index) => new CanvasWorkbenchNode
+            {
+                Id = $"palette-{key}",
+                Title = $"{key} palette",
+                Subtitle = key,
+                AccentColor = string.Empty,
+                PaletteKey = key,
+                BranchLabel = key == "workflow-decision" ? "Branch A" : string.Empty,
+                X = 40 + (index % 4) * 260,
+                Y = 420 + (index / 4) * 220
+            }).ToList();
+
+            var readonlySelected = new CanvasWorkbenchNode { Id = "node-readonly-selected", Title = "Read-only (selected)", IsReadOnly = true, X = 40, Y = 900 };
+            var readonlyUnselected = new CanvasWorkbenchNode { Id = "node-readonly-unselected", Title = "Read-only", IsReadOnly = true, X = 300, Y = 900 };
+
+            var portsNode = new CanvasWorkbenchNode
+            {
+                Id = "node-ports",
+                Title = "Port tones",
+                InputPorts =
+                [
+                    new CanvasWorkbenchPort { Id = "in-accent", Label = "In", Tone = "accent" },
+                    new CanvasWorkbenchPort { Id = "in-default", Label = "In (default)" }
+                ],
+                OutputPorts =
+                [
+                    new CanvasWorkbenchPort { Id = "out-success", Label = "Out", Tone = "success" },
+                    new CanvasWorkbenchPort { Id = "out-warning", Label = "Out", Tone = "warning" },
+                    new CanvasWorkbenchPort { Id = "out-danger", Label = "Out", Tone = "danger" }
+                ],
+                X = 580,
+                Y = 900
+            };
+
+            var progressComplete = new CanvasWorkbenchNode { Id = "node-progress-complete", Title = "Progress complete", ProgressMode = "complete", ProgressPercent = 100, X = 40, Y = 1140 };
+            var progressInProgress = new CanvasWorkbenchNode { Id = "node-progress-inprogress", Title = "Progress in-progress", ProgressMode = "in-progress", ProgressPercent = 45, X = 300, Y = 1140 };
+
+            var decoratedNode = new CanvasWorkbenchNode
+            {
+                Id = "node-decorated",
+                Title = "Markers, annotations, media",
+                IsPreviewOnly = true,
+                MediaKind = "image",
+                MediaPreviewUrl = SampleMediaPreviewUrl,
+                Markers =
+                [
+                    new CanvasWorkbenchMarker { Icon = "info", Tone = "sky", Label = "Sky" },
+                    new CanvasWorkbenchMarker { Icon = "check", Tone = "mint", Label = "Mint" },
+                    new CanvasWorkbenchMarker { Icon = "warning", Tone = "warn", Label = "Warn" },
+                    new CanvasWorkbenchMarker { Icon = "error", Tone = "danger", Label = "Danger" },
+                    new CanvasWorkbenchMarker { Icon = "star", Tone = "primary", Label = "Primary" },
+                    new CanvasWorkbenchMarker { Icon = "circle", Tone = "ghost", Label = "Ghost" },
+                    new CanvasWorkbenchMarker { Icon = "help", Tone = "unrecognized-tone", Label = "Other" }
+                ],
+                Annotations =
+                [
+                    new CanvasWorkbenchAnnotation { Id = "note-1", Icon = "!", Label = "Needs review" }
+                ],
+                X = 560,
+                Y = 1140
+            };
+
+            var allNodes = new List<CanvasWorkbenchNode>(accentNodes);
+            allNodes.AddRange(paletteNodes);
+            allNodes.Add(readonlySelected);
+            allNodes.Add(readonlyUnselected);
+            allNodes.Add(portsNode);
+            allNodes.Add(progressComplete);
+            allNodes.Add(progressInProgress);
+            allNodes.Add(decoratedNode);
+
+            var selectedNodeIds = paletteNodes.Select(node => node.Id).Append(readonlySelected.Id).ToList();
+
+            return new CanvasWorkbenchSurface
+            {
+                SurfaceId = "test-canvas",
+                Nodes = allNodes,
+                Links =
+                [
+                    new CanvasWorkbenchLink { SourceId = "palette-primary", TargetId = "palette-secondary", Tone = "success", Label = "Handoff" },
+                    new CanvasWorkbenchLink { SourceId = "palette-secondary", TargetId = "palette-success", Tone = "warning", Label = "Review" },
+                    new CanvasWorkbenchLink { SourceId = "palette-success", TargetId = "palette-info", Tone = "danger", Label = "Blocked" },
+                    new CanvasWorkbenchLink { SourceId = "palette-info", TargetId = "palette-warning", Tone = "info", Label = "Info" },
+                    new CanvasWorkbenchLink { SourceId = "palette-warning", TargetId = "palette-danger", Kind = "dependson", Label = "Depends" },
+                    new CanvasWorkbenchLink { SourceId = "palette-danger", TargetId = "palette-workflow-decision", IsUserAuthored = true, Label = "Manual" },
+                    new CanvasWorkbenchLink { SourceId = "palette-workflow-decision", TargetId = "palette-neutral", Label = "Plain" }
+                ],
+                UiState = new CanvasWorkbenchUiState
+                {
+                    SelectedNodeIds = selectedNodeIds,
+                    GroupFrames =
+                    [
+                        new CanvasWorkbenchGroupFrame { Id = "frame-accent", Tone = "accent", Label = "Accent frame", AnchorNodeIds = ["node-violet", "node-mint"] },
+                        new CanvasWorkbenchGroupFrame { Id = "frame-success", Tone = "success", Label = "Success frame", AnchorNodeIds = ["palette-success", "palette-info"] },
+                        new CanvasWorkbenchGroupFrame { Id = "frame-warning", Tone = "warning", Label = "Warning frame", AnchorNodeIds = ["palette-warning", "palette-danger"] },
+                        new CanvasWorkbenchGroupFrame { Id = "frame-danger", Tone = "danger", Label = "Danger frame", AnchorNodeIds = ["node-decorated"] }
+                    ]
+                }
+            };
+        }
+    }
 }

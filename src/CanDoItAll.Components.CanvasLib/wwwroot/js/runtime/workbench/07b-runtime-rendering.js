@@ -92,7 +92,7 @@
             renderedNodeCount += 1;
         }
 
-        renderCanvasLinkLabels(surface.context, state.renderedLinks);
+        renderCanvasLinkLabels(surface.context, state.renderedLinks, state.colors);
 
         reconcileRetainedLayer(
             state.retainedNodeElements,

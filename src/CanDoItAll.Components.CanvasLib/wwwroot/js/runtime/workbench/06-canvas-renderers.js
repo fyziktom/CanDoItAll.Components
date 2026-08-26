@@ -263,20 +263,21 @@
     }
 
     function drawCanvasFrame(context, state, frame, hostBounds, memberCount, frameId) {
+        const colors = state.colors || {};
         const tone = (frame?.tone || "accent").toLowerCase();
-        let stroke = "rgba(124, 58, 237, 0.72)";
-        let fill = "rgba(124, 58, 237, 0.08)";
+        let stroke = colors.frameAccentStroke || "rgba(124, 58, 237, 0.72)";
+        let fill = colors.frameAccentFill || "rgba(124, 58, 237, 0.08)";
         if (tone === "success") {
-            stroke = "rgba(5, 150, 105, 0.72)";
-            fill = "rgba(5, 150, 105, 0.08)";
+            stroke = colors.frameSuccessStroke || "rgba(5, 150, 105, 0.72)";
+            fill = colors.frameSuccessFill || "rgba(5, 150, 105, 0.08)";
         }
         else if (tone === "warning" || tone === "warn") {
-            stroke = "rgba(217, 119, 6, 0.72)";
-            fill = "rgba(217, 119, 6, 0.08)";
+            stroke = colors.frameWarningStroke || "rgba(217, 119, 6, 0.72)";
+            fill = colors.frameWarningFill || "rgba(217, 119, 6, 0.08)";
         }
         else if (tone === "danger") {
-            stroke = "rgba(220, 38, 38, 0.72)";
-            fill = "rgba(220, 38, 38, 0.08)";
+            stroke = colors.frameDangerStroke || "rgba(220, 38, 38, 0.72)";
+            fill = colors.frameDangerFill || "rgba(220, 38, 38, 0.08)";
         }
 
         drawRoundedPanel(
@@ -295,16 +296,16 @@
             context,
             labelBounds,
             Math.max(10, 14 * state.ui.zoom),
-            "rgba(255, 255, 255, 0.96)",
+            colors.frameChipBg || "rgba(255, 255, 255, 0.96)",
             hexToRgba(stroke, 0.18),
             1,
             "");
         context.save();
         setCanvasFont(context, 700, Math.max(9, 11.5 * state.ui.zoom));
-        context.fillStyle = "rgba(15, 23, 42, 0.74)";
+        context.fillStyle = colors.frameLabelText || "rgba(15, 23, 42, 0.74)";
         context.fillText(frame?.label || "Group border", labelBounds.left + 12, labelBounds.top + Math.max(14, 18 * state.ui.zoom));
         setCanvasFont(context, 700, Math.max(9, 10.5 * state.ui.zoom));
-        context.fillStyle = "rgba(71, 85, 105, 0.84)";
+        context.fillStyle = colors.frameMemberCountText || "rgba(71, 85, 105, 0.84)";
         context.textAlign = "right";
         context.fillText(`${memberCount}`, labelBounds.right - 12, labelBounds.top + Math.max(14, 18 * state.ui.zoom));
         context.restore();
@@ -323,7 +324,7 @@
                 context,
                 bounds,
                 handleSize / 2,
-                "rgba(255, 255, 255, 0.96)",
+                colors.frameChipBg || "rgba(255, 255, 255, 0.96)",
                 hexToRgba(stroke, 0.8),
                 1,
                 "");
@@ -509,7 +510,8 @@
         };
     }
 
-    function resolveCanvasPortVisualStyle(port, paletteStyle) {
+    function resolveCanvasPortVisualStyle(port, paletteStyle, colors) {
+        const resolved = colors || {};
         const accentColor = (port?.accentColor || "").trim();
         if (accentColor) {
             return {
@@ -528,58 +530,58 @@
             case "accent":
                 return {
                     categoryKey: port?.categoryKey || "",
-                    accentColor: "#3b82f6",
-                    fill: "rgba(59, 130, 246, 0.18)",
-                    stroke: "rgba(37, 99, 235, 0.48)",
-                    text: "rgba(219, 234, 254, 0.98)",
-                    anchor: "rgba(59, 130, 246, 0.94)",
-                    halo: "rgba(59, 130, 246, 0.18)",
-                    line: "rgba(59, 130, 246, 0.88)"
+                    accentColor: resolved.portAccentAccentColor || "#3b82f6",
+                    fill: resolved.portAccentFill || "rgba(59, 130, 246, 0.18)",
+                    stroke: resolved.portAccentStroke || "rgba(37, 99, 235, 0.48)",
+                    text: resolved.portAccentText || "rgba(219, 234, 254, 0.98)",
+                    anchor: resolved.portAccentAnchor || "rgba(59, 130, 246, 0.94)",
+                    halo: resolved.portAccentHalo || "rgba(59, 130, 246, 0.18)",
+                    line: resolved.portAccentLine || "rgba(59, 130, 246, 0.88)"
                 };
             case "success":
                 return {
                     categoryKey: port?.categoryKey || "",
-                    accentColor: "#22c55e",
-                    fill: "rgba(34, 197, 94, 0.18)",
-                    stroke: "rgba(22, 163, 74, 0.48)",
-                    text: "rgba(220, 252, 231, 0.98)",
-                    anchor: "rgba(34, 197, 94, 0.92)",
-                    halo: "rgba(34, 197, 94, 0.18)",
-                    line: "rgba(34, 197, 94, 0.86)"
+                    accentColor: resolved.portSuccessAccentColor || "#22c55e",
+                    fill: resolved.portSuccessFill || "rgba(34, 197, 94, 0.18)",
+                    stroke: resolved.portSuccessStroke || "rgba(22, 163, 74, 0.48)",
+                    text: resolved.portSuccessText || "rgba(220, 252, 231, 0.98)",
+                    anchor: resolved.portSuccessAnchor || "rgba(34, 197, 94, 0.92)",
+                    halo: resolved.portSuccessHalo || "rgba(34, 197, 94, 0.18)",
+                    line: resolved.portSuccessLine || "rgba(34, 197, 94, 0.86)"
                 };
             case "warning":
             case "warn":
                 return {
                     categoryKey: port?.categoryKey || "",
-                    accentColor: "#f59e0b",
-                    fill: "rgba(245, 158, 11, 0.18)",
-                    stroke: "rgba(217, 119, 6, 0.48)",
-                    text: "rgba(254, 243, 199, 0.98)",
-                    anchor: "rgba(245, 158, 11, 0.92)",
-                    halo: "rgba(245, 158, 11, 0.18)",
-                    line: "rgba(245, 158, 11, 0.88)"
+                    accentColor: resolved.portWarningAccentColor || "#f59e0b",
+                    fill: resolved.portWarningFill || "rgba(245, 158, 11, 0.18)",
+                    stroke: resolved.portWarningStroke || "rgba(217, 119, 6, 0.48)",
+                    text: resolved.portWarningText || "rgba(254, 243, 199, 0.98)",
+                    anchor: resolved.portWarningAnchor || "rgba(245, 158, 11, 0.92)",
+                    halo: resolved.portWarningHalo || "rgba(245, 158, 11, 0.18)",
+                    line: resolved.portWarningLine || "rgba(245, 158, 11, 0.88)"
                 };
             case "danger":
                 return {
                     categoryKey: port?.categoryKey || "",
-                    accentColor: "#ef4444",
-                    fill: "rgba(239, 68, 68, 0.18)",
-                    stroke: "rgba(220, 38, 38, 0.48)",
-                    text: "rgba(254, 226, 226, 0.98)",
-                    anchor: "rgba(239, 68, 68, 0.92)",
-                    halo: "rgba(239, 68, 68, 0.18)",
-                    line: "rgba(239, 68, 68, 0.88)"
+                    accentColor: resolved.portDangerAccentColor || "#ef4444",
+                    fill: resolved.portDangerFill || "rgba(239, 68, 68, 0.18)",
+                    stroke: resolved.portDangerStroke || "rgba(220, 38, 38, 0.48)",
+                    text: resolved.portDangerText || "rgba(254, 226, 226, 0.98)",
+                    anchor: resolved.portDangerAnchor || "rgba(239, 68, 68, 0.92)",
+                    halo: resolved.portDangerHalo || "rgba(239, 68, 68, 0.18)",
+                    line: resolved.portDangerLine || "rgba(239, 68, 68, 0.88)"
                 };
             default:
                 return {
                     categoryKey: port?.categoryKey || "",
                     accentColor: "",
-                    fill: paletteStyle?.subtleFill || "rgba(255, 255, 255, 0.94)",
-                    stroke: paletteStyle?.subtleStroke || "rgba(148, 163, 184, 0.34)",
-                    text: paletteStyle?.subtleText || "rgba(71, 85, 105, 0.96)",
-                    anchor: paletteStyle?.iconFill || "rgba(71, 85, 105, 0.88)",
-                    halo: "rgba(148, 163, 184, 0.16)",
-                    line: paletteStyle?.iconFill || "rgba(71, 85, 105, 0.82)"
+                    fill: paletteStyle?.subtleFill || resolved.portDefaultFill || "rgba(255, 255, 255, 0.94)",
+                    stroke: paletteStyle?.subtleStroke || resolved.portDefaultStroke || "rgba(148, 163, 184, 0.34)",
+                    text: paletteStyle?.subtleText || resolved.portDefaultText || "rgba(71, 85, 105, 0.96)",
+                    anchor: paletteStyle?.iconFill || resolved.portDefaultAnchor || "rgba(71, 85, 105, 0.88)",
+                    halo: resolved.portDefaultHalo || "rgba(148, 163, 184, 0.16)",
+                    line: paletteStyle?.iconFill || resolved.portDefaultLine || "rgba(71, 85, 105, 0.82)"
                 };
         }
     }
@@ -595,23 +597,24 @@
         return ports.find(port => port?.id === portId) || null;
     }
 
-    function resolveCanvasLinkConnectionStyle(sourcePort, targetPort) {
+    function resolveCanvasLinkConnectionStyle(sourcePort, targetPort, colors) {
         if (sourcePort) {
-            return resolveCanvasPortVisualStyle(sourcePort, null);
+            return resolveCanvasPortVisualStyle(sourcePort, null, colors);
         }
 
         if (targetPort) {
-            return resolveCanvasPortVisualStyle(targetPort, null);
+            return resolveCanvasPortVisualStyle(targetPort, null, colors);
         }
 
         return null;
     }
 
     function resolveCanvasLinkStyle(link, options) {
+        const colors = options?.colors || {};
         if (options?.isHovered) {
             return {
-                stroke: "rgba(239, 68, 68, 0.94)",
-                arrowFill: "rgba(220, 38, 38, 0.96)",
+                stroke: colors.linkHoveredStroke || "rgba(239, 68, 68, 0.94)",
+                arrowFill: colors.linkHoveredArrowFill || "rgba(220, 38, 38, 0.96)",
                 lineWidth: 4,
                 lineDash: []
             };
@@ -628,8 +631,8 @@
             }
 
             return {
-                stroke: "rgba(124, 58, 237, 0.92)",
-                arrowFill: "rgba(109, 40, 217, 0.96)",
+                stroke: colors.linkPreviewStroke || "rgba(124, 58, 237, 0.92)",
+                arrowFill: colors.linkPreviewArrowFill || "rgba(109, 40, 217, 0.96)",
                 lineWidth: 3,
                 lineDash: [10, 6]
             };
@@ -646,8 +649,8 @@
 
         if (isDependencyLink(link)) {
             return {
-                stroke: "rgba(37, 99, 235, 0.94)",
-                arrowFill: "rgba(29, 78, 216, 0.98)",
+                stroke: colors.linkDependencyStroke || "rgba(37, 99, 235, 0.94)",
+                arrowFill: colors.linkDependencyArrowFill || "rgba(29, 78, 216, 0.98)",
                 lineWidth: 3.35,
                 lineDash: []
             };
@@ -657,32 +660,32 @@
             case "success":
             case "true":
                 return {
-                    stroke: "rgba(20, 184, 166, 0.9)",
-                    arrowFill: "rgba(15, 118, 110, 0.96)",
+                    stroke: colors.linkSuccessStroke || "rgba(20, 184, 166, 0.9)",
+                    arrowFill: colors.linkSuccessArrowFill || "rgba(15, 118, 110, 0.96)",
                     lineWidth: 3.2,
                     lineDash: []
                 };
             case "danger":
             case "else":
                 return {
-                    stroke: "rgba(244, 63, 94, 0.9)",
-                    arrowFill: "rgba(225, 29, 72, 0.96)",
+                    stroke: colors.linkDangerStroke || "rgba(244, 63, 94, 0.9)",
+                    arrowFill: colors.linkDangerArrowFill || "rgba(225, 29, 72, 0.96)",
                     lineWidth: 3.2,
                     lineDash: []
                 };
             case "default":
             case "warning":
                 return {
-                    stroke: "rgba(245, 158, 11, 0.94)",
-                    arrowFill: "rgba(217, 119, 6, 0.98)",
+                    stroke: colors.linkWarningStroke || "rgba(245, 158, 11, 0.94)",
+                    arrowFill: colors.linkWarningArrowFill || "rgba(217, 119, 6, 0.98)",
                     lineWidth: 3.2,
                     lineDash: []
                 };
             case "fanout":
             case "info":
                 return {
-                    stroke: "rgba(14, 165, 233, 0.9)",
-                    arrowFill: "rgba(2, 132, 199, 0.98)",
+                    stroke: colors.linkInfoStroke || "rgba(14, 165, 233, 0.9)",
+                    arrowFill: colors.linkInfoArrowFill || "rgba(2, 132, 199, 0.98)",
                     lineWidth: 3.2,
                     lineDash: []
                 };
@@ -690,16 +693,16 @@
 
         if (link?.isUserAuthored) {
             return {
-                stroke: "rgba(14, 165, 233, 0.82)",
-                arrowFill: "rgba(14, 165, 233, 0.88)",
+                stroke: colors.linkUserAuthoredStroke || "rgba(14, 165, 233, 0.82)",
+                arrowFill: colors.linkUserAuthoredArrowFill || "rgba(14, 165, 233, 0.88)",
                 lineWidth: 3,
                 lineDash: [12, 8]
             };
         }
 
         return {
-            stroke: "rgba(100, 116, 139, 0.44)",
-            arrowFill: "rgba(100, 116, 139, 0.58)",
+            stroke: colors.linkDefaultStroke || "rgba(100, 116, 139, 0.44)",
+            arrowFill: colors.linkDefaultArrowFill || "rgba(100, 116, 139, 0.58)",
             lineWidth: 2,
             lineDash: []
         };
@@ -758,45 +761,46 @@
         context.restore();
     }
 
-    function resolveCanvasLinkLabelStyle(link, fallbackStyle) {
+    function resolveCanvasLinkLabelStyle(link, fallbackStyle, colors) {
+        const resolved = colors || {};
         switch ((link?.tone || "").toLowerCase()) {
             case "success":
             case "true":
                 return {
-                    fill: "rgba(236, 253, 245, 0.97)",
-                    stroke: "rgba(20, 184, 166, 0.42)",
-                    text: "rgba(15, 118, 110, 0.98)"
+                    fill: resolved.linkLabelSuccessFill || "rgba(236, 253, 245, 0.97)",
+                    stroke: resolved.linkLabelSuccessStroke || "rgba(20, 184, 166, 0.42)",
+                    text: resolved.linkLabelSuccessText || "rgba(15, 118, 110, 0.98)"
                 };
             case "warning":
             case "default":
                 return {
-                    fill: "rgba(255, 251, 235, 0.98)",
-                    stroke: "rgba(245, 158, 11, 0.46)",
-                    text: "rgba(146, 64, 14, 0.98)"
+                    fill: resolved.linkLabelWarningFill || "rgba(255, 251, 235, 0.98)",
+                    stroke: resolved.linkLabelWarningStroke || "rgba(245, 158, 11, 0.46)",
+                    text: resolved.linkLabelWarningText || "rgba(146, 64, 14, 0.98)"
                 };
             case "danger":
                 return {
-                    fill: "rgba(254, 242, 242, 0.98)",
-                    stroke: "rgba(244, 63, 94, 0.44)",
-                    text: "rgba(159, 18, 57, 0.98)"
+                    fill: resolved.linkLabelDangerFill || "rgba(254, 242, 242, 0.98)",
+                    stroke: resolved.linkLabelDangerStroke || "rgba(244, 63, 94, 0.44)",
+                    text: resolved.linkLabelDangerText || "rgba(159, 18, 57, 0.98)"
                 };
             case "fanout":
             case "info":
                 return {
-                    fill: "rgba(240, 249, 255, 0.98)",
-                    stroke: "rgba(14, 165, 233, 0.42)",
-                    text: "rgba(3, 105, 161, 0.98)"
+                    fill: resolved.linkLabelInfoFill || "rgba(240, 249, 255, 0.98)",
+                    stroke: resolved.linkLabelInfoStroke || "rgba(14, 165, 233, 0.42)",
+                    text: resolved.linkLabelInfoText || "rgba(3, 105, 161, 0.98)"
                 };
             default:
                 return {
-                    fill: "rgba(255, 255, 255, 0.96)",
-                    stroke: fallbackStyle?.stroke || "rgba(100, 116, 139, 0.32)",
-                    text: "rgba(30, 41, 59, 0.9)"
+                    fill: resolved.linkLabelDefaultFill || "rgba(255, 255, 255, 0.96)",
+                    stroke: fallbackStyle?.stroke || resolved.linkLabelDefaultStroke || "rgba(100, 116, 139, 0.32)",
+                    text: resolved.linkLabelDefaultText || "rgba(30, 41, 59, 0.9)"
                 };
         }
     }
 
-    function drawCanvasLinkLabel(context, link, geometry, fallbackStyle) {
+    function drawCanvasLinkLabel(context, link, geometry, fallbackStyle, colors) {
         const rawLabel = (link?.label || "").trim();
         const labelPoint = geometry?.labelPoint || geometry?.midPoint;
         if (!rawLabel || !labelPoint) {
@@ -806,7 +810,7 @@
         const label = rawLabel.length > 32
             ? `${rawLabel.slice(0, 29)}...`
             : rawLabel;
-        const style = resolveCanvasLinkLabelStyle(link, fallbackStyle);
+        const style = resolveCanvasLinkLabelStyle(link, fallbackStyle, colors);
         context.save();
         setCanvasFont(context, 800, 11);
         const textWidth = Math.min(180, Math.ceil(context.measureText(label).width));
@@ -817,7 +821,7 @@
             labelPoint.y - (height / 2),
             width,
             height);
-        drawRoundedPanel(context, bounds, 12, style.fill, style.stroke, 1, "rgba(15, 23, 42, 0.1)");
+        drawRoundedPanel(context, bounds, 12, style.fill, style.stroke, 1, colors?.linkLabelPanelShadow || "rgba(15, 23, 42, 0.1)");
         context.fillStyle = style.text;
         context.textBaseline = "middle";
         context.textAlign = "center";
@@ -825,13 +829,13 @@
         context.restore();
     }
 
-    function renderCanvasLinkLabels(context, renderedLinks) {
+    function renderCanvasLinkLabels(context, renderedLinks, colors) {
         if (!context || !Array.isArray(renderedLinks)) {
             return;
         }
 
         for (const link of renderedLinks) {
-            drawCanvasLinkLabel(context, link, link, resolveCanvasLinkStyle(link, null));
+            drawCanvasLinkLabel(context, link, link, resolveCanvasLinkStyle(link, { colors }), colors);
         }
     }
 
@@ -863,7 +867,7 @@
         context.restore();
 
         if (!shouldRenderArrow(link) && !options?.isPreview && !options?.forceArrow) {
-            drawCanvasLinkLabel(context, link, geometry, style);
+            drawCanvasLinkLabel(context, link, geometry, style, options?.colors);
             return geometry;
         }
 
@@ -893,7 +897,7 @@
             drawCanvasArrowHead(context, midPoint, midAngle, style.arrowFill, 10, 4);
         }
 
-        drawCanvasLinkLabel(context, link, geometry, style);
+        drawCanvasLinkLabel(context, link, geometry, style, options?.colors);
         return geometry;
     }
 
@@ -966,7 +970,8 @@
             const targetAnchor = worldToHostPoint(state, getLinkAnchorPoint(state, target, anchorSides.targetSide, link.targetPortId, "input", detailMode));
             const connectionStyle = resolveCanvasLinkConnectionStyle(
                 findNodePort(source, link.sourcePortId, "output"),
-                findNodePort(target, link.targetPortId, "input"));
+                findNodePort(target, link.targetPortId, "input"),
+                state.colors);
             const retainedKey = getLinkRetainedKey(link, index);
             const routeOffset = routeOffsetsByLinkIndex.get(index) || 0;
             const geometry = drawCanvasLink(surface.context, link, sourceAnchor, targetAnchor, {
@@ -975,7 +980,8 @@
                 targetSide: targetAnchor.side || anchorSides.targetSide,
                 routeOffset,
                 isHovered: state.surface?.mode === "delete" && state.hoveredDeleteLinkKey === retainedKey,
-                connectionStyle
+                connectionStyle,
+                colors: state.colors
             });
             nextEntries.set(retainedKey, {
                 signature: JSON.stringify({
@@ -1041,13 +1047,15 @@
                 const targetAnchor = worldToHostPoint(state, getLinkAnchorPoint(state, previewTarget, anchorSides.targetSide, previewLink.targetPortId, "input", detailMode));
                 const previewConnectionStyle = resolveCanvasLinkConnectionStyle(
                     findNodePort(previewSource, previewLink.sourcePortId, "output"),
-                    findNodePort(previewTarget, previewLink.targetPortId, "input"));
+                    findNodePort(previewTarget, previewLink.targetPortId, "input"),
+                    state.colors);
                 const previewGeometry = drawCanvasLink(surface.context, previewLink, sourceAnchor, targetAnchor, {
                     isPreview: true,
                     sourceSide: sourceAnchor.side || anchorSides.sourceSide,
                     targetSide: targetAnchor.side || anchorSides.targetSide,
                     forceArrow: true,
-                    connectionStyle: previewConnectionStyle
+                    connectionStyle: previewConnectionStyle,
+                    colors: state.colors
                 });
                 state.previewLink = {
                     sourceId: dependencySourceId,
@@ -1066,13 +1074,15 @@
                 const sourceAnchor = worldToHostPoint(state, getLinkAnchorPoint(state, previewSource, sourceSide, previewLink.sourcePortId, "output", detailMode));
                 const previewConnectionStyle = resolveCanvasLinkConnectionStyle(
                     findNodePort(previewSource, previewLink.sourcePortId, "output"),
-                    null);
+                    null,
+                    state.colors);
                 const previewGeometry = drawCanvasLink(surface.context, previewLink, sourceAnchor, state.pointerHostPoint, {
                     isPreview: true,
                     sourceSide: sourceAnchor.side || sourceSide,
                     targetSide: "left",
                     forceArrow: true,
-                    connectionStyle: previewConnectionStyle
+                    connectionStyle: previewConnectionStyle,
+                    colors: state.colors
                 });
                 state.previewLink = {
                     sourceId: dependencySourceId,
@@ -1110,7 +1120,8 @@
                     : null;
                 const previewConnectionStyle = resolveCanvasLinkConnectionStyle(
                     findNodePort(previewSourceNode, outputDescriptor?.portId || "", "output"),
-                    findNodePort(previewTargetNode, inputDescriptor?.portId || "", "input"));
+                    findNodePort(previewTargetNode, inputDescriptor?.portId || "", "input"),
+                    state.colors);
                 const previewGeometry = drawCanvasLink(
                     surface.context,
                     {
@@ -1128,7 +1139,8 @@
                         sourceSide: previewSource.side || outputDescriptor?.side || "right",
                         targetSide: previewTarget?.side || inputDescriptor?.side || "left",
                         forceArrow: true,
-                        connectionStyle: previewConnectionStyle
+                        connectionStyle: previewConnectionStyle,
+                        colors: state.colors
                     });
                 state.previewLink = {
                     sourceId: outputDescriptor?.nodeId || null,
@@ -1168,27 +1180,28 @@
     }
 
     function drawCanvasProgressBadge(context, state, bounds, node, paletteStyle) {
+        const colors = state.colors || {};
         const display = resolveProgressDisplay(node?.progressMode, node?.progressPercent);
         const centerX = bounds.left + (bounds.width / 2);
         const centerY = bounds.top + (bounds.height / 2);
         const radius = Math.max(6, bounds.width / 2);
         context.save();
         context.lineWidth = Math.max(2, 2.2 * state.ui.zoom);
-        context.strokeStyle = paletteStyle?.progressTrack || "rgba(148, 163, 184, 0.28)";
+        context.strokeStyle = paletteStyle?.progressTrack || colors.progressTrackDefault || "rgba(148, 163, 184, 0.28)";
         context.beginPath();
         context.arc(centerX, centerY, radius - context.lineWidth, 0, Math.PI * 2);
         context.stroke();
         if (display.mode !== "na") {
             context.strokeStyle = display.mode === "complete"
-                ? "rgba(5, 150, 105, 0.92)"
-                : "rgba(124, 58, 237, 0.92)";
+                ? (colors.progressCompleteArc || "rgba(5, 150, 105, 0.92)")
+                : (colors.progressInProgressArc || "rgba(124, 58, 237, 0.92)");
             context.beginPath();
             context.arc(centerX, centerY, radius - context.lineWidth, -Math.PI / 2, -Math.PI / 2 + ((display.angle / 360) * Math.PI * 2));
             context.stroke();
         }
 
         setCanvasFont(context, 700, Math.max(7, 10 * state.ui.zoom));
-        context.fillStyle = paletteStyle?.progressText || "rgba(15, 23, 42, 0.78)";
+        context.fillStyle = paletteStyle?.progressText || colors.progressTextDefault || "rgba(15, 23, 42, 0.78)";
         context.textAlign = "center";
         context.fillText(display.centerText || "", centerX, centerY + Math.max(2, 3 * state.ui.zoom));
         context.restore();
@@ -1229,23 +1242,24 @@
         return markers;
     }
 
-    function resolveMarkerToneAccentColor(tone, fallbackAccent) {
+    function resolveMarkerToneAccentColor(tone, fallbackAccent, colors) {
+        const resolved = colors || {};
         switch ((tone || "").toLowerCase()) {
             case "sky":
-                return "#38bdf8";
+                return resolved.markerSky || "#38bdf8";
             case "mint":
-                return "#10b981";
+                return resolved.markerMint || "#10b981";
             case "warn":
-                return "#f97316";
+                return resolved.markerWarn || "#f97316";
             case "danger":
-                return "#e11d48";
+                return resolved.markerDanger || "#e11d48";
             case "primary":
-                return "#0f172a";
+                return resolved.markerPrimary || "#0f172a";
             case "ghost":
-                return "#94a3b8";
+                return resolved.markerGhost || "#94a3b8";
             case "accent":
             default:
-                return fallbackAccent || "#8b5cf6";
+                return fallbackAccent || resolved.markerDefaultFallback || "#8b5cf6";
         }
     }
 
@@ -1266,7 +1280,7 @@
                 context,
                 bounds,
                 resolveMarkerGlyph(marker.icon),
-                hexToRgba(resolveMarkerToneAccentColor(marker.tone, accent), 0.12),
+                hexToRgba(resolveMarkerToneAccentColor(marker.tone, accent, state.colors), 0.12),
                 paletteStyle.subtleStroke,
                 paletteStyle.subtleText,
                 Math.max(8, 9.5 * state.ui.zoom));
@@ -1305,6 +1319,7 @@
 
         let cursorX = startX;
         let cursorY = y;
+        const colors = state.colors || {};
         const rowHeight = Math.max(16, 18 * state.ui.zoom);
         const gap = Math.max(4, 6 * state.ui.zoom);
         context.save();
@@ -1325,9 +1340,9 @@
                 context,
                 bounds,
                 label,
-                "rgba(255, 255, 255, 0.94)",
-                "rgba(148, 163, 184, 0.24)",
-                "rgba(15, 23, 42, 0.78)",
+                colors.annotationBadgeFill || "rgba(255, 255, 255, 0.94)",
+                colors.annotationBadgeStroke || "rgba(148, 163, 184, 0.24)",
+                colors.annotationBadgeText || "rgba(15, 23, 42, 0.78)",
                 baseFontSize);
             results.push({
                 bounds,
@@ -1346,12 +1361,13 @@
             return false;
         }
 
+        const colors = state.colors || {};
         drawRoundedPanel(
             context,
             bounds,
             radius,
-            "rgba(241, 245, 249, 0.95)",
-            "rgba(148, 163, 184, 0.22)",
+            colors.mediaPreviewPanelFill || "rgba(241, 245, 249, 0.95)",
+            colors.mediaPreviewPanelStroke || "rgba(148, 163, 184, 0.22)",
             1,
             "");
         if (node.mediaKind === "image") {
@@ -1368,7 +1384,7 @@
 
         context.save();
         setCanvasFont(context, 700, Math.max(10, 12 * state.ui.zoom));
-        context.fillStyle = "rgba(15, 23, 42, 0.76)";
+        context.fillStyle = colors.mediaPreviewCaptionText || "rgba(15, 23, 42, 0.76)";
         context.fillText(node.mediaKind === "image" ? "Image" : "Preview", bounds.left + (12 * state.ui.zoom), bounds.bottom - (12 * state.ui.zoom));
         context.restore();
         return true;
@@ -1401,11 +1417,12 @@
         const leftX = hostBounds.left - Math.max(2, 3 * zoom);
         const rightX = hostBounds.right + Math.max(2, 3 * zoom);
 
+        const colors = state.colors || {};
         context.save();
         context.lineWidth = Math.max(1.1, 1.5 * zoom);
-        context.fillStyle = paletteStyle.iconFill || "rgba(255, 251, 235, 0.9)";
-        context.strokeStyle = paletteStyle.iconStroke || "rgba(245, 158, 11, 0.56)";
-        context.shadowColor = "rgba(15, 118, 110, 0.16)";
+        context.fillStyle = paletteStyle.iconFill || colors.decisionCueIconFillDefault || "rgba(255, 251, 235, 0.9)";
+        context.strokeStyle = paletteStyle.iconStroke || colors.decisionCueIconStrokeDefault || "rgba(245, 158, 11, 0.56)";
+        context.shadowColor = colors.decisionCueShadow || "rgba(15, 118, 110, 0.16)";
         context.shadowBlur = Math.max(4, 8 * zoom);
         traceCanvasDecisionDiamond(context, leftX, centerY, markerRadius);
         context.fill();
@@ -1421,8 +1438,8 @@
         const dotRadius = Math.max(2.2, 3.2 * zoom);
         context.save();
         context.globalAlpha = 0.82;
-        context.strokeStyle = "rgba(245, 158, 11, 0.58)";
-        context.fillStyle = "rgba(15, 118, 110, 0.78)";
+        context.strokeStyle = colors.decisionCueForkStroke || "rgba(245, 158, 11, 0.58)";
+        context.fillStyle = colors.decisionCueForkDotFill || "rgba(15, 118, 110, 0.78)";
         context.lineWidth = Math.max(1.2, 1.8 * zoom);
         context.lineCap = "round";
         context.beginPath();
@@ -1444,21 +1461,22 @@
 
     function renderCanvasDecisionNode(context, state, node, hostBounds, accent, detailMode, meta) {
         const isSelected = state.selectedIds.has(node.id);
-        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected);
+        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected, state.colors);
+        const colors = state.colors || {};
         const zoom = Math.max(state?.ui?.zoom || 1, 0.01);
         const centerX = hostBounds.left + (hostBounds.width / 2);
         const centerY = hostBounds.top + (hostBounds.height / 2);
         const radius = Math.max(42 * zoom, Math.min(hostBounds.width, hostBounds.height) * 0.46);
 
         context.save();
-        context.shadowColor = isSelected ? "rgba(15, 118, 110, 0.2)" : "rgba(15, 23, 42, 0.12)";
+        context.shadowColor = isSelected ? (colors.decisionShadowSelected || "rgba(15, 118, 110, 0.2)") : (colors.decisionShadowDefault || "rgba(15, 23, 42, 0.12)");
         context.shadowBlur = Math.max(10, 16 * zoom);
         context.shadowOffsetY = Math.max(4, 8 * zoom);
         traceCanvasDecisionDiamond(context, centerX, centerY, radius);
-        context.fillStyle = "rgba(255, 255, 255, 0.98)";
+        context.fillStyle = colors.decisionBodyFill || "rgba(255, 255, 255, 0.98)";
         context.fill();
         context.lineWidth = isSelected ? Math.max(2.2, 3 * zoom) : Math.max(1.6, 2.2 * zoom);
-        context.strokeStyle = accent || "rgba(20, 184, 166, 0.9)";
+        context.strokeStyle = accent || colors.decisionStrokeDefault || "rgba(20, 184, 166, 0.9)";
         context.stroke();
         context.restore();
 
@@ -1467,8 +1485,8 @@
         context.lineWidth = Math.max(1.6, 2.2 * zoom);
         context.lineCap = "round";
         context.lineJoin = "round";
-        context.strokeStyle = "rgba(51, 65, 85, 0.9)";
-        context.fillStyle = "rgba(20, 184, 166, 0.9)";
+        context.strokeStyle = colors.decisionGlyphStroke || "rgba(51, 65, 85, 0.9)";
+        context.fillStyle = colors.decisionStrokeDefault || "rgba(20, 184, 166, 0.9)";
         context.beginPath();
         context.moveTo(centerX - innerRadius * 0.45, centerY);
         context.lineTo(centerX + innerRadius * 0.08, centerY);
@@ -1490,7 +1508,7 @@
 
         context.save();
         setCanvasFont(context, 800, Math.max(10, 13.5 * zoom));
-        context.fillStyle = "rgba(15, 23, 42, 0.92)";
+        context.fillStyle = colors.decisionTitleText || "rgba(15, 23, 42, 0.92)";
         context.textAlign = "center";
         context.textBaseline = "middle";
         const label = (node.title || node.kind || "Decision").trim().toUpperCase();
@@ -1510,10 +1528,10 @@
             context.save();
             context.beginPath();
             context.arc(anchor.x, anchor.y, anchorRadius, 0, Math.PI * 2);
-            context.fillStyle = "rgba(255, 255, 255, 0.98)";
+            context.fillStyle = colors.decisionBodyFill || "rgba(255, 255, 255, 0.98)";
             context.fill();
             context.lineWidth = Math.max(1.4, 2 * zoom);
-            context.strokeStyle = accent || "rgba(20, 184, 166, 0.92)";
+            context.strokeStyle = accent || colors.decisionAnchorStrokeDefault || "rgba(20, 184, 166, 0.92)";
             context.stroke();
             context.restore();
 
@@ -1540,9 +1558,9 @@
                 context,
                 buildRect(centerX - (labelWidth / 2), centerY - radius - (labelHeight / 2), labelWidth, labelHeight),
                 node.branchLabel,
-                "rgba(240, 253, 250, 0.98)",
-                "rgba(20, 184, 166, 0.38)",
-                "rgba(15, 118, 110, 0.98)",
+                colors.decisionBranchPillFill || "rgba(240, 253, 250, 0.98)",
+                colors.decisionBranchPillStroke || "rgba(20, 184, 166, 0.38)",
+                colors.decisionBranchPillText || "rgba(15, 118, 110, 0.98)",
                 Math.max(8, 9.5 * zoom));
         }
 
@@ -1588,7 +1606,7 @@
 
     function renderCanvasMicroNode(context, state, node, hostBounds, accent, meta) {
         const isSelected = state.selectedIds.has(node.id);
-        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected);
+        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected, state.colors);
         drawRoundedPanel(
             context,
             hostBounds,
@@ -1610,7 +1628,7 @@
 
     function renderCanvasInlineTextNode(context, state, node, hostBounds, accent, detailMode, meta) {
         const isSelected = state.selectedIds.has(node.id);
-        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected);
+        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected, state.colors);
         drawRoundedPanel(
             context,
             hostBounds,
@@ -1912,8 +1930,8 @@
         };
     }
 
-    function drawCanvasPortPill(context, bounds, port, side, paletteStyle, zoom) {
-        const toneStyle = resolveCanvasPortVisualStyle(port, paletteStyle);
+    function drawCanvasPortPill(context, bounds, port, side, paletteStyle, zoom, colors) {
+        const toneStyle = resolveCanvasPortVisualStyle(port, paletteStyle, colors);
         drawRoundedPanel(
             context,
             bounds,
@@ -1949,7 +1967,7 @@
 
     function renderCanvasAdvancedNode(context, state, node, hostBounds, accent, detailMode, meta) {
         const isSelected = state.selectedIds.has(node.id);
-        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected);
+        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected, state.colors);
         const inputPorts = Array.isArray(node.inputPorts) ? node.inputPorts : [];
         const outputPorts = Array.isArray(node.outputPorts) ? node.outputPorts : [];
         const portCount = Math.max(inputPorts.length, outputPorts.length);
@@ -1966,7 +1984,7 @@
         drawCanvasDecisionCues(context, state, node, hostBounds, paletteStyle);
 
         context.save();
-        context.fillStyle = "rgba(59, 130, 246, 0.18)";
+        context.fillStyle = (state.colors || {}).portAccentFill || "rgba(59, 130, 246, 0.18)";
         context.fillRect(hostBounds.left + 8, hostBounds.top + 8, Math.max(6, 8 * state.ui.zoom), Math.max(30, hostBounds.height - 16));
         context.restore();
 
@@ -2032,7 +2050,8 @@
                 entry.port,
                 "left",
                 paletteStyle,
-                state.ui.zoom);
+                state.ui.zoom,
+                state.colors);
             registerCanvasPortHotZone(state, node, entry.bounds, entry.port, "left", "input");
         }
 
@@ -2043,7 +2062,8 @@
                 entry.port,
                 "right",
                 paletteStyle,
-                state.ui.zoom);
+                state.ui.zoom,
+                state.colors);
             registerCanvasPortHotZone(state, node, entry.bounds, entry.port, "right", "output");
         }
 
@@ -2071,7 +2091,7 @@
 
     function renderCanvasStandardNode(context, state, node, hostBounds, accent, detailMode, meta) {
         const isSelected = state.selectedIds.has(node.id);
-        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected);
+        const paletteStyle = resolveCanvasNodePaletteStyle(node, accent, isSelected, state.colors);
         const padding = Math.max(12, 18 * state.ui.zoom);
         drawRoundedPanel(
             context,
@@ -2084,7 +2104,7 @@
         drawCanvasDecisionCues(context, state, node, hostBounds, paletteStyle);
         if (node.isPreviewOnly) {
             context.save();
-            context.strokeStyle = "rgba(14, 165, 233, 0.38)";
+            context.strokeStyle = (state.colors || {}).standardNodePreviewOutlineStroke || "rgba(14, 165, 233, 0.38)";
             context.setLineDash([8, 6]);
             context.lineWidth = Math.max(1, 1.4 * state.ui.zoom);
             context.beginPath();
