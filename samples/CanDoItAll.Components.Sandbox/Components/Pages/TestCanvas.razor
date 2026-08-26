@@ -5,9 +5,9 @@
 
 @{
     var testUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase);
+    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase) || (ThemeState?.IsDark ?? false);
     var isRaw = testUri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
-        || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
+                || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
 }
 
 <main class="min-h-screen @(isRaw ? "p-10" : "")" data-ui-theme="@(isDark ? "dark" : "light")" data-testid="test-canvas-page">
@@ -43,6 +43,9 @@
     /// <summary>Accepted for the WASM hash router; the page reads route state directly from NavigationManager.</summary>
     [Parameter]
     public string? HashRouteState { get; set; }
+
+    [CascadingParameter]
+    public SandboxThemeState? ThemeState { get; set; }
 
     private const string SampleMediaPreviewUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 
