@@ -8,6 +8,23 @@
 
 @source "../samples/CanDoItAll.Components.Sandbox";
 
+/* Theme is required for custom color classes like color-chrome-400 */
+
+@custom-variant dark {
+  @container style(--ui-theme: dark) {
+    @slot;
+  }
+}
+
+@custom-variant light {
+  @container style(--ui-theme: light) {
+    @slot;
+  }
+}
+
+@import "./fonts.css";
+@import "./theme.css";
+
 @import "./sandbox/shell.css";
 @import "./sandbox/toolbar.css";
 @import "./sandbox/catalog.css";
