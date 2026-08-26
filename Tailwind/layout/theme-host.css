@@ -1,0 +1,36 @@
+/* ThemeHost's own structural reset and base style. Scoped in @layer base
+   (not this folder's usual @layer components) because it's a reset applied
+   to the theme-host subtree, matching ../typography/base-elements.css's
+   precedent, which also targets .ui-theme-host descendants at base layer. */
+@layer base {
+  .ui-theme-host,
+  .ui-theme-host *,
+  .ui-theme-host *::before,
+  .ui-theme-host *::after {
+    box-sizing: border-box;
+  }
+
+  .ui-theme-host button,
+  .ui-theme-host input,
+  .ui-theme-host optgroup,
+  .ui-theme-host select,
+  .ui-theme-host textarea {
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  .ui-theme-host img,
+  .ui-theme-host picture,
+  .ui-theme-host svg,
+  .ui-theme-host video,
+  .ui-theme-host canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  .ui-theme-host {
+    @apply block min-h-full;
+    background: var(--tone-page-bg);
+    color: var(--tone-text);
+  }
+}

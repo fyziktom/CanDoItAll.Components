@@ -6,6 +6,24 @@
 /* @import "tailwindcss/utilities.css" layer(utilities) source(none); */
 @tailwind utilities;
 
+/* Keys Tailwind's `dark:`/`light:` variants off the `--ui-theme` custom
+   property (set per `[data-ui-theme]` scope in theme.css) via a CSS style
+   container query, rather than `prefers-color-scheme` -- this is what lets
+   a nested `ThemeHost` boundary flip `dark:`/`light:` utilities correctly
+   without the ancestor's setting leaking through. See CLAUDE.md's
+   "data-ui-theme theming attribute" rule. */
+@custom-variant dark {
+  @container style(--ui-theme: dark) {
+    @slot;
+  }
+}
+
+@custom-variant light {
+  @container style(--ui-theme: light) {
+    @slot;
+  }
+}
+
 @source "../src/CanDoItAll.Components.BaseLib";
 
 /* Temporary compatibility sources for packages that currently consume BaseLib's utility output. */
@@ -16,6 +34,7 @@
 @import "./fonts.css";
 @import "./theme.css";
 
+@import "./layout/theme-host.css";
 @import "./layout/layout.css";
 @import "./layout/sidebar.css";
 @import "./layout/body.css";

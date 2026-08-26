@@ -115,7 +115,7 @@ function buildConfig(options, container) {
   return deepMerge(baseConfig, options?.additionalConfig ?? {});
 }
 
-// A "auto"/unset theme follows the nearest data-cad-theme ancestor's dark/light state directly
+// A "auto"/unset theme follows the nearest data-ui-theme ancestor's dark/light state directly
 // off the attribute (a discrete mode name, not a CSS color, so this doesn't go through the
 // shared theme-tokens readTokens helper). An explicit theme name always wins.
 function resolveTheme(requestedTheme, container) {
@@ -123,13 +123,13 @@ function resolveTheme(requestedTheme, container) {
     return requestedTheme;
   }
 
-  const owner = container?.closest?.('[data-cad-theme]');
-  return owner?.getAttribute('data-cad-theme') === 'dark' ? 'dark' : 'default';
+  const owner = container?.closest?.('[data-ui-theme]');
+  return owner?.getAttribute('data-ui-theme') === 'dark' ? 'dark' : 'default';
 }
 
 const themeWatchers = new WeakMap();
 
-// Live-flips the rendered diagram's theme when data-cad-theme changes, via the shared
+// Live-flips the rendered diagram's theme when data-ui-theme changes, via the shared
 // window.CanDoItAll.themeTokens module (CLAUDE.md rule 8). No-ops when that module isn't loaded
 // (MermaidBodyAssets IncludeThemeTokens="false") — the diagram still resolves the correct theme
 // on each render via resolveTheme() above, it just won't live-update without a re-render.

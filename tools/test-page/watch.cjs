@@ -60,7 +60,7 @@ async function capture(page, url) {
       if (value && !value.startsWith("data:") && !value.startsWith("#")) element.setAttribute(attribute, new URL(value, document.baseURI).href);
     });
     const script = document.createElement("script");
-    script.textContent = `document.addEventListener('keydown', event => { if (event.key.toLowerCase() !== 'd' || event.repeat) return; const root = document.querySelector('[data-cad-theme]') || document.documentElement; root.dataset.cadTheme = root.dataset.cadTheme === 'dark' ? 'light' : 'dark'; });`;
+    script.textContent = `document.addEventListener('keydown', event => { if (event.key.toLowerCase() !== 'd' || event.repeat) return; const root = document.querySelector('[data-ui-theme]') || document.documentElement; root.dataset.uiTheme = root.dataset.uiTheme === 'dark' ? 'light' : 'dark'; });`;
     clone.querySelector("body").append(script);
     return "<!doctype html>\n" + clone.outerHTML;
   });

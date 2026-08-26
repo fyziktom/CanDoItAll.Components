@@ -3,7 +3,7 @@
        --ui-mermaid-* override (Tailwind/theme.css) when present, falling back
        to this literal when it isn't (e.g. MermaidHeadAssets IncludeBaseLibStyles
        ="false") — see CLAUDE.md rule 9. --ui-mermaid-* already resolves per
-       data-cad-theme on its own, so no dark-mode override is needed here for
+       data-ui-theme on its own, so no dark-mode override is needed here for
        any of these custom properties. */
     --mermaid-title-text: var(--ui-mermaid-title-text, #0f172a);
     --mermaid-description-text: var(--ui-mermaid-description-text, #475569);
@@ -153,10 +153,10 @@
     }
 }
 
-/* data-cad-theme is the single source of truth for dark/light here, matching
+/* data-ui-theme is the single source of truth for dark/light here, matching
    --color-chrome-*'s attribute-only convention (CLAUDE.md rule 3) instead of
    following the OS's prefers-color-scheme independently of the app's own
    ThemeHost state. Every --mermaid-* custom property reads --ui-mermaid-*
-   (Tailwind/theme.css), which already resolves per data-cad-theme on its own
-   — so no [data-cad-theme="dark"] override rule is needed anywhere in this
+   (Tailwind/theme.css), which already resolves per data-ui-theme on its own
+   — so no [data-ui-theme="dark"] override rule is needed anywhere in this
    file. */

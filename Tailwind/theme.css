@@ -1,7 +1,7 @@
 /*
  * Chrome is the theme-aware neutral scale for structural application chrome:
  * page backgrounds, surfaces, borders, headings, muted text, dividers, and
- * metadata. It intentionally inverts at each `data-cad-theme` boundary (step
+ * metadata. It intentionally inverts at each `data-ui-theme` boundary (step
  * 50 <-> 950, 100 <-> 900, ...), so `--color-chrome-500` is the only step
  * that resolves to the same color in both themes. Do not use it for values
  * that must stay fixed across themes (shadows, the permanently-dark nav
@@ -22,34 +22,10 @@
 }
 
 @layer base {
-  .cad-theme-host,
-  .cad-theme-host *,
-  .cad-theme-host *::before,
-  .cad-theme-host *::after {
-    box-sizing: border-box;
-  }
-
-  .cad-theme-host button,
-  .cad-theme-host input,
-  .cad-theme-host optgroup,
-  .cad-theme-host select,
-  .cad-theme-host textarea {
-    font: inherit;
-    letter-spacing: inherit;
-  }
-
-  .cad-theme-host img,
-  .cad-theme-host picture,
-  .cad-theme-host svg,
-  .cad-theme-host video,
-  .cad-theme-host canvas {
-    display: block;
-    max-width: 100%;
-  }
-
   :root,
-  [data-cad-theme="light"] {
+  [data-ui-theme="light"] {
     color-scheme: light;
+    --ui-theme: light;
     --cad-radius-control: 0.75rem;
     --cad-radius-surface: 1rem;
     --cad-radius-panel: 1.25rem;
@@ -656,8 +632,9 @@
     --ui-canvas-progress-track-default: rgba(148, 163, 184, 0.28);
   }
 
-  [data-cad-theme="dark"] {
+  [data-ui-theme="dark"] {
     color-scheme: dark;
+    --ui-theme: dark;
 
     /* Chrome is structural, so it inverts with the application surface:
        step 50 <-> 950, 100 <-> 900, ... A dark-scope reference to
@@ -793,11 +770,5 @@
     --ui-canvas-action-hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.32);
     --ui-canvas-create-rail-bg: rgba(30, 41, 59, 0.96);
     --ui-canvas-create-rail-shadow: 0 18px 32px rgba(0, 0, 0, 0.32);
-  }
-
-  .cad-theme-host {
-    @apply block min-h-full;
-    background: var(--tone-page-bg);
-    color: var(--tone-text);
   }
 }

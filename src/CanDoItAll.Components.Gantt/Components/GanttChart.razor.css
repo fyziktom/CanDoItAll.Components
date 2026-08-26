@@ -3,7 +3,7 @@
        --ui-gantt-* override (Tailwind/theme.css) when present, falling back to
        this literal when it isn't (e.g. GanttChartHeadAssets IncludeBaseLibStyles
        ="false") — see CLAUDE.md rule 9. --ui-gantt-* already resolves per
-       data-cad-theme on its own, so no dark-mode override is needed here for
+       data-ui-theme on its own, so no dark-mode override is needed here for
        any of these custom properties. */
     --gantt-border: var(--ui-gantt-border, #dbe3ef);
     --gantt-grid: var(--ui-gantt-grid, #e7edf5);
@@ -345,12 +345,12 @@
     }
 }
 
-/* data-cad-theme is the single source of truth for dark/light here, matching
+/* data-ui-theme is the single source of truth for dark/light here, matching
    --color-chrome-*'s attribute-only convention (CLAUDE.md rule 3) instead of
    following the OS's prefers-color-scheme independently of the app's own
-   ThemeHost state. Without a data-cad-theme="dark" ancestor, the light values
+   ThemeHost state. Without a data-ui-theme="dark" ancestor, the light values
    declared above on .cda-gantt apply by default. Every --gantt-* custom
    property (including the shadow/header/title-editor ones this file used to
    override here directly) now reads --ui-gantt-* (Tailwind/theme.css), which
-   already resolves per data-cad-theme on its own — so no [data-cad-theme=
+   already resolves per data-ui-theme on its own — so no [data-ui-theme=
    "dark"] override rule is needed anywhere in this file any more. */

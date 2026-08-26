@@ -4,7 +4,7 @@ public sealed class MermaidDiagramOptions
 {
     /// <summary>
     /// Mermaid's own theme name ("default", "dark", "forest", "neutral", "base", ...), or the
-    /// sentinel "auto" to follow the nearest data-cad-theme ancestor ("dark" when it resolves to
+    /// sentinel "auto" to follow the nearest data-ui-theme ancestor ("dark" when it resolves to
     /// dark, "default" otherwise) and re-render live when it flips. An explicit non-"auto" value
     /// always overrides and never watches for theme changes.
     /// </summary>

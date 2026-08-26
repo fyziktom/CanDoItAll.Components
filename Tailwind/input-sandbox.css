@@ -6,6 +6,21 @@
 /* @import "tailwindcss/utilities.css" layer(utilities) source(none); */
 @tailwind utilities;
 
+/* Mirrors input-base.css: keys `dark:`/`light:` off `--ui-theme` via a style
+   container query instead of `prefers-color-scheme`, so Sandbox markup using
+   these variants matches BaseLib's behavior under nested ThemeHost scopes. */
+@custom-variant dark {
+  @container style(--ui-theme: dark) {
+    @slot;
+  }
+}
+
+@custom-variant light {
+  @container style(--ui-theme: light) {
+    @slot;
+  }
+}
+
 @source "../samples/CanDoItAll.Components.Sandbox";
 
 @import "./fonts.css";

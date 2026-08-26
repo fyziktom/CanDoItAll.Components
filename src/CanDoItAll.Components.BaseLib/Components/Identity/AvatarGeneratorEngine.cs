@@ -10,7 +10,7 @@ internal static class AvatarGeneratorEngine
     private static readonly string[] LightOpacityStops = ["0.24", "0.6", "0.12"];
     private static readonly string[] DarkOpacityStops = ["0.3", "0.5", "0.18"];
 
-    // Follows the BaseLib surface token (flips with the nearest [data-cad-theme] ancestor set by
+    // Follows the BaseLib surface token (flips with the nearest [data-ui-theme] ancestor set by
     // ThemeHost) instead of a literal white, so the mouth/eyes plate doesn't stay white on dark
     // surfaces. Falls back to white outside a ThemeHost, matching the JS default.
     private const string DefaultBackground = "var(--tone-surface, #fff)";

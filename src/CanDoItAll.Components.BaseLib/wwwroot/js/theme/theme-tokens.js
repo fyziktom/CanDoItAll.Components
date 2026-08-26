@@ -2,7 +2,7 @@
     "use strict";
 
     const root = window.CanDoItAll = window.CanDoItAll || {};
-    const themeAttribute = "data-cad-theme";
+    const themeAttribute = "data-ui-theme";
 
     function requireElement(value, name) {
         if (!(value instanceof HTMLElement)) {
@@ -12,7 +12,7 @@
         return value;
     }
 
-    // Resolves from the passed-in host, never document.documentElement: data-cad-theme
+    // Resolves from the passed-in host, never document.documentElement: data-ui-theme
     // can be scoped to any subtree via ThemeHost, so a component must read its own ancestor.
     function readTokens(hostValue, tokenMap) {
         const host = requireElement(hostValue, "host");
@@ -31,7 +31,7 @@
         return host.closest(`[${themeAttribute}]`) || host.ownerDocument.documentElement;
     }
 
-    // Watches the nearest data-cad-theme ancestor (which may be host itself, or an
+    // Watches the nearest data-ui-theme ancestor (which may be host itself, or an
     // ancestor stamped by ThemeHost) and invokes onChange whenever it flips.
     function watchTheme(hostValue, onChange) {
         const host = requireElement(hostValue, "host");

@@ -10,14 +10,14 @@
         || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
 }
 
-<main class="min-h-screen @(isRaw ? "p-10" : "")" data-cad-theme="@(isDark ? "dark" : "light")" data-testid="test-canvas-page">
+<main class="min-h-screen @(isRaw ? "p-10" : "")" data-ui-theme="@(isDark ? "dark" : "light")" data-testid="test-canvas-page">
     <div class="space-y-6">
         <section class="space-y-2" aria-labelledby="test-canvas-heading">
             <h2 id="test-canvas-heading" class="text-2xl font-semibold">CanvasWorkbench theme tokens</h2>
             <p class="max-w-3xl text-sm">
                 Proof page for the <code>--ui-canvas-*</code> theme-token consolidation (see <code>CHANGELOG.md</code> → CanvasLib).
                 Toggle <code>?dark=true</code> to verify the workbench shell/toolbar/panel chrome repaints under
-                <code>data-cad-theme="dark"</code>. The row of 10 nodes exercises the named accent tones
+                <code>data-ui-theme="dark"</code>. The row of 10 nodes exercises the named accent tones
                 (<code>violet</code>/<code>mint</code>/<code>sky</code>/<code>amber</code>/<code>rose</code>/<code>success</code>/<code>warning</code>/<code>danger</code>/<code>info</code>/<code>neutral</code>)
                 via <code>resolveCanvasColors</code>/<code>watchTheme</code>. The remaining rows exercise
                 <code>resolveCanvasNodePaletteStyle</code>'s per-tone surface/text/icon shades (including the read-only
