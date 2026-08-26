@@ -216,6 +216,15 @@ All notable changes to this repository's packages are recorded here, per the cha
   mode; dark-mode chrome is new (`ZoomPanFrame` previously had no dark palette at all — its
   background/border/text/focus-ring stayed fixed regardless of `data-cad-theme`).
 
+### Tooling
+
+#### Internal
+
+- Fixed: `.github/workflows/ci.yml`, `tools/deployment/nugets/Build-NuGets.ps1`, `CONTRIBUTING.md`, `README.md`, and
+  `AGENTS.md` all invoked a nonexistent `npm run tailwind:build` script — the script is actually named
+  `build:tailwind` in `package.json`. CI's Tailwind step and `Build-NuGets.ps1`'s pre-pack Tailwind build were both
+  failing outright before this fix. Renamed every call site to `npm run build:tailwind`.
+
 ### Gantt
 
 #### Public interface

@@ -122,7 +122,7 @@ band. Shared component CSS is authored with Tailwind in
 ```powershell
 npm ci
 npm ci --prefix Tailwind
-npm run tailwind:build
+npm run build:tailwind
 npm run assets:verify
 dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
 dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
@@ -157,7 +157,7 @@ useful for local or validation packages.
 
 The packaging tool restores, builds, and tests the solution, then packs every
 packable project under `src`; samples and tests are never packaged. It first
-runs `npm run tailwind:build` so BaseLib's packaged `output.css` is current.
+runs `npm run build:tailwind` so BaseLib's packaged `output.css` is current.
 
 Every invocation creates a new run folder under `artifacts/packages`. Its name
 contains the effective version and local date and time, for example
