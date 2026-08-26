@@ -1,0 +1,72 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/test-canvas"
+@using CanDoItAll.Components.CanvasLib
+@inject NavigationManager NavigationManager
+
+@{
+    var testUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase);
+    var isRaw = testUri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
+        || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
+}
+
+<main class="min-h-screen @(isRaw ? "p-10" : "")" data-cad-theme="@(isDark ? "dark" : "light")" data-testid="test-canvas-page">
+    <div class="space-y-6">
+        <section class="space-y-2" aria-labelledby="test-canvas-heading">
+            <h2 id="test-canvas-heading" class="text-2xl font-semibold">CanvasWorkbench theme tokens</h2>
+            <p class="max-w-3xl text-sm">
+                Proof page for the <code>--ui-canvas-*</code> theme-token consolidation (see <code>CHANGELOG.md</code> → CanvasLib).
+                Toggle <code>?dark=true</code> to verify the workbench shell/toolbar/panel chrome repaints under
+                <code>data-cad-theme="dark"</code>, and that each node below &mdash; one per named accent tone
+                (<code>violet</code>/<code>mint</code>/<code>sky</code>/<code>amber</code>/<code>rose</code>/<code>success</code>/<code>warning</code>/<code>danger</code>/<code>info</code>/<code>neutral</code>) &mdash;
+                resolves its accent color through <code>resolveCanvasColors</code>/<code>watchTheme</code> rather than a hardcoded literal.
+            </p>
+            <p class="max-w-3xl text-sm">
+                <strong>Known gap, not exercised here:</strong> <code>resolveCanvasNodePaletteStyle</code>'s ~130 precomputed
+                palette shades and the remaining <code>&lt;canvas&gt;</code>-fill literals in <code>06-canvas-renderers.js</code>
+                are not yet token-converted (see the CanvasLib CHANGELOG entry's "Not yet converted" note).
+            </p>
+        </section>
+
+        <div class="sandbox-canvas-host">
+            <CanvasWorkbench Surface="@Surface" />
+        </div>
+    </div>
+</main>
+
+@code {
+    /// <summary>Accepted for the WASM hash router; the page reads route state directly from NavigationManager.</summary>
+    [Parameter]
+    public string? HashRouteState { get; set; }
+
+    private static readonly (string PaletteKey, string Title)[] AccentTones =
+    [
+        ("violet", "Violet accent"),
+        ("mint", "Mint accent"),
+        ("sky", "Sky accent"),
+        ("amber", "Amber accent"),
+        ("rose", "Rose accent"),
+        ("success", "Success accent"),
+        ("warning", "Warning accent"),
+        ("danger", "Danger accent"),
+        ("info", "Info accent"),
+        ("neutral", "Neutral accent")
+    ];
+
+    private CanvasWorkbenchSurface Surface => new()
+    {
+        SurfaceId = "test-canvas",
+        Nodes = [.. AccentTones.Select((tone, index) => new CanvasWorkbenchNode
+        {
+            Id = $"node-{tone.PaletteKey}",
+            Title = tone.Title,
+            Subtitle = tone.PaletteKey,
+            // Empty AccentColor forces resolveNodeAccentColor() to fall through to the
+            // token-resolved PaletteKey lookup instead of returning a literal verbatim.
+            AccentColor = string.Empty,
+            PaletteKey = tone.PaletteKey,
+            X = 40 + (index % 5) * 220,
+            Y = 40 + (index / 5) * 180
+        })]
+    };
+}

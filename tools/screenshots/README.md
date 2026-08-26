@@ -2,9 +2,12 @@
 
 Screenshots the Sandbox catalog with Playwright, diffs against the previous run with
 `odiff-bin`, and writes an interlinked Markdown report. Each run is committed to its own
-orphan `screenshots_{yyyy-MM-dd}_{HH-mm}` (UTC) branch in a **separate** git repository
-(configured via `storageRepoPath`), so history never touches this repo, branch names sort
-and compare correctly across timezones, and a run can be reclaimed by deleting its branch.
+orphan `{key}_{yyyy-MM-dd}_{HH-mm}` (UTC) branch — `key` is `config.key`, `"screenshots"` by
+default — in a **separate** git repository (configured via `storageRepoPath`), so history
+never touches this repo, branch names sort and compare correctly across timezones, and a run
+can be reclaimed by deleting its branch. A distinct `key` lets multiple unrelated configs
+(e.g. a full-catalog run vs. a single-page proof run) share one `storageRepoPath` without
+treating each other's branches as their own baseline — see `key` under "Config" below.
 
 This is a local, opt-in dev tool — it is not wired into CI.
 
@@ -102,6 +105,13 @@ they're omitted.
 - `sessionStorage` — optional map of session-storage keys to string values, seeded before each
   route loads. Use this for target-specific, session-scoped UI state such as a dismissed startup
   notice, without changing the application itself.
+- `key` — optional string (default `"screenshots"`), matching `/^[a-z0-9-]+$/`. Prefixes every
+  branch this config creates (`{key}_{yyyy-MM-dd}_{HH-mm}`) and scopes which branches count as
+  "ours" when auto-detecting the most recent baseline (`diff.cjs`) or pruning (`prune.cjs`) —
+  branches from a different `key` in the same `storageRepoPath` are invisible to both. Also
+  becomes the report's `<h1>` title, since that's just the branch name. Set a distinct `key`
+  when adding a narrow, single-purpose config (e.g. proving one component/page) that shares
+  `storageRepoPath` with a broader existing config, so the two runs' histories don't collide.
 - `storageRepoPath` — the separate git repo screenshots are committed to.
 - `gitignore` — optional array of `.gitignore` patterns (default: `[".idea/", ".vscode/", ".DS_Store", "Thumbs.db"]`). Each `screenshots_*` branch is an orphan root with its own tree, so a `.gitignore` in one branch (e.g. on `master`) doesn't cover any other — `store.cjs` writes this list as a `.gitignore` into every new run before committing it, so IDE/OS cruft stays out regardless of which branch happens to be checked out. Set to `[]` to skip writing one.
 

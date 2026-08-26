@@ -48,11 +48,11 @@ async function main() {
   fs.rmSync(path.join(config.outputDir, "pages"), { recursive: true, force: true });
 
   const readmePath = path.join(config.outputDir, "README.md");
-  const branchTitle = args.branch || `(uncommitted run — would be ${generateBranchName()})`;
+  const branchTitle = args.branch || `(uncommitted run — would be ${generateBranchName(config.key)})`;
 
   writeGalleries(config.outputDir, readmePath, combos);
   writePageReports(config.outputDir, readmePath, pages, pageOrderByAlternative, showAlternativeHeadings);
-  writeReadme(config.outputDir, readmePath, branchTitle, manifest, diffResults, {
+  writeReadme(config.key, config.outputDir, readmePath, branchTitle, manifest, diffResults, {
     themeNames,
     viewportNames,
     combos,
@@ -326,7 +326,7 @@ function formatStatusLine(combo) {
   }
 }
 
-function writeReadme(outputDir, readmePath, branchTitle, manifest, diffResults, context) {
+function writeReadme(key, outputDir, readmePath, branchTitle, manifest, diffResults, context) {
   const { themeNames, viewportNames, combos, pages, pageOrderByAlternative, showAlternativeHeadings } = context;
 
   const summary = {
@@ -369,7 +369,7 @@ function writeReadme(outputDir, readmePath, branchTitle, manifest, diffResults, 
     return { name: alternativeName, screenshotsTable, pagesTable };
   });
 
-  const parsedAgainst = diffResults.against ? parseBranchTimestamp(diffResults.against) : null;
+  const parsedAgainst = diffResults.against ? parseBranchTimestamp(key, diffResults.against) : null;
 
   const readmeTemplate = fs.readFileSync(path.join(__dirname, "templates", "readme.mustache"), "utf8");
   fs.writeFileSync(

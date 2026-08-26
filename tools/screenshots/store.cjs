@@ -32,7 +32,7 @@ async function main() {
 
   writeGitignore(config);
 
-  const branchName = args.branch || generateBranchName();
+  const branchName = args.branch || generateBranchName(config.key);
   createSnapshotBranch(config.storageRepoPath, branchName, config.outputDir);
 
   console.log(`\nSnapshot committed to branch "${branchName}" in ${config.storageRepoPath}`);
