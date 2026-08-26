@@ -4,7 +4,7 @@
 
 @{
     var testUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase);
+    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase) || (ThemeState?.IsDark ?? false);
     var isRaw = testUri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
         || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
 }
@@ -305,6 +305,9 @@
     /// <summary>Accepted for the WASM hash router; the page reads route state directly from NavigationManager.</summary>
     [Parameter]
     public string? HashRouteState { get; set; }
+
+    [CascadingParameter]
+    public SandboxThemeState? ThemeState { get; set; }
 
     private static readonly ButtonStyle[] ButtonStyles = Enum.GetValues<ButtonStyle>();
     private static readonly ButtonSize[] ButtonSizes = Enum.GetValues<ButtonSize>();
