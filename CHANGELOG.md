@@ -44,6 +44,13 @@ All notable changes to this repository's packages are recorded here, per the cha
   existing `--color-chrome-*` mapping, now folded into this block). Landing step only — nothing in `theme.css`
   consumes these yet, so no existing token's resolved value changed; wiring `--tone-*` to them is a follow-up
   change.
+- Changed: `Tailwind/theme.css`'s `--tone-secondary-*`/`-success-*`/`-info-*`/`-warning-*`/`-danger-*` tokens
+  (both `-soft-*` and `-solid-*` variants, light and dark blocks) now derive from the semantic `--color-secondary-*`/
+  `-success-*`/`-info-*`/`-warn-*`/`-danger-*` tokens instead of raw Tailwind color families (`fuchsia`/`emerald`/
+  `green`/`sky`/`amber`/`rose`/`red`/`pink`, plus one raw `#0f62d6` hex) — the follow-up mentioned above. Most steps
+  are visually unchanged (`success`/`danger` already mapped to `emerald`/`rose`), but `--tone-info-*` shifts from a
+  `sky`-based blue to the `--cus-pervenche-*`-based `--color-info-*`, and `--tone-warning-*` shifts from `amber` to
+  the `yellow`-based `--color-warn-*` — both intentional per the semantic mapping, not regressions.
 - Changed: the theme-host structural reset (box-sizing, form-element font inheritance, media max-width) and base
   component style (`background`/`color` from `--tone-page-bg`/`--tone-text`) moved from `Tailwind/theme.css` into
   new `Tailwind/layout/theme-host.css`, per the Tailwind file-layout convention (CLAUDE.md rule 6) — `theme.css` now
