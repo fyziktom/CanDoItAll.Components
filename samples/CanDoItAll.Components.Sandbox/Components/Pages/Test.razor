@@ -4,7 +4,7 @@
 
 @{
     var testUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase) || (ThemeState?.IsDark ?? false);
+    var isDark = SandboxQueryLinks.IsDark(NavigationManager) || (ThemeState?.IsDark ?? false);
     var isRaw = testUri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
         || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
 }
@@ -14,7 +14,7 @@
         <section class="space-y-5" aria-labelledby="test-buttons">
             <h2 id="test-buttons" class="text-2xl font-semibold">Buttons</h2>
             <section class="space-y-4" aria-labelledby="test-button">
-                <h3 id="test-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/buttons#button">&lt;Button&gt;</a></h3>
+                <h3 id="test-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/buttons", "Button")" data-sandbox-route>&lt;Button&gt;</a></h3>
 
                 <div class="grid gap-x-10 gap-y-8 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-4">
                     @foreach (var style in ButtonStyles)
@@ -36,7 +36,7 @@
             </section>
 
             <section class="space-y-3" aria-labelledby="test-copy-button">
-                <h3 id="test-copy-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/buttons#copy-button">&lt;CopyButton&gt;</a></h3>
+                <h3 id="test-copy-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/buttons", "CopyButton")" data-sandbox-route>&lt;CopyButton&gt;</a></h3>
                 <div class="space-y-3">
                     <CopyButton Text="Copy token" Value="cda_test_token" />
                     <CopyButton Text="Copy token" Value="cda_test_token" Disabled="true" />
@@ -47,7 +47,7 @@
         <section class="mt-10 space-y-5" aria-labelledby="test-badges">
             <h2 id="test-badges" class="text-2xl font-semibold">Badges</h2>
             <section class="space-y-4" aria-labelledby="test-badge">
-                <h3 id="test-badge" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/badges#badge">&lt;Badge&gt;</a></h3>
+                <h3 id="test-badge" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/badges", "Badge")" data-sandbox-route>&lt;Badge&gt;</a></h3>
                 <div class="flex flex-wrap gap-2">
                     @foreach (var tone in BadgeTones)
                     {
@@ -59,7 +59,7 @@
             @foreach (var component in BadgeComponents)
             {
                 <section class="space-y-3" aria-labelledby="@($"test-{component.Name}")">
-                    <h3 id="@($"test-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/badges", component.Name)">&lt;@component.Name&gt;</a></h3>
+                    <h3 id="@($"test-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/badges", component.Name)" data-sandbox-route>&lt;@component.Name&gt;</a></h3>
                     @if (component.Name == "Pill")
                     {
                         <div class="space-y-3">
@@ -99,7 +99,7 @@
                     @foreach (var component in group.Components)
                     {
                         <section class="space-y-3" aria-labelledby="@($"test-{group.Slug}-{component.Name}")">
-                            <h3 id="@($"test-{group.Slug}-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl(group.Route, component.Name)">&lt;@component.Name&gt;</a></h3>
+                            <h3 id="@($"test-{group.Slug}-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl(group.Route, component.Name)" data-sandbox-route>&lt;@component.Name&gt;</a></h3>
                             @if (component.Name == "CheckBox")
                             {
                                 <div class="space-y-3">
@@ -469,15 +469,19 @@
             new("TextBlock", typeof(TextBlock))])
     ];
 
-    private static string BuildCatalogUrl(string route, string componentName)
+    private string BuildCatalogUrl(string route, string componentName)
     {
         var anchor = SandboxCatalogRegistry.GetSections(route)
             .FirstOrDefault(section => string.Equals(section.ComponentName, componentName, StringComparison.Ordinal))
             ?.Anchor;
 
-        return string.IsNullOrWhiteSpace(anchor)
-            ? $"{route}#{System.Text.RegularExpressions.Regex.Replace(componentName, "(?<!^)([A-Z])", "-$1").ToLowerInvariant()}"
-            : $"{route}#{anchor}";
+        anchor ??= System.Text.RegularExpressions.Regex.Replace(componentName, "(?<!^)([A-Z])", "-$1").ToLowerInvariant();
+        return SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            route,
+            SandboxQueryLinks.GetCurrentFrame(NavigationManager),
+            ThemeState?.IsDark ?? SandboxQueryLinks.IsDark(NavigationManager),
+            anchor);
     }
 
     private static string GetTabPositionIcon(TabPosition position)

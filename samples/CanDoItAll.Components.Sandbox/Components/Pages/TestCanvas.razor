@@ -5,7 +5,7 @@
 
 @{
     var testUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase) || (ThemeState?.IsDark ?? false);
+    var isDark = SandboxQueryLinks.IsDark(NavigationManager) || (ThemeState?.IsDark ?? false);
     var isRaw = testUri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
                 || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
 }
@@ -16,7 +16,7 @@
             <h2 id="test-canvas-heading" class="text-2xl font-semibold">CanvasWorkbench theme tokens</h2>
             <p class="max-w-3xl text-sm">
                 Proof page for the <code>--ui-canvas-*</code> theme-token consolidation (see <code>CHANGELOG.md</code> → CanvasLib).
-                Toggle <code>?dark=true</code> to verify the workbench shell/toolbar/panel chrome repaints under
+                Toggle the sandbox dark-mode control to verify the workbench shell/toolbar/panel chrome repaints under
                 <code>data-ui-theme="dark"</code>. The row of 10 nodes exercises the named accent tones
                 (<code>violet</code>/<code>mint</code>/<code>sky</code>/<code>amber</code>/<code>rose</code>/<code>success</code>/<code>warning</code>/<code>danger</code>/<code>info</code>/<code>neutral</code>)
                 via <code>resolveCanvasColors</code>/<code>watchTheme</code>. The remaining rows exercise

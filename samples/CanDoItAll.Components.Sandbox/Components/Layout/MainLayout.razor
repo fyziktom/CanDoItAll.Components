@@ -166,15 +166,7 @@
 
     private void SyncThemeFromQuery()
     {
-        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-        var isDark = uri.Query.TrimStart('?')
-            .Split('&', StringSplitOptions.RemoveEmptyEntries)
-            .Select(static pair => pair.Split('=', 2))
-            .Any(static pair => pair.Length == 2
-                && string.Equals(Uri.UnescapeDataString(pair[0]), "dark", StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Uri.UnescapeDataString(pair[1]), "true", StringComparison.OrdinalIgnoreCase));
-
-        themeState.SetTheme(isDark ? CadThemes.Dark : CadThemes.Light);
+        themeState.SetTheme(SandboxQueryLinks.IsDark(NavigationManager) ? CadThemes.Dark : CadThemes.Light);
     }
 
     private string NormalizedQuery => searchQuery.Trim();

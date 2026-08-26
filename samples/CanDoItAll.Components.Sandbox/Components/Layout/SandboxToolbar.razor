@@ -69,7 +69,20 @@
         => ToolbarState!.FrameChanged.InvokeAsync(frame);
 
     private void ToggleDarkMode()
-        => NavigationManager.NavigateTo(SandboxQueryLinks.WithDark(NavigationManager, !ThemeState!.IsDark));
+    {
+        var isDark = !ThemeState!.IsDark;
+        var destination = SandboxQueryLinks.WithDark(NavigationManager, isDark);
+
+        if (SandboxQueryLinks.UseHashRouting)
+        {
+            // Hash-only NavigateTo uses pushState and does not reliably raise hashchange.
+            // Apply both pieces of client state now, as the frame selector does.
+            SandboxQueryLinks.UpdateHashState(destination);
+            ThemeState.SetTheme(isDark ? CadThemes.Dark : CadThemes.Light);
+        }
+
+        NavigationManager.NavigateTo(destination);
+    }
 
     private string BuildHomeLink()
     {
