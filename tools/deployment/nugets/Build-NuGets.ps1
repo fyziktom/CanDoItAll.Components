@@ -268,9 +268,9 @@ Write-Host ''
 Write-Host 'Building Tailwind assets...'
 Push-Location $repositoryRoot
 try {
-    & npm run tailwind:build
+    & npm run build:tailwind
     if ($LASTEXITCODE -ne 0) {
-        throw "npm run tailwind:build failed with exit code $LASTEXITCODE."
+        throw "npm run build:tailwind failed with exit code $LASTEXITCODE."
     }
 }
 finally {

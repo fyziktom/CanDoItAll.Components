@@ -16,7 +16,7 @@ release, then run:
 ```powershell
 npm ci
 npm ci --prefix Tailwind
-npm run tailwind:build
+npm run build:tailwind
 dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
 dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
 dotnet test CanDoItAll.Components.slnx --configuration Release --no-build
@@ -34,6 +34,6 @@ application-specific behavior out of the reusable libraries.
 - Open a pull request only after partner approval.
 - Keep changes focused and explain public API changes.
 - Add or update unit tests and sandbox scenarios for behavior changes.
-- Regenerate Tailwind output with `npm run tailwind:build`.
+- Regenerate Tailwind output with `npm run build:tailwind`.
 - Do not update approval snapshots unless the public API or package input change is intentional and described in the pull request.
 - Do not add third-party images, fonts, scripts, or models without recording their source, version, and redistribution license.
