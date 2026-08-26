@@ -3908,7 +3908,8 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
-          "method System.Void Dispose()",
+          "method System.Threading.Tasks.Task HandleChartThemeChangedAsync()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
           "property CanDoItAll.Components.Charts.CdaChartOptions Options {get;set;}",
           "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.Object\u003E AdditionalAttributes {get;set;}",
           "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Charts.CdaChartSeries\u003E Series {get;set;}",
@@ -4004,6 +4005,7 @@
         "isSealed": true,
         "baseType": "",
         "members": [
+          "field static const System.String StrokeDefault",
           "field static readonly System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Calm",
           "field static readonly System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Energetic",
           "property static System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Default {get;}"
@@ -4070,6 +4072,17 @@
           "field static const CanDoItAll.Components.Charts.CdaChartType Donut",
           "field static const CanDoItAll.Components.Charts.CdaChartType Line",
           "field static const CanDoItAll.Components.Charts.CdaChartType Pie"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Charts.ChartsBodyAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeThemeTokens {get;set;}"
         ]
       },
       {

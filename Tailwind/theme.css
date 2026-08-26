@@ -456,6 +456,34 @@
     --ui-mermaid-error-code-bg: rgba(124, 45, 18, 0.08);
     --ui-mermaid-error-code-text: #431407;
 
+    /* Charts component tokens (--ui-charts-*): the public override surface for
+       CanDoItAll.Components.Charts' JS-resolved palette/grid/legend/stroke
+       colors (read via charts-theme.js's readTokens call, since ApexCharts
+       consumes plain color strings baked into its options rather than reading
+       CSS custom properties itself — see CLAUDE.md rule 9). The series
+       palette and stroke default paint atop chart lines/fills rather than
+       page chrome, so — like --tone-* solid colors and --ui-gantt-*'s paint
+       tokens — they don't invert and are declared once. --ui-charts-grid-
+       stripe and --ui-charts-legend-text paint directly atop the shell's own
+       --color-chrome-* surface/text and get a dark override below instead. */
+    --ui-charts-series-1: #0f766e;
+    --ui-charts-series-2: #2563eb;
+    --ui-charts-series-3: #dc2626;
+    --ui-charts-series-4: #d97706;
+    --ui-charts-series-5: #7c3aed;
+    --ui-charts-series-6: #0891b2;
+    --ui-charts-series-7: #16a34a;
+    --ui-charts-series-8: #db2777;
+    --ui-charts-series-calm-1: #2563eb;
+    --ui-charts-series-calm-2: #0f766e;
+    --ui-charts-series-calm-3: #7c3aed;
+    --ui-charts-series-calm-4: #c2410c;
+    --ui-charts-series-calm-5: #0891b2;
+    --ui-charts-series-calm-6: #65a30d;
+    --ui-charts-grid-stripe: #f8fafc;
+    --ui-charts-legend-text: #0f172a;
+    --ui-charts-stroke-default: #64748b;
+
     /* ZoomPanFrame component tokens (--ui-zoom-pan-*): the public override
        surface for ZoomPanFrame.razor.css's own --cda-zoom-pan-* tokens (see
        CLAUDE.md rule 9). All structural/chrome tokens derive from
@@ -987,6 +1015,13 @@
     --ui-mermaid-error-text: #fed7aa;
     --ui-mermaid-error-code-bg: rgba(254, 215, 170, 0.12);
     --ui-mermaid-error-code-text: #ffedd5;
+
+    /* --ui-charts-grid-stripe and --ui-charts-legend-text paint atop the
+       shell's own --color-chrome-* surface/text (which does invert), so
+       unlike the series palette they need a dark override too — see the
+       light block's comment above. */
+    --ui-charts-grid-stripe: #1e293b;
+    --ui-charts-legend-text: #f1f5f9;
 
     /* Only the pure-white --ui-zoom-pan-* surfaces need a dark override —
        the rest derive from --color-chrome-* above and self-invert. */

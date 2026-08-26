@@ -7,12 +7,13 @@ internal static class CdaApexChartOptionsFactory
     public static ApexChartOptions<CdaChartPoint> Build(
         CdaChartOptions options,
         IReadOnlyList<CdaChartSeries> series,
-        string? title)
+        string? title,
+        ChartThemeColors? themeColors = null)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(series);
 
-        var palette = ResolvePalette(options, series);
+        var palette = ResolvePalette(options, series, themeColors);
         var noAxis = IsNoAxisChart(options.Type);
 
         var apexOptions = new ApexChartOptions<CdaChartPoint>
@@ -46,8 +47,8 @@ internal static class CdaApexChartOptionsFactory
             Colors = palette,
             DataLabels = new DataLabels { Enabled = options.ShowDataLabels },
             Fill = BuildFill(options, series),
-            Grid = BuildGrid(options, noAxis),
-            Legend = BuildLegend(options),
+            Grid = BuildGrid(options, noAxis, themeColors),
+            Legend = BuildLegend(options, themeColors),
             PlotOptions = new PlotOptions
             {
                 Area = new PlotOptionsArea
@@ -62,7 +63,7 @@ internal static class CdaApexChartOptionsFactory
                 Colors = palette
             },
             Title = string.IsNullOrWhiteSpace(title) ? null : new Title { Text = title },
-            Tooltip = BuildTooltip(options, noAxis),
+            Tooltip = BuildTooltip(options, noAxis, themeColors),
             Xaxis = noAxis ? null : BuildXAxis(options),
             Yaxis = noAxis ? null : [BuildYAxis(options)]
         };
@@ -115,7 +116,7 @@ internal static class CdaApexChartOptionsFactory
         };
     }
 
-    private static ApexCharts.Grid? BuildGrid(CdaChartOptions options, bool noAxis)
+    private static ApexCharts.Grid? BuildGrid(CdaChartOptions options, bool noAxis, ChartThemeColors? themeColors)
     {
         if (noAxis)
         {
@@ -127,14 +128,14 @@ internal static class CdaApexChartOptionsFactory
             Row = options.UseAlternatingGridRows
                 ? new GridRow
                 {
-                    Colors = ["#f8fafc", "transparent"],
+                    Colors = [themeColors?.GridStripe ?? "#f8fafc", "transparent"],
                     Opacity = 0.65
                 }
                 : null
         };
     }
 
-    private static Legend BuildLegend(CdaChartOptions options)
+    private static Legend BuildLegend(CdaChartOptions options, ChartThemeColors? themeColors)
     {
         return new Legend
         {
@@ -142,17 +143,18 @@ internal static class CdaApexChartOptionsFactory
             Position = ResolveLegendPosition(options.LegendPosition),
             HorizontalAlign = Align.Left,
             FontSize = "13px",
-            Labels = new LegendLabels { Colors = "#0f172a" }
+            Labels = new LegendLabels { Colors = themeColors?.LegendText ?? "#0f172a" }
         };
     }
 
-    private static Tooltip BuildTooltip(CdaChartOptions options, bool noAxis)
+    private static Tooltip BuildTooltip(CdaChartOptions options, bool noAxis, ChartThemeColors? themeColors)
     {
         return new Tooltip
         {
             Shared = !noAxis,
             Intersect = false,
             Enabled = true,
+            Theme = themeColors is not null ? (themeColors.IsDark ? Mode.Dark : Mode.Light) : null,
             X = noAxis ? null : new TooltipX { Format = options.TooltipDateTimeFormat },
             Y = new TooltipY { Formatter = BuildFormatter(options.Unit, options.TooltipPrecision) }
         };
@@ -211,7 +213,10 @@ internal static class CdaApexChartOptionsFactory
         return $"function (val) {{ return Number(val).toFixed({precision}) + ' {escapedUnit}'; }}";
     }
 
-    private static List<string> ResolvePalette(CdaChartOptions options, IReadOnlyList<CdaChartSeries> series)
+    private static List<string> ResolvePalette(
+        CdaChartOptions options,
+        IReadOnlyList<CdaChartSeries> series,
+        ChartThemeColors? themeColors)
     {
         var seriesColors = series
             .Select(item => item.Color)
@@ -229,7 +234,7 @@ internal static class CdaApexChartOptionsFactory
             return options.Palette.ToList();
         }
 
-        return CdaChartPalette.Default.ToList();
+        return themeColors is not null ? themeColors.Palette.ToList() : CdaChartPalette.Default.ToList();
     }
 
     private static int ResolveStrokeWidth(CdaChartOptions options)

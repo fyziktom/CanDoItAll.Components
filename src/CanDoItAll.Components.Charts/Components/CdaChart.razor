@@ -1,22 +1,23 @@
 @namespace CanDoItAll.Components.Charts
 @using ApexCharts
-@implements IDisposable
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 @if (!HasRenderableData)
 {
-    <div @attributes="AdditionalAttributes" data-cda-chart-state="empty" class="@ShellClass" style="@Style" role="figure" aria-label="@ResolvedAriaLabel">
+    <div @ref="_rootElement" @attributes="AdditionalAttributes" data-cda-chart-state="empty" class="@ShellClass" style="@Style" role="figure" aria-label="@ResolvedAriaLabel">
         @RenderHeading()
 
-        <div class="flex min-h-48 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50/70 p-6 text-center text-sm text-slate-500">
+        <div class="flex min-h-48 items-center justify-center rounded-lg border border-dashed border-chrome-300 bg-chrome-50/70 p-6 text-center text-sm text-chrome-500">
             <div class="max-w-prose space-y-1">
-                <p class="font-semibold text-slate-700">@EmptyText</p>
+                <p class="font-semibold text-chrome-700">@EmptyText</p>
             </div>
         </div>
     </div>
 }
 else
 {
-    <div @attributes="AdditionalAttributes" data-cda-chart-state="ready" class="@ShellClass" style="@Style" role="figure" aria-label="@ResolvedAriaLabel">
+    <div @ref="_rootElement" @attributes="AdditionalAttributes" data-cda-chart-state="ready" class="@ShellClass" style="@Style" role="figure" aria-label="@ResolvedAriaLabel">
         @RenderHeading()
 
         <div class="min-w-0 overflow-hidden" aria-hidden="true">
@@ -48,6 +49,9 @@ else
     private ApexChart<CdaChartPoint>? _chart;
     private ApexChartOptions<CdaChartPoint> _apexOptions = new();
     private IReadOnlyList<CdaChartSeries> _renderSeries = [];
+    private ElementReference _rootElement;
+    private DotNetObjectReference<CdaChart>? _dotNetReference;
+    private ChartThemeColors? _themeColors;
 
     /// <summary>Heading rendered above the chart. Omitted entirely when both this and <see cref="Description"/> are empty.</summary>
     [Parameter]
@@ -110,7 +114,7 @@ else
         ' ',
         new[]
         {
-            "min-w-0 w-full overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm",
+            "min-w-0 w-full overflow-hidden rounded-lg border border-chrome-200 bg-chrome-50 p-4 shadow-sm",
             Class
         }.Where(value => !string.IsNullOrWhiteSpace(value)));
 
@@ -128,7 +132,7 @@ else
         if (!string.IsNullOrWhiteSpace(Title))
         {
             builder.OpenElement(sequence++, "h3");
-            builder.AddAttribute(sequence++, "class", "break-words text-base font-semibold text-slate-950");
+            builder.AddAttribute(sequence++, "class", "break-words text-base font-semibold text-chrome-950");
             builder.AddContent(sequence++, Title);
             builder.CloseElement();
         }
@@ -136,7 +140,7 @@ else
         if (!string.IsNullOrWhiteSpace(Description))
         {
             builder.OpenElement(sequence++, "p");
-            builder.AddAttribute(sequence++, "class", "break-words text-sm text-slate-600");
+            builder.AddAttribute(sequence++, "class", "break-words text-sm text-chrome-600");
             builder.AddContent(sequence++, Description);
             builder.CloseElement();
         }
@@ -148,21 +152,97 @@ else
     {
         Options ??= new CdaChartOptions();
         _renderSeries = NormalizeSeries(Series);
-        _apexOptions = CdaApexChartOptionsFactory.Build(Options, _renderSeries, null);
+        _apexOptions = CdaApexChartOptionsFactory.Build(Options, _renderSeries, null, _themeColors);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            _dotNetReference = DotNetObjectReference.Create(this);
+
+            try
+            {
+                await JS.InvokeVoidAsync("CanDoItAll.charts.watchTheme", _rootElement, _dotNetReference);
+            }
+            catch (JSException)
+            {
+            }
+
+            if (await TryResolveThemeColorsAsync())
+            {
+                _apexOptions = CdaApexChartOptionsFactory.Build(Options, _renderSeries, null, _themeColors);
+                StateHasChanged();
+            }
+
+            return;
+        }
+
         if (_chart is null || !HasRenderableData)
         {
             return;
         }
 
-        if (!firstRender)
+        await _chart.UpdateSeriesAsync(Options.Animate);
+        await _chart.UpdateOptionsAsync(true, Options.Animate, true);
+    }
+
+    [JSInvokable]
+    public async Task HandleChartThemeChangedAsync()
+    {
+        if (!await TryResolveThemeColorsAsync())
         {
-            await _chart.UpdateSeriesAsync(Options.Animate);
+            return;
+        }
+
+        _apexOptions = CdaApexChartOptionsFactory.Build(Options, _renderSeries, null, _themeColors);
+
+        if (_chart is not null && HasRenderableData)
+        {
             await _chart.UpdateOptionsAsync(true, Options.Animate, true);
         }
+
+        StateHasChanged();
+    }
+
+    // Resolves --ui-charts-* tokens (Tailwind/theme.css) for this instance's ancestor
+    // data-ui-theme scope via BaseLib's theme-tokens.js. Returns false (leaving the
+    // previously hardcoded CdaChartPalette-based options untouched) when the JS module
+    // can't be reached — the CLAUDE.md rule 8 degrade path for a missing <ChartsBodyAssets />.
+    private async Task<bool> TryResolveThemeColorsAsync()
+    {
+        Dictionary<string, string>? tokens;
+        try
+        {
+            tokens = await JS.InvokeAsync<Dictionary<string, string>>("CanDoItAll.charts.resolveTokens", _rootElement);
+        }
+        catch (JSException)
+        {
+            return false;
+        }
+
+        if (tokens is null)
+        {
+            return false;
+        }
+
+        var palette = new[] { "series1", "series2", "series3", "series4", "series5", "series6", "series7", "series8" }
+            .Select(key => tokens.GetValueOrDefault(key))
+            .ToArray();
+
+        if (palette.Any(string.IsNullOrWhiteSpace) ||
+            !tokens.TryGetValue("gridStripe", out var gridStripe) || string.IsNullOrWhiteSpace(gridStripe) ||
+            !tokens.TryGetValue("legendText", out var legendText) || string.IsNullOrWhiteSpace(legendText) ||
+            !tokens.TryGetValue("strokeDefault", out var strokeDefault) || string.IsNullOrWhiteSpace(strokeDefault))
+        {
+            return false;
+        }
+
+        var isDark = tokens.TryGetValue("isDark", out var isDarkValue) &&
+            string.Equals(isDarkValue, "true", StringComparison.Ordinal);
+
+        _themeColors = new ChartThemeColors(palette!, gridStripe, legendText, strokeDefault, isDark);
+        return true;
     }
 
     private static IReadOnlyList<CdaChartSeries> NormalizeSeries(IReadOnlyList<CdaChartSeries>? series)
@@ -197,14 +277,31 @@ else
 
         return new SeriesStroke
         {
-            Color = chartSeries.Color ?? "#64748b",
+            Color = chartSeries.Color ?? _themeColors?.StrokeDefault ?? CdaChartPalette.StrokeDefault,
             DashSpace = Math.Max(0, chartSeries.StrokeDash),
             Width = Math.Max(0, chartSeries.StrokeWidth ?? Options.StrokeWidth)
         };
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
+        if (_dotNetReference is not null)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("CanDoItAll.charts.unwatchTheme", _rootElement);
+            }
+            catch (JSException)
+            {
+            }
+            catch (JSDisconnectedException)
+            {
+            }
+
+            _dotNetReference.Dispose();
+            _dotNetReference = null;
+        }
+
         _chart?.Dispose();
     }
 }

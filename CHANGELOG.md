@@ -317,6 +317,64 @@ All notable changes to this repository's packages are recorded here, per the cha
   instead of `data-cad-theme`, following the BaseLib rename (see BaseLib → Public interface). Same behavior — only
   the attribute name changed.
 
+### Charts
+
+#### Public interface
+
+- Added a `ProjectReference` from `CanDoItAll.Components.Charts.csproj` to
+  `CanDoItAll.Components.BaseLib.csproj` (previously a standalone leaf package with no dependency on BaseLib at
+  all). This is what makes BaseLib's shared `theme-tokens.js` module reachable from Charts, per CLAUDE.md rule 8's
+  eligibility ("any package that already depends on BaseLib").
+- Added: `ChartsBodyAssets` (new component), composing BaseLib's `theme-tokens.js` `<script>` tag ahead of the
+  package's own new `charts-theme.js`, with an `IncludeThemeTokens` (`bool`, default `true`) opt-out — mirrors
+  `GanttChartBodyAssets`/`MermaidBodyAssets`. Consumers that render `<CdaChart>` should add `<ChartsBodyAssets />`
+  to their page to get theme-aware series/grid/legend/stroke colors and live theme-flip support; without it,
+  `<CdaChart>` keeps behaving exactly as before (CLAUDE.md rule 8 degrade path).
+- Added: `CdaChartPalette.StrokeDefault` (`const string`, `"#64748b"`) — the series stroke fallback used when
+  neither a series nor point supplies its own color, previously an inline literal in `CdaChart.razor`.
+
+#### Internal
+
+- Changed: `CdaChart.razor`'s shell/empty-state/heading markup now uses the theme-aware `--color-chrome-*` Tailwind
+  utilities (`border-chrome-*`, `bg-chrome-*`, `text-chrome-*`) instead of raw `slate-*` classes, so the card
+  border, background, and text now invert correctly under a dark `data-ui-theme` scope. Visually unchanged in
+  light mode.
+- Added `Tailwind/input-base.css`'s `@source` list now includes `../src/CanDoItAll.Components.Charts` (it was
+  previously missing, so none of Charts' own Tailwind utility classes — including the `slate-*`/`chrome-*` ones
+  above — were actually being compiled into BaseLib's `output.css`).
+- Added 17 new `--ui-charts-*` tokens to `Tailwind/theme.css` (the public override surface for Charts' palette,
+  grid-stripe, legend-text, and stroke-default colors): `--ui-charts-series-1` through `-8` (from the former
+  `CdaChartPalette.Energetic`/`Default`), `--ui-charts-series-calm-1` through `-6` (from the former
+  `CdaChartPalette.Calm`), `--ui-charts-grid-stripe`, `--ui-charts-legend-text`, and `--ui-charts-stroke-default`.
+  `--ui-charts-grid-stripe`/`-legend-text` paint atop the shell's own inverting `--color-chrome-*` surface/text, so
+  they get a dark-mode override; the series palette and stroke default paint atop chart lines/fills and are
+  declared once, same as `--ui-gantt-*`'s paint tokens. Same values as before in light mode — no visual change
+  without `ChartsBodyAssets`.
+- Added `wwwroot/js/charts-theme.js`: exposes `window.CanDoItAll.charts.resolveTokens(host)` (reads the
+  `--ui-charts-*` tokens above via BaseLib's `theme-tokens.js`, degrading to an inline `getComputedStyle` read with
+  the same literal fallbacks when that module isn't loaded) and `watchTheme`/`unwatchTheme(host, dotNetReference)`
+  (subscribes to theme flips and invokes the component's `HandleChartThemeChangedAsync` JS-invokable method).
+- Changed: `CdaApexChartOptionsFactory.Build` takes an additional optional `ChartThemeColors? themeColors`
+  parameter (new internal record: `Palette`, `GridStripe`, `LegendText`, `StrokeDefault`, `IsDark`). When
+  supplied, its values replace the previously hardcoded palette/grid-stripe/legend-text/stroke-default literals;
+  `null` keeps the exact previous hardcoded behavior (the degrade path for no `ChartsBodyAssets`/JS unavailable).
+- Fixed: the ApexCharts hover tooltip and x-axis crosshair label were unreadable under a dark `data-ui-theme`
+  scope (light background, near-white text) — ApexCharts styles both from a discrete `Tooltip.Theme`
+  (`Mode.Light`/`Mode.Dark`) option rather than CSS custom properties, so it wasn't covered by the color-token
+  work above. `charts-theme.js`'s `resolveTokens` now also returns the resolved `isDark` flag (read from the
+  nearest `data-ui-theme` ancestor's attribute directly, mirroring CLAUDE.md rule 11's "auto" pattern, since it's
+  a discrete mode rather than a color), and `CdaApexChartOptionsFactory.BuildTooltip` sets `Tooltip.Theme`
+  accordingly when `themeColors` is supplied.
+- Changed: `CdaChart.razor` now resolves `ChartThemeColors` via JS interop on first render and on every
+  `data-ui-theme` flip (watched for the component's lifetime), rebuilding `_apexOptions` and pushing the change
+  into the live ApexCharts instance via the existing `UpdateOptionsAsync` call. The component now implements
+  `IAsyncDisposable` instead of `IDisposable` to unwind the JS theme watcher and the `DotNetObjectReference`
+  alongside the existing `ApexChart.Dispose()` call.
+- `samples/CanDoItAll.Components.Sandbox/Components/App.razor` now includes `<ChartsBodyAssets
+  IncludeThemeTokens="false" />` (theme-tokens.js is already loaded once via the existing `<GanttChartBodyAssets
+  />` on the same page). `samples/CanDoItAll.Components.SandboxWasm/wwwroot/index.html` now also loads
+  `charts-theme.js` via a manual `<script>` tag, next to the existing hand-loaded `theme-tokens.js`.
+
 ### CanvasLib
 
 #### Public interface
