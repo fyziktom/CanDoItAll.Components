@@ -262,6 +262,148 @@
     --ui-zoom-pan-border-strong: var(--color-chrome-400);
     --ui-zoom-pan-focus: var(--cad-tone-primary-soft-border);
     --ui-zoom-pan-background: var(--color-white);
+
+    /* CanvasLib component tokens (--ui-canvas-*): the public override surface
+       for CanDoItAll.Components.CanvasLib's own --cw-* tokens, read both by
+       CanvasThemeTokenPack.cs's inline var() defaults and by the workbench
+       CSS files under wwwroot/css/workbench/ (see CLAUDE.md rule 9). Surface/
+       background/border/text tokens are structural chrome and get a dark
+       override below; accent/dark-card-border are paint atop an
+       already-colored element and are declared once. */
+    --ui-canvas-border-soft: rgba(15, 23, 42, 0.1);
+    --ui-canvas-shadow-soft: 0 18px 36px rgba(15, 23, 42, 0.1);
+    --ui-canvas-shadow-strong: 0 24px 56px rgba(15, 23, 42, 0.16);
+    --ui-canvas-bg-start: #fff4e5;
+    --ui-canvas-bg-mid: #f6faf7;
+    --ui-canvas-bg-end: #eef1ff;
+    --ui-canvas-accent-start: #8b5cf6;
+    --ui-canvas-accent-end: #6d28d9;
+    --ui-canvas-dark-card-border: #14b8a6;
+    --ui-canvas-panel: rgba(255, 255, 255, 0.92);
+    --ui-canvas-muted: #64748b;
+    --ui-canvas-text: #0f172a;
+    --ui-canvas-stat-chip-border: rgba(124, 58, 237, 0.12);
+    --ui-canvas-stat-chip-bg-start: rgba(255, 255, 255, 0.95);
+    --ui-canvas-stat-chip-bg-end: rgba(245, 243, 255, 0.9);
+    --ui-canvas-maximized-overlay: rgba(15, 23, 42, 0.28);
+    --ui-canvas-frame-border: rgba(255, 255, 255, 0.42);
+    --ui-canvas-stage-glow: rgba(255, 255, 255, 0.7);
+    --ui-canvas-toolbar-border: rgba(255, 255, 255, 0.48);
+    --ui-canvas-toolbar-bg: rgba(255, 255, 255, 0.62);
+    --ui-canvas-toolbar-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
+    --ui-canvas-action-border: rgba(15, 23, 42, 0.08);
+    --ui-canvas-action-bg: rgba(255, 255, 255, 0.92);
+    --ui-canvas-action-hover-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+    --ui-canvas-primary-action-start: #0f172a;
+    --ui-canvas-primary-action-end: #334155;
+    --ui-canvas-primary-action-border: rgba(255, 255, 255, 0.28);
+    --ui-canvas-ghost-action-text: rgba(255, 255, 255, 0.96);
+    --ui-canvas-zoom-rail-shadow: rgba(109, 40, 217, 0.22);
+    --ui-canvas-zoom-slider-accent: #ddd6fe;
+    --ui-canvas-zoom-pill-bg: rgba(255, 255, 255, 0.16);
+    --ui-canvas-create-rail-bg: rgba(255, 255, 255, 0.96);
+    --ui-canvas-create-rail-shadow: 0 18px 32px rgba(15, 23, 42, 0.12);
+
+    /* Shared "white text/icon atop an already-colored surface" paint token —
+       reused by primary/zoom-pill actions and by badges, chips, and overlays
+       in workbench/panels/03-help-settings-and-preview.css. Never inverts. */
+    --ui-canvas-badge-text: #fff;
+
+    /* Accent/status "tone" family used by decorative preview widgets in
+       workbench/panels/03-help-settings-and-preview.css (help nav hover,
+       menu-preview sun/accent, viewport/animation preview glows). Paint
+       atop already-colored surfaces, so declared once — no dark override. */
+    --ui-canvas-accent-violet: #7c3aed;
+    --ui-canvas-accent-soft: #c4b5fd;
+    --ui-canvas-accent-soft-strong: #a78bfa;
+    --ui-canvas-tone-info: #3b82f6;
+    --ui-canvas-tone-info-wash-start: #eff6ff;
+    --ui-canvas-tone-info-wash-end: #e0f2fe;
+    --ui-canvas-tone-indigo: #4f46e5;
+    --ui-canvas-tone-indigo-wash: #f2f4ff;
+    --ui-canvas-tone-indigo-soft: #6366f1;
+    --ui-canvas-tone-sky: #38bdf8;
+    --ui-canvas-tone-sky-strong: #0ea5e9;
+    --ui-canvas-tone-amber: #f59e0b;
+    --ui-canvas-sun-start: #fbbf24;
+    --ui-canvas-sun-end: #f97316;
+
+    /* Node/chip/marker/priority "tone" family used by
+       workbench/scene/04-scene-and-nodes.css's data-palette node surfaces
+       and its marker/chip/priority tone-* variants. Paint atop
+       already-colored surfaces — declared once, no dark override. */
+    --ui-canvas-tone-accent: #6d28d9;
+    --ui-canvas-tone-accent-wash: #ede9fe;
+    --ui-canvas-tone-accent-mid: #c4b5fd;
+    --ui-canvas-tone-accent-mid-text: #5b21b6;
+    --ui-canvas-tone-violet-deep: #581c87;
+    --ui-canvas-tone-sky-text: #0369a1;
+    --ui-canvas-tone-sky-wash: #e0f2fe;
+    --ui-canvas-tone-sky-mid: #7dd3fc;
+    --ui-canvas-tone-sky-mid-text: #0c4a6e;
+    --ui-canvas-tone-sky-deep: #0284c7;
+    --ui-canvas-tone-mint: #10b981;
+    --ui-canvas-tone-mint-deep: #059669;
+    --ui-canvas-tone-mint-text: #047857;
+    --ui-canvas-tone-mint-wash: #d1fae5;
+    --ui-canvas-tone-mint-wash-light: #ecfdf5;
+    --ui-canvas-tone-mint-mid: #6ee7b7;
+    --ui-canvas-tone-mint-mid-text: #065f46;
+    --ui-canvas-tone-warn-text: #c2410c;
+    --ui-canvas-tone-warn-wash: #ffedd5;
+    --ui-canvas-tone-warn-mid: #fb923c;
+    --ui-canvas-tone-warn-mid-text: #7c2d12;
+    --ui-canvas-tone-amber-deep: #d97706;
+    --ui-canvas-tone-danger-text: #be123c;
+    --ui-canvas-tone-danger-wash: #ffe4e6;
+    --ui-canvas-tone-danger-mid: #fb7185;
+    --ui-canvas-tone-danger-mid-text: #fff1f2;
+    --ui-canvas-tone-danger-solid: #f43f5e;
+    --ui-canvas-tone-green: #16a34a;
+    --ui-canvas-tone-green-light: #4ade80;
+    --ui-canvas-tone-red: #dc2626;
+    --ui-canvas-tone-red-light: #fca5a5;
+    --ui-canvas-tone-teal: #0f766e;
+    --ui-canvas-workflow-wash-a: #f0fdfa;
+    --ui-canvas-workflow-wash-b: #fffbeb;
+    --ui-canvas-workflow-wash-c: #f0f9ff;
+
+    /* Node data-palette surfaces (secondary/success/info/warning/danger) —
+       bg/bg-soft/text only; overlay/border/shadow derive from the tone
+       tokens above via color-mix at each use site. */
+    --ui-canvas-node-secondary-bg: #ede9fe;
+    --ui-canvas-node-secondary-bg-soft: #ddd6fe;
+    --ui-canvas-node-secondary-text: #581c87;
+    --ui-canvas-node-success-bg: #dcfce7;
+    --ui-canvas-node-success-bg-soft: #bbf7d0;
+    --ui-canvas-node-success-text: #14532d;
+    --ui-canvas-node-info-bg: #e0f2fe;
+    --ui-canvas-node-info-bg-soft: #bae6fd;
+    --ui-canvas-node-info-text: #0c4a6e;
+    --ui-canvas-node-warning-bg: #fef3c7;
+    --ui-canvas-node-warning-bg-soft: #fde68a;
+    --ui-canvas-node-warning-text: #78350f;
+    --ui-canvas-node-danger-bg: #fee2e2;
+    --ui-canvas-node-danger-bg-soft: #fecaca;
+    --ui-canvas-node-danger-text: #7f1d1d;
+
+    /* Additional tone-family members used by
+       workbench/responsive/06-motion-and-responsive.css and
+       workbench/overlays/05-overlays-and-composer.css badge/status chips. */
+    --ui-canvas-tone-warn-wash-light: #fff7ed;
+    --ui-canvas-tone-red-wash: #fef2f2;
+    --ui-canvas-tone-red-deep: #b91c1c;
+    --ui-canvas-tone-red-solid: #ef4444;
+    --ui-canvas-tone-info-deep: #1d4ed8;
+    --ui-canvas-tone-info-strong: #2563eb;
+    --ui-canvas-tone-amber-text: #b45309;
+    --ui-canvas-tone-yellow: #facc15;
+    --ui-canvas-tone-orange-light: #fdba74;
+    --ui-canvas-tone-dark: #1f2937;
+    --ui-canvas-tone-danger-strong: #e11d48;
+    --ui-canvas-tone-mint-deep-text: #064e3b;
+    --ui-canvas-tone-cyan-deep: #0e7490;
+    --ui-canvas-tone-cyan-wash: #ecfeff;
   }
 
   [data-cad-theme="dark"] {
@@ -380,6 +522,27 @@
        the rest derive from --color-chrome-* above and self-invert. */
     --ui-zoom-pan-tool-background: var(--color-chrome-50);
     --ui-zoom-pan-background: var(--color-chrome-50);
+
+    /* Structural --ui-canvas-* tokens only — accent/dark-card-border are
+       declared once in the light block above and stay fixed. */
+    --ui-canvas-border-soft: rgba(148, 163, 184, 0.16);
+    --ui-canvas-shadow-soft: 0 18px 36px rgba(0, 0, 0, 0.28);
+    --ui-canvas-shadow-strong: 0 24px 56px rgba(0, 0, 0, 0.36);
+    --ui-canvas-bg-start: #201a2e;
+    --ui-canvas-bg-mid: #161c22;
+    --ui-canvas-bg-end: #161a2e;
+    --ui-canvas-panel: rgba(30, 41, 59, 0.92);
+    --ui-canvas-muted: #94a3b8;
+    --ui-canvas-text: #f1f5f9;
+    --ui-canvas-frame-border: rgba(255, 255, 255, 0.08);
+    --ui-canvas-toolbar-border: rgba(255, 255, 255, 0.1);
+    --ui-canvas-toolbar-bg: rgba(15, 23, 42, 0.72);
+    --ui-canvas-toolbar-shadow: 0 18px 34px rgba(0, 0, 0, 0.32);
+    --ui-canvas-action-border: rgba(255, 255, 255, 0.12);
+    --ui-canvas-action-bg: rgba(30, 41, 59, 0.92);
+    --ui-canvas-action-hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.32);
+    --ui-canvas-create-rail-bg: rgba(30, 41, 59, 0.96);
+    --ui-canvas-create-rail-shadow: 0 18px 32px rgba(0, 0, 0, 0.32);
   }
 
   .cad-theme-host {

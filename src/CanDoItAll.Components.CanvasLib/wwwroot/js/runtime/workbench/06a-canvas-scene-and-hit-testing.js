@@ -213,35 +213,36 @@
         };
     }
 
-    function resolveNodeAccentColor(node) {
+    function resolveNodeAccentColor(node, colors) {
         if (typeof node?.accentColor === "string" && node.accentColor.trim().length > 0) {
             return node.accentColor.trim();
         }
 
+        const resolved = colors || {};
         switch ((node?.paletteKey || "").toLowerCase()) {
             case "violet":
-                return "#7c3aed";
+                return resolved.accentViolet || "#7c3aed";
             case "mint":
-                return "#10b981";
+                return resolved.accentMint || "#10b981";
             case "sky":
-                return "#0ea5e9";
+                return resolved.accentSky || "#0ea5e9";
             case "amber":
-                return "#f59e0b";
+                return resolved.accentAmber || "#f59e0b";
             case "rose":
-                return "#e11d48";
+                return resolved.accentRose || "#e11d48";
             case "success":
-                return "#059669";
+                return resolved.accentSuccess || "#059669";
             case "warning":
             case "warn":
-                return "#d97706";
+                return resolved.accentWarning || "#d97706";
             case "danger":
-                return "#dc2626";
+                return resolved.accentDanger || "#dc2626";
             case "info":
-                return "#0284c7";
+                return resolved.accentInfo || "#0284c7";
             case "neutral":
-                return "#475569";
+                return resolved.accentNeutral || "#475569";
             default:
-                return "#7c3aed";
+                return resolved.accentViolet || "#7c3aed";
         }
     }
 

@@ -1503,6 +1503,41 @@
         return true;
     }
 
+    // CanvasLib's canvas-painted node accent colors (see resolveNodeAccentColor in
+    // 06a-canvas-scene-and-hit-testing.js), read through BaseLib's shared theme-tokens.js
+    // module when present (CLAUDE.md rule 8), falling back to an inline getComputedStyle
+    // read so callers degrade gracefully when it isn't loaded. Fallback literals mirror
+    // the --ui-canvas-* tokens declared in Tailwind/theme.css.
+    const canvasColorTokenMap = {
+        accentViolet: { cssVar: "--ui-canvas-accent-violet", fallback: "#7c3aed" },
+        accentMint: { cssVar: "--ui-canvas-tone-mint", fallback: "#10b981" },
+        accentSky: { cssVar: "--ui-canvas-tone-sky-strong", fallback: "#0ea5e9" },
+        accentAmber: { cssVar: "--ui-canvas-tone-amber", fallback: "#f59e0b" },
+        accentRose: { cssVar: "--ui-canvas-tone-danger-strong", fallback: "#e11d48" },
+        accentSuccess: { cssVar: "--ui-canvas-tone-mint-deep", fallback: "#059669" },
+        accentWarning: { cssVar: "--ui-canvas-tone-amber-deep", fallback: "#d97706" },
+        accentDanger: { cssVar: "--ui-canvas-tone-red", fallback: "#dc2626" },
+        accentInfo: { cssVar: "--ui-canvas-tone-sky-deep", fallback: "#0284c7" },
+        accentNeutral: { cssVar: "--color-chrome-600", fallback: "#475569" }
+    };
+
+    function readCanvasColorsInline(host, tokenMap) {
+        const style = window.getComputedStyle(host);
+        const resolved = {};
+        for (const propertyName of Object.keys(tokenMap)) {
+            const { cssVar, fallback } = tokenMap[propertyName];
+            resolved[propertyName] = style.getPropertyValue(cssVar).trim() || fallback;
+        }
+
+        return resolved;
+    }
+
+    function resolveCanvasColors(host) {
+        return root.themeTokens
+            ? root.themeTokens.readTokens(host, canvasColorTokenMap)
+            : readCanvasColorsInline(host, canvasColorTokenMap);
+    }
+
     const shared = root.canvasWorkbenchModule = root.canvasWorkbenchModule || {};
-    Object.assign(shared, { contextSubmenuHoverDelayMs, MIN_ZOOM, MAX_ZOOM, selectionModel, getRequiredRootService, getTextMeasureService, getViewportControllerService, getAnimationTimelineService, clear, createElement, createSvgElement, normalizeInputField, normalizeInputValue, clamp, debounce, now, createWorkbenchMetrics, formatMetricDuration, cloneWorkbenchMetrics, incrementMetric, resetLastDragPatchMetrics, recordDragPatchMetrics, round, normalizeAction, normalizeAnnotation, normalizeCompactPath, normalizeDiagnosticsOptions, normalizeMinimapOptions, normalizeClipboardOptions, normalizeTooltipPopoverOptions, normalizeMarqueeOptions, normalizeSnapGuideOptions, normalizeConnectorAnchorOptions, normalizeTransformHandleOptions, normalizeGroupFrame, normalizeProgressPercent, normalizeMenuActionScale, normalizeSurface, toSelectionSet, toCollapsedSet, getDefaultNodeSize, resolveBaseNodeSize, estimateNodeSizeFromText, getNodeSize, buildNodeLookup, isNodeVisible, getVisibleNodes, getProjectionOverscanPx, collectProjectedContextNodeIds, isNodeProjectedInViewport, getProjectedNodes, getBaseNodePosition, getNodeDepth, getNodeMobility, buildResolvedLayoutKey, buildLayoutItems, getCollisionPaddingX, getCollisionPaddingY, getOverlapDelta, chooseCollisionAxis, resolveCollisionDirection, applyCollisionSeparation, enforceParentClearance, enforceSiblingSpacing, relaxTowardBase, computeResolvedNodePositions, ensureLayoutPositions, getNodePosition, getSceneBounds, clampPanToScene, setPan, syncMenuScaleCss, serializeState, legacyApplySceneTransform, cancelViewportAnimation, updateViewportTransform, animateViewportTransition });
+    Object.assign(shared, { contextSubmenuHoverDelayMs, MIN_ZOOM, MAX_ZOOM, selectionModel, getRequiredRootService, getTextMeasureService, getViewportControllerService, getAnimationTimelineService, clear, createElement, createSvgElement, normalizeInputField, normalizeInputValue, clamp, debounce, now, createWorkbenchMetrics, formatMetricDuration, cloneWorkbenchMetrics, incrementMetric, resetLastDragPatchMetrics, recordDragPatchMetrics, round, normalizeAction, normalizeAnnotation, normalizeCompactPath, normalizeDiagnosticsOptions, normalizeMinimapOptions, normalizeClipboardOptions, normalizeTooltipPopoverOptions, normalizeMarqueeOptions, normalizeSnapGuideOptions, normalizeConnectorAnchorOptions, normalizeTransformHandleOptions, normalizeGroupFrame, normalizeProgressPercent, normalizeMenuActionScale, normalizeSurface, toSelectionSet, toCollapsedSet, getDefaultNodeSize, resolveBaseNodeSize, estimateNodeSizeFromText, getNodeSize, buildNodeLookup, isNodeVisible, getVisibleNodes, getProjectionOverscanPx, collectProjectedContextNodeIds, isNodeProjectedInViewport, getProjectedNodes, getBaseNodePosition, getNodeDepth, getNodeMobility, buildResolvedLayoutKey, buildLayoutItems, getCollisionPaddingX, getCollisionPaddingY, getOverlapDelta, chooseCollisionAxis, resolveCollisionDirection, applyCollisionSeparation, enforceParentClearance, enforceSiblingSpacing, relaxTowardBase, computeResolvedNodePositions, ensureLayoutPositions, getNodePosition, getSceneBounds, clampPanToScene, setPan, syncMenuScaleCss, serializeState, legacyApplySceneTransform, cancelViewportAnimation, updateViewportTransform, animateViewportTransition, canvasColorTokenMap, resolveCanvasColors });
 })();

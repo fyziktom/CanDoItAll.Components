@@ -91,6 +91,8 @@ function appendScriptSection(lines, propertyName, entries) {
   lines.push("}");
 }
 
+const themeTokensScriptPath = "_content/CanDoItAll.Components.BaseLib/js/theme/theme-tokens.js";
+
 function buildBodyComponent(manifest) {
   const lines = [
     componentNamespace,
@@ -98,6 +100,11 @@ function buildBodyComponent(manifest) {
     "@using CanDoItAll.Components.OverlayLib"
   ];
 
+  lines.push("@if (IncludeThemeTokens)");
+  lines.push("{");
+  lines.push(`    <script src="@Assets["${themeTokensScriptPath}"]"></script>`);
+  lines.push("}");
+  lines.push(stringEmptyLine());
   lines.push("@if (IncludeRuntimeAssets)");
   lines.push("{");
   lines.push(`    <OverlayLibBodyAssets IncludeRuntimeAssets="true" />`);
@@ -111,6 +118,9 @@ function buildBodyComponent(manifest) {
   appendScriptSection(lines, "IncludeCalendarAssets", manifest.calendarScripts);
   lines.push(stringEmptyLine());
   lines.push("@code {");
+  lines.push("    [Parameter]");
+  lines.push("    public bool IncludeThemeTokens { get; set; } = true;");
+  lines.push(stringEmptyLine("    "));
   lines.push("    [Parameter]");
   lines.push("    public bool IncludeRuntimeAssets { get; set; } = true;");
   lines.push(stringEmptyLine("    "));

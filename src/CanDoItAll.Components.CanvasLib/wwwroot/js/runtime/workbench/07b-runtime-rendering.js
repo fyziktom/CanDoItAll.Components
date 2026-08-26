@@ -34,7 +34,7 @@
                 nodeId: node.id
             });
 
-            const accent = resolveNodeAccentColor(node);
+            const accent = resolveNodeAccentColor(node, state.colors);
             const isHighlighted = hasHighlightedNodes && state.highlightedIds.has(node.id);
             const isDimmed = hasHighlightedNodes && !isHighlighted;
             const meta = {
