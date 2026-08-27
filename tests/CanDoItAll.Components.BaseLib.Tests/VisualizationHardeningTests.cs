@@ -43,6 +43,19 @@ public sealed class VisualizationHardeningTests
     }
 
     [Fact]
+    public void MermaidJavascriptKeepsTheGlobalTooltipOutOfDocumentOverflow()
+    {
+        var source = File.ReadAllText(Path.Combine(
+            AppContext.BaseDirectory,
+            "TestAssets",
+            "mermaidDiagram.js"));
+
+        Assert.Contains("function stabilizeMermaidTooltip", source, StringComparison.Ordinal);
+        Assert.Contains("tooltip.style.position = 'fixed'", source, StringComparison.Ordinal);
+        Assert.Contains("stabilizeMermaidTooltip();", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ChartBuildsAccessibleSeriesAndRangeSummary()
     {
         var chart = new CdaChart();

@@ -36,6 +36,7 @@ async function renderCore(container, dotNetReference, request) {
     mermaid.initialize(buildConfig(request?.options, container));
     const svgId = `${diagramId}-svg`;
     const renderResult = await mermaid.render(svgId, source);
+    stabilizeMermaidTooltip();
     removeMermaidRenderArtifacts(svgId, container);
     const state = {
       cleanupCallbacks: [],
@@ -94,6 +95,16 @@ function removeMermaidRenderArtifacts(svgId, container) {
     if (element && !container?.contains(element)) {
       element.remove();
     }
+  }
+}
+
+// Mermaid appends its shared tooltip directly to <body>. Its default absolute
+// positioning can extend the document's scrollable area even while hidden,
+// which creates an otherwise empty page scrollbar. Fixed positioning retains
+// the tooltip overlay while keeping it out of document overflow calculations.
+function stabilizeMermaidTooltip() {
+  for (const tooltip of document.querySelectorAll('body > .mermaidTooltip')) {
+    tooltip.style.position = 'fixed';
   }
 }
 
