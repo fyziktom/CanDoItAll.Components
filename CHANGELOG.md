@@ -37,7 +37,7 @@ All notable changes to this repository's packages are recorded here, per the cha
     used to look like; now available uniformly across every tone, and it's the default).
   - `Filled` — visibly tinted ("tonal") background, now applied uniformly to every tone including
     `Primary` (previously `Primary` alone rendered solid inside `Filled`). `Primary` and `Default` now use
-    a distinct, more visible tint (new `--tone-primary-tonal-bg`/`--tone-light-tonal-bg`) instead of the
+    a distinct, more visible tint (new `--tone-primary-tonal-bg`/`--tone-default-tonal-bg`) instead of the
     shared `-soft-bg` tokens, which are a near-white 96% mix and were effectively invisible as a button
     fill; other tones already had a visible `-soft-bg` and are unchanged.
   - `Outlined` — no fill at rest (previously it shared `Filled`'s soft background); border now uses the
@@ -47,8 +47,8 @@ All notable changes to this repository's packages are recorded here, per the cha
 
   A consumer that wants the previous default look should set `Variant="Variant.Filled"` explicitly (soft/tonal, no
   longer the default) or `Variant="Variant.Solid"` for the previous `Primary`-only solid look now
-  available on every tone. Added `--tone-secondary-solid-*`, `--tone-light-solid-*`, `--tone-primary-tonal-*`,
-  and `--tone-light-tonal-*` custom-property pairs (`Tailwind/theme.css`, light and dark blocks) plus
+  available on every tone. Added `--tone-secondary-solid-*`, `--tone-default-solid-*`, `--tone-primary-tonal-*`,
+  and `--tone-default-tonal-*` custom-property pairs (`Tailwind/theme.css`, light and dark blocks) plus
   missing `-solid-hover`/`-solid-border` pairs for `success`/`info`/`warning`/`danger`, deriving from the
   existing color scale per the centralized-color rule, to back every tone's new `Solid` treatment and the
   brighter `Primary`/`Default` `Filled` tint.
