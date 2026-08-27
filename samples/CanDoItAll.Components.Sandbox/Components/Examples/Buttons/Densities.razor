@@ -1,0 +1,12 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<Cluster Gap="LayoutGap.Medium">
+    @foreach (var density in ButtonDensities)
+    {
+        <Button Text="@density.ToString()" Density="@density" />
+    }
+</Cluster>
+
+@code {
+    private static readonly ButtonDensity[] ButtonDensities = Enum.GetValues<ButtonDensity>();
+}

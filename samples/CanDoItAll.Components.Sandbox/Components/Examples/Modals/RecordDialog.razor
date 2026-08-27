@@ -3,7 +3,7 @@
 <Cluster Gap="LayoutGap.Small">
     <Button Text="Edit record"
             Icon="edit"
-            ButtonStyle="@(ButtonStyle.Primary)"
+            Tone="@(ButtonTone.Primary)"
             Click="OpenEditor" />
 </Cluster>
 <Dialog IsOpen="@isOpen"
@@ -26,12 +26,12 @@
     </ChildContent>
     <Footer>
         <Button Text="Cancel"
-                ButtonStyle="@(ButtonStyle.Light)"
+                Tone="@(ButtonTone.Default)"
                 Variant="@(Variant.Outlined)"
                 Click="CloseEditor" />
         <Button Text="Save"
                 Icon="save"
-                ButtonStyle="@(ButtonStyle.Primary)"
+                Tone="@(ButtonTone.Primary)"
                 Disabled="@(string.IsNullOrWhiteSpace(title))"
                 Click="CloseEditor" />
     </Footer>

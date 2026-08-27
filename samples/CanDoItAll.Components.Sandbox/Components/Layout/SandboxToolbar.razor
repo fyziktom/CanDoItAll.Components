@@ -20,7 +20,7 @@
 
             <Button Text="Coverage"
                     class="sandbox-toolbar__coverage"
-                    ButtonStyle="@(toolbarState.ShowCoverage ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Tone="@(toolbarState.ShowCoverage ? ButtonTone.Primary : ButtonTone.Default)"
                     Variant="@(toolbarState.ShowCoverage ? Variant.Filled : Variant.Outlined)"
                     Size="ButtonSize.Small"
                     Click="@(() => toolbarState.ToggleCoverage())"
@@ -31,7 +31,7 @@
         @if (ToolbarState is not null)
         {
             <Button Text="Unused"
-                    ButtonStyle="@(ToolbarState.ShowUnused ? ButtonStyle.Danger : ButtonStyle.Light)"
+                    Tone="@(ToolbarState.ShowUnused ? ButtonTone.Danger : ButtonTone.Default)"
                     Variant="@(ToolbarState.ShowUnused ? Variant.Filled : Variant.Outlined)"
                     Size="ButtonSize.Small"
                     class="@(ToolbarState.ShowUnused ? "sandbox-toolbar__controls--unused" : "")"
@@ -44,7 +44,7 @@
         {
             <Button Text="@(ThemeState.IsDark ? "Dark" : "Light")"
                     Icon="@(ThemeState.IsDark ? "dark_mode" : "light_mode")"
-                    ButtonStyle="ButtonStyle.Light"
+                    Tone="ButtonTone.Default"
                     Variant="Variant.Outlined"
                     Size="ButtonSize.Small"
                     Click="ToggleDarkMode"

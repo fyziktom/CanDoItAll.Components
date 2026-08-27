@@ -1,281 +1,338 @@
 @layer components {
-  .cda-button {
+  .ui-button {
     @apply inline-flex max-w-full min-w-0 items-center justify-center gap-2 border font-semibold leading-snug transition-colors;
     @apply disabled:cursor-not-allowed disabled:opacity-50;
-    border-radius: var(--cad-radius-control);
+    @apply rounded-md;
   }
 
-  .cda-button .rz-button-text {
+  .ui-button .ui-button__label {
     @apply min-w-0 max-w-full;
     overflow-wrap: anywhere;
   }
 
-  .cda-button--size-sm {
+  .ui-button--size-sm {
     @apply px-3 py-2 text-xs;
   }
 
-  .cda-button--size-md {
+  .ui-button--size-md {
     @apply px-4 py-2 text-sm;
   }
 
-  .cda-button--size-lg {
+  .ui-button--size-lg {
     @apply px-4 py-2.5 text-base;
   }
 
-  .cda-button--filled.cda-button--tone-primary {
+  .ui-button--density-comfortable {
+    @apply py-1;
+  }
+
+  .ui-button--density-compact {
+    @apply py-0.5;
+  }
+
+  .ui-button--rounded-none {
+    border-radius: 0;
+  }
+
+  .ui-button--rounded-md {
+    border-radius: var(--cad-radius-control);
+  }
+
+  .ui-button--rounded-lg {
+    @apply rounded-3xl;
+  }
+
+  /* Filled (tonal): visibly tinted background, same treatment for every tone.
+     Outlined: no fill at rest (background: transparent, below); border uses the tone's text
+     color instead of its (much lighter) soft-border, so the outline reads clearly on its own. */
+
+  .ui-button--filled.ui-button--tone-primary,
+  .ui-button--outlined.ui-button--tone-primary {
+    color: var(--tone-primary-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-primary {
+    border-color: var(--tone-primary-soft-border);
+    background: var(--tone-primary-tonal-bg);
+  }
+
+  .ui-button--outlined.ui-button--tone-primary {
+    border-color: var(--tone-primary-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-primary:hover,
+  .ui-button--outlined.ui-button--tone-primary:hover {
+    background: var(--tone-primary-tonal-hover);
+  }
+
+  .ui-button--filled.ui-button--tone-default,
+  .ui-button--outlined.ui-button--tone-default {
+    color: var(--tone-light-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-default {
+    border-color: var(--tone-light-soft-border);
+    background: var(--tone-light-tonal-bg);
+  }
+
+  .ui-button--outlined.ui-button--tone-default {
+    border-color: var(--tone-light-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-default:hover,
+  .ui-button--outlined.ui-button--tone-default:hover {
+    background: var(--tone-light-tonal-hover);
+  }
+
+  .ui-button--filled.ui-button--tone-secondary,
+  .ui-button--outlined.ui-button--tone-secondary {
+    color: var(--tone-secondary-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-secondary {
+    border-color: var(--tone-secondary-soft-border);
+    background: var(--tone-secondary-soft-bg);
+  }
+
+  .ui-button--outlined.ui-button--tone-secondary {
+    border-color: var(--tone-secondary-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-success,
+  .ui-button--outlined.ui-button--tone-success {
+    color: var(--tone-success-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-success {
+    border-color: var(--tone-success-soft-border);
+    background: var(--tone-success-soft-bg);
+  }
+
+  .ui-button--outlined.ui-button--tone-success {
+    border-color: var(--tone-success-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-info,
+  .ui-button--outlined.ui-button--tone-info {
+    color: var(--tone-info-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-info {
+    border-color: var(--tone-info-soft-border);
+    background: var(--tone-info-soft-bg);
+  }
+
+  .ui-button--outlined.ui-button--tone-info {
+    border-color: var(--tone-info-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-warning,
+  .ui-button--outlined.ui-button--tone-warning {
+    color: var(--tone-warning-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-warning {
+    border-color: var(--tone-warning-soft-border);
+    background: var(--tone-warning-soft-bg);
+  }
+
+  .ui-button--outlined.ui-button--tone-warning {
+    border-color: var(--tone-warning-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-danger,
+  .ui-button--outlined.ui-button--tone-danger {
+    color: var(--tone-danger-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-danger {
+    border-color: var(--tone-danger-soft-border);
+    background: var(--tone-danger-soft-bg);
+  }
+
+  .ui-button--outlined.ui-button--tone-danger {
+    border-color: var(--tone-danger-soft-fg);
+  }
+
+  .ui-button--filled.ui-button--tone-secondary:hover,
+  .ui-button--outlined.ui-button--tone-secondary:hover {
+    background: var(--tone-secondary-soft-hover);
+  }
+
+  .ui-button--filled.ui-button--tone-success:hover,
+  .ui-button--outlined.ui-button--tone-success:hover {
+    background: var(--tone-success-soft-hover);
+  }
+
+  .ui-button--filled.ui-button--tone-info:hover,
+  .ui-button--outlined.ui-button--tone-info:hover {
+    background: var(--tone-info-soft-hover);
+  }
+
+  .ui-button--filled.ui-button--tone-warning:hover,
+  .ui-button--outlined.ui-button--tone-warning:hover {
+    background: var(--tone-warning-soft-hover);
+  }
+
+  .ui-button--filled.ui-button--tone-danger:hover,
+  .ui-button--outlined.ui-button--tone-danger:hover {
+    background: var(--tone-danger-soft-hover);
+  }
+
+  .ui-button--outlined {
+    background: transparent;
+  }
+
+  /* Solid: fully saturated fill, same treatment for every tone. */
+
+  .ui-button--solid.ui-button--tone-primary {
     border-color: var(--tone-primary-solid-border);
     background: var(--tone-primary-solid-bg);
     color: var(--tone-primary-solid-fg);
     box-shadow: var(--cad-shadow-soft);
   }
 
-  .cda-button--filled.cda-button--tone-primary:hover {
+  .ui-button--solid.ui-button--tone-primary:hover {
     border-color: var(--tone-primary-solid-hover);
     background: var(--tone-primary-solid-hover);
   }
 
-  .cda-button--outlined.cda-button--tone-primary {
-    border-color: var(--tone-primary-soft-border);
-    background: var(--tone-primary-soft-bg);
-    color: var(--tone-primary-soft-fg);
+  .ui-button--solid.ui-button--tone-default {
+    border-color: var(--tone-light-solid-border);
+    background: var(--tone-light-solid-bg);
+    color: var(--tone-light-solid-fg);
+    box-shadow: var(--cad-shadow-soft);
   }
 
-  .cda-button--outlined.cda-button--tone-primary:hover {
-    background: var(--tone-primary-soft-hover);
+  .ui-button--solid.ui-button--tone-default:hover {
+    border-color: var(--tone-light-solid-hover);
+    background: var(--tone-light-solid-hover);
   }
 
-  .cda-button--filled.cda-button--tone-light,
-  .cda-button--outlined.cda-button--tone-light,
-  .cda-button--filled.cda-button--tone-base,
-  .cda-button--outlined.cda-button--tone-base,
-  .cda-button--filled.cda-button--tone-dark,
-  .cda-button--outlined.cda-button--tone-dark {
-    border-color: var(--tone-light-soft-border);
-    background: var(--tone-light-soft-bg);
-    color: var(--tone-light-soft-fg);
+  .ui-button--solid.ui-button--tone-secondary {
+    border-color: var(--tone-secondary-solid-border);
+    background: var(--tone-secondary-solid-bg);
+    color: var(--tone-secondary-solid-fg);
+    box-shadow: var(--cad-shadow-soft);
   }
 
-  .cda-button--filled.cda-button--tone-secondary,
-  .cda-button--outlined.cda-button--tone-secondary {
-    border-color: var(--tone-secondary-soft-border);
-    background: var(--tone-secondary-soft-bg);
-    color: var(--tone-secondary-soft-fg);
+  .ui-button--solid.ui-button--tone-secondary:hover {
+    border-color: var(--tone-secondary-solid-hover);
+    background: var(--tone-secondary-solid-hover);
   }
 
-  .cda-button--filled.cda-button--tone-success,
-  .cda-button--outlined.cda-button--tone-success {
-    border-color: var(--tone-success-soft-border);
-    background: var(--tone-success-soft-bg);
-    color: var(--tone-success-soft-fg);
+  .ui-button--solid.ui-button--tone-success {
+    border-color: var(--tone-success-solid-border);
+    background: var(--tone-success-solid-bg);
+    color: var(--tone-success-solid-fg);
+    box-shadow: var(--cad-shadow-soft);
   }
 
-  .cda-button--filled.cda-button--tone-info,
-  .cda-button--outlined.cda-button--tone-info {
-    border-color: var(--tone-info-soft-border);
-    background: var(--tone-info-soft-bg);
-    color: var(--tone-info-soft-fg);
+  .ui-button--solid.ui-button--tone-success:hover {
+    border-color: var(--tone-success-solid-hover);
+    background: var(--tone-success-solid-hover);
   }
 
-  .cda-button--filled.cda-button--tone-warning,
-  .cda-button--outlined.cda-button--tone-warning {
-    border-color: var(--tone-warning-soft-border);
-    background: var(--tone-warning-soft-bg);
-    color: var(--tone-warning-soft-fg);
+  .ui-button--solid.ui-button--tone-info {
+    border-color: var(--tone-info-solid-border);
+    background: var(--tone-info-solid-bg);
+    color: var(--tone-info-solid-fg);
+    box-shadow: var(--cad-shadow-soft);
   }
 
-  .cda-button--filled.cda-button--tone-danger,
-  .cda-button--outlined.cda-button--tone-danger {
-    border-color: var(--tone-danger-soft-border);
-    background: var(--tone-danger-soft-bg);
-    color: var(--tone-danger-soft-fg);
+  .ui-button--solid.ui-button--tone-info:hover {
+    border-color: var(--tone-info-solid-hover);
+    background: var(--tone-info-solid-hover);
   }
 
-  .cda-button--filled.cda-button--tone-light:hover,
-  .cda-button--outlined.cda-button--tone-light:hover {
-    background: var(--tone-light-soft-hover);
+  .ui-button--solid.ui-button--tone-warning {
+    border-color: var(--tone-warning-solid-border);
+    background: var(--tone-warning-solid-bg);
+    color: var(--tone-warning-solid-fg);
+    box-shadow: var(--cad-shadow-soft);
   }
 
-  .cda-button--filled.cda-button--tone-base,
-  .cda-button--outlined.cda-button--tone-base {
-    border-color: var(--tone-base-soft-border);
-    background: var(--tone-base-soft-bg);
-    color: var(--tone-base-soft-fg);
+  .ui-button--solid.ui-button--tone-warning:hover {
+    border-color: var(--tone-warning-solid-hover);
+    background: var(--tone-warning-solid-hover);
   }
 
-  .cda-button--filled.cda-button--tone-base:hover,
-  .cda-button--outlined.cda-button--tone-base:hover {
-    background: var(--tone-base-soft-hover);
+  .ui-button--solid.ui-button--tone-danger {
+    border-color: var(--tone-danger-solid-border);
+    background: var(--tone-danger-solid-bg);
+    color: var(--tone-danger-solid-fg);
+    box-shadow: var(--cad-shadow-soft);
   }
 
-  .cda-button--filled.cda-button--tone-dark,
-  .cda-button--outlined.cda-button--tone-dark {
-    border-color: var(--tone-dark-soft-border);
-    background: var(--tone-dark-soft-bg);
-    color: var(--tone-dark-soft-fg);
+  .ui-button--solid.ui-button--tone-danger:hover {
+    border-color: var(--tone-danger-solid-hover);
+    background: var(--tone-danger-solid-hover);
   }
 
-  .cda-button--filled.cda-button--tone-dark:hover,
-  .cda-button--outlined.cda-button--tone-dark:hover {
-    background: var(--tone-dark-soft-hover);
-  }
-
-  .cda-button--filled.cda-button--tone-secondary:hover,
-  .cda-button--outlined.cda-button--tone-secondary:hover {
-    background: var(--tone-secondary-soft-hover);
-  }
-
-  .cda-button--filled.cda-button--tone-success:hover,
-  .cda-button--outlined.cda-button--tone-success:hover {
-    background: var(--tone-success-soft-hover);
-  }
-
-  .cda-button--filled.cda-button--tone-info:hover,
-  .cda-button--outlined.cda-button--tone-info:hover {
-    background: var(--tone-info-soft-hover);
-  }
-
-  .cda-button--filled.cda-button--tone-warning:hover,
-  .cda-button--outlined.cda-button--tone-warning:hover {
-    background: var(--tone-warning-soft-hover);
-  }
-
-  .cda-button--filled.cda-button--tone-danger:hover,
-  .cda-button--outlined.cda-button--tone-danger:hover {
-    background: var(--tone-danger-soft-hover);
-  }
-
-  .cda-button--text {
+  .ui-button--text {
     @apply border-transparent bg-transparent shadow-none;
   }
 
-  .cda-button--text.cda-button--tone-danger {
+  .ui-button--text.ui-button--tone-danger {
     color: var(--tone-danger-soft-fg);
   }
 
-  .cda-button--text.cda-button--tone-danger:hover {
+  .ui-button--text.ui-button--tone-danger:hover {
     background: color-mix(in srgb, var(--tone-danger-soft-bg) 78%, transparent);
   }
 
-  .cda-button--text.cda-button--tone-secondary {
+  .ui-button--text.ui-button--tone-secondary {
     color: var(--tone-secondary-soft-fg);
   }
 
-  .cda-button--text.cda-button--tone-secondary:hover {
+  .ui-button--text.ui-button--tone-secondary:hover {
     background: color-mix(in srgb, var(--tone-secondary-soft-bg) 78%, transparent);
   }
 
-  .cda-button--text.cda-button--tone-success {
+  .ui-button--text.ui-button--tone-success {
     color: var(--tone-success-soft-fg);
   }
 
-  .cda-button--text.cda-button--tone-success:hover {
+  .ui-button--text.ui-button--tone-success:hover {
     background: color-mix(in srgb, var(--tone-success-soft-bg) 78%, transparent);
   }
 
-  .cda-button--text.cda-button--tone-info {
+  .ui-button--text.ui-button--tone-info {
     color: var(--tone-info-soft-fg);
   }
 
-  .cda-button--text.cda-button--tone-info:hover {
+  .ui-button--text.ui-button--tone-info:hover {
     background: color-mix(in srgb, var(--tone-info-soft-bg) 78%, transparent);
   }
 
-  .cda-button--text.cda-button--tone-warning {
+  .ui-button--text.ui-button--tone-warning {
     color: var(--tone-warning-soft-fg);
   }
 
-  .cda-button--text.cda-button--tone-warning:hover {
+  .ui-button--text.ui-button--tone-warning:hover {
     background: color-mix(in srgb, var(--tone-warning-soft-bg) 78%, transparent);
   }
 
-  .cda-button--text.cda-button--tone-primary,
-  .cda-button--text.cda-button--tone-light,
-  .cda-button--text.cda-button--tone-base,
-  .cda-button--text.cda-button--tone-dark {
+  .ui-button--text.ui-button--tone-primary,
+  .ui-button--text.ui-button--tone-default {
     color: var(--tone-primary-soft-fg);
   }
 
-  .cda-button--text.cda-button--tone-primary:hover,
-  .cda-button--text.cda-button--tone-light:hover,
-  .cda-button--text.cda-button--tone-base:hover,
-  .cda-button--text.cda-button--tone-dark:hover {
+  .ui-button--text.ui-button--tone-primary:hover,
+  .ui-button--text.ui-button--tone-default:hover {
     background: color-mix(in srgb, var(--tone-primary-soft-bg) 82%, transparent);
   }
 
-  .cda-button__spinner {
+  .ui-button__spinner {
     @apply inline-flex h-3 w-3 animate-spin rounded-full border-2 border-current border-r-transparent;
   }
 
-  .cda-button__token {
+  .ui-button__token {
     @apply min-w-0 text-[10px] font-bold uppercase tracking-[0.18em];
     overflow-wrap: anywhere;
   }
 
-  .cda-button--quick {
+  .ui-button--quick {
     @apply h-9 w-9 min-w-9 justify-center px-0 text-[10px] font-bold uppercase tracking-[0.18em];
-  }
-
-  .cad-card-button,
-  .zy-card-button {
-    @apply inline-flex h-9 items-center justify-center gap-2 border px-3 text-sm font-semibold transition-colors;
-    @apply disabled:cursor-not-allowed disabled:opacity-50;
-    border-radius: var(--cad-radius-control);
-    border-color: var(--tone-light-soft-border);
-    background: var(--tone-light-soft-bg);
-    color: var(--tone-light-soft-fg);
-  }
-
-  .cad-card-button:hover,
-  .zy-card-button:hover {
-    background: var(--tone-light-soft-hover);
-  }
-
-  .cad-card-button--ghost,
-  .zy-card-button--ghost {
-    @apply bg-transparent shadow-none;
-  }
-
-  .cad-card-button--warn,
-  .zy-card-button--warn {
-    border-color: var(--tone-danger-soft-border);
-    background: var(--tone-danger-soft-bg);
-    color: var(--tone-danger-soft-fg);
-  }
-
-  .cad-card-button--warn:hover,
-  .zy-card-button--warn:hover {
-    background: var(--tone-danger-soft-hover);
-  }
-
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 border px-4 py-2 text-sm font-semibold transition-colors;
-    @apply disabled:cursor-not-allowed disabled:opacity-50;
-    border-radius: var(--cad-radius-control);
-    border-color: var(--tone-light-soft-border);
-    background: var(--tone-light-soft-bg);
-    color: var(--tone-light-soft-fg);
-  }
-
-  .btn:hover {
-    background: var(--tone-light-soft-hover);
-  }
-
-  .btn.ghost {
-    @apply bg-transparent shadow-none;
-  }
-
-  .btn.xs {
-    @apply px-3 py-2 text-xs;
-  }
-
-  .btn.primary {
-    border-color: var(--tone-primary-solid-border);
-    background: var(--tone-primary-solid-bg);
-    color: var(--tone-primary-solid-fg);
-  }
-
-  .btn.primary:hover {
-    border-color: var(--tone-primary-solid-hover);
-    background: var(--tone-primary-solid-hover);
   }
 }

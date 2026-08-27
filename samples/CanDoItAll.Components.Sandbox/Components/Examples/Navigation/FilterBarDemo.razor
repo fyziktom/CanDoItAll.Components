@@ -7,6 +7,6 @@
         <DropDown TValue="string" Data="@ToolbarScopes" Value="@filterBarScope" ValueChanged="@(value => filterBarScope = value ?? ToolbarScopeAll)" aria-label="Scope" />
     </ChildContent>
     <Actions>
-        <Button Text="Reset" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => { filterBarQuery = string.Empty; filterBarScope = ToolbarScopeAll; })" />
+        <Button Text="Reset" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)" Click="@(() => { filterBarQuery = string.Empty; filterBarScope = ToolbarScopeAll; })" />
     </Actions>
 </FilterBar>

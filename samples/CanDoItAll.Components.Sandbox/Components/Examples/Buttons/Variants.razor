@@ -1,0 +1,12 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<Cluster Gap="LayoutGap.Medium">
+    @foreach (var variant in AllVariants)
+    {
+        <Button Text="@variant.ToString()" Variant="@variant" />
+    }
+</Cluster>
+
+@code {
+    private static readonly Variant[] AllVariants = Enum.GetValues<Variant>();
+}

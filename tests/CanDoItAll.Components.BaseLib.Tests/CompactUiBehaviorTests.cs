@@ -188,7 +188,7 @@ public sealed class CompactUiBehaviorTests
         Assert.DoesNotContain("sm:flex-row", cut.Find("div").ClassList);
         Assert.NotNull(cut.Find(".cda-secret-field__control"));
         Assert.Contains("flex-wrap", cut.Find(".cda-secret-field__actions").ClassList);
-        Assert.Equal("Show 30s", cut.Find(".cda-secret-field__reveal .rz-button-text").TextContent.Trim());
+        Assert.Equal("Show 30s", cut.Find(".cda-secret-field__reveal .ui-button__label").TextContent.Trim());
     }
 
     [Fact]

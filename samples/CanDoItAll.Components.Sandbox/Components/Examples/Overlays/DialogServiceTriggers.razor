@@ -3,14 +3,14 @@
 
 <Stack GapScale="LayoutGap.Medium">
     <Cluster Gap="LayoutGap.Small">
-        <Button Text="Compact dialog" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)"
+        <Button Text="Compact dialog" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)"
                 Click="@(() => OpenSizedDialog(ModalSize.Compact))" data-testid="open-compact-dialog" />
-        <Button Text="Wide dialog" ButtonStyle="@(ButtonStyle.Info)" Variant="@(Variant.Outlined)"
+        <Button Text="Wide dialog" Tone="@(ButtonTone.Info)" Variant="@(Variant.Outlined)"
                 Click="@(() => OpenSizedDialog(ModalSize.Wide))" data-testid="open-wide-dialog" />
-        <Button Text="Full dialog" ButtonStyle="@(ButtonStyle.Secondary)" Variant="@(Variant.Outlined)"
+        <Button Text="Full dialog" Tone="@(ButtonTone.Secondary)" Variant="@(Variant.Outlined)"
                 Click="@(() => OpenSizedDialog(ModalSize.Full))" data-testid="open-full-dialog" />
         <Button Text="Return object" Click="@OpenResultDialog" data-testid="open-result-dialog" />
-        <Button Text="Backdrop locked" ButtonStyle="@(ButtonStyle.Warning)" Variant="@(Variant.Outlined)"
+        <Button Text="Backdrop locked" Tone="@(ButtonTone.Warning)" Variant="@(Variant.Outlined)"
                 Click="@OpenBackdropLockedDialog" data-testid="open-backdrop-dialog" />
     </Cluster>
     <Alert AlertStyle="@(AlertStyle.Info)"><span data-testid="dialog-result">@DialogResultText</span></Alert>
@@ -36,7 +36,7 @@
                                                                              </Alert>
                                                                              <Cluster Gap="LayoutGap.Small">
                                                                                  <Button Text="Close"
-                                                                                         ButtonStyle="@(ButtonStyle.Light)"
+                                                                                         Tone="@(ButtonTone.Default)"
                                                                                          Variant="@(Variant.Outlined)"
                                                                                          Click="@(() => CloseDialogWithResult(dialog, $"{label} closed"))"
                                                                                          data-testid="close-sized-dialog" />
@@ -60,7 +60,7 @@
                                                                                                      data-testid="return-dialog-object" />
                                                                                                  <Button
                                                                                                      Text="Return review"
-                                                                                                     ButtonStyle="@(ButtonStyle.Warning)"
+                                                                                                     Tone="@(ButtonTone.Warning)"
                                                                                                      Variant="@(Variant.Outlined)"
                                                                                                      Click="@(() => CloseDialogWithDecision(dialog, ReviewStatus))" />
                                                                                              </Cluster>
@@ -74,7 +74,7 @@
                                                                              <TextBlock TextStyle="@(TextStyle.Body2)"
                                                                                         Value="Clicking outside this modal should leave it open. Use the explicit action to close it." />
                                                                              <Button Text="Close locked dialog"
-                                                                                     ButtonStyle="@(ButtonStyle.Warning)"
+                                                                                     Tone="@(ButtonTone.Warning)"
                                                                                      Variant="@(Variant.Outlined)"
                                                                                      Click="@(() => CloseDialogWithResult(dialog, LockedCloseResult))"
                                                                                      data-testid="close-backdrop-dialog" />

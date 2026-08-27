@@ -37,7 +37,7 @@
                 <span class="cda-gantt__status" role="status">@ScheduleSummary</span>
                 <Button Text="Export PNG"
                         Size="ButtonSize.Small"
-                        ButtonStyle="ButtonStyle.Info"
+                        Tone="ButtonTone.Info"
                         Disabled="@IsInteractionDisabled"
                         IsBusy="exportInFlight"
                         Click="DownloadPngAsync" />
@@ -118,7 +118,7 @@
                                                     Class="cda-gantt__task-order-button"
                                                     Size="ButtonSize.Small"
                                                     Variant="Variant.Text"
-                                                    ButtonStyle="ButtonStyle.Light"
+                                                    Tone="ButtonTone.Default"
                                                     Disabled="@(!CanChangeTaskOrder(taskIndex, taskIndex - 1))"
                                                     Click="() => RequestTaskOrderChangeAsync(task.Id, GanttTaskOrderPlacement.Before)"
                                                     title="@($"Move {task.Title} up")"
@@ -127,7 +127,7 @@
                                                     Class="cda-gantt__task-order-button"
                                                     Size="ButtonSize.Small"
                                                     Variant="Variant.Text"
-                                                    ButtonStyle="ButtonStyle.Light"
+                                                    Tone="ButtonTone.Default"
                                                     Disabled="@(!CanChangeTaskOrder(taskIndex, taskIndex + 1))"
                                                     Click="() => RequestTaskOrderChangeAsync(task.Id, GanttTaskOrderPlacement.After)"
                                                     title="@($"Move {task.Title} down")"

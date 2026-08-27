@@ -330,10 +330,10 @@
         "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
         "members": [
           "ctor()",
-          "property CanDoItAll.Components.BaseLib.ButtonLook Look {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonDensity Density {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonRounded Rounded {get;set;}",
           "property CanDoItAll.Components.BaseLib.ButtonSize Size {get;set;}",
-          "property CanDoItAll.Components.BaseLib.ButtonStyle ButtonStyle {get;set;}",
-          "property CanDoItAll.Components.BaseLib.Shade Shade {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonTone Tone {get;set;}",
           "property CanDoItAll.Components.BaseLib.Variant Variant {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback Click {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
@@ -349,22 +349,30 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.ButtonLook",
+        "name": "CanDoItAll.Components.BaseLib.ButtonDensity",
         "kind": "enum",
         "isAbstract": false,
         "isSealed": true,
         "baseType": "System.Enum",
         "members": [
           "field System.Int32 value__",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook Default",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook Legacy",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyExtraSmall",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyExtraSmallGhost",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyGhost",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyPrimaryFullWidth",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook SheetCard",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook SheetCardGhost",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook SheetCardWarn"
+          "field static const CanDoItAll.Components.BaseLib.ButtonDensity Comfortable",
+          "field static const CanDoItAll.Components.BaseLib.ButtonDensity Compact",
+          "field static const CanDoItAll.Components.BaseLib.ButtonDensity Normal"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.ButtonRounded",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded Default",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded Large",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded Medium",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded None"
         ]
       },
       {
@@ -381,22 +389,20 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.ButtonStyle",
+        "name": "CanDoItAll.Components.BaseLib.ButtonTone",
         "kind": "enum",
         "isAbstract": false,
         "isSealed": true,
         "baseType": "System.Enum",
         "members": [
           "field System.Int32 value__",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Base",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Danger",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Dark",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Info",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Light",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Primary",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Secondary",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Success",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Warning"
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Danger",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Default",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Info",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Primary",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Secondary",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Success",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Warning"
         ]
       },
       {
@@ -709,7 +715,7 @@
         "members": [
           "ctor()",
           "method System.Threading.Tasks.ValueTask DisposeAsync()",
-          "property CanDoItAll.Components.BaseLib.ButtonStyle ButtonStyle {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonTone Tone {get;set;}",
           "property CanDoItAll.Components.BaseLib.CopyButtonDisplayMode DisplayMode {get;set;}",
           "property CanDoItAll.Components.BaseLib.CopyButtonSize Size {get;set;}",
           "property CanDoItAll.Components.BaseLib.Variant Variant {get;set;}",
@@ -1943,7 +1949,7 @@
         "members": [
           "ctor()",
           "property CanDoItAll.Components.BaseLib.ButtonSize Size {get;set;}",
-          "property CanDoItAll.Components.BaseLib.ButtonStyle ButtonStyle {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonTone Tone {get;set;}",
           "property CanDoItAll.Components.BaseLib.TooltipPosition Position {get;set;}",
           "property CanDoItAll.Components.BaseLib.Variant Variant {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback Click {get;set;}",
@@ -3790,8 +3796,8 @@
         "members": [
           "field System.Int32 value__",
           "field static const CanDoItAll.Components.BaseLib.Variant Filled",
-          "field static const CanDoItAll.Components.BaseLib.Variant Flat",
           "field static const CanDoItAll.Components.BaseLib.Variant Outlined",
+          "field static const CanDoItAll.Components.BaseLib.Variant Solid",
           "field static const CanDoItAll.Components.BaseLib.Variant Text"
         ]
       },

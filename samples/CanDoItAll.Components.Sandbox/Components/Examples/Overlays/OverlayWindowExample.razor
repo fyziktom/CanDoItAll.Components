@@ -3,7 +3,7 @@
 <div class="relative min-h-[28rem] overflow-hidden rounded-[1.5rem] border border-chrome-200 bg-white shadow-sm shadow-chrome-200/60" data-cda-overlay-frame data-cda-overlay-container data-testid="sandbox-overlay-window-frame">
     <div class="relative z-[2] flex flex-wrap items-center justify-between gap-3 border-b border-chrome-200 bg-chrome-50/95 px-4 py-3" data-cda-overlay-safe-top data-testid="sandbox-overlay-window-safe-top">
         <div class="min-w-0"><p class="cda-eyebrow cda-eyebrow--tight">OverlayLib</p><p class="break-words text-sm font-semibold text-chrome-800">Window host frame</p></div>
-        <Cluster Gap="LayoutGap.Small"><Button Text="Show window" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@ShowOverlayWindow" data-testid="show-overlay-window" /><Button Text="Reset" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@ResetOverlayWindow" data-testid="reset-overlay-window" /></Cluster>
+        <Cluster Gap="LayoutGap.Small"><Button Text="Show window" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)" Click="@ShowOverlayWindow" data-testid="show-overlay-window" /><Button Text="Reset" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)" Click="@ResetOverlayWindow" data-testid="reset-overlay-window" /></Cluster>
     </div>
     <div class="grid min-h-[22rem] gap-4 p-4 md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.65fr)]">
         <div class="min-w-0 space-y-3 rounded-[1rem] border border-dashed border-chrome-300 bg-chrome-50/70 p-4">
@@ -20,7 +20,7 @@
                 <Stack GapScale="LayoutGap.Medium">
                     <TextBlock TextStyle="@(TextStyle.Body2)" Value="@OverlayWindowBodyCopy" />
                     <Alert AlertStyle="@(AlertStyle.Info)">This floating surface is rendered by OverlayLib, while the surrounding sandbox content remains ordinary BaseLib layout.</Alert>
-                    <Toolbar data-testid="sandbox-overlay-window-toolbar"><ToolbarRow><ToolbarFields><TextBox Value="@OverlayWindowSearch" ReadOnly="true" aria-label="Overlay window search preview" data-testid="sandbox-overlay-window-search" /></ToolbarFields><ToolbarActions><Button Text="Refresh" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Disabled="@IsDisabled" /></ToolbarActions></ToolbarRow></Toolbar>
+                    <Toolbar data-testid="sandbox-overlay-window-toolbar"><ToolbarRow><ToolbarFields><TextBox Value="@OverlayWindowSearch" ReadOnly="true" aria-label="Overlay window search preview" data-testid="sandbox-overlay-window-search" /></ToolbarFields><ToolbarActions><Button Text="Refresh" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)" Disabled="@IsDisabled" /></ToolbarActions></ToolbarRow></Toolbar>
                     <Cluster Gap="LayoutGap.Small"><StatusBadge Text="Geometry" Tone="success" /><StatusBadge Text="Minimize" Tone="info" /><StatusBadge Text="Hide/show" Tone="warning" /></Cluster>
                 </Stack>
             </ChildContent>

@@ -1,0 +1,21 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<Stack GapScale="LayoutGap.Medium">
+    @foreach (var variant in DisplayOrderVariants)
+    {
+        <div class="space-y-2">
+            <TextBlock TextStyle="TextStyle.Subtitle2" Value="@variant.ToString()" />
+            <Cluster Gap="LayoutGap.Medium">
+                @foreach (var tone in AllTones)
+                {
+                    <Button Text="@tone.ToString()" Tone="@tone" Variant="@variant" Disabled="true" />
+                }
+            </Cluster>
+        </div>
+    }
+</Stack>
+
+@code {
+    private static readonly ButtonTone[] AllTones = Enum.GetValues<ButtonTone>();
+    private static readonly Variant[] DisplayOrderVariants = [Variant.Solid, Variant.Filled, Variant.Outlined, Variant.Text];
+}

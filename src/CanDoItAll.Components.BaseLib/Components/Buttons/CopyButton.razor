@@ -22,7 +22,7 @@ else
 {
     <Button Text="@ResolveDisplayedText()"
             Icon="@ResolveButtonIcon()"
-            ButtonStyle="@ButtonStyle"
+            Tone="@Tone"
             Size="@ResolveButtonSize()"
             Variant="@Variant"
             Disabled="@IsDisabled"
@@ -97,9 +97,9 @@ else
     [Parameter]
     public CopyButtonSize Size { get; set; } = CopyButtonSize.Medium;
 
-    /// <summary>Semantic tone forwarded to the underlying button. Copy is a utility action, so this defaults to <c>Light</c>.</summary>
+    /// <summary>Semantic tone forwarded to the underlying button. Copy is a utility action, so this defaults to <c>Default</c>.</summary>
     [Parameter]
-    public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Light;
+    public ButtonTone Tone { get; set; } = ButtonTone.Default;
 
     /// <summary>Emphasis treatment forwarded to the underlying button.</summary>
     [Parameter]

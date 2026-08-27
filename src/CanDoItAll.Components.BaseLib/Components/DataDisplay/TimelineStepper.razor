@@ -71,7 +71,7 @@
         </div>
         <div class="cda-timeline-stepper__actions">
             <Button Icon="chevron_left"
-                    ButtonStyle="ButtonStyle.Secondary"
+                    Tone="ButtonTone.Secondary"
                     Variant="Variant.Outlined"
                     Size="ButtonSize.Small"
                     Disabled="@(!CanStepBack)"
@@ -81,7 +81,7 @@
             @if (ShowPlayPause)
             {
                 <Button Icon="@PlayPauseIcon"
-                        ButtonStyle="ButtonStyle.Secondary"
+                        Tone="ButtonTone.Secondary"
                         Variant="Variant.Outlined"
                         Size="ButtonSize.Small"
                         Disabled="@(!CanPlayPause)"
@@ -91,7 +91,7 @@
             }
             <Button Text="@NextText"
                     Icon="chevron_right"
-                    ButtonStyle="ButtonStyle.Primary"
+                    Tone="ButtonTone.Primary"
                     Size="ButtonSize.Small"
                     Disabled="@(!CanStepForward)"
                     Click="NextClicked"

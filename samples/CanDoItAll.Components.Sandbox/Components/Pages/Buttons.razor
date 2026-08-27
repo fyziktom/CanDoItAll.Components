@@ -19,11 +19,46 @@
 
                     @if (section.ComponentName == "Button")
                     {
-                        <ExampleBlock Title="Primary hierarchy"
-                                      Description="One filled primary action carries the page; everything else steps down through outlined and text variants."
-                                      SourceId="examples/Buttons/PrimaryHierarchy.razor"
-                                      ApiTypes="@ButtonApiTypes">
-                            <PrimaryHierarchy />
+                        <ExampleBlock Title="Tones"
+                                      Description="Every ButtonTone value, one row per Variant, Solid first."
+                                      SourceId="examples/Buttons/Tones.razor"
+                                      ComponentType="typeof(Button)">
+                            <Tones />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Disabled"
+                                      Description="Every ButtonTone value, one row per Variant, in the disabled state."
+                                      SourceId="examples/Buttons/DisabledTones.razor"
+                                      ComponentType="typeof(Button)">
+                            <DisabledTones />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Variants"
+                                      Description="Emphasis treatment: Filled (tonal), Solid, Outlined, and Text at the default Primary tone."
+                                      SourceId="examples/Buttons/Variants.razor"
+                                      ComponentType="typeof(Button)">
+                            <Variants />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Sizes"
+                                      Description="Physical dimension scale: Small, Medium, and Large."
+                                      SourceId="examples/Buttons/Sizes.razor"
+                                      ComponentType="typeof(Button)">
+                            <Sizes />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Density"
+                                      Description="Density controls vertical padding independently of Size: Normal, Comfortable, and Compact."
+                                      SourceId="examples/Buttons/Densities.razor"
+                                      ComponentType="typeof(Button)">
+                            <Densities />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Rounded corners"
+                                      Description="Rounded controls corner radius independently of tone and size: None, Default, Medium, and Large."
+                                      SourceId="examples/Buttons/RoundedCorners.razor"
+                                      ComponentType="typeof(Button)">
+                            <RoundedCorners />
                         </ExampleBlock>
 
                         <ExampleBlock Title="Icon-only actions"
@@ -52,7 +87,6 @@
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Buttons);
     private static readonly IReadOnlyList<SandboxExampleDefinition> RegisteredExamples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Buttons);
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/buttons");
-    private static readonly IReadOnlyList<Type> ButtonApiTypes = [typeof(Button)];
     private static readonly IReadOnlyList<Type> CopyButtonApiTypes = [typeof(CopyButton)];
 
 }

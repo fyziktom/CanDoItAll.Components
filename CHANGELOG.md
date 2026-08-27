@@ -6,8 +6,57 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ### BaseLib
 
+#### Public interface
+
+- **Breaking:** `Button.ButtonStyle` renamed to `Tone` (type `ButtonStyle` renamed to `ButtonTone`,
+  matching the existing `BadgeTone`/`PillTone`/`TabsTone` naming convention). `Light` and `Base` collapsed
+  into `Default`; `Dark` removed (both were only reachable from `Button.razor`'s own switch, never set by
+  a consumer). Update `ButtonStyle="ButtonStyle.Light"` to `Tone="ButtonTone.Default"`. The same rename
+  applies to `PageHeaderActionButton.ButtonStyle` -> `Tone`, `CopyButton.ButtonStyle` -> `Tone`,
+  `QrCodeButton.ButtonStyle` -> `Tone`, and `QrScanButton.ButtonStyle` -> `Tone`.
+- **Breaking:** `Button.Shade` and `Button.Look` (and the `ButtonLook` enum) removed. Both were dead
+  escape hatches: `Shade` was declared but never read, and `Look` had zero consumers anywhere in the
+  repo. The legacy `.cad-card-button`/`.zy-card-button`/`.btn`/`.btn.ghost`/`.btn.xs`/`.btn.primary` CSS
+  backing `Look` was removed alongside it.
+- **Breaking:** Button's CSS classes renamed from the `cda-button*`/bare `rz-button`/`rz-button-text`
+  family to `.ui-button*` (e.g. `cda-button--tone-primary` -> `ui-button--tone-primary`,
+  `rz-button-text` -> `ui-button__label`), per the `.ui-`/`--ui-` namespacing convention. A consumer with
+  structural CSS targeting the old class names must update selectors.
+- Added: `Button.Density` (`ButtonDensity`: `Normal`/`Comfortable`/`Compact`) controls vertical padding
+  independently of `Size`. `Normal` (the default) is a no-op — existing markup is visually unchanged.
+- Added: `Button.Rounded` (`ButtonRounded`: `None`/`Default`/`Medium`/`Large`) controls corner radius,
+  increasing in that order. **Breaking:** `Default` (the parameter's default value) is now a smaller
+  radius than the pre-`Rounded` button corner — `Medium` reproduces the old radius. A consumer relying on
+  the previous default corner radius should set `Rounded="ButtonRounded.Medium"`. See the new
+  standardized-`Rounded`-property development rule in `CLAUDE.md`.
+- **Breaking:** `Variant.Flat` renamed to `Solid`, and `Button.Variant`'s default value changed from
+  `Filled` to `Solid`. The four `Variant` treatments now render distinctly for every `Tone` (previously
+  `Flat` silently aliased to `Filled`, and `Filled`/`Outlined` were visually identical apart from
+  `Primary`):
+  - `Solid` — fully saturated tone-colored fill with white/light text (what `Filled`'s `Primary` case
+    used to look like; now available uniformly across every tone, and it's the default).
+  - `Filled` — visibly tinted ("tonal") background, now applied uniformly to every tone including
+    `Primary` (previously `Primary` alone rendered solid inside `Filled`). `Primary` and `Default` now use
+    a distinct, more visible tint (new `--tone-primary-tonal-bg`/`--tone-light-tonal-bg`) instead of the
+    shared `-soft-bg` tokens, which are a near-white 96% mix and were effectively invisible as a button
+    fill; other tones already had a visible `-soft-bg` and are unchanged.
+  - `Outlined` — no fill at rest (previously it shared `Filled`'s soft background); border now uses the
+    tone's text color (`-soft-fg`) instead of the lighter `-soft-border`, for more contrast and a more
+    uniform look with the text. A tint appears on hover.
+  - `Text` — unchanged.
+
+  A consumer that wants the previous default look should set `Variant="Variant.Filled"` explicitly (soft/tonal, no
+  longer the default) or `Variant="Variant.Solid"` for the previous `Primary`-only solid look now
+  available on every tone. Added `--tone-secondary-solid-*`, `--tone-light-solid-*`, `--tone-primary-tonal-*`,
+  and `--tone-light-tonal-*` custom-property pairs (`Tailwind/theme.css`, light and dark blocks) plus
+  missing `-solid-hover`/`-solid-border` pairs for `success`/`info`/`warning`/`danger`, deriving from the
+  existing color scale per the centralized-color rule, to back every tone's new `Solid` treatment and the
+  brighter `Primary`/`Default` `Filled` tint.
+
 #### Internal
 
+- Changed: `ButtonPrimitives.cs`/`Tailwind/buttons/button.css` migrated off the `cda-`/`rz-`-era class
+  naming onto the `.ui-button` convention (rule 3), matching the existing per-component CSS reorg.
 - Changed: Tailwind source files under `Tailwind/` now mirror
   `src/CanDoItAll.Components.BaseLib/Components/<Group>/<Component>.razor`, in lowercase-kebab (e.g.
   `buttons/copy-button.css` for `Buttons/CopyButton.razor`). No emitted class names changed.

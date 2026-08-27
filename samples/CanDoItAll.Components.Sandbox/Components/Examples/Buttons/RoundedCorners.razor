@@ -1,0 +1,12 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<Cluster Gap="LayoutGap.Medium">
+    @foreach (var rounded in ButtonRoundedValues)
+    {
+        <Button Text="@rounded.ToString()" Rounded="@rounded" />
+    }
+</Cluster>
+
+@code {
+    private static readonly ButtonRounded[] ButtonRoundedValues = Enum.GetValues<ButtonRounded>();
+}

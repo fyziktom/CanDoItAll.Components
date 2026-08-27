@@ -10,7 +10,7 @@
                TestId="@TooltipTestId"
                TabIndex="-1">
     <Button Icon="@Icon"
-            ButtonStyle="@ButtonStyle"
+            Tone="@Tone"
             Size="@Size"
             Variant="@Variant"
             Disabled="@Disabled"
@@ -41,7 +41,7 @@
     public string? TooltipText { get; set; }
 
     [Parameter]
-    public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Light;
+    public ButtonTone Tone { get; set; } = ButtonTone.Default;
 
     [Parameter]
     public ButtonSize Size { get; set; } = ButtonSize.Small;
@@ -96,5 +96,5 @@
             : TooltipText;
 
     private string ResolveButtonClass()
-        => CssClassBuilder.Join("cda-button--quick", Class);
+        => CssClassBuilder.Join("ui-button--quick", Class);
 }
