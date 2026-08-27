@@ -2,6 +2,10 @@
 
 All notable changes to this repository's packages are recorded here, per the changelog rule in `CLAUDE.md`.
 
+## [Unreleased] — 2.0.1
+
+
+
 ## [Unreleased] — 2.0.0
 
 ### BaseLib
