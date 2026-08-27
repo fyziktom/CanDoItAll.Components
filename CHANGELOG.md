@@ -57,6 +57,18 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 - Changed: `ButtonPrimitives.cs`/`Tailwind/buttons/button.css` migrated off the `cda-`/`rz-`-era class
   naming onto the `.ui-button` convention (rule 3), matching the existing per-component CSS reorg.
+- Changed: `Tailwind/buttons/button.css`'s `.ui-button--solid` tone rules now express hover/active state
+  via `@apply hover:bg-(--tone-*-solid-hover)`/`@apply active:bg-(--tone-*-solid-bg)`, matching the
+  `tone-primary` rule, instead of a separate `:hover` selector that also toggled `border-color`. No
+  emitted class names or default colors changed.
+- Changed: `Tailwind/buttons/button.css`'s `.ui-button--filled`/`.ui-button--outlined` tone rules split
+  out of their previous comma-grouped `.ui-button--filled.ui-button--tone-X, .ui-button--outlined.ui-button--tone-X`
+  selectors into one selector per class combination, each declaring `color`/`border-color`/`background`
+  then hover/active state via `@apply hover:bg-(...)`/`@apply active:bg-(...)`, matching the
+  `.ui-button--solid`/`.ui-button--text` rules' shape. Filled/outlined `secondary`/`success`/`info`/
+  `warning`/`danger` tones gained hover/active feedback they previously lacked (only `primary`/`default`
+  had it before); values reuse each tone's existing `-soft-hover` token, so this is additive, not a
+  color change.
 - Changed: Tailwind source files under `Tailwind/` now mirror
   `src/CanDoItAll.Components.BaseLib/Components/<Group>/<Component>.razor`, in lowercase-kebab (e.g.
   `buttons/copy-button.css` for `Buttons/CopyButton.razor`). No emitted class names changed.

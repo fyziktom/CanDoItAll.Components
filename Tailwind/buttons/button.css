@@ -3,6 +3,7 @@
     @apply inline-flex max-w-full min-w-0 items-center justify-center gap-2 border font-semibold leading-snug transition-colors;
     @apply disabled:cursor-not-allowed disabled:opacity-50;
     @apply rounded-md;
+    @apply cursor-pointer;
   }
 
   .ui-button .ui-button__label {
@@ -46,141 +47,113 @@
      Outlined: no fill at rest (background: transparent, below); border uses the tone's text
      color instead of its (much lighter) soft-border, so the outline reads clearly on its own. */
 
-  .ui-button--filled.ui-button--tone-primary,
-  .ui-button--outlined.ui-button--tone-primary {
-    color: var(--tone-primary-soft-fg);
+  .ui-button--outlined {
+    background: transparent;
   }
 
   .ui-button--filled.ui-button--tone-primary {
+    color: var(--tone-primary-soft-fg);
     border-color: var(--tone-primary-soft-border);
     background: var(--tone-primary-tonal-bg);
+    @apply hover:bg-(--tone-primary-tonal-hover)/60;
+    @apply active:bg-(--tone-primary-tonal-bg);
   }
 
   .ui-button--outlined.ui-button--tone-primary {
+    color: var(--tone-primary-soft-fg);
     border-color: var(--tone-primary-soft-fg);
-  }
-
-  .ui-button--filled.ui-button--tone-primary:hover,
-  .ui-button--outlined.ui-button--tone-primary:hover {
-    background: var(--tone-primary-tonal-hover);
-  }
-
-  .ui-button--filled.ui-button--tone-default,
-  .ui-button--outlined.ui-button--tone-default {
-    color: var(--tone-light-soft-fg);
+    @apply hover:bg-(--tone-primary-tonal-hover)/60;
+    @apply active:bg-(--tone-primary-tonal-hover)/70;
   }
 
   .ui-button--filled.ui-button--tone-default {
+    color: var(--tone-light-soft-fg);
     border-color: var(--tone-light-soft-border);
     background: var(--tone-light-tonal-bg);
+    @apply hover:bg-(--tone-light-tonal-hover)/60;
+    @apply active:bg-(--tone-light-tonal-bg);
   }
 
   .ui-button--outlined.ui-button--tone-default {
+    color: var(--tone-light-soft-fg);
     border-color: var(--tone-light-soft-fg);
-  }
-
-  .ui-button--filled.ui-button--tone-default:hover,
-  .ui-button--outlined.ui-button--tone-default:hover {
-    background: var(--tone-light-tonal-hover);
-  }
-
-  .ui-button--filled.ui-button--tone-secondary,
-  .ui-button--outlined.ui-button--tone-secondary {
-    color: var(--tone-secondary-soft-fg);
+    @apply hover:bg-(--tone-light-tonal-hover)/60;
+    @apply active:bg-(--tone-light-tonal-hover)/70;
   }
 
   .ui-button--filled.ui-button--tone-secondary {
+    color: var(--tone-secondary-soft-fg);
     border-color: var(--tone-secondary-soft-border);
     background: var(--tone-secondary-soft-bg);
+    @apply hover:bg-(--tone-secondary-soft-hover)/60;
+    @apply active:bg-(--tone-secondary-soft-bg);
   }
 
   .ui-button--outlined.ui-button--tone-secondary {
+    color: var(--tone-secondary-soft-fg);
     border-color: var(--tone-secondary-soft-fg);
-  }
-
-  .ui-button--filled.ui-button--tone-success,
-  .ui-button--outlined.ui-button--tone-success {
-    color: var(--tone-success-soft-fg);
+    @apply hover:bg-(--tone-secondary-soft-hover)/60;
+    @apply active:bg-(--tone-secondary-soft-hover)/70;
   }
 
   .ui-button--filled.ui-button--tone-success {
+    color: var(--tone-success-soft-fg);
     border-color: var(--tone-success-soft-border);
     background: var(--tone-success-soft-bg);
+    @apply hover:bg-(--tone-success-soft-hover)/60;
+    @apply active:bg-(--tone-success-soft-bg);
   }
 
   .ui-button--outlined.ui-button--tone-success {
+    color: var(--tone-success-soft-fg);
     border-color: var(--tone-success-soft-fg);
-  }
-
-  .ui-button--filled.ui-button--tone-info,
-  .ui-button--outlined.ui-button--tone-info {
-    color: var(--tone-info-soft-fg);
+    @apply hover:bg-(--tone-success-soft-hover)/60;
+    @apply active:bg-(--tone-success-soft-hover)/70;
   }
 
   .ui-button--filled.ui-button--tone-info {
+    color: var(--tone-info-soft-fg);
     border-color: var(--tone-info-soft-border);
     background: var(--tone-info-soft-bg);
+    @apply hover:bg-(--tone-info-soft-hover)/60;
+    @apply active:bg-(--tone-info-soft-bg);
   }
 
   .ui-button--outlined.ui-button--tone-info {
+    color: var(--tone-info-soft-fg);
     border-color: var(--tone-info-soft-fg);
-  }
-
-  .ui-button--filled.ui-button--tone-warning,
-  .ui-button--outlined.ui-button--tone-warning {
-    color: var(--tone-warning-soft-fg);
+    @apply hover:bg-(--tone-info-soft-hover)/60;
+    @apply active:bg-(--tone-info-soft-hover)/70;
   }
 
   .ui-button--filled.ui-button--tone-warning {
+    color: var(--tone-warning-soft-fg);
     border-color: var(--tone-warning-soft-border);
     background: var(--tone-warning-soft-bg);
+    @apply hover:bg-(--tone-warning-soft-hover)/60;
+    @apply active:bg-(--tone-warning-soft-bg);
   }
 
   .ui-button--outlined.ui-button--tone-warning {
+    color: var(--tone-warning-soft-fg);
     border-color: var(--tone-warning-soft-fg);
-  }
-
-  .ui-button--filled.ui-button--tone-danger,
-  .ui-button--outlined.ui-button--tone-danger {
-    color: var(--tone-danger-soft-fg);
+    @apply hover:bg-(--tone-warning-soft-hover)/60;
+    @apply active:bg-(--tone-warning-soft-hover)/70;
   }
 
   .ui-button--filled.ui-button--tone-danger {
+    color: var(--tone-danger-soft-fg);
     border-color: var(--tone-danger-soft-border);
     background: var(--tone-danger-soft-bg);
+    @apply hover:bg-(--tone-danger-soft-hover)/60;
+    @apply active:bg-(--tone-danger-soft-bg);
   }
 
   .ui-button--outlined.ui-button--tone-danger {
+    color: var(--tone-danger-soft-fg);
     border-color: var(--tone-danger-soft-fg);
-  }
-
-  .ui-button--filled.ui-button--tone-secondary:hover,
-  .ui-button--outlined.ui-button--tone-secondary:hover {
-    background: var(--tone-secondary-soft-hover);
-  }
-
-  .ui-button--filled.ui-button--tone-success:hover,
-  .ui-button--outlined.ui-button--tone-success:hover {
-    background: var(--tone-success-soft-hover);
-  }
-
-  .ui-button--filled.ui-button--tone-info:hover,
-  .ui-button--outlined.ui-button--tone-info:hover {
-    background: var(--tone-info-soft-hover);
-  }
-
-  .ui-button--filled.ui-button--tone-warning:hover,
-  .ui-button--outlined.ui-button--tone-warning:hover {
-    background: var(--tone-warning-soft-hover);
-  }
-
-  .ui-button--filled.ui-button--tone-danger:hover,
-  .ui-button--outlined.ui-button--tone-danger:hover {
-    background: var(--tone-danger-soft-hover);
-  }
-
-  .ui-button--outlined {
-    background: transparent;
+    @apply hover:bg-(--tone-danger-soft-hover)/60;
+    @apply active:bg-(--tone-danger-soft-hover)/70;
   }
 
   /* Solid: fully saturated fill, same treatment for every tone. */
@@ -190,11 +163,8 @@
     background: var(--tone-primary-solid-bg);
     color: var(--tone-primary-solid-fg);
     box-shadow: var(--cad-shadow-soft);
-  }
-
-  .ui-button--solid.ui-button--tone-primary:hover {
-    border-color: var(--tone-primary-solid-hover);
-    background: var(--tone-primary-solid-hover);
+    @apply hover:bg-(--tone-primary-solid-hover);
+    @apply active:bg-(--tone-primary-solid-bg);
   }
 
   .ui-button--solid.ui-button--tone-default {
@@ -202,11 +172,8 @@
     background: var(--tone-light-solid-bg);
     color: var(--tone-light-solid-fg);
     box-shadow: var(--cad-shadow-soft);
-  }
-
-  .ui-button--solid.ui-button--tone-default:hover {
-    border-color: var(--tone-light-solid-hover);
-    background: var(--tone-light-solid-hover);
+    @apply hover:bg-(--tone-light-solid-hover);
+    @apply active:bg-(--tone-light-solid-bg);
   }
 
   .ui-button--solid.ui-button--tone-secondary {
@@ -214,11 +181,8 @@
     background: var(--tone-secondary-solid-bg);
     color: var(--tone-secondary-solid-fg);
     box-shadow: var(--cad-shadow-soft);
-  }
-
-  .ui-button--solid.ui-button--tone-secondary:hover {
-    border-color: var(--tone-secondary-solid-hover);
-    background: var(--tone-secondary-solid-hover);
+    @apply hover:bg-(--tone-secondary-solid-hover);
+    @apply active:bg-(--tone-secondary-solid-bg);
   }
 
   .ui-button--solid.ui-button--tone-success {
@@ -226,11 +190,8 @@
     background: var(--tone-success-solid-bg);
     color: var(--tone-success-solid-fg);
     box-shadow: var(--cad-shadow-soft);
-  }
-
-  .ui-button--solid.ui-button--tone-success:hover {
-    border-color: var(--tone-success-solid-hover);
-    background: var(--tone-success-solid-hover);
+    @apply hover:bg-(--tone-success-solid-hover);
+    @apply active:bg-(--tone-success-solid-bg);
   }
 
   .ui-button--solid.ui-button--tone-info {
@@ -238,11 +199,8 @@
     background: var(--tone-info-solid-bg);
     color: var(--tone-info-solid-fg);
     box-shadow: var(--cad-shadow-soft);
-  }
-
-  .ui-button--solid.ui-button--tone-info:hover {
-    border-color: var(--tone-info-solid-hover);
-    background: var(--tone-info-solid-hover);
+    @apply hover:bg-(--tone-info-solid-hover);
+    @apply active:bg-(--tone-info-solid-bg);
   }
 
   .ui-button--solid.ui-button--tone-warning {
@@ -250,11 +208,8 @@
     background: var(--tone-warning-solid-bg);
     color: var(--tone-warning-solid-fg);
     box-shadow: var(--cad-shadow-soft);
-  }
-
-  .ui-button--solid.ui-button--tone-warning:hover {
-    border-color: var(--tone-warning-solid-hover);
-    background: var(--tone-warning-solid-hover);
+    @apply hover:bg-(--tone-warning-solid-hover);
+    @apply active:bg-(--tone-warning-solid-bg);
   }
 
   .ui-button--solid.ui-button--tone-danger {
@@ -262,11 +217,8 @@
     background: var(--tone-danger-solid-bg);
     color: var(--tone-danger-solid-fg);
     box-shadow: var(--cad-shadow-soft);
-  }
-
-  .ui-button--solid.ui-button--tone-danger:hover {
-    border-color: var(--tone-danger-solid-hover);
-    background: var(--tone-danger-solid-hover);
+    @apply hover:bg-(--tone-danger-solid-hover);
+    @apply active:bg-(--tone-danger-solid-bg);
   }
 
   .ui-button--text {
@@ -275,52 +227,39 @@
 
   .ui-button--text.ui-button--tone-danger {
     color: var(--tone-danger-soft-fg);
-  }
-
-  .ui-button--text.ui-button--tone-danger:hover {
-    background: color-mix(in srgb, var(--tone-danger-soft-bg) 78%, transparent);
+    @apply hover:bg-(--tone-danger-soft-bg)/78;
+    @apply active:bg-(--tone-danger-soft-bg);
   }
 
   .ui-button--text.ui-button--tone-secondary {
     color: var(--tone-secondary-soft-fg);
-  }
-
-  .ui-button--text.ui-button--tone-secondary:hover {
-    background: color-mix(in srgb, var(--tone-secondary-soft-bg) 78%, transparent);
+    @apply hover:bg-(--tone-secondary-soft-bg)/70;
+    @apply active:bg-(--tone-secondary-soft-bg);
   }
 
   .ui-button--text.ui-button--tone-success {
     color: var(--tone-success-soft-fg);
-  }
-
-  .ui-button--text.ui-button--tone-success:hover {
-    background: color-mix(in srgb, var(--tone-success-soft-bg) 78%, transparent);
+    @apply hover:bg-(--tone-success-soft-bg)/70;
+    @apply active:bg-(--tone-success-soft-bg);
   }
 
   .ui-button--text.ui-button--tone-info {
     color: var(--tone-info-soft-fg);
-  }
-
-  .ui-button--text.ui-button--tone-info:hover {
-    background: color-mix(in srgb, var(--tone-info-soft-bg) 78%, transparent);
+    @apply hover:bg-(--tone-info-soft-bg)/70;
+    @apply active:bg-(--tone-info-soft-bg);
   }
 
   .ui-button--text.ui-button--tone-warning {
     color: var(--tone-warning-soft-fg);
-  }
-
-  .ui-button--text.ui-button--tone-warning:hover {
-    background: color-mix(in srgb, var(--tone-warning-soft-bg) 78%, transparent);
+    @apply hover:bg-(--tone-warning-soft-bg)/70;
+    @apply active:bg-(--tone-warning-soft-bg);
   }
 
   .ui-button--text.ui-button--tone-primary,
   .ui-button--text.ui-button--tone-default {
     color: var(--tone-primary-soft-fg);
-  }
-
-  .ui-button--text.ui-button--tone-primary:hover,
-  .ui-button--text.ui-button--tone-default:hover {
-    background: color-mix(in srgb, var(--tone-primary-soft-bg) 82%, transparent);
+    @apply hover:bg-(--tone-primary-soft-bg)/70;
+    @apply active:bg-(--tone-primary-soft-bg);
   }
 
   .ui-button__spinner {
