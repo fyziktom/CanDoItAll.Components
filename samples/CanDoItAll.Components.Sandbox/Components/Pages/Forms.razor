@@ -117,6 +117,15 @@
                             <CheckboxOptionExample />
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "FileInput")
+                    {
+                        <ExampleBlock Title="Attachment picker"
+                                      Description="A plain inline file field styled like the rest of the form, no drop zone -- for the common single-file case."
+                                      SourceId="examples/Forms/FileInputExample.razor"
+                                      ApiTypes="@FileInputApiTypes">
+                            <FileInputExample />
+                        </ExampleBlock>
+                    }
                     else if (section.ComponentName == "FileUpload")
                     {
                         <ExampleBlock Title="MusicXML upload"
@@ -256,6 +265,7 @@
     private static readonly IReadOnlyList<Type> EditableApiTypes = [typeof(Editable<FormsShowcaseBase.EditableReviewItem>)];
     private static readonly IReadOnlyList<Type> CheckBoxApiTypes = [typeof(CheckBox<bool>)];
     private static readonly IReadOnlyList<Type> CheckboxOptionApiTypes = [typeof(CheckboxOption<bool>)];
+    private static readonly IReadOnlyList<Type> FileInputApiTypes = [typeof(FileInput)];
     private static readonly IReadOnlyList<Type> FileUploadApiTypes = [typeof(FileUpload)];
     private static readonly IReadOnlyList<Type> FieldsetApiTypes = [typeof(Fieldset)];
     private static readonly IReadOnlyList<Type> FormFieldApiTypes = [typeof(FormField)];

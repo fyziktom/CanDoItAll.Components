@@ -33,6 +33,8 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected int uploadedFileCount;
     protected long uploadedTotalSizeBytes;
     protected IReadOnlyList<string> uploadedFileNames = [];
+    protected int fileInputSelectionCount;
+    protected string? fileInputFileName;
     protected bool CanReadStorage { get; set; } = true;
     protected bool CanWriteStorage { get; set; }
 
@@ -64,6 +66,7 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected Task HandleAdvancedReset() { AdvancedState = CreateAdvancedState(); advancedChangeCount++; return Task.CompletedTask; }
     protected Task HandleEditableChanged(EditableReviewItem item) { EditableState = item; editableSaveCount++; return Task.CompletedTask; }
     protected Task HandleUploadChanged(InputFileChangeEventArgs args) { var files = args.GetMultipleFiles(10); uploadSelectionCount++; uploadedFileCount = files.Count; uploadedTotalSizeBytes = files.Sum(file => file.Size); uploadedFileNames = files.Select(file => $"{file.Name} ({FormatBytes(file.Size)})").ToArray(); return Task.CompletedTask; }
+    protected Task HandleFileInputChanged(InputFileChangeEventArgs args) { fileInputSelectionCount++; fileInputFileName = args.File.Name; return Task.CompletedTask; }
     private static string FormatBytes(long bytes) { string[] suffixes = ["B", "KB", "MB", "GB"]; double value = bytes; var index = 0; while (value >= 1024d && index < suffixes.Length - 1) { value /= 1024d; index++; } return index == 0 ? $"{value:0} {suffixes[index]}" : $"{value:0.0} {suffixes[index]}"; }
     private static AdvancedInputState CreateAdvancedState() => new() { Priority = 92, BudgetCode = "COMPONENT-PUBLISHING-READINESS-TRANSFER-REFERENCE", Tags = ["accessibility", "mobile-layout", "publishing", "visual-proof"], ReviewerId = "release", NotifyLeads = true };
     private static EditableReviewItem CreateEditableState() => new() { Title = "Quarterly migration review with extended ownership and escalation notes", Confidence = 91, EffortHours = 18.75, RequiresApproval = true };

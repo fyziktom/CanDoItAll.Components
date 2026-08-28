@@ -375,6 +375,7 @@ public static class SandboxCatalogRegistry
                 new("editable", "Editable", typeof(Editable<>)),
                 new("entity-picker", "EntityPicker", typeof(EntityPicker)),
                 new("fieldset", "Fieldset", typeof(Fieldset)),
+                new("file-input", "FileInput", typeof(FileInput)),
                 new("file-upload", "FileUpload", typeof(FileUpload)),
                 new("form-field", "FormField", typeof(FormField)),
                 new("form-row", "FormRow", typeof(FormRow)),
