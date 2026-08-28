@@ -370,6 +370,7 @@ public static class SandboxCatalogRegistry
             ["/forms"] =
             [
                 new("checkbox", "CheckBox", typeof(CheckBox<>)),
+                new("checkbox-option", "CheckboxOption", typeof(CheckboxOption<>)),
                 new("dropdown", "DropDown", typeof(DropDown<>)),
                 new("editable", "Editable", typeof(Editable<>)),
                 new("entity-picker", "EntityPicker", typeof(EntityPicker)),

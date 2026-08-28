@@ -11,6 +11,11 @@ All notable changes to this repository's packages are recorded here, per the cha
 - Added: `TextStyle.EyebrowCaption`, a looser eyebrow variant (12px, 0.2em tracking) for
   consumers who want the non-tight eyebrow look through `TextBlock`/`Eyebrow` instead of the
   legacy `cda-eyebrow` class.
+- Added: `CheckboxOption` component — composes `CheckBox` inside a single bordered `<label>` row,
+  for a checkbox paired with inline label text (e.g. a permission toggle). Renders the
+  `.ui-checkbox-option`/`.ui-checkbox-option--muted` (via `Muted="true"`) Tailwind classes.
+  Replaces the raw `<label class="cda-inline-option">...<input type="checkbox">...</label>`
+  markup pattern some consumers hand-rolled — use `<CheckboxOption>` instead of that class name.
 
 #### Internal
 
@@ -20,6 +25,13 @@ All notable changes to this repository's packages are recorded here, per the cha
 - `Tailwind/typography/eyebrow.css` moved to `Tailwind/typography/compatibility/eyebrow.css`
   since it no longer has an in-repo component owner — styles unchanged, kept only for the
   `CanDoItAll` app's existing raw-class usage.
+- Removed the unused `.cda-inline-option`/`.cda-inline-option--muted` rules from
+  `Tailwind/forms/fields.css`. That file was never imported into `input-base.css`, so these rules
+  never reached the compiled `output.css` and this has no effect on any consumer's rendered
+  output — unlike the `cda-eyebrow` case above, there was nothing live to preserve in
+  `compatibility/`. The pattern now lives, wired into the build and namespaced per the `--ui-`
+  convention, as `.ui-checkbox-option` behind the new `CheckboxOption` component
+  (`Tailwind/forms/checkbox-option.css`).
 
 ## [Unreleased] — 2.0.0
 

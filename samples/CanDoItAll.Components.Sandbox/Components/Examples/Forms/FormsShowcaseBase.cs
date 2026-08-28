@@ -33,6 +33,8 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected int uploadedFileCount;
     protected long uploadedTotalSizeBytes;
     protected IReadOnlyList<string> uploadedFileNames = [];
+    protected bool CanReadStorage { get; set; } = true;
+    protected bool CanWriteStorage { get; set; }
 
     protected string PriorityLabel => AdvancedState.Priority switch { >= 85 => "High review priority", >= 55 => "Standard review priority", _ => "Low review priority" };
     protected string SelectedReviewerLabel => ReviewerOptions.FirstOrDefault(item => item.Id == AdvancedState.ReviewerId)?.Label ?? "No lane";
@@ -52,6 +54,8 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected Task HandleNotesChanged(string? value) => Task.CompletedTask;
     protected Task HandleApprovalChanged(bool value) => Task.CompletedTask;
     protected Task HandlePublishChanged(bool value) => Task.CompletedTask;
+    protected Task HandleCanReadStorageChanged(bool value) { CanReadStorage = value; return Task.CompletedTask; }
+    protected Task HandleCanWriteStorageChanged(bool value) { CanWriteStorage = value; return Task.CompletedTask; }
     protected Task HandlePriorityChanged(int value) { AdvancedState.Priority = value; advancedChangeCount++; return Task.CompletedTask; }
     protected Task HandleBudgetCodeChanged(string? value) { AdvancedState.BudgetCode = value ?? string.Empty; advancedChangeCount++; return Task.CompletedTask; }
     protected Task HandleTagsChanged(IReadOnlyList<string> value) { AdvancedState.Tags = value; advancedChangeCount++; return Task.CompletedTask; }
