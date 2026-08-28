@@ -1,0 +1,63 @@
+@namespace CanDoItAll.Components.BaseLib
+@typeparam TValue
+@inherits StyledComponentBase
+
+<label class="@BuildClass(ResolveRootClass())" style="@Style">
+    <CheckBox TValue="TValue"
+              Value="Value"
+              ValueChanged="ValueChanged"
+              Change="Change"
+              Name="Name"
+              Disabled="Disabled"
+              Look="Look"
+              AdditionalAttributes="AdditionalAttributes" />
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        @Text
+    }
+</label>
+
+@code {
+    /// <summary>The checkbox's value; supports <c>bool</c> and <c>bool?</c>.</summary>
+    [Parameter]
+    public TValue? Value { get; set; }
+
+    /// <summary>Raised whenever <see cref="Value"/> changes.</summary>
+    [Parameter]
+    public EventCallback<TValue?> ValueChanged { get; set; }
+
+    /// <summary>Raised after the value changes, with the new value.</summary>
+    [Parameter]
+    public EventCallback<TValue?> Change { get; set; }
+
+    /// <summary>Value applied to the checkbox's <c>name</c> attribute.</summary>
+    [Parameter]
+    public string? Name { get; set; }
+
+    /// <summary>When <c>true</c>, the checkbox cannot be interacted with.</summary>
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    /// <summary>The visual style applied to the checkbox input.</summary>
+    [Parameter]
+    public InputLook Look { get; set; } = InputLook.Default;
+
+    /// <summary>Plain-text label content. Ignored when <see cref="ChildContent"/> is set.</summary>
+    [Parameter]
+    public string? Text { get; set; }
+
+    /// <summary>Custom label content, e.g. text paired with a badge or icon. Overrides <see cref="Text"/>.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>When <c>true</c>, applies the muted background variant.</summary>
+    [Parameter]
+    public bool Muted { get; set; }
+
+    private string ResolveRootClass()
+        => Muted ? "ui-checkbox-option ui-checkbox-option--muted" : "ui-checkbox-option";
+}
