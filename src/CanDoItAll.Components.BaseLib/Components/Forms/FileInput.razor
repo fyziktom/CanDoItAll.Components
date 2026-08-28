@@ -1,0 +1,75 @@
+@namespace CanDoItAll.Components.BaseLib
+@using Microsoft.AspNetCore.Components.Forms
+@inherits StyledComponentBase
+
+<InputFile @attributes='BuildAttributes(ResolveCssClass())'
+           aria-labelledby="@ResolveLabelledBy()"
+           aria-label="@AriaLabel"
+           name="@Name"
+           accept="@Accept"
+           multiple="@Multiple"
+           disabled="@Disabled"
+           data-testid="@TestHookId"
+           OnChange="HandleChangeAsync" />
+
+@code {
+    /// <summary>Value applied to the underlying file input's <c>accept</c> attribute, restricting selectable file types.</summary>
+    [Parameter]
+    public string? Accept { get; set; }
+
+    /// <summary>When <c>true</c>, more than one file can be selected at once.</summary>
+    [Parameter]
+    public bool Multiple { get; set; }
+
+    /// <summary>When <c>true</c>, the input cannot be interacted with.</summary>
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    /// <summary>Value applied to the input's <c>name</c> attribute.</summary>
+    [Parameter]
+    public string? Name { get; set; }
+
+    /// <summary>Explicit accessible name; falls back to the cascading <c>FormFieldLabelId</c> when unset.</summary>
+    [Parameter]
+    public string? AriaLabel { get; set; }
+
+    /// <summary>The visual style applied to the input element.</summary>
+    [Parameter]
+    public InputLook Look { get; set; } = InputLook.Default;
+
+    /// <summary>Value applied as the input's <c>data-testid</c> attribute.</summary>
+    [Parameter]
+    public string? TestHookId { get; set; }
+
+    /// <summary>Raised with the native change args whenever the selected file(s) change; read <c>File</c>/<c>GetMultipleFiles()</c> from it.</summary>
+    [Parameter]
+    public EventCallback<InputFileChangeEventArgs> Change { get; set; }
+
+    [CascadingParameter(Name = "FormFieldLabelId")]
+    public string? FormFieldLabelId { get; set; }
+
+    private Task HandleChangeAsync(InputFileChangeEventArgs args)
+    {
+        return Change.InvokeAsync(args);
+    }
+
+    private string ResolveCssClass()
+    {
+        return Look switch
+        {
+            InputLook.Plain => string.Empty,
+            InputLook.Filled => "ui-file-input ui-file-input--filled",
+            _ => "ui-file-input ui-file-input--outlined"
+        };
+    }
+
+    private string? ResolveLabelledBy()
+        => HasExplicitAccessibleName() ? null : FormFieldLabelId;
+
+    private bool HasExplicitAccessibleName()
+        => !string.IsNullOrWhiteSpace(AriaLabel)
+            || (AdditionalAttributes is not null
+                && AdditionalAttributes.Keys.Any(key =>
+                    string.Equals(key, "aria-label", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(key, "aria-labelledby", StringComparison.OrdinalIgnoreCase)));
+}

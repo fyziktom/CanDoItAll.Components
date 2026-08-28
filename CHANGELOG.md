@@ -52,6 +52,17 @@ All notable changes to this repository's packages are recorded here, per the cha
   `.ui-checkbox-option`/`.ui-checkbox-option--muted` (via `Muted="true"`) Tailwind classes.
   Replaces the raw `<label class="cda-inline-option">...<input type="checkbox">...</label>`
   markup pattern some consumers hand-rolled — use `<CheckboxOption>` instead of that class name.
+- Added: `FileInput` component (`Components/Forms/FileInput.razor`) — a plain inline wrapper around
+  Blazor's native `InputFile`/`OnChange`/`InputFileChangeEventArgs`, styled with the new
+  `.ui-file-input`/`.ui-file-input--outlined`/`.ui-file-input--filled` Tailwind classes and a `Look`
+  parameter matching the rest of the Forms family. Unlike `TextInput`/`NumberInput<TValue>`/etc., it
+  does **not** derive from `StyledInputBase<TValue>`/`InputBase<TValue>` — native file selection has no
+  bindable value (the browser never lets script set a file input's value), so it inherits
+  `StyledComponentBase` instead and simply forwards the native `InputFileChangeEventArgs` through its
+  `Change` callback for callers to read `.File`/`.GetMultipleFiles()` from. It is distinct from the
+  existing `FileUpload` component — `FileUpload` is a drag-and-drop card widget with its own JS module;
+  `FileInput` is a single native-looking field for the common case of one file input styled like the
+  rest of a form, with no drop zone.
 
 #### Internal
 

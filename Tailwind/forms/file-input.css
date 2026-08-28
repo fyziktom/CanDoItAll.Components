@@ -1,0 +1,34 @@
+@layer components {
+  .ui-file-input {
+    @apply min-w-0 w-full max-w-full rounded-md px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    border: 1px solid var(--tone-border);
+    color: var(--tone-text);
+  }
+
+  .ui-file-input::file-selector-button {
+    @apply mr-3 rounded px-3 py-1.5 text-sm font-medium transition;
+    border: 1px solid var(--tone-border);
+    background-color: var(--tone-surface-soft);
+    color: var(--tone-text-strong);
+  }
+
+  .ui-file-input--outlined {
+    background-color: var(--tone-surface);
+  }
+
+  .ui-file-input--filled {
+    background-color: var(--tone-surface-soft);
+  }
+
+  .ui-file-input[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
+    background-color: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
+    color: color-mix(in oklch, var(--tone-text) 65%, transparent);
+  }
+
+  .ui-file-input[disabled]::file-selector-button {
+    cursor: not-allowed;
+  }
+}
