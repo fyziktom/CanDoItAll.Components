@@ -4,7 +4,22 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ## [Unreleased] — 2.0.1
 
+### BaseLib
 
+#### Public interface
+
+- Added: `TextStyle.EyebrowCaption`, a looser eyebrow variant (12px, 0.2em tracking) for
+  consumers who want the non-tight eyebrow look through `TextBlock`/`Eyebrow` instead of the
+  legacy `cda-eyebrow` class.
+
+#### Internal
+
+- `SummaryTile`, `Dialog`, `Steps`, `StorageSummaryCard`, `StickyActionFooter`, and the Sandbox's
+  `OverlayWindowExample` now render their eyebrow text through `TextBlock`/`Eyebrow` instead of
+  the raw `cda-eyebrow`/`cda-eyebrow--tight` classes; no visual change.
+- `Tailwind/typography/eyebrow.css` moved to `Tailwind/typography/compatibility/eyebrow.css`
+  since it no longer has an in-repo component owner — styles unchanged, kept only for the
+  `CanDoItAll` app's existing raw-class usage.
 
 ## [Unreleased] — 2.0.0
 

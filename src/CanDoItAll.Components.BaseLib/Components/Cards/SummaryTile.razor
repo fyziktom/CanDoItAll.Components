@@ -4,7 +4,7 @@
         @if (ShouldRenderHelperTooltip)
         {
             <div class="inline-flex min-w-0 max-w-full flex-nowrap items-start gap-2">
-                <p class="cda-eyebrow min-w-0 break-words">@Label</p>
+                <TextBlock TextStyle="TextStyle.EyebrowCaption" Class="min-w-0 break-words" Value="@Label" />
                 <HelpPopover RootClass="pf-help-popover inline-flex items-center"
                              ToggleClass="pf-help-popover__toggle pf-help-popover__toggle--compact shrink-0"
                              OpenOnHover="true"
@@ -16,7 +16,7 @@
         }
         else
         {
-            <p class="cda-eyebrow">@Label</p>
+            <TextBlock TextStyle="TextStyle.EyebrowCaption" Value="@Label" />
         }
 
         <p class="cda-summary-tile__value">@Value</p>
