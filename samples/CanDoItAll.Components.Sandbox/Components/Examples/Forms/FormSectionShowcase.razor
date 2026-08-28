@@ -21,10 +21,11 @@
                         Disabled="@IsDisabled" />
             </FormField>
             <FormField Text="Budget reference">
-                <TextBox Value="@AdvancedState.BudgetCode"
-                         ValueChanged="HandleBudgetCodeChanged"
-                         Placeholder="Review budget code"
-                         Disabled="@IsDisabled" />
+                <TextInput Value="@AdvancedState.BudgetCode"
+                           ValueChanged="HandleBudgetCodeChanged"
+                           ValueExpression="@(() => AdvancedState.BudgetCode)"
+                           placeholder="Review budget code"
+                           disabled="@IsDisabled" />
             </FormField>
         </FormRow>
     </ChildContent>

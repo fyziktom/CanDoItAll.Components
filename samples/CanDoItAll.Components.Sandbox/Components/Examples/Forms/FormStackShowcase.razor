@@ -4,23 +4,28 @@
 <FormStack data-testid="sandbox-forms-stack">
     <FormRow Split="true">
         <FormField Text="Title">
-            <TextBox Value="@FormState.Title" ValueChanged="HandleTitleChanged" Placeholder="@TitlePlaceholder"
-                     Disabled="@IsDisabled" />
+            <TextInput Value="@FormState.Title" ValueChanged="HandleTitleChanged" ValueExpression="@(() => FormState.Title)"
+                       placeholder="@TitlePlaceholder"
+                       disabled="@IsDisabled" />
         </FormField>
         <FormField Text="Status">
-            <DropDown TValue="string"
-                      Data="@StatusOptions"
-                      TextProperty="@nameof(SelectOption.Text)"
-                      ValueProperty="@nameof(SelectOption.Value)"
-                      Value="@FormState.Status"
-                      ValueChanged="HandleStatusChanged"
-                      Disabled="@IsDisabled" />
+            <SelectInput TValue="string"
+                         Value="@FormState.Status"
+                         ValueChanged="HandleStatusChanged"
+                         ValueExpression="@(() => FormState.Status)"
+                         disabled="@IsDisabled">
+                @foreach (var option in StatusOptions)
+                {
+                    <option value="@option.Value">@option.Text</option>
+                }
+            </SelectInput>
         </FormField>
     </FormRow>
     <FormField Text="Notes">
-        <TextArea Value="@FormState.Notes"
-                  ValueChanged="HandleNotesChanged"
-                  Placeholder="@NotesPlaceholder"
-                  Disabled="@IsDisabled" />
+        <TextAreaInput Value="@FormState.Notes"
+                        ValueChanged="HandleNotesChanged"
+                        ValueExpression="@(() => FormState.Notes)"
+                        placeholder="@NotesPlaceholder"
+                        disabled="@IsDisabled" />
     </FormField>
 </FormStack>

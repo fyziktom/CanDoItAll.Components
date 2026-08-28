@@ -22,11 +22,12 @@
                     <PrefixedField Prefix="@BudgetPrefix"
                                    Suffix="@BudgetSuffix"
                                    StackOnMobile="true">
-                        <TextBox Value="@AdvancedState.BudgetCode"
-                                 ValueChanged="HandleBudgetCodeChanged"
-                                 Immediate="true"
-                                 Placeholder="@BudgetCodePlaceholder"
-                                 Disabled="@IsDisabled" />
+                        <TextInput Value="@AdvancedState.BudgetCode"
+                                   ValueChanged="HandleBudgetCodeChanged"
+                                   ValueExpression="@(() => AdvancedState.BudgetCode)"
+                                   Immediate="true"
+                                   placeholder="@BudgetCodePlaceholder"
+                                   disabled="@IsDisabled" />
                     </PrefixedField>
                 </FormField>
             </FormRow>

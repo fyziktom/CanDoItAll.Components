@@ -559,6 +559,25 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.CheckboxOption\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E Change {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E ValueChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
+          "property System.Boolean Muted {get;set;}",
+          "property System.String Name {get;set;}",
+          "property System.String Text {get;set;}",
+          "property TValue Value {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.Chip",
         "kind": "class",
         "isAbstract": false,
@@ -862,6 +881,17 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.DateInput\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.Forms.InputDateType Type {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.Dialog",
         "kind": "class",
         "isAbstract": false,
@@ -1011,27 +1041,6 @@
         "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
         "members": [
           "ctor()"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.DropDown\u003CTValue\u003E",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Object\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E ValueChanged {get;set;}",
-          "property System.Boolean AllowClear {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Collections.IEnumerable Data {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Placeholder {get;set;}",
-          "property System.String TextProperty {get;set;}",
-          "property System.String ValueProperty {get;set;}",
-          "property TValue Value {get;set;}"
         ]
       },
       {
@@ -1905,23 +1914,13 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.Numeric\u003CTValue\u003E",
+        "name": "CanDoItAll.Components.BaseLib.NumberInput\u003CTValue\u003E",
         "kind": "class",
         "isAbstract": false,
         "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
         "members": [
-          "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E ValueChanged {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Object Max {get;set;}",
-          "property System.Object Min {get;set;}",
-          "property System.Object Step {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Format {get;set;}",
-          "property TValue Value {get;set;}"
+          "ctor()"
         ]
       },
       {
@@ -2422,6 +2421,17 @@
         "isAbstract": false,
         "isSealed": false,
         "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.SelectInput\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
         "members": [
           "ctor()",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
@@ -3072,6 +3082,19 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.Forms.InputBase\u003CTValue\u003E",
+        "members": [
+          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
+          "property System.String Class {get;set;}",
+          "property System.String FormFieldLabelId {get;set;}",
+          "property System.String Style {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.SummaryTile",
         "kind": "class",
         "isAbstract": false,
@@ -3308,37 +3331,13 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.TextArea",
+        "name": "CanDoItAll.Components.BaseLib.TextAreaInput",
         "kind": "class",
         "isAbstract": false,
         "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CSystem.String\u003E",
         "members": [
-          "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
-          "property CanDoItAll.Components.BaseLib.TextAreaSize Size {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ValueChanged {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Boolean Immediate {get;set;}",
-          "property System.Boolean ReadOnly {get;set;}",
-          "property System.Int32 Rows {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Placeholder {get;set;}",
-          "property System.String Value {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.TextAreaSize",
-        "kind": "enum",
-        "isAbstract": false,
-        "isSealed": true,
-        "baseType": "System.Enum",
-        "members": [
-          "field System.Int32 value__",
-          "field static const CanDoItAll.Components.BaseLib.TextAreaSize Compact",
-          "field static const CanDoItAll.Components.BaseLib.TextAreaSize Extended",
-          "field static const CanDoItAll.Components.BaseLib.TextAreaSize Standard"
+          "ctor()"
         ]
       },
       {
@@ -3355,22 +3354,14 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.TextBox",
+        "name": "CanDoItAll.Components.BaseLib.TextInput",
         "kind": "class",
         "isAbstract": false,
         "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CSystem.String\u003E",
         "members": [
           "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ValueChanged {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Boolean Immediate {get;set;}",
-          "property System.Boolean ReadOnly {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Placeholder {get;set;}",
-          "property System.String Value {get;set;}"
+          "property System.Boolean Immediate {get;set;}"
         ]
       },
       {

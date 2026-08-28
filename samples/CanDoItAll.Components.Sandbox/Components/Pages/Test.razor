@@ -158,15 +158,30 @@
                                     <Editable TItem="TestDataRow" Item="@(new TestDataRow("Review title"))" ParameterName="@nameof(TestDataRow.Name)" Placeholder="Review title" Disabled="true" />
                                 </div>
                             }
-                            else if (component.Name == "DropDown")
+                            else if (component.Name == "SelectInput")
                             {
                                 <div class="space-y-3">
-                                    <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" aria-label="Enabled status" />
-                                    <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" Disabled="true" aria-label="Disabled status" />
+                                    <SelectInput TValue="string" Value="@DropDownValues[0]" ValueExpression="@(() => testInputPlaceholder)" aria-label="Enabled status">
+                                        @foreach (var value in DropDownValues)
+                                        {
+                                            <option value="@value">@value</option>
+                                        }
+                                    </SelectInput>
+                                    <SelectInput TValue="string" Value="@DropDownValues[0]" ValueExpression="@(() => testInputPlaceholder)" disabled="true" aria-label="Disabled status">
+                                        @foreach (var value in DropDownValues)
+                                        {
+                                            <option value="@value">@value</option>
+                                        }
+                                    </SelectInput>
                                     <div class="flex flex-wrap gap-3">
                                         @foreach (var look in InputLooks)
                                         {
-                                            <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" Look="@look" aria-label="@($"{look} look")" />
+                                            <SelectInput TValue="string" Value="@DropDownValues[0]" ValueExpression="@(() => testInputPlaceholder)" Look="@look" aria-label="@($"{look} look")">
+                                                @foreach (var value in DropDownValues)
+                                                {
+                                                    <option value="@value">@value</option>
+                                                }
+                                            </SelectInput>
                                         }
                                     </div>
                                 </div>
@@ -188,19 +203,19 @@
                             else if (component.Name == "FormField")
                             {
                                 <div class="space-y-3">
-                                    <FormField Label="Project name"><TextBox Value="Project Aurora" /></FormField>
-                                    <FormField Label="Project name"><TextBox Value="Project Aurora" Disabled="true" /></FormField>
+                                    <FormField Label="Project name"><TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" /></FormField>
+                                    <FormField Label="Project name"><TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" disabled="true" /></FormField>
                                 </div>
                             }
-                            else if (component.Name == "Numeric")
+                            else if (component.Name == "NumberInput")
                             {
                                 <div class="space-y-3">
-                                    <Numeric TValue="int" Value="42" aria-label="Enabled quantity" />
-                                    <Numeric TValue="int" Value="42" Disabled="true" aria-label="Disabled quantity" />
+                                    <NumberInput TValue="int" Value="42" ValueExpression="@(() => testIntPlaceholder)" aria-label="Enabled quantity" />
+                                    <NumberInput TValue="int" Value="42" ValueExpression="@(() => testIntPlaceholder)" disabled="true" aria-label="Disabled quantity" />
                                     <div class="flex flex-wrap gap-3">
                                         @foreach (var look in InputLooks)
                                         {
-                                            <Numeric TValue="int" Value="42" Look="@look" aria-label="@($"{look} look quantity")" />
+                                            <NumberInput TValue="int" Value="42" ValueExpression="@(() => testIntPlaceholder)" Look="@look" aria-label="@($"{look} look quantity")" />
                                         }
                                     </div>
                                 </div>
@@ -208,10 +223,10 @@
                             else if (component.Name == "PrefixedField")
                             {
                                 <div class="space-y-3">
-                                    <PrefixedField Prefix="$"><TextBox Value="120" aria-label="Prefix only" /></PrefixedField>
-                                    <PrefixedField Suffix="USD"><TextBox Value="120" aria-label="Suffix only" /></PrefixedField>
-                                    <PrefixedField Prefix="$" Suffix="USD"><TextBox Value="120" aria-label="Prefix and suffix" /></PrefixedField>
-                                    <PrefixedField Prefix="$" Suffix="USD"><TextBox Value="120" Disabled="true" aria-label="Disabled prefix and suffix" /></PrefixedField>
+                                    <PrefixedField Prefix="$"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" aria-label="Prefix only" /></PrefixedField>
+                                    <PrefixedField Suffix="USD"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" aria-label="Suffix only" /></PrefixedField>
+                                    <PrefixedField Prefix="$" Suffix="USD"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" aria-label="Prefix and suffix" /></PrefixedField>
+                                    <PrefixedField Prefix="$" Suffix="USD"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" disabled="true" aria-label="Disabled prefix and suffix" /></PrefixedField>
                                 </div>
                             }
                             else if (component.Name == "LineSeries")
@@ -301,28 +316,28 @@
                                     }
                                 </div>
                             }
-                            else if (component.Name == "TextArea")
+                            else if (component.Name == "TextAreaInput")
                             {
                                 <div class="space-y-3">
-                                    <TextArea Value="Review notes" />
-                                    <TextArea Value="Review notes" Disabled="true" />
+                                    <TextAreaInput Value="Review notes" ValueExpression="@(() => testInputPlaceholder)" />
+                                    <TextAreaInput Value="Review notes" ValueExpression="@(() => testInputPlaceholder)" disabled="true" />
                                     <div class="flex flex-wrap gap-3">
                                         @foreach (var look in InputLooks)
                                         {
-                                            <TextArea Value="@($"{look} look")" Look="@look" />
+                                            <TextAreaInput Value="@($"{look} look")" ValueExpression="@(() => testInputPlaceholder)" Look="@look" />
                                         }
                                     </div>
                                 </div>
                             }
-                            else if (component.Name == "TextBox")
+                            else if (component.Name == "TextInput")
                             {
                                 <div class="space-y-3">
-                                    <TextBox Value="Project Aurora" />
-                                    <TextBox Value="Project Aurora" Disabled="true" />
+                                    <TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" />
+                                    <TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" disabled="true" />
                                     <div class="flex flex-wrap gap-3">
                                         @foreach (var look in InputLooks)
                                         {
-                                            <TextBox Value="@($"{look} look")" Look="@look" />
+                                            <TextInput Value="@($"{look} look")" ValueExpression="@(() => testInputPlaceholder)" Look="@look" />
                                         }
                                     </div>
                                 </div>
@@ -389,6 +404,10 @@
         new() { Id = "lin", Label = "Lin Chen", Description = "Design", Meta = "Contributor" }
     ];
     private static readonly string[] DropDownValues = ["Draft", "Published"];
+
+    /// <summary>Shared ValueExpression target for display-only inputs in this raw proof page — never actually read/written.</summary>
+    private string testInputPlaceholder = string.Empty;
+    private int testIntPlaceholder = 42;
     private static readonly TestDataRow[] TestDataRows =
     [
         new("CDA-001", "Button", "Ada", "Ready", "Today", "100%"),
@@ -428,17 +447,17 @@
             new("TooltipTarget", typeof(TooltipTarget))]),
         new("Forms", "forms", "/forms", [
             new("CheckBox", typeof(CheckBox<bool>)),
-            new("DropDown", typeof(DropDown<string>)),
+            new("SelectInput", typeof(SelectInput<string>)),
             new("Editable", typeof(Editable<TestDataRow>)),
             new("EntityPicker", typeof(EntityPicker)),
             new("FileUpload", typeof(FileUpload)),
             new("FormField", typeof(FormField)),
-            new("Numeric", typeof(Numeric<int>)),
+            new("NumberInput", typeof(NumberInput<int>)),
             new("PrefixedField", typeof(PrefixedField)),
             new("SecretField", typeof(SecretField)),
             new("TagEditor", typeof(TagEditor)),
-            new("TextArea", typeof(TextArea)),
-            new("TextBox", typeof(TextBox))]),
+            new("TextAreaInput", typeof(TextAreaInput)),
+            new("TextInput", typeof(TextInput))]),
         new("Identity", "identity", "/identity", [
             new("Avatar", typeof(Avatar)),
             new("Icon", typeof(Icon))]),

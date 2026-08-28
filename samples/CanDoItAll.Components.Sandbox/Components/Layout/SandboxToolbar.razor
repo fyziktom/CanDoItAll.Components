@@ -8,14 +8,17 @@
         @if (ToolbarState is { HasContext: true } toolbarState)
         {
             <div class="sandbox-toolbar__frame">
-                <DropDown TValue="SandboxFramePreset"
-                          Data="@FrameOptions"
-                          TextProperty="Text"
-                          ValueProperty="Value"
-                          Value="@toolbarState.Frame"
-                          ValueChanged="HandleFrameChanged"
-                          aria-label="Frame preset"
-                          data-testid="sandbox-toolbar-frame"/>
+                <SelectInput TValue="SandboxFramePreset"
+                             Value="@toolbarState.Frame"
+                             ValueChanged="HandleFrameChanged"
+                             ValueExpression="@(() => toolbarState.Frame)"
+                             aria-label="Frame preset"
+                             data-testid="sandbox-toolbar-frame">
+                    @foreach (var option in FrameOptions)
+                    {
+                        <option value="@option.Value">@option.Text</option>
+                    }
+                </SelectInput>
             </div>
 
             <Button Text="Coverage"

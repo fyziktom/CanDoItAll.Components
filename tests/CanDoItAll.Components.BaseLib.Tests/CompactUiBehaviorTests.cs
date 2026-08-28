@@ -6,30 +6,6 @@ namespace CanDoItAll.Components.BaseLib.Tests;
 public sealed class CompactUiBehaviorTests
 {
     [Theory]
-    [InlineData(TextAreaSize.Compact, "3")]
-    [InlineData(TextAreaSize.Standard, "5")]
-    [InlineData(TextAreaSize.Extended, "10")]
-    public void TextAreaSizeSelectsRowsFromExpectedContentLength(TextAreaSize size, string expectedRows)
-    {
-        using var context = new BunitContext();
-        var cut = context.Render<TextArea>(parameters => parameters
-            .Add(component => component.Size, size));
-
-        Assert.Equal(expectedRows, cut.Find("textarea").GetAttribute("rows"));
-    }
-
-    [Fact]
-    public void ExplicitTextAreaRowsOverrideSemanticSize()
-    {
-        using var context = new BunitContext();
-        var cut = context.Render<TextArea>(parameters => parameters
-            .Add(component => component.Size, TextAreaSize.Extended)
-            .Add(component => component.Rows, 4));
-
-        Assert.Equal("4", cut.Find("textarea").GetAttribute("rows"));
-    }
-
-    [Theory]
     [InlineData(ModalSize.Compact, "cda-dialog--compact")]
     [InlineData(ModalSize.Medium, "cda-dialog--medium")]
     [InlineData(ModalSize.Wide, "cda-dialog--wide")]

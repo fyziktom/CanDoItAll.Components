@@ -1025,7 +1025,7 @@ public sealed class GanttChartComponentTests
             .Add(component => component.TimeScaleChanged, scale => requestedScale = scale)
             .Add(component => component.PixelsPerHourChanged, value => requestedPixelsPerHour = value));
 
-        cut.Find(".cda-gantt__time-scale").Change("1");
+        cut.Find(".cda-gantt__time-scale").Change(nameof(GanttTimeScale.Hour));
 
         Assert.Equal(GanttTimeScale.Hour, requestedScale);
         var scaleUpdate = context.JSInterop.Invocations.Last(

@@ -46,11 +46,16 @@
             <Column>
                 <FormField Text="Mode" ContainerClass="w-full">
                     <ChildContent>
-                        <DropDown TValue="string"
-                                  Data="@ModeOptions"
-                                  Value="@selectedMode"
-                                  Change="OnModeChanged"
-                                  Style="width:100%" />
+                        <SelectInput TValue="string"
+                                     Value="@selectedMode"
+                                     ValueChanged="@(value => OnModeChanged(value))"
+                                     ValueExpression="@(() => selectedMode)"
+                                     Style="width:100%">
+                            @foreach (var mode in ModeOptions)
+                            {
+                                <option value="@mode">@mode</option>
+                            }
+                        </SelectInput>
                     </ChildContent>
                 </FormField>
             </Column>
@@ -58,11 +63,16 @@
             <Column>
                 <FormField Text="Time Window" ContainerClass="w-full">
                     <ChildContent>
-                        <DropDown TValue="int"
-                                  Data="@WindowOptions"
-                                  Value="@selectedWindowDays"
-                                  Change="OnWindowChanged"
-                                  Style="width:100%" />
+                        <SelectInput TValue="int"
+                                     Value="@selectedWindowDays"
+                                     ValueChanged="@(value => OnWindowChanged(value))"
+                                     ValueExpression="@(() => selectedWindowDays)"
+                                     Style="width:100%">
+                            @foreach (var days in WindowOptions)
+                            {
+                                <option value="@days">@days days</option>
+                            }
+                        </SelectInput>
                     </ChildContent>
                 </FormField>
             </Column>

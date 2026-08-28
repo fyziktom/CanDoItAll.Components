@@ -15,12 +15,13 @@
     <ChildContent>
         <FormStack>
             <FormField Text="Title">
-                <TextBox Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" />
+                <TextInput Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" ValueExpression="@(() => title)" />
             </FormField>
             <FormField Text="Review notes">
-                <TextArea Value="@notes"
-                          ValueChanged="@(value => notes = value ?? string.Empty)"
-                          Size="TextAreaSize.Extended" />
+                <TextAreaInput Value="@notes"
+                               ValueChanged="@(value => notes = value ?? string.Empty)"
+                               ValueExpression="@(() => notes)"
+                               rows="10" />
             </FormField>
         </FormStack>
     </ChildContent>

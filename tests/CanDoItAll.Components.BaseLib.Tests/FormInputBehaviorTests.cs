@@ -46,38 +46,6 @@ public sealed class FormInputBehaviorTests
     }
 
     [Fact]
-    public async Task DisabledTextBoxDoesNotInvokeChangeCallbacks()
-    {
-        var callbackCount = 0;
-        var textBox = new TextBox();
-        SetProperty(textBox, nameof(TextBox.Disabled), true);
-        SetProperty(textBox, nameof(TextBox.Value), "before");
-        SetProperty(
-            textBox,
-            nameof(TextBox.ValueChanged),
-            EventCallback.Factory.Create<string?>(this, _ => callbackCount++));
-
-        await InvokeChangeAsync(textBox, "OnChangedAsync", "after");
-
-        Assert.Equal("before", textBox.Value);
-        Assert.Equal(0, callbackCount);
-    }
-
-    [Fact]
-    public async Task ControlledTextBoxEmitsValueWithoutMutatingParameter()
-    {
-        string? emittedValue = null;
-        var textBox = new TextBox();
-        SetProperty(textBox, nameof(TextBox.Value), "before");
-        SetProperty(textBox, nameof(TextBox.ValueChanged), EventCallback.Factory.Create<string?>(this, value => emittedValue = value));
-
-        await InvokeChangeAsync(textBox, "OnChangedAsync", "after");
-
-        Assert.Equal("before", textBox.Value);
-        Assert.Equal("after", emittedValue);
-    }
-
-    [Fact]
     public async Task ControlledCheckBoxEmitsValueWithoutMutatingParameter()
     {
         bool? emittedValue = null;

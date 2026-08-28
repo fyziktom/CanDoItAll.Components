@@ -6,10 +6,11 @@
         <Icon Name="tag" />
     </Start>
     <ChildContent>
-        <TextBox Value="@AdvancedState.BudgetCode"
-                 ValueChanged="HandleBudgetCodeChanged"
-                 Placeholder="Review budget code"
-                 Disabled="@IsDisabled" />
+        <TextInput Value="@AdvancedState.BudgetCode"
+                   ValueChanged="HandleBudgetCodeChanged"
+                   ValueExpression="@(() => AdvancedState.BudgetCode)"
+                   placeholder="Review budget code"
+                   disabled="@IsDisabled" />
     </ChildContent>
     <End>
         <StatusBadge Text="Synced" Tone="success" />

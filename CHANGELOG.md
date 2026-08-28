@@ -8,6 +8,42 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Public interface
 
+- Added: `TextInput`, `NumberInput<TValue>`, `DateInput<TValue>`, `TextAreaInput`, `SelectInput<TValue>`
+  — a new family of form controls under `Components/Forms/` that derive from
+  `Microsoft.AspNetCore.Components.Forms.InputBase<TValue>`. These are true drop-in replacements for
+  Blazor's own `InputText`/`InputNumber<TValue>`/`InputDate<TValue>`/`InputTextArea`/`InputSelect<TValue>`
+  — real `ValueExpression`/`EditContext` support, so `@bind-Value` and validation-state CSS classes
+  (`modified`/`valid`/`invalid`) work exactly as they do on the framework's own controls. No `EditForm`
+  ancestor is required for basic use (a manual `Value`/`ValueChanged`/`ValueExpression` trio works
+  standalone), but `ValueExpression` is always required — `InputBase<TValue>` throws without it, and
+  `@bind-Value` supplies it automatically. They render the same `.ui-input`/`.ui-select`/`form-input`/
+  `form-select` Tailwind classes the removed family below used, so nothing visually changes.
+  `SelectInput<TValue>` takes arbitrary `<option>` `ChildContent` (including `@foreach`, `disabled`
+  options, and enum/nullable `TValue`) rather than a `Data` collection — closer to `<select>`'s and
+  `InputSelect<TValue>`'s own shape. All five accept a `Look` (`InputLook`) parameter matching the
+  removed family's `Default`/`Filled`/`Plain` styles. `SelectInput<TValue>` does not support the
+  `multiple` attribute / array-typed `TValue` (`InputSelect<TValue>`'s multi-select mode) — use the
+  framework's own `InputSelect` for that case.
+- **Breaking:** Removed `TextBox`, `Numeric<TValue>`, `TextArea`, `DropDown<TValue>` (and the
+  `DropDownOption<TValue>` support record) — superseded by the `InputBase<TValue>`-derived family
+  above, which covers the same rendered elements (`<input type="text">`, `<input type="number">`,
+  `<textarea>`, `<select>`) with real `ValueExpression` support the old family never had. Migrate call
+  sites as follows: `TextBox` → `TextInput` (drop the `Immediate` parameter unless you need live-typing
+  updates — `TextInput` now also has one, opt-in, off by default to match `InputText`); `Numeric<TValue>`
+  → `NumberInput<TValue>` (drop `Min`/`Max`/`Step`/`Format`; pass `min`/`max`/`step` as plain HTML
+  attributes — clamping is no longer applied client-side, matching `InputNumber<TValue>`); `TextArea` →
+  `TextAreaInput` (drop `Rows`/`Size`; pass `rows` as a plain HTML attribute); `DropDown<TValue>` →
+  `SelectInput<TValue>` (drop `Data`/`TextProperty`/`ValueProperty`/`Placeholder`/`AllowClear`; write
+  `<option>` elements as `ChildContent` instead, including an explicit empty `<option value="">` for a
+  placeholder). Every migrated call site needs a `ValueExpression` (or `@bind-Value`, which supplies one
+  automatically) — a plain `Value`/`ValueChanged` pair that was sufficient before now throws
+  `InvalidOperationException` at runtime. Also removed the now-unused `TextAreaSize` enum
+  (`FormPrimitives.cs`), which existed only for `TextArea.Size`.
+- Added: `.ui-input.invalid`/`.ui-select.invalid`/`.ui-input.modified.valid`/`.ui-select.modified.valid`
+  Tailwind rules (`Tailwind/forms/styled-input-base.css`) so `EditContext.FieldCssClass`'s
+  `modified`/`valid`/`invalid` tokens — emitted automatically by the new `InputBase<TValue>`-derived
+  family above — are visually styled; no existing component emitted these classes before, so there was
+  previously nothing for this CSS to target.
 - Added: `TextStyle.EyebrowCaption`, a looser eyebrow variant (12px, 0.2em tracking) for
   consumers who want the non-tight eyebrow look through `TextBlock`/`Eyebrow` instead of the
   legacy `cda-eyebrow` class.
@@ -19,6 +55,19 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Internal
 
+- Added `StyledInputBase<TValue>` (`Components/Forms/StyledInputBase.cs`) — the shared base class for
+  the new `TextInput`/`NumberInput<TValue>`/`DateInput<TValue>`/`TextAreaInput`/`SelectInput<TValue>`
+  family above. It replicates `StyledComponentBase`'s `Class`/`Style`/`BuildAttributes` contract by
+  composition (`InputBase<TValue>` can't also derive from `StyledComponentBase`), and folds
+  `EditContext.FieldCssClass(FieldIdentifier)` into the merged class string while deliberately bypassing
+  `InputBase<TValue>.CssClass` to avoid double-emitting the consumer's `Class`. See AGENTS.md's new rule
+  on when to use it instead of `StyledComponentBase`.
+- Migrated every in-repo consumer of the removed `TextBox`/`Numeric<TValue>`/`TextArea`/
+  `DropDown<TValue>` family to the new one ahead of removal: BaseLib's own `Editable.razor`;
+  `CanDoItAll.Components.Gantt`'s `GanttChart.razor` time-scale selector; and ~25 Sandbox files,
+  including the app-shell `MainLayout`/`SandboxToolbar` (search box and frame-preset picker). No
+  application-visible behavior changed — no remaining in-repo call sites drove the removal above,
+  matching the existing shim-removal precedent in `docs/standard-components-compatibility-policy.md`.
 - `SummaryTile`, `Dialog`, `Steps`, `StorageSummaryCard`, `StickyActionFooter`, and the Sandbox's
   `OverlayWindowExample` now render their eyebrow text through `TextBlock`/`Eyebrow` instead of
   the raw `cda-eyebrow`/`cda-eyebrow--tight` classes; no visual change.

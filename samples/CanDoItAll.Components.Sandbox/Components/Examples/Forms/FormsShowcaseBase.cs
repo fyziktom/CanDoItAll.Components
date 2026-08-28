@@ -68,8 +68,25 @@ public abstract class FormsShowcaseBase : ComponentBase
     private static AdvancedInputState CreateAdvancedState() => new() { Priority = 92, BudgetCode = "COMPONENT-PUBLISHING-READINESS-TRANSFER-REFERENCE", Tags = ["accessibility", "mobile-layout", "publishing", "visual-proof"], ReviewerId = "release", NotifyLeads = true };
     private static EditableReviewItem CreateEditableState() => new() { Title = "Quarterly migration review with extended ownership and escalation notes", Confidence = 91, EffortHours = 18.75, RequiresApproval = true };
 
+    protected NativeInputModel NativeModel { get; } = new();
+    protected NativeInputModel NativeInvalidModel { get; } = new() { Title = null };
+
     protected sealed record SelectOption(string Text, string Value);
     protected sealed record InputFormState(string Title, string Owner, string Status, int Confidence, string Secret, bool RemindersEnabled, bool RequiresApproval, bool PublishExternally, string Notes);
     protected sealed class AdvancedInputState { public int Priority { get; set; } public string BudgetCode { get; set; } = string.Empty; public IReadOnlyList<string> Tags { get; set; } = []; public string ReviewerId { get; set; } = string.Empty; public bool NotifyLeads { get; set; } }
     public sealed class EditableReviewItem { public string Title { get; set; } = string.Empty; public int Confidence { get; set; } public double EffortHours { get; set; } public bool RequiresApproval { get; set; } }
+
+    /// <summary>Mutable model backing the EditForm-integrated form examples (validation state, DateInput, enum-typed SelectInput).</summary>
+    public sealed class NativeInputModel
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(80)]
+        public string? Title { get; set; } = "Quarterly migration review";
+
+        public DateOnly? DueDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
+
+        public ReviewStatus? Status { get; set; } = ReviewStatus.Review;
+    }
+
+    public enum ReviewStatus { Draft, Review, Blocked, Approved }
 }

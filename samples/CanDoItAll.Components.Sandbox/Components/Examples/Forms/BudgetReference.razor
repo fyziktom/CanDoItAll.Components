@@ -6,11 +6,12 @@
                    Suffix="@BudgetSuffix"
                    StackOnMobile="true"
                    data-testid="sandbox-inputs-prefixed-field">
-        <TextBox Value="@AdvancedState.BudgetCode"
-                 ValueChanged="HandleBudgetCodeChanged"
-                 Immediate="true"
-                 Placeholder="@BudgetCodePlaceholder"
-                 Disabled="@IsDisabled"
-                 data-testid="sandbox-inputs-prefixed-field-input" />
+        <TextInput Value="@AdvancedState.BudgetCode"
+                   ValueChanged="HandleBudgetCodeChanged"
+                   ValueExpression="@(() => AdvancedState.BudgetCode)"
+                   Immediate="true"
+                   placeholder="@BudgetCodePlaceholder"
+                   disabled="@IsDisabled"
+                   data-testid="sandbox-inputs-prefixed-field-input" />
     </PrefixedField>
 </FormField>

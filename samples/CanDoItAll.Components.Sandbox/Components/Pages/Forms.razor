@@ -18,34 +18,7 @@
                 <section id="@(section.Anchor)" class="sandbox-component-section">
                     @RenderSectionHeading(section)
 
-                    @if (section.ComponentName == "TextBox")
-                    {
-                        <ExampleBlock Title="Title field"
-                                      Description="A standard text field with placeholder guidance."
-                                      SourceId="examples/Forms/TitleField.razor"
-                                      ApiTypes="@TextBoxApiTypes">
-                            <TitleField />
-                        </ExampleBlock>
-                    }
-                    else if (section.ComponentName == "DropDown")
-                    {
-                        <ExampleBlock Title="Status field"
-                                      Description="A typed dropdown backed by a data source, text property, and value property."
-                                      SourceId="examples/Forms/StatusField.razor"
-                                      ApiTypes="@DropDownApiTypes">
-                            <StatusField />
-                        </ExampleBlock>
-                    }
-                    else if (section.ComponentName == "Numeric")
-                    {
-                        <ExampleBlock Title="Confidence field"
-                                      Description="A numeric input with clamped min/max and a step increment."
-                                      SourceId="examples/Forms/ConfidenceField.razor"
-                                      ApiTypes="@NumericApiTypes">
-                            <ConfidenceField />
-                        </ExampleBlock>
-                    }
-                    else if (section.ComponentName == "Password")
+                    @if (section.ComponentName == "Password")
                     {
                         <ExampleBlock Title="Password field"
                                       Description="A masked text input for short-lived credentials."
@@ -124,15 +97,6 @@
                                       SourceId="examples/Forms/EditableReviewFields.razor"
                                       ApiTypes="@EditableApiTypes">
                             <EditableReviewFields />
-                        </ExampleBlock>
-                    }
-                    else if (section.ComponentName == "TextArea")
-                    {
-                        <ExampleBlock Title="Review notes"
-                                      Description="A multi-line text field whose height scales with the dense scenario."
-                                      SourceId="examples/Forms/ReviewNotes.razor"
-                                      ApiTypes="@TextAreaApiTypes">
-                            <ReviewNotes />
                         </ExampleBlock>
                     }
                     else if (section.ComponentName == "CheckBox")
@@ -225,6 +189,51 @@
                             <SwitchLabelVariants />
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "TextInput")
+                    {
+                        <ExampleBlock Title="Title field"
+                                      Description="TextInput derives from Blazor's InputBase for true InputText parity — real ValueExpression/EditContext support, requires an ancestor EditForm. Shown in its default, filled+disabled, and validation-error states."
+                                      SourceId="examples/Forms/TitleField.razor"
+                                      ApiTypes="@TextInputApiTypes">
+                            <TitleField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "NumberInput")
+                    {
+                        <ExampleBlock Title="Confidence field"
+                                      Description="NumberInput derives from Blazor's InputBase for true InputNumber parity, including min/max/step passthrough via AdditionalAttributes."
+                                      SourceId="examples/Forms/ConfidenceField.razor"
+                                      ApiTypes="@NumberInputApiTypes">
+                            <ConfidenceField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "DateInput")
+                    {
+                        <ExampleBlock Title="Due date field"
+                                      Description="DateInput derives from Blazor's InputBase for true InputDate parity, including the Type parameter (date/datetime-local/month). No prior BaseLib component covered this — it's new in this family."
+                                      SourceId="examples/Forms/DueDateField.razor"
+                                      ApiTypes="@DateInputApiTypes">
+                            <DueDateField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "TextAreaInput")
+                    {
+                        <ExampleBlock Title="Review notes"
+                                      Description="TextAreaInput derives from Blazor's InputBase for true InputTextArea parity."
+                                      SourceId="examples/Forms/ReviewNotes.razor"
+                                      ApiTypes="@TextAreaInputApiTypes">
+                            <ReviewNotes />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SelectInput")
+                    {
+                        <ExampleBlock Title="Status field"
+                                      Description="SelectInput derives from Blazor's InputBase for true InputSelect parity — it takes arbitrary option-element ChildContent (including a foreach loop, disabled options, and nullable enum values) rather than a Data collection like DropDown."
+                                      SourceId="examples/Forms/StatusField.razor"
+                                      ApiTypes="@SelectInputApiTypes">
+                            <StatusField />
+                        </ExampleBlock>
+                    }
                 </section>
             }
 
@@ -236,9 +245,6 @@
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Forms);
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/forms");
 
-    private static readonly IReadOnlyList<Type> TextBoxApiTypes = [typeof(TextBox)];
-    private static readonly IReadOnlyList<Type> DropDownApiTypes = [typeof(DropDown<string>)];
-    private static readonly IReadOnlyList<Type> NumericApiTypes = [typeof(Numeric<int>)];
     private static readonly IReadOnlyList<Type> PasswordApiTypes = [typeof(Password)];
     private static readonly IReadOnlyList<Type> SecretFieldApiTypes = [typeof(SecretField)];
     private static readonly IReadOnlyList<Type> SwitchApiTypes = [typeof(Switch)];
@@ -248,7 +254,6 @@
     private static readonly IReadOnlyList<Type> EntityPickerApiTypes = [typeof(EntityPicker)];
     private static readonly IReadOnlyList<Type> SettingsSwitchRowApiTypes = [typeof(SettingsSwitchRow), typeof(SettingsSwitchLabel)];
     private static readonly IReadOnlyList<Type> EditableApiTypes = [typeof(Editable<FormsShowcaseBase.EditableReviewItem>)];
-    private static readonly IReadOnlyList<Type> TextAreaApiTypes = [typeof(TextArea)];
     private static readonly IReadOnlyList<Type> CheckBoxApiTypes = [typeof(CheckBox<bool>)];
     private static readonly IReadOnlyList<Type> CheckboxOptionApiTypes = [typeof(CheckboxOption<bool>)];
     private static readonly IReadOnlyList<Type> FileUploadApiTypes = [typeof(FileUpload)];
@@ -259,5 +264,10 @@
     private static readonly IReadOnlyList<Type> FormStackApiTypes = [typeof(FormStack)];
     private static readonly IReadOnlyList<Type> InlineActionsApiTypes = [typeof(InlineActions)];
     private static readonly IReadOnlyList<Type> SettingsSwitchLabelApiTypes = [typeof(SettingsSwitchLabel)];
+    private static readonly IReadOnlyList<Type> TextInputApiTypes = [typeof(TextInput)];
+    private static readonly IReadOnlyList<Type> NumberInputApiTypes = [typeof(NumberInput<int>)];
+    private static readonly IReadOnlyList<Type> DateInputApiTypes = [typeof(DateInput<DateOnly?>)];
+    private static readonly IReadOnlyList<Type> TextAreaInputApiTypes = [typeof(TextAreaInput)];
+    private static readonly IReadOnlyList<Type> SelectInputApiTypes = [typeof(SelectInput<FormsShowcaseBase.ReviewStatus?>)];
 
 }

@@ -20,13 +20,14 @@
                         </a>
 
                         <div class="sandbox-nav__search">
-                            <TextBox Value="@searchQuery"
-                                     ValueChanged="@OnSearchQueryChanged"
-                                     Immediate="true"
-                                     Look="InputLook.Plain"
-                                     Placeholder="Search components…"
-                                     class="sandbox-nav__search-input"
-                                     aria-label="Search components" />
+                            <TextInput Value="@searchQuery"
+                                       ValueChanged="@OnSearchQueryChanged"
+                                       ValueExpression="@(() => searchQuery)"
+                                       Immediate="true"
+                                       Look="InputLook.Plain"
+                                       placeholder="Search components…"
+                                       class="sandbox-nav__search-input"
+                                       aria-label="Search components" />
                         </div>
 
                         <nav class="sandbox-nav" aria-label="Standard proof groups">

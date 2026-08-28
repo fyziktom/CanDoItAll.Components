@@ -20,7 +20,7 @@
                 <Stack GapScale="LayoutGap.Medium">
                     <TextBlock TextStyle="@(TextStyle.Body2)" Value="@OverlayWindowBodyCopy" />
                     <Alert AlertStyle="@(AlertStyle.Info)">This floating surface is rendered by OverlayLib, while the surrounding sandbox content remains ordinary BaseLib layout.</Alert>
-                    <Toolbar data-testid="sandbox-overlay-window-toolbar"><ToolbarRow><ToolbarFields><TextBox Value="@OverlayWindowSearch" ReadOnly="true" aria-label="Overlay window search preview" data-testid="sandbox-overlay-window-search" /></ToolbarFields><ToolbarActions><Button Text="Refresh" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)" Disabled="@IsDisabled" /></ToolbarActions></ToolbarRow></Toolbar>
+                    <Toolbar data-testid="sandbox-overlay-window-toolbar"><ToolbarRow><ToolbarFields><TextInput Value="@OverlayWindowSearch" ValueChanged="@(value => OverlayWindowSearch = value ?? string.Empty)" ValueExpression="@(() => OverlayWindowSearch)" readonly="true" aria-label="Overlay window search preview" data-testid="sandbox-overlay-window-search" /></ToolbarFields><ToolbarActions><Button Text="Refresh" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)" Disabled="@IsDisabled" /></ToolbarActions></ToolbarRow></Toolbar>
                     <Cluster Gap="LayoutGap.Small"><StatusBadge Text="Geometry" Tone="success" /><StatusBadge Text="Minimize" Tone="info" /><StatusBadge Text="Hide/show" Tone="warning" /></Cluster>
                 </Stack>
             </ChildContent>
@@ -37,7 +37,7 @@
     private const string OverlayWindowSummary = "Longer title and summary copy still need to stay readable without pushing action buttons off the header.";
     private const string OverlayWindowHostCopy = "The host frame deliberately includes enough ordinary page content to prove the floating surface supports the workflow instead of replacing the surrounding page.";
     private const string OverlayWindowBodyCopy = "Overlay body copy can grow, but it should wrap inside the floating surface and leave the header controls reachable.";
-    private const string OverlayWindowSearch = "Filter overlay evidence and acceptance checkpoints";
+    private string OverlayWindowSearch = "Filter overlay evidence and acceptance checkpoints";
     private string OverlayWindowStateLabel => overlayWindowState.IsVisible ? overlayWindowState.IsMinimized ? "Minimized" : "Visible" : "Hidden";
     private string OverlayWindowStateTone => overlayWindowState.IsVisible ? overlayWindowState.IsMinimized ? "warning" : "success" : "warning";
 }

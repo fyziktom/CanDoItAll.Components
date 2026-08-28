@@ -1,0 +1,19 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+@using Microsoft.AspNetCore.Components.Forms
+
+<Grid Gap="LayoutGap.Large" ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
+    <EditForm Model="NativeModel">
+        <DataAnnotationsValidator />
+        <FormField Text="Due date">
+            <DateInput TValue="DateOnly?" @bind-Value="NativeModel.DueDate" data-testid="native-due-date" />
+        </FormField>
+    </EditForm>
+
+    <EditForm Model="NativeModel">
+        <DataAnnotationsValidator />
+        <FormField Text="Due month">
+            <DateInput TValue="DateOnly?" @bind-Value="NativeModel.DueDate" Type="InputDateType.Month" data-testid="native-due-month" />
+        </FormField>
+    </EditForm>
+</Grid>

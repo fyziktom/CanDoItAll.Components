@@ -1,0 +1,77 @@
+@namespace CanDoItAll.Components.BaseLib
+@typeparam TValue
+@inherits StyledInputBase<TValue>
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
+
+<select @attributes='BuildAttributes(ResolveCssClass())'
+        aria-labelledby="@ResolveLabelledBy()"
+        value="@CurrentValueAsString"
+        @onchange="@(e => CurrentValueAsString = e.Value?.ToString())">
+    @ChildContent
+</select>
+
+@code {
+    /// <summary>
+    /// The <c>&lt;option&gt;</c> elements to render, written by the consumer directly (including
+    /// <c>@foreach</c>-generated options, <c>disabled</c> options, and enum/nullable values) rather
+    /// than supplied via a <c>Data</c> collection.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private string ResolveCssClass()
+    {
+        return Look switch
+        {
+            InputLook.Plain => string.Empty,
+            InputLook.Filled => "form-select ui-select ui-select--filled",
+            _ => "form-select ui-select ui-select--outlined"
+        };
+    }
+
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        var targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
+        var isNullable = targetType != typeof(TValue);
+
+        if (string.IsNullOrEmpty(value))
+        {
+            if (isNullable || default(TValue) is null)
+            {
+                result = default!;
+                validationErrorMessage = null;
+                return true;
+            }
+
+            result = default!;
+            validationErrorMessage = $"The {DisplayName ?? FieldIdentifier.FieldName} field is required.";
+            return false;
+        }
+
+        if (targetType.IsEnum)
+        {
+            if (Enum.TryParse(targetType, value, out var enumResult))
+            {
+                result = (TValue)enumResult!;
+                validationErrorMessage = null;
+                return true;
+            }
+
+            result = default!;
+            validationErrorMessage = $"The {DisplayName ?? FieldIdentifier.FieldName} field is not valid.";
+            return false;
+        }
+
+        if (BindConverter.TryConvertTo<TValue>(value, CultureInfo.InvariantCulture, out var parsedValue))
+        {
+            result = parsedValue!;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        result = default!;
+        validationErrorMessage = $"The {DisplayName ?? FieldIdentifier.FieldName} field is not valid.";
+        return false;
+    }
+}

@@ -7,7 +7,7 @@
             <MutedInline Text="Use your workspace email to continue." />
         </Stack>
         <FormField Text="Email">
-            <TextBox Value="team@example.com" />
+            <TextInput Value="@email" ValueChanged="@(value => email = value ?? string.Empty)" ValueExpression="@(() => email)" />
         </FormField>
         <FormField Text="Password">
             <Password Value="" />
@@ -15,3 +15,7 @@
         <Button Text="Continue" Tone="ButtonTone.Primary" />
     </Stack>
 </AuthCard>
+
+@code {
+    private string email = "team@example.com";
+}

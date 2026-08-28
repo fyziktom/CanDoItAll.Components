@@ -1,0 +1,104 @@
+@namespace CanDoItAll.Components.BaseLib
+@typeparam TValue
+@inherits StyledInputBase<TValue>
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Forms
+
+<input type="@TypeAttributeValue"
+       @attributes='BuildAttributes(ResolveCssClass())'
+       aria-labelledby="@ResolveLabelledBy()"
+       @bind-value="CurrentValueAsString" />
+
+@code {
+    private const string DateFormat = "yyyy-MM-dd";
+    private const string DateTimeLocalFormat = "yyyy-MM-ddTHH:mm:ss";
+    private const string MonthFormat = "yyyy-MM";
+
+    private static readonly Type[] SupportedTypes = [typeof(DateTime), typeof(DateTimeOffset), typeof(DateOnly)];
+
+    static DateInput()
+    {
+        var targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
+        if (!SupportedTypes.Contains(targetType))
+        {
+            throw new InvalidOperationException(
+                $"The type '{targetType}' is not a supported date type. "
+                + $"{nameof(DateInput<TValue>)} only supports DateTime, DateTimeOffset, DateOnly and their nullable variants.");
+        }
+    }
+
+    /// <summary>The HTML date input variant rendered.</summary>
+    [Parameter]
+    public InputDateType Type { get; set; } = InputDateType.Date;
+
+    private string TypeAttributeValue => Type switch
+    {
+        InputDateType.DateTimeLocal => "datetime-local",
+        InputDateType.Month => "month",
+        _ => "date"
+    };
+
+    private string ResolveCssClass()
+    {
+        return Look switch
+        {
+            InputLook.Plain => string.Empty,
+            InputLook.Filled => "form-input ui-input ui-input--filled",
+            _ => "form-input ui-input ui-input--outlined"
+        };
+    }
+
+    private string CurrentTypeFormat => Type switch
+    {
+        InputDateType.DateTimeLocal => DateTimeLocalFormat,
+        InputDateType.Month => MonthFormat,
+        _ => DateFormat
+    };
+
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        var targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
+        var isNullable = targetType != typeof(TValue);
+
+        if (string.IsNullOrEmpty(value))
+        {
+            if (isNullable)
+            {
+                result = default!;
+                validationErrorMessage = null;
+                return true;
+            }
+
+            result = default!;
+            validationErrorMessage = $"The {DisplayName ?? FieldIdentifier.FieldName} field is required.";
+            return false;
+        }
+
+        object? parsed = null;
+        var parsedOk =
+            (targetType == typeof(DateTime) && DateTime.TryParseExact(value, CurrentTypeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime) && (parsed = dateTime) is not null)
+            || (targetType == typeof(DateTimeOffset) && DateTimeOffset.TryParseExact(value, CurrentTypeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeOffset) && (parsed = dateTimeOffset) is not null)
+            || (targetType == typeof(DateOnly) && DateOnly.TryParseExact(value, CurrentTypeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateOnly) && (parsed = dateOnly) is not null);
+
+        if (parsedOk)
+        {
+            result = (TValue)parsed!;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        result = default!;
+        validationErrorMessage = $"The {DisplayName ?? FieldIdentifier.FieldName} field must be a valid date.";
+        return false;
+    }
+
+    protected override string? FormatValueAsString(TValue? value) => value switch
+    {
+        null => null,
+        DateTime dateTimeValue => dateTimeValue.ToString(CurrentTypeFormat, CultureInfo.InvariantCulture),
+        DateTimeOffset dateTimeOffsetValue => dateTimeOffsetValue.ToString(CurrentTypeFormat, CultureInfo.InvariantCulture),
+        DateOnly dateOnlyValue => dateOnlyValue.ToString(CurrentTypeFormat, CultureInfo.InvariantCulture),
+        _ => throw new InvalidOperationException($"Unsupported type {value.GetType()}")
+    };
+}

@@ -371,7 +371,7 @@ public static class SandboxCatalogRegistry
             [
                 new("checkbox", "CheckBox", typeof(CheckBox<>)),
                 new("checkbox-option", "CheckboxOption", typeof(CheckboxOption<>)),
-                new("dropdown", "DropDown", typeof(DropDown<>)),
+                new("date-input", "DateInput", typeof(DateInput<>)),
                 new("editable", "Editable", typeof(Editable<>)),
                 new("entity-picker", "EntityPicker", typeof(EntityPicker)),
                 new("fieldset", "Fieldset", typeof(Fieldset)),
@@ -381,17 +381,18 @@ public static class SandboxCatalogRegistry
                 new("form-section", "FormSection", typeof(FormSection)),
                 new("form-stack", "FormStack", typeof(FormStack)),
                 new("inline-actions", "InlineActions", typeof(InlineActions)),
-                new("numeric", "Numeric", typeof(Numeric<>)),
+                new("number-input", "NumberInput", typeof(NumberInput<>)),
                 new("password", "Password", typeof(Password)),
                 new("prefixed-field", "PrefixedField", typeof(PrefixedField)),
                 new("secret-field", "SecretField", typeof(SecretField)),
+                new("select-input", "SelectInput", typeof(SelectInput<>)),
                 new("settings-switch-label", "SettingsSwitchLabel", typeof(SettingsSwitchLabel)),
                 new("settings-switch-row", "SettingsSwitchRow", typeof(SettingsSwitchRow)),
                 new("slider", "Slider", typeof(Slider<>)),
                 new("switch", "Switch", typeof(Switch)),
                 new("tag-editor", "TagEditor", typeof(TagEditor)),
-                new("text-area", "TextArea", typeof(TextArea)),
-                new("textbox", "TextBox", typeof(TextBox))
+                new("text-area-input", "TextAreaInput", typeof(TextAreaInput)),
+                new("text-input", "TextInput", typeof(TextInput))
             ],
             ["/cards"] =
             [

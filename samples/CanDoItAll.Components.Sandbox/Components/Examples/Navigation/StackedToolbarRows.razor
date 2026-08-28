@@ -4,7 +4,7 @@
 <Toolbar data-testid="sandbox-navigation-toolbar-row">
     <ToolbarRow>
         <ToolbarFields>
-            <TextBox Value="@toolbarRowsQuery" ValueChanged="@(value => toolbarRowsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Filter" aria-label="Filter" />
+            <TextInput Value="@toolbarRowsQuery" ValueChanged="@(value => toolbarRowsQuery = value ?? string.Empty)" ValueExpression="@(() => toolbarRowsQuery)" Immediate="true" placeholder="Filter" aria-label="Filter" />
         </ToolbarFields>
     </ToolbarRow>
     <ToolbarRow>

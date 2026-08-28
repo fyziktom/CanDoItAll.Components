@@ -49,12 +49,13 @@
             }
             else
             {
-                <TextBox Value="@editText"
-                         ValueChanged="OnTextChangedAsync"
-                         Placeholder="@Placeholder"
-                         Class="cda-editable__input"
-                         Disabled="@Disabled"
-                         aria-label="@InputAriaLabel" />
+                <TextInput Value="@editText"
+                           ValueChanged="OnTextChangedAsync"
+                           ValueExpression="@(() => editText)"
+                           placeholder="@Placeholder"
+                           Class="cda-editable__input"
+                           disabled="@Disabled"
+                           aria-label="@InputAriaLabel" />
                 <Button Icon="@SaveIcon"
                         Tone="@(ButtonTone.Success)"
                         Size="@(ButtonSize.Small)"
