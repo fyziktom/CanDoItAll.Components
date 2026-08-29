@@ -14,10 +14,10 @@ All notable changes to this repository's packages are recorded here, per the cha
   Blazor's own `InputText`/`InputNumber<TValue>`/`InputDate<TValue>`/`InputTextArea`/`InputSelect<TValue>`
   — real `ValueExpression`/`EditContext` support, so `@bind-Value` and validation-state CSS classes
   (`modified`/`valid`/`invalid`) work exactly as they do on the framework's own controls. No `EditForm`
-  ancestor is required for basic use (a manual `Value`/`ValueChanged`/`ValueExpression` trio works
-  standalone), but `ValueExpression` is always required — `InputBase<TValue>` throws without it, and
-  `@bind-Value` supplies it automatically. They render the same `.ui-input`/`.ui-select`/`form-input`/
-  `form-select` Tailwind classes the removed family below used, so nothing visually changes.
+  ancestor is required for basic use, and a plain `Value`/`ValueChanged` pair (no `ValueExpression`, the
+  old family's binding shape) now works standalone too — see the `StyledInputBase<TValue>` entry below.
+  They render the same `.ui-input`/`.ui-select`/`form-input`/`form-select` Tailwind classes the removed
+  family below used, so nothing visually changes.
   `SelectInput<TValue>` takes arbitrary `<option>` `ChildContent` (including `@foreach`, `disabled`
   options, and enum/nullable `TValue`) rather than a `Data` collection — closer to `<select>`'s and
   `InputSelect<TValue>`'s own shape. All five accept a `Look` (`InputLook`) parameter matching the
@@ -35,10 +35,26 @@ All notable changes to this repository's packages are recorded here, per the cha
   `TextAreaInput` (drop `Rows`/`Size`; pass `rows` as a plain HTML attribute); `DropDown<TValue>` →
   `SelectInput<TValue>` (drop `Data`/`TextProperty`/`ValueProperty`/`Placeholder`/`AllowClear`; write
   `<option>` elements as `ChildContent` instead, including an explicit empty `<option value="">` for a
-  placeholder). Every migrated call site needs a `ValueExpression` (or `@bind-Value`, which supplies one
-  automatically) — a plain `Value`/`ValueChanged` pair that was sufficient before now throws
-  `InvalidOperationException` at runtime. Also removed the now-unused `TextAreaSize` enum
-  (`FormPrimitives.cs`), which existed only for `TextArea.Size`.
+  placeholder). A plain `Value`/`ValueChanged` pair (no `ValueExpression`) keeps working unchanged after
+  migration — see the `StyledInputBase<TValue>` entry below — but a computed `Value` expression that
+  isn't a plain member access (e.g. `x?.ToString("D")`) still needs its own backing member if you also
+  want a real `ValueExpression`/`EditContext` validation binding. Also removed the now-unused
+  `TextAreaSize` enum (`FormPrimitives.cs`), which existed only for `TextArea.Size`.
+- Changed: `StyledInputBase<TValue>` (the shared base for `TextInput`/`NumberInput<TValue>`/
+  `DateInput<TValue>`/`TextAreaInput`/`SelectInput<TValue>`) now overrides `SetParametersAsync` to
+  synthesize a `ValueExpression` when the consumer doesn't supply one, instead of letting
+  `InputBase<TValue>` throw `InvalidOperationException`. A plain `Value`/`ValueChanged` pair (or a
+  manual `@onchange`/`@oninput`), with no `EditForm`/`EditContext` and no `ValueExpression`, now renders
+  the same way the removed `TextBox`/`Numeric<TValue>`/`TextArea`/`DropDown<TValue>` family did. An
+  explicit `ValueExpression` (including the one `@bind-Value` generates automatically) is always used
+  as-is and still drives `EditContext.FieldCssClass`'s `modified`/`valid`/`invalid` classes normally —
+  this only changes what happens when one was missing before, which was a hard crash.
+- Added: `TextAreaInput.Immediate` (`bool`, default `false`) — brings it in line with `TextInput`/
+  `NumberInput<TValue>`/`DateInput<TValue>`, which already had `Immediate` for live-typing updates
+  (`oninput`) instead of the default blur/commit (`onchange`). `TextAreaInput` previously had no such
+  parameter at all, so a consumer passing `Immediate="true"` (following the sibling controls' own
+  convention) got it silently splatted onto the `<textarea>` as an inert HTML attribute — the value only
+  ever updated on blur, never on keystroke, with no compile or runtime signal that anything was wrong.
 - Added: `.ui-input.invalid`/`.ui-select.invalid`/`.ui-input.modified.valid`/`.ui-select.modified.valid`
   Tailwind rules (`Tailwind/forms/styled-input-base.css`) so `EditContext.FieldCssClass`'s
   `modified`/`valid`/`invalid` tokens — emitted automatically by the new `InputBase<TValue>`-derived

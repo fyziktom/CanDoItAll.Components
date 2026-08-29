@@ -2,16 +2,30 @@
 @inherits StyledInputBase<string?>
 @using System.Diagnostics.CodeAnalysis
 
-<textarea @attributes='BuildAttributes(ResolveCssClass())'
-          aria-labelledby="@ResolveLabelledBy()"
-          @bind="CurrentValue"></textarea>
+@if (Immediate)
+{
+    <textarea @attributes='BuildAttributes(ResolveCssClass())'
+              aria-labelledby="@ResolveLabelledBy()"
+              @bind="CurrentValue"
+              @bind:event="oninput"></textarea>
+}
+else
+{
+    <textarea @attributes='BuildAttributes(ResolveCssClass())'
+              aria-labelledby="@ResolveLabelledBy()"
+              @bind="CurrentValue"></textarea>
+}
 
 @code {
+    /// <summary>When <c>true</c>, the bound value updates on every keystroke (<c>oninput</c>) instead of on blur/commit (<c>onchange</c>, the default — matching <c>InputTextArea</c>).</summary>
+    [Parameter]
+    public bool Immediate { get; set; }
+
     private string ResolveCssClass()
     {
         return Look switch
         {
-            InputLook.Plain => string.Empty,
+            InputLook.Plain => "form-input",
             InputLook.Filled => "form-input ui-input ui-input--textarea ui-input--filled",
             _ => "form-input ui-input ui-input--textarea ui-input--outlined"
         };

@@ -50,16 +50,17 @@
 
     private string? ResolveFieldStyle()
     {
-        var prefixPadding = ResolvePadding(Prefix, PrefixPaddingRem, 1.7, 0.45);
-        var suffixPadding = ResolvePadding(Suffix, SuffixPaddingRem, 1.8, 0.5);
+        return null;
+        // var prefixPadding = ResolvePadding(Prefix, PrefixPaddingRem, 1.7, 0.45);
+        // var suffixPadding = ResolvePadding(Suffix, SuffixPaddingRem, 1.8, 0.5);
 
-        return BuildStyle(
-            prefixPadding.HasValue
-                ? $"--cda-prefixed-field-prefix-pad:{prefixPadding.Value.ToString("0.##", CultureInfo.InvariantCulture)}rem;"
-                : null,
-            suffixPadding.HasValue
-                ? $"--cda-prefixed-field-suffix-pad:{suffixPadding.Value.ToString("0.##", CultureInfo.InvariantCulture)}rem;"
-                : null);
+        // return BuildStyle(
+        // prefixPadding.HasValue
+        // ? $"--cda-prefixed-field-prefix-pad:{prefixPadding.Value.ToString("0.##", CultureInfo.InvariantCulture)}rem;"
+        // : null,
+        // suffixPadding.HasValue
+        // ? $"--cda-prefixed-field-suffix-pad:{suffixPadding.Value.ToString("0.##", CultureInfo.InvariantCulture)}rem;"
+        // : null);
     }
 
     private static double? ResolvePadding(string? token, double? explicitPaddingRem, double baseRem, double perCharacterRem)

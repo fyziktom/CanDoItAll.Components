@@ -8,7 +8,18 @@ namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms;
 public abstract class FormsShowcaseBase : ComponentBase
 {
     protected bool IsDisabled => false;
-    protected InputFormState FormState { get; } = new("Quarterly migration review with extended ownership and escalation notes for all teams involved", "Platform architecture review board", "Review", 90, "long-secret", true, true, false, "This example deliberately uses a longer note so the textarea, labels, and spacing prove that shared field components can tolerate editorial copy without becoming unreadable.");
+    protected InputFormState FormState { get; } = new(
+        "Quarterly migration review with extended ownership and escalation notes for all teams involved",
+        "Platform architecture review board",
+        "Review",
+        90,
+        "long-secret",
+        true,
+        true,
+        false,
+        "This example deliberately uses a longer note so the textarea, labels, and spacing prove that shared field components can tolerate editorial copy without becoming unreadable.",
+        new DateTime(2000, 1, 1)
+        );
 
     protected string TitlePlaceholder => "Long titles should wrap predictably and still read well.";
     protected string NotesPlaceholder => "Explain context, risk, and reviewer expectations.";
@@ -75,7 +86,19 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected NativeInputModel NativeInvalidModel { get; } = new() { Title = null };
 
     protected sealed record SelectOption(string Text, string Value);
-    protected sealed record InputFormState(string Title, string Owner, string Status, int Confidence, string Secret, bool RemindersEnabled, bool RequiresApproval, bool PublishExternally, string Notes);
+
+    protected sealed record InputFormState(
+        string Title,
+        string Owner,
+        string Status,
+        int Confidence,
+        string Secret,
+        bool RemindersEnabled,
+        bool RequiresApproval,
+        bool PublishExternally,
+        string Notes,
+        DateTime Date
+        );
     protected sealed class AdvancedInputState { public int Priority { get; set; } public string BudgetCode { get; set; } = string.Empty; public IReadOnlyList<string> Tags { get; set; } = []; public string ReviewerId { get; set; } = string.Empty; public bool NotifyLeads { get; set; } }
     public sealed class EditableReviewItem { public string Title { get; set; } = string.Empty; public int Confidence { get; set; } public double EffortHours { get; set; } public bool RequiresApproval { get; set; } }
 

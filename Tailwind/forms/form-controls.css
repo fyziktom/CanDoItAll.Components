@@ -15,14 +15,17 @@
 @layer components {
   .ui-input,
   .ui-select {
-    @apply min-w-0 w-full max-w-full rounded-md px-3 py-2 text-sm transition focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    @apply min-w-0 w-full max-w-full;
+    @apply rounded-md px-3 py-2 text-sm;
+    @apply transition;
+    @apply focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
     border-color: var(--tone-border);
     color: var(--tone-text);
   }
 
   .ui-select {
-    appearance: auto;
-    background-image: none;
+    /*appearance: auto;*/
+    /*background-image: none;*/
   }
 
   .ui-input::placeholder {

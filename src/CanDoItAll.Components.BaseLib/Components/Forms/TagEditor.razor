@@ -12,12 +12,12 @@
                     @onclick="@(() => RemoveTagAsync(tag))"
                     disabled="@Disabled">
                 <span>@tag</span>
-                <span class="cad-tag-textedit__chip-x zy-tag-textedit__chip-x" aria-hidden="true"><Icon Name="close" /></span>
+                <span class="cad-tag-textedit__chip-x zy-tag-textedit__chip-x" aria-hidden="true"><Icon Name="close" OpticalSize="16" /></span>
             </button>
         }
 
         <input id="@InputId"
-               class="cad-tag-textedit__input zy-tag-textedit__input"
+               class="form-input cad-tag-textedit__input zy-tag-textedit__input"
                value="@pendingValue"
                aria-label="@AriaLabel"
                aria-labelledby="@ResolveLabelledBy()"
@@ -115,19 +115,19 @@
 
     private string pendingValue = string.Empty;
     private bool isFocused;
-    private static readonly ChipPaletteEntry[] ChipPalette =
-    [
-        new("#e0f2fe", "#7dd3fc", "#0c4a6e"),
-        new("#fce7f3", "#f9a8d4", "#831843"),
-        new("#d1fae5", "#6ee7b7", "#064e3b"),
-        new("#fef3c7", "#fcd34d", "#78350f"),
-        new("#ede9fe", "#c4b5fd", "#4c1d95"),
-        new("#ffedd5", "#fdba74", "#7c2d12"),
-        new("#e0e7ff", "#a5b4fc", "#312e81"),
-        new("#ccfbf1", "#5eead4", "#134e4a"),
-        new("#fce4ec", "#f48fb1", "#880e4f"),
-        new("#e8f5e9", "#81c784", "#1b5e20")
-    ];
+    // private static readonly ChipPaletteEntry[] ChipPalette =
+    // [
+    //     new("#e0f2fe", "#7dd3fc", "#0c4a6e"),
+    //     new("#fce7f3", "#f9a8d4", "#831843"),
+    //     new("#d1fae5", "#6ee7b7", "#064e3b"),
+    //     new("#fef3c7", "#fcd34d", "#78350f"),
+    //     new("#ede9fe", "#c4b5fd", "#4c1d95"),
+    //     new("#ffedd5", "#fdba74", "#7c2d12"),
+    //     new("#e0e7ff", "#a5b4fc", "#312e81"),
+    //     new("#ccfbf1", "#5eead4", "#134e4a"),
+    //     new("#fce4ec", "#f48fb1", "#880e4f"),
+    //     new("#e8f5e9", "#81c784", "#1b5e20")
+    // ];
 
     private static int GetChipColorIndex(string tag)
     {
@@ -142,8 +142,9 @@
 
     private static string GetChipStyle(string tag)
     {
-        var palette = ChipPalette[GetChipColorIndex(tag)];
-        return $"background:{palette.BackgroundColor};border-color:{palette.BorderColor};color:{palette.ForegroundColor};";
+        return "";
+        // var palette = ChipPalette[GetChipColorIndex(tag)];
+        // return $"background:{palette.BackgroundColor};border-color:{palette.BorderColor};color:{palette.ForegroundColor};";
     }
 
     private IReadOnlyList<string> MatchingSuggestions => Suggestions

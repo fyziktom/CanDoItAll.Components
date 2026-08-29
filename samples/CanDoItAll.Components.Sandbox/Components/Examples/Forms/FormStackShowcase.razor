@@ -4,12 +4,16 @@
 <FormStack data-testid="sandbox-forms-stack">
     <FormRow Split="true">
         <FormField Text="Title">
-            <TextInput Value="@FormState.Title" ValueChanged="HandleTitleChanged" ValueExpression="@(() => FormState.Title)"
+            <TextInput Look="InputLook.Default" Value="@FormState.Title" ValueChanged="HandleTitleChanged" ValueExpression="@(() => FormState.Title)"
                        placeholder="@TitlePlaceholder"
                        disabled="@IsDisabled" />
         </FormField>
+        <FormField Text="Date">
+            <DateInput Look="InputLook.Default" Value="@FormState.Date" />
+        </FormField>
         <FormField Text="Status">
             <SelectInput TValue="string"
+                         Look="InputLook.Default"
                          Value="@FormState.Status"
                          ValueChanged="HandleStatusChanged"
                          ValueExpression="@(() => FormState.Status)"
@@ -19,6 +23,48 @@
                     <option value="@option.Value">@option.Text</option>
                 }
             </SelectInput>
+        </FormField>
+        <FormField Text="Secret">
+            <TextInput Look="InputLook.Default" Value="@FormState.Secret" />
+        </FormField>
+        <CheckboxOption TValue="bool" Value="@CanReadStorage" ValueChanged="HandleCanReadStorageChanged"
+                        Disabled="@IsDisabled" Text="Can read storage driver catalogs"
+                        data-testid="agents-catalog-storage-read" />
+        <FileInput Accept=".pdf,.png,.jpg,.jpeg"
+                   Change="HandleFileInputChanged"
+                   TestHookId="sandbox-inputs-file-input" />
+        <FormField Text="Secret">
+            <TextInput Look="InputLook.Default" Value="@FormState.Secret" />
+        </FormField>
+        <FormField Text="Tags">
+            <TagEditor Value="@AdvancedState.Tags"
+                       ValueChanged="HandleTagsChanged"
+                       Suggestions="@TagSuggestions"
+                       Placeholder="Add review tag"
+                       Hint="Press comma or Enter to add a tag. Suggestions appear while the field is focused."
+                       Disabled="@IsDisabled"
+                       TestId="sandbox-inputs-tag-editor"
+                       InputTestId="sandbox-inputs-tag-editor-input"
+                       MaxTags="8"
+                       MaxLength="36" />
+        </FormField>
+        <FormField Text="Budget reference">
+            <PrefixedField Suffix="USD"
+                           StackOnMobile="true"
+                           data-testid="sandbox-inputs-prefixed-field">
+                <TextInput Value="@AdvancedState.BudgetCode"
+                           ValueChanged="HandleBudgetCodeChanged"
+                           ValueExpression="@(() => AdvancedState.BudgetCode)"
+                           Immediate="true"
+                           placeholder="@BudgetCodePlaceholder"
+                           disabled="@IsDisabled"
+                           data-testid="sandbox-inputs-prefixed-field-input" />
+            </PrefixedField>
+        </FormField>
+        <FormField Text="Title">
+            <TextInput Look="InputLook.Default" Value="@FormState.Title" ValueChanged="HandleTitleChanged" ValueExpression="@(() => FormState.Title)"
+                       placeholder="@TitlePlaceholder"
+                       disabled="@IsDisabled" />
         </FormField>
     </FormRow>
     <FormField Text="Notes">

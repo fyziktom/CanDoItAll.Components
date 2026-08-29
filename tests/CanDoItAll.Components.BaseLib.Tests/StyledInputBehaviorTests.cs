@@ -376,4 +376,118 @@ public sealed class StyledInputBehaviorTests
 
         Assert.Equal(expectedHtmlType, form.Find("input").GetAttribute("type"));
     }
+
+    // 9: plain Value/ValueChanged binding without ValueExpression, EditForm, or EditContext.
+    [Fact]
+    public void TextInputRendersWithoutValueExpressionOrEditForm()
+    {
+        using var context = new BunitContext();
+        var value = "abc";
+        var rendered = context.Render<TextInput>(parameters => parameters
+            .Add(p => p.Value, value)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string?>(this, v => value = v)));
+
+        Assert.Equal("abc", rendered.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void SelectInputRendersWithoutValueExpressionOrEditFormAndValueChangedStillFires()
+    {
+        using var context = new BunitContext();
+        string? selected = null;
+        var rendered = context.Render<SelectInput<string>>(parameters => parameters
+            .Add(p => p.Value, "a")
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string>(this, v => selected = v))
+            .Add(p => p.ChildContent, (RenderFragment)(builder =>
+            {
+                builder.OpenElement(0, "option");
+                builder.AddAttribute(1, "value", "a");
+                builder.CloseElement();
+                builder.OpenElement(2, "option");
+                builder.AddAttribute(3, "value", "b");
+                builder.CloseElement();
+            })));
+
+        rendered.Find("select").Change("b");
+
+        Assert.Equal("b", selected);
+    }
+
+    [Fact]
+    public void NumberInputRendersWithoutValueExpressionOrEditForm()
+    {
+        using var context = new BunitContext();
+        var rendered = context.Render<NumberInput<int>>(parameters => parameters
+            .Add(p => p.Value, 5)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<int>(this, _ => { })));
+
+        Assert.Equal("5", rendered.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void ExplicitValueExpressionIsNotOverriddenByFallback()
+    {
+        var model = new TextModel { Title = "Initial" };
+        var (context, form) = RenderForm(model, editContext => builder =>
+        {
+            builder.OpenComponent<TextInput>(0);
+            builder.AddAttribute(1, "Value", model.Title);
+            builder.AddAttribute(2, "ValueChanged", EventCallback.Factory.Create<string?>(this, v => model.Title = v));
+            builder.AddAttribute(3, "ValueExpression", (Expression<Func<string?>>)(() => model.Title));
+            builder.CloseComponent();
+        });
+        using var _ = context;
+
+        var editContext = form.Instance.EditContext!;
+        var messages = new ValidationMessageStore(editContext);
+        messages.Add(editContext.Field(nameof(TextModel.Title)), "Title is required.");
+        form.InvokeAsync(editContext.NotifyValidationStateChanged);
+
+        Assert.Contains("invalid", form.Find("input").GetAttribute("class"));
+    }
+
+    // 10: Immediate updates on oninput instead of onchange (TextInput and TextAreaInput).
+    [Fact]
+    public void TextInputImmediateUpdatesOnInputEvent()
+    {
+        using var context = new BunitContext();
+        string? value = "initial";
+        var rendered = context.Render<TextInput>(parameters => parameters
+            .Add(p => p.Value, value)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string?>(this, v => value = v))
+            .Add(p => p.Immediate, true));
+
+        rendered.Find("input").Input("typed");
+
+        Assert.Equal("typed", value);
+    }
+
+    [Fact]
+    public void TextAreaInputImmediateUpdatesOnInputEvent()
+    {
+        using var context = new BunitContext();
+        string? value = "initial";
+        var rendered = context.Render<TextAreaInput>(parameters => parameters
+            .Add(p => p.Value, value)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string?>(this, v => value = v))
+            .Add(p => p.Immediate, true));
+
+        rendered.Find("textarea").Input("typed");
+
+        Assert.Equal("typed", value);
+    }
+
+    [Fact]
+    public void TextAreaInputDefaultUpdatesOnChangeEvent()
+    {
+        using var context = new BunitContext();
+        string? value = "initial";
+        var rendered = context.Render<TextAreaInput>(parameters => parameters
+            .Add(p => p.Value, value)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string?>(this, v => value = v)));
+
+        rendered.Find("textarea").Change("typed");
+
+        Assert.Equal("typed", value);
+    }
 }

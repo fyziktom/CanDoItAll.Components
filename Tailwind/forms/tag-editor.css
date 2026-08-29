@@ -11,11 +11,15 @@
 
   .cad-tag-textedit__surface,
   .zy-tag-textedit__surface {
-    @apply flex min-w-0 max-w-full flex-wrap items-center gap-1.5 rounded-[0.85rem] border px-2 py-1;
-    min-height: 2.35rem;
+    @apply flex min-w-0 max-w-full flex-wrap items-center;
+    @apply gap-2;
+    @apply border;
+    @apply rounded-md px-3 py-2 text-sm;
+    /*rounded-[0.85rem] border px-2 py-1;*/
+    min-height: 2.625rem;
     border-color: var(--tone-border);
-    background: var(--tone-surface);
-    box-shadow: var(--cad-shadow-soft);
+    /*background: var(--tone-surface);*/
+    /*box-shadow: var(--cad-shadow-soft);*/
   }
 
   .cad-tag-textedit__surface:focus-within,
@@ -33,22 +37,26 @@
   .zy-tag-textedit__chip,
   .cad-tag-textedit__suggestion,
   .zy-tag-textedit__suggestion {
-    @apply inline-flex max-w-full items-center gap-1 rounded-full border;
-    padding: 0.08rem 0.4rem;
-    font-size: 0.64rem;
-    font-weight: 700;
-    line-height: 1;
-    min-height: 1.15rem !important;
-    text-transform: none;
-    user-select: none;
-    box-shadow: none;
+    @apply inline-flex items-center;
+    /*@apply max-w-full;*/
+    @apply rounded-sm border;
+    /*padding: 0.08rem 0.4rem;*/
+    /*font-size: 0.64rem;*/
+    /*font-weight: 700;*/
+    /*line-height: 1;*/
+    /*min-height: 1.15rem !important;*/
+    /*text-transform: none;*/
+    /*user-select: none;*/
+    /*box-shadow: none;*/
   }
 
   .cad-tag-textedit__chip > span:first-child,
   .zy-tag-textedit__chip > span:first-child,
   .cad-tag-textedit__suggestion > span:first-child,
   .zy-tag-textedit__suggestion > span:first-child {
-    @apply min-w-0 truncate;
+    /*@apply min-w-0 truncate;*/
+    @apply ml-1.5;
+    @apply text-xs;
   }
 
   .cad-tag-textedit__chip,
@@ -162,32 +170,34 @@
   .cad-tag-textedit__chip-x,
   .zy-tag-textedit__chip-x {
     display: inline-flex;
-    width: 0.72rem;
-    height: 0.72rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--tone-text-strong) 8%, transparent);
-    font-size: 0.62rem;
-    font-weight: 700;
-    line-height: 1;
+    /*width: 0.72rem;*/
+    /*height: 0.72rem;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    /*border-radius: 999px;*/
+    /*background: color-mix(in srgb, var(--tone-text-strong) 8%, transparent);*/
+    /*font-size: 0.62rem;*/
+    /*font-weight: 700;*/
+    /*line-height: 1;*/
   }
 
   .cad-tag-textedit__input,
   .zy-tag-textedit__input {
     min-width: 4rem;
-    flex: 1 1 6rem;
+    /*flex: 1 1 6rem;*/
     max-width: 100%;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    color: var(--tone-text);
-    padding: 0.14rem 0.2rem !important;
-    font-family: inherit;
-    font-size: 0.82rem !important;
-    outline: none;
-    box-shadow: none !important;
-    min-height: auto !important;
+    @apply border-0 px-1 py-0.5 text-xs;
+    @apply focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    /*border: 0 !important;*/
+    /*border-radius: 0 !important;*/
+    /*background: transparent !important;*/
+    /*color: var(--tone-text);*/
+    /*padding: 0.14rem 0.2rem !important;*/
+    /*font-family: inherit;*/
+    /*font-size: 0.82rem !important;*/
+    /*outline: none;*/
+    /*box-shadow: none !important;*/
+    /*min-height: auto !important;*/
   }
 
   .cad-tag-textedit__input::placeholder,
@@ -212,7 +222,8 @@
   .cad-tag-textedit__hint,
   .zy-tag-textedit__hint {
     color: var(--tone-text-soft);
-    font-size: 0.78rem;
+    /*font-size: 0.78rem;*/
+    @apply text-xs;
     line-height: 1.45;
   }
 }
