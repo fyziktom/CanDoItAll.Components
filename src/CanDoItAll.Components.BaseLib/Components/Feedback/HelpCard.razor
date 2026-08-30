@@ -1,0 +1,61 @@
+@namespace CanDoItAll.Components.BaseLib
+@inherits StyledComponentBase
+
+@if (Visible)
+{
+    <div role="note" @attributes='BuildAttributes("ui-help-card")'>
+        <button type="button"
+                class="ui-help-card__close"
+                aria-label="@CloseAriaLabel"
+                title="@CloseAriaLabel"
+                @onclick:stopPropagation="true"
+                @onclick="CloseAsync">
+            <Icon Name="close" />
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace(Icon))
+        {
+            <span class="ui-help-card__icon" aria-hidden="true">
+                <Icon Name="@Icon" OpticalSize="48" Class="text-4xl" />
+            </span>
+        }
+
+        <div class="ui-help-card__content">
+            @if (!string.IsNullOrWhiteSpace(Heading))
+            {
+                <p class="ui-help-card__heading">@Heading</p>
+            }
+
+            <div class="ui-help-card__body">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>Whether the card is shown. Bind the same field a consumer's own help-toggle control uses.</summary>
+    [Parameter]
+    public bool Visible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> VisibleChanged { get; set; }
+
+    /// <summary>Optional heading shown above the body content.</summary>
+    [Parameter]
+    public string? Heading { get; set; }
+
+    /// <summary>Optional Material icon token rendered to the left of the heading/body.</summary>
+    [Parameter]
+    public string? Icon { get; set; }
+
+    /// <summary>The card's body content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Accessible label for the close button.</summary>
+    [Parameter]
+    public string CloseAriaLabel { get; set; } = "Hide help";
+
+    private Task CloseAsync() => VisibleChanged.InvokeAsync(false);
+}

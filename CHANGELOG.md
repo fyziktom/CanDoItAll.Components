@@ -79,6 +79,17 @@ All notable changes to this repository's packages are recorded here, per the cha
   existing `FileUpload` component — `FileUpload` is a drag-and-drop card widget with its own JS module;
   `FileInput` is a single native-looking field for the common case of one file input styled like the
   rest of a form, with no drop zone.
+- Added: `HelpCard` (`Components/Feedback/HelpCard.razor`) — a dismissible help/description card with
+  its own close button, replacing the ad hoc paragraph text apps previously inlined next to a page
+  title. Takes `Visible`/`VisibleChanged`, `Heading`, and `ChildContent` for the body. Intended to be
+  toggled by a consumer's own page-chrome control via a shared bound field; not a replacement for
+  `Alert` or `PageHeader.Description`, which are unchanged.
+- Added: `theme-tokens.js`'s `readThemeMode(hostElement)` and `watchThemeMode(hostElement, dotNetRef,
+  methodName)` — `readThemeMode` resolves the nearest `data-ui-theme` ancestor's current value
+  (`"light"`/`"dark"`) directly, for components that need the discrete mode name rather than a CSS
+  color read via `readTokens`, mirroring the pattern `MermaidDiagramOptions.Theme`'s `resolveTheme`
+  already hand-rolled locally before this helper existed. `watchThemeMode` bridges `watchTheme`'s
+  JS-only callback to a Blazor `[JSInvokable]` method.
 
 #### Internal
 

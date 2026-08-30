@@ -476,6 +476,7 @@ public static class SandboxCatalogRegistry
                 new("alert", "Alert", typeof(Alert)),
                 new("callout", "Callout", typeof(Callout)),
                 new("empty-state", "EmptyState", typeof(EmptyState)),
+                new("help-card", "HelpCard", typeof(HelpCard)),
                 new("help-popover", "HelpPopover", typeof(HelpPopover)),
                 new("loading-state", "LoadingState", typeof(LoadingState)),
                 new("notification", "Notification", typeof(Notification)),
