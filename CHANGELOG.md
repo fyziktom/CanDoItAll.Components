@@ -104,6 +104,32 @@ All notable changes to this repository's packages are recorded here, per the cha
   only its own label row and is not forwarded to its inner `CheckBox`. `.ui-select--density-comfortable`/
   `--compact` also pin an explicit `height` alongside the padding override, since WebKit/Safari can floor
   a native `<select>`'s rendered height below its author padding.
+- Added: `Tabs.Rounded` and `Tabs.ContentRounded` (new `TabsRounded` enum: `None`/`Default`/`Medium`/
+  `Large`, mirroring `ButtonRounded`). `Rounded` controls the corner radius of each tab button — only
+  the two outer corners round (the corners facing away from the panel/other tabs); every `Density`
+  (including `Compact`, which previously forced a full 4-corner pill regardless of `Rounded`) now
+  respects it. `ContentRounded` (default `Medium`) controls the corner radius of the `.cad-tabs__panel`
+  wrapper below the tab strip — only the two corners on the edge *away* from the tab strip round, so the
+  seam between the tab strip and the panel always stays a flush straight line no matter which tab is
+  active or which `TabPosition` is in use, fixing both vertical tabs (which previously rounded all four
+  tab corners regardless of `TabPosition`) and the panel (which previously had one hardcoded "attached"
+  corner that didn't track `TabPosition` and could round a corner right next to the tab-strip border).
+- Added: `TabsDensity.Comfortable`, sitting between the existing `Normal` and `Compact` values,
+  matching `ButtonDensity`'s three-way scale and bringing tab-strip heights closer to
+  `Button`/`.ui-input`'s own Normal/Comfortable/Compact heights.
+- Added: `Tabs.NoContent` (`bool`, default `false`) — when `true`, the `.cad-tabs__panels` wrapper (and
+  its panel) is not rendered at all, for consumers using `Tabs` purely as a selector strip with their
+  own panel markup elsewhere (see the `ExampleBlock` change under Internal below).
+- Added: `Tabs.NoSlider` (`bool`, default `false`) — hides the active-tab underline/indicator.
+- Added: `TabsItem.Link` (`string?`) — when set, that tab renders as an `<a href>` styled like a link
+  (no button chrome) instead of a `<button>`, reusing `Button`'s `Href`/anchor pattern.
+- **Breaking:** `Tabs`' default appearance changed: the tab strip no longer has horizontal inset padding,
+  the active-tab underline now spans flush to the tab's edges instead of floating inset from them, and
+  the default tab corner radius is smaller (`Rounded.Default`, ~0.375rem, replacing the previous
+  hardcoded 1rem-on-top/all-corners shape). This look was already what the Sandbox showed everywhere —
+  it forced this exact shape via `.sandbox-theme-host .cad-tabs`/`.cad-tabs__list` CSS overrides, now
+  removed — so most consumers will see no change; a consumer styling directly against the old
+  `--cad-tabs-tab-radius` custom property or the underline's previous inset position should re-check.
 
 #### Internal
 
@@ -133,6 +159,14 @@ All notable changes to this repository's packages are recorded here, per the cha
   `compatibility/`. The pattern now lives, wired into the build and namespaced per the `--ui-`
   convention, as `.ui-checkbox-option` behind the new `CheckboxOption` component
   (`Tailwind/forms/checkbox-option.css`).
+- Removed the `.sandbox-theme-host .cad-tabs`/`.cad-tabs__list`/`.cad-tabs--density-compact` overrides
+  from `Tailwind/sandbox/shell.css` and the `.sandbox-example__tabs .cad-tabs__panels { @apply hidden;
+  }` override from `Tailwind/sandbox/examples.css`, now that `Tabs` itself defaults to that shape and
+  exposes `NoContent` — `ExampleBlock.razor`'s own `<Tabs>` usage (the Example/API/Code toolbar) now
+  passes `NoContent="true"` instead of relying on the removed CSS.
+- The Buttons sandbox page (`Pages/Buttons.razor`) now passes `ApiTypes="@ButtonApiTypes"`
+  (`typeof(Button)`) to each of its `Button` `ExampleBlock`s, which previously had no "API" tab because
+  `ApiTypes` was never supplied.
 
 ## [Unreleased] — 2.0.0
 

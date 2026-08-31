@@ -20,7 +20,9 @@
               SelectedIndexChanged="HandleTabChanged"
               RenderMode="@(TabRenderMode.Server)"
               Density="@(TabsDensity.Compact)"
+              Rounded="@(TabsRounded.None)"
               BorderMode="@(TabsBorderMode.None)"
+              NoContent="true"
               AriaLabel="@($"{Title} view")"
               data-testid="@($"{TestId}-tabs")">
             <TabItems>
@@ -42,6 +44,7 @@
             <CopyButton Value="@Source"
                         Text="Copy"
                         Variant="Variant.Text"
+                        Density="ButtonDensity.Compact"
                         CopiedText="Copied"
                         Size="CopyButtonSize.Small"
                         data-testid="@($"{TestId}-copy")" />
@@ -54,6 +57,7 @@
                     Href="@GitHubSourceUrl"
                     Target="_blank"
                     Variant="Variant.Text"
+                    Density="ButtonDensity.Compact"
                     Size="ButtonSize.Small"
                     data-testid="@($"{TestId}-github")" />
         }

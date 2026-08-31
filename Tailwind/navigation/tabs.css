@@ -31,10 +31,13 @@
     --cad-tabs-tab-indicator: color-mix(in srgb, var(--cad-tabs-accent-border) 72%, var(--cad-tabs-accent-fg) 28%);
     --cad-tabs-tab-font-size: 0.875rem;
     --cad-tabs-tab-font-weight: 650;
-    --cad-tabs-tab-padding: 0.65rem 1rem;
-    --cad-tabs-tab-min-height: 2.85rem;
-    --cad-tabs-tab-radius: 1rem 1rem 0 0;
-    /* TODO: V2 candidate: --cad-tabs-tab-radius: 0; Sandbox overrides it. */
+    --cad-tabs-tab-padding: 0.5rem 1rem;
+    --cad-tabs-tab-min-height: 2.5rem;
+    --cad-tabs-tab-radius-value: 0.375rem;
+    --cad-tabs-tab-radius-tl: 0;
+    --cad-tabs-tab-radius-tr: 0;
+    --cad-tabs-tab-radius-bl: 0;
+    --cad-tabs-tab-radius-br: 0;
     --cad-tabs-panel-border: color-mix(in srgb, var(--cad-tabs-accent-border) 56%, var(--tone-border-soft) 44%);
     --cad-tabs-panel-background: linear-gradient(
       180deg,
@@ -43,7 +46,11 @@
     );
     --cad-tabs-panel-shadow: 0 18px 42px -30px color-mix(in srgb, var(--tone-text) 20%, transparent);
     --cad-tabs-panel-padding: 1rem;
-    --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
+    --cad-tabs-panel-radius-value: 1.25rem;
+    --cad-tabs-panel-radius-tl: 0;
+    --cad-tabs-panel-radius-tr: 0;
+    --cad-tabs-panel-radius-bl: 0;
+    --cad-tabs-panel-radius-br: 0;
     --cad-tabs-badge-background: var(--cad-tabs-accent-bg);
     --cad-tabs-badge-color: var(--cad-tabs-accent-fg);
 
@@ -92,6 +99,83 @@
     --cad-tabs-accent-fg: var(--tone-danger-soft-fg);
   }
 
+  .cad-tabs--rounded-none {
+    --cad-tabs-tab-radius-value: 0;
+  }
+
+  .cad-tabs--rounded-default {
+    --cad-tabs-tab-radius-value: 0.375rem;
+  }
+
+  .cad-tabs--rounded-md {
+    --cad-tabs-tab-radius-value: 0.75rem;
+  }
+
+  .cad-tabs--rounded-lg {
+    --cad-tabs-tab-radius-value: 1.25rem;
+  }
+
+  .cad-tabs--content-rounded-none {
+    --cad-tabs-panel-radius-value: 0;
+  }
+
+  .cad-tabs--content-rounded-default {
+    --cad-tabs-panel-radius-value: 0.375rem;
+  }
+
+  .cad-tabs--content-rounded-md {
+    --cad-tabs-panel-radius-value: 0.25rem;
+  }
+
+  .cad-tabs--content-rounded-lg {
+    --cad-tabs-panel-radius-value: 1.25rem;
+  }
+
+  /* Only the outer corners of a tab button round; which corners are "outer"
+     depends on which edge the tab strip sits against. */
+  .cad-tabs--position-top {
+    --cad-tabs-tab-radius-tl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-tr: var(--cad-tabs-tab-radius-value);
+  }
+
+  .cad-tabs--position-bottom {
+    --cad-tabs-tab-radius-bl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-br: var(--cad-tabs-tab-radius-value);
+  }
+
+  .cad-tabs--position-left {
+    --cad-tabs-tab-radius-tl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-bl: var(--cad-tabs-tab-radius-value);
+  }
+
+  .cad-tabs--position-right {
+    --cad-tabs-tab-radius-tr: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-br: var(--cad-tabs-tab-radius-value);
+  }
+
+  /* The panel's edge touching the tab strip always stays square; only the
+     opposite two corners round, so the seam between tabs and panel stays a
+     straight line regardless of which tab is active. */
+  .cad-tabs--position-top {
+    --cad-tabs-panel-radius-bl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-br: var(--cad-tabs-panel-radius-value);
+  }
+
+  .cad-tabs--position-bottom {
+    --cad-tabs-panel-radius-tl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-tr: var(--cad-tabs-panel-radius-value);
+  }
+
+  .cad-tabs--position-left {
+    --cad-tabs-panel-radius-tr: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-br: var(--cad-tabs-panel-radius-value);
+  }
+
+  .cad-tabs--position-right {
+    --cad-tabs-panel-radius-tl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-bl: var(--cad-tabs-panel-radius-value);
+  }
+
   .cad-tabs--horizontal {
     @apply flex-col;
   }
@@ -130,8 +214,7 @@
   .cad-tabs__list {
     @apply flex min-w-0 w-full max-w-full items-end gap-2;
     margin: 0;
-    padding: 0 0.25rem;
-    /* TODO: V2 removes the list inset; Sandbox overrides it. */
+    padding: 0;
     border-bottom: 1px solid var(--cad-tabs-list-border);
     scrollbar-width: thin;
   }
@@ -169,7 +252,10 @@
     padding: var(--cad-tabs-tab-padding);
     border: 1px solid var(--cad-tabs-tab-border);
     border-bottom-width: 0;
-    border-radius: var(--cad-tabs-tab-radius);
+    border-top-left-radius: var(--cad-tabs-tab-radius-tl);
+    border-top-right-radius: var(--cad-tabs-tab-radius-tr);
+    border-bottom-left-radius: var(--cad-tabs-tab-radius-bl);
+    border-bottom-right-radius: var(--cad-tabs-tab-radius-br);
     background: var(--cad-tabs-tab-background);
     color: var(--cad-tabs-tab-color);
     font-size: var(--cad-tabs-tab-font-size);
@@ -184,7 +270,6 @@
   .cad-tabs--vertical .cad-tabs__tab {
     @apply w-full justify-start;
     border-bottom-width: 1px;
-    border-radius: 1rem;
   }
 
   .cad-tabs__tab:hover,
@@ -211,28 +296,30 @@
   .cad-tabs--horizontal .cad-tabs__tab.is-active::after {
     content: "";
     position: absolute;
-    right: 0.9rem;
-    bottom: 0.42rem;
-    left: 0.9rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
     height: 0.18rem;
-    border-radius: 9999px;
     background: var(--cad-tabs-tab-indicator);
   }
 
   .cad-tabs--position-bottom.cad-tabs--horizontal .cad-tabs__tab.is-active::after {
-    top: 0.42rem;
+    top: 0;
     bottom: auto;
   }
 
   .cad-tabs--vertical .cad-tabs__tab.is-active::after {
     content: "";
     position: absolute;
-    top: 0.7rem;
-    bottom: 0.7rem;
-    left: 0.38rem;
+    top: 0;
+    bottom: 0;
+    left: 0;
     width: 0.2rem;
-    border-radius: 9999px;
     background: var(--cad-tabs-tab-indicator);
+  }
+
+  .cad-tabs--no-slider .cad-tabs__tab.is-active::after {
+    display: none;
   }
 
   .cad-tabs--horizontal.cad-tabs--position-top .cad-tabs__tab.is-active {
@@ -256,6 +343,28 @@
   .cad-tabs__tab:disabled::after,
   .cad-tabs__tab[aria-disabled="true"]::after {
     display: none;
+  }
+
+  .cad-tabs__tab--link {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.2em;
+  }
+
+  .cad-tabs__tab--link:hover,
+  .cad-tabs__tab--link:focus-visible {
+    border-color: transparent;
+    background: transparent;
+    text-decoration-color: currentColor;
+  }
+
+  .cad-tabs__tab--link.is-active {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .cad-tabs__icon {
@@ -298,7 +407,10 @@
     min-width: 0;
     padding: var(--cad-tabs-panel-padding);
     border: 1px solid var(--cad-tabs-panel-border);
-    border-radius: var(--cad-tabs-panel-radius);
+    border-top-left-radius: var(--cad-tabs-panel-radius-tl);
+    border-top-right-radius: var(--cad-tabs-panel-radius-tr);
+    border-bottom-left-radius: var(--cad-tabs-panel-radius-bl);
+    border-bottom-right-radius: var(--cad-tabs-panel-radius-br);
     background: var(--cad-tabs-panel-background);
     box-shadow: var(--cad-tabs-panel-shadow);
     color: var(--tone-text);
@@ -336,21 +448,23 @@
 
   .cad-tabs--position-left.cad-tabs--vertical .cad-tabs__panel {
     margin-left: -1px;
-    border-top-left-radius: 0;
   }
 
   .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__panel {
     margin-right: -1px;
-    border-top-right-radius: 0;
+  }
+
+  .cad-tabs--density-comfortable {
+    --cad-tabs-tab-font-size: 0.8125rem;
+    --cad-tabs-tab-padding: 0.4rem 0.9rem;
+    --cad-tabs-tab-min-height: 2rem;
   }
 
   .cad-tabs--density-compact {
     --cad-tabs-list-border: transparent;
     --cad-tabs-tab-font-size: 0.8125rem;
-    --cad-tabs-tab-padding: 0.45rem 0.85rem;
-    --cad-tabs-tab-min-height: 2.35rem;
-    --cad-tabs-tab-radius: 9999px;
-    /* TODO: V2 candidate: --cad-tabs-tab-radius: 0; Sandbox overrides it. */
+    --cad-tabs-tab-padding: 0.3rem 0.75rem;
+    --cad-tabs-tab-min-height: 1.625rem;
     --cad-tabs-tab-background: color-mix(in srgb, var(--tone-surface-soft) 74%, transparent);
     --cad-tabs-tab-hover-background: color-mix(in srgb, var(--tone-surface) 70%, var(--cad-tabs-accent-bg) 30%);
     --cad-tabs-tab-active-background: var(--cad-tabs-accent-bg);
@@ -359,7 +473,10 @@
     --cad-tabs-panel-background: transparent;
     --cad-tabs-panel-shadow: none;
     --cad-tabs-panel-padding: 0.85rem 0 0;
-    --cad-tabs-panel-radius: 0;
+    --cad-tabs-panel-radius-tl: 0;
+    --cad-tabs-panel-radius-tr: 0;
+    --cad-tabs-panel-radius-bl: 0;
+    --cad-tabs-panel-radius-br: 0;
   }
 
   .cad-tabs--density-compact .cad-tabs__tab.is-active::after {
@@ -403,7 +520,10 @@
     .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__panel {
       margin-left: 0;
       margin-right: 0;
-      border-radius: var(--cad-tabs-panel-radius);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--cad-tabs-panel-radius-value);
+      border-bottom-right-radius: var(--cad-tabs-panel-radius-value);
     }
   }
 }

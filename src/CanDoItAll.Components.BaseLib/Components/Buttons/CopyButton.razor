@@ -25,6 +25,7 @@ else
             Tone="@Tone"
             Size="@ResolveButtonSize()"
             Variant="@Variant"
+            Density="@Density"
             Disabled="@IsDisabled"
             Class="@ResolveStandardButtonCssClass()"
             Style="@BuildStyle()"
@@ -104,6 +105,10 @@ else
     /// <summary>Emphasis treatment forwarded to the underlying button.</summary>
     [Parameter]
     public Variant Variant { get; set; } = Variant.Outlined;
+
+    /// <summary>Vertical padding scale, independent of <see cref="Size"/>.</summary>
+    [Parameter]
+    public ButtonDensity Density { get; set; } = ButtonDensity.Normal;
 
     /// <summary>Blocks interaction. The control is also disabled automatically when no copy source is configured.</summary>
     [Parameter]

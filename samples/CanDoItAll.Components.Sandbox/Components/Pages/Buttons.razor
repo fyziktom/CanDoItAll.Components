@@ -22,49 +22,56 @@
                         <ExampleBlock Title="Tones"
                                       Description="Every ButtonTone value, one row per Variant, Solid first."
                                       SourceId="examples/Buttons/Tones.razor"
-                                      ComponentType="typeof(Button)">
+                                      ComponentType="typeof(Button)"
+                                      ApiTypes="@ButtonApiTypes">
                             <Tones />
                         </ExampleBlock>
 
                         <ExampleBlock Title="Disabled"
                                       Description="Every ButtonTone value, one row per Variant, in the disabled state."
                                       SourceId="examples/Buttons/DisabledTones.razor"
-                                      ComponentType="typeof(Button)">
+                                      ComponentType="typeof(Button)"
+                                      ApiTypes="@ButtonApiTypes">
                             <DisabledTones />
                         </ExampleBlock>
 
                         <ExampleBlock Title="Variants"
                                       Description="Emphasis treatment: Filled (tonal), Solid, Outlined, and Text at the default Primary tone."
                                       SourceId="examples/Buttons/Variants.razor"
-                                      ComponentType="typeof(Button)">
+                                      ComponentType="typeof(Button)"
+                                      ApiTypes="@ButtonApiTypes">
                             <Variants />
                         </ExampleBlock>
 
                         <ExampleBlock Title="Sizes"
                                       Description="Physical dimension scale: Small, Medium, and Large."
                                       SourceId="examples/Buttons/Sizes.razor"
-                                      ComponentType="typeof(Button)">
+                                      ComponentType="typeof(Button)"
+                                      ApiTypes="@ButtonApiTypes">
                             <Sizes />
                         </ExampleBlock>
 
                         <ExampleBlock Title="Density"
                                       Description="Density controls vertical padding independently of Size: Normal, Comfortable, and Compact."
                                       SourceId="examples/Buttons/Densities.razor"
-                                      ComponentType="typeof(Button)">
+                                      ComponentType="typeof(Button)"
+                                      ApiTypes="@ButtonApiTypes">
                             <Densities />
                         </ExampleBlock>
 
                         <ExampleBlock Title="Rounded corners"
                                       Description="Rounded controls corner radius independently of tone and size: None, Default, Medium, and Large."
                                       SourceId="examples/Buttons/RoundedCorners.razor"
-                                      ComponentType="typeof(Button)">
+                                      ComponentType="typeof(Button)"
+                                      ApiTypes="@ButtonApiTypes">
                             <RoundedCorners />
                         </ExampleBlock>
 
                         <ExampleBlock Title="Icon-only actions"
                                       Description="Icon-only buttons derive their accessible name from the icon token when no text is supplied; a long label button proves wrapping stays calm under long text."
                                       SourceId="examples/Buttons/IconOnlyActions.razor"
-                                      ComponentType="typeof(Button)">
+                                      ComponentType="typeof(Button)"
+                                      ApiTypes="@ButtonApiTypes">
                             <IconOnlyActions />
                         </ExampleBlock>
                     }
@@ -88,5 +95,6 @@
     private static readonly IReadOnlyList<SandboxExampleDefinition> RegisteredExamples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Buttons);
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/buttons");
     private static readonly IReadOnlyList<Type> CopyButtonApiTypes = [typeof(CopyButton)];
+    private static readonly IReadOnlyList<Type> ButtonApiTypes = [typeof(Button)];
 
 }

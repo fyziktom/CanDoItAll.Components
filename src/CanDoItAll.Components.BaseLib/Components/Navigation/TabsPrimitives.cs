@@ -17,7 +17,16 @@ public enum TabPosition
 public enum TabsDensity
 {
     Normal,
+    Comfortable,
     Compact
+}
+
+public enum TabsRounded
+{
+    None,
+    Default,
+    Medium,
+    Large
 }
 
 public enum TabsBorderMode
