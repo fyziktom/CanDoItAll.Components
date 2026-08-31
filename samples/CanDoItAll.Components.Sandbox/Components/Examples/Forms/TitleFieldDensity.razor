@@ -1,0 +1,25 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Cluster Gap="LayoutGap.Medium">
+    @foreach (var density in FormDensities)
+    {
+        <FormField Text="@density.ToString()">
+            <TextInput Value="@FormState.Title"
+                       ValueChanged="HandleTitleChanged"
+                       Density="@density"
+                       placeholder="@TitlePlaceholder" />
+        </FormField>
+    }
+    <FormField Text="Plain + Compact">
+        <TextInput Value="@FormState.Title"
+                   ValueChanged="HandleTitleChanged"
+                   Look="InputLook.Plain"
+                   Density="FormDensity.Compact"
+                   placeholder="@TitlePlaceholder" />
+    </FormField>
+</Cluster>
+
+@code {
+    private static readonly FormDensity[] FormDensities = Enum.GetValues<FormDensity>();
+}

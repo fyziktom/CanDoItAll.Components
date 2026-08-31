@@ -7,6 +7,13 @@ public enum InputLook
     Plain
 }
 
+public enum FormDensity
+{
+    Normal,
+    Comfortable,
+    Compact
+}
+
 public enum ModalSize
 {
     Compact,

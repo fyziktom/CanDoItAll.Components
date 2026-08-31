@@ -2,7 +2,7 @@
 @typeparam TValue
 @inherits StyledComponentBase
 
-<label class="@BuildClass(ResolveRootClass())" style="@Style">
+<label class="@BuildClass(ResolveRootClass(), ResolveDensityCssClass())" style="@Style">
     <CheckBox TValue="TValue"
               Value="Value"
               ValueChanged="ValueChanged"
@@ -46,6 +46,11 @@
     [Parameter]
     public InputLook Look { get; set; } = InputLook.Default;
 
+    /// <summary>Vertical padding scale for this row, independent of <see cref="Look"/>. Not forwarded to the
+    /// inner <see cref="CheckBox{TValue}"/>, which has no padding of its own to scale.</summary>
+    [Parameter]
+    public FormDensity Density { get; set; } = FormDensity.Normal;
+
     /// <summary>Plain-text label content. Ignored when <see cref="ChildContent"/> is set.</summary>
     [Parameter]
     public string? Text { get; set; }
@@ -60,4 +65,11 @@
 
     private string ResolveRootClass()
         => Muted ? "ui-checkbox-option ui-checkbox-option--muted" : "ui-checkbox-option";
+
+    private string? ResolveDensityCssClass() => Density switch
+    {
+        FormDensity.Comfortable => "ui-checkbox-option--density-comfortable",
+        FormDensity.Compact => "ui-checkbox-option--density-compact",
+        _ => null
+    };
 }

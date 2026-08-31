@@ -4,7 +4,7 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Globalization
 
-<select @attributes='BuildAttributes(ResolveCssClass())'
+<select @attributes='BuildAttributes(CssClassBuilder.Join(ResolveCssClass(), ResolveDensityCssClass("ui-select")))'
         aria-labelledby="@ResolveLabelledBy()"
         value="@CurrentValueAsString"
         @onchange="@(e => CurrentValueAsString = e.Value?.ToString())">

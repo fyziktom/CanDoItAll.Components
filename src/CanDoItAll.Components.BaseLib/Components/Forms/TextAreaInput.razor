@@ -4,14 +4,14 @@
 
 @if (Immediate)
 {
-    <textarea @attributes='BuildAttributes(ResolveCssClass())'
+    <textarea @attributes='BuildAttributes(CssClassBuilder.Join(ResolveCssClass(), ResolveDensityCssClass("ui-input")))'
               aria-labelledby="@ResolveLabelledBy()"
               @bind="CurrentValue"
               @bind:event="oninput"></textarea>
 }
 else
 {
-    <textarea @attributes='BuildAttributes(ResolveCssClass())'
+    <textarea @attributes='BuildAttributes(CssClassBuilder.Join(ResolveCssClass(), ResolveDensityCssClass("ui-input")))'
               aria-labelledby="@ResolveLabelledBy()"
               @bind="CurrentValue"></textarea>
 }

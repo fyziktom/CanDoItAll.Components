@@ -6,7 +6,7 @@
 
 <input type="number"
        step="@ResolveStep()"
-       @attributes='BuildAttributes(ResolveCssClass())'
+       @attributes='BuildAttributes(CssClassBuilder.Join(ResolveCssClass(), ResolveDensityCssClass("ui-input")))'
        aria-labelledby="@ResolveLabelledBy()"
        @bind-value="CurrentValueAsString" />
 

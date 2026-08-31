@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inherits StyledComponentBase
 
-<InputFile @attributes='BuildAttributes(ResolveCssClass())'
+<InputFile @attributes='BuildAttributes(CssClassBuilder.Join(ResolveCssClass(), ResolveDensityCssClass()))'
            aria-labelledby="@ResolveLabelledBy()"
            aria-label="@AriaLabel"
            name="@Name"
@@ -37,6 +37,10 @@
     [Parameter]
     public InputLook Look { get; set; } = InputLook.Default;
 
+    /// <summary>Vertical padding scale, independent of <see cref="Look"/>.</summary>
+    [Parameter]
+    public FormDensity Density { get; set; } = FormDensity.Normal;
+
     /// <summary>Value applied as the input's <c>data-testid</c> attribute.</summary>
     [Parameter]
     public string? TestHookId { get; set; }
@@ -62,6 +66,13 @@
             _ => "ui-file-input ui-file-input--outlined"
         };
     }
+
+    private string? ResolveDensityCssClass() => Density switch
+    {
+        FormDensity.Comfortable => "ui-file-input--density-comfortable",
+        FormDensity.Compact => "ui-file-input--density-compact",
+        _ => null
+    };
 
     private string? ResolveLabelledBy()
         => HasExplicitAccessibleName() ? null : FormFieldLabelId;

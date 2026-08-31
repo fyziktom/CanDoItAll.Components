@@ -49,6 +49,29 @@
     @apply block w-full resize-y leading-6;
   }
 
+  .ui-input--density-comfortable,
+  .ui-select--density-comfortable {
+    @apply py-1;
+  }
+
+  .ui-input--density-compact,
+  .ui-select--density-compact {
+    @apply py-0.5;
+  }
+
+  /* WebKit/Safari can floor a native <select>'s rendered height below its author padding
+     (the platform popup-button chrome ignores vertical padding past a browser-defined
+     minimum) -- pin an explicit height here as well so Density is reliable cross-browser,
+     even though Chromium/Firefox already respect the padding-only rule above. Values match
+     text-sm's line-height (1.25rem) + the 1px top/bottom border + each density's padding. */
+  .ui-select--density-comfortable {
+    height: 1.875rem;
+  }
+
+  .ui-select--density-compact {
+    height: 1.625rem;
+  }
+
   .ui-input--mono {
     @apply font-mono;
   }

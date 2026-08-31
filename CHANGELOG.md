@@ -90,6 +90,20 @@ All notable changes to this repository's packages are recorded here, per the cha
   color read via `readTokens`, mirroring the pattern `MermaidDiagramOptions.Theme`'s `resolveTheme`
   already hand-rolled locally before this helper existed. `watchThemeMode` bridges `watchTheme`'s
   JS-only callback to a Blazor `[JSInvokable]` method.
+- Added: `TextInput`/`NumberInput<TValue>`/`DateInput<TValue>`/`TextAreaInput`/`SelectInput<TValue>`.Density,
+  `FileInput.Density`, `Password.Density`, and `CheckboxOption.Density` (new `FormDensity` enum:
+  `Normal`/`Comfortable`/`Compact`, declared on `StyledInputBase<TValue>` for the five
+  `InputBase<TValue>`-derived controls, and locally on `FileInput`/`Password`/`CheckboxOption`) control
+  vertical padding independently of `Look`, following `ButtonDensity`'s own convention
+  (`Comfortable`/`Compact` tighten spacing relative to `Normal`, rather than loosening it). `Normal`
+  (the default) is a no-op — existing markup renders unchanged. New CSS: `.ui-input--density-*`/
+  `.ui-select--density-*` in `form-controls.css`, `.ui-file-input--density-*` (outer element and its
+  `::file-selector-button`) in `file-input.css`, and `.ui-checkbox-option--density-*` in
+  `checkbox-option.css`. `CheckBox` and `Switch` are intentionally excluded — both are fixed-size
+  controls (`size-4` square, `h-5 w-9` track) with no padding to scale; `CheckboxOption.Density` affects
+  only its own label row and is not forwarded to its inner `CheckBox`. `.ui-select--density-comfortable`/
+  `--compact` also pin an explicit `height` alongside the padding override, since WebKit/Safari can floor
+  a native `<select>`'s rendered height below its author padding.
 
 #### Internal
 

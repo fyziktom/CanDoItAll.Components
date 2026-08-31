@@ -25,6 +25,10 @@ public abstract class StyledInputBase<TValue> : InputBase<TValue>
     [Parameter]
     public InputLook Look { get; set; } = InputLook.Default;
 
+    /// <summary>Vertical padding scale, independent of <see cref="Look"/>.</summary>
+    [Parameter]
+    public FormDensity Density { get; set; } = FormDensity.Normal;
+
     [CascadingParameter(Name = "FormFieldLabelId")]
     public string? FormFieldLabelId { get; set; }
 
@@ -76,6 +80,15 @@ public abstract class StyledInputBase<TValue> : InputBase<TValue>
             CssClassBuilder.Join(baseClass, Class, validationClass),
             CssClassBuilder.JoinStyles(baseStyle, Style));
     }
+
+    /// <summary>Resolves <see cref="Density"/> into a CSS modifier class scoped to <paramref name="prefix"/>
+    /// (e.g. <c>"ui-input"</c> or <c>"ui-select"</c>), or <c>null</c> for <see cref="FormDensity.Normal"/>.</summary>
+    protected string? ResolveDensityCssClass(string prefix) => Density switch
+    {
+        FormDensity.Comfortable => $"{prefix}--density-comfortable",
+        FormDensity.Compact => $"{prefix}--density-compact",
+        _ => null
+    };
 
     protected string? ResolveLabelledBy()
         => HasExplicitAccessibleName() ? null : FormFieldLabelId;

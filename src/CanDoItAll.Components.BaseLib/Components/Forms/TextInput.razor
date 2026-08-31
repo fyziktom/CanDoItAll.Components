@@ -5,7 +5,7 @@
 @if (Immediate)
 {
     <input type="text"
-           @attributes='BuildAttributes(ResolveCssClass())'
+           @attributes='BuildAttributes(CssClassBuilder.Join(ResolveCssClass(), ResolveDensityCssClass("ui-input")))'
            aria-labelledby="@ResolveLabelledBy()"
            @bind-value="CurrentValueAsString"
            @bind-value:event="oninput" />
@@ -13,7 +13,7 @@
 else
 {
     <input type="text"
-           @attributes='BuildAttributes(ResolveCssClass())'
+           @attributes='BuildAttributes(CssClassBuilder.Join(ResolveCssClass(), ResolveDensityCssClass("ui-input")))'
            aria-labelledby="@ResolveLabelledBy()"
            @bind-value="CurrentValueAsString" />
 }
