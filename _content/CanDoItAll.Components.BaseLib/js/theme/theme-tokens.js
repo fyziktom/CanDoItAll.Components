@@ -54,5 +54,21 @@
         };
     }
 
-    root.themeTokens = { readTokens, watchTheme };
+    // Resolves the nearest data-ui-theme ancestor's current value directly ("light"/"dark"),
+    // for callers that need the discrete mode name rather than a CSS color via readTokens.
+    function readThemeMode(hostValue) {
+        const owner = findThemeOwner(hostValue);
+        return owner.getAttribute(themeAttribute) || "light";
+    }
+
+    // Bridges watchTheme's JS-only callback to a Blazor component: invokes methodName on
+    // dotNetRef whenever the nearest data-ui-theme ancestor changes. Returns the same
+    // { disconnect() } handle as watchTheme, capturable as an IJSObjectReference.
+    function watchThemeMode(hostValue, dotNetRef, methodName) {
+        return watchTheme(hostValue, () => {
+            dotNetRef.invokeMethodAsync(methodName);
+        });
+    }
+
+    root.themeTokens = { readTokens, watchTheme, readThemeMode, watchThemeMode };
 })();

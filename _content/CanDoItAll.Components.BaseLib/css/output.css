@@ -134,12 +134,15 @@
     --tracking-tight: -0.025em;
     --tracking-normal: 0em;
     --tracking-wide: 0.025em;
+    --tracking-widest: 0.1em;
     --leading-tight: 1.25;
     --leading-snug: 1.375;
+    --radius-sm: 0.25rem;
     --radius-md: 0.375rem;
     --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
     --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --animate-spin: spin 1s linear infinite;
     --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -248,6 +251,7 @@
     --color-secondary-700: var(--cus-photon-barrier-700);
     --color-secondary-800: var(--cus-photon-barrier-800);
     --color-secondary-900: var(--cus-photon-barrier-900);
+    --color-secondary-950: var(--cus-photon-barrier-950);
     --color-tertiary-100: var(--cus-iris-100);
     --color-tertiary-200: var(--cus-iris-200);
     --color-tertiary-400: var(--cus-iris-400);
@@ -1246,6 +1250,10 @@
 .align-top {
   vertical-align: top;
 }
+.text-4xl {
+  font-size: var(--text-4xl);
+  line-height: var(--tw-leading, var(--text-4xl--line-height));
+}
 .text-base {
   font-size: var(--text-base);
   line-height: var(--tw-leading, var(--text-base--line-height));
@@ -1410,6 +1418,9 @@
 }
 .uppercase {
   text-transform: uppercase;
+}
+.underline {
+  text-decoration-line: underline;
 }
 .opacity-90 {
   opacity: 90%;
@@ -1732,63 +1743,72 @@
     @supports (color: color-mix(in lab, red, red)) {
       --cad-shadow-strong: 0 14px 36px color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
     }
-    --tone-primary-solid-bg: var(--color-chrome-900);
-    --tone-primary-solid-hover: var(--color-chrome-800);
-    --tone-primary-solid-border: var(--color-chrome-900);
-    --tone-primary-solid-fg: var(--color-white);
-    --tone-primary-soft-bg: color-mix(in srgb, #fff 96%, transparent);
+    --tone-default-soft-bg: color-mix(in srgb, #fff 96%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-primary-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
+      --tone-default-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
+    }
+    --tone-default-soft-hover: var(--color-chrome-50);
+    --tone-default-soft-border: var(--color-chrome-300);
+    --tone-default-soft-fg: var(--color-chrome-600);
+    --tone-default-solid-bg: var(--color-chrome-50);
+    --tone-default-solid-hover: var(--color-chrome-200);
+    --tone-default-solid-border: var(--color-chrome-600);
+    --tone-default-solid-fg: var(--color-chrome-950);
+    --tone-default-tonal-bg: var(--color-chrome-100);
+    --tone-default-tonal-hover: var(--color-chrome-200);
+    --tone-primary-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-primary-soft-bg: color-mix(in srgb, var(--color-chrome-200) 50%, transparent);
     }
     --tone-primary-soft-hover: var(--color-chrome-50);
     --tone-primary-soft-border: var(--color-chrome-300);
     --tone-primary-soft-fg: var(--color-chrome-900);
+    --tone-primary-solid-bg: var(--color-chrome-900);
+    --tone-primary-solid-hover: var(--color-chrome-600);
+    --tone-primary-solid-border: var(--color-chrome-900);
+    --tone-primary-solid-fg: var(--color-white);
+    --tone-primary-tonal-bg: var(--color-chrome-100);
+    --tone-primary-tonal-hover: var(--color-chrome-200);
     --tone-secondary-soft-bg: var(--color-secondary-100);
     --tone-secondary-soft-hover: var(--color-secondary-200);
     --tone-secondary-soft-border: var(--color-secondary-300);
     --tone-secondary-soft-fg: var(--color-secondary-800);
+    --tone-secondary-solid-bg: var(--color-secondary-600);
+    --tone-secondary-solid-hover: var(--color-secondary-700);
+    --tone-secondary-solid-border: var(--color-secondary-600);
+    --tone-secondary-solid-fg: var(--color-white);
     --tone-success-soft-bg: var(--color-success-100);
     --tone-success-soft-hover: var(--color-success-200);
     --tone-success-soft-border: var(--color-success-300);
     --tone-success-soft-fg: var(--color-success-800);
     --tone-success-solid-bg: var(--color-success-600);
+    --tone-success-solid-hover: var(--color-success-700);
+    --tone-success-solid-border: var(--color-success-600);
     --tone-success-solid-fg: var(--color-white);
     --tone-info-soft-bg: var(--color-info-100);
     --tone-info-soft-hover: var(--color-info-200);
     --tone-info-soft-border: var(--color-info-300);
     --tone-info-soft-fg: var(--color-info-800);
     --tone-info-solid-bg: var(--color-info-600);
+    --tone-info-solid-hover: var(--color-info-700);
+    --tone-info-solid-border: var(--color-info-600);
     --tone-info-solid-fg: var(--color-white);
     --tone-warning-soft-bg: var(--color-warn-100);
     --tone-warning-soft-hover: var(--color-warn-200);
     --tone-warning-soft-border: var(--color-warn-300);
     --tone-warning-soft-fg: var(--color-warn-800);
     --tone-warning-solid-bg: var(--color-warn-600);
+    --tone-warning-solid-hover: var(--color-warn-700);
+    --tone-warning-solid-border: var(--color-warn-600);
     --tone-warning-solid-fg: var(--color-white);
     --tone-danger-soft-bg: var(--color-danger-100);
     --tone-danger-soft-hover: var(--color-danger-200);
     --tone-danger-soft-border: var(--color-danger-300);
     --tone-danger-soft-fg: var(--color-danger-800);
     --tone-danger-solid-bg: var(--color-danger-600);
+    --tone-danger-solid-hover: var(--color-danger-700);
+    --tone-danger-solid-border: var(--color-danger-600);
     --tone-danger-solid-fg: var(--color-white);
-    --tone-light-soft-bg: color-mix(in srgb, #fff 96%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
-    }
-    --tone-light-soft-hover: var(--color-chrome-50);
-    --tone-light-soft-border: var(--color-chrome-300);
-    --tone-light-soft-fg: var(--color-chrome-600);
-    --tone-base-soft-bg: color-mix(in srgb, #fff 96%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
-    }
-    --tone-base-soft-hover: var(--color-chrome-50);
-    --tone-base-soft-border: var(--color-chrome-300);
-    --tone-base-soft-fg: var(--color-chrome-600);
-    --tone-dark-soft-bg: var(--color-chrome-200);
-    --tone-dark-soft-hover: var(--color-chrome-300);
-    --tone-dark-soft-border: var(--color-chrome-400);
-    --tone-dark-soft-fg: var(--color-chrome-900);
     --tone-scrim: color-mix(in srgb, oklch(14.5% 0 none) 55%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-scrim: color-mix(in srgb, var(--color-neutral-950) 55%, transparent);
@@ -2407,6 +2427,14 @@
       --tone-primary-soft-border: color-mix(in srgb, var(--color-chrome-600) 35%, transparent);
     }
     --tone-primary-soft-fg: var(--color-chrome-800);
+    --tone-primary-tonal-bg: color-mix(in srgb, oklch(92.2% 0 none) 78%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-primary-tonal-bg: color-mix(in srgb, var(--color-chrome-200) 78%, transparent);
+    }
+    --tone-primary-tonal-hover: color-mix(in srgb, oklch(87% 0 none) 84%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-primary-tonal-hover: color-mix(in srgb, var(--color-chrome-300) 84%, transparent);
+    }
     --tone-secondary-soft-bg: color-mix(in srgb, oklch(40.1% 0.074 212.8) 32%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-secondary-soft-bg: color-mix(in srgb, var(--color-secondary-900) 32%, transparent);
@@ -2420,6 +2448,10 @@
       --tone-secondary-soft-border: color-mix(in srgb, var(--color-secondary-400) 38%, transparent);
     }
     --tone-secondary-soft-fg: var(--color-secondary-200);
+    --tone-secondary-solid-bg: var(--color-secondary-500);
+    --tone-secondary-solid-hover: var(--color-secondary-600);
+    --tone-secondary-solid-border: var(--color-secondary-500);
+    --tone-secondary-solid-fg: var(--color-secondary-950);
     --tone-success-soft-bg: color-mix(in srgb, oklch(43.2% 0.095 166.913) 34%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-success-soft-bg: color-mix(in srgb, var(--color-success-800) 34%, transparent);
@@ -2434,6 +2466,8 @@
     }
     --tone-success-soft-fg: var(--color-success-200);
     --tone-success-solid-bg: var(--color-success-500);
+    --tone-success-solid-hover: var(--color-success-600);
+    --tone-success-solid-border: var(--color-success-500);
     --tone-success-solid-fg: var(--color-success-950);
     --tone-info-soft-bg: color-mix(in srgb, oklch(43.6% 0.140 243.8) 32%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -2449,6 +2483,8 @@
     }
     --tone-info-soft-fg: var(--color-info-200);
     --tone-info-solid-bg: var(--color-info-400);
+    --tone-info-solid-hover: var(--color-info-500);
+    --tone-info-solid-border: var(--color-info-400);
     --tone-info-solid-fg: var(--color-info-950);
     --tone-warning-soft-bg: color-mix(in srgb, oklch(47.6% 0.114 61.907) 34%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -2464,6 +2500,8 @@
     }
     --tone-warning-soft-fg: var(--color-warn-200);
     --tone-warning-solid-bg: var(--color-warn-500);
+    --tone-warning-solid-hover: var(--color-warn-600);
+    --tone-warning-solid-border: var(--color-warn-500);
     --tone-warning-solid-fg: var(--color-warn-950);
     --tone-danger-soft-bg: color-mix(in srgb, oklch(45.5% 0.188 13.697) 34%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -2479,33 +2517,43 @@
     }
     --tone-danger-soft-fg: var(--color-danger-200);
     --tone-danger-solid-bg: var(--color-danger-400);
+    --tone-danger-solid-hover: var(--color-danger-500);
+    --tone-danger-solid-border: var(--color-danger-400);
     --tone-danger-solid-fg: var(--color-danger-950);
-    --tone-light-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+      --tone-default-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
     }
-    --tone-light-soft-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+      --tone-default-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
     }
-    --tone-light-soft-border: color-mix(in srgb, oklch(43.9% 0 none) 28%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+      --tone-default-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
     }
-    --tone-light-soft-fg: var(--color-chrome-800);
-    --tone-base-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
+    --tone-default-tonal-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+      --tone-default-tonal-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
     }
-    --tone-base-soft-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
+    --tone-default-tonal-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+      --tone-default-tonal-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
     }
-    --tone-base-soft-border: color-mix(in srgb, oklch(43.9% 0 none) 28%, transparent);
+    --tone-default-solid-bg: var(--color-chrome-500);
+    --tone-default-solid-hover: var(--color-chrome-600);
+    --tone-default-solid-border: var(--color-chrome-500);
+    --tone-default-solid-fg: var(--color-chrome-950);
+    --tone-default-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+      --tone-default-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
     }
-    --tone-base-soft-fg: var(--color-chrome-800);
+    --tone-default-soft-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-default-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+    }
+    --tone-default-soft-border: color-mix(in srgb, oklch(43.9% 0 none) 28%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-default-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+    }
+    --tone-default-soft-fg: var(--color-chrome-800);
     --tone-dark-soft-bg: color-mix(in srgb, oklch(26.9% 0 none) 14%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-dark-soft-bg: color-mix(in srgb, var(--color-chrome-800) 14%, transparent);
@@ -2833,7 +2881,6 @@
       background: color-mix(in srgb, var(--tone-surface) 92%, transparent);
     }
     color: var(--tone-text);
-    box-shadow: var(--cad-shadow-soft);
   }
   .cda-section-card__title {
     margin: 0px;
@@ -2876,11 +2923,11 @@
     flex-direction: column;
     gap: var(--spacing);
   }
-  .cda-summary-tile .cda-eyebrow, .cda-summary-tile__value, .cda-summary-tile__helper {
+  .cda-summary-tile .cda-text-block--eyebrow-caption, .cda-summary-tile__value, .cda-summary-tile__helper {
     max-width: 100%;
     overflow-wrap: break-word;
   }
-  .cda-summary-tile--compact .cda-eyebrow {
+  .cda-summary-tile--compact .cda-text-block--eyebrow-caption {
     font-size: 11px;
     --tw-tracking: 0.18em;
     letter-spacing: 0.18em;
@@ -2901,7 +2948,7 @@
     justify-content: space-between;
     gap: calc(var(--spacing) * 2);
   }
-  .cda-summary-tile--badge .cda-eyebrow {
+  .cda-summary-tile--badge .cda-text-block--eyebrow-caption {
     min-width: 0px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3196,6 +3243,16 @@
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);
   }
+  .cda-text-block--eyebrow-caption {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+    --tw-tracking: 0.2em;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tone-text-soft);
+  }
 }
 @layer base {
   .ui-theme-host h1:not(.cda-text-block) {
@@ -3301,9 +3358,9 @@
     color: var(--tone-primary-solid-fg);
   }
   .cda-badge--tone-base, .cda-status-badge--tone-base {
-    border-color: var(--tone-base-soft-border);
-    background: var(--tone-base-soft-bg);
-    color: var(--tone-base-soft-fg);
+    border-color: var(--tone-default-soft-border);
+    background: var(--tone-default-soft-bg);
+    color: var(--tone-default-soft-fg);
   }
   .cda-badge--tone-secondary, .cda-status-badge--tone-secondary {
     border-color: var(--tone-secondary-soft-border);
@@ -3419,7 +3476,7 @@
     --tw-leading: 1;
     line-height: 1;
   }
-  .cda-button {
+  .ui-button {
     display: inline-flex;
     max-width: 100%;
     min-width: 0px;
@@ -3441,174 +3498,470 @@
     &:disabled {
       opacity: 50%;
     }
-    border-radius: var(--cad-radius-control);
+    border-radius: var(--radius-md);
+    cursor: pointer;
   }
-  .cda-button .rz-button-text {
+  .ui-button .ui-button__label {
     max-width: 100%;
     min-width: 0px;
     overflow-wrap: anywhere;
   }
-  .cda-button--size-sm {
+  .ui-button--size-sm {
     padding-inline: calc(var(--spacing) * 3);
     padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
-  .cda-button--size-md {
+  .ui-button--size-md {
     padding-inline: calc(var(--spacing) * 4);
     padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
-  .cda-button--size-lg {
+  .ui-button--size-lg {
     padding-inline: calc(var(--spacing) * 4);
     padding-block: calc(var(--spacing) * 2.5);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
   }
-  .cda-button--filled.cda-button--tone-primary {
+  .ui-button--density-comfortable {
+    padding-block: var(--spacing);
+  }
+  .ui-button--density-compact {
+    padding-block: calc(var(--spacing) * 0.5);
+  }
+  .ui-button--rounded-none {
+    border-radius: 0;
+  }
+  .ui-button--rounded-md {
+    border-radius: var(--cad-radius-control);
+  }
+  .ui-button--rounded-lg {
+    border-radius: var(--radius-3xl);
+  }
+  .ui-button--outlined {
+    background: transparent;
+  }
+  .ui-button--filled.ui-button--tone-primary {
+    color: var(--tone-primary-soft-fg);
+    border-color: var(--tone-primary-soft-border);
+    background: var(--tone-primary-tonal-bg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-primary-tonal-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-primary-tonal-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-primary-tonal-bg);
+    }
+  }
+  .ui-button--outlined.ui-button--tone-primary {
+    color: var(--tone-primary-soft-fg);
+    border-color: var(--tone-primary-soft-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-primary-tonal-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-primary-tonal-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-primary-tonal-hover);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--tone-primary-tonal-hover) 70%, transparent);
+      }
+    }
+  }
+  .ui-button--filled.ui-button--tone-default {
+    color: var(--tone-default-soft-fg);
+    border-color: var(--tone-default-soft-border);
+    background: var(--tone-default-tonal-bg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-default-tonal-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-default-tonal-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-default-tonal-bg);
+    }
+  }
+  .ui-button--outlined.ui-button--tone-default {
+    color: var(--tone-default-soft-fg);
+    border-color: var(--tone-default-soft-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-default-tonal-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-default-tonal-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-default-tonal-hover);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--tone-default-tonal-hover) 70%, transparent);
+      }
+    }
+  }
+  .ui-button--filled.ui-button--tone-secondary {
+    color: var(--tone-secondary-soft-fg);
+    border-color: var(--tone-secondary-soft-border);
+    background: var(--tone-secondary-soft-bg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-secondary-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-secondary-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-secondary-soft-bg);
+    }
+  }
+  .ui-button--outlined.ui-button--tone-secondary {
+    color: var(--tone-secondary-soft-fg);
+    border-color: var(--tone-secondary-soft-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-secondary-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-secondary-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-secondary-soft-hover);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--tone-secondary-soft-hover) 70%, transparent);
+      }
+    }
+  }
+  .ui-button--filled.ui-button--tone-success {
+    color: var(--tone-success-soft-fg);
+    border-color: var(--tone-success-soft-border);
+    background: var(--tone-success-soft-bg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-success-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-success-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-success-soft-bg);
+    }
+  }
+  .ui-button--outlined.ui-button--tone-success {
+    color: var(--tone-success-soft-fg);
+    border-color: var(--tone-success-soft-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-success-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-success-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-success-soft-hover);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--tone-success-soft-hover) 70%, transparent);
+      }
+    }
+  }
+  .ui-button--filled.ui-button--tone-info {
+    color: var(--tone-info-soft-fg);
+    border-color: var(--tone-info-soft-border);
+    background: var(--tone-info-soft-bg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-info-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-info-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-info-soft-bg);
+    }
+  }
+  .ui-button--outlined.ui-button--tone-info {
+    color: var(--tone-info-soft-fg);
+    border-color: var(--tone-info-soft-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-info-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-info-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-info-soft-hover);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--tone-info-soft-hover) 70%, transparent);
+      }
+    }
+  }
+  .ui-button--filled.ui-button--tone-warning {
+    color: var(--tone-warning-soft-fg);
+    border-color: var(--tone-warning-soft-border);
+    background: var(--tone-warning-soft-bg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-warning-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-warning-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-warning-soft-bg);
+    }
+  }
+  .ui-button--outlined.ui-button--tone-warning {
+    color: var(--tone-warning-soft-fg);
+    border-color: var(--tone-warning-soft-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-warning-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-warning-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-warning-soft-hover);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--tone-warning-soft-hover) 70%, transparent);
+      }
+    }
+  }
+  .ui-button--filled.ui-button--tone-danger {
+    color: var(--tone-danger-soft-fg);
+    border-color: var(--tone-danger-soft-border);
+    background: var(--tone-danger-soft-bg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-danger-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-danger-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-danger-soft-bg);
+    }
+  }
+  .ui-button--outlined.ui-button--tone-danger {
+    color: var(--tone-danger-soft-fg);
+    border-color: var(--tone-danger-soft-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-danger-soft-hover);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-danger-soft-hover) 60%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-danger-soft-hover);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--tone-danger-soft-hover) 70%, transparent);
+      }
+    }
+  }
+  .ui-button--solid.ui-button--tone-primary {
     border-color: var(--tone-primary-solid-border);
     background: var(--tone-primary-solid-bg);
     color: var(--tone-primary-solid-fg);
-    box-shadow: var(--cad-shadow-soft);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-primary-solid-hover);
+      }
+    }
+    &:active {
+      background-color: var(--tone-primary-solid-bg);
+    }
   }
-  .cda-button--filled.cda-button--tone-primary:hover {
-    border-color: var(--tone-primary-solid-hover);
-    background: var(--tone-primary-solid-hover);
+  .ui-button--solid.ui-button--tone-default {
+    border-color: var(--tone-default-solid-border);
+    background: var(--tone-default-solid-bg);
+    color: var(--tone-default-solid-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-default-solid-hover);
+      }
+    }
+    &:active {
+      background-color: var(--tone-default-solid-bg);
+    }
   }
-  .cda-button--outlined.cda-button--tone-primary {
-    border-color: var(--tone-primary-soft-border);
-    background: var(--tone-primary-soft-bg);
-    color: var(--tone-primary-soft-fg);
+  .ui-button--solid.ui-button--tone-secondary {
+    border-color: var(--tone-secondary-solid-border);
+    background: var(--tone-secondary-solid-bg);
+    color: var(--tone-secondary-solid-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-secondary-solid-hover);
+      }
+    }
+    &:active {
+      background-color: var(--tone-secondary-solid-bg);
+    }
   }
-  .cda-button--outlined.cda-button--tone-primary:hover {
-    background: var(--tone-primary-soft-hover);
+  .ui-button--solid.ui-button--tone-success {
+    border-color: var(--tone-success-solid-border);
+    background: var(--tone-success-solid-bg);
+    color: var(--tone-success-solid-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-success-solid-hover);
+      }
+    }
+    &:active {
+      background-color: var(--tone-success-solid-bg);
+    }
   }
-  .cda-button--filled.cda-button--tone-light, .cda-button--outlined.cda-button--tone-light, .cda-button--filled.cda-button--tone-base, .cda-button--outlined.cda-button--tone-base, .cda-button--filled.cda-button--tone-dark, .cda-button--outlined.cda-button--tone-dark {
-    border-color: var(--tone-light-soft-border);
-    background: var(--tone-light-soft-bg);
-    color: var(--tone-light-soft-fg);
+  .ui-button--solid.ui-button--tone-info {
+    border-color: var(--tone-info-solid-border);
+    background: var(--tone-info-solid-bg);
+    color: var(--tone-info-solid-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-info-solid-hover);
+      }
+    }
+    &:active {
+      background-color: var(--tone-info-solid-bg);
+    }
   }
-  .cda-button--filled.cda-button--tone-secondary, .cda-button--outlined.cda-button--tone-secondary {
-    border-color: var(--tone-secondary-soft-border);
-    background: var(--tone-secondary-soft-bg);
-    color: var(--tone-secondary-soft-fg);
+  .ui-button--solid.ui-button--tone-warning {
+    border-color: var(--tone-warning-solid-border);
+    background: var(--tone-warning-solid-bg);
+    color: var(--tone-warning-solid-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-warning-solid-hover);
+      }
+    }
+    &:active {
+      background-color: var(--tone-warning-solid-bg);
+    }
   }
-  .cda-button--filled.cda-button--tone-success, .cda-button--outlined.cda-button--tone-success {
-    border-color: var(--tone-success-soft-border);
-    background: var(--tone-success-soft-bg);
-    color: var(--tone-success-soft-fg);
+  .ui-button--solid.ui-button--tone-danger {
+    border-color: var(--tone-danger-solid-border);
+    background: var(--tone-danger-solid-bg);
+    color: var(--tone-danger-solid-fg);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-danger-solid-hover);
+      }
+    }
+    &:active {
+      background-color: var(--tone-danger-solid-bg);
+    }
   }
-  .cda-button--filled.cda-button--tone-info, .cda-button--outlined.cda-button--tone-info {
-    border-color: var(--tone-info-soft-border);
-    background: var(--tone-info-soft-bg);
-    color: var(--tone-info-soft-fg);
-  }
-  .cda-button--filled.cda-button--tone-warning, .cda-button--outlined.cda-button--tone-warning {
-    border-color: var(--tone-warning-soft-border);
-    background: var(--tone-warning-soft-bg);
-    color: var(--tone-warning-soft-fg);
-  }
-  .cda-button--filled.cda-button--tone-danger, .cda-button--outlined.cda-button--tone-danger {
-    border-color: var(--tone-danger-soft-border);
-    background: var(--tone-danger-soft-bg);
-    color: var(--tone-danger-soft-fg);
-  }
-  .cda-button--filled.cda-button--tone-light:hover, .cda-button--outlined.cda-button--tone-light:hover {
-    background: var(--tone-light-soft-hover);
-  }
-  .cda-button--filled.cda-button--tone-base, .cda-button--outlined.cda-button--tone-base {
-    border-color: var(--tone-base-soft-border);
-    background: var(--tone-base-soft-bg);
-    color: var(--tone-base-soft-fg);
-  }
-  .cda-button--filled.cda-button--tone-base:hover, .cda-button--outlined.cda-button--tone-base:hover {
-    background: var(--tone-base-soft-hover);
-  }
-  .cda-button--filled.cda-button--tone-dark, .cda-button--outlined.cda-button--tone-dark {
-    border-color: var(--tone-dark-soft-border);
-    background: var(--tone-dark-soft-bg);
-    color: var(--tone-dark-soft-fg);
-  }
-  .cda-button--filled.cda-button--tone-dark:hover, .cda-button--outlined.cda-button--tone-dark:hover {
-    background: var(--tone-dark-soft-hover);
-  }
-  .cda-button--filled.cda-button--tone-secondary:hover, .cda-button--outlined.cda-button--tone-secondary:hover {
-    background: var(--tone-secondary-soft-hover);
-  }
-  .cda-button--filled.cda-button--tone-success:hover, .cda-button--outlined.cda-button--tone-success:hover {
-    background: var(--tone-success-soft-hover);
-  }
-  .cda-button--filled.cda-button--tone-info:hover, .cda-button--outlined.cda-button--tone-info:hover {
-    background: var(--tone-info-soft-hover);
-  }
-  .cda-button--filled.cda-button--tone-warning:hover, .cda-button--outlined.cda-button--tone-warning:hover {
-    background: var(--tone-warning-soft-hover);
-  }
-  .cda-button--filled.cda-button--tone-danger:hover, .cda-button--outlined.cda-button--tone-danger:hover {
-    background: var(--tone-danger-soft-hover);
-  }
-  .cda-button--text {
+  .ui-button--text {
     border-color: transparent;
     background-color: transparent;
     --tw-shadow: 0 0 #0000;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
-  .cda-button--text.cda-button--tone-danger {
+  .ui-button--text.ui-button--tone-danger {
     color: var(--tone-danger-soft-fg);
-  }
-  .cda-button--text.cda-button--tone-danger:hover {
-    background: var(--tone-danger-soft-bg);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-danger-soft-bg) 78%, transparent);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-danger-soft-bg);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-danger-soft-bg) 78%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-danger-soft-bg);
     }
   }
-  .cda-button--text.cda-button--tone-secondary {
+  .ui-button--text.ui-button--tone-secondary {
     color: var(--tone-secondary-soft-fg);
-  }
-  .cda-button--text.cda-button--tone-secondary:hover {
-    background: var(--tone-secondary-soft-bg);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-secondary-soft-bg) 78%, transparent);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-secondary-soft-bg);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-secondary-soft-bg) 70%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-secondary-soft-bg);
     }
   }
-  .cda-button--text.cda-button--tone-success {
+  .ui-button--text.ui-button--tone-success {
     color: var(--tone-success-soft-fg);
-  }
-  .cda-button--text.cda-button--tone-success:hover {
-    background: var(--tone-success-soft-bg);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-success-soft-bg) 78%, transparent);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-success-soft-bg);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-success-soft-bg) 70%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-success-soft-bg);
     }
   }
-  .cda-button--text.cda-button--tone-info {
+  .ui-button--text.ui-button--tone-info {
     color: var(--tone-info-soft-fg);
-  }
-  .cda-button--text.cda-button--tone-info:hover {
-    background: var(--tone-info-soft-bg);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-info-soft-bg) 78%, transparent);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-info-soft-bg);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-info-soft-bg) 70%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-info-soft-bg);
     }
   }
-  .cda-button--text.cda-button--tone-warning {
+  .ui-button--text.ui-button--tone-warning {
     color: var(--tone-warning-soft-fg);
-  }
-  .cda-button--text.cda-button--tone-warning:hover {
-    background: var(--tone-warning-soft-bg);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-warning-soft-bg) 78%, transparent);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-warning-soft-bg);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-warning-soft-bg) 70%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-warning-soft-bg);
     }
   }
-  .cda-button--text.cda-button--tone-primary, .cda-button--text.cda-button--tone-light, .cda-button--text.cda-button--tone-base, .cda-button--text.cda-button--tone-dark {
+  .ui-button--text.ui-button--tone-primary, .ui-button--text.ui-button--tone-default {
     color: var(--tone-primary-soft-fg);
-  }
-  .cda-button--text.cda-button--tone-primary:hover, .cda-button--text.cda-button--tone-light:hover, .cda-button--text.cda-button--tone-base:hover, .cda-button--text.cda-button--tone-dark:hover {
-    background: var(--tone-primary-soft-bg);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-primary-soft-bg) 82%, transparent);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--tone-primary-soft-bg);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--tone-primary-soft-bg) 70%, transparent);
+        }
+      }
+    }
+    &:active {
+      background-color: var(--tone-primary-soft-bg);
     }
   }
-  .cda-button__spinner {
+  .ui-button__spinner {
     display: inline-flex;
     height: calc(var(--spacing) * 3);
     width: calc(var(--spacing) * 3);
@@ -3619,7 +3972,7 @@
     border-color: currentcolor;
     border-right-color: transparent;
   }
-  .cda-button__token {
+  .ui-button__token {
     min-width: 0px;
     font-size: 10px;
     --tw-font-weight: var(--font-weight-bold);
@@ -3629,7 +3982,7 @@
     text-transform: uppercase;
     overflow-wrap: anywhere;
   }
-  .cda-button--quick {
+  .ui-button--quick {
     height: calc(var(--spacing) * 9);
     width: calc(var(--spacing) * 9);
     min-width: calc(var(--spacing) * 9);
@@ -3641,99 +3994,6 @@
     --tw-tracking: 0.18em;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-  }
-  .cad-card-button, .zy-card-button {
-    display: inline-flex;
-    height: calc(var(--spacing) * 9);
-    align-items: center;
-    justify-content: center;
-    gap: calc(var(--spacing) * 2);
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-    padding-inline: calc(var(--spacing) * 3);
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-semibold);
-    font-weight: var(--font-weight-semibold);
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-    &:disabled {
-      cursor: not-allowed;
-    }
-    &:disabled {
-      opacity: 50%;
-    }
-    border-radius: var(--cad-radius-control);
-    border-color: var(--tone-light-soft-border);
-    background: var(--tone-light-soft-bg);
-    color: var(--tone-light-soft-fg);
-  }
-  .cad-card-button:hover, .zy-card-button:hover {
-    background: var(--tone-light-soft-hover);
-  }
-  .cad-card-button--ghost, .zy-card-button--ghost {
-    background-color: transparent;
-    --tw-shadow: 0 0 #0000;
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .cad-card-button--warn, .zy-card-button--warn {
-    border-color: var(--tone-danger-soft-border);
-    background: var(--tone-danger-soft-bg);
-    color: var(--tone-danger-soft-fg);
-  }
-  .cad-card-button--warn:hover, .zy-card-button--warn:hover {
-    background: var(--tone-danger-soft-hover);
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: calc(var(--spacing) * 2);
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-    padding-inline: calc(var(--spacing) * 4);
-    padding-block: calc(var(--spacing) * 2);
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-semibold);
-    font-weight: var(--font-weight-semibold);
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-    &:disabled {
-      cursor: not-allowed;
-    }
-    &:disabled {
-      opacity: 50%;
-    }
-    border-radius: var(--cad-radius-control);
-    border-color: var(--tone-light-soft-border);
-    background: var(--tone-light-soft-bg);
-    color: var(--tone-light-soft-fg);
-  }
-  .btn:hover {
-    background: var(--tone-light-soft-hover);
-  }
-  .btn.ghost {
-    background-color: transparent;
-    --tw-shadow: 0 0 #0000;
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .btn.xs {
-    padding-inline: calc(var(--spacing) * 3);
-    padding-block: calc(var(--spacing) * 2);
-    font-size: var(--text-xs);
-    line-height: var(--tw-leading, var(--text-xs--line-height));
-  }
-  .btn.primary {
-    border-color: var(--tone-primary-solid-border);
-    background: var(--tone-primary-solid-bg);
-    color: var(--tone-primary-solid-fg);
-  }
-  .btn.primary:hover {
-    border-color: var(--tone-primary-solid-hover);
-    background: var(--tone-primary-solid-hover);
   }
   .cda-copy-button {
     position: relative;
@@ -3796,11 +4056,11 @@
     border-width: 0px;
     background-color: transparent;
     border-radius: var(--cad-radius-control);
-    color: var(--tone-light-soft-fg);
+    color: var(--tone-default-soft-fg);
     transition: background-color 140ms ease, color 140ms ease, transform 140ms ease;
   }
   .cda-copy-button-icon:hover:not(:disabled) {
-    background: var(--tone-light-soft-bg);
+    background: var(--tone-default-soft-bg);
     color: var(--tone-primary-soft-fg);
   }
   .cda-copy-button-icon:active:not(:disabled) {
@@ -3857,9 +4117,9 @@
     border-radius: var(--cad-radius-surface);
   }
   .cda-alert--tone-base {
-    border-color: var(--tone-base-soft-border);
-    background: var(--tone-base-soft-bg);
-    color: var(--tone-base-soft-fg);
+    border-color: var(--tone-default-soft-border);
+    background: var(--tone-default-soft-bg);
+    color: var(--tone-default-soft-fg);
   }
   .cda-alert--tone-info {
     border-color: var(--tone-info-soft-border);
@@ -4042,6 +4302,66 @@
       transform: none;
     }
   }
+  .ui-help-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    border-radius: var(--radius-xl);
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    padding: calc(var(--spacing) * 4);
+    padding-right: calc(var(--spacing) * 10);
+  }
+  .ui-help-card__icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-lg);
+    line-height: var(--tw-leading, var(--text-lg--line-height));
+  }
+  .ui-help-card__content {
+    min-width: 0px;
+  }
+  .ui-help-card__heading {
+    margin-bottom: var(--spacing);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  .ui-help-card__body {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-leading: calc(var(--spacing) * 6);
+    line-height: calc(var(--spacing) * 6);
+  }
+  .ui-help-card__close {
+    position: absolute;
+    top: calc(var(--spacing) * 2);
+    right: calc(var(--spacing) * 2);
+    display: inline-flex;
+    height: calc(var(--spacing) * 7);
+    width: calc(var(--spacing) * 7);
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(infinity * 1px);
+    border-style: var(--tw-border-style);
+    border-width: 0px;
+  }
+}
+.ui-help-card {
+  background: var(--color-chrome-100);
+  border-color: var(--color-chrome-300);
+}
+.ui-help-card__icon {
+  color: var(--color-chrome-400);
+}
+.ui-help-card__close:hover {
+  background: var(--color-chrome-200);
+}
+@layer components {
   .cda-status-check-list {
     display: flex;
     width: 100%;
@@ -4149,9 +4469,9 @@
     color: var(--tone-info-soft-fg);
   }
   .cda-status-check-list__icon--neutral {
-    border-color: var(--tone-base-soft-border);
-    background: var(--tone-base-soft-bg);
-    color: var(--tone-base-soft-fg);
+    border-color: var(--tone-default-soft-border);
+    background: var(--tone-default-soft-bg);
+    color: var(--tone-default-soft-fg);
   }
   .cda-status-check-list li > span:not(.cda-status-check-list__icon) {
     display: flex;
@@ -4407,10 +4727,6 @@
     border-color: var(--tone-border);
     color: var(--tone-text);
   }
-  .ui-select {
-    appearance: auto;
-    background-image: none;
-  }
   .ui-input::placeholder {
     color: var(--color-chrome-500);
   }
@@ -4426,6 +4742,18 @@
     resize: vertical;
     --tw-leading: calc(var(--spacing) * 6);
     line-height: calc(var(--spacing) * 6);
+  }
+  .ui-input--density-comfortable, .ui-select--density-comfortable {
+    padding-block: var(--spacing);
+  }
+  .ui-input--density-compact, .ui-select--density-compact {
+    padding-block: calc(var(--spacing) * 0.5);
+  }
+  .ui-select--density-comfortable {
+    height: 1.875rem;
+  }
+  .ui-select--density-compact {
+    height: 1.625rem;
   }
   .ui-input--mono {
     font-family: var(--font-mono);
@@ -4486,6 +4814,16 @@
     --tw-shadow: 0 0 #0000;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .ui-input.invalid, .ui-select.invalid {
+    border-color: var(--tone-danger-soft-border);
+  }
+  .ui-input.invalid:focus, .ui-select.invalid:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--tone-danger-soft-border);
+  }
+  .ui-input.modified.valid, .ui-select.modified.valid {
+    border-color: var(--tone-success-soft-border);
+  }
   .cda-form-field {
     display: flex;
     width: 100% !important;
@@ -4520,93 +4858,44 @@
     max-width: 100%;
     min-width: 0px;
     flex: 1;
-    align-items: stretch;
-    overflow: hidden;
     border-radius: var(--radius-md);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--tone-border);
     background: var(--tone-surface);
   }
-  @media (max-width: 639px) {
-    .cda-prefixed-field--stack-mobile {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .cda-prefixed-field--stack-mobile .cda-prefixed-field__prefix {
-      width: 100%;
-      max-width: 100%;
-      justify-content: flex-start;
-      border-right-style: var(--tw-border-style);
-      border-right-width: 0px;
-      border-bottom-style: var(--tw-border-style);
-      border-bottom-width: 1px;
-      --tw-leading: calc(var(--spacing) * 4);
-      line-height: calc(var(--spacing) * 4);
-      overflow-wrap: break-word;
-      white-space: normal;
-    }
-    .cda-prefixed-field--stack-mobile .cda-prefixed-field__suffix {
-      width: 100%;
-      max-width: 100%;
-      justify-content: flex-start;
-      border-top-style: var(--tw-border-style);
-      border-top-width: 1px;
-      border-left-style: var(--tw-border-style);
-      border-left-width: 0px;
-      --tw-leading: calc(var(--spacing) * 4);
-      line-height: calc(var(--spacing) * 4);
-      overflow-wrap: break-word;
-      white-space: normal;
-    }
-  }
   .cda-prefixed-field__prefix {
-    pointer-events: none;
     display: inline-flex;
-    min-height: calc(var(--spacing) * 10);
-    max-width: 45%;
     flex-shrink: 0;
     align-items: center;
     border-right-style: var(--tw-border-style);
     border-right-width: 1px;
-    padding-inline: calc(var(--spacing) * 3);
-    font-size: 10px;
-    --tw-leading: calc(var(--spacing) * 4);
-    line-height: calc(var(--spacing) * 4);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-    --tw-tracking: 0.18em;
-    letter-spacing: 0.18em;
-    overflow-wrap: break-word;
-    white-space: normal;
+    padding-inline: calc(var(--spacing) * 2);
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+    --tw-tracking: var(--tracking-widest);
+    letter-spacing: var(--tracking-widest);
     text-transform: uppercase;
     border-color: var(--tone-border);
-    background: var(--tone-page-bg);
     color: var(--tone-text-soft);
   }
   .cda-prefixed-field__suffix {
-    pointer-events: none;
     display: inline-flex;
-    min-height: calc(var(--spacing) * 10);
-    max-width: 45%;
     flex-shrink: 0;
     align-items: center;
     border-left-style: var(--tw-border-style);
     border-left-width: 1px;
-    padding-inline: calc(var(--spacing) * 3);
-    font-size: 10px;
-    --tw-leading: calc(var(--spacing) * 4);
-    line-height: calc(var(--spacing) * 4);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-    --tw-tracking: 0.18em;
-    letter-spacing: 0.18em;
-    overflow-wrap: break-word;
-    white-space: normal;
+    padding-inline: calc(var(--spacing) * 2);
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+    --tw-tracking: var(--tracking-widest);
+    letter-spacing: var(--tracking-widest);
     text-transform: uppercase;
     border-color: var(--tone-border);
-    background: var(--tone-page-bg);
     color: var(--tone-text-soft);
   }
   .cda-secret-field {
@@ -4700,7 +4989,7 @@
     font-size: 0.875rem !important;
     line-height: 1.25 !important;
   }
-  .cda-editable__action.cda-button {
+  .cda-editable__action.ui-button {
     min-width: 1.875rem;
     width: 1.875rem;
     height: 1.875rem;
@@ -4713,11 +5002,11 @@
       box-shadow: 0 0.5rem 1.25rem color-mix(in srgb, var(--tone-primary-soft-fg) 12%, transparent);
     }
   }
-  .cda-editable__action.cda-button .cda-material-icon {
+  .cda-editable__action.ui-button .cda-material-icon {
     font-size: 1rem;
     line-height: 1;
   }
-  .cda-editable__action--save.cda-button {
+  .cda-editable__action--save.ui-button {
     box-shadow: 0 0.5rem 1.25rem var(--tone-success-soft-fg);
     @supports (color: color-mix(in lab, red, red)) {
       box-shadow: 0 0.5rem 1.25rem color-mix(in srgb, var(--tone-success-soft-fg) 12%, transparent);
@@ -4735,13 +5024,13 @@
   .cda-editable--xs .cda-editable__value {
     font-size: 0.8125rem;
   }
-  .cda-editable--xs .cda-editable__action.cda-button {
+  .cda-editable--xs .cda-editable__action.ui-button {
     min-width: 1.45rem;
     width: 1.45rem;
     height: 1.45rem;
     flex-basis: 1.45rem;
   }
-  .cda-editable--xs .cda-editable__action.cda-button .cda-material-icon {
+  .cda-editable--xs .cda-editable__action.ui-button .cda-material-icon {
     font-size: 0.85rem;
   }
   .cda-editable--xs .cda-editable__input {
@@ -4774,16 +5063,16 @@
     min-width: 0px;
     flex-wrap: wrap;
     align-items: center;
-    gap: calc(var(--spacing) * 1.5);
-    border-radius: 0.85rem;
+    gap: calc(var(--spacing) * 2);
     border-style: var(--tw-border-style);
     border-width: 1px;
-    padding-inline: calc(var(--spacing) * 2);
-    padding-block: var(--spacing);
-    min-height: 2.35rem;
+    border-radius: var(--radius-md);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    min-height: 2.625rem;
     border-color: var(--tone-border);
-    background: var(--tone-surface);
-    box-shadow: var(--cad-shadow-soft);
   }
   .cad-tag-textedit__surface:focus-within, .zy-tag-textedit__surface:focus-within {
     border-color: var(--tone-success-soft-border);
@@ -4797,26 +5086,15 @@
   }
   .cad-tag-textedit__chip, .zy-tag-textedit__chip, .cad-tag-textedit__suggestion, .zy-tag-textedit__suggestion {
     display: inline-flex;
-    max-width: 100%;
     align-items: center;
-    gap: var(--spacing);
-    border-radius: calc(infinity * 1px);
+    border-radius: var(--radius-sm);
     border-style: var(--tw-border-style);
     border-width: 1px;
-    padding: 0.08rem 0.4rem;
-    font-size: 0.64rem;
-    font-weight: 700;
-    line-height: 1;
-    min-height: 1.15rem !important;
-    text-transform: none;
-    user-select: none;
-    box-shadow: none;
   }
   .cad-tag-textedit__chip > span:first-child, .zy-tag-textedit__chip > span:first-child, .cad-tag-textedit__suggestion > span:first-child, .zy-tag-textedit__suggestion > span:first-child {
-    min-width: 0px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    margin-left: calc(var(--spacing) * 1.5);
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
   }
   .cad-tag-textedit__chip, .zy-tag-textedit__chip {
     cursor: pointer;
@@ -4880,33 +5158,30 @@
   }
   .cad-tag-textedit__chip-x, .zy-tag-textedit__chip-x {
     display: inline-flex;
-    width: 0.72rem;
-    height: 0.72rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    background: var(--tone-text-strong);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-text-strong) 8%, transparent);
-    }
-    font-size: 0.62rem;
-    font-weight: 700;
-    line-height: 1;
   }
   .cad-tag-textedit__input, .zy-tag-textedit__input {
     min-width: 4rem;
-    flex: 1 1 6rem;
     max-width: 100%;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    color: var(--tone-text);
-    padding: 0.14rem 0.2rem !important;
-    font-family: inherit;
-    font-size: 0.82rem !important;
-    outline: none;
-    box-shadow: none !important;
-    min-height: auto !important;
+    border-style: var(--tw-border-style);
+    border-width: 0px;
+    padding-inline: var(--spacing);
+    padding-block: calc(var(--spacing) * 0.5);
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    &:focus {
+      border-color: var(--tone-primary-soft-border);
+    }
+    &:focus {
+      --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+    &:focus {
+      --tw-ring-color: var(--tone-primary-soft-border);
+    }
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
   }
   .cad-tag-textedit__input::placeholder, .zy-tag-textedit__input::placeholder {
     color: var(--tone-text-soft);
@@ -4933,7 +5208,8 @@
   }
   .cad-tag-textedit__hint, .zy-tag-textedit__hint {
     color: var(--tone-text-soft);
-    font-size: 0.78rem;
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
     line-height: 1.45;
   }
   .cda-entity-picker {
@@ -5145,6 +5421,35 @@
     font-weight: var(--font-weight-semibold);
     color: var(--tone-text);
   }
+  .ui-checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    border-radius: var(--radius-md);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    border-color: var(--tone-border);
+    color: var(--tone-text);
+    [data-ui-theme="white"] & .form-checkbox:checked {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e") !important;
+    }
+    [data-ui-theme="dark"] & .form-checkbox:checked {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e") !important;
+    }
+  }
+  .ui-checkbox-option--muted {
+    background: var(--tone-surface-soft);
+  }
+  .ui-checkbox-option--density-comfortable {
+    padding-block: var(--spacing);
+  }
+  .ui-checkbox-option--density-compact {
+    padding-block: calc(var(--spacing) * 0.5);
+  }
   .ui-settings-row {
     display: flex;
     align-items: center;
@@ -5242,6 +5547,85 @@
     --tw-leading: calc(var(--spacing) * 7);
     line-height: calc(var(--spacing) * 7);
     color: var(--tone-text-soft);
+  }
+  .ui-file-input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0px;
+    border-radius: var(--radius-md);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    &:focus {
+      --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+    &:focus {
+      --tw-ring-color: var(--tone-primary-soft-border);
+    }
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+    border: 1px solid var(--tone-border);
+    color: var(--tone-text);
+  }
+  .ui-file-input::file-selector-button {
+    margin-right: calc(var(--spacing) * 3);
+    border-radius: 0.25rem;
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 1.5);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    border: 1px solid var(--tone-border);
+    background-color: var(--tone-surface-soft);
+    color: var(--tone-text-strong);
+  }
+  .ui-file-input--density-comfortable {
+    padding-block: var(--spacing);
+  }
+  .ui-file-input--density-comfortable::file-selector-button {
+    padding-block: var(--spacing);
+  }
+  .ui-file-input--density-compact {
+    padding-block: calc(var(--spacing) * 0.5);
+  }
+  .ui-file-input--density-compact::file-selector-button {
+    padding-block: calc(var(--spacing) * 0.5);
+  }
+  .ui-file-input--outlined {
+    background-color: var(--tone-surface);
+  }
+  .ui-file-input--filled {
+    background-color: var(--tone-surface-soft);
+  }
+  .ui-file-input[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    border-color: var(--tone-border);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
+    }
+    background-color: var(--tone-surface-soft);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
+    }
+    color: var(--tone-text);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklch, var(--tone-text) 65%, transparent);
+    }
+  }
+  .ui-file-input[disabled]::file-selector-button {
+    cursor: not-allowed;
   }
   .cda-dialog-layer {
     position: fixed;
@@ -5836,8 +6220,8 @@
     max-width: 45%;
     text-overflow: ellipsis;
     border-radius: 9999px;
-    background: var(--tone-base-soft-bg);
-    color: var(--tone-base-soft-fg);
+    background: var(--tone-default-soft-bg);
+    color: var(--tone-default-soft-fg);
   }
   .cda-treeview__badge-full {
     display: block;
@@ -5889,11 +6273,11 @@
     color: var(--tone-text);
   }
   .cda-treeview--workbench .cda-treeview__badge {
-    background: var(--tone-base-soft-bg);
+    background: var(--tone-default-soft-bg);
     @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-base-soft-bg) 72%, transparent);
+      background: color-mix(in srgb, var(--tone-default-soft-bg) 72%, transparent);
     }
-    color: var(--tone-base-soft-fg);
+    color: var(--tone-default-soft-fg);
   }
   .cad-tabs {
     --cad-tabs-accent-bg: var(--tone-primary-soft-bg);
@@ -5965,9 +6349,13 @@
     }
     --cad-tabs-tab-font-size: 0.875rem;
     --cad-tabs-tab-font-weight: 650;
-    --cad-tabs-tab-padding: 0.65rem 1rem;
-    --cad-tabs-tab-min-height: 2.85rem;
-    --cad-tabs-tab-radius: 1rem 1rem 0 0;
+    --cad-tabs-tab-padding: 0.5rem 1rem;
+    --cad-tabs-tab-min-height: 2.5rem;
+    --cad-tabs-tab-radius-value: 0.375rem;
+    --cad-tabs-tab-radius-tl: 0;
+    --cad-tabs-tab-radius-tr: 0;
+    --cad-tabs-tab-radius-bl: 0;
+    --cad-tabs-tab-radius-br: 0;
     --cad-tabs-panel-border: var(--cad-tabs-accent-border);
     @supports (color: color-mix(in lab, red, red)) {
       --cad-tabs-panel-border: color-mix(in srgb, var(--cad-tabs-accent-border) 56%, var(--tone-border-soft) 44%);
@@ -5989,7 +6377,11 @@
       --cad-tabs-panel-shadow: 0 18px 42px -30px color-mix(in srgb, var(--tone-text) 20%, transparent);
     }
     --cad-tabs-panel-padding: 1rem;
-    --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
+    --cad-tabs-panel-radius-value: 1.25rem;
+    --cad-tabs-panel-radius-tl: 0;
+    --cad-tabs-panel-radius-tr: 0;
+    --cad-tabs-panel-radius-bl: 0;
+    --cad-tabs-panel-radius-br: 0;
     --cad-tabs-badge-background: var(--cad-tabs-accent-bg);
     --cad-tabs-badge-color: var(--cad-tabs-accent-fg);
     display: flex;
@@ -6034,6 +6426,62 @@
     --cad-tabs-accent-border: var(--tone-danger-soft-border);
     --cad-tabs-accent-fg: var(--tone-danger-soft-fg);
   }
+  .cad-tabs--rounded-none {
+    --cad-tabs-tab-radius-value: 0;
+  }
+  .cad-tabs--rounded-default {
+    --cad-tabs-tab-radius-value: 0.375rem;
+  }
+  .cad-tabs--rounded-md {
+    --cad-tabs-tab-radius-value: 0.75rem;
+  }
+  .cad-tabs--rounded-lg {
+    --cad-tabs-tab-radius-value: 1.25rem;
+  }
+  .cad-tabs--content-rounded-none {
+    --cad-tabs-panel-radius-value: 0;
+  }
+  .cad-tabs--content-rounded-default {
+    --cad-tabs-panel-radius-value: 0.375rem;
+  }
+  .cad-tabs--content-rounded-md {
+    --cad-tabs-panel-radius-value: 0.25rem;
+  }
+  .cad-tabs--content-rounded-lg {
+    --cad-tabs-panel-radius-value: 1.25rem;
+  }
+  .cad-tabs--position-top {
+    --cad-tabs-tab-radius-tl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-tr: var(--cad-tabs-tab-radius-value);
+  }
+  .cad-tabs--position-bottom {
+    --cad-tabs-tab-radius-bl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-br: var(--cad-tabs-tab-radius-value);
+  }
+  .cad-tabs--position-left {
+    --cad-tabs-tab-radius-tl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-bl: var(--cad-tabs-tab-radius-value);
+  }
+  .cad-tabs--position-right {
+    --cad-tabs-tab-radius-tr: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-br: var(--cad-tabs-tab-radius-value);
+  }
+  .cad-tabs--position-top {
+    --cad-tabs-panel-radius-bl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-br: var(--cad-tabs-panel-radius-value);
+  }
+  .cad-tabs--position-bottom {
+    --cad-tabs-panel-radius-tl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-tr: var(--cad-tabs-panel-radius-value);
+  }
+  .cad-tabs--position-left {
+    --cad-tabs-panel-radius-tr: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-br: var(--cad-tabs-panel-radius-value);
+  }
+  .cad-tabs--position-right {
+    --cad-tabs-panel-radius-tl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-bl: var(--cad-tabs-panel-radius-value);
+  }
   .cad-tabs--horizontal {
     flex-direction: column;
   }
@@ -6072,7 +6520,7 @@
     align-items: flex-end;
     gap: calc(var(--spacing) * 2);
     margin: 0;
-    padding: 0 0.25rem;
+    padding: 0;
     border-bottom: 1px solid var(--cad-tabs-list-border);
     scrollbar-width: thin;
   }
@@ -6118,7 +6566,10 @@
     padding: var(--cad-tabs-tab-padding);
     border: 1px solid var(--cad-tabs-tab-border);
     border-bottom-width: 0;
-    border-radius: var(--cad-tabs-tab-radius);
+    border-top-left-radius: var(--cad-tabs-tab-radius-tl);
+    border-top-right-radius: var(--cad-tabs-tab-radius-tr);
+    border-bottom-left-radius: var(--cad-tabs-tab-radius-bl);
+    border-bottom-right-radius: var(--cad-tabs-tab-radius-br);
     background: var(--cad-tabs-tab-background);
     color: var(--cad-tabs-tab-color);
     font-size: var(--cad-tabs-tab-font-size);
@@ -6134,7 +6585,6 @@
     width: 100%;
     justify-content: flex-start;
     border-bottom-width: 1px;
-    border-radius: 1rem;
   }
   .cad-tabs__tab:hover, .cad-tabs__tab:focus-visible {
     border-color: var(--cad-tabs-tab-hover-border);
@@ -6159,26 +6609,27 @@
   .cad-tabs--horizontal .cad-tabs__tab.is-active::after {
     content: "";
     position: absolute;
-    right: 0.9rem;
-    bottom: 0.42rem;
-    left: 0.9rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
     height: 0.18rem;
-    border-radius: 9999px;
     background: var(--cad-tabs-tab-indicator);
   }
   .cad-tabs--position-bottom.cad-tabs--horizontal .cad-tabs__tab.is-active::after {
-    top: 0.42rem;
+    top: 0;
     bottom: auto;
   }
   .cad-tabs--vertical .cad-tabs__tab.is-active::after {
     content: "";
     position: absolute;
-    top: 0.7rem;
-    bottom: 0.7rem;
-    left: 0.38rem;
+    top: 0;
+    bottom: 0;
+    left: 0;
     width: 0.2rem;
-    border-radius: 9999px;
     background: var(--cad-tabs-tab-indicator);
+  }
+  .cad-tabs--no-slider .cad-tabs__tab.is-active::after {
+    display: none;
   }
   .cad-tabs--horizontal.cad-tabs--position-top .cad-tabs__tab.is-active {
     margin-bottom: -1px;
@@ -6202,6 +6653,24 @@
   }
   .cad-tabs__tab:disabled::after, .cad-tabs__tab[aria-disabled="true"]::after {
     display: none;
+  }
+  .cad-tabs__tab--link {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.2em;
+  }
+  .cad-tabs__tab--link:hover, .cad-tabs__tab--link:focus-visible {
+    border-color: transparent;
+    background: transparent;
+    text-decoration-color: currentColor;
+  }
+  .cad-tabs__tab--link.is-active {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
   .cad-tabs__icon {
     display: inline-flex;
@@ -6259,7 +6728,10 @@
     min-width: 0;
     padding: var(--cad-tabs-panel-padding);
     border: 1px solid var(--cad-tabs-panel-border);
-    border-radius: var(--cad-tabs-panel-radius);
+    border-top-left-radius: var(--cad-tabs-panel-radius-tl);
+    border-top-right-radius: var(--cad-tabs-panel-radius-tr);
+    border-bottom-left-radius: var(--cad-tabs-panel-radius-bl);
+    border-bottom-right-radius: var(--cad-tabs-panel-radius-br);
     background: var(--cad-tabs-panel-background);
     box-shadow: var(--cad-tabs-panel-shadow);
     color: var(--tone-text);
@@ -6292,18 +6764,20 @@
   }
   .cad-tabs--position-left.cad-tabs--vertical .cad-tabs__panel {
     margin-left: -1px;
-    border-top-left-radius: 0;
   }
   .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__panel {
     margin-right: -1px;
-    border-top-right-radius: 0;
+  }
+  .cad-tabs--density-comfortable {
+    --cad-tabs-tab-font-size: 0.8125rem;
+    --cad-tabs-tab-padding: 0.4rem 0.9rem;
+    --cad-tabs-tab-min-height: 2rem;
   }
   .cad-tabs--density-compact {
     --cad-tabs-list-border: transparent;
     --cad-tabs-tab-font-size: 0.8125rem;
-    --cad-tabs-tab-padding: 0.45rem 0.85rem;
-    --cad-tabs-tab-min-height: 2.35rem;
-    --cad-tabs-tab-radius: 9999px;
+    --cad-tabs-tab-padding: 0.3rem 0.75rem;
+    --cad-tabs-tab-min-height: 1.625rem;
     --cad-tabs-tab-background: var(--tone-surface-soft);
     @supports (color: color-mix(in lab, red, red)) {
       --cad-tabs-tab-background: color-mix(in srgb, var(--tone-surface-soft) 74%, transparent);
@@ -6318,7 +6792,10 @@
     --cad-tabs-panel-background: transparent;
     --cad-tabs-panel-shadow: none;
     --cad-tabs-panel-padding: 0.85rem 0 0;
-    --cad-tabs-panel-radius: 0;
+    --cad-tabs-panel-radius-tl: 0;
+    --cad-tabs-panel-radius-tr: 0;
+    --cad-tabs-panel-radius-bl: 0;
+    --cad-tabs-panel-radius-br: 0;
   }
   .cad-tabs--density-compact .cad-tabs__tab.is-active::after {
     display: none;
@@ -6367,7 +6844,10 @@
     .cad-tabs--position-left.cad-tabs--vertical .cad-tabs__panel, .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__panel {
       margin-left: 0;
       margin-right: 0;
-      border-radius: var(--cad-tabs-panel-radius);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--cad-tabs-panel-radius-value);
+      border-bottom-right-radius: var(--cad-tabs-panel-radius-value);
     }
   }
   .cad-side-menu {
@@ -7318,9 +7798,9 @@
     border-width: 1px;
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    border-color: var(--tone-base-soft-border);
-    background: var(--tone-base-soft-bg);
-    color: var(--tone-base-soft-fg);
+    border-color: var(--tone-default-soft-border);
+    background: var(--tone-default-soft-bg);
+    color: var(--tone-default-soft-fg);
   }
   .cda-timeline__marker .material-symbols-rounded {
     font-size: var(--text-base);
@@ -7623,7 +8103,7 @@
     .cda-timeline-stepper__actions {
       justify-content: stretch;
     }
-    .cda-timeline-stepper__actions .cda-button {
+    .cda-timeline-stepper__actions .ui-button {
       flex: 1 1 auto;
     }
   }

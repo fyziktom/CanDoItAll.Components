@@ -98,6 +98,7 @@
     --text-2xl: 1.5rem;
     --text-2xl--line-height: calc(2 / 1.5);
     --font-weight-normal: 400;
+    --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --tracking-tight: -0.025em;
@@ -209,6 +210,7 @@
     --color-secondary-700: var(--cus-photon-barrier-700);
     --color-secondary-800: var(--cus-photon-barrier-800);
     --color-secondary-900: var(--cus-photon-barrier-900);
+    --color-secondary-950: var(--cus-photon-barrier-950);
     --color-tertiary-100: var(--cus-iris-100);
     --color-tertiary-200: var(--cus-iris-200);
     --color-tertiary-400: var(--cus-iris-400);
@@ -542,6 +544,9 @@
 .grow {
   flex-grow: 1;
 }
+.border-collapse {
+  border-collapse: collapse;
+}
 .cursor-pointer {
   cursor: pointer;
 }
@@ -804,8 +809,14 @@
 .py-4 {
   padding-block: calc(var(--spacing) * 4);
 }
+.pr-4 {
+  padding-right: calc(var(--spacing) * 4);
+}
 .pr-6 {
   padding-right: calc(var(--spacing) * 6);
+}
+.pb-2 {
+  padding-bottom: calc(var(--spacing) * 2);
 }
 .pl-1 {
   padding-left: var(--spacing);
@@ -849,6 +860,10 @@
 .font-bold {
   --tw-font-weight: var(--font-weight-bold);
   font-weight: var(--font-weight-bold);
+}
+.font-medium {
+  --tw-font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
 }
 .font-semibold {
   --tw-font-weight: var(--font-weight-semibold);
@@ -911,6 +926,9 @@
 }
 .overline {
   text-decoration-line: overline;
+}
+.underline {
+  text-decoration-line: underline;
 }
 .opacity-70 {
   opacity: 70%;
@@ -986,11 +1004,27 @@
   .xl\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .xl\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 @media (width >= 96rem) {
   .\32 xl\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+.\[\&\>tr\:not\(\:last-child\)\>td\]\:border-b > tr:not(:last-child) > td {
+  border-bottom-style: var(--tw-border-style);
+  border-bottom-width: 1px;
+}
+.\[\&\>tr\:not\(\:last-child\)\>td\]\:border-\(--tone-border\) > tr:not(:last-child) > td {
+  border-color: var(--tone-border);
+}
+.\[\&\>tr\>td\]\:py-2 > tr > td {
+  padding-block: calc(var(--spacing) * 2);
+}
+.\[\&\>tr\>td\]\:pr-4 > tr > td {
+  padding-right: calc(var(--spacing) * 4);
 }
 @layer base {
   :root, [data-ui-theme="light"] {
@@ -1039,63 +1073,72 @@
     @supports (color: color-mix(in lab, red, red)) {
       --cad-shadow-strong: 0 14px 36px color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
     }
-    --tone-primary-solid-bg: var(--color-chrome-900);
-    --tone-primary-solid-hover: var(--color-chrome-800);
-    --tone-primary-solid-border: var(--color-chrome-900);
-    --tone-primary-solid-fg: var(--color-white);
-    --tone-primary-soft-bg: color-mix(in srgb, #fff 96%, transparent);
+    --tone-default-soft-bg: color-mix(in srgb, #fff 96%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-primary-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
+      --tone-default-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
+    }
+    --tone-default-soft-hover: var(--color-chrome-50);
+    --tone-default-soft-border: var(--color-chrome-300);
+    --tone-default-soft-fg: var(--color-chrome-600);
+    --tone-default-solid-bg: var(--color-chrome-50);
+    --tone-default-solid-hover: var(--color-chrome-200);
+    --tone-default-solid-border: var(--color-chrome-600);
+    --tone-default-solid-fg: var(--color-chrome-950);
+    --tone-default-tonal-bg: var(--color-chrome-100);
+    --tone-default-tonal-hover: var(--color-chrome-200);
+    --tone-primary-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-primary-soft-bg: color-mix(in srgb, var(--color-chrome-200) 50%, transparent);
     }
     --tone-primary-soft-hover: var(--color-chrome-50);
     --tone-primary-soft-border: var(--color-chrome-300);
     --tone-primary-soft-fg: var(--color-chrome-900);
+    --tone-primary-solid-bg: var(--color-chrome-900);
+    --tone-primary-solid-hover: var(--color-chrome-600);
+    --tone-primary-solid-border: var(--color-chrome-900);
+    --tone-primary-solid-fg: var(--color-white);
+    --tone-primary-tonal-bg: var(--color-chrome-100);
+    --tone-primary-tonal-hover: var(--color-chrome-200);
     --tone-secondary-soft-bg: var(--color-secondary-100);
     --tone-secondary-soft-hover: var(--color-secondary-200);
     --tone-secondary-soft-border: var(--color-secondary-300);
     --tone-secondary-soft-fg: var(--color-secondary-800);
+    --tone-secondary-solid-bg: var(--color-secondary-600);
+    --tone-secondary-solid-hover: var(--color-secondary-700);
+    --tone-secondary-solid-border: var(--color-secondary-600);
+    --tone-secondary-solid-fg: var(--color-white);
     --tone-success-soft-bg: var(--color-success-100);
     --tone-success-soft-hover: var(--color-success-200);
     --tone-success-soft-border: var(--color-success-300);
     --tone-success-soft-fg: var(--color-success-800);
     --tone-success-solid-bg: var(--color-success-600);
+    --tone-success-solid-hover: var(--color-success-700);
+    --tone-success-solid-border: var(--color-success-600);
     --tone-success-solid-fg: var(--color-white);
     --tone-info-soft-bg: var(--color-info-100);
     --tone-info-soft-hover: var(--color-info-200);
     --tone-info-soft-border: var(--color-info-300);
     --tone-info-soft-fg: var(--color-info-800);
     --tone-info-solid-bg: var(--color-info-600);
+    --tone-info-solid-hover: var(--color-info-700);
+    --tone-info-solid-border: var(--color-info-600);
     --tone-info-solid-fg: var(--color-white);
     --tone-warning-soft-bg: var(--color-warn-100);
     --tone-warning-soft-hover: var(--color-warn-200);
     --tone-warning-soft-border: var(--color-warn-300);
     --tone-warning-soft-fg: var(--color-warn-800);
     --tone-warning-solid-bg: var(--color-warn-600);
+    --tone-warning-solid-hover: var(--color-warn-700);
+    --tone-warning-solid-border: var(--color-warn-600);
     --tone-warning-solid-fg: var(--color-white);
     --tone-danger-soft-bg: var(--color-danger-100);
     --tone-danger-soft-hover: var(--color-danger-200);
     --tone-danger-soft-border: var(--color-danger-300);
     --tone-danger-soft-fg: var(--color-danger-800);
     --tone-danger-solid-bg: var(--color-danger-600);
+    --tone-danger-solid-hover: var(--color-danger-700);
+    --tone-danger-solid-border: var(--color-danger-600);
     --tone-danger-solid-fg: var(--color-white);
-    --tone-light-soft-bg: color-mix(in srgb, #fff 96%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
-    }
-    --tone-light-soft-hover: var(--color-chrome-50);
-    --tone-light-soft-border: var(--color-chrome-300);
-    --tone-light-soft-fg: var(--color-chrome-600);
-    --tone-base-soft-bg: color-mix(in srgb, #fff 96%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
-    }
-    --tone-base-soft-hover: var(--color-chrome-50);
-    --tone-base-soft-border: var(--color-chrome-300);
-    --tone-base-soft-fg: var(--color-chrome-600);
-    --tone-dark-soft-bg: var(--color-chrome-200);
-    --tone-dark-soft-hover: var(--color-chrome-300);
-    --tone-dark-soft-border: var(--color-chrome-400);
-    --tone-dark-soft-fg: var(--color-chrome-900);
     --tone-scrim: color-mix(in srgb, oklch(14.5% 0 none) 55%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-scrim: color-mix(in srgb, var(--color-neutral-950) 55%, transparent);
@@ -1714,6 +1757,14 @@
       --tone-primary-soft-border: color-mix(in srgb, var(--color-chrome-600) 35%, transparent);
     }
     --tone-primary-soft-fg: var(--color-chrome-800);
+    --tone-primary-tonal-bg: color-mix(in srgb, oklch(92.2% 0 none) 78%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-primary-tonal-bg: color-mix(in srgb, var(--color-chrome-200) 78%, transparent);
+    }
+    --tone-primary-tonal-hover: color-mix(in srgb, oklch(87% 0 none) 84%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-primary-tonal-hover: color-mix(in srgb, var(--color-chrome-300) 84%, transparent);
+    }
     --tone-secondary-soft-bg: color-mix(in srgb, oklch(40.1% 0.074 212.8) 32%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-secondary-soft-bg: color-mix(in srgb, var(--color-secondary-900) 32%, transparent);
@@ -1727,6 +1778,10 @@
       --tone-secondary-soft-border: color-mix(in srgb, var(--color-secondary-400) 38%, transparent);
     }
     --tone-secondary-soft-fg: var(--color-secondary-200);
+    --tone-secondary-solid-bg: var(--color-secondary-500);
+    --tone-secondary-solid-hover: var(--color-secondary-600);
+    --tone-secondary-solid-border: var(--color-secondary-500);
+    --tone-secondary-solid-fg: var(--color-secondary-950);
     --tone-success-soft-bg: color-mix(in srgb, oklch(43.2% 0.095 166.913) 34%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-success-soft-bg: color-mix(in srgb, var(--color-success-800) 34%, transparent);
@@ -1741,6 +1796,8 @@
     }
     --tone-success-soft-fg: var(--color-success-200);
     --tone-success-solid-bg: var(--color-success-500);
+    --tone-success-solid-hover: var(--color-success-600);
+    --tone-success-solid-border: var(--color-success-500);
     --tone-success-solid-fg: var(--color-success-950);
     --tone-info-soft-bg: color-mix(in srgb, oklch(43.6% 0.140 243.8) 32%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1756,6 +1813,8 @@
     }
     --tone-info-soft-fg: var(--color-info-200);
     --tone-info-solid-bg: var(--color-info-400);
+    --tone-info-solid-hover: var(--color-info-500);
+    --tone-info-solid-border: var(--color-info-400);
     --tone-info-solid-fg: var(--color-info-950);
     --tone-warning-soft-bg: color-mix(in srgb, oklch(47.6% 0.114 61.907) 34%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1771,6 +1830,8 @@
     }
     --tone-warning-soft-fg: var(--color-warn-200);
     --tone-warning-solid-bg: var(--color-warn-500);
+    --tone-warning-solid-hover: var(--color-warn-600);
+    --tone-warning-solid-border: var(--color-warn-500);
     --tone-warning-solid-fg: var(--color-warn-950);
     --tone-danger-soft-bg: color-mix(in srgb, oklch(45.5% 0.188 13.697) 34%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1786,33 +1847,43 @@
     }
     --tone-danger-soft-fg: var(--color-danger-200);
     --tone-danger-solid-bg: var(--color-danger-400);
+    --tone-danger-solid-hover: var(--color-danger-500);
+    --tone-danger-solid-border: var(--color-danger-400);
     --tone-danger-solid-fg: var(--color-danger-950);
-    --tone-light-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+      --tone-default-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
     }
-    --tone-light-soft-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+      --tone-default-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
     }
-    --tone-light-soft-border: color-mix(in srgb, oklch(43.9% 0 none) 28%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-light-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+      --tone-default-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
     }
-    --tone-light-soft-fg: var(--color-chrome-800);
-    --tone-base-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
+    --tone-default-tonal-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+      --tone-default-tonal-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
     }
-    --tone-base-soft-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
+    --tone-default-tonal-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+      --tone-default-tonal-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
     }
-    --tone-base-soft-border: color-mix(in srgb, oklch(43.9% 0 none) 28%, transparent);
+    --tone-default-solid-bg: var(--color-chrome-500);
+    --tone-default-solid-hover: var(--color-chrome-600);
+    --tone-default-solid-border: var(--color-chrome-500);
+    --tone-default-solid-fg: var(--color-chrome-950);
+    --tone-default-soft-bg: color-mix(in srgb, oklch(92.2% 0 none) 74%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      --tone-base-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+      --tone-default-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
     }
-    --tone-base-soft-fg: var(--color-chrome-800);
+    --tone-default-soft-hover: color-mix(in srgb, oklch(87% 0 none) 82%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-default-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+    }
+    --tone-default-soft-border: color-mix(in srgb, oklch(43.9% 0 none) 28%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tone-default-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+    }
+    --tone-default-soft-fg: var(--color-chrome-800);
     --tone-dark-soft-bg: color-mix(in srgb, oklch(26.9% 0 none) 14%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tone-dark-soft-bg: color-mix(in srgb, var(--color-chrome-800) 14%, transparent);
@@ -1907,15 +1978,6 @@ body {
 }
 .sandbox-theme-host .cda-page-header__description:not(.cda-page-header__description--compact) {
   margin-top: 1rem;
-}
-.sandbox-theme-host .cad-tabs {
-  --cad-tabs-tab-radius: 0;
-}
-.sandbox-theme-host .cad-tabs__list {
-  padding: 0;
-}
-.sandbox-theme-host .cad-tabs--density-compact {
-  --cad-tabs-tab-radius: 0;
 }
 .sandbox-layout {
   min-height: 100vh;
@@ -2104,7 +2166,7 @@ body {
   padding-block: calc(var(--spacing) * 2);
   font-size: 0.85rem;
 }
-.sandbox-toolbar__controls--unused .rz-button-text:after {
+.sandbox-toolbar__controls--unused .ui-button__label:after {
   content: '∅';
   margin-left: .125em;
   display: inline-block;
@@ -2710,9 +2772,6 @@ body {
   width: auto;
   max-width: max-content;
   flex: 0 auto;
-}
-.sandbox-example__tabs .cad-tabs__panels {
-  display: none;
 }
 .sandbox-example__source {
   overflow: hidden;
