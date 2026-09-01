@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<Toolbar data-testid="sandbox-navigation-toolbar-fields">
+    <ToolbarRow>
+        <ToolbarFields>
+            <TextBox Value="@toolbarFieldsQuery" ValueChanged="@(value => toolbarFieldsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search records" aria-label="Search records" />
+            <DropDown TValue="string" Data="@ToolbarScopes" Value="@toolbarFieldsScope" ValueChanged="@(value => toolbarFieldsScope = value ?? ToolbarScopeAll)" aria-label="Field scope" />
+        </ToolbarFields>
+    </ToolbarRow>
+</Toolbar>

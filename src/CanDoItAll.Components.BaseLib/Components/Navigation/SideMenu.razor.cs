@@ -44,75 +44,99 @@ public partial class SideMenu : IAsyncDisposable
     [Inject]
     private SideMenuService MenuService { get; set; } = default!;
 
+    /// <summary>Identifier used to look up this menu's state in <see cref="SideMenuService"/>; must be unique per menu instance.</summary>
     [Parameter]
     public string MenuId { get; set; } = "primary";
 
+    /// <summary>The menu's title, shown in the header when expanded and used as the mobile toggle's small label.</summary>
     [Parameter]
     public string Title { get; set; } = "Menu";
 
+    /// <summary>Optional subtitle shown below <see cref="Title"/> when expanded and <see cref="HeaderContent"/> is unset.</summary>
     [Parameter]
     public string Subtitle { get; set; } = string.Empty;
 
+    /// <summary>Material icon token shown as the menu's brand mark.</summary>
     [Parameter]
     public string Icon { get; set; } = "apps";
 
+    /// <summary>Accessible label applied to the menu's navigation regions.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Primary navigation";
 
+    /// <summary>Label for the overflow "More" entry point.</summary>
     [Parameter]
     public string MoreText { get; set; } = "More";
 
+    /// <summary>Whether the menu is expanded (showing labels) or collapsed (icons only).</summary>
     [Parameter]
     public bool Expanded { get; set; } = true;
 
+    /// <summary>Raised whenever <see cref="Expanded"/> changes, including via the collapse toggle or restored state.</summary>
     [Parameter]
     public EventCallback<bool> ExpandedChanged { get; set; }
 
+    /// <summary>When <c>true</c>, the collapse/expand toggle button is shown.</summary>
     [Parameter]
     public bool AllowCollapse { get; set; } = true;
 
+    /// <summary>When <c>true</c>, the menu stretches to fill the height of its parent.</summary>
     [Parameter]
     public bool FillHeight { get; set; } = true;
 
+    /// <summary>When <c>true</c>, the current <see cref="Expanded"/> state is persisted to browser storage.</summary>
     [Parameter]
     public bool PersistExpandedState { get; set; } = true;
 
+    /// <summary>When <c>true</c>, a previously persisted expanded state is restored on load.</summary>
     [Parameter]
     public bool RestoreExpandedState { get; set; } = true;
 
+    /// <summary>Storage key used to persist the expanded state; defaults to a key derived from <see cref="MenuId"/>.</summary>
     [Parameter]
     public string? PersistenceKey { get; set; }
 
+    /// <summary>Maximum number of primary items shown before overflowing into the "More" panel; defaults to the measured layout capacity.</summary>
     [Parameter]
     public int? VisibleItemCapacity { get; set; }
 
+    /// <summary>The menu's primary items, in addition to any declared as <see cref="SideMenuItem"/> children.</summary>
     [Parameter]
     public IReadOnlyList<ISideMenuItem> Items { get; set; } = [];
 
+    /// <summary>Items always shown in the overflow "More" panel, regardless of available space.</summary>
     [Parameter]
     public IReadOnlyList<ISideMenuItem> MoreItems { get; set; } = [];
 
+    /// <summary>Items pinned to the bottom of the menu, separate from the scrollable primary list.</summary>
     [Parameter]
     public IReadOnlyList<ISideMenuItem> BottomItems { get; set; } = [];
 
+    /// <summary>Custom content replacing the default title/subtitle header when expanded.</summary>
     [Parameter]
     public RenderFragment? HeaderContent { get; set; }
 
+    /// <summary>Declarative <see cref="SideMenuItem"/> children for the primary item list.</summary>
     [Parameter]
     public RenderFragment? MenuItems { get; set; }
 
+    /// <summary>Declarative <see cref="SideMenuItem"/> children for the overflow "More" panel.</summary>
     [Parameter]
     public RenderFragment? MoreMenuItems { get; set; }
 
+    /// <summary>Custom content appended inside the "More" panel, alongside any configured more items.</summary>
     [Parameter]
     public RenderFragment? MoreContent { get; set; }
 
+    /// <summary>Declarative <see cref="SideMenuItem"/> children for the bottom-pinned item list.</summary>
     [Parameter]
     public RenderFragment? BottomMenuItems { get; set; }
 
+    /// <summary>Custom content shown when the menu has no visible items.</summary>
     [Parameter]
     public RenderFragment? EmptyContent { get; set; }
 
+    /// <summary>Raised whenever an item is selected, from any input source (pointer, keyboard, or programmatic).</summary>
     [Parameter]
     public EventCallback<SideMenuSelection> ItemSelected { get; set; }
 

@@ -56,36 +56,47 @@
     private bool initialized;
     private bool disposed;
 
+    /// <summary>The zoomable and pannable content.</summary>
     [Parameter, EditorRequired]
     public RenderFragment ChildContent { get; set; } = default!;
 
+    /// <summary>When <c>false</c>, zoom and pan interaction is disabled and the toolbar is hidden.</summary>
     [Parameter]
     public bool Enabled { get; set; } = true;
 
+    /// <summary>When <c>true</c> (and <see cref="Enabled"/>), shows the zoom in/out/reset toolbar.</summary>
     [Parameter]
     public bool ShowControls { get; set; } = true;
 
+    /// <summary>When <c>true</c>, makes the content inert so pointer/focus interaction passes through to the frame instead of the content.</summary>
     [Parameter]
     public bool SuppressContentInteraction { get; set; }
 
+    /// <summary>What the mouse wheel does over the frame: zoom or pan.</summary>
     [Parameter]
     public ZoomPanWheelMode WheelMode { get; set; } = ZoomPanWheelMode.Zoom;
 
+    /// <summary>The smallest zoom scale allowed, as a fraction of 1.</summary>
     [Parameter]
     public double MinimumZoom { get; set; } = 0.25;
 
+    /// <summary>The largest zoom scale allowed, as a multiple of 1.</summary>
     [Parameter]
     public double MaximumZoom { get; set; } = 8;
 
+    /// <summary>The multiplier applied per zoom step (wheel notch or toolbar button).</summary>
     [Parameter]
     public double ZoomFactor { get; set; } = 1.2;
 
+    /// <summary>Pixels panned per keyboard arrow-key press.</summary>
     [Parameter]
     public double KeyboardPanStep { get; set; } = 48;
 
+    /// <summary>Accessible label for the pannable viewport; defaults to "Zoomable and pannable content".</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>When this value changes, the zoom and pan state resets to its default.</summary>
     [Parameter]
     public object? ResetKey { get; set; }
 

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>CanDoItAll.Components.Sandbox.Catalog</AssemblyName>
+    <RootNamespace>CanDoItAll.Components.Sandbox</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CanDoItAll.Components.Sandbox\*.cs" Exclude="..\CanDoItAll.Components.Sandbox\Program.cs" Link="%(Filename)%(Extension)" />
+    <Compile Include="..\CanDoItAll.Components.Sandbox\Components\**\*.cs" Link="Components\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\CanDoItAll.Components.Sandbox\Documentation\**\*.cs" Link="Documentation\%(RecursiveDir)%(Filename)%(Extension)" />
+    <RazorComponent Include="..\CanDoItAll.Components.Sandbox\_Imports.razor" Link="_Imports.razor" />
+    <RazorComponent Include="..\CanDoItAll.Components.Sandbox\Components\**\*.razor" Exclude="..\CanDoItAll.Components.Sandbox\Components\App.razor" Link="Components\%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\CanDoItAll.Components.Sandbox\Components\Examples\**\*.razor" LogicalName="examples/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj" />
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.Charts\CanDoItAll.Components.Charts.csproj" />
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.Common\CanDoItAll.Components.Common.csproj" />
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.Gantt\CanDoItAll.Components.Gantt.csproj" />
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.Mermaid\CanDoItAll.Components.Mermaid.csproj" />
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.OverlayLib\CanDoItAll.Components.OverlayLib.csproj" />
+    <ProjectReference Include="..\..\src\CanDoItAll.Components.QRCode\CanDoItAll.Components.QRCode.csproj" />
+  </ItemGroup>
+</Project>

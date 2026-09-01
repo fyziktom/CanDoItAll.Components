@@ -5,7 +5,7 @@
     var iconName = ResolveIconName(Name);
     if (iconName is not null)
     {
-        <span @attributes='BuildAttributes("rz-icon cda-material-icon material-icons")' aria-hidden="true">@iconName</span>
+        <span @attributes='BuildAttributes("rz-icon cda-material-icon material-symbols-rounded", BuildVariationStyle())' aria-hidden="true">@iconName</span>
     }
     else
     {
@@ -14,8 +14,25 @@
 }
 
 @code {
+    /// <summary>Icon token to resolve against the Material icon catalog, for example <c>plus</c> or <c>calendar</c>. An unresolved token renders as a visible fallback label instead of a blank glyph.</summary>
     [Parameter]
     public string? Name { get; set; }
+
+    /// <summary>Renders the filled ('FILL' 1) variant instead of the default outlined glyph.</summary>
+    [Parameter]
+    public bool Filled { get; set; } = false;
+
+    /// <summary>Stroke weight ('wght' axis), from 100 to 700. Defaults to the CSS baseline of 100 when unset.</summary>
+    [Parameter]
+    public int? Weight { get; set; } = 400;
+
+    /// <summary>Fine emphasis adjustment ('GRAD' axis), from -25 to 200. Defaults to the CSS baseline of -25 when unset.</summary>
+    [Parameter]
+    public int? Grade { get; set; } = 0;
+
+    /// <summary>Optical size ('opsz' axis), from 20 to 48. Defaults to the CSS baseline of 48 when unset.</summary>
+    [Parameter]
+    public int? OpticalSize { get; set; } = 24;
 
     private static string? ResolveIconName(string? iconToken)
     {
@@ -25,5 +42,19 @@
         }
 
         return null;
+    }
+
+    private string? BuildVariationStyle()
+    {
+        if (!Filled && Weight is null && Grade is null && OpticalSize is null)
+        {
+            return null;
+        }
+
+        var fill = Filled ? 1 : 0;
+        var weight = Weight ?? 400;
+        var grade = Grade ?? 0;
+        var opticalSize = OpticalSize ?? 24;
+        return $"font-variation-settings: 'FILL' {fill}, 'wght' {weight}, 'GRAD' {grade}, 'opsz' {opticalSize}";
     }
 }

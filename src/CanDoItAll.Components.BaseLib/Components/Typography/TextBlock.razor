@@ -29,12 +29,15 @@
 }
 
 @code {
+    /// <summary>Typographic role, driving both the rendered HTML tag (heading levels render as their matching <c>h1</c>-<c>h6</c> element) and its styling.</summary>
     [Parameter]
     public TextStyle TextStyle { get; set; } = TextStyle.Body1;
 
+    /// <summary>Text content. Ignored when <see cref="ChildContent"/> is supplied.</summary>
     [Parameter]
     public string? Value { get; set; }
 
+    /// <summary>Custom content. Takes precedence over <see cref="Value"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

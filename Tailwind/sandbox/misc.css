@@ -1,0 +1,71 @@
+.sandbox-inline-icon {
+  @apply inline-flex items-center gap-[0.65rem];
+}
+
+.sandbox-icon-tile {
+  @apply flex items-center gap-3 min-w-0 rounded-(--cad-radius-surface) py-[0.9rem] px-4;
+  border: 1px solid var(--cad-color-border-soft);
+  background: color-mix(in srgb, var(--cad-color-surface-soft) 88%, transparent);
+}
+
+.sandbox-home-grid {
+  @apply grid gap-4;
+}
+
+.sandbox-home-lead {
+  @apply grid gap-4;
+}
+
+.sandbox-canvas-host {
+  @apply block w-full min-w-0 min-h-176;
+}
+
+.sandbox-floating-window-copy {
+  @apply flex flex-col gap-3;
+}
+
+.sandbox-code-preview {
+  @apply max-h-72 overflow-auto rounded-(--cad-radius-surface) text-(--cad-color-text) text-[0.82rem] leading-[1.55] m-0 p-[0.85rem] whitespace-pre-wrap;
+  border: 1px solid var(--cad-color-border-soft);
+  background: color-mix(in srgb, var(--cad-color-surface-soft) 86%, transparent);
+}
+
+.sandbox-icon-playground {
+  @apply grid gap-6;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+}
+
+@media (max-width: 640px) {
+  .sandbox-icon-playground {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sandbox-icon-playground__controls {
+  @apply flex flex-col gap-4;
+}
+
+.sandbox-icon-playground__select {
+  @apply rounded-(--cad-radius-surface) text-(--cad-color-text) text-[0.9rem] py-2 px-3;
+  border: 1px solid var(--cad-color-border-soft);
+  background: var(--cad-color-surface);
+}
+
+.sandbox-icon-playground__stage {
+  @apply flex items-center justify-center min-h-80 p-6 rounded-(--cad-radius-surface);
+  border: 1px solid var(--cad-color-border-soft);
+  background: color-mix(in srgb, var(--cad-color-surface-soft) 88%, transparent);
+}
+
+.sandbox-icon-playground__checker-box {
+  @apply flex items-center justify-center shrink-0 aspect-square rounded-(--cad-radius-surface);
+}
+
+.sandbox-icon-playground__checker-box--checker {
+  border: 1px solid var(--cad-color-border);
+  background-image:
+    linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0),
+    linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0);
+  background-color: rgba(128, 128, 128, 0.08);
+  /* background-size/background-position are set inline per icon size so the tile stays a crisp, whole-pixel grid. */
+}

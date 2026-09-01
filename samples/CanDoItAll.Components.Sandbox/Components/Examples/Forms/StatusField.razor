@@ -1,0 +1,13 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormField Text="Status">
+    <DropDown TValue="string"
+              Data="@StatusOptions"
+              TextProperty="@nameof(SelectOption.Text)"
+              ValueProperty="@nameof(SelectOption.Value)"
+              Value="@FormState.Status"
+              ValueChanged="HandleStatusChanged"
+              Placeholder="Select status"
+              Disabled="@IsDisabled" />
+</FormField>

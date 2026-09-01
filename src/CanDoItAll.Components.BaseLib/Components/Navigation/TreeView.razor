@@ -42,27 +42,35 @@ else
     private ElementReference treeElement;
     private string? activeNodeId;
 
+    /// <summary>The root nodes rendered by the tree.</summary>
     [Parameter, EditorRequired]
     public IReadOnlyList<TreeViewNode> Items { get; set; } = [];
 
+    /// <summary>Accessible label for the tree's <c>role="tree"</c> element.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Tree";
 
+    /// <summary>Message shown when <see cref="Items"/> is empty.</summary>
     [Parameter]
     public string EmptyText { get; set; } = "No items to display.";
 
+    /// <summary>The visual style applied to the tree.</summary>
     [Parameter]
     public TreeViewStyle Style { get; set; } = TreeViewStyle.Default;
 
+    /// <summary>Raised with the node id when a selectable node is activated.</summary>
     [Parameter]
     public EventCallback<string> OnSelect { get; set; }
 
+    /// <summary>Raised with the node id when an expandable node's expanded state should toggle.</summary>
     [Parameter]
     public EventCallback<string> OnToggle { get; set; }
 
+    /// <summary>Raised when the user requests a context menu for a node (right-click or context-menu key).</summary>
     [Parameter]
     public EventCallback<TreeViewNodeContextMenuRequest> OnContextMenu { get; set; }
 
+    /// <summary>Additional attributes applied to the tree's root element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 

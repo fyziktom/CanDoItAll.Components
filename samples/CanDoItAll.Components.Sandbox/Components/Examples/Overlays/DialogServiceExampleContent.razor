@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Overlays
+
+<Stack GapScale="LayoutGap.Medium">
+    <TextBlock TextStyle="TextStyle.Body2" Value="This modal is opened by DialogService and rendered through the shared DialogHost." />
+    <Button Text="Close" Click="@(() => Dialog!.CloseAsync())" />
+</Stack>
+
+@code {
+    [CascadingParameter]
+    public DialogReference? Dialog { get; set; }
+}

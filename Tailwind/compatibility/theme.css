@@ -1,0 +1,92 @@
+@layer components {
+  .cad-theme-switcher {
+    @apply inline-flex flex-wrap items-center gap-2;
+  }
+
+  .cad-theme-proof {
+    @apply mt-5 flex flex-col gap-4 border p-4 md:p-5;
+    border-radius: var(--cad-radius-panel);
+    border-color: var(--cad-color-border-soft);
+    background: linear-gradient(180deg, var(--cad-color-surface) 0%, var(--cad-color-surface-soft) 100%);
+    color: var(--cad-color-text);
+    box-shadow: var(--cad-shadow-soft);
+  }
+
+  .cad-theme-proof__header {
+    @apply flex flex-col gap-3 md:flex-row md:items-start md:justify-between;
+  }
+
+  .cad-theme-proof__eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.22em];
+    color: var(--cad-color-text-soft);
+  }
+
+  .cad-theme-proof__title {
+    @apply text-lg font-semibold tracking-tight;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cad-theme-proof__summary {
+    @apply mt-2 text-sm leading-6;
+    color: var(--cad-color-text-muted);
+  }
+
+  .cad-theme-proof__pill {
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
+    border-color: var(--cad-color-border);
+    background: var(--cad-tone-primary-soft-bg);
+    color: var(--cad-tone-primary-soft-fg);
+  }
+
+  .cad-theme-proof__swatches {
+    @apply flex flex-wrap gap-3;
+  }
+
+  .cad-theme-proof__swatch {
+    @apply inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold;
+  }
+
+  .cad-theme-proof__swatch--primary {
+    border-color: var(--cad-tone-primary-solid-border);
+    background: var(--cad-tone-primary-solid-bg);
+    color: var(--cad-tone-primary-solid-fg);
+  }
+
+  .cad-theme-proof__swatch--secondary {
+    border-color: var(--cad-tone-secondary-soft-border);
+    background: var(--cad-tone-secondary-soft-bg);
+    color: var(--cad-tone-secondary-soft-fg);
+  }
+
+  .cad-theme-proof__swatch--danger {
+    border-color: var(--cad-tone-danger-soft-border);
+    background: var(--cad-tone-danger-soft-bg);
+    color: var(--cad-tone-danger-soft-fg);
+  }
+
+  .cad-theme-proof__swatch--surface {
+    border-color: var(--cad-color-border);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text);
+  }
+
+  .cad-theme-proof__metrics {
+    @apply grid gap-3 md:grid-cols-3;
+  }
+
+  .cad-theme-proof__metric {
+    @apply rounded-2xl border p-3;
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface);
+  }
+
+  .cad-theme-proof__metric-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em];
+    color: var(--cad-color-text-soft);
+  }
+
+  .cad-theme-proof__metric-value {
+    @apply mt-2 block text-sm font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+}

@@ -1,0 +1,8 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<Steps Value="@stepsItemDemoIndex" ValueChanged="@(value => stepsItemDemoIndex = value)" data-testid="sandbox-navigation-steps-item">
+    <StepsItem Text="Draft" Icon="edit" Description="Author the initial content." />
+    <StepsItem Text="Legal review" Icon="gavel" Disabled="true" Description="Not yet available for this workflow." />
+    <StepsItem Text="Publish" Icon="publish" Description="Ship to the shared catalog." />
+</Steps>

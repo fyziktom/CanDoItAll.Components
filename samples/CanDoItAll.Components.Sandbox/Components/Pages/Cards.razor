@@ -1,0 +1,418 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/cards"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Cards
+
+<PageTitle>Cards</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in VisibleSections(Sections))
+            {
+                @if (section.ComponentName == "SummaryTiles")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Surface rhythm"
+                                      Description="Spacing, copy length, and support metrics need to feel deliberate without additional chrome."
+                                      SourceId="examples/Cards/SurfaceRhythm.razor"
+                                      ApiTypes="@SummaryTilesApiTypes">
+                            <SurfaceRhythm />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "Card")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Visual collection"
+                                      Description="Use cards only when media and independent item actions improve recognition."
+                                      SourceId="examples/Cards/VisualCollection.razor"
+                                      ApiTypes="@CardApiTypes">
+                            <VisualCollection />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "ActionCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Action card"
+                                      Description="A selectable card shell with an active and inactive tone."
+                                      SourceId="examples/Cards/ActionCardShowcase.razor"
+                                      ApiTypes="@ActionCardApiTypes">
+                            <ActionCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "ActionReviewPanel")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Action review panel"
+                                      Description="Summarizes the facts a reviewer should see before confirming an action."
+                                      SourceId="examples/Cards/ActionReviewPanelShowcase.razor"
+                                      ApiTypes="@ActionReviewPanelApiTypes">
+                            <ActionReviewPanelShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "AuthCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Auth card"
+                                      Description="A centered shell sized for sign-in and account entry flows."
+                                      SourceId="examples/Cards/AuthCardShowcase.razor"
+                                      ApiTypes="@AuthCardApiTypes">
+                            <AuthCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardActions")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Card actions"
+                                      Description="An inline action cluster, or a bordered footer row when Secondary is set."
+                                      SourceId="examples/Cards/CardActionsShowcase.razor"
+                                      ApiTypes="@CardActionsApiTypes">
+                            <CardActionsShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardButton")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Card button"
+                                      Description="A solid or ghost action button that renders as a link when Href is set."
+                                      SourceId="examples/Cards/CardButtonShowcase.razor"
+                                      ApiTypes="@CardButtonApiTypes">
+                            <CardButtonShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardGrid")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Card grid"
+                                      Description="A responsive auto-fit grid for laying out Card and other card-family items."
+                                      SourceId="examples/Cards/CardGridShowcase.razor"
+                                      ApiTypes="@CardGridApiTypes">
+                            <CardGridShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "CardStatsWithNumber")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Card stat with number"
+                                      Description="A compact stat card with small, normal, and large sizes, and an optional icon."
+                                      SourceId="examples/Cards/CardStatsWithNumberShowcase.razor"
+                                      ApiTypes="@CardStatsWithNumberApiTypes">
+                            <CardStatsWithNumberShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "HeroCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Hero card"
+                                      Description="A gradient hero surface for introducing a page or section."
+                                      SourceId="examples/Cards/HeroCardShowcase.razor"
+                                      ApiTypes="@HeroCardApiTypes">
+                            <HeroCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "MetricCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Metric card"
+                                      Description="A label and value pair, with an optional custom ValueContent fragment."
+                                      SourceId="examples/Cards/MetricCardShowcase.razor"
+                                      ApiTypes="@MetricCardApiTypes">
+                            <MetricCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "PanelCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Panel card"
+                                      Description="A general-purpose bordered panel, with a quieter Soft variant."
+                                      SourceId="examples/Cards/PanelCardShowcase.razor"
+                                      ApiTypes="@PanelCardApiTypes">
+                            <PanelCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "ParitySectionCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Parity section card"
+                                      Description="A plain bordered card that renders as a section by default, or an article."
+                                      SourceId="examples/Cards/ParitySectionCardShowcase.razor"
+                                      ApiTypes="@ParitySectionCardApiTypes">
+                            <ParitySectionCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "PriceBar")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Price bar"
+                                      Description="A full-width price or value row with default and success tones."
+                                      SourceId="examples/Cards/PriceBarShowcase.razor"
+                                      ApiTypes="@PriceBarApiTypes">
+                            <PriceBarShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "PriceRow")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Price row"
+                                      Description="A space-between flex row for pairing a label with a price or value."
+                                      SourceId="examples/Cards/PriceRowShowcase.razor"
+                                      ApiTypes="@PriceRowApiTypes">
+                            <PriceRowShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "SectionCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Section card"
+                                      Description="A titled section shell with description, help popover, and header actions — used throughout the Sandbox chrome itself."
+                                      SourceId="examples/Cards/SectionCardShowcase.razor"
+                                      ApiTypes="@SectionCardApiTypes">
+                            <SectionCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "StatBox")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Stat box"
+                                      Description="A compact stat card, with a Simple variant for dense rows."
+                                      SourceId="examples/Cards/StatBoxShowcase.razor"
+                                      ApiTypes="@StatBoxApiTypes">
+                            <StatBoxShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "StatsCardRow")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Stats card row"
+                                      Description="A flex row container for laying out CardStatsWithNumber items."
+                                      SourceId="examples/Cards/StatsCardRowShowcase.razor"
+                                      ApiTypes="@StatsCardRowApiTypes">
+                            <StatsCardRowShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "StatsGrid")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Stats grid"
+                                      Description="A responsive grid intended for SummaryTile items."
+                                      SourceId="examples/Cards/StatsGridShowcase.razor"
+                                      ApiTypes="@StatsGridApiTypes">
+                            <StatsGridShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "SummaryTile")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Summary tile"
+                                      Description="A single label/value tile with tone, compact, badge, and tooltip-helper variants."
+                                      SourceId="examples/Cards/SummaryTileShowcase.razor"
+                                      ApiTypes="@SummaryTileApiTypes">
+                            <SummaryTileShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+                else if (section.ComponentName == "SurfaceCard")
+                {
+                    <section id="@(section.Anchor)" class="sandbox-component-section">
+                        @RenderSectionHeading(section)
+                        <ExampleBlock Title="Surface card"
+                                      Description="A general-purpose surface wrapper, with a quieter Soft variant."
+                                      SourceId="examples/Cards/SurfaceCardShowcase.razor"
+                                      ApiTypes="@SurfaceCardApiTypes">
+                            <SurfaceCardShowcase />
+                        </ExampleBlock>
+                    </section>
+                }
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Cards);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Cards);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/cards");
+
+    private static readonly IReadOnlyList<Type> CardApiTypes = [typeof(Card), typeof(CardGrid)];
+    private static readonly IReadOnlyList<Type> ActionCardApiTypes = [typeof(ActionCard)];
+    private static readonly IReadOnlyList<Type> ActionReviewPanelApiTypes = [typeof(ActionReviewPanel)];
+    private static readonly IReadOnlyList<Type> AuthCardApiTypes = [typeof(AuthCard)];
+    private static readonly IReadOnlyList<Type> CardActionsApiTypes = [typeof(CardActions)];
+    private static readonly IReadOnlyList<Type> CardButtonApiTypes = [typeof(CardButton)];
+    private static readonly IReadOnlyList<Type> CardGridApiTypes = [typeof(CardGrid)];
+    private static readonly IReadOnlyList<Type> CardStatsWithNumberApiTypes = [typeof(CardStatsWithNumber)];
+    private static readonly IReadOnlyList<Type> HeroCardApiTypes = [typeof(HeroCard)];
+    private static readonly IReadOnlyList<Type> MetricCardApiTypes = [typeof(MetricCard)];
+    private static readonly IReadOnlyList<Type> PanelCardApiTypes = [typeof(PanelCard)];
+    private static readonly IReadOnlyList<Type> ParitySectionCardApiTypes = [typeof(ParitySectionCard)];
+    private static readonly IReadOnlyList<Type> PriceBarApiTypes = [typeof(PriceBar)];
+    private static readonly IReadOnlyList<Type> PriceRowApiTypes = [typeof(PriceRow)];
+    private static readonly IReadOnlyList<Type> SectionCardApiTypes = [typeof(SectionCard)];
+    private static readonly IReadOnlyList<Type> StatBoxApiTypes = [typeof(StatBox)];
+    private static readonly IReadOnlyList<Type> StatsCardRowApiTypes = [typeof(StatsCardRow), typeof(CardStatsWithNumber)];
+    private static readonly IReadOnlyList<Type> StatsGridApiTypes = [typeof(StatsGrid), typeof(SummaryTile)];
+    private static readonly IReadOnlyList<Type> SummaryTileApiTypes = [typeof(SummaryTile)];
+    private static readonly IReadOnlyList<Type> SurfaceCardApiTypes = [typeof(SurfaceCard)];
+    private static readonly IReadOnlyList<Type> SummaryTilesApiTypes = [typeof(SummaryTiles), typeof(SummaryTile)];
+    private const string PrimaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-01.jpg";
+    private const string SecondaryCardImageSource = "_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-02.jpg";
+
+    private const bool IsDisabled = false;
+
+    private const string SurfaceParagraph = "Long explanatory copy remains readable without collapsing into a narrow, uncomfortable measure. When the catalog carries more editorial guidance, the surrounding surfaces still need to feel stable and intentional.";
+
+    private IReadOnlyList<DisplayCardModel> CardItems => LongCards;
+
+    private static readonly IReadOnlyList<DisplayCardModel> BaseCards =
+    [
+        new(
+            DisplayItemId.New(),
+            "Summary card",
+            "Migration review",
+            "Shared component uptake stays visible through a stable card shell and supporting metadata.",
+            "Healthy",
+            "success",
+            PrimaryCardImageSource,
+            [
+                new("Owner", "Architecture"),
+                new("Scope", "Base + canvas"),
+                new("Updated", "Today")
+            ]),
+        new(
+            DisplayItemId.New(),
+            "Fact card",
+            "Canvas acceptance",
+            "Calendar and workbench boundaries keep their state model, chrome, and preview evidence readable inside the same display system.",
+            "Review",
+            "warning",
+            SecondaryCardImageSource,
+            [
+                new("Workbench", "Ready"),
+                new("Calendar", "Ready"),
+                new("Proof", "Pending dense capture")
+            ])
+    ];
+
+    private static readonly IReadOnlyList<DisplayCardModel> DenseCards =
+    [
+        new(
+            DisplayItemId.New(),
+            "Summary card",
+            "Migration review",
+            "Shared component uptake stays visible through a stable card shell and supporting metadata.",
+            "Healthy",
+            "success",
+            PrimaryCardImageSource,
+            [
+                new("Owner", "Architecture"),
+                new("Scope", "Base + canvas"),
+                new("Updated", "Today"),
+                new("Packages", "5")
+            ]),
+        new(
+            DisplayItemId.New(),
+            "Fact card",
+            "Canvas acceptance",
+            "Calendar and workbench boundaries keep their state model, chrome, and preview evidence readable inside the same display system.",
+            "Review",
+            "warning",
+            SecondaryCardImageSource,
+            [
+                new("Workbench", "Ready"),
+                new("Calendar", "Ready"),
+                new("Proof", "Pending dense capture"),
+                new("Screenshot set", "Desktop + mobile")
+            ])
+    ];
+
+    private static readonly IReadOnlyList<DisplayCardModel> LongCards =
+    [
+        new(
+            DisplayItemId.New(),
+            "Summary card",
+            "Migration review with extended ownership and rollout notes",
+            "Longer descriptions should stay readable inside the same card shell and keep their supporting metadata nearby instead of forcing separate explanatory panels.",
+            "Healthy",
+            "success",
+            PrimaryCardImageSource,
+            [
+                new("Owner", "Architecture working group"),
+                new("Scope", "Base library and canvas extraction"),
+                new("Updated", "Today")
+            ]),
+        new(
+            DisplayItemId.New(),
+            "Fact card",
+            "Canvas acceptance for workbench, floating windows, and calendar surfaces",
+            "The second card proves that longer titles and summaries still preserve card rhythm, status placement, and scanning order.",
+            "Review",
+            "warning",
+            SecondaryCardImageSource,
+            [
+                new("Workbench", "Ready"),
+                new("Calendar", "Ready"),
+                new("Proof", "Pending dense capture")
+            ])
+    ];
+
+    private readonly record struct DisplayItemId(Guid Value)
+    {
+        public static DisplayItemId New() => new(Guid.NewGuid());
+    }
+
+    private sealed record DisplayCardFact(string Label, string Value);
+
+    private sealed record DisplayCardModel(
+        DisplayItemId Id,
+        string Eyebrow,
+        string Title,
+        string Summary,
+        string State,
+        string Tone,
+        string ImageSource,
+        IReadOnlyList<DisplayCardFact> Facts);
+
+}

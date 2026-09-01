@@ -1,0 +1,34 @@
+@layer components {
+  .cda-input {
+    @apply min-w-0 w-full max-w-full border px-3 py-2 text-sm outline-none transition;
+    border-radius: var(--cad-radius-control);
+    border-color: var(--cad-color-border);
+    background: var(--cad-color-surface);
+    color: var(--cad-color-text);
+  }
+
+  .cda-input::placeholder {
+    color: var(--cad-color-text-soft);
+  }
+
+  .cda-input:hover {
+    border-color: var(--cad-color-border-soft);
+  }
+
+  .cda-input:focus {
+    border-color: var(--cad-tone-primary-soft-border);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cad-tone-primary-soft-bg) 70%, transparent);
+  }
+
+  :where(.cda-input--textarea) {
+    @apply block w-full resize-y leading-6;
+  }
+
+  .cda-input--mono {
+    @apply font-mono;
+  }
+
+  .cda-input--toolbar {
+    box-shadow: var(--cad-shadow-soft);
+  }
+}

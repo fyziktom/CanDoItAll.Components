@@ -5,18 +5,26 @@
     <AssemblyName>CanDoItAll.Components.Sandbox</AssemblyName>
     <RootNamespace>CanDoItAll.Components.Sandbox</RootNamespace>
     <IsPackable>false</IsPackable>
-    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+    <EnableDefaultRazorGenerateItems>false</EnableDefaultRazorGenerateItems>
+    <EnableDefaultRazorComponentItems>false</EnableDefaultRazorComponentItems>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.BaseLib\CanDoItAll.Components.BaseLib.csproj" />
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.CanvasLib\CanDoItAll.Components.CanvasLib.csproj" />
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.Charts\CanDoItAll.Components.Charts.csproj" />
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.Common\CanDoItAll.Components.Common.csproj" />
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.Gantt\CanDoItAll.Components.Gantt.csproj" />
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.Mermaid\CanDoItAll.Components.Mermaid.csproj" />
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.OverlayLib\CanDoItAll.Components.OverlayLib.csproj" />
-    <ProjectReference Include="..\..\src\CanDoItAll.Components.QRCode\CanDoItAll.Components.QRCode.csproj" />
+    <Compile Remove="*.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Remove="Documentation\**\*.cs" />
+    <Compile Remove="Components\**\*.cs" />
+    <RazorComponent Remove="Components\**\*.razor" />
+    <RazorComponent Include="_Imports.razor" />
+    <RazorComponent Include="Components\App.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CanDoItAll.Components.Sandbox.Catalog\CanDoItAll.Components.Sandbox.Catalog.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
 </Project>

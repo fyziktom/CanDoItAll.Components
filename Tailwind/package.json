@@ -3,13 +3,32 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "@tailwindcss/cli": "^4.1.7",
-    "tailwindcss": "^4.1.7"
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.20",
+    "concurrently": "^10.0.4",
+    "css-to-tailwindcss4": "^0.0.3",
+    "prettier": "^3.9.6",
+    "stylelint": "^17.14.1",
+    "tailwindcss": "^4.3.3"
   },
   "scripts": {
-    "build": "npm run build:baselib && npm run build:sandbox",
-    "build:baselib": "tailwindcss -i ./input.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css",
-    "build:sandbox": "tailwindcss -i ./sandbox-input.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/tailwind-sandbox.css",
-    "watch": "tailwindcss -i ./input.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css --watch"
+    "help": "tailwindcss --help",
+    "build": "npm run build:baselib && npm run build:sandbox && npm run build:sandbox-wasm",
+    "build:baselib": "tailwindcss -i ./input-base.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css",
+    "build:sandbox": "tailwindcss -i ./input-sandbox.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/css/output-sandbox.css",
+    "build:sandbox-wasm": "tailwindcss -i ./input-sandbox.css -o ../samples/CanDoItAll.Components.SandboxWasm/wwwroot/css/output-sandbox-wasm.css",
+    "watch": "concurrently 'npm run watch:baselib' 'npm run watch:sandbox' 'npm run watch:sandbox-wasm'",
+    "watch:baselib": "tailwindcss  --watch=always -i ./input-base.css -o ../src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css",
+    "watch:sandbox": "tailwindcss  --watch=always -i ./input-sandbox.css -o ../samples/CanDoItAll.Components.Sandbox/wwwroot/css/output-sandbox.css",
+    "watch:sandbox-wasm": "tailwindcss  --watch=always -i ./input-sandbox.css -o ../samples/CanDoItAll.Components.SandboxWasm/wwwroot/css/output-sandbox-wasm.css",
+    "watch:test": "tailwindcss  --watch=always -i ./input-test.css -o ../assets/output-test.css",
+    "apply": "node scripts/css-to-apply.mjs",
+    "format": "npm run format:indent && npm run format:spacing",
+    "format:indent": "prettier --write \"**/*.css\"",
+    "format:spacing": "stylelint --fix \"**/*.css\""
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.5.6": true
   }
 }

@@ -1,0 +1,63 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Identity
+@using System.Globalization
+
+<div class="sandbox-icon-playground">
+    <div class="sandbox-icon-playground__controls">
+        <FormField Text="Icon"><select class="sandbox-icon-playground__select" value="@iconToken"
+                                       @onchange="HandleIconChanged">@foreach (var icon in IconTokens)
+                {
+                    <option value="@icon.Token">@icon.Label</option>
+                }</select></FormField>
+        <FormField Text="@($"Size ({size}px)")">
+            <Slider TValue="int" Value="@size" ValueChanged="@(v => size = v)" Min="24" Max="256" Step="1" />
+        </FormField>
+        <FormField Text="Filled">
+            <Switch Value="@filled" ValueChanged="@(v => filled = v)" />
+        </FormField>
+        <FormField Text="@($"Weight ({weight})")">
+            <Slider TValue="int" Value="@weight" ValueChanged="@(v => weight = v)" Min="100" Max="700" Step="10" />
+        </FormField>
+        <FormField Text="@($"Grade ({grade})")">
+            <Slider TValue="int" Value="@grade" ValueChanged="@(v => grade = v)" Min="-25" Max="200" Step="5" />
+        </FormField>
+        <FormField Text="@($"Optical size ({opticalSize})")">
+            <Slider TValue="int" Value="@opticalSize" ValueChanged="@(v => opticalSize = v)" Min="20" Max="48"
+                    Step="1" />
+        </FormField>
+        <FormField Text="Background checker">
+            <Switch Value="@showChecker" ValueChanged="@(v => showChecker = v)" />
+        </FormField>
+    </div>
+    <div class="sandbox-icon-playground__stage">
+        <div class="@CheckerClass" style="@CheckerStyle">
+            <Icon Name="@iconToken" Filled="@filled" Weight="@weight" Grade="@grade" OpticalSize="@opticalSize"
+                  Style="@(showChecker ? $"font-size:{size}px; opacity:0.55;" : $"font-size:{size}px;")" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private static readonly (string Token, string Label)[] IconTokens = [("add_2", "Create"), ("filter_alt", "Filter"), ("calendar", "Schedule"), ("circle_info", "Context"), ("save", "Save"), ("risk", "Warning")];
+    private string iconToken = "add_2";
+    private int size = 256;
+    private bool filled;
+    private int weight = 400;
+    private int grade;
+    private int opticalSize = 24;
+    private bool showChecker = true;
+    private string CheckerClass => showChecker ? "sandbox-icon-playground__checker-box sandbox-icon-playground__checker-box--checker" : "sandbox-icon-playground__checker-box";
+
+    private string CheckerStyle
+    {
+        get
+        {
+            var baseStyle = $"width:min({size}px, 100%);";
+            if (!showChecker) return baseStyle;
+            var tile = size / 12.0;
+            var half = tile / 2.0;
+            return $"{baseStyle} background-size:{tile.ToString(CultureInfo.InvariantCulture)}px {tile.ToString(CultureInfo.InvariantCulture)}px; background-position:0 0, {half.ToString(CultureInfo.InvariantCulture)}px {half.ToString(CultureInfo.InvariantCulture)}px;";
+        }
+    }
+
+    private void HandleIconChanged(ChangeEventArgs e) => iconToken = e.Value?.ToString() ?? iconToken;
+}

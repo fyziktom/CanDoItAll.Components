@@ -13,27 +13,35 @@
         />
 
 @code {
+    /// <summary>The slider's value.</summary>
     [Parameter]
     public TValue? Value { get; set; }
 
+    /// <summary>Raised whenever <see cref="Value"/> changes.</summary>
     [Parameter]
     public EventCallback<TValue?> ValueChanged { get; set; }
 
+    /// <summary>Raised after the value changes, with the new value.</summary>
     [Parameter]
     public EventCallback<TValue?> Change { get; set; }
 
+    /// <summary>The smallest value the slider can reach.</summary>
     [Parameter]
     public object? Min { get; set; } = 0m;
 
+    /// <summary>The largest value the slider can reach.</summary>
     [Parameter]
     public object? Max { get; set; } = 100m;
 
+    /// <summary>The increment the slider moves per step.</summary>
     [Parameter]
     public object? Step { get; set; } = 1m;
 
+    /// <summary>When <c>true</c>, the slider cannot be interacted with.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Additional attributes applied to the slider's <c>&lt;input&gt;</c> element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spinner</title>
+
+    <style>
+    svg {
+        --step-duration: 1s;
+        --cycle-duration: calc(var(--step-duration) * 6);
+        --colour-step: calc(var(--cycle-duration) / 6);
+
+        --inner-0: #63b3c8;
+        --inner-1: #6dbfdd;
+        --inner-2: #5ba3da;
+        --inner-3: #3d64d2;
+        --inner-4: #364dbe;
+        --inner-5: #5091d0;
+        --outer-0: #8fe6ed;
+        --outer-1: #8ce0f2;
+        --outer-2: #74c4ec;
+        --outer-3: #5784e6;
+        --outer-4: #4a63d6;
+        --outer-5: #79d0eb;
+        --inner-grey-0: #a8a8a8;
+        --inner-grey-1: #b4b4b4;
+        --inner-grey-2: #9c9c9c;
+        --inner-grey-3: #6b6b6b;
+        --inner-grey-4: #58585a;
+        --inner-grey-5: #8d8d8d;
+        --outer-grey-0: #d7d7d7;
+        --outer-grey-1: #d3d3d3;
+        --outer-grey-2: #bababa;
+        --outer-grey-3: #878787;
+        --outer-grey-4: #6d6d6d;
+        --outer-grey-5: #c4c4c4;
+
+        overflow: visible;
+    }
+
+    svg > g {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: rotate-step var(--cycle-duration) ease-out infinite;
+        transition: opacity 150ms linear;
+    }
+
+    path:nth-child(1) {
+        fill: var(--inner-0);
+    }
+
+    path:nth-child(2) {
+        fill: var(--inner-1);
+    }
+
+    path:nth-child(3) {
+        fill: var(--inner-2);
+    }
+
+    path:nth-child(4) {
+        fill: var(--inner-3);
+    }
+
+    path:nth-child(5) {
+        fill: var(--inner-4);
+    }
+
+    path:nth-child(6) {
+        fill: var(--inner-5);
+    }
+
+    path:nth-child(7) {
+        fill: var(--outer-0);
+    }
+
+    path:nth-child(8) {
+        fill: var(--outer-1);
+    }
+
+    path:nth-child(9) {
+        fill: var(--outer-2);
+    }
+
+    path:nth-child(10) {
+        fill: var(--outer-3);
+    }
+
+    path:nth-child(11) {
+        fill: var(--outer-4);
+    }
+
+    path:nth-child(12) {
+        fill: var(--outer-5);
+    }
+
+    path:nth-child(1), path:nth-child(2), path:nth-child(3),
+    path:nth-child(4), path:nth-child(5), path:nth-child(6),
+    path:nth-child(7), path:nth-child(8), path:nth-child(9),
+    path:nth-child(10), path:nth-child(11), path:nth-child(12) {
+        animation-duration: calc(var(--cycle-duration) * 1);
+        animation-timing-function: cubic-bezier(0.1, 0.5, 0.2, 1);
+        animation-iteration-count: infinite;
+    }
+
+    path:nth-child(1), path:nth-child(2), path:nth-child(3),
+    path:nth-child(4), path:nth-child(5), path:nth-child(6) {
+        animation-name: inner-colours;
+    }
+
+    path:nth-child(7), path:nth-child(8), path:nth-child(9),
+    path:nth-child(10), path:nth-child(11), path:nth-child(12) {
+        animation-name: outer-colours;
+    }
+
+    path:nth-child(1), path:nth-child(7) {
+        animation-delay: calc(var(--colour-step) * 0);
+    }
+
+    path:nth-child(2), path:nth-child(8) {
+        animation-delay: calc(var(--colour-step) * -1);
+    }
+
+    path:nth-child(3), path:nth-child(9) {
+        animation-delay: calc(var(--colour-step) * -2);
+    }
+
+    path:nth-child(4), path:nth-child(10) {
+        animation-delay: calc(var(--colour-step) * -3);
+    }
+
+    path:nth-child(5), path:nth-child(11) {
+        animation-delay: calc(var(--colour-step) * -4);
+    }
+
+    path:nth-child(6), path:nth-child(12) {
+        animation-delay: calc(var(--colour-step) * -5);
+    }
+
+    /* Each 60-degree turn occupies 65% of its slot; the rest is the pause. */
+    @keyframes rotate-step {
+        0% {
+            transform: rotate(0deg);
+            animation-timing-function: cubic-bezier(.25, .8, .25, 1);
+        }
+        10.833% {
+            transform: rotate(60deg);
+            animation-timing-function: steps(1, end);
+        }
+        16.667% {
+            transform: rotate(60deg);
+            animation-timing-function: cubic-bezier(.25, .8, .25, 1);
+        }
+        27.5% {
+            transform: rotate(120deg);
+            animation-timing-function: steps(1, end);
+        }
+        33.333% {
+            transform: rotate(120deg);
+            animation-timing-function: cubic-bezier(.25, .8, .25, 1);
+        }
+        44.167% {
+            transform: rotate(180deg);
+            animation-timing-function: steps(1, end);
+        }
+        50% {
+            transform: rotate(180deg);
+            animation-timing-function: cubic-bezier(.25, .8, .25, 1);
+        }
+        60.833% {
+            transform: rotate(240deg);
+            animation-timing-function: steps(1, end);
+        }
+        66.667% {
+            transform: rotate(240deg);
+            animation-timing-function: cubic-bezier(.25, .8, .25, 1);
+        }
+        77.5% {
+            transform: rotate(300deg);
+            animation-timing-function: steps(1, end);
+        }
+        83.333% {
+            transform: rotate(300deg);
+            animation-timing-function: cubic-bezier(.25, .8, .25, 1);
+        }
+        94.167% {
+            transform: rotate(360deg);
+            animation-timing-function: steps(1, end);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes inner-colours {
+        0% {
+            fill: var(--inner-0);
+        }
+        16.667% {
+            fill: var(--inner-1);
+        }
+        33.333% {
+            fill: var(--inner-2);
+        }
+        50% {
+            fill: var(--inner-3);
+        }
+        66.667% {
+            fill: var(--inner-4);
+        }
+        83.333% {
+            fill: var(--inner-5);
+        }
+        100% {
+            fill: var(--inner-0);
+        }
+    }
+
+    @keyframes outer-colours {
+        0% {
+            fill: var(--outer-0);
+        }
+        16.667% {
+            fill: var(--outer-1);
+        }
+        33.333% {
+            fill: var(--outer-2);
+        }
+        50% {
+            fill: var(--outer-3);
+        }
+        66.667% {
+            fill: var(--outer-4);
+        }
+        83.333% {
+            fill: var(--outer-5);
+        }
+        100% {
+            fill: var(--outer-0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        svg > g,
+        svg path {
+            animation: none;
+        }
+    }
+
+    body {
+        font-family: sans-serif;
+        color: rgba(0, 0, 0, .4);
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-header {
+        height: 56px;
+        border-bottom: 1px solid rgba(0, 0, 0, .12);
+        position: absolute;
+        top: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .page-header > svg {
+        margin: 0 8px;
+    }
+
+    .spinner-toggle-input {
+        position: fixed;
+        inline-size: 1px;
+        block-size: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .spin-toggle {
+        position: fixed;
+        text-align: center;
+        top: 160px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        appearance: none;
+        border: 0;
+        border-radius: 24px;
+        background: rgba(0, 0, 0, .06);
+        border: 1px solid rgba(0, 0, 0, .09);
+        color: rgba(0, 0, 0, .4);
+        cursor: pointer;
+        font-weight: bolder;
+        letter-spacing: .18em;
+        padding: 14px 24px;
+        min-width: 7rem;
+    }
+
+    .spin-toggle:hover {
+        background: rgba(0, 0, 0, .09);
+    }
+
+    .spin-toggle:focus-visible {
+        outline: 3px solid rgba(0, 0, 0, .09);
+        outline-offset: 3px;
+    }
+
+    .spinner-toggle-input:focus-visible + .spin-toggle {
+        outline: 3px solid rgba(0, 0, 0, .09);
+        outline-offset: 3px;
+    }
+
+    .spin-toggle__spin {
+        display: none;
+    }
+
+    .spinner-toggle-input:not(:checked) + .spin-toggle .spin-toggle__stop {
+        display: none;
+    }
+
+    .spinner-toggle-input:not(:checked) + .spin-toggle .spin-toggle__spin {
+        display: inline;
+    }
+
+    .spinner-toggle-input:not(:checked) ~ .page-header > svg > g {
+        animation-play-state: paused;
+        opacity: .5;
+    }
+
+    .spinner-toggle-input:not(:checked) ~ .page-header > svg {
+        --inner-0: var(--inner-grey-0);
+        --inner-1: var(--inner-grey-1);
+        --inner-2: var(--inner-grey-2);
+        --inner-3: var(--inner-grey-3);
+        --inner-4: var(--inner-grey-4);
+        --inner-5: var(--inner-grey-5);
+        --outer-0: var(--outer-grey-0);
+        --outer-1: var(--outer-grey-1);
+        --outer-2: var(--outer-grey-2);
+        --outer-3: var(--outer-grey-3);
+        --outer-4: var(--outer-grey-4);
+        --outer-5: var(--outer-grey-5);
+    }
+
+    .spinner-toggle-input:not(:checked) ~ .page-header > svg path {
+        animation-play-state: paused;
+    }
+    </style>
+</head>
+<body>
+<input class="spinner-toggle-input" id="spin-toggle" type="checkbox" checked>
+<label class="spin-toggle" for="spin-toggle">
+    <span class="spin-toggle__spin">SPIN</span>
+    <span class="spin-toggle__stop">STOP</span>
+</label>
+<div class="page-header">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
+        <g>
+            <path d="m3.34 7 4 2.31L12 6.618z" fill="#63b3c8" />
+            <path d="M12 2v4.619l4.66 2.69Z" fill="#6dbfdd" />
+            <path d="M16.66 14.69V9.31l4-2.31z" fill="#5ba3da" />
+            <path d="m20.66 17-4-2.31L12 17.382Z" fill="#3d64d2" />
+            <path d="M12 22v-4.619l-4.66-2.69Z" fill="#364dbe" />
+            <path d="m7.34 14.69-4 2.31 4-7.69z" fill="#5091d0" />
+            <path d="M3.34 7 12 6.62V2Z" fill="#8fe6ed" />
+            <path d="m12 2 4.66 7.31 4-2.31Z" fill="#8ce0f2" />
+            <path d="m16.66 14.69 4 2.31V7z" fill="#74c4ec" />
+            <path d="M12 17.381v4.62l8.66-5z" fill="#5784e6" />
+            <path d="M7.34 14.69 12 22l-8.66-5Z" fill="#4a63d6" />
+            <path d="M7.34 9.31 3.34 7v10z" fill="#79d0eb" />
+        </g>
+    </svg>
+
+    <span>Spinner Concept</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Grid Gap="LayoutGap.Large"
+      Columns="1"
+      ColumnsLg="2">
+    <div class="space-y-4">
+        <FileUpload PrimaryText="@UploadPrimaryText"
+                    SecondaryText="@UploadSecondaryText"
+                    ButtonText="@UploadButtonText"
+                    Accept=".musicxml,.xml,text/xml,application/xml"
+                    Disabled="@IsDisabled"
+                    Change="HandleUploadChanged"
+                    RootTestHookId="sandbox-inputs-file-upload"
+                    DropZoneTestHookId="sandbox-inputs-file-upload-zone"
+                    ButtonTestHookId="sandbox-inputs-file-upload-button"
+                    InputTestHookId="sandbox-inputs-file-upload-input" />
+
+        <div class="flex flex-wrap gap-2" data-testid="sandbox-inputs-file-upload-modes">
+            <StatusBadge Text="Native picker" Tone="info" />
+            <StatusBadge Text="Drag and drop" Tone="success" />
+            <StatusBadge Text="@(IsDisabled ? "Disabled state" : "Live state")"
+                         Tone="@(IsDisabled ? "neutral" : "warning")" />
+        </div>
+    </div>
+
+    <div class="space-y-4" data-testid="sandbox-inputs-file-upload-summary">
+        <SummaryTiles>
+            <SummaryTile Label="Selections"
+                         Value="@uploadSelectionCount.ToString()"
+                         HelperText="How many successful file selections reached the shared callback."
+                         Tone="info" />
+            <SummaryTile Label="Files"
+                         Value="@uploadedFileCount.ToString()"
+                         HelperText="Current file count in the latest selection."
+                         Tone="success" />
+            <SummaryTile Label="Payload"
+                         Value="@UploadedTotalSizeLabel"
+                         HelperText="Combined size of the latest accepted files."
+                         Tone="warning" />
+        </SummaryTiles>
+
+        <div class="rounded-[1rem] border border-slate-200 bg-white px-4 py-4">
+            <div class="space-y-1">
+                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Latest selection" />
+                <TextBlock TextStyle="@(TextStyle.Caption)"
+                           Value="Use this panel to confirm that browse and drop both resolve through the same stable callback." />
+            </div>
+
+            @if (uploadedFileNames.Count == 0)
+            {
+                <p class="mt-3 text-sm leading-6 text-slate-500">No files selected yet.</p>
+            }
+            else
+            {
+                <ul class="mt-3 space-y-2 text-sm text-slate-700" data-testid="sandbox-inputs-file-upload-files">
+                    @foreach (var fileName in uploadedFileNames)
+                    {
+                        <li class="rounded-[0.85rem] bg-slate-50 px-3 py-2">@fileName</li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</Grid>

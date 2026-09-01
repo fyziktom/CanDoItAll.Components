@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en" data-ui-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Semantic Tailwind demo</title>
+    <script>
+        document.documentElement.dataset.uiTheme = localStorage.getItem('semantic-demo-theme') === 'dark' ? 'dark' : 'light';
+    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="./output-test.css">
+</head>
+<body>
+    <div id="app"></div>
+
+    <template id="button-row-template">
+        <section class="ui-card space-y-3" :class="`role--${role.key}`">
+            <div class="mb-4 flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-chrome-900">{{ role.name }}</h2>
+                    <p class="mt-1 text-sm text-chrome-600">{{ role.description }}</p>
+                </div>
+                <span class="rounded-full bg-chrome-100 px-2.5 py-1 text-xs font-medium text-chrome-600">semantic role</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <div><button class="ui-ripple ui-button ui-button--solid ui-button--pill ui-button--compact" type="button"><span class="ui-icon text-2xl" aria-hidden="true">search</span></button></div>
+                <div><button class="ui-ripple ui-button ui-button--outline ui-button--compact" type="button"><span class="ui-icon text-md" aria-hidden="true">search</span></button></div>
+                <div><button class="ui-ripple ui-button ui-button--solid ui-button--pill min-w-20" type="button">Solid</button></div>
+                <div><button class="ui-ripple ui-button ui-button--tonal ui-button--compact" type="button">Tonal</button></div>
+                <div><button class="ui-ripple ui-button ui-button--outline ui-button--dense" type="button">Outlined</button></div>
+                <div><button class="ui-ripple ui-button ui-button--plain ui-button--dense" type="button">Plain</button></div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <div><button class="ui-ripple ui-button ui-button--solid ui-button--rounded" type="button" disabled>Disabled</button></div>
+                <div><button class="ui-ripple ui-button ui-button--tonal" type="button" disabled>Disabled</button></div>
+                <div><button class="ui-ripple ui-button ui-button--outline" type="button" disabled>Disabled</button></div>
+                <div><button class="ui-ripple ui-button ui-button--plain" type="button" disabled>Disabled</button></div>
+            </div>
+        </section>
+    </template>
+
+    <template id="alert-template">
+        <article class="ui-alert" :class="`ui-alert--${alert.key}`">
+            <div class="flex gap-3 items-center">
+                <span class="ui-icon ui-icon--filled min-w-8 text-3xl" aria-hidden="true">{{ alert.icon }}</span>
+                <div>
+                    <h3 class="font-bold">{{ alert.title }}</h3>
+                    <p class="mt-1 text-sm leading-6 opacity-80">{{ alert.message }}</p>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <template id="app-template">
+        <main class="min-h-screen bg-chrome-50 px-6 py-10 font-sans text-chrome-900 sm:px-10">
+            <div class="mx-auto max-w-7xl">
+                <header class="mb-8 border-b border-chrome-200 pb-8">
+                    <p class="text-sm font-semibold uppercase tracking-widest text-primary-600">Tailwind semantic roles</p>
+                    <h1 class="mt-2 text-3xl font-bold tracking-tight text-chrome-950">Action and feedback palette</h1>
+                    <p class="mt-3 max-w-3xl text-chrome-600">The palette names describe intent. Chrome stays neutral for the page, cards, separators, and metadata; actions and feedback use primary, info, success, warn, and danger.</p>
+                    <p class="mt-3 max-w-3xl text-info-600 dark:text-danger-500">Informative in light, dangerous in dark.</p>
+                </header>
+
+                <div class="mb-6 flex justify-end">
+                    <button class="ui-button ui-button--outline role--primary" type="button" :aria-pressed="darkMode" @click="toggleTheme">
+                        <span class="ui-icon mr-2" aria-hidden="true">{{ darkMode ? 'light_mode' : 'dark_mode' }}</span>
+                        {{ darkMode ? 'Light theme' : 'Dark theme' }}
+                    </button>
+                </div>
+
+                <section aria-labelledby="buttons-heading">
+                    <div class="mb-4">
+                        <h2 id="buttons-heading" class="text-xl font-bold text-chrome-900">Button treatments</h2>
+                        <p class="mt-1 text-sm text-chrome-600">The same four treatments work for every semantic role.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                        <button-row v-for="role in roles" :key="role.key" :role="role"></button-row>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="alerts-heading">
+                    <div class="mb-4">
+                        <h2 id="alerts-heading" class="text-xl font-bold text-chrome-900">Feedback</h2>
+                        <p class="mt-1 text-sm text-chrome-600">Alerts use the same role token family without borrowing chrome colors.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <ui-alert v-for="alert in alerts" :key="alert.key" :alert="alert"></ui-alert>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="padding-heading">
+                    <div class="mb-4">
+                        <h2 id="padding-heading" class="text-xl font-bold text-chrome-900">Layout flexibility</h2>
+                        <p class="mt-1 text-sm text-chrome-600">The component owns its themed surface; page markup chooses the spacing appropriate to its layout.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-3">
+                        <article class="ui-card">
+                            <p class="text-sm font-semibold text-chrome-900">Default padding</p>
+                            <p class="mt-2 text-sm leading-6 text-chrome-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+                        </article>
+                        <article class="ui-card p-8">
+                            <p class="text-sm font-semibold text-chrome-900">Larger padding</p>
+                            <p class="mt-2 text-sm leading-6 text-chrome-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+                        </article>
+                        <article class="ui-card p-12">
+                            <p class="text-sm font-semibold text-chrome-900">Large padding</p>
+                            <p class="mt-2 text-sm leading-6 text-chrome-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="forms-heading">
+                    <div class="mb-4">
+                        <h2 id="forms-heading" class="text-xl font-bold text-chrome-900">Semantic form controls</h2>
+                        <p class="mt-1 text-sm text-chrome-600">The forms plugin supplies the opt-in reset; ui- classes supply the theme-aware surface, border, text, and focus treatment.</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <form class="ui-card space-y-4" @submit.prevent>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="outlined-email">Outlined input</label>
+                                <input id="outlined-email" class="form-input ui-input ui-input--outlined" type="email" placeholder="you@example.com">
+                            </div>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="outlined-role">Outlined select</label>
+                                <select id="outlined-role" class="form-select ui-input ui-input--outlined">
+                                    <option>Choose a role</option>
+                                    <option>Designer</option>
+                                    <option>Developer</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-700 ui-disabled" for="disabled-company">Disabled input</label>
+                                <input id="disabled-company" class="form-input ui-input ui-input--outlined" type="text" value="CanDoItAll Components" disabled>
+                            </div>
+                            <label class="flex items-center gap-2 text-sm text-chrome-700">
+                                <input class="form-checkbox ui-checkbox ui-checkbox--outlined" type="checkbox" checked>
+                                Send product updates
+                            </label>
+                        </form>
+                        <form class="ui-card space-y-4" @submit.prevent>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="filled-name">Filled input</label>
+                                <input id="filled-name" class="form-input ui-input ui-input--filled" type="text" value="Ada Lovelace">
+                            </div>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-900" for="filled-team">Filled select</label>
+                                <select id="filled-team" class="form-select ui-input ui-input--filled">
+                                    <option>Platform team</option>
+                                    <option>Product team</option>
+                                    <option>Design team</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-chrome-700 ui-disabled" for="disabled-company">Disabled input</label>
+                                <input id="disabled-company" class="form-input ui-input ui-input--filled" type="text" value="CanDoItAll Components" disabled>
+                            </div>
+                            <label class="flex items-center gap-2 text-sm text-chrome-700">
+                                <input class="form-checkbox ui-checkbox ui-checkbox--filled" type="checkbox">
+                                Enable weekly summary
+                            </label>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="semantic-swatches-heading">
+                    <h2 id="semantic-swatches-heading" class="mb-4 text-xl font-bold text-chrome-900">Semantic
+                        swatches</h2>
+
+<!-- GENERATOR DO NOT DELETE -->
+<!--                    <div class="grid gap-4 md:grid-cols-2">-->
+<!--                        <div class="space-y-4 ui-card">-->
+<!--                            <div v-for="scale in semanticScaleNames" :key="scale" :aria-label="`${scale} scale`">-->
+<!--                                <div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]">-->
+<!--                                    <h3>{{scale}}</h3>-->
+<!--                                    <div v-for="shade in semanticShades" :key="shade" :title="`${scale}-${shade}`"-->
+<!--                                         :class="{[`bg-${scale}-${shade}`]: true}"-->
+<!--                                         class="rounded-xs border border-chrome-500"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="space-y-4 ui-card">-->
+<!--                            <div v-for="scale in semanticScaleNames" :key="`${scale}-half`"-->
+<!--                                 :aria-label="`${scale} scale at 50% opacity`">-->
+<!--                                <div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]">-->
+<!--                                    <h3>{{scale}}</h3>-->
+<!--                                    <div v-for="shade in semanticShades" :key="shade"-->
+<!--                                         :title="`${scale}-${shade} at 75% opacity`"-->
+<!--                                         :class="{[`bg-${scale}-${shade}/75`]: true}"-->
+<!--                                         class="rounded-xs border border-chrome-500"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="space-y-4 ui-card">-->
+<!--                            <div v-for="scale in semanticScaleNames" :key="`${scale}-half`"-->
+<!--                                 :aria-label="`${scale} scale at 50% opacity`">-->
+<!--                                <div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]">-->
+<!--                                    <h3>{{scale}}</h3>-->
+<!--                                    <div v-for="shade in semanticShades" :key="shade"-->
+<!--                                         :title="`${scale}-${shade} at 50% opacity`"-->
+<!--                                         :class="{[`bg-${scale}-${shade}/50`]: true}"-->
+<!--                                         class="rounded-xs border border-chrome-500"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="space-y-4 ui-card">-->
+<!--                            <div v-for="scale in semanticScaleNames" :key="`${scale}-half`"-->
+<!--                                 :aria-label="`${scale} scale at 50% opacity`">-->
+<!--                                <div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]">-->
+<!--                                    <h3>{{scale}}</h3>-->
+<!--                                    <div v-for="shade in semanticShades" :key="shade"-->
+<!--                                         :title="`${scale}-${shade} at 25% opacity`"-->
+<!--                                         :class="{[`bg-${scale}-${shade}/25`]: true}"-->
+<!--                                         class="rounded-xs border border-chrome-500"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                    <div class="grid gap-4 md:grid-cols-2"><div class="space-y-4 ui-card"><div aria-label="chrome scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>chrome</h3><div title="chrome-50" class="bg-chrome-50 rounded-xs border border-chrome-500"></div><div title="chrome-100" class="bg-chrome-100 rounded-xs border border-chrome-500"></div><div title="chrome-200" class="bg-chrome-200 rounded-xs border border-chrome-500"></div><div title="chrome-300" class="bg-chrome-300 rounded-xs border border-chrome-500"></div><div title="chrome-400" class="bg-chrome-400 rounded-xs border border-chrome-500"></div><div title="chrome-500" class="bg-chrome-500 rounded-xs border border-chrome-500"></div><div title="chrome-600" class="bg-chrome-600 rounded-xs border border-chrome-500"></div><div title="chrome-700" class="bg-chrome-700 rounded-xs border border-chrome-500"></div><div title="chrome-800" class="bg-chrome-800 rounded-xs border border-chrome-500"></div><div title="chrome-900" class="bg-chrome-900 rounded-xs border border-chrome-500"></div><div title="chrome-950" class="bg-chrome-950 rounded-xs border border-chrome-500"></div></div></div><div aria-label="primary scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>primary</h3><div title="primary-50" class="bg-primary-50 rounded-xs border border-chrome-500"></div><div title="primary-100" class="bg-primary-100 rounded-xs border border-chrome-500"></div><div title="primary-200" class="bg-primary-200 rounded-xs border border-chrome-500"></div><div title="primary-300" class="bg-primary-300 rounded-xs border border-chrome-500"></div><div title="primary-400" class="bg-primary-400 rounded-xs border border-chrome-500"></div><div title="primary-500" class="bg-primary-500 rounded-xs border border-chrome-500"></div><div title="primary-600" class="bg-primary-600 rounded-xs border border-chrome-500"></div><div title="primary-700" class="bg-primary-700 rounded-xs border border-chrome-500"></div><div title="primary-800" class="bg-primary-800 rounded-xs border border-chrome-500"></div><div title="primary-900" class="bg-primary-900 rounded-xs border border-chrome-500"></div><div title="primary-950" class="bg-primary-950 rounded-xs border border-chrome-500"></div></div></div><div aria-label="secondary scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>secondary</h3><div title="secondary-50" class="bg-secondary-50 rounded-xs border border-chrome-500"></div><div title="secondary-100" class="bg-secondary-100 rounded-xs border border-chrome-500"></div><div title="secondary-200" class="bg-secondary-200 rounded-xs border border-chrome-500"></div><div title="secondary-300" class="bg-secondary-300 rounded-xs border border-chrome-500"></div><div title="secondary-400" class="bg-secondary-400 rounded-xs border border-chrome-500"></div><div title="secondary-500" class="bg-secondary-500 rounded-xs border border-chrome-500"></div><div title="secondary-600" class="bg-secondary-600 rounded-xs border border-chrome-500"></div><div title="secondary-700" class="bg-secondary-700 rounded-xs border border-chrome-500"></div><div title="secondary-800" class="bg-secondary-800 rounded-xs border border-chrome-500"></div><div title="secondary-900" class="bg-secondary-900 rounded-xs border border-chrome-500"></div><div title="secondary-950" class="bg-secondary-950 rounded-xs border border-chrome-500"></div></div></div><div aria-label="tertiary scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>tertiary</h3><div title="tertiary-50" class="bg-tertiary-50 rounded-xs border border-chrome-500"></div><div title="tertiary-100" class="bg-tertiary-100 rounded-xs border border-chrome-500"></div><div title="tertiary-200" class="bg-tertiary-200 rounded-xs border border-chrome-500"></div><div title="tertiary-300" class="bg-tertiary-300 rounded-xs border border-chrome-500"></div><div title="tertiary-400" class="bg-tertiary-400 rounded-xs border border-chrome-500"></div><div title="tertiary-500" class="bg-tertiary-500 rounded-xs border border-chrome-500"></div><div title="tertiary-600" class="bg-tertiary-600 rounded-xs border border-chrome-500"></div><div title="tertiary-700" class="bg-tertiary-700 rounded-xs border border-chrome-500"></div><div title="tertiary-800" class="bg-tertiary-800 rounded-xs border border-chrome-500"></div><div title="tertiary-900" class="bg-tertiary-900 rounded-xs border border-chrome-500"></div><div title="tertiary-950" class="bg-tertiary-950 rounded-xs border border-chrome-500"></div></div></div><div aria-label="info scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>info</h3><div title="info-50" class="bg-info-50 rounded-xs border border-chrome-500"></div><div title="info-100" class="bg-info-100 rounded-xs border border-chrome-500"></div><div title="info-200" class="bg-info-200 rounded-xs border border-chrome-500"></div><div title="info-300" class="bg-info-300 rounded-xs border border-chrome-500"></div><div title="info-400" class="bg-info-400 rounded-xs border border-chrome-500"></div><div title="info-500" class="bg-info-500 rounded-xs border border-chrome-500"></div><div title="info-600" class="bg-info-600 rounded-xs border border-chrome-500"></div><div title="info-700" class="bg-info-700 rounded-xs border border-chrome-500"></div><div title="info-800" class="bg-info-800 rounded-xs border border-chrome-500"></div><div title="info-900" class="bg-info-900 rounded-xs border border-chrome-500"></div><div title="info-950" class="bg-info-950 rounded-xs border border-chrome-500"></div></div></div><div aria-label="success scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>success</h3><div title="success-50" class="bg-success-50 rounded-xs border border-chrome-500"></div><div title="success-100" class="bg-success-100 rounded-xs border border-chrome-500"></div><div title="success-200" class="bg-success-200 rounded-xs border border-chrome-500"></div><div title="success-300" class="bg-success-300 rounded-xs border border-chrome-500"></div><div title="success-400" class="bg-success-400 rounded-xs border border-chrome-500"></div><div title="success-500" class="bg-success-500 rounded-xs border border-chrome-500"></div><div title="success-600" class="bg-success-600 rounded-xs border border-chrome-500"></div><div title="success-700" class="bg-success-700 rounded-xs border border-chrome-500"></div><div title="success-800" class="bg-success-800 rounded-xs border border-chrome-500"></div><div title="success-900" class="bg-success-900 rounded-xs border border-chrome-500"></div><div title="success-950" class="bg-success-950 rounded-xs border border-chrome-500"></div></div></div><div aria-label="warn scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>warn</h3><div title="warn-50" class="bg-warn-50 rounded-xs border border-chrome-500"></div><div title="warn-100" class="bg-warn-100 rounded-xs border border-chrome-500"></div><div title="warn-200" class="bg-warn-200 rounded-xs border border-chrome-500"></div><div title="warn-300" class="bg-warn-300 rounded-xs border border-chrome-500"></div><div title="warn-400" class="bg-warn-400 rounded-xs border border-chrome-500"></div><div title="warn-500" class="bg-warn-500 rounded-xs border border-chrome-500"></div><div title="warn-600" class="bg-warn-600 rounded-xs border border-chrome-500"></div><div title="warn-700" class="bg-warn-700 rounded-xs border border-chrome-500"></div><div title="warn-800" class="bg-warn-800 rounded-xs border border-chrome-500"></div><div title="warn-900" class="bg-warn-900 rounded-xs border border-chrome-500"></div><div title="warn-950" class="bg-warn-950 rounded-xs border border-chrome-500"></div></div></div><div aria-label="danger scale"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>danger</h3><div title="danger-50" class="bg-danger-50 rounded-xs border border-chrome-500"></div><div title="danger-100" class="bg-danger-100 rounded-xs border border-chrome-500"></div><div title="danger-200" class="bg-danger-200 rounded-xs border border-chrome-500"></div><div title="danger-300" class="bg-danger-300 rounded-xs border border-chrome-500"></div><div title="danger-400" class="bg-danger-400 rounded-xs border border-chrome-500"></div><div title="danger-500" class="bg-danger-500 rounded-xs border border-chrome-500"></div><div title="danger-600" class="bg-danger-600 rounded-xs border border-chrome-500"></div><div title="danger-700" class="bg-danger-700 rounded-xs border border-chrome-500"></div><div title="danger-800" class="bg-danger-800 rounded-xs border border-chrome-500"></div><div title="danger-900" class="bg-danger-900 rounded-xs border border-chrome-500"></div><div title="danger-950" class="bg-danger-950 rounded-xs border border-chrome-500"></div></div></div></div><div class="space-y-4 ui-card"><div aria-label="chrome scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>chrome</h3><div title="chrome-50 at 75% opacity" class="bg-chrome-50/75 rounded-xs border border-chrome-500"></div><div title="chrome-100 at 75% opacity" class="bg-chrome-100/75 rounded-xs border border-chrome-500"></div><div title="chrome-200 at 75% opacity" class="bg-chrome-200/75 rounded-xs border border-chrome-500"></div><div title="chrome-300 at 75% opacity" class="bg-chrome-300/75 rounded-xs border border-chrome-500"></div><div title="chrome-400 at 75% opacity" class="bg-chrome-400/75 rounded-xs border border-chrome-500"></div><div title="chrome-500 at 75% opacity" class="bg-chrome-500/75 rounded-xs border border-chrome-500"></div><div title="chrome-600 at 75% opacity" class="bg-chrome-600/75 rounded-xs border border-chrome-500"></div><div title="chrome-700 at 75% opacity" class="bg-chrome-700/75 rounded-xs border border-chrome-500"></div><div title="chrome-800 at 75% opacity" class="bg-chrome-800/75 rounded-xs border border-chrome-500"></div><div title="chrome-900 at 75% opacity" class="bg-chrome-900/75 rounded-xs border border-chrome-500"></div><div title="chrome-950 at 75% opacity" class="bg-chrome-950/75 rounded-xs border border-chrome-500"></div></div></div><div aria-label="primary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>primary</h3><div title="primary-50 at 75% opacity" class="bg-primary-50/75 rounded-xs border border-chrome-500"></div><div title="primary-100 at 75% opacity" class="bg-primary-100/75 rounded-xs border border-chrome-500"></div><div title="primary-200 at 75% opacity" class="bg-primary-200/75 rounded-xs border border-chrome-500"></div><div title="primary-300 at 75% opacity" class="bg-primary-300/75 rounded-xs border border-chrome-500"></div><div title="primary-400 at 75% opacity" class="bg-primary-400/75 rounded-xs border border-chrome-500"></div><div title="primary-500 at 75% opacity" class="bg-primary-500/75 rounded-xs border border-chrome-500"></div><div title="primary-600 at 75% opacity" class="bg-primary-600/75 rounded-xs border border-chrome-500"></div><div title="primary-700 at 75% opacity" class="bg-primary-700/75 rounded-xs border border-chrome-500"></div><div title="primary-800 at 75% opacity" class="bg-primary-800/75 rounded-xs border border-chrome-500"></div><div title="primary-900 at 75% opacity" class="bg-primary-900/75 rounded-xs border border-chrome-500"></div><div title="primary-950 at 75% opacity" class="bg-primary-950/75 rounded-xs border border-chrome-500"></div></div></div><div aria-label="secondary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>secondary</h3><div title="secondary-50 at 75% opacity" class="bg-secondary-50/75 rounded-xs border border-chrome-500"></div><div title="secondary-100 at 75% opacity" class="bg-secondary-100/75 rounded-xs border border-chrome-500"></div><div title="secondary-200 at 75% opacity" class="bg-secondary-200/75 rounded-xs border border-chrome-500"></div><div title="secondary-300 at 75% opacity" class="bg-secondary-300/75 rounded-xs border border-chrome-500"></div><div title="secondary-400 at 75% opacity" class="bg-secondary-400/75 rounded-xs border border-chrome-500"></div><div title="secondary-500 at 75% opacity" class="bg-secondary-500/75 rounded-xs border border-chrome-500"></div><div title="secondary-600 at 75% opacity" class="bg-secondary-600/75 rounded-xs border border-chrome-500"></div><div title="secondary-700 at 75% opacity" class="bg-secondary-700/75 rounded-xs border border-chrome-500"></div><div title="secondary-800 at 75% opacity" class="bg-secondary-800/75 rounded-xs border border-chrome-500"></div><div title="secondary-900 at 75% opacity" class="bg-secondary-900/75 rounded-xs border border-chrome-500"></div><div title="secondary-950 at 75% opacity" class="bg-secondary-950/75 rounded-xs border border-chrome-500"></div></div></div><div aria-label="tertiary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>tertiary</h3><div title="tertiary-50 at 75% opacity" class="bg-tertiary-50/75 rounded-xs border border-chrome-500"></div><div title="tertiary-100 at 75% opacity" class="bg-tertiary-100/75 rounded-xs border border-chrome-500"></div><div title="tertiary-200 at 75% opacity" class="bg-tertiary-200/75 rounded-xs border border-chrome-500"></div><div title="tertiary-300 at 75% opacity" class="bg-tertiary-300/75 rounded-xs border border-chrome-500"></div><div title="tertiary-400 at 75% opacity" class="bg-tertiary-400/75 rounded-xs border border-chrome-500"></div><div title="tertiary-500 at 75% opacity" class="bg-tertiary-500/75 rounded-xs border border-chrome-500"></div><div title="tertiary-600 at 75% opacity" class="bg-tertiary-600/75 rounded-xs border border-chrome-500"></div><div title="tertiary-700 at 75% opacity" class="bg-tertiary-700/75 rounded-xs border border-chrome-500"></div><div title="tertiary-800 at 75% opacity" class="bg-tertiary-800/75 rounded-xs border border-chrome-500"></div><div title="tertiary-900 at 75% opacity" class="bg-tertiary-900/75 rounded-xs border border-chrome-500"></div><div title="tertiary-950 at 75% opacity" class="bg-tertiary-950/75 rounded-xs border border-chrome-500"></div></div></div><div aria-label="info scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>info</h3><div title="info-50 at 75% opacity" class="bg-info-50/75 rounded-xs border border-chrome-500"></div><div title="info-100 at 75% opacity" class="bg-info-100/75 rounded-xs border border-chrome-500"></div><div title="info-200 at 75% opacity" class="bg-info-200/75 rounded-xs border border-chrome-500"></div><div title="info-300 at 75% opacity" class="bg-info-300/75 rounded-xs border border-chrome-500"></div><div title="info-400 at 75% opacity" class="bg-info-400/75 rounded-xs border border-chrome-500"></div><div title="info-500 at 75% opacity" class="bg-info-500/75 rounded-xs border border-chrome-500"></div><div title="info-600 at 75% opacity" class="bg-info-600/75 rounded-xs border border-chrome-500"></div><div title="info-700 at 75% opacity" class="bg-info-700/75 rounded-xs border border-chrome-500"></div><div title="info-800 at 75% opacity" class="bg-info-800/75 rounded-xs border border-chrome-500"></div><div title="info-900 at 75% opacity" class="bg-info-900/75 rounded-xs border border-chrome-500"></div><div title="info-950 at 75% opacity" class="bg-info-950/75 rounded-xs border border-chrome-500"></div></div></div><div aria-label="success scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>success</h3><div title="success-50 at 75% opacity" class="bg-success-50/75 rounded-xs border border-chrome-500"></div><div title="success-100 at 75% opacity" class="bg-success-100/75 rounded-xs border border-chrome-500"></div><div title="success-200 at 75% opacity" class="bg-success-200/75 rounded-xs border border-chrome-500"></div><div title="success-300 at 75% opacity" class="bg-success-300/75 rounded-xs border border-chrome-500"></div><div title="success-400 at 75% opacity" class="bg-success-400/75 rounded-xs border border-chrome-500"></div><div title="success-500 at 75% opacity" class="bg-success-500/75 rounded-xs border border-chrome-500"></div><div title="success-600 at 75% opacity" class="bg-success-600/75 rounded-xs border border-chrome-500"></div><div title="success-700 at 75% opacity" class="bg-success-700/75 rounded-xs border border-chrome-500"></div><div title="success-800 at 75% opacity" class="bg-success-800/75 rounded-xs border border-chrome-500"></div><div title="success-900 at 75% opacity" class="bg-success-900/75 rounded-xs border border-chrome-500"></div><div title="success-950 at 75% opacity" class="bg-success-950/75 rounded-xs border border-chrome-500"></div></div></div><div aria-label="warn scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>warn</h3><div title="warn-50 at 75% opacity" class="bg-warn-50/75 rounded-xs border border-chrome-500"></div><div title="warn-100 at 75% opacity" class="bg-warn-100/75 rounded-xs border border-chrome-500"></div><div title="warn-200 at 75% opacity" class="bg-warn-200/75 rounded-xs border border-chrome-500"></div><div title="warn-300 at 75% opacity" class="bg-warn-300/75 rounded-xs border border-chrome-500"></div><div title="warn-400 at 75% opacity" class="bg-warn-400/75 rounded-xs border border-chrome-500"></div><div title="warn-500 at 75% opacity" class="bg-warn-500/75 rounded-xs border border-chrome-500"></div><div title="warn-600 at 75% opacity" class="bg-warn-600/75 rounded-xs border border-chrome-500"></div><div title="warn-700 at 75% opacity" class="bg-warn-700/75 rounded-xs border border-chrome-500"></div><div title="warn-800 at 75% opacity" class="bg-warn-800/75 rounded-xs border border-chrome-500"></div><div title="warn-900 at 75% opacity" class="bg-warn-900/75 rounded-xs border border-chrome-500"></div><div title="warn-950 at 75% opacity" class="bg-warn-950/75 rounded-xs border border-chrome-500"></div></div></div><div aria-label="danger scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>danger</h3><div title="danger-50 at 75% opacity" class="bg-danger-50/75 rounded-xs border border-chrome-500"></div><div title="danger-100 at 75% opacity" class="bg-danger-100/75 rounded-xs border border-chrome-500"></div><div title="danger-200 at 75% opacity" class="bg-danger-200/75 rounded-xs border border-chrome-500"></div><div title="danger-300 at 75% opacity" class="bg-danger-300/75 rounded-xs border border-chrome-500"></div><div title="danger-400 at 75% opacity" class="bg-danger-400/75 rounded-xs border border-chrome-500"></div><div title="danger-500 at 75% opacity" class="bg-danger-500/75 rounded-xs border border-chrome-500"></div><div title="danger-600 at 75% opacity" class="bg-danger-600/75 rounded-xs border border-chrome-500"></div><div title="danger-700 at 75% opacity" class="bg-danger-700/75 rounded-xs border border-chrome-500"></div><div title="danger-800 at 75% opacity" class="bg-danger-800/75 rounded-xs border border-chrome-500"></div><div title="danger-900 at 75% opacity" class="bg-danger-900/75 rounded-xs border border-chrome-500"></div><div title="danger-950 at 75% opacity" class="bg-danger-950/75 rounded-xs border border-chrome-500"></div></div></div></div><div class="space-y-4 ui-card"><div aria-label="chrome scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>chrome</h3><div title="chrome-50 at 50% opacity" class="bg-chrome-50/50 rounded-xs border border-chrome-500"></div><div title="chrome-100 at 50% opacity" class="bg-chrome-100/50 rounded-xs border border-chrome-500"></div><div title="chrome-200 at 50% opacity" class="bg-chrome-200/50 rounded-xs border border-chrome-500"></div><div title="chrome-300 at 50% opacity" class="bg-chrome-300/50 rounded-xs border border-chrome-500"></div><div title="chrome-400 at 50% opacity" class="bg-chrome-400/50 rounded-xs border border-chrome-500"></div><div title="chrome-500 at 50% opacity" class="bg-chrome-500/50 rounded-xs border border-chrome-500"></div><div title="chrome-600 at 50% opacity" class="bg-chrome-600/50 rounded-xs border border-chrome-500"></div><div title="chrome-700 at 50% opacity" class="bg-chrome-700/50 rounded-xs border border-chrome-500"></div><div title="chrome-800 at 50% opacity" class="bg-chrome-800/50 rounded-xs border border-chrome-500"></div><div title="chrome-900 at 50% opacity" class="bg-chrome-900/50 rounded-xs border border-chrome-500"></div><div title="chrome-950 at 50% opacity" class="bg-chrome-950/50 rounded-xs border border-chrome-500"></div></div></div><div aria-label="primary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>primary</h3><div title="primary-50 at 50% opacity" class="bg-primary-50/50 rounded-xs border border-chrome-500"></div><div title="primary-100 at 50% opacity" class="bg-primary-100/50 rounded-xs border border-chrome-500"></div><div title="primary-200 at 50% opacity" class="bg-primary-200/50 rounded-xs border border-chrome-500"></div><div title="primary-300 at 50% opacity" class="bg-primary-300/50 rounded-xs border border-chrome-500"></div><div title="primary-400 at 50% opacity" class="bg-primary-400/50 rounded-xs border border-chrome-500"></div><div title="primary-500 at 50% opacity" class="bg-primary-500/50 rounded-xs border border-chrome-500"></div><div title="primary-600 at 50% opacity" class="bg-primary-600/50 rounded-xs border border-chrome-500"></div><div title="primary-700 at 50% opacity" class="bg-primary-700/50 rounded-xs border border-chrome-500"></div><div title="primary-800 at 50% opacity" class="bg-primary-800/50 rounded-xs border border-chrome-500"></div><div title="primary-900 at 50% opacity" class="bg-primary-900/50 rounded-xs border border-chrome-500"></div><div title="primary-950 at 50% opacity" class="bg-primary-950/50 rounded-xs border border-chrome-500"></div></div></div><div aria-label="secondary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>secondary</h3><div title="secondary-50 at 50% opacity" class="bg-secondary-50/50 rounded-xs border border-chrome-500"></div><div title="secondary-100 at 50% opacity" class="bg-secondary-100/50 rounded-xs border border-chrome-500"></div><div title="secondary-200 at 50% opacity" class="bg-secondary-200/50 rounded-xs border border-chrome-500"></div><div title="secondary-300 at 50% opacity" class="bg-secondary-300/50 rounded-xs border border-chrome-500"></div><div title="secondary-400 at 50% opacity" class="bg-secondary-400/50 rounded-xs border border-chrome-500"></div><div title="secondary-500 at 50% opacity" class="bg-secondary-500/50 rounded-xs border border-chrome-500"></div><div title="secondary-600 at 50% opacity" class="bg-secondary-600/50 rounded-xs border border-chrome-500"></div><div title="secondary-700 at 50% opacity" class="bg-secondary-700/50 rounded-xs border border-chrome-500"></div><div title="secondary-800 at 50% opacity" class="bg-secondary-800/50 rounded-xs border border-chrome-500"></div><div title="secondary-900 at 50% opacity" class="bg-secondary-900/50 rounded-xs border border-chrome-500"></div><div title="secondary-950 at 50% opacity" class="bg-secondary-950/50 rounded-xs border border-chrome-500"></div></div></div><div aria-label="tertiary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>tertiary</h3><div title="tertiary-50 at 50% opacity" class="bg-tertiary-50/50 rounded-xs border border-chrome-500"></div><div title="tertiary-100 at 50% opacity" class="bg-tertiary-100/50 rounded-xs border border-chrome-500"></div><div title="tertiary-200 at 50% opacity" class="bg-tertiary-200/50 rounded-xs border border-chrome-500"></div><div title="tertiary-300 at 50% opacity" class="bg-tertiary-300/50 rounded-xs border border-chrome-500"></div><div title="tertiary-400 at 50% opacity" class="bg-tertiary-400/50 rounded-xs border border-chrome-500"></div><div title="tertiary-500 at 50% opacity" class="bg-tertiary-500/50 rounded-xs border border-chrome-500"></div><div title="tertiary-600 at 50% opacity" class="bg-tertiary-600/50 rounded-xs border border-chrome-500"></div><div title="tertiary-700 at 50% opacity" class="bg-tertiary-700/50 rounded-xs border border-chrome-500"></div><div title="tertiary-800 at 50% opacity" class="bg-tertiary-800/50 rounded-xs border border-chrome-500"></div><div title="tertiary-900 at 50% opacity" class="bg-tertiary-900/50 rounded-xs border border-chrome-500"></div><div title="tertiary-950 at 50% opacity" class="bg-tertiary-950/50 rounded-xs border border-chrome-500"></div></div></div><div aria-label="info scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>info</h3><div title="info-50 at 50% opacity" class="bg-info-50/50 rounded-xs border border-chrome-500"></div><div title="info-100 at 50% opacity" class="bg-info-100/50 rounded-xs border border-chrome-500"></div><div title="info-200 at 50% opacity" class="bg-info-200/50 rounded-xs border border-chrome-500"></div><div title="info-300 at 50% opacity" class="bg-info-300/50 rounded-xs border border-chrome-500"></div><div title="info-400 at 50% opacity" class="bg-info-400/50 rounded-xs border border-chrome-500"></div><div title="info-500 at 50% opacity" class="bg-info-500/50 rounded-xs border border-chrome-500"></div><div title="info-600 at 50% opacity" class="bg-info-600/50 rounded-xs border border-chrome-500"></div><div title="info-700 at 50% opacity" class="bg-info-700/50 rounded-xs border border-chrome-500"></div><div title="info-800 at 50% opacity" class="bg-info-800/50 rounded-xs border border-chrome-500"></div><div title="info-900 at 50% opacity" class="bg-info-900/50 rounded-xs border border-chrome-500"></div><div title="info-950 at 50% opacity" class="bg-info-950/50 rounded-xs border border-chrome-500"></div></div></div><div aria-label="success scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>success</h3><div title="success-50 at 50% opacity" class="bg-success-50/50 rounded-xs border border-chrome-500"></div><div title="success-100 at 50% opacity" class="bg-success-100/50 rounded-xs border border-chrome-500"></div><div title="success-200 at 50% opacity" class="bg-success-200/50 rounded-xs border border-chrome-500"></div><div title="success-300 at 50% opacity" class="bg-success-300/50 rounded-xs border border-chrome-500"></div><div title="success-400 at 50% opacity" class="bg-success-400/50 rounded-xs border border-chrome-500"></div><div title="success-500 at 50% opacity" class="bg-success-500/50 rounded-xs border border-chrome-500"></div><div title="success-600 at 50% opacity" class="bg-success-600/50 rounded-xs border border-chrome-500"></div><div title="success-700 at 50% opacity" class="bg-success-700/50 rounded-xs border border-chrome-500"></div><div title="success-800 at 50% opacity" class="bg-success-800/50 rounded-xs border border-chrome-500"></div><div title="success-900 at 50% opacity" class="bg-success-900/50 rounded-xs border border-chrome-500"></div><div title="success-950 at 50% opacity" class="bg-success-950/50 rounded-xs border border-chrome-500"></div></div></div><div aria-label="warn scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>warn</h3><div title="warn-50 at 50% opacity" class="bg-warn-50/50 rounded-xs border border-chrome-500"></div><div title="warn-100 at 50% opacity" class="bg-warn-100/50 rounded-xs border border-chrome-500"></div><div title="warn-200 at 50% opacity" class="bg-warn-200/50 rounded-xs border border-chrome-500"></div><div title="warn-300 at 50% opacity" class="bg-warn-300/50 rounded-xs border border-chrome-500"></div><div title="warn-400 at 50% opacity" class="bg-warn-400/50 rounded-xs border border-chrome-500"></div><div title="warn-500 at 50% opacity" class="bg-warn-500/50 rounded-xs border border-chrome-500"></div><div title="warn-600 at 50% opacity" class="bg-warn-600/50 rounded-xs border border-chrome-500"></div><div title="warn-700 at 50% opacity" class="bg-warn-700/50 rounded-xs border border-chrome-500"></div><div title="warn-800 at 50% opacity" class="bg-warn-800/50 rounded-xs border border-chrome-500"></div><div title="warn-900 at 50% opacity" class="bg-warn-900/50 rounded-xs border border-chrome-500"></div><div title="warn-950 at 50% opacity" class="bg-warn-950/50 rounded-xs border border-chrome-500"></div></div></div><div aria-label="danger scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>danger</h3><div title="danger-50 at 50% opacity" class="bg-danger-50/50 rounded-xs border border-chrome-500"></div><div title="danger-100 at 50% opacity" class="bg-danger-100/50 rounded-xs border border-chrome-500"></div><div title="danger-200 at 50% opacity" class="bg-danger-200/50 rounded-xs border border-chrome-500"></div><div title="danger-300 at 50% opacity" class="bg-danger-300/50 rounded-xs border border-chrome-500"></div><div title="danger-400 at 50% opacity" class="bg-danger-400/50 rounded-xs border border-chrome-500"></div><div title="danger-500 at 50% opacity" class="bg-danger-500/50 rounded-xs border border-chrome-500"></div><div title="danger-600 at 50% opacity" class="bg-danger-600/50 rounded-xs border border-chrome-500"></div><div title="danger-700 at 50% opacity" class="bg-danger-700/50 rounded-xs border border-chrome-500"></div><div title="danger-800 at 50% opacity" class="bg-danger-800/50 rounded-xs border border-chrome-500"></div><div title="danger-900 at 50% opacity" class="bg-danger-900/50 rounded-xs border border-chrome-500"></div><div title="danger-950 at 50% opacity" class="bg-danger-950/50 rounded-xs border border-chrome-500"></div></div></div></div><div class="space-y-4 ui-card"><div aria-label="chrome scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>chrome</h3><div title="chrome-50 at 25% opacity" class="bg-chrome-50/25 rounded-xs border border-chrome-500"></div><div title="chrome-100 at 25% opacity" class="bg-chrome-100/25 rounded-xs border border-chrome-500"></div><div title="chrome-200 at 25% opacity" class="bg-chrome-200/25 rounded-xs border border-chrome-500"></div><div title="chrome-300 at 25% opacity" class="bg-chrome-300/25 rounded-xs border border-chrome-500"></div><div title="chrome-400 at 25% opacity" class="bg-chrome-400/25 rounded-xs border border-chrome-500"></div><div title="chrome-500 at 25% opacity" class="bg-chrome-500/25 rounded-xs border border-chrome-500"></div><div title="chrome-600 at 25% opacity" class="bg-chrome-600/25 rounded-xs border border-chrome-500"></div><div title="chrome-700 at 25% opacity" class="bg-chrome-700/25 rounded-xs border border-chrome-500"></div><div title="chrome-800 at 25% opacity" class="bg-chrome-800/25 rounded-xs border border-chrome-500"></div><div title="chrome-900 at 25% opacity" class="bg-chrome-900/25 rounded-xs border border-chrome-500"></div><div title="chrome-950 at 25% opacity" class="bg-chrome-950/25 rounded-xs border border-chrome-500"></div></div></div><div aria-label="primary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>primary</h3><div title="primary-50 at 25% opacity" class="bg-primary-50/25 rounded-xs border border-chrome-500"></div><div title="primary-100 at 25% opacity" class="bg-primary-100/25 rounded-xs border border-chrome-500"></div><div title="primary-200 at 25% opacity" class="bg-primary-200/25 rounded-xs border border-chrome-500"></div><div title="primary-300 at 25% opacity" class="bg-primary-300/25 rounded-xs border border-chrome-500"></div><div title="primary-400 at 25% opacity" class="bg-primary-400/25 rounded-xs border border-chrome-500"></div><div title="primary-500 at 25% opacity" class="bg-primary-500/25 rounded-xs border border-chrome-500"></div><div title="primary-600 at 25% opacity" class="bg-primary-600/25 rounded-xs border border-chrome-500"></div><div title="primary-700 at 25% opacity" class="bg-primary-700/25 rounded-xs border border-chrome-500"></div><div title="primary-800 at 25% opacity" class="bg-primary-800/25 rounded-xs border border-chrome-500"></div><div title="primary-900 at 25% opacity" class="bg-primary-900/25 rounded-xs border border-chrome-500"></div><div title="primary-950 at 25% opacity" class="bg-primary-950/25 rounded-xs border border-chrome-500"></div></div></div><div aria-label="secondary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>secondary</h3><div title="secondary-50 at 25% opacity" class="bg-secondary-50/25 rounded-xs border border-chrome-500"></div><div title="secondary-100 at 25% opacity" class="bg-secondary-100/25 rounded-xs border border-chrome-500"></div><div title="secondary-200 at 25% opacity" class="bg-secondary-200/25 rounded-xs border border-chrome-500"></div><div title="secondary-300 at 25% opacity" class="bg-secondary-300/25 rounded-xs border border-chrome-500"></div><div title="secondary-400 at 25% opacity" class="bg-secondary-400/25 rounded-xs border border-chrome-500"></div><div title="secondary-500 at 25% opacity" class="bg-secondary-500/25 rounded-xs border border-chrome-500"></div><div title="secondary-600 at 25% opacity" class="bg-secondary-600/25 rounded-xs border border-chrome-500"></div><div title="secondary-700 at 25% opacity" class="bg-secondary-700/25 rounded-xs border border-chrome-500"></div><div title="secondary-800 at 25% opacity" class="bg-secondary-800/25 rounded-xs border border-chrome-500"></div><div title="secondary-900 at 25% opacity" class="bg-secondary-900/25 rounded-xs border border-chrome-500"></div><div title="secondary-950 at 25% opacity" class="bg-secondary-950/25 rounded-xs border border-chrome-500"></div></div></div><div aria-label="tertiary scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>tertiary</h3><div title="tertiary-50 at 25% opacity" class="bg-tertiary-50/25 rounded-xs border border-chrome-500"></div><div title="tertiary-100 at 25% opacity" class="bg-tertiary-100/25 rounded-xs border border-chrome-500"></div><div title="tertiary-200 at 25% opacity" class="bg-tertiary-200/25 rounded-xs border border-chrome-500"></div><div title="tertiary-300 at 25% opacity" class="bg-tertiary-300/25 rounded-xs border border-chrome-500"></div><div title="tertiary-400 at 25% opacity" class="bg-tertiary-400/25 rounded-xs border border-chrome-500"></div><div title="tertiary-500 at 25% opacity" class="bg-tertiary-500/25 rounded-xs border border-chrome-500"></div><div title="tertiary-600 at 25% opacity" class="bg-tertiary-600/25 rounded-xs border border-chrome-500"></div><div title="tertiary-700 at 25% opacity" class="bg-tertiary-700/25 rounded-xs border border-chrome-500"></div><div title="tertiary-800 at 25% opacity" class="bg-tertiary-800/25 rounded-xs border border-chrome-500"></div><div title="tertiary-900 at 25% opacity" class="bg-tertiary-900/25 rounded-xs border border-chrome-500"></div><div title="tertiary-950 at 25% opacity" class="bg-tertiary-950/25 rounded-xs border border-chrome-500"></div></div></div><div aria-label="info scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>info</h3><div title="info-50 at 25% opacity" class="bg-info-50/25 rounded-xs border border-chrome-500"></div><div title="info-100 at 25% opacity" class="bg-info-100/25 rounded-xs border border-chrome-500"></div><div title="info-200 at 25% opacity" class="bg-info-200/25 rounded-xs border border-chrome-500"></div><div title="info-300 at 25% opacity" class="bg-info-300/25 rounded-xs border border-chrome-500"></div><div title="info-400 at 25% opacity" class="bg-info-400/25 rounded-xs border border-chrome-500"></div><div title="info-500 at 25% opacity" class="bg-info-500/25 rounded-xs border border-chrome-500"></div><div title="info-600 at 25% opacity" class="bg-info-600/25 rounded-xs border border-chrome-500"></div><div title="info-700 at 25% opacity" class="bg-info-700/25 rounded-xs border border-chrome-500"></div><div title="info-800 at 25% opacity" class="bg-info-800/25 rounded-xs border border-chrome-500"></div><div title="info-900 at 25% opacity" class="bg-info-900/25 rounded-xs border border-chrome-500"></div><div title="info-950 at 25% opacity" class="bg-info-950/25 rounded-xs border border-chrome-500"></div></div></div><div aria-label="success scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>success</h3><div title="success-50 at 25% opacity" class="bg-success-50/25 rounded-xs border border-chrome-500"></div><div title="success-100 at 25% opacity" class="bg-success-100/25 rounded-xs border border-chrome-500"></div><div title="success-200 at 25% opacity" class="bg-success-200/25 rounded-xs border border-chrome-500"></div><div title="success-300 at 25% opacity" class="bg-success-300/25 rounded-xs border border-chrome-500"></div><div title="success-400 at 25% opacity" class="bg-success-400/25 rounded-xs border border-chrome-500"></div><div title="success-500 at 25% opacity" class="bg-success-500/25 rounded-xs border border-chrome-500"></div><div title="success-600 at 25% opacity" class="bg-success-600/25 rounded-xs border border-chrome-500"></div><div title="success-700 at 25% opacity" class="bg-success-700/25 rounded-xs border border-chrome-500"></div><div title="success-800 at 25% opacity" class="bg-success-800/25 rounded-xs border border-chrome-500"></div><div title="success-900 at 25% opacity" class="bg-success-900/25 rounded-xs border border-chrome-500"></div><div title="success-950 at 25% opacity" class="bg-success-950/25 rounded-xs border border-chrome-500"></div></div></div><div aria-label="warn scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>warn</h3><div title="warn-50 at 25% opacity" class="bg-warn-50/25 rounded-xs border border-chrome-500"></div><div title="warn-100 at 25% opacity" class="bg-warn-100/25 rounded-xs border border-chrome-500"></div><div title="warn-200 at 25% opacity" class="bg-warn-200/25 rounded-xs border border-chrome-500"></div><div title="warn-300 at 25% opacity" class="bg-warn-300/25 rounded-xs border border-chrome-500"></div><div title="warn-400 at 25% opacity" class="bg-warn-400/25 rounded-xs border border-chrome-500"></div><div title="warn-500 at 25% opacity" class="bg-warn-500/25 rounded-xs border border-chrome-500"></div><div title="warn-600 at 25% opacity" class="bg-warn-600/25 rounded-xs border border-chrome-500"></div><div title="warn-700 at 25% opacity" class="bg-warn-700/25 rounded-xs border border-chrome-500"></div><div title="warn-800 at 25% opacity" class="bg-warn-800/25 rounded-xs border border-chrome-500"></div><div title="warn-900 at 25% opacity" class="bg-warn-900/25 rounded-xs border border-chrome-500"></div><div title="warn-950 at 25% opacity" class="bg-warn-950/25 rounded-xs border border-chrome-500"></div></div></div><div aria-label="danger scale at 50% opacity"><div class="grid gap-2 grid-cols-[6rem_repeat(11,_auto)]"><h3>danger</h3><div title="danger-50 at 25% opacity" class="bg-danger-50/25 rounded-xs border border-chrome-500"></div><div title="danger-100 at 25% opacity" class="bg-danger-100/25 rounded-xs border border-chrome-500"></div><div title="danger-200 at 25% opacity" class="bg-danger-200/25 rounded-xs border border-chrome-500"></div><div title="danger-300 at 25% opacity" class="bg-danger-300/25 rounded-xs border border-chrome-500"></div><div title="danger-400 at 25% opacity" class="bg-danger-400/25 rounded-xs border border-chrome-500"></div><div title="danger-500 at 25% opacity" class="bg-danger-500/25 rounded-xs border border-chrome-500"></div><div title="danger-600 at 25% opacity" class="bg-danger-600/25 rounded-xs border border-chrome-500"></div><div title="danger-700 at 25% opacity" class="bg-danger-700/25 rounded-xs border border-chrome-500"></div><div title="danger-800 at 25% opacity" class="bg-danger-800/25 rounded-xs border border-chrome-500"></div><div title="danger-900 at 25% opacity" class="bg-danger-900/25 rounded-xs border border-chrome-500"></div><div title="danger-950 at 25% opacity" class="bg-danger-950/25 rounded-xs border border-chrome-500"></div></div></div></div></div>
+
+                </section>
+
+                <section class="mt-10" aria-labelledby="typography-heading">
+                    <div class="mb-4">
+                        <h2 id="typography-heading" class="text-xl font-bold text-chrome-900">Typography</h2>
+                        <p class="mt-1 max-w-3xl text-sm text-chrome-600">The @tailwindcss/typography plugin takes all of its colors from the active chrome theme. The same <code class="font-mono">prose prose-theme</code> class is used in light and dark modes.</p>
+                    </div>
+
+                    <article class="grid gap-6 lg:grid-cols-2">
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Headings</h3>
+                            <div class="ui-card prose prose-theme max-w-none flex-1">
+                                <h1>H1 heading</h1>
+                                <h2>H2 heading</h2>
+                                <h3>H3 heading</h3>
+                                <h4>H4 heading</h4>
+                                <h5>H5 heading</h5>
+                                <p>A paragraph establishes the standard reading rhythm for rich content.</p>
+                                <small>Small text is available for supporting detail and metadata.</small>
+                            </div>
+                        </section>
+
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Inline markup</h3>
+                            <div class="ui-card prose prose-theme max-w-none flex-1">
+                                <p>Chrome supplies the surrounding UI and content foregrounds. <a href="#typography-heading">Links</a> stay intentionally understated, while <strong>strong text remains clear</strong> in either theme.</p>
+                                <p><em>Emphasis</em>, <mark>highlighted text</mark>, <del>deleted text</del>, and <code>--tw-prose-body</code> retain their native meaning.</p>
+                                <p>Use <kbd>D</kbd> to swap dark/light theme.</p>
+                            </div>
+                        </section>
+
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Lists</h3>
+                            <div class="ui-card prose prose-theme max-w-none flex-1">
+                                <p>Unordered and ordered lists.</p>
+                                <ul>
+                                    <li>Semantic chrome colors drive ordinary reading content.</li>
+                                    <li>Theme scopes replace the values, not the markup.</li>
+                                </ul>
+                                <ol>
+                                    <li>Write normal HTML.</li>
+                                    <li>Apply <code>.prose</code> at the content boundary.</li>
+                                </ol>
+                            </div>
+                        </section>
+
+                        <section class="flex h-full flex-col">
+                            <h3 class="mb-2 text-lg font-bold text-chrome-900">Code, and data</h3>
+                            <div class="ui-card prose prose-theme max-w-none flex-1">
+                                <pre><code>const proseTheme = {
+  palette: "chrome",
+  invert: false,
+};</code></pre>
+                                <table>
+                                    <thead><tr><th>Token</th><th>Role</th></tr></thead>
+                                    <tbody><tr><td><code>--tw-prose-body</code></td><td>Reading text</td></tr><tr><td><code>--tw-prose-headings</code></td><td>Headings</td></tr></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </article>
+                </section>
+
+                <section class="mt-10" aria-labelledby="icons-heading">
+                    <div class="mb-4">
+                        <h2 id="icons-heading" class="text-xl font-bold text-chrome-900">Material Symbols Rounded</h2>
+                        <p class="mt-1 max-w-3xl text-sm text-chrome-600">Outlined and filled variants use the same ligature name. Icons render at their optical size, with a positive grade in dark theme to compensate for the lighter perceived stroke.</p>
+                    </div>
+                    <div class="grid gap-4 lg:grid-cols-2">
+                        <section class="ui-card" aria-labelledby="small-icons-heading">
+                            <div class="flex items-baseline justify-between gap-4">
+                                <div>
+                                    <h3 id="small-icons-heading" class="font-bold text-chrome-900">Small</h3>
+                                    <p class="mt-1 text-sm text-chrome-600">24px / opsz 24</p>
+                                </div>
+                                <span class="text-xs font-medium text-chrome-600">Outline · Filled</span>
+                            </div>
+                            <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                                <div v-for="icon in icons" :key="icon" class="flex min-w-0 items-center gap-4">
+                                    <div class="flex shrink-0 items-center gap-2 text-chrome-900" aria-label="Outlined and filled icon">
+                                        <span class="ui-icon text-2xl [--ui-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="ui-icon ui-icon--filled text-2xl [--ui-symbol-optical-size:24]" aria-hidden="true">{{ icon }}</span>
+                                    </div>
+                                    <code class="truncate font-mono text-xs text-chrome-600">{{ icon }}</code>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="ui-card pb-6" aria-labelledby="large-icons-heading">
+                            <div class="flex items-baseline justify-between gap-4">
+                                <div>
+                                    <h3 id="large-icons-heading" class="font-bold text-chrome-900">Large</h3>
+                                    <p class="mt-1 text-sm text-chrome-600">48px / opsz 48</p>
+                                </div>
+                                <span class="text-xs font-medium text-chrome-600">Outline · Filled</span>
+                            </div>
+                            <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <div v-for="icon in icons" :key="icon" class="flex min-w-0 items-center gap-4">
+                                    <div class="flex shrink-0 items-center gap-2 text-chrome-900" aria-label="Outlined and filled icon">
+                                        <span class="ui-icon text-5xl [--ui-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
+                                        <span class="ui-icon ui-icon--filled text-5xl [--ui-symbol-optical-size:48]" aria-hidden="true">{{ icon }}</span>
+                                    </div>
+                                    <code class="truncate font-mono text-xs text-chrome-600">{{ icon }}</code>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="nested-theme-heading">
+                    <div class="mb-4">
+                        <h2 id="nested-theme-heading" class="text-xl font-bold text-chrome-900">Scoped opposite theme</h2>
+                        <p class="mt-1 text-sm text-chrome-600">This card resolves its own theme tokens without changing the surrounding page.</p>
+                    </div>
+                    <article :data-ui-theme="darkMode ? 'light' : 'dark'">
+                        <div class="ui-card bg-chrome-100/87 flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <p class="text-sm font-semibold uppercase tracking-widest text-[var(--color-info-700)] dark:text-[var(--color-danger-400)]">Nested theme boundary (Info in light, Dage in dark)</p>
+                                <h3 class="mt-1 text-lg font-bold text-chrome-950">{{ darkMode ? 'Light' : 'Dark' }} card inside the {{ darkMode ? 'dark' : 'light' }} page</h3>
+                                <p class="mt-2 max-w-2xl text-sm leading-6 text-chrome-600">Its chrome, surface, text, semantic button treatment, and native controls inherit from this card’s <code>data-ui-theme</code> boundary.</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2 role--primary">
+                                <button class="ui-button ui-button--plain" type="button">Plain action</button>
+                                <button class="ui-button ui-button--solid" type="button">Solid action</button>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </div>
+        </main>
+    </template>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            template: '#app-template',
+            components: {
+                'button-row': { template: '#button-row-template', props: ['role'] },
+                'ui-alert': { template: '#alert-template', props: ['alert'] }
+            },
+            data: () => ({
+                darkMode: false,
+                icons: ['menu', 'search', 'close', 'add', 'more_vert', 'home', 'settings', 'notifications', 'person', 'edit', 'delete', 'favorite'],
+                semanticScaleNames: ['chrome', 'primary', 'secondary', 'tertiary', 'info', 'success', 'warn', 'danger'],
+                semanticShades: [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950],
+                roles: [
+                    { key: 'primary', name: 'Primary', description: 'The default action in a workflow.' },
+                    { key: 'secondary', name: 'Secondary', description: 'The secondary action in a workflow.' },
+                    { key: 'tertiary', name: 'Tertiary', description: 'The tertiary action in a workflow.' },
+                    { key: 'info', name: 'Info', description: 'Helpful or contextual actions.' },
+                    { key: 'success', name: 'Success', description: 'Confirmation and positive outcomes.' },
+                    { key: 'warn', name: 'Warning', description: 'Proceed with care or review needed.' },
+                    { key: 'danger', name: 'Danger', description: 'Destructive or irreversible actions.' }
+                ],
+                alerts: [
+                    { key: 'primary', icon: 'info', title: 'New information', message: 'A newer version of this template is available.' },
+                    { key: 'secondary', icon: 'info', title: 'New information', message: 'A newer version of this template is available.' },
+                    { key: 'tertiary', icon: 'info', title: 'New information', message: 'A newer version of this template is available.' },
+                    { key: 'info', icon: 'info', title: 'New information', message: 'A newer version of this template is available.' },
+                    { key: 'success', icon: 'check_circle', title: 'Changes saved', message: 'Your settings were saved successfully.' },
+                    { key: 'warn', icon: 'warning', title: 'Review required', message: 'Two fields need attention before you can continue.' },
+                    { key: 'danger', icon: 'error', title: 'Action failed', message: 'We could not complete the requested operation.' }
+                ]
+            }),
+            mounted() {
+                this.darkMode = document.documentElement.dataset.uiTheme === 'dark';
+                window.addEventListener('keydown', ({key}) => {
+                    if (key === 'd') this.toggleTheme();
+                });
+                this.rippleClickHandler = (event) => {
+                    const button = event.target.closest('.ui-ripple:not(:disabled)');
+                    if (!button) return;
+
+                    button.classList.remove('is-rippling');
+                    void button.offsetWidth;
+                    button.classList.add('is-rippling');
+                    setTimeout(() => button.classList.remove('is-rippling'), 500)
+                };
+                document.addEventListener('click', this.rippleClickHandler);
+            },
+            beforeUnmount() {
+                document.removeEventListener('click', this.rippleClickHandler);
+            },
+            methods: {
+                toggleTheme() {
+                    this.darkMode = !this.darkMode;
+                    const theme = this.darkMode ? 'dark' : 'light';
+                    const root = document.documentElement;
+
+                    root.classList.add('ui-no-transition');
+                    requestAnimationFrame(() => {
+                        root.dataset.uiTheme = theme;
+                        localStorage.setItem('semantic-demo-theme', theme);
+
+                        requestAnimationFrame(() => {
+                            root.classList.remove('ui-no-transition');
+                        });
+                    });
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

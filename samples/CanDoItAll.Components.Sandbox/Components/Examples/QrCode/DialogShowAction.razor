@@ -1,0 +1,10 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.QrCode
+
+<QrCodeButton Payload="@(new QrCodePayload(Payload, QrPayloadKind.Generic, "Component repository", Caption))"
+              Label="Show QR dialog"
+              TestId="sandbox-qr-dialog-button" />
+
+@code {
+    [Parameter] public string Payload { get; set; } = "https://github.com/fyziktom/CanDoItAll.Components";
+    [Parameter] public string Caption { get; set; } = "CanDoItAll.Components repository";
+}

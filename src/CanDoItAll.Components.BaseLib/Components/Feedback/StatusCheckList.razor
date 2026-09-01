@@ -26,7 +26,7 @@
             {
                 <li>
                     <span class="@ResolveIconClass(item)" aria-hidden="true">
-                        <span class="material-icons">@(item.Complete ? "check" : "radio_button_unchecked")</span>
+                        <span class="material-symbols-rounded">@(item.Complete ? "check" : "radio_button_unchecked")</span>
                     </span>
                     <span>
                         <strong>@item.Label</strong>
@@ -43,18 +43,23 @@
 </section>
 
 @code {
+    /// <summary>Heading shown above the list.</summary>
     [Parameter]
     public string? Title { get; set; }
 
+    /// <summary>Supporting sentence rendered under <see cref="Title"/>.</summary>
     [Parameter]
     public string? Description { get; set; }
 
+    /// <summary>The rows to render, each with a label, optional description, status text, and completion/tone state.</summary>
     [Parameter]
     public IReadOnlyList<StatusCheckItem> Items { get; set; } = [];
 
+    /// <summary>Message shown in place of the list when <see cref="Items"/> is empty.</summary>
     [Parameter]
     public string EmptyText { get; set; } = "No checks are available.";
 
+    /// <summary>Additional HTML attributes splatted onto the root element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 

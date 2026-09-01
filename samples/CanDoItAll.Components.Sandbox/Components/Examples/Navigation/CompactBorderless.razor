@@ -1,0 +1,27 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<Tabs SelectedIndex="@modalTabIndex"
+      SelectedIndexChanged="HandleModalTabChanged"
+      RenderMode="@(TabRenderMode.Client)"
+      Variant="@(TabsVariant.ModalCompact)"
+      BorderMode="@(TabsBorderMode.None)"
+      Tone="@(TabsTone.Info)"
+      AriaLabel="Compact borderless tabs"
+      data-testid="tabs-lab-modal">
+    <TabItems>
+        <TabsItem Text="Summary">
+            <TextBlock TextStyle="@(TextStyle.Body2)"
+                       Value="This variant keeps the panel minimal and uses rounded pills for lighter modal chrome." />
+        </TabsItem>
+        <TabsItem Text="Warnings" BadgeText="2">
+            <Alert AlertStyle="@(AlertStyle.Warning)">
+                Borderless tabs should still keep hover, focus, and active state obvious.
+            </Alert>
+        </TabsItem>
+        <TabsItem Text="Approval path">
+            <TextBlock TextStyle="@(TextStyle.Body2)"
+                       Value="Client render mode keeps the whole set rendered so the tab switch remains instantaneous." />
+        </TabsItem>
+    </TabItems>
+</Tabs>

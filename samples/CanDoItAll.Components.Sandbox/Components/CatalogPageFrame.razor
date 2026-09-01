@@ -1,262 +1,90 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 
+<CascadingValue Value="@Group" IsFixed="true">
 <div class="sandbox-page">
     <PageScaffold MaxWidthClass="max-w-[1720px]">
             <Header>
-                <PageHeader Eyebrow="Components Sandbox"
-                            Title="@Group.Title"
-                            Description="@Group.Summary"
-                            Compact="true">
-                    <Actions>
-                        <div class="cad-theme-switcher" data-testid="theme-switcher">
-                            <Button Text="Light"
-                                    ButtonStyle="@(IsTheme(CadThemes.Light) ? ButtonStyle.Primary : ButtonStyle.Light)"
-                                    Variant="@(IsTheme(CadThemes.Light) ? Variant.Filled : Variant.Outlined)"
-                                    Click="@(() => SetTheme(CadThemes.Light))"
-                                    data-testid="theme-switch-light"
-                                    aria-pressed="@IsTheme(CadThemes.Light)" />
-                            <Button Text="Dark"
-                                    ButtonStyle="@(IsTheme(CadThemes.Dark) ? ButtonStyle.Primary : ButtonStyle.Light)"
-                                    Variant="@(IsTheme(CadThemes.Dark) ? Variant.Filled : Variant.Outlined)"
-                                    Click="@(() => SetTheme(CadThemes.Dark))"
-                                    data-testid="theme-switch-dark"
-                                    aria-pressed="@IsTheme(CadThemes.Dark)" />
-                            <Button Text="Catalog index" ButtonStyle="@(ButtonStyle.Light)" Href="/" />
-                        </div>
-                    </Actions>
-                </PageHeader>
-            </Header>
+                <PageHeader Title="@Group.Title"
+                            Description="@Group.Summary" />
 
-            <Lead>
-                <SectionCard Title="@HeroTitle" Description="@HeroSummary">
-                    <Split Breakpoint="LayoutBreakpoint.Lg"
-                           Gap="LayoutGap.Medium"
-                           AlignItems="AlignItems.Center"
-                           JustifyContent="JustifyContent.SpaceBetween">
-                        <Stack GapScale="LayoutGap.Small"
-                               Class="min-w-0">
-                            <Cluster Gap="LayoutGap.Small">
-                                <StatusBadge Text="@HeroEyebrow" Tone="info" />
-                            @foreach (var focusArea in Group.FocusAreas)
-                            {
-                                    <StatusBadge Text="@focusArea" Tone="neutral" />
-                            }
-                            </Cluster>
-
-                            <CompactStatStrip>
-                                <CompactStat Label="Scenario"
-                                             Value="@Scenario.ToLabel()"
-                                             HelperText="@Scenario.ToSummary()"
-                                             Tone="info" />
-                                <CompactStat Label="Frame"
-                                             Value="@Frame.ToLabel()"
-                                             HelperText="Use a constrained frame or the live viewport to verify composition." />
-                                <CompactStat Label="Examples"
-                                             Value="@ExampleCount.ToString()"
-                                             HelperText="Curated examples available for this group."
-                                             Tone="success" />
-                                <CompactStat Text="Dense + empty proof"
-                                             HelperText="Each group needs dense and empty-state screenshot proof."
-                                             Tone="warning" />
-                            </CompactStatStrip>
-                        </Stack>
-
-                        <Button Text="Review proof"
-                                ButtonStyle="@(ButtonStyle.Light)"
-                                Variant="@(Variant.Outlined)"
-                                Click="OpenProofDialog"
-                                data-testid="open-proof-dialog" />
-                    </Split>
-                </SectionCard>
-            </Lead>
-
-            <ChildContent>
-                <div class="sandbox-page-section">
-                    <SectionCard Title="@DemoTitle" Description="@DemoSummary">
-                        <div class="sandbox-demo-toolbar">
-                            <SecondaryTabs Items="@ScenarioTabs"
-                                           SelectedKey="@Scenario.ToSlug()"
-                                           SelectedKeyChanged="HandleScenarioChanged"
-                                           Dense="true"
-                                           ShowActiveDescription="false" />
-
-                            <div class="sandbox-frame-toggle">
-                                @foreach (var preset in FramePresets)
-                                {
-                                    <Button Text="@preset.ToLabel()"
-                                            ButtonStyle="@(preset == Frame ? ButtonStyle.Primary : ButtonStyle.Light)"
-                                            Variant="@(preset == Frame ? Variant.Filled : Variant.Outlined)"
-                                            Click="@(() => FrameChanged.InvokeAsync(preset))" />
-                                }
-                            </div>
-                        </div>
-
-                        <SmallText Text="@Scenario.ToSummary()" Paragraph="true" />
-
-                        <div class="sandbox-demo-frame @Frame.ToSurfaceClass()" data-testid="sandbox-demo-surface">
-                            <div class="sandbox-demo-stage">
-                                @ChildContent
-                            </div>
-                        </div>
-                    </SectionCard>
-                </div>
-            </ChildContent>
-    </PageScaffold>
-
-    <Dialog IsOpen="@isProofDialogOpen"
-            Title="Review catalog proof"
-            Subtitle="Supporting guidance stays available without pushing the working surface below the fold."
-            Size="ModalSize.Compact"
-            DenseChrome="true"
-            OnClose="CloseProofDialog"
-            TestId="proof-dialog">
-        <ChildContent>
-            <Tabs RenderMode="TabRenderMode.Client"
-                  Variant="TabsVariant.ModalCompact"
-                  BorderMode="TabsBorderMode.None"
-                  Tone="TabsTone.Info"
-                  AriaLabel="Catalog proof views"
-                  data-testid="proof-tabs">
-                <TabItems>
-                    <TabsItem Text="Notes">
-                        <Stack GapScale="LayoutGap.Small">
-                            <div class="sandbox-proof-list">
+                @if (ToolbarState is { ShowCoverage: true })
+                {
+                    <div class="sandbox-page-section flex flex-col gap-4 cda-section-card">
+                        <SectionCard Title="Coverage" Description="Areas to focus at during manual testing.">
+                            <ul class="list-decimal ml-5">
                                 @foreach (var note in Group.ProofNotes)
                                 {
-                                    <p>@note</p>
+                                    <li>@note</li>
                                 }
-                            </div>
+                            </ul>
+                        </SectionCard>
+                    </div>
+                }
+            </Header>
 
-                            @if (Notes is not null)
-                            {
-                                @Notes
-                            }
-                        </Stack>
-                    </TabsItem>
-                    <TabsItem Text="Validation">
-                        <div class="sandbox-proof-list">
-                            @foreach (var question in SandboxCatalogRegistry.ValidationQuestions.Take(5))
-                            {
-                                <p>@question</p>
-                            }
+            <ChildContent>
+                <CascadingValue Value="@Frame" Name="SandboxFramePreset">
+                    <div class="sandbox-page-section flex flex-col gap-4">
+                        <div class="sandbox-demo-stage">
+                            @ChildContent
                         </div>
-                    </TabsItem>
-                    <TabsItem Text="Theme">
-                        <div class="cad-theme-proof" data-testid="theme-proof-panel">
-                            <div class="cad-theme-proof__header">
-                                <div>
-                                    <p class="cad-theme-proof__eyebrow">Theme contract</p>
-                                    <h3 class="cad-theme-proof__title">Runtime proof: @ResolvedThemeState.ThemeKey</h3>
-                                    <p class="cad-theme-proof__summary">Hierarchy, contrast, and action emphasis must survive a runtime theme change.</p>
-                                </div>
-                                <span class="cad-theme-proof__pill">@ResolvedThemeState.ThemeKey</span>
-                            </div>
+                    </div>
+                </CascadingValue>
 
-                            <div class="cad-theme-proof__swatches">
-                                <span class="cad-theme-proof__swatch cad-theme-proof__swatch--primary">Primary</span>
-                                <span class="cad-theme-proof__swatch cad-theme-proof__swatch--secondary">Secondary</span>
-                                <span class="cad-theme-proof__swatch cad-theme-proof__swatch--danger">Danger</span>
-                                <span class="cad-theme-proof__swatch cad-theme-proof__swatch--surface">Surface</span>
+                @* Examples and API tables sit outside the demo frame so the Tablet/Mobile
+                   presets constrain only the proof surface, not the reference material. *@
+                @if (Examples is not null)
+                {
+                    <div class="sandbox-page-section flex flex-col gap-4">
+                        <SectionCard Title="Examples"
+                                     Description="Copy-ready markup. Each snippet is the embedded source of the component rendering above it.">
+                            <div class="sandbox-example-list" data-testid="sandbox-examples">
+                                @Examples
                             </div>
+                        </SectionCard>
+                    </div>
+                }
 
-                            <div class="cad-theme-proof__metrics">
-                                <div class="cad-theme-proof__metric">
-                                    <span class="cad-theme-proof__metric-label">Control radius</span>
-                                    <strong class="cad-theme-proof__metric-value">Shared through `--cad-radius-control`</strong>
-                                </div>
-                                <div class="cad-theme-proof__metric">
-                                    <span class="cad-theme-proof__metric-label">Consumer override</span>
-                                    <strong class="cad-theme-proof__metric-value">Scope `data-cad-theme` or override the CSS variables</strong>
-                                </div>
+                @if (Api is not null)
+                {
+                    <div class="sandbox-page-section flex flex-col gap-4">
+                        <SectionCard Title="Component API"
+                                     Description="Parameters reflected from the compiled assembly; descriptions come from the /// comments on each component.">
+                            <div class="sandbox-api-list" data-testid="sandbox-api">
+                                @Api
                             </div>
-                        </div>
-                    </TabsItem>
-                </TabItems>
-            </Tabs>
-        </ChildContent>
-
-        <Footer>
-            <Cluster JustifyContent="JustifyContent.End">
-                <Button Text="Close"
-                        ButtonStyle="@(ButtonStyle.Light)"
-                        Click="CloseProofDialog" />
-            </Cluster>
-        </Footer>
-    </Dialog>
+                        </SectionCard>
+                    </div>
+                }
+            </ChildContent>
+    </PageScaffold>
 </div>
+</CascadingValue>
 
 @code {
-    private static readonly IReadOnlyList<SecondaryTabItem> ScenarioTabs = SandboxScenarioKeyExtensions.BuildTabs();
-    private static readonly IReadOnlyList<SandboxFramePreset> FramePresets = Enum.GetValues<SandboxFramePreset>();
-    private bool isProofDialogOpen;
-
     [Parameter, EditorRequired]
     public SandboxGroupDefinition Group { get; set; } = default!;
-
-    [Parameter, EditorRequired]
-    public SandboxScenarioKey Scenario { get; set; }
 
     [Parameter, EditorRequired]
     public SandboxFramePreset Frame { get; set; }
 
     [Parameter]
-    public string HeroEyebrow { get; set; } = "Group focus";
-
-    [Parameter, EditorRequired]
-    public string HeroTitle { get; set; } = string.Empty;
-
-    [Parameter, EditorRequired]
-    public string HeroSummary { get; set; } = string.Empty;
-
-    [Parameter, EditorRequired]
-    public string DemoTitle { get; set; } = string.Empty;
-
-    [Parameter, EditorRequired]
-    public string DemoSummary { get; set; } = string.Empty;
-
-    [Parameter]
     public int ExampleCount { get; set; }
-
-    [Parameter]
-    public EventCallback<SandboxScenarioKey> ScenarioChanged { get; set; }
 
     [Parameter]
     public EventCallback<SandboxFramePreset> FrameChanged { get; set; }
 
     [Parameter]
-    public RenderFragment? Notes { get; set; }
-
-    [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Copy-ready examples rendered below the scenario proof surface.</summary>
+    [Parameter]
+    public RenderFragment? Examples { get; set; }
+
+    /// <summary>Component API tables rendered below the examples.</summary>
+    [Parameter]
+    public RenderFragment? Api { get; set; }
+
     [CascadingParameter]
-    public SandboxThemeState? ThemeState { get; set; }
-
-    private SandboxThemeState ResolvedThemeState => ThemeState ?? throw new InvalidOperationException("CatalogPageFrame requires a cascading SandboxThemeState.");
-
-    private bool IsTheme(string themeKey)
-    {
-        return string.Equals(ResolvedThemeState.ThemeKey, themeKey, StringComparison.Ordinal);
-    }
-
-    private void SetTheme(string themeKey)
-    {
-        ResolvedThemeState.SetTheme(themeKey);
-    }
-
-    private Task HandleScenarioChanged(string key)
-    {
-        return ScenarioChanged.InvokeAsync(SandboxScenarioKeyExtensions.Parse(key));
-    }
-
-    private void OpenProofDialog()
-    {
-        isProofDialogOpen = true;
-    }
-
-    private void CloseProofDialog()
-    {
-        isProofDialogOpen = false;
-    }
-
+    public SandboxToolbarState? ToolbarState { get; set; }
 }

@@ -1,0 +1,135 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Benchmark
+@using System.Diagnostics
+@using System.Text
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="space-y-4">
+    <FormField Text="Items to aggregate" ContainerClass="max-w-xs">
+        <DropDown TValue="int"
+                  Data="@ItemCounts"
+                  Value="@itemCount"
+                  ValueChanged="HandleItemCountChanged"
+                  aria-label="C# items to aggregate" />
+    </FormField>
+
+    <Button Text="Run C# benchmark" Click="RunBenchmarkAsync" Disabled="@(pending || module is null)" data-testid="benchmark-wasm-run" />
+
+    @if (result is null)
+    {
+        <p class="text-sm opacity-70">No result yet.</p>
+    }
+    else
+    {
+        <div class="space-y-3" data-testid="benchmark-wasm-result">
+            <div class="flex justify-between items-baseline">
+                <div class="whitespace-nowrap">
+                    <div class="text-base">Roundtrip penalty: @($"{roundtripPenaltyMilliseconds:F1} ms")</div>
+                    <div class="text-2xl font-semibold">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                </div>
+                <div class="flex flex-wrap justify-end gap-x-3 gap-y-1 text-base">
+                    <span class="whitespace-nowrap">Runs: @samples.Count</span>
+                    <span class="whitespace-nowrap">Min: @($"{MinimumMilliseconds:F1} ms")</span>
+                    <span class="whitespace-nowrap">Max: @($"{MaximumMilliseconds:F1} ms")</span>
+                    <span class="whitespace-nowrap">Avg: <span class="font-semibold">@($"{AverageMilliseconds:F1} ms")</span></span>
+                </div>
+            </div>
+            <p class="text-sm opacity-70">Aggregation only; array generation is excluded.</p>
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-5">
+                @foreach (var fruit in Fruits)
+                {
+                    <div>
+                        <dt class="opacity-70">@fruit</dt>
+                        <dd class="font-semibold opacity-70">@result.Counts[fruit]</dd>
+                    </div>
+                }
+            </dl>
+        </div>
+    }
+</div>
+
+@code {
+    private static readonly int[] ItemCounts = [100, 1_000, 10_000, 1_000_000];
+    private static readonly string[] Fruits = ["Apple", "Banana", "Cherry", "Mango", "Pear"];
+    private const string JavaScriptModule = """
+        export function nextAnimationFrame() {
+            return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        """;
+    private int itemCount = 10_000;
+    private Result? result;
+    private bool pending;
+    private IJSObjectReference? module;
+    private readonly List<double> samples = [];
+    private double roundtripPenaltyMilliseconds;
+
+    private double MinimumMilliseconds => samples.Min();
+    private double MaximumMilliseconds => samples.Max();
+    private double AverageMilliseconds => samples.Average();
+
+    private void HandleItemCountChanged(int value)
+    {
+        itemCount = value;
+        result = null;
+        samples.Clear();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var moduleUrl = $"data:text/javascript;base64,{Convert.ToBase64String(Encoding.UTF8.GetBytes(JavaScriptModule))}";
+        module = await JS.InvokeAsync<IJSObjectReference>("import", moduleUrl);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RunBenchmarkAsync()
+    {
+        pending = true;
+        await InvokeAsync(StateHasChanged);
+        await module!.InvokeVoidAsync("nextAnimationFrame");
+
+        var outsideStart = Stopwatch.GetTimestamp();
+        var selections = CreateSelections(itemCount);
+        var insideStart = Stopwatch.GetTimestamp();
+        var counts = Fruits.ToDictionary(fruit => fruit, _ => 0, StringComparer.Ordinal);
+
+        foreach (var selection in selections)
+        {
+            counts[selection]++;
+        }
+
+        result = new Result(Stopwatch.GetElapsedTime(insideStart).TotalMilliseconds, counts);
+        roundtripPenaltyMilliseconds = Stopwatch.GetElapsedTime(outsideStart).TotalMilliseconds - result.ElapsedMilliseconds;
+        samples.Add(result.ElapsedMilliseconds);
+        pending = false;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (module is not null)
+        {
+            await module.DisposeAsync();
+        }
+    }
+
+    private static string[] CreateSelections(int count)
+    {
+        var selections = new string[count];
+        uint state = 0x00C0FFEE;
+
+        for (var index = 0; index < selections.Length; index++)
+        {
+            state = unchecked((state * 1_664_525u) + 1_013_904_223u);
+            selections[index] = Fruits[(int)((state >> 16) % (uint)Fruits.Length)];
+        }
+
+        return selections;
+    }
+
+    private sealed record Result(double ElapsedMilliseconds, Dictionary<string, int> Counts);
+}

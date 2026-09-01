@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loader</title>
+
+    <style>
+    svg, p {
+        overflow: visible;
+        --wave-duration: calc(2.6s * 1.5);
+        --wave-step: calc(var(--wave-duration) / 6);
+        --pulse-duration: calc(2s);
+        --pulse-min: .2;
+        --pulse-max: .5;
+        animation: pulse var(--pulse-duration) cubic-bezier(.45, 0, .55, 1) infinite;
+        /*animation: pulse var(--pulse-duration) ease-in infinite;*/
+        animation-direction: alternate-reverse;
+    }
+
+    p {
+        animation-timing-function: linear;
+        --pulse-min: .4;
+        --pulse-max: 1;
+    }
+
+    path:nth-child(7), path:nth-child(8), path:nth-child(9),
+    path:nth-child(10), path:nth-child(11), path:nth-child(12) {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: wave var(--wave-duration) ease-out infinite;
+    }
+
+    path:nth-child(1), path:nth-child(2), path:nth-child(3),
+    path:nth-child(4), path:nth-child(5), path:nth-child(6) {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: wave-in var(--wave-duration) ease-out infinite;
+    }
+
+    path:nth-child(7),
+    path:nth-child(1) {
+        animation-delay: calc(var(--wave-step) * -5);
+    }
+
+    path:nth-child(8),
+    path:nth-child(2) {
+        animation-delay: calc(var(--wave-step) * -4);
+    }
+
+    path:nth-child(9),
+    path:nth-child(3) {
+        animation-delay: calc(var(--wave-step) * -3);
+    }
+
+    path:nth-child(10),
+    path:nth-child(4) {
+        animation-delay: calc(var(--wave-step) * -2);
+    }
+
+    path:nth-child(11),
+    path:nth-child(5) {
+        animation-delay: calc(var(--wave-step) * -1);
+    }
+
+    path:nth-child(12),
+    path:nth-child(6) {
+        animation-delay: calc(var(--wave-step) * 0);
+    }
+
+    @keyframes wave {
+        0%, 50%, 100% {
+            transform: scale(1) rotate3d(1, 1, 0, 0) rotate(0);
+            opacity: 1;
+        }
+        25% {
+            transform: scale(1.06) rotate3d(1, 1, 0, 15deg) rotate(1deg);
+            opacity: .9;
+        }
+        75% {
+            transform: scale(1.06) rotate3d(1, 1, 0, 15deg) rotate(-1deg);
+            opacity: .85;
+        }
+    }
+
+    @keyframes wave-in {
+        0%, 50%, 100% {
+            transform: scale(1) rotate3d(1, 1, 0, 0deg) rotate(0);
+            opacity: 1;
+        }
+        25% {
+            transform: scale(.996) rotate3d(1, 1, 0, -15deg) rotate(-2deg);
+            opacity: 0.25;
+        }
+        75% {
+            transform: scale(.996) rotate3d(1, 1, 0, 15deg) rotate(2deg);
+            opacity: 0.35;
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: var(--pulse-min);
+        }
+        50% {
+            opacity: var(--pulse-max);
+        }
+    }
+
+    body {
+        font-family: sans-serif;
+        color: rgba(0, 0, 0, .4);
+        margin: 0;
+    }
+
+    main {
+        display: grid;
+        justify-items: center;
+        padding: 60px 24px 0 24px;
+    }
+
+    .loader-card {
+        width: min(100%, 320px);
+        border: 1px solid rgba(0, 0, 0, .12);
+        border-radius: 0px 0px 36px 36px;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .loader-card__toolbar {
+        height: 56px;
+        border-bottom: 1px solid rgba(0, 0, 0, .12);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+    }
+
+    .loader-card__toolbar > svg {
+        margin: 0 8px;
+    }
+
+    .loader-card__content {
+        padding: 40px;
+        text-align: center;
+    }
+
+    .loader-card__content p {
+        margin: .75em;
+        padding-left: 1em;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-size: .875rem;
+    }
+    </style>
+</head>
+<body>
+<main>
+    <section class="loader-card" aria-label="Loading data">
+        <div class="loader-card__toolbar">
+            <span>Data Loading Concept</span>
+        </div>
+        <div class="loader-card__content">
+            <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" aria-hidden="true">
+                <g>
+                    <path d="m3.34 7 4 2.31L12 6.618z" fill="#a8a8a8" />
+                    <path d="M12 2v4.619l4.66 2.69Z" fill="#b4b4b4" />
+                    <path d="M16.66 14.69V9.31l4-2.31z" fill="#9c9c9c" />
+                    <path d="m20.66 17-4-2.31L12 17.382Z" fill="#6b6b6b" />
+                    <path d="M12 22v-4.619l-4.66-2.69Z" fill="#58585a" />
+                    <path d="m7.34 14.69-4 2.31 4-7.69z" fill="#8d8d8d" />
+                    <path d="M3.34 7 12 6.62V2Z" fill="#d7d7d7" />
+                    <path d="m12 2 4.66 7.31 4-2.31Z" fill="#d3d3d3" />
+                    <path d="m16.66 14.69 4 2.31V7z" fill="#bababa" />
+                    <path d="M12 17.381v4.62l8.66-5z" fill="#878787" />
+                    <path d="M7.34 14.69 12 22l-8.66-5Z" fill="#6d6d6d" />
+                    <path d="M7.34 9.31 3.34 7v10z" fill="#c4c4c4" />
+                </g>
+            </svg>
+            <p>Loading&hellip;</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

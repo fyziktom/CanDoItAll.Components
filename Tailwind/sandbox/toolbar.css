@@ -1,0 +1,46 @@
+.sandbox-toolbar {
+  @apply fixed inset-x-0 top-0 z-20 flex justify-between items-center gap-3 py-3 px-4;
+  border-bottom: 1px solid var(--cad-color-border-soft);
+  background: var(--cad-color-surface);
+  @apply @container;
+}
+
+@container (width <= 24rem) {
+.sandbox-toolbar__frame, .sandbox-toolbar__coverage {
+    @apply hidden;
+  }
+}
+
+.sandbox-toolbar__controls {
+  @apply flex flex-wrap items-center gap-3;
+}
+
+.sandbox-toolbar__scenario,
+.sandbox-toolbar__frame {
+  @apply max-w-40;
+}
+
+.sandbox-demo-toolbar {
+  @apply flex flex-col gap-3;
+}
+
+.sandbox-frame-toggle {
+  @apply flex flex-wrap gap-2;
+}
+
+.sandbox-nav--sub {
+  @apply ml-3 pl-3 gap-[0.35rem];
+  border-left: 1px solid var(--cad-color-border-soft);
+}
+
+.sandbox-nav__link--sub {
+  @apply -ms-3 py-2 px-3 text-[0.85rem];
+}
+
+.sandbox-toolbar__controls--unused .rz-button-text:after {
+  content: '∅';
+  margin-left: .125em;
+  display: inline-block;
+  font-size: 1.2em;
+  @apply font-normal;
+}

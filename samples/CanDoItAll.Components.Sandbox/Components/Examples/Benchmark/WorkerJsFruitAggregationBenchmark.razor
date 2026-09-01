@@ -1,0 +1,157 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Benchmark
+@using System.Diagnostics
+@using Microsoft.JSInterop
+@using System.Text
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="space-y-4">
+    <FormField Text="Items to aggregate" ContainerClass="max-w-xs">
+        <DropDown TValue="int"
+                  Data="@ItemCounts"
+                  Value="@itemCount"
+                  ValueChanged="HandleItemCountChanged"
+                  aria-label="Worker JavaScript items to aggregate" />
+    </FormField>
+
+    <Button Text="Run worker JS benchmark" Click="RunBenchmarkAsync" Disabled="@(worker is null)" data-testid="benchmark-worker-js-run" />
+
+    @if (result is null)
+    {
+        <p class="text-sm opacity-70">No result yet.</p>
+    }
+    else
+    {
+        <div class="space-y-3" data-testid="benchmark-worker-js-result">
+            <div class="flex justify-between items-baseline">
+                <div class="whitespace-nowrap">
+                    <div class="text-base">Roundtrip penalty: @($"{roundtripPenaltyMilliseconds:F1} ms")</div>
+                    <div class="text-2xl font-semibold">@($"{result.ElapsedMilliseconds:F1} ms")</div>
+                </div>
+                <div class="flex flex-wrap justify-end gap-x-3 gap-y-1 text-base">
+                    <span class="whitespace-nowrap">Runs: @samples.Count</span>
+                    <span class="whitespace-nowrap">Min: @($"{MinimumMilliseconds:F1} ms")</span>
+                    <span class="whitespace-nowrap">Max: @($"{MaximumMilliseconds:F1} ms")</span>
+                    <span class="whitespace-nowrap">Avg: <span class="font-semibold">@($"{AverageMilliseconds:F1} ms")</span></span>
+                </div>
+            </div>
+            <p class="text-sm opacity-70">JavaScript runs in a separate Web Worker; array generation and worker messaging are excluded.</p>
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-5">
+                @foreach (var fruit in Fruits)
+                {
+                    <div>
+                        <dt class="opacity-70">@fruit</dt>
+                        <dd class="font-semibold opacity-70">@result.Counts[fruit]</dd>
+                    </div>
+                }
+            </dl>
+        </div>
+    }
+</div>
+
+@code {
+    private static readonly int[] ItemCounts = [100, 1_000, 10_000, 1_000_000];
+    private static readonly string[] Fruits = ["Apple", "Banana", "Cherry", "Mango", "Pear"];
+    private const string JavaScriptModule = """
+        const workerSource = `
+            self.addEventListener('message', event => {
+                const fruits = ["Apple", "Banana", "Cherry", "Mango", "Pear"];
+                const selections = new Array(event.data.itemCount);
+                let state = 0x00C0FFEE;
+
+                for (let index = 0; index < selections.length; index++) {
+                    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+                    selections[index] = fruits[(state >>> 16) % fruits.length];
+                }
+
+                const counts = Object.fromEntries(fruits.map(fruit => [fruit, 0]));
+                const start = performance.now();
+                for (const selection of selections) counts[selection]++;
+
+                self.postMessage({
+                    requestId: event.data.requestId,
+                    result: { elapsedMilliseconds: performance.now() - start, counts }
+                });
+            });`;
+
+        export function create() {
+            const workerUrl = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }));
+            const worker = new Worker(workerUrl);
+            let nextRequestId = 0;
+            const pendingRequests = new Map();
+
+            worker.addEventListener('message', event => {
+                const pending = pendingRequests.get(event.data.requestId);
+                if (!pending) return;
+                pendingRequests.delete(event.data.requestId);
+                pending.resolve(event.data.result);
+            });
+
+            return {
+                aggregateFruitCounts(itemCount) {
+                    const requestId = ++nextRequestId;
+                    return new Promise(resolve => {
+                        pendingRequests.set(requestId, { resolve });
+                        worker.postMessage({ requestId, itemCount });
+                    });
+                },
+                dispose() {
+                    worker.terminate();
+                    URL.revokeObjectURL(workerUrl);
+                    pendingRequests.clear();
+                }
+            };
+        }
+        """;
+    private int itemCount = 10_000;
+    private Result? result;
+    private IJSObjectReference? module;
+    private IJSObjectReference? worker;
+    private readonly List<double> samples = [];
+    private double roundtripPenaltyMilliseconds;
+
+    private double MinimumMilliseconds => samples.Min();
+    private double MaximumMilliseconds => samples.Max();
+    private double AverageMilliseconds => samples.Average();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        var moduleUrl = $"data:text/javascript;base64,{Convert.ToBase64String(Encoding.UTF8.GetBytes(JavaScriptModule))}";
+        module = await JS.InvokeAsync<IJSObjectReference>("import", moduleUrl);
+        worker = await module.InvokeAsync<IJSObjectReference>("create");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleItemCountChanged(int value)
+    {
+        itemCount = value;
+        result = null;
+        samples.Clear();
+    }
+
+    private async Task RunBenchmarkAsync()
+    {
+        if (worker is not null)
+        {
+            var outsideStart = Stopwatch.GetTimestamp();
+            result = await worker.InvokeAsync<Result>("aggregateFruitCounts", itemCount);
+            roundtripPenaltyMilliseconds = Stopwatch.GetElapsedTime(outsideStart).TotalMilliseconds - result.ElapsedMilliseconds;
+            samples.Add(result.ElapsedMilliseconds);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (worker is not null)
+        {
+            await worker.InvokeVoidAsync("dispose");
+            await worker.DisposeAsync();
+        }
+
+        if (module is not null) await module.DisposeAsync();
+    }
+
+    private sealed record Result(double ElapsedMilliseconds, Dictionary<string, int> Counts);
+}

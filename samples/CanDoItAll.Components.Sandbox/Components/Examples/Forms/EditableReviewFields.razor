@@ -1,0 +1,53 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Stack GapScale="LayoutGap.Large" data-testid="sandbox-editable-values">
+    <Grid Gap="LayoutGap.Large"
+          ColumnTemplate="repeat(auto-fit,minmax(14rem,1fr))">
+        <FormField Text="Title">
+            <Editable TItem="EditableReviewItem"
+                      Item="@EditableState"
+                      ItemChanged="HandleEditableChanged"
+                      ParameterName="@nameof(EditableReviewItem.Title)"
+                      Placeholder="Review title"
+                      Disabled="@IsDisabled"
+                      data-testid="editable-title" />
+        </FormField>
+
+        <FormField Text="Confidence">
+            <Editable TItem="EditableReviewItem"
+                      Item="@EditableState"
+                      ItemChanged="HandleEditableChanged"
+                      ParameterName="@nameof(EditableReviewItem.Confidence)"
+                      Extension="%"
+                      Disabled="@IsDisabled"
+                      data-testid="editable-confidence" />
+        </FormField>
+
+        <FormField Text="Effort">
+            <Editable TItem="EditableReviewItem"
+                      Item="@EditableState"
+                      ItemChanged="HandleEditableChanged"
+                      ParameterName="@nameof(EditableReviewItem.EffortHours)"
+                      Format="0.0"
+                      Extension=" h"
+                      Disabled="@IsDisabled"
+                      data-testid="editable-effort" />
+        </FormField>
+
+        <FormField Text="Approval">
+            <Editable TItem="EditableReviewItem"
+                      Item="@EditableState"
+                      ItemChanged="HandleEditableChanged"
+                      ParameterName="@nameof(EditableReviewItem.RequiresApproval)"
+                      TrueText="Approval required"
+                      FalseText="Self review"
+                      Disabled="@IsDisabled"
+                      data-testid="editable-approval" />
+        </FormField>
+    </Grid>
+
+    <Alert AlertStyle="@(AlertStyle.Info)">
+        Latest editable state: @EditableSummary. Saves: @editableSaveCount.
+    </Alert>
+</Stack>

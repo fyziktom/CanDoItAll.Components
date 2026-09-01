@@ -93,39 +93,51 @@
     private bool _disposed;
     private string NormalizedSource => MermaidSourceNormalizer.Normalize(Source);
 
+    /// <summary>Heading shown above the diagram. Also supplies the viewport's accessible name when set.</summary>
     [Parameter]
     public string? Title { get; set; }
 
+    /// <summary>Supporting sentence rendered under <see cref="Title"/>.</summary>
     [Parameter]
     public string? Description { get; set; }
 
+    /// <summary>Mermaid diagram source text. An empty or whitespace value renders the "No Mermaid source provided" state instead of a parser error.</summary>
     [Parameter]
     public string? Source { get; set; }
 
+    /// <summary>Mermaid initialization options such as theme and security level, passed through to the underlying <c>mermaid.initialize</c> call.</summary>
     [Parameter]
     public MermaidDiagramOptions Options { get; set; } = new();
 
+    /// <summary>Wraps the rendered SVG in a <see cref="ZoomPanFrame"/> for wheel, drag, touch, and keyboard viewport control.</summary>
     [Parameter]
     public bool PanZoomEnabled { get; set; } = true;
 
+    /// <summary>Shows the built-in zoom in / reset / zoom out toolbar. Only rendered when <see cref="PanZoomEnabled"/> is also <c>true</c>.</summary>
     [Parameter]
     public bool ShowControls { get; set; } = true;
 
+    /// <summary>Invoked when a clickable node in the rendered diagram is activated, with node id, text, and SVG element context.</summary>
     [Parameter]
     public EventCallback<MermaidNodeClickEventArgs> NodeClicked { get; set; }
 
+    /// <summary>Invoked after a successful render with the resulting node count and SVG element id.</summary>
     [Parameter]
     public EventCallback<MermaidRenderResult> Rendered { get; set; }
 
+    /// <summary>Invoked when Mermaid reports a syntax error, normalized into line, column, excerpt, and expected-token fields when available.</summary>
     [Parameter]
     public EventCallback<MermaidRenderError> Error { get; set; }
 
+    /// <summary>Additional CSS class merged onto the root element.</summary>
     [Parameter]
     public string? Class { get; set; }
 
+    /// <summary>Inline style applied to the root element. Set <c>--cda-mermaid-min-height</c> to control the viewport's minimum height.</summary>
     [Parameter]
     public string? Style { get; set; }
 
+    /// <summary>Additional HTML attributes splatted onto the root element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 

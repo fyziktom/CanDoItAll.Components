@@ -1,0 +1,90 @@
+@layer components {
+  .cda-timeline {
+    @apply min-w-0;
+    color: var(--cad-color-text);
+  }
+
+  .cda-timeline ol {
+    @apply m-0 flex list-none flex-col gap-0 p-0;
+  }
+
+  .cda-timeline__item {
+    @apply relative grid min-w-0 gap-3 py-2.5;
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+
+  .cda-timeline__item:not(:last-child)::before {
+    @apply absolute bottom-0 top-10 w-px content-[''];
+    left: calc(1rem - 0.5px);
+    background: var(--cad-color-border-soft);
+  }
+
+  .cda-timeline__marker {
+    @apply relative z-[1] inline-flex size-8 shrink-0 items-center justify-center rounded-full border text-sm;
+    border-color: var(--cad-tone-base-soft-border);
+    background: var(--cad-tone-base-soft-bg);
+    color: var(--cad-tone-base-soft-fg);
+  }
+
+  .cda-timeline__marker .material-symbols-rounded {
+    @apply text-base;
+  }
+
+  .cda-timeline__marker--success {
+    border-color: var(--cad-tone-success-soft-border);
+    background: var(--cad-tone-success-soft-bg);
+    color: var(--cad-tone-success-soft-fg);
+  }
+
+  .cda-timeline__marker--warning,
+  .cda-timeline__marker--warn {
+    border-color: var(--cad-tone-warning-soft-border);
+    background: var(--cad-tone-warning-soft-bg);
+    color: var(--cad-tone-warning-soft-fg);
+  }
+
+  .cda-timeline__marker--danger,
+  .cda-timeline__marker--error {
+    border-color: var(--cad-tone-danger-soft-border);
+    background: var(--cad-tone-danger-soft-bg);
+    color: var(--cad-tone-danger-soft-fg);
+  }
+
+  .cda-timeline__marker--info {
+    border-color: var(--cad-tone-info-soft-border);
+    background: var(--cad-tone-info-soft-bg);
+    color: var(--cad-tone-info-soft-fg);
+  }
+
+  .cda-timeline__content {
+    @apply flex min-w-0 flex-col gap-1;
+  }
+
+  .cda-timeline__row {
+    @apply flex min-w-0 flex-wrap items-baseline justify-between gap-2;
+  }
+
+  .cda-timeline__row strong {
+    @apply min-w-0 break-words text-sm font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-timeline__row time,
+  .cda-timeline__meta {
+    @apply text-xs;
+    color: var(--cad-color-text-soft);
+  }
+
+  .cda-timeline__content p {
+    @apply m-0 text-sm leading-5;
+    color: var(--cad-color-text-muted);
+  }
+
+  .cda-timeline__empty {
+    @apply border border-dashed px-4 py-5 text-center text-sm;
+    border-radius: var(--cad-radius-surface);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+    color: var(--cad-color-text-muted);
+  }
+}

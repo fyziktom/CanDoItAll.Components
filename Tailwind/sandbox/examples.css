@@ -1,0 +1,150 @@
+/* ------------------------------------------------------------------ *
+ * Examples and component API reference
+ * ------------------------------------------------------------------ */
+.sandbox-example-list,
+.sandbox-api-list {
+  @apply flex flex-col gap-5;
+}
+
+.sandbox-example,
+.sandbox-api {
+  @apply flex flex-col gap-3;
+}
+
+.sandbox-api + .sandbox-api {
+  @apply mt-2;
+}
+
+.sandbox-demo-stage > .sandbox-component-section:first-child {
+  @apply mt-10;
+}
+
+.sandbox-demo-stage > .sandbox-component-section + .sandbox-component-section {
+  /*border-top: 1px solid var(--cad-color-border-soft);*/
+}
+
+.sandbox-demo-stage > .sandbox-component-section:not(:last-child) {
+  @apply mb-12;
+}
+
+
+.sandbox-component-section > .sandbox-example + .sandbox-example {
+  /*border-top: 1px solid var(--cad-color-border-soft);*/
+}
+
+.sandbox-component-section > .sandbox-example:not(:last-child) {
+  @apply mb-8;
+}
+
+.sandbox-example__header,
+.sandbox-api__header {
+  @apply flex flex-wrap items-start justify-between gap-3;
+}
+
+.sandbox-example__heading,
+.sandbox-api__heading {
+  @apply flex min-w-0 flex-col gap-0.5;
+}
+
+.sandbox-example__toolbar {
+  @apply flex items-center justify-between gap-2 flex-wrap;
+}
+
+/* Tabs is used as a compact strip alongside the Copy button here, not as a
+   full-width tab bar, so it shouldn't claim the whole toolbar row. */
+.sandbox-example__toolbar .cad-tabs.sandbox-example__tabs {
+  @apply w-auto max-w-max flex-initial;
+}
+
+/* Panels are rendered manually below the toolbar instead of by Tabs itself. */
+.sandbox-example__tabs .cad-tabs__panels {
+  @apply hidden;
+}
+
+.sandbox-example__demo {
+}
+
+.sandbox-example__source {
+  @apply overflow-hidden rounded-(--cad-radius-control);
+}
+
+.sandbox-example__code {
+  @apply m-0 overflow-x-auto text-[0.8125rem] leading-[1.6] text-(--cad-color-text-strong);
+  @apply font-mono;
+}
+
+.sandbox-example__missing {
+  @apply m-0 text-[0.8125rem] text-(--cad-tone-warning-soft-fg);
+}
+
+/* The reference tables can be wider than the page; they scroll inside their
+   own container so the page body never scrolls horizontally. */
+.sandbox-api__scroll {
+  @apply overflow-x-auto;
+}
+
+.sandbox-api__table {
+  @apply w-full min-w-176 border-collapse text-[0.8125rem] text-left;
+}
+
+.sandbox-api__table th,
+.sandbox-api__table td {
+  @apply align-top py-2 px-3;
+  border-bottom: 1px solid var(--cad-color-border);
+}
+
+.sandbox-api__table thead th {
+  @apply border-b-(--cad-color-border) text-[0.6875rem] font-bold tracking-[0.12em] uppercase text-(--cad-color-text-soft);
+}
+
+.sandbox-api__table tbody th {
+  @apply font-semibold whitespace-nowrap text-(--cad-color-text-strong);
+}
+
+.sandbox-api__table tbody tr:last-child th,
+.sandbox-api__table tbody tr:last-child td {
+  @apply border-b-0;
+}
+
+.sandbox-api__row--inherited {
+  background: color-mix(in srgb, var(--cad-color-surface-soft) 55%, transparent);
+}
+
+.sandbox-api__name,
+.sandbox-api__type,
+.sandbox-api__default {
+  @apply text-[0.8125rem];
+  @apply font-mono;
+}
+
+.sandbox-api__type {
+  @apply text-(--cad-tone-info-soft-fg);
+}
+
+.sandbox-api__default {
+  @apply text-(--cad-color-text-muted);
+}
+
+.sandbox-api__enum {
+  @apply block pt-1 text-[0.6875rem] leading-normal text-(--cad-color-text-soft);
+}
+
+.sandbox-api__flag {
+  @apply inline-block ml-1.5 rounded-[999px] py-[0.0625rem] px-1.5 text-[0.625rem] font-semibold tracking-[0.04em] uppercase text-(--cad-color-text-soft);
+  background: var(--cad-color-surface-soft);
+}
+
+.sandbox-api__flag--required {
+  @apply text-(--cad-tone-warning-soft-fg);
+  background: var(--cad-tone-warning-soft-bg);
+}
+
+.sandbox-api__none {
+  @apply text-(--cad-color-text-soft);
+}
+
+/* Deliberately visible rather than blank: an undocumented parameter is a gap
+   somebody should close, not an empty cell to skip past. */
+.sandbox-api__undocumented {
+  @apply italic text-(--cad-tone-warning-soft-fg);
+}

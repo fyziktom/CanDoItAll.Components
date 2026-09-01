@@ -1,0 +1,10 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormField Text="Notes">
+    <TextArea Value="@FormState.Notes"
+              ValueChanged="HandleNotesChanged"
+              Size="TextAreaSize.Extended"
+              Placeholder="@NotesPlaceholder"
+              Disabled="@IsDisabled" />
+</FormField>

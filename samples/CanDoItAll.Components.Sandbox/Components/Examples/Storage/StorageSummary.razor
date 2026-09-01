@@ -1,0 +1,23 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Storage
+
+<Stack GapScale="LayoutGap.Medium">
+    <StorageSummaryCard Model="@(new StorageSummaryModel
+                               {
+                                   Eyebrow = "Workspace storage",
+                                   Title = "Primary object store",
+                                   Description = "Shared bucket for uploads, exports, and generated assets.",
+                                   Footnote = "Usage refreshes every 15 minutes.",
+                                   Badges = [new("Plan: Pro", "info"), new("82% used", "warning"), new("Backups on", "success")],
+                                   Facts = [new("Used", "82.4 GB of 100 GB"), new("Objects", "128,940"), new("Region", "us-east-1"), new("Last backup", "2026-08-14 03:00 UTC")]
+                               })" />
+    <StorageSummaryCard Model="@(new StorageSummaryModel
+                               {
+                                   Eyebrow = "Workspace storage",
+                                   Title = "Primary object store",
+                                   Description = "Shared bucket for uploads, exports, and generated assets.",
+                                   Footnote = "Usage refreshes every 15 minutes.",
+                                   Badges = [new("Plan: Pro", "info"), new("82% used", "warning"), new("Backups on", "success")],
+                                   Facts = [new("Used", "82.4 GB of 100 GB"), new("Objects", "128,940"), new("Region", "us-east-1"), new("Last backup", "2026-08-14 03:00 UTC")]
+                               })"
+                        Emphasized="true" />
+</Stack>

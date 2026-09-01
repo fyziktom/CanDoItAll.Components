@@ -1,0 +1,28 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Stack GapScale="LayoutGap.Medium">
+    <SettingsSwitchRow data-testid="sandbox-inputs-settings-switch">
+        <div class="min-w-0 space-y-1">
+            <SettingsSwitchLabel Text="Notify reviewer leads" />
+            <TextBlock TextStyle="@(TextStyle.Caption)"
+                       Value="Send a compact summary whenever priority, tags, or selected lane changes." />
+        </div>
+        <Switch Value="@AdvancedState.NotifyLeads"
+                ValueChanged="HandleNotifyLeadsChanged"
+                AriaLabel="Notify reviewer leads"
+                Disabled="@IsDisabled"
+                data-testid="sandbox-inputs-settings-switch-control" />
+    </SettingsSwitchRow>
+
+    <InlineActions data-testid="sandbox-inputs-inline-actions">
+        <Button Text="Reset"
+                Icon="refresh"
+                Variant="Variant.Outlined"
+                Size="ButtonSize.Small"
+                Disabled="@IsDisabled"
+                Click="HandleAdvancedReset" />
+        <StatusBadge Text="@AdvancedSummary" Tone="success" />
+        <StatusBadge Text="@($"Changes {advancedChangeCount}")" Tone="neutral" />
+    </InlineActions>
+</Stack>

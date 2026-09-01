@@ -1,0 +1,96 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
+
+<PageScaffold MaxWidthClass="max-w-[1280px]"
+              data-testid="sandbox-layout-scaffold">
+    <Header>
+        <PageHeader Eyebrow="Shared layout"
+                    Title="@WorkspaceTitle"
+                    Description="@WorkspaceDescription">
+            <Actions>
+                <Button Text="Share view" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" />
+                <Button Text="Open checklist" />
+            </Actions>
+        </PageHeader>
+    </Header>
+
+    <Lead>
+        <SummaryTiles>
+            <SummaryTile Label="Regions" Value="@RegionCount.ToString()" HelperText="Primary content, supporting rail, and action footer stay structurally distinct." Tone="info" />
+            <SummaryTile Label="Sections" Value="@SectionCount.ToString()" HelperText="Grouped sections should read clearly without extra chrome." Tone="success" />
+            <SummaryTile Label="Viewport" Value="@ViewportLabel" HelperText="Frame changes should preserve orientation and hierarchy." Tone="warning" />
+        </SummaryTiles>
+    </Lead>
+
+    <SecondaryRail>
+        <SectionCard Title="Review rail" Description="The supporting rail should stay concise and useful.">
+            <div class="sandbox-proof-list">
+                <p>Use the right rail for compact context, not for duplicate content.</p>
+                <p>Headings should make the page understandable before the user reads paragraphs.</p>
+            </div>
+        </SectionCard>
+
+        <SectionCard Title="Current emphasis" Description="What this workspace sample proves.">
+            <div class="sandbox-proof-list">
+                <p>@ScenarioRailCopy</p>
+                <p>@WidthRailCopy</p>
+            </div>
+        </SectionCard>
+    </SecondaryRail>
+
+    <ChildContent>
+        <div class="sandbox-demo-grid--two"
+             data-testid="sandbox-layout-primary-grid">
+            <FormSection Title="Primary workspace" Description="The main region should be able to hold operational content without collapsing the reading rhythm.">
+                <div class="space-y-4">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Release acceptance workspace" />
+                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@WorkspaceCopy" />
+
+                    <div class="sandbox-demo-grid--two">
+                        @foreach (var metric in WorkspaceMetrics)
+                        {
+                            <SectionCard Title="@metric.Title" Description="@metric.Description">
+                                <div class="space-y-2">
+                                    <TextBlock TextStyle="@(TextStyle.H4)" Value="@metric.Value" />
+                                    <StatusBadge Text="@metric.ToneLabel" Tone="@metric.Tone" />
+                                </div>
+                            </SectionCard>
+                        }
+                    </div>
+                </div>
+            </FormSection>
+
+            <SectionCard Title="Secondary workspace" Description="The supporting column still needs enough substance to justify its width.">
+                <div class="sandbox-kv-list">
+                    @foreach (var item in SecondaryFacts)
+                    {
+                        <div class="sandbox-kv-item">
+                            <strong>@item.Label</strong>
+                            <span>@item.Value</span>
+                        </div>
+                    }
+                </div>
+            </SectionCard>
+        </div>
+    </ChildContent>
+</PageScaffold>
+
+@code {
+    [CascadingParameter] public SandboxToolbarState? ToolbarState { get; set; }
+    private SandboxFramePreset Frame => ToolbarState?.Frame ?? SandboxFramePreset.LiveViewport;
+    private string WorkspaceTitle => "Migration acceptance workspace with extended release notes and validation guidance";
+    private string WorkspaceDescription => "Longer page descriptions should not force the scaffold into awkward wrapping or a first viewport that feels like a document instead of a workspace.";
+    private string WorkspaceCopy => "Longer explanatory copy belongs in the main region, where it can keep a controlled reading width and still leave the rail available for compact operational context.";
+    private string ScenarioRailCopy => "This sample checks whether longer page copy stays readable without crushing the layout.";
+    private string WidthRailCopy => Frame switch { SandboxFramePreset.Mobile => "Mobile should surface the headline, first metric, and next step without forcing horizontal scanning.", SandboxFramePreset.Tablet => "Tablet should use breadth deliberately and avoid dead space between sections.", _ => "The live viewport should keep the same hierarchy rules as the proof frames." };
+    private string ViewportLabel => Frame switch { SandboxFramePreset.Mobile => "Mobile", SandboxFramePreset.Tablet => "Tablet", _ => "Live" };
+    private int RegionCount => 3;
+    private int SectionCount => 6;
+    private IReadOnlyList<WorkspaceMetric> WorkspaceMetrics => DenseMetrics;
+    private IReadOnlyList<WorkspaceFact> SecondaryFacts => LongFacts;
+    private static readonly IReadOnlyList<WorkspaceMetric> BaseMetrics = [new("Primary flow", "Review", "Focus stays on the main acceptance path without starving the support rail.", "Ready", "success"), new("Secondary rail", "2 cards", "Supporting context stays compact and avoids duplicating main content.", "Balanced", "info")];
+    private static readonly IReadOnlyList<WorkspaceMetric> DenseMetrics = [.. BaseMetrics, new("List-detail shell", "3 records", "The lower split region still reads clearly in a denser pass.", "Active", "warning")];
+    private static readonly IReadOnlyList<WorkspaceFact> BaseFacts = [new("Main width", "Intentional"), new("Rail content", "Concise"), new("Action placement", "Footer"), new("Detail behavior", "Inline")];
+    private static readonly IReadOnlyList<WorkspaceFact> LongFacts = [new("Main width", "Protects readable line length"), new("Rail content", "Still compact under longer copy"), new("Action placement", "Footer closes the flow"), new("Detail behavior", "Longer summaries still scan"), new("Headline", "Can grow without breaking the shell")];
+    private sealed record WorkspaceMetric(string Title, string Value, string Description, string ToneLabel, string Tone);
+    private sealed record WorkspaceFact(string Label, string Value);
+}

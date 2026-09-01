@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Modals
+
+<Stack GapScale="LayoutGap.Small">
+    <DangerActionDialog Eyebrow="Danger action"
+                        Title="Delete workspace"
+                        Description="This permanently removes the workspace and all of its data."
+                        RequiredConfirmation="delete workspace"
+                        Confirmed="@(() => dangerActionResult = "Confirmed")"
+                        Cancelled="@(() => dangerActionResult = "Cancelled")" />
+    @if (dangerActionResult is not null)
+    {
+        <Alert AlertStyle="@(AlertStyle.Info)">@dangerActionResult</Alert>
+    }
+</Stack>
+
+@code {
+    private string? dangerActionResult;
+}

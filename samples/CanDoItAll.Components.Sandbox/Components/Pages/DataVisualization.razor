@@ -1,0 +1,111 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/data-visualization"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Sandbox.Components.Examples.DataVisualization
+
+<PageTitle>Data Visualization</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in VisibleSections(Sections))
+            {
+                <section id="@(section.Anchor)" class="sandbox-component-section">
+                    @RenderSectionHeading(section)
+
+                    @if (section.ComponentName == "DataGrid")
+                    {
+                        <ExampleBlock Title="Data grid states"
+                                      Description="The shared grid proves keyboard row activation, paging boundaries, and captions."
+                                      SourceId="examples/DataVisualization/DataGridStates.razor"
+                                      ApiTypes="@DataGridApiTypes">
+                            <DataGridStates />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "DataGridColumn")
+                    {
+                        <ExampleBlock Title="Custom cell templates"
+                                      Description="DataGridColumn resolves a cell either by reflecting Property or by rendering a Template."
+                                      SourceId="examples/DataVisualization/DataGridColumnTemplate.razor"
+                                      ApiTypes="@DataGridColumnApiTypes">
+                            <DataGridColumnTemplate />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Chart")
+                    {
+                        <ExampleBlock Title="Line chart"
+                                      Description="Chart, LineSeries, and ValueAxis compose an SVG line chart via cascading registration."
+                                      SourceId="examples/DataVisualization/TrendChart.razor"
+                                      ApiTypes="@ChartApiTypes">
+                            <TrendChart />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "LineSeries")
+                    {
+                        <ExampleBlock Title="Line series"
+                                      Description="LineSeries only makes sense registered inside a Chart; ValueProperty is read via reflection off each data item."
+                                      SourceId="examples/DataVisualization/LineSeriesRegistration.razor"
+                                      ApiTypes="@LineSeriesApiTypes">
+                            <LineSeriesRegistration />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ValueAxis")
+                    {
+                        <ExampleBlock Title="Value axis"
+                                      Description="ValueAxis pins the chart's y-axis Min/Max instead of auto-scaling from series data."
+                                      SourceId="examples/DataVisualization/PinnedValueAxis.razor"
+                                      ApiTypes="@ValueAxisApiTypes">
+                            <PinnedValueAxis />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CategoryAxis")
+                    {
+                        <ExampleBlock Title="Category axis"
+                                      Description="Shown for correct usage syntax. Chart does not currently read CategoryAxis, so it has no visible effect yet."
+                                      SourceId="examples/DataVisualization/CategoryAxisUsage.razor"
+                                      ApiTypes="@CategoryAxisApiTypes">
+                            <CategoryAxisUsage />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "GridLines")
+                    {
+                        <ExampleBlock Title="Grid lines"
+                                      Description="Shown for correct usage syntax. Chart draws its own fixed gridlines and does not currently consume this component."
+                                      SourceId="examples/DataVisualization/GridLinesUsage.razor"
+                                      ApiTypes="@GridLinesApiTypes">
+                            <GridLinesUsage />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ProgressBar")
+                    {
+                        <ExampleBlock Title="Progress bar"
+                                      Description="Standalone bounded meter; percentage is derived from Value relative to Min/Max."
+                                      SourceId="examples/DataVisualization/ProgressMeters.razor"
+                                      ApiTypes="@ProgressBarApiTypes">
+                            <ProgressMeters />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.DataVisualization);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.DataVisualization);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/data-visualization");
+
+    private static readonly IReadOnlyList<Type> DataGridApiTypes = [typeof(DataGrid<DataGridExampleRow>)];
+    private static readonly IReadOnlyList<Type> DataGridColumnApiTypes = [typeof(DataGridColumn<DataGridExampleRow>)];
+    private static readonly IReadOnlyList<Type> ChartApiTypes = [typeof(Chart)];
+    private static readonly IReadOnlyList<Type> LineSeriesApiTypes = [typeof(LineSeries)];
+    private static readonly IReadOnlyList<Type> ValueAxisApiTypes = [typeof(ValueAxis)];
+    private static readonly IReadOnlyList<Type> CategoryAxisApiTypes = [typeof(CategoryAxis)];
+    private static readonly IReadOnlyList<Type> GridLinesApiTypes = [typeof(GridLines)];
+    private static readonly IReadOnlyList<Type> ProgressBarApiTypes = [typeof(ProgressBar)];
+
+}

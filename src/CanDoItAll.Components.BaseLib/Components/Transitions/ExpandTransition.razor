@@ -1,0 +1,10 @@
+@namespace CanDoItAll.Components.BaseLib
+
+<div class="cda-expand-transition @(IsExpanded ? "cda-expand-transition--expanded" : null)">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public bool IsExpanded { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

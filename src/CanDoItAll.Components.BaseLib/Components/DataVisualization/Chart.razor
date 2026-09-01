@@ -47,6 +47,8 @@
     private readonly List<LineSeries> lineSeries = [];
     private readonly List<ChartSnapshot> snapshots = [];
     private ValueAxis? valueAxis;
+    private double? registeredValueAxisMin;
+    private double? registeredValueAxisMax;
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -56,12 +58,17 @@
 
     internal void RegisterSeries(LineSeries series)
     {
+        var isNewSeries = false;
         if (!lineSeries.Contains(series))
         {
             lineSeries.Add(series);
+            isNewSeries = true;
         }
 
-        RebuildSnapshots();
+        if (isNewSeries || RebuildSnapshots())
+        {
+            RequestRender();
+        }
     }
 
     internal void UnregisterSeries(LineSeries series)
@@ -69,13 +76,23 @@
         if (lineSeries.Remove(series))
         {
             RebuildSnapshots();
+            RequestRender();
         }
     }
 
     internal void SetValueAxis(ValueAxis? axis)
     {
+        var axisChanged = !ReferenceEquals(valueAxis, axis) ||
+            registeredValueAxisMin != axis?.Min ||
+            registeredValueAxisMax != axis?.Max;
+
         valueAxis = axis;
-        RebuildSnapshots();
+        registeredValueAxisMin = axis?.Min;
+        registeredValueAxisMax = axis?.Max;
+        if (axisChanged || RebuildSnapshots())
+        {
+            RequestRender();
+        }
     }
 
     protected override void OnParametersSet()
@@ -83,9 +100,9 @@
         RebuildSnapshots();
     }
 
-    private void RebuildSnapshots()
+    private bool RebuildSnapshots()
     {
-        snapshots.Clear();
+        var rebuiltSnapshots = new List<ChartSnapshot>();
 
         foreach (var series in lineSeries)
         {
@@ -95,11 +112,41 @@
                 continue;
             }
 
-            snapshots.Add(new ChartSnapshot(
+            rebuiltSnapshots.Add(new ChartSnapshot(
                 string.IsNullOrWhiteSpace(series.Title) ? "Series" : series.Title,
                 values));
         }
 
+        var changed = !SnapshotsEqual(snapshots, rebuiltSnapshots);
+        snapshots.Clear();
+        snapshots.AddRange(rebuiltSnapshots);
+        return changed;
+    }
+
+    private void RequestRender()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private static bool SnapshotsEqual(
+        IReadOnlyList<ChartSnapshot> current,
+        IReadOnlyList<ChartSnapshot> updated)
+    {
+        if (current.Count != updated.Count)
+        {
+            return false;
+        }
+
+        for (var index = 0; index < current.Count; index++)
+        {
+            if (!string.Equals(current[index].Title, updated[index].Title, StringComparison.Ordinal) ||
+                !current[index].Values.SequenceEqual(updated[index].Values))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private string BuildPolylinePoints(IReadOnlyList<double> values)
@@ -178,5 +225,3 @@
 
     private sealed record ChartSnapshot(string Title, IReadOnlyList<double> Values);
 }
-
-

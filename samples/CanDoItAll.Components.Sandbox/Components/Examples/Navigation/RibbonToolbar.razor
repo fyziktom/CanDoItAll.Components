@@ -1,0 +1,14 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<RibbonTabs TItem="string"
+            Items="@RibbonTools"
+            SelectedItem="@ribbonSelectedTool"
+            SelectedItemChanged="@(item => ribbonSelectedTool = item)"
+            IsCollapsed="@ribbonCollapsed"
+            OnToggleCollapsed="@(() => ribbonCollapsed = !ribbonCollapsed)"
+            RootTestId="sandbox-navigation-ribbon-tabs">
+    <PanelContent Context="tool">
+        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@($"{tool} tools appear here.")" />
+    </PanelContent>
+</RibbonTabs>

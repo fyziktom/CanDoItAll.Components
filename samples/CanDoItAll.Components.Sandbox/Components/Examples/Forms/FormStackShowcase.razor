@@ -1,0 +1,26 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormStack data-testid="sandbox-forms-stack">
+    <FormRow Split="true">
+        <FormField Text="Title">
+            <TextBox Value="@FormState.Title" ValueChanged="HandleTitleChanged" Placeholder="@TitlePlaceholder"
+                     Disabled="@IsDisabled" />
+        </FormField>
+        <FormField Text="Status">
+            <DropDown TValue="string"
+                      Data="@StatusOptions"
+                      TextProperty="@nameof(SelectOption.Text)"
+                      ValueProperty="@nameof(SelectOption.Value)"
+                      Value="@FormState.Status"
+                      ValueChanged="HandleStatusChanged"
+                      Disabled="@IsDisabled" />
+        </FormField>
+    </FormRow>
+    <FormField Text="Notes">
+        <TextArea Value="@FormState.Notes"
+                  ValueChanged="HandleNotesChanged"
+                  Placeholder="@NotesPlaceholder"
+                  Disabled="@IsDisabled" />
+    </FormField>
+</FormStack>

@@ -1,0 +1,781 @@
+/**
+  Namespaces
+
+  --cus-          custom colors
+  --color-chrome- chrome colors
+  --color-        TailWind color utilities
+  --tw-prose-     TailWind typography plugin
+  --tone-         component colors
+  --ui-           component variables
+  --role-         role variables
+
+  .ui-            ui components
+  .role-          role settings
+  .form-          TailWind forms
+  .prose          TailWind typography
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Mono:wght@100..900&display=swap");
+
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+
+@tailwind utilities;
+
+@custom-variant dark {
+  @container style(--ui-theme: dark) {
+    @slot;
+  }
+}
+
+@custom-variant light {
+  @container style(--ui-theme: light) {
+    @slot;
+  }
+}
+
+@plugin "@tailwindcss/forms" {
+  strategy: "class";
+}
+
+@plugin "@tailwindcss/typography";
+
+@source "../assets/test.html";
+
+/*CUSTOM COLORS, Should not be used directly*/
+@theme {
+  --font-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Noto Sans Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --cus-lavender-blue-50: oklch(97.0% 0.016 274.0);
+  --cus-lavender-blue-100: oklch(94.5% 0.029 274.0);
+  --cus-lavender-blue-200: oklch(89.9% 0.054 274.0);
+  --cus-lavender-blue-300: oklch(84.0% 0.087 274.0);
+  --cus-lavender-blue-400: oklch(77.0% 0.128 274.0);
+  --cus-lavender-blue-500: oklch(69.0% 0.177 274.0);
+  --cus-lavender-blue-600: oklch(64.6% 0.180 274.0);
+  --cus-lavender-blue-700: oklch(56.6% 0.180 274.0);
+  --cus-lavender-blue-800: oklch(46.2% 0.180 274.0);
+  --cus-lavender-blue-900: oklch(33.9% 0.180 274.0);
+  --cus-lavender-blue-950: oklch(20.0% 0.128 274.0);
+
+  --cus-pervenche-50: oklch(97.0% 0.017 243.8);
+  --cus-pervenche-100: oklch(94.1% 0.034 243.8);
+  --cus-pervenche-200: oklch(88.7% 0.065 243.8);
+  --cus-pervenche-300: oklch(81.7% 0.108 243.8);
+  --cus-pervenche-400: oklch(73.5% 0.157 243.8);
+  --cus-pervenche-500: oklch(64.2% 0.157 243.8);
+  --cus-pervenche-600: oklch(60.2% 0.157 243.8);
+  --cus-pervenche-700: oklch(53.0% 0.157 243.8);
+  --cus-pervenche-800: oklch(43.6% 0.140 243.8);
+  --cus-pervenche-900: oklch(32.6% 0.104 243.8);
+  --cus-pervenche-950: oklch(20.0% 0.064 243.8);
+
+  --cus-iris-50: oklch(97.0% 0.016 282.8);
+  --cus-iris-100: oklch(92.9% 0.039 282.8);
+  --cus-iris-200: oklch(85.4% 0.081 282.8);
+  --cus-iris-300: oklch(75.8% 0.140 282.8);
+  --cus-iris-400: oklch(64.3% 0.185 282.8);
+  --cus-iris-500: oklch(51.3% 0.185 282.8);
+  --cus-iris-600: oklch(48.5% 0.185 282.8);
+  --cus-iris-700: oklch(43.4% 0.185 282.8);
+  --cus-iris-800: oklch(36.7% 0.185 282.8);
+  --cus-iris-900: oklch(28.9% 0.174 282.8);
+  --cus-iris-950: oklch(20.0% 0.121 282.8);
+
+  --cus-cold-light-50: oklch(98.7% 0.013 191.0);
+  --cus-cold-light-100: oklch(97.1% 0.031 191.0);
+  --cus-cold-light-200: oklch(94.8% 0.060 191.0);
+  --cus-cold-light-300: oklch(92.2% 0.099 191.0);
+  --cus-cold-light-400: oklch(89.2% 0.149 191.0);
+  --cus-cold-light-500: oklch(86.0% 0.150 191.0);
+  --cus-cold-light-600: oklch(75.3% 0.134 191.0);
+  --cus-cold-light-700: oklch(63.8% 0.116 191.0);
+  --cus-cold-light-800: oklch(52.1% 0.096 191.0);
+  --cus-cold-light-900: oklch(40.1% 0.076 191.0);
+  --cus-cold-light-950: oklch(28.0% 0.054 191.0);
+
+  --cus-soulstone-blue-50: oklch(97.0% 0.012 262.0);
+  --cus-soulstone-blue-100: oklch(90.3% 0.038 262.0);
+  --cus-soulstone-blue-200: oklch(80.6% 0.077 262.0);
+  --cus-soulstone-blue-300: oklch(69.2% 0.124 262.0);
+  --cus-soulstone-blue-400: oklch(56.6% 0.179 262.0);
+  --cus-soulstone-blue-500: oklch(43.0% 0.170 262.0);
+  --cus-soulstone-blue-600: oklch(40.2% 0.166 262.0);
+  --cus-soulstone-blue-700: oklch(37.3% 0.160 262.0);
+  --cus-soulstone-blue-800: oklch(34.2% 0.152 262.0);
+  --cus-soulstone-blue-900: oklch(31.1% 0.143 262.0);
+  --cus-soulstone-blue-950: oklch(28.0% 0.134 262.0);
+
+  --cus-photon-barrier-50: oklch(99.0% 0.007 212.8);
+  --cus-photon-barrier-100: oklch(97.4% 0.017 212.8);
+  --cus-photon-barrier-200: oklch(95.0% 0.032 212.8);
+  --cus-photon-barrier-300: oklch(92.3% 0.048 212.8);
+  --cus-photon-barrier-400: oklch(89.2% 0.066 212.8);
+  --cus-photon-barrier-500: oklch(85.9% 0.085 212.8);
+  --cus-photon-barrier-600: oklch(75.3% 0.122 212.8);
+  --cus-photon-barrier-700: oklch(63.8% 0.108 212.8);
+  --cus-photon-barrier-800: oklch(52.1% 0.092 212.8);
+  --cus-photon-barrier-900: oklch(40.1% 0.074 212.8);
+  --cus-photon-barrier-950: oklch(28.0% 0.054 212.8);
+
+  --cus-mint-morning-50: oklch(97.0% 0.048 186.0);
+  --cus-mint-morning-100: oklch(95.5% 0.074 186.0);
+  --cus-mint-morning-200: oklch(92.7% 0.125 186.0);
+  --cus-mint-morning-300: oklch(89.1% 0.170 186.0);
+  --cus-mint-morning-400: oklch(84.8% 0.170 186.0);
+  --cus-mint-morning-500: oklch(80.0% 0.170 186.0);
+  --cus-mint-morning-600: oklch(74.6% 0.170 186.0);
+  --cus-mint-morning-700: oklch(64.8% 0.154 186.0);
+  --cus-mint-morning-800: oklch(52.1% 0.123 186.0);
+  --cus-mint-morning-900: oklch(37.1% 0.088 186.0);
+  --cus-mint-morning-950: oklch(20.0% 0.047 186.0);
+
+  --cus-american-orange-50: oklch(98.7% 0.022 91.6);
+  --cus-american-orange-100: oklch(95.7% 0.066 90.7);
+  --cus-american-orange-200: oklch(91.4% 0.133 90.8);
+  --cus-american-orange-300: oklch(86.4% 0.189 86.6);
+  --cus-american-orange-400: oklch(80.9% 0.195 76.2);
+  --cus-american-orange-500: oklch(74.5% 0.198 60.9);
+  --cus-american-orange-600: oklch(64.7% 0.197 49.1);
+  --cus-american-orange-700: oklch(54.0% 0.181 42.9);
+  --cus-american-orange-800: oklch(46.3% 0.150 41.2);
+  --cus-american-orange-900: oklch(40.9% 0.119 40.9);
+  --cus-american-orange-950: oklch(27.9% 0.077 40.7);
+
+  --cus-cala-benirras-50: oklch(98.4% 0.014 196.0);
+  --cus-cala-benirras-100: oklch(95.7% 0.051 196.0);
+  --cus-cala-benirras-200: oklch(91.7% 0.096 195.7);
+  --cus-cala-benirras-300: oklch(86.6% 0.138 196.3);
+  --cus-cala-benirras-400: oklch(79.1% 0.152 197.2);
+  --cus-cala-benirras-500: oklch(72.2% 0.140 197.7);
+  --cus-cala-benirras-600: oklch(62.1% 0.117 199.9);
+  --cus-cala-benirras-700: oklch(52.7% 0.096 201.6);
+  --cus-cala-benirras-800: oklch(44.8% 0.078 203.4);
+  --cus-cala-benirras-900: oklch(39.1% 0.063 203.7);
+  --cus-cala-benirras-950: oklch(27.7% 0.046 207.8);
+
+  --cus-malibu-blue-50: oklch(98.4% 0.019 203.9);
+  --cus-malibu-blue-100: oklch(92.7% 0.048 211.2);
+  --cus-malibu-blue-200: oklch(85.9% 0.085 212.8);
+  --cus-malibu-blue-300: oklch(81.5% 0.132 214.8);
+  --cus-malibu-blue-400: oklch(74.6% 0.158 219.3);
+  --cus-malibu-blue-500: oklch(67.9% 0.146 223.0);
+  --cus-malibu-blue-600: oklch(58.0% 0.129 229.5);
+  --cus-malibu-blue-700: oklch(49.8% 0.107 230.9);
+  --cus-malibu-blue-800: oklch(43.6% 0.086 232.1);
+  --cus-malibu-blue-900: oklch(39.1% 0.071 235.2);
+  --cus-malibu-blue-950: oklch(30.2% 0.056 237.5);
+}
+
+/*SEMANTIC COLORS */
+@theme {
+  --color-chrome-50: var(--color-neutral-50);
+  --color-chrome-100: var(--color-neutral-100);
+  --color-chrome-200: var(--color-neutral-200);
+  --color-chrome-300: var(--color-neutral-300);
+  --color-chrome-400: var(--color-neutral-400);
+  --color-chrome-500: var(--color-neutral-500);
+  --color-chrome-600: var(--color-neutral-600);
+  --color-chrome-700: var(--color-neutral-700);
+  --color-chrome-800: var(--color-neutral-800);
+  --color-chrome-900: var(--color-neutral-900);
+  --color-chrome-950: var(--color-neutral-950);
+
+  --color-info-50: var(--cus-pervenche-50);
+  --color-info-100: var(--cus-pervenche-100);
+  --color-info-200: var(--cus-pervenche-200);
+  --color-info-300: var(--cus-pervenche-300);
+  --color-info-400: var(--cus-pervenche-400);
+  --color-info-500: var(--cus-pervenche-500);
+  --color-info-600: var(--cus-pervenche-600);
+  --color-info-700: var(--cus-pervenche-700);
+  --color-info-800: var(--cus-pervenche-800);
+  --color-info-900: var(--cus-pervenche-900);
+  --color-info-950: var(--cus-pervenche-950);
+
+  --color-success-50: var(--color-emerald-50);
+  --color-success-100: var(--color-emerald-100);
+  --color-success-200: var(--color-emerald-200);
+  --color-success-300: var(--color-emerald-300);
+  --color-success-400: var(--color-emerald-400);
+  --color-success-500: var(--color-emerald-500);
+  --color-success-600: var(--color-emerald-600);
+  --color-success-700: var(--color-emerald-700);
+  --color-success-800: var(--color-emerald-800);
+  --color-success-900: var(--color-emerald-900);
+  --color-success-950: var(--color-emerald-950);
+
+  --color-warn-50: var(--color-yellow-50);
+  --color-warn-100: var(--color-yellow-100);
+  --color-warn-200: var(--color-yellow-200);
+  --color-warn-300: var(--color-yellow-300);
+  --color-warn-400: var(--color-yellow-400);
+  --color-warn-500: var(--color-yellow-500);
+  --color-warn-600: var(--color-yellow-600);
+  --color-warn-700: var(--color-yellow-700);
+  --color-warn-800: var(--color-yellow-800);
+  --color-warn-900: var(--color-yellow-900);
+  --color-warn-950: var(--color-yellow-950);
+
+  --color-danger-50: var(--color-rose-50);
+  --color-danger-100: var(--color-rose-100);
+  --color-danger-200: var(--color-rose-200);
+  --color-danger-300: var(--color-rose-300);
+  --color-danger-400: var(--color-rose-400);
+  --color-danger-500: var(--color-rose-500);
+  --color-danger-600: var(--color-rose-600);
+  --color-danger-700: var(--color-rose-700);
+  --color-danger-800: var(--color-rose-800);
+  --color-danger-900: var(--color-rose-900);
+  --color-danger-950: var(--color-rose-950);
+
+  --color-primary-50: var(--color-neutral-50);
+  --color-primary-100: var(--color-neutral-100);
+  --color-primary-200: var(--color-neutral-200);
+  --color-primary-300: var(--color-neutral-300);
+  --color-primary-400: var(--color-neutral-400);
+  --color-primary-500: var(--color-neutral-500);
+  --color-primary-600: var(--color-neutral-600);
+  --color-primary-700: var(--color-neutral-700);
+  --color-primary-800: var(--color-neutral-800);
+  --color-primary-900: var(--color-neutral-900);
+  --color-primary-950: var(--color-neutral-950);
+
+  --color-secondary-50:  var(--cus-photon-barrier-50);
+  --color-secondary-100: var(--cus-photon-barrier-100);
+  --color-secondary-200: var(--cus-photon-barrier-200);
+  --color-secondary-300: var(--cus-photon-barrier-300);
+  --color-secondary-400: var(--cus-photon-barrier-400);
+  --color-secondary-500: var(--cus-photon-barrier-500);
+  --color-secondary-600: var(--cus-photon-barrier-600);
+  --color-secondary-700: var(--cus-photon-barrier-700);
+  --color-secondary-800: var(--cus-photon-barrier-800);
+  --color-secondary-900: var(--cus-photon-barrier-900);
+  --color-secondary-950: var(--cus-photon-barrier-950);
+
+  --color-tertiary-50:  var(--cus-iris-50);
+  --color-tertiary-100: var(--cus-iris-100);
+  --color-tertiary-200: var(--cus-iris-200);
+  --color-tertiary-300: var(--cus-iris-300);
+  --color-tertiary-400: var(--cus-iris-400);
+  --color-tertiary-500: var(--cus-iris-500);
+  --color-tertiary-600: var(--cus-iris-600);
+  --color-tertiary-700: var(--cus-iris-700);
+  --color-tertiary-800: var(--cus-iris-800);
+  --color-tertiary-900: var(--cus-iris-900);
+  --color-tertiary-950: var(--cus-iris-950);
+}
+
+@utility prose-theme {
+  /*
+   * Typography deliberately uses the normal prose variables in both modes.
+   * `chrome` reverses at a theme boundary, so `.prose` follows the active
+   * theme without coupling markup to Tailwind Typography's `prose-invert`.
+   */
+  --tw-prose-body: var(--color-chrome-700);
+  --tw-prose-headings: var(--color-chrome-950);
+  --tw-prose-lead: var(--color-chrome-600);
+  --tw-prose-links: var(--color-chrome-950);
+  --tw-prose-bold: var(--color-chrome-900);
+  --tw-prose-counters: var(--color-chrome-600);
+  --tw-prose-bullets: var(--color-chrome-400);
+  --tw-prose-hr: var(--color-chrome-200);
+  --tw-prose-quotes: var(--color-chrome-900);
+  --tw-prose-quote-borders: var(--color-chrome-300);
+  --tw-prose-captions: var(--color-chrome-600);
+  --tw-prose-kbd: var(--color-chrome-950);
+  --tw-prose-kbd-shadows: var(--color-chrome-400);
+  --tw-prose-code: var(--color-chrome-900);
+  --tw-prose-pre-code: var(--color-chrome-100);
+  --tw-prose-pre-bg: var(--color-chrome-800);
+  --tw-prose-th-borders: var(--color-chrome-300);
+  --tw-prose-td-borders: var(--color-chrome-200);
+}
+
+/*
+ * Component recipes use semantic roles exclusively. `chrome` is deliberately
+ * reserved for the page, cards, dividers, and other neutral UI structure.
+ */
+@layer components {
+  :root,
+  [data-ui-theme="light"] {
+    color-scheme: light;
+    --ui-theme: light;
+    --ui-symbol-grade: 0;
+
+    /* Duplicate required for theme nesting */
+    --color-chrome-50: var(--color-neutral-50);
+    --color-chrome-100: var(--color-neutral-100);
+    --color-chrome-200: var(--color-neutral-200);
+    --color-chrome-300: var(--color-neutral-300);
+    --color-chrome-400: var(--color-neutral-400);
+    --color-chrome-500: var(--color-neutral-500);
+    --color-chrome-600: var(--color-neutral-600);
+    --color-chrome-700: var(--color-neutral-700);
+    --color-chrome-800: var(--color-neutral-800);
+    --color-chrome-900: var(--color-neutral-900);
+    --color-chrome-950: var(--color-neutral-950);
+
+    --tone-surface: var(--color-white);
+    --tone-surface-soft: var(--color-chrome-100);
+    --tone-border: color-mix(in oklch, var(--color-chrome-400) 50%, transparent);
+    --tone-text: var(--color-chrome-900);
+
+    --tone-primary-solid-bg: var(--color-primary-600);
+    --tone-primary-solid-hover: var(--color-primary-700);
+    --tone-primary-solid-fg: var(--color-white);
+    --tone-primary-soft-bg: var(--color-primary-100);
+    --tone-primary-soft-hover: var(--color-primary-200);
+    --tone-primary-soft-border: var(--color-primary-500);
+    --tone-primary-soft-fg: var(--color-primary-800);
+
+    --tone-secondary-solid-bg: var(--color-secondary-600);
+    --tone-secondary-solid-hover: var(--color-secondary-700);
+    --tone-secondary-solid-fg: var(--color-white);
+    --tone-secondary-soft-bg: var(--color-secondary-100);
+    --tone-secondary-soft-hover: var(--color-secondary-200);
+    --tone-secondary-soft-border: var(--color-secondary-500);
+    --tone-secondary-soft-fg: var(--color-secondary-800);
+
+    --tone-tertiary-solid-bg: var(--color-tertiary-600);
+    --tone-tertiary-solid-hover: var(--color-tertiary-700);
+    --tone-tertiary-solid-fg: var(--color-white);
+    --tone-tertiary-soft-bg: var(--color-tertiary-100);
+    --tone-tertiary-soft-hover: var(--color-tertiary-200);
+    --tone-tertiary-soft-border: var(--color-tertiary-500);
+    --tone-tertiary-soft-fg: var(--color-tertiary-800);
+
+    --tone-info-solid-bg: var(--color-info-600);
+    --tone-info-solid-hover: var(--color-info-700);
+    --tone-info-solid-fg: var(--color-white);
+    --tone-info-soft-bg: var(--color-info-100);
+    --tone-info-soft-hover: var(--color-info-200);
+    --tone-info-soft-border: var(--color-info-500);
+    --tone-info-soft-fg: var(--color-info-800);
+
+    --tone-success-solid-bg: var(--color-success-700);
+    --tone-success-solid-hover: var(--color-success-800);
+    --tone-success-solid-fg: var(--color-white);
+    --tone-success-soft-bg: var(--color-success-100);
+    --tone-success-soft-hover: var(--color-success-200);
+    --tone-success-soft-border: var(--color-success-500);
+    --tone-success-soft-fg: var(--color-success-900);
+
+    --tone-warn-solid-bg: var(--color-warn-600);
+    --tone-warn-solid-hover: var(--color-warn-700);
+    --tone-warn-solid-fg: var(--color-white);
+    --tone-warn-soft-bg: var(--color-warn-100);
+    --tone-warn-soft-hover: var(--color-warn-200);
+    --tone-warn-soft-border: var(--color-warn-500);
+    --tone-warn-soft-fg: var(--color-warn-900);
+
+    --tone-danger-solid-bg: var(--color-danger-600);
+    --tone-danger-solid-hover: var(--color-danger-700);
+    --tone-danger-solid-fg: var(--color-white);
+    --tone-danger-soft-bg: var(--color-danger-100);
+    --tone-danger-soft-hover: var(--color-danger-200);
+    --tone-danger-soft-border: var(--color-danger-500);
+    --tone-danger-soft-fg: var(--color-danger-900);
+  }
+
+  [data-ui-theme="dark"] {
+    color-scheme: dark;
+    --ui-theme: dark;
+    /* A positive grade restores some perceived stroke weight on dark surfaces. */
+    --ui-symbol-grade: -25;
+
+    /* Chrome is structural, so it inverts with the application surface. */
+    --color-chrome-50: var(--color-neutral-950);
+    --color-chrome-100: var(--color-neutral-900);
+    --color-chrome-200: var(--color-neutral-800);
+    --color-chrome-300: var(--color-neutral-700);
+    --color-chrome-400: var(--color-neutral-600);
+    --color-chrome-500: var(--color-neutral-500);
+    --color-chrome-600: var(--color-neutral-400);
+    --color-chrome-700: var(--color-neutral-300);
+    --color-chrome-800: var(--color-neutral-200);
+    --color-chrome-900: var(--color-neutral-100);
+    --color-chrome-950: var(--color-neutral-50);
+
+    --tone-surface: var(--color-chrome-100);
+    --tone-surface-soft: var(--color-chrome-200);
+    --tone-border: var(--color-chrome-400);
+    --tone-text: var(--color-chrome-900);
+
+    --tone-primary-solid-bg: var(--color-primary-500);
+    --tone-primary-solid-hover: var(--color-primary-400);
+    --tone-primary-solid-fg: var(--color-white);
+    --tone-primary-soft-bg: var(--color-primary-700);
+    --tone-primary-soft-hover: var(--color-primary-600);
+    --tone-primary-soft-border: var(--color-primary-500);
+    --tone-primary-soft-fg: var(--color-primary-200);
+
+    --tone-secondary-solid-bg: var(--color-secondary-600);
+    --tone-secondary-solid-hover: var(--color-secondary-400);
+    --tone-secondary-solid-fg: var(--color-white);
+    --tone-secondary-soft-bg: var(--color-secondary-700);
+    --tone-secondary-soft-hover: var(--color-secondary-600);
+    --tone-secondary-soft-border: var(--color-secondary-500);
+    --tone-secondary-soft-fg: var(--color-secondary-200);
+
+    --tone-tertiary-solid-bg: var(--color-tertiary-500);
+    --tone-tertiary-solid-hover: var(--color-tertiary-400);
+    --tone-tertiary-solid-fg: var(--color-white);
+    --tone-tertiary-soft-bg: var(--color-tertiary-700);
+    --tone-tertiary-soft-hover: var(--color-tertiary-600);
+    --tone-tertiary-soft-border: var(--color-tertiary-500);
+    --tone-tertiary-soft-fg: var(--color-tertiary-200);
+
+    --tone-info-solid-bg: var(--color-info-500);
+    --tone-info-solid-hover: var(--color-info-400);
+    --tone-info-solid-fg: var(--color-white);
+    --tone-info-soft-bg: var(--color-info-900);
+    --tone-info-soft-hover: var(--color-info-800);
+    --tone-info-soft-border: var(--color-info-700);
+    --tone-info-soft-fg: var(--color-info-200);
+
+    --tone-success-solid-bg: var(--color-success-600);
+    --tone-success-solid-hover: var(--color-success-500);
+    --tone-success-solid-fg: var(--color-white);
+    --tone-success-soft-bg: var(--color-success-900);
+    --tone-success-soft-hover: var(--color-success-800);
+    --tone-success-soft-border: var(--color-success-700);
+    --tone-success-soft-fg: var(--color-success-200);
+
+    --tone-warn-solid-bg: var(--color-warn-600);
+    --tone-warn-solid-hover: var(--color-warn-400);
+    --tone-warn-solid-fg: var(--color-white);
+    --tone-warn-soft-bg: var(--color-warn-900);
+    --tone-warn-soft-hover: var(--color-warn-800);
+    --tone-warn-soft-border: var(--color-warn-700);
+    --tone-warn-soft-fg: var(--color-warn-200);
+
+    --tone-danger-solid-bg: var(--color-danger-500);
+    --tone-danger-solid-hover: var(--color-danger-400);
+    --tone-danger-solid-fg: var(--color-white);
+    --tone-danger-soft-bg: var(--color-danger-900);
+    --tone-danger-soft-hover: var(--color-danger-800);
+    --tone-danger-soft-border: var(--color-danger-700);
+    --tone-danger-soft-fg: var(--color-danger-200);
+  }
+
+  /* Roles */
+
+  .role--primary {
+    --role-strong: var(--tone-primary-solid-bg);
+    --role-strong-hover: var(--tone-primary-solid-hover);
+    --role-strong-fg: var(--tone-primary-solid-fg);
+    --role-soft: var(--tone-primary-soft-bg);
+    --role-soft-hover: var(--tone-primary-soft-hover);
+    --role-border: var(--tone-primary-soft-border);
+    --role-text: var(--tone-primary-soft-fg);
+  }
+
+  .role--secondary {
+    --role-strong: var(--tone-secondary-solid-bg);
+    --role-strong-hover: var(--tone-secondary-solid-hover);
+    --role-strong-fg: var(--tone-secondary-solid-fg);
+    --role-soft: var(--tone-secondary-soft-bg);
+    --role-soft-hover: var(--tone-secondary-soft-hover);
+    --role-border: var(--tone-secondary-soft-border);
+    --role-text: var(--tone-secondary-soft-fg);
+  }
+
+  .role--tertiary {
+    --role-strong: var(--tone-tertiary-solid-bg);
+    --role-strong-hover: var(--tone-tertiary-solid-hover);
+    --role-strong-fg: var(--tone-tertiary-solid-fg);
+    --role-soft: var(--tone-tertiary-soft-bg);
+    --role-soft-hover: var(--tone-tertiary-soft-hover);
+    --role-border: var(--tone-tertiary-soft-border);
+    --role-text: var(--tone-tertiary-soft-fg);
+  }
+
+  .role--info {
+    --role-strong: var(--tone-info-solid-bg);
+    --role-strong-hover: var(--tone-info-solid-hover);
+    --role-strong-fg: var(--tone-info-solid-fg);
+    --role-soft: var(--tone-info-soft-bg);
+    --role-soft-hover: var(--tone-info-soft-hover);
+    --role-border: var(--tone-info-soft-border);
+    --role-text: var(--tone-info-soft-fg);
+  }
+
+  .role--success {
+    --role-strong: var(--tone-success-solid-bg);
+    --role-strong-hover: var(--tone-success-solid-hover);
+    --role-strong-fg: var(--tone-success-solid-fg);
+    --role-soft: var(--tone-success-soft-bg);
+    --role-soft-hover: var(--tone-success-soft-hover);
+    --role-border: var(--tone-success-soft-border);
+    --role-text: var(--tone-success-soft-fg);
+  }
+
+  .role--warn {
+    --role-strong: var(--tone-warn-solid-bg);
+    --role-strong-hover: var(--tone-warn-solid-hover);
+    --role-strong-fg: var(--tone-warn-solid-fg);
+    --role-soft: var(--tone-warn-soft-bg);
+    --role-soft-hover: var(--tone-warn-soft-hover);
+    --role-border: var(--tone-warn-soft-border);
+    --role-text: var(--tone-warn-soft-fg);
+  }
+
+  .role--danger {
+    --role-strong: var(--tone-danger-solid-bg);
+    --role-strong-hover: var(--tone-danger-solid-hover);
+    --role-strong-fg: var(--tone-danger-solid-fg);
+    --role-soft: var(--tone-danger-soft-bg);
+    --role-soft-hover: var(--tone-danger-soft-hover);
+    --role-border: var(--tone-danger-soft-border);
+    --role-text: var(--tone-danger-soft-fg);
+  }
+
+  /* HTML */
+
+  mark {
+    background-color: var(--color-warn-300);
+  }
+
+  /* Card */
+
+  .ui-card {
+    @apply rounded-2xl border p-6;
+    border-color: var(--tone-border);
+    background: var(--tone-surface);
+    color: var(--tone-text);
+  }
+
+  /* Button */
+
+  .ui-button {
+    @apply inline-flex items-center justify-center rounded-sm px-3 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    @apply cursor-pointer;
+  }
+
+  .ui-button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .ui-button.ui-button--pill {
+    @apply rounded-3xl;
+  }
+
+  .ui-button.ui-button--rounded {
+    @apply rounded-lg;
+  }
+
+  .ui-button.ui-button--dense {
+    @apply px-1 py-0;
+  }
+
+  .ui-button.ui-button--compact {
+    @apply px-2 py-1;
+  }
+
+  .ui-button--solid {
+    @apply bg-(--role-strong) text-(--role-strong-fg) hover:bg-(--role-strong-hover) focus-visible:outline-(--role-strong) active:bg-(--role-strong)/80;
+  }
+
+  .ui-button--tonal {
+    @apply bg-(--role-soft) text-(--role-text) hover:bg-(--role-soft-hover) focus-visible:outline-(--role-strong) active:bg-(--role-strong)/40;
+  }
+
+  .ui-button--outline {
+    @apply border border-(--role-border)/80 text-(--role-text) hover:bg-(--role-soft) focus-visible:outline-(--role-strong) active:bg-(--role-border)/20;
+    background: color-mix(in oklch, var(--tone-surface) 65%, var(--role-soft));
+  }
+
+  .ui-button--plain {
+    @apply text-(--role-text) hover:bg-(--role-soft) focus-visible:outline-(--role-strong) active:bg-(--role-border)/20;
+  }
+
+  /* Alert */
+
+  .ui-alert {
+    @apply rounded-xl border p-4;
+  }
+
+  .ui-alert--primary {
+    border-color: color-mix(in oklch, var(--tone-primary-soft-border) 60%, transparent);
+    background: var(--tone-primary-soft-bg);
+    color: var(--tone-primary-soft-fg);
+  }
+
+  .ui-alert--secondary {
+    border-color: color-mix(in oklch, var(--tone-secondary-soft-border) 60%, transparent);
+    background: var(--tone-secondary-soft-bg);
+    color: var(--tone-secondary-soft-fg);
+  }
+
+  .ui-alert--tertiary {
+    border-color: color-mix(in oklch, var(--tone-tertiary-soft-border) 60%, transparent);
+    background: var(--tone-tertiary-soft-bg);
+    color: var(--tone-tertiary-soft-fg);
+  }
+
+  .ui-alert--info {
+    border-color: color-mix(in oklch, var(--tone-info-soft-border) 60%, transparent);
+    background: var(--tone-info-soft-bg);
+    color: var(--tone-info-soft-fg);
+  }
+
+  .ui-alert--success {
+    border-color: color-mix(in oklch, var(--tone-success-soft-border) 60%, transparent);
+    background: var(--tone-success-soft-bg);
+    color: var(--tone-success-soft-fg);
+  }
+
+  .ui-alert--warn {
+    border-color: color-mix(in oklch, var(--tone-warn-soft-border) 60%, transparent);
+    background: var(--tone-warn-soft-bg);
+    color: var(--tone-warn-soft-fg);
+  }
+
+  .ui-alert--danger {
+    border-color: color-mix(in oklch, var(--tone-danger-soft-border) 60%, transparent);
+    background: var(--tone-danger-soft-bg);
+    color: var(--tone-danger-soft-fg);
+  }
+
+  /* Icon */
+
+  .ui-icon {
+    display: inline-block;
+    direction: ltr;
+    /*noinspection CssNoGenericFontName*/
+    font-family: "Material Symbols Rounded";
+    font-size: 1em;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings:
+      "FILL" var(--ui-symbol-fill, 0),
+      "wght" var(--ui-symbol-weight, 300),
+      "GRAD" var(--ui-symbol-grade),
+      "opsz" var(--ui-symbol-optical-size, 24);
+  }
+
+  .ui-icon--filled {
+    --ui-symbol-fill: 1;
+  }
+}
+
+/* Forms */
+
+/*
+  @tailwindcss/forms emits unlayered .form-* classes.
+  These overrides must remain unlayered too;
+  otherwise the plugin wins by cascade-layer precedence.
+ */
+
+.ui-input,
+.ui-select {
+  @apply w-full rounded-md px-3 py-2 text-sm transition focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
+  border-color: var(--tone-border);
+  color: var(--tone-text);
+}
+
+.ui-select {
+  appearance: auto;
+  background-image: none;
+}
+
+.ui-input::placeholder {
+  color: var(--color-chrome-500);
+}
+
+.ui-input--outlined,
+.ui-select--outlined {
+  background: var(--tone-surface);
+}
+
+.ui-input--filled,
+.ui-select--filled {
+  background: var(--tone-surface-soft);
+}
+
+.ui-checkbox {
+  @apply size-4 rounded border transition focus:ring-2 focus:ring-(--tone-primary-soft-border);
+  border-color: var(--tone-border);
+  color: var(--tone-primary-solid-bg);
+}
+
+.ui-checkbox--outlined {
+  background: var(--tone-surface);
+}
+
+.ui-checkbox--filled {
+  background: var(--tone-surface-soft);
+}
+
+.ui-input[disabled],
+.ui-select[disabled],
+.ui-checkbox[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.ui-input[disabled],
+.ui-select[disabled] {
+  border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
+  background: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
+  color: color-mix(in oklch, var(--tone-text) 65%, transparent);
+}
+
+@layer components {
+  /* Utility */
+
+  .ui-disabled {
+    opacity: 0.55;
+  }
+
+  /* Theme switching */
+
+  .ui-no-transition,
+  .ui-no-transition *,
+  .ui-no-transition *::before,
+  .ui-no-transition *::after {
+    transition: none !important;
+  }
+}
+
+/* Ripple */
+
+.ui-ripple {
+  --ripple-color: var(--role-strong);
+  --ripple-growth: 12px;
+  position: relative;
+}
+
+/* based on https://github.com/Jackthomsonn/ripples */
+.ui-ripple.is-rippling::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: inherit;
+  pointer-events: none;
+  animation: ui-ripple 0.5s ease-out;
+}
+
+@keyframes ui-ripple {
+  0% {
+    box-shadow: 0 0 0 1px var(--ripple-color);
+    opacity: .8;
+  }
+
+  100% {
+    box-shadow: 0 0 0 var(--ripple-growth) var(--ripple-color);
+    opacity: 0;
+  }
+}

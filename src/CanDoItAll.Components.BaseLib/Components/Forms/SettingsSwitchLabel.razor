@@ -4,9 +4,11 @@
 <span @attributes='BuildAttributes("text-sm font-medium text-slate-700")'>@RenderContent()</span>
 
 @code {
+    /// <summary>The label text; ignored when <see cref="ChildContent"/> is set.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Custom label content, taking precedence over <see cref="Text"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

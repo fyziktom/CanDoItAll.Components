@@ -1,0 +1,165 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/typography"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Sandbox.Components.Examples.Typography
+
+<PageTitle>Typography</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in VisibleSections(Sections))
+            {
+                <section id="@(section.Anchor)" class="sandbox-component-section">
+                    @RenderSectionHeading(section)
+
+                    @if (section.ComponentName == "TextBlock")
+                    {
+                        <ExampleBlock Title="Type scale"
+                                      Description="Shared text styles should stay calm, readable, and easy to scan in sequence."
+                                      SourceId="examples/Typography/TypeScale.razor"
+                                      ApiTypes="@TextBlockApiTypes">
+                            <TypeScale />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Bare elements and classes vs TextBlock "
+                                      Description="Bare HTML now carries sensible defaults; apply cda-text-block classes directly when the required tag and the desired visual weight don't match."
+                                      SourceId="examples/Typography/RawElementsEscapeHatch.razor"
+                                      ApiTypes="@TextBlockApiTypes">
+                            <RawElementsEscapeHatch />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Inline formatting"
+                                      Description="Value renders as encoded plain text; use ChildContent with raw markup for bold, italic, or mixed emphasis inside a TextBlock."
+                                      SourceId="examples/Typography/InlineFormatting.razor"
+                                      ApiTypes="@TextBlockApiTypes">
+                            <InlineFormatting />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Eyebrow")
+                    {
+                        <ExampleBlock Title="Overline label"
+                                      Description="A small overline label that sits above a heading to give it context, from plain text or custom markup."
+                                      SourceId="examples/Typography/EyebrowShowcase.razor"
+                                      ApiTypes="@EyebrowApiTypes">
+                            <EyebrowShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SectionHeading")
+                    {
+                        <ExampleBlock Title="Styled heading"
+                                      Description="Consistent heading styling for grouping a block of content."
+                                      SourceId="examples/Typography/SectionHeadingShowcase.razor"
+                                      ApiTypes="@SectionHeadingApiTypes">
+                            <SectionHeadingShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SectionHead")
+                    {
+                        <ExampleBlock Title="Heading row"
+                                      Description="A flex row that spaces a heading and a trailing action apart, for section headers that need both."
+                                      SourceId="examples/Typography/SectionHeadShowcase.razor"
+                                      ApiTypes="@SectionHeadApiTypes">
+                            <SectionHeadShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Header")
+                    {
+                        <ExampleBlock Title="Page header anatomy"
+                                      Description="Header composes with Eyebrow and SectionHead to form the typical top-of-page layout."
+                                      SourceId="examples/Typography/HeaderShowcase.razor"
+                                      ApiTypes="@HeaderApiTypes">
+                            <HeaderShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Divider")
+                    {
+                        <ExampleBlock Title="Content separator"
+                                      Description="A hairline rule for separating adjacent blocks of content without adding a heading."
+                                      SourceId="examples/Typography/DividerShowcase.razor"
+                                      ApiTypes="@DividerApiTypes">
+                            <DividerShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "MonoText")
+                    {
+                        <ExampleBlock Title="Monospace text"
+                                      Description="Renders text in the shared monospace style, from plain text or custom markup."
+                                      SourceId="examples/Typography/MonoTextShowcase.razor"
+                                      ApiTypes="@MonoTextApiTypes">
+                            <MonoTextShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CopyableMonoValue")
+                    {
+                        <ExampleBlock Title="Copyable value"
+                                      Description="A monospace value with a copy button, with optional middle truncation for long identifiers."
+                                      SourceId="examples/Typography/CopyableMonoValueShowcase.razor"
+                                      ApiTypes="@CopyableMonoValueApiTypes">
+                            <CopyableMonoValueShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "HashDisplay")
+                    {
+                        <ExampleBlock Title="Hash value"
+                                      Description="A CopyableMonoValue preset with hash-flavored defaults for copy label and empty state."
+                                      SourceId="examples/Typography/HashDisplayShowcase.razor"
+                                      ApiTypes="@HashDisplayApiTypes">
+                            <HashDisplayShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "MutedInline")
+                    {
+                        <ExampleBlock Title="Muted inline text"
+                                      Description="De-emphasized text that sits inline within a sentence."
+                                      SourceId="examples/Typography/MutedInlineShowcase.razor"
+                                      ApiTypes="@MutedInlineApiTypes">
+                            <MutedInlineShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SmallText")
+                    {
+                        <ExampleBlock Title="Small text variants"
+                                      Description="Muted small text that can render as a block, inline span, or standalone paragraph."
+                                      SourceId="examples/Typography/SmallTextShowcase.razor"
+                                      ApiTypes="@SmallTextApiTypes">
+                            <SmallTextShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FooterText")
+                    {
+                        <ExampleBlock Title="Footer caption"
+                                      Description="Small muted text styled for page and card footers."
+                                      SourceId="examples/Typography/FooterTextShowcase.razor"
+                                      ApiTypes="@FooterTextApiTypes">
+                            <FooterTextShowcase />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Typography);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Typography);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/typography");
+
+    private static readonly IReadOnlyList<Type> TextBlockApiTypes = [typeof(TextBlock)];
+    private static readonly IReadOnlyList<Type> EyebrowApiTypes = [typeof(Eyebrow)];
+    private static readonly IReadOnlyList<Type> SectionHeadingApiTypes = [typeof(SectionHeading)];
+    private static readonly IReadOnlyList<Type> SectionHeadApiTypes = [typeof(SectionHead)];
+    private static readonly IReadOnlyList<Type> HeaderApiTypes = [typeof(Header)];
+    private static readonly IReadOnlyList<Type> DividerApiTypes = [typeof(Divider)];
+    private static readonly IReadOnlyList<Type> MonoTextApiTypes = [typeof(MonoText)];
+    private static readonly IReadOnlyList<Type> CopyableMonoValueApiTypes = [typeof(CopyableMonoValue)];
+    private static readonly IReadOnlyList<Type> HashDisplayApiTypes = [typeof(HashDisplay)];
+    private static readonly IReadOnlyList<Type> MutedInlineApiTypes = [typeof(MutedInline)];
+    private static readonly IReadOnlyList<Type> SmallTextApiTypes = [typeof(SmallText)];
+    private static readonly IReadOnlyList<Type> FooterTextApiTypes = [typeof(FooterText)];
+
+}

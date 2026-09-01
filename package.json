@@ -10,6 +10,7 @@
     "canvaslib:verify-assets": "node tools/canvaslib/verify-assets.cjs",
     "gantt:test-routing": "node tools/gantt/test-routing.cjs",
     "gantt:test-grid": "node tools/gantt/test-grid.cjs",
+    "components-usage": "node tools/components-usage/components-usage.cjs",
     "webgllib:build-assets": "node tools/webgllib/build-assets.cjs",
     "webgllib:verify-assets": "node tools/webgllib/verify-assets.cjs",
     "webgllib:inventory-glb": "node tools/webgllib/inventory-glb-assets.cjs",
@@ -26,15 +27,36 @@
     "webgllib:test-runtime-idle-policy": "node tools/webgllib/test-runtime-idle-policy.mjs",
     "webgllib:test-command-batch-runtime-idle-policy": "node tools/webgllib/test-command-batch-runtime-idle-policy.cjs",
     "webgl:validate-rc": "powershell -ExecutionPolicy Bypass -File scripts/validate-webgl-rc.ps1",
-    "tailwind:build": "npm --prefix Tailwind run build",
-    "tailwind:watch": "npm --prefix Tailwind run watch",
+    "build:tailwind": "npm --prefix Tailwind run build",
+    "build:sandbox-wasm-static": "npm run build:tailwind && node -e \"require('node:fs').rmSync('artifacts/sandbox-wasm-publish', { recursive: true, force: true })\" && dotnet publish ./samples/CanDoItAll.Components.SandboxWasm/CanDoItAll.Components.SandboxWasm.csproj --configuration Release --property:CompressionEnabled=false --output ./artifacts/sandbox-wasm-publish",
+    "serve:sandbox-wasm-static": "npx http-server ./artifacts/sandbox-wasm-publish/wwwroot -c-1 -s -o",
+    "deploy:sandbox-wasm-gh-pages": "npm run build:sandbox-wasm-static && gh-pages --dist ./artifacts/sandbox-wasm-publish/wwwroot --branch gh-pages --dotfiles",
+    "watch:tailwind": "npm --prefix Tailwind run watch",
+    "watch:sandbox": "dotnet watch --project ./samples/CanDoItAll.Components.Sandbox",
+    "watch:test-page": "node tools/test-page/watch.cjs",
+    "watch:sandbox-wasm": "dotnet watch --no-restore -v:minimal --project ./samples/CanDoItAll.Components.SandboxWasm",
+    "watch:sandbox-wasm:release": "dotnet watch -c Release --project ./samples/CanDoItAll.Components.SandboxWasm",
+    "screenshots": "node tools/screenshots/snapshot.cjs",
+    "screenshots-app": "node tools/screenshots/snapshot.cjs --config ./tools/screenshots/screenshots-app.config.json",
+    "screenshots:capture": "node tools/screenshots/capture.cjs",
+    "screenshots:diff": "node tools/screenshots/diff.cjs",
+    "screenshots:report": "node tools/screenshots/report.cjs",
+    "screenshots:store": "node tools/screenshots/store.cjs",
+    "screenshots:prune": "node tools/screenshots/prune.cjs",
     "build": "dotnet build CanDoItAll.Components.slnx",
     "pack": "powershell -ExecutionPolicy Bypass -File tools/deployment/nugets/Build-NuGets.ps1"
   },
   "type": "commonjs",
   "license": "MIT",
   "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "material-symbols": "^0.45.10",
+    "mustache": "^4.2.0",
+    "odiff-bin": "^4.5.0",
     "playwright": "^1.60.0",
     "three": "^0.184.0"
+  },
+  "allowScripts": {
+    "fsevents@2.3.2": true
   }
 }

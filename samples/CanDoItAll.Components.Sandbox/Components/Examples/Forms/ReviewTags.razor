@@ -1,0 +1,15 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormField Text="Tags">
+    <TagEditor Value="@AdvancedState.Tags"
+               ValueChanged="HandleTagsChanged"
+               Suggestions="@TagSuggestions"
+               Placeholder="Add review tag"
+               Hint="Press comma or Enter to add a tag. Suggestions appear while the field is focused."
+               Disabled="@IsDisabled"
+               TestId="sandbox-inputs-tag-editor"
+               InputTestId="sandbox-inputs-tag-editor-input"
+               MaxTags="8"
+               MaxLength="36" />
+</FormField>

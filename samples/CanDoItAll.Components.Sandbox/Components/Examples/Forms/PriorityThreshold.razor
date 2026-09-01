@@ -1,0 +1,19 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormField Text="Priority threshold">
+    <div class="space-y-3" data-testid="sandbox-inputs-slider">
+        <Slider TValue="int"
+                Value="@AdvancedState.Priority"
+                ValueChanged="HandlePriorityChanged"
+                Min="0"
+                Max="100"
+                Step="5"
+                Disabled="@IsDisabled"
+                data-testid="sandbox-inputs-slider-control" />
+        <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+            <span>@PriorityLabel</span>
+            <StatusBadge Text="@($"{AdvancedState.Priority}%")" Tone="info" />
+        </div>
+    </div>
+</FormField>

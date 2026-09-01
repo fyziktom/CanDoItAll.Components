@@ -1,7 +1,144 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-<Router AppAssembly="@typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-</Router>
+@using System.Reflection
+@using Microsoft.JSInterop
+@implements IDisposable
+@implements IAsyncDisposable
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+@if (queryRouteData is { } routeData)
+{
+    <RouteView RouteData="@routeData" DefaultLayout="@GetDefaultLayout()" />
+    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+}
+else
+{
+    <Router AppAssembly="@typeof(Routes).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@GetDefaultLayout()" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+    </Router>
+}
+
+@code {
+    private RouteData? queryRouteData;
+    private string? pendingAnchor;
+    private bool pendingScroll;
+    private IJSObjectReference? toolbarModule;
+    private DotNetObjectReference<Routes>? dotNetReference;
+
+    private Type GetDefaultLayout()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var isTestRoute = uri.AbsolutePath.TrimEnd('/').EndsWith("/test", StringComparison.OrdinalIgnoreCase)
+            || uri.Fragment.StartsWith("#test", StringComparison.OrdinalIgnoreCase);
+        var isRaw = uri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
+            || uri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
+
+        return isTestRoute && isRaw
+            ? typeof(RawTestLayout)
+            : typeof(MainLayout);
+    }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += HandleLocationChanged;
+        UpdateQueryRoute();
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs args)
+    {
+        UpdateQueryRoute(NavigationManager.ToAbsoluteUri(args.Location).Fragment);
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void UpdateQueryRoute(string? hash = null)
+    {
+        if (!SandboxQueryLinks.UseHashRouting)
+        {
+            queryRouteData = null;
+            return;
+        }
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var routeHash = (hash ?? uri.Fragment).TrimStart('#');
+        if (string.IsNullOrWhiteSpace(routeHash))
+        {
+            routeHash = NavigationManager.ToBaseRelativePath(uri.AbsoluteUri)
+                .Split('?', 2)[0]
+                .Trim('/');
+        }
+        var parts = routeHash.Split('?', 2);
+
+        // An empty route (home) still needs to resolve to a component below so it renders
+        // through the same RouteView branch as every other hash-routed page. Falling back to
+        // the plain <Router> for "/" would mount a second MainLayout/ToolbarState instance,
+        // silently resetting the Unused/Coverage toggles and theme whenever navigation crosses
+        // between home and any other page.
+        var route = parts.Length > 0 ? Uri.UnescapeDataString(parts[0]).Trim('/') : string.Empty;
+        var template = string.IsNullOrWhiteSpace(route) ? "/" : $"/{route}";
+        pendingAnchor = SandboxQueryLinks.UpdateHashState(routeHash);
+        var componentType = typeof(Routes).Assembly.ExportedTypes.FirstOrDefault(type =>
+            typeof(IComponent).IsAssignableFrom(type)
+            && type.GetCustomAttributes<RouteAttribute>()
+                .Any(attribute => string.Equals(attribute.Template, template, StringComparison.OrdinalIgnoreCase)));
+
+        queryRouteData = componentType is null
+            ? null
+            : new RouteData(componentType, new Dictionary<string, object?>
+            {
+                [nameof(CatalogPageBase.HashRouteState)] = routeHash
+            });
+        pendingScroll = queryRouteData is not null;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && SandboxQueryLinks.UseHashRouting)
+        {
+            toolbarModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/sandbox-toolbar.js");
+            dotNetReference = DotNetObjectReference.Create(this);
+            await toolbarModule.InvokeVoidAsync("observeHashChanges", dotNetReference);
+        }
+
+        if (!SandboxQueryLinks.UseHashRouting || !pendingScroll)
+        {
+            return;
+        }
+
+        if (toolbarModule is not null)
+        {
+            if (string.IsNullOrWhiteSpace(pendingAnchor))
+            {
+                await toolbarModule.InvokeVoidAsync("scrollToTop");
+            }
+            else
+            {
+                await toolbarModule.InvokeVoidAsync("scrollToAnchor", pendingAnchor);
+            }
+        }
+        pendingAnchor = null;
+        pendingScroll = false;
+    }
+
+    [JSInvokable]
+    public Task HandleHashChanged(string hash)
+    {
+        UpdateQueryRoute(hash);
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (toolbarModule is not null)
+        {
+            await toolbarModule.InvokeVoidAsync("stopObservingHashChanges");
+            await toolbarModule.DisposeAsync();
+        }
+
+        dotNetReference?.Dispose();
+    }
+}

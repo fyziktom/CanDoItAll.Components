@@ -1,0 +1,83 @@
+@layer components {
+  .cda-dialog-scaffold {
+    @apply flex min-w-0 flex-col;
+    gap: var(--cad-space-section-gap);
+  }
+
+  .cda-dialog-scaffold--dense {
+    gap: var(--cad-space-content-gap);
+  }
+
+  .cda-dialog-scaffold__header {
+    @apply flex min-w-0 flex-wrap items-start justify-between gap-3;
+  }
+
+  .cda-dialog-scaffold__title-block {
+    @apply flex min-w-0 flex-1 flex-col gap-1;
+  }
+
+  .cda-dialog-scaffold__eyebrow {
+    @apply m-0 text-[10px] font-semibold uppercase tracking-[0.18em];
+    color: var(--cad-color-text-soft);
+  }
+
+  .cda-dialog-scaffold__title-block h3 {
+    @apply m-0 text-base font-semibold;
+    color: var(--cad-color-text-strong);
+  }
+
+  .cda-dialog-scaffold__title-block p {
+    @apply m-0 max-w-3xl text-sm leading-5;
+    color: var(--cad-color-text-muted);
+  }
+
+  .cda-dialog-scaffold__actions,
+  .cda-dialog-scaffold__footer {
+    @apply flex min-w-0 flex-wrap items-center justify-end gap-2;
+  }
+
+  .cda-dialog-scaffold__body {
+    @apply grid min-w-0 grid-cols-1 gap-3;
+  }
+
+  .cda-dialog-scaffold__main,
+  .cda-dialog-scaffold__rail,
+  .cda-dialog-scaffold__review {
+    @apply min-w-0;
+  }
+
+  .cda-dialog-scaffold__rail,
+  .cda-dialog-scaffold__review {
+    @apply border p-3;
+    border-radius: var(--cad-radius-surface);
+    border-color: var(--cad-color-border-soft);
+    background: var(--cad-color-surface-soft);
+  }
+
+  .cda-dialog-scaffold__validation {
+    @apply border px-3 py-2.5 text-sm;
+    border-radius: var(--cad-radius-control);
+    border-color: var(--cad-tone-warning-soft-border);
+    background: var(--cad-tone-warning-soft-bg);
+    color: var(--cad-tone-warning-soft-fg);
+  }
+
+  .cda-dialog-scaffold__footer {
+    @apply border-t pt-3;
+    border-color: var(--cad-color-border-soft);
+  }
+
+  @media (min-width: 1024px) {
+    .cda-dialog-scaffold__body--rail {
+      grid-template-columns: minmax(11rem, 0.35fr) minmax(0, 1fr);
+    }
+
+    .cda-dialog-scaffold__body--review {
+      grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.4fr);
+    }
+
+    .cda-dialog-scaffold__body--rail.cda-dialog-scaffold__body--review {
+      grid-template-columns: minmax(10rem, 0.28fr) minmax(0, 1fr) minmax(14rem, 0.38fr);
+    }
+  }
+}

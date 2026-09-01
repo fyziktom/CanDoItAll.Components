@@ -1,0 +1,17 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormField Text="Budget reference">
+    <PrefixedField Prefix="@BudgetPrefix"
+                   Suffix="@BudgetSuffix"
+                   StackOnMobile="true"
+                   data-testid="sandbox-inputs-prefixed-field">
+        <TextBox Value="@AdvancedState.BudgetCode"
+                 ValueChanged="HandleBudgetCodeChanged"
+                 Immediate="true"
+                 Placeholder="@BudgetCodePlaceholder"
+                 Disabled="@IsDisabled"
+                 Class="cda-input"
+                 data-testid="sandbox-inputs-prefixed-field-input" />
+    </PrefixedField>
+</FormField>

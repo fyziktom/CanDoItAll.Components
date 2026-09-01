@@ -5,24 +5,31 @@
     [CascadingParameter]
     private Tabs? Parent { get; set; }
 
+    /// <summary>The label shown on the tab button.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Material icon token shown before <see cref="Text"/>; renders the raw token if unresolved.</summary>
     [Parameter]
     public string? Icon { get; set; }
 
+    /// <summary>When <c>true</c>, the tab cannot be selected and is skipped by keyboard navigation.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>When <c>false</c>, the tab is excluded from the visible tab strip and its indices.</summary>
     [Parameter]
     public bool Visible { get; set; } = true;
 
+    /// <summary>Optional badge text rendered alongside <see cref="Text"/>.</summary>
     [Parameter]
     public string? BadgeText { get; set; }
 
+    /// <summary>Additional attributes applied to the tab's <c>&lt;button&gt;</c> element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
+    /// <summary>The panel content shown when this tab is selected.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

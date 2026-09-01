@@ -13,9 +13,11 @@
 </span>
 
 @code {
+    /// <summary>Label rendered inside the chip. Ignored when <see cref="ChildContent"/> is supplied.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Custom chip content. Takes precedence over <see cref="Text"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 }

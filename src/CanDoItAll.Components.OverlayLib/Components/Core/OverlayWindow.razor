@@ -102,81 +102,107 @@
     private string? appliedStateKey;
     private string? pendingStateKey;
 
+    /// <summary>Stable identifier for this window instance, used as the JS interop key and persisted with its geometry.</summary>
     [Parameter, EditorRequired]
     public string WindowId { get; set; } = string.Empty;
 
+    /// <summary>Heading shown in the window's header.</summary>
     [Parameter, EditorRequired]
     public string Title { get; set; } = string.Empty;
 
+    /// <summary>Small label rendered above <see cref="Title"/>.</summary>
     [Parameter]
     public string Kicker { get; set; } = string.Empty;
 
+    /// <summary>Supporting sentence rendered under <see cref="Title"/>.</summary>
     [Parameter]
     public string Summary { get; set; } = string.Empty;
 
+    /// <summary>Accessible name for the window's root region.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Overlay window";
 
+    /// <summary>Additional CSS class merged onto the window body.</summary>
     [Parameter]
     public string BodyClass { get; set; } = string.Empty;
 
+    /// <summary>Value applied to <c>data-testid</c> on the window, for test targeting.</summary>
     [Parameter]
     public string TestId { get; set; } = string.Empty;
 
+    /// <summary>Corner the window opens in the first time it's shown, before the user repositions it.</summary>
     [Parameter]
     public string DefaultPlacement { get; set; } = "top-right";
 
+    /// <summary>CSS selector for the element the window's drag and resize bounds are constrained to.</summary>
     [Parameter]
     public string ContainerSelector { get; set; } = "[data-cda-overlay-container], .cw-stage-surface, .wgl-workbench-stage";
 
+    /// <summary>CSS selector for the element the window must not overlap when placed at the top of its container.</summary>
     [Parameter]
     public string SafeTopSelector { get; set; } = "[data-cda-overlay-safe-top], .cw-toolbar, .wgl-overlay-toolbar";
 
+    /// <summary>Root namespace of the JS interop module backing drag, resize, and geometry persistence.</summary>
     [Parameter]
     public string InteropApiRoot { get; set; } = "CanDoItAll.overlayWindow";
 
+    /// <summary>Initial width in pixels before the user resizes the window.</summary>
     [Parameter]
     public double DefaultWidth { get; set; } = 360;
 
+    /// <summary>Initial height in pixels before the user resizes the window.</summary>
     [Parameter]
     public double DefaultHeight { get; set; } = 480;
 
+    /// <summary>Minimum width the window can be resized to.</summary>
     [Parameter]
     public double MinWidth { get; set; } = 280;
 
+    /// <summary>Minimum height the window can be resized to.</summary>
     [Parameter]
     public double MinHeight { get; set; } = 180;
 
+    /// <summary>Maximum width the window can be resized to. Unbounded when unset.</summary>
     [Parameter]
     public double? MaxWidth { get; set; }
 
+    /// <summary>Maximum height the window can be resized to. Unbounded when unset.</summary>
     [Parameter]
     public double? MaxHeight { get; set; }
 
+    /// <summary>Enables the resize handle.</summary>
     [Parameter]
     public bool AllowResize { get; set; } = true;
 
+    /// <summary>Accessible label for the restore-from-minimized control.</summary>
     [Parameter]
     public string RestoreLabel { get; set; } = "Expand window";
 
+    /// <summary>Accessible label for the minimize control.</summary>
     [Parameter]
     public string MinimizeLabel { get; set; } = "Minimize window";
 
+    /// <summary>Accessible label for the reset-position-and-size control.</summary>
     [Parameter]
     public string NormalizeLabel { get; set; } = "Restart window position and size";
 
+    /// <summary>Accessible label for the hide control.</summary>
     [Parameter]
     public string HideLabel { get; set; } = "Hide window";
 
+    /// <summary>Shows the header bar with title, kicker, summary, and window controls.</summary>
     [Parameter]
     public bool ShowHeader { get; set; } = true;
 
+    /// <summary>Controlled geometry and visibility state (position, size, minimized, hidden). The host owns this value and updates it via <see cref="StateChanged"/>.</summary>
     [Parameter, EditorRequired]
     public OverlayWindowState State { get; set; } = new();
 
+    /// <summary>Invoked when the user drags, resizes, minimizes, restores, or hides the window.</summary>
     [Parameter]
     public EventCallback<OverlayWindowState> StateChanged { get; set; }
 
+    /// <summary>The window's body content.</summary>
     [Parameter, EditorRequired]
     public RenderFragment ChildContent { get; set; } = default!;
 

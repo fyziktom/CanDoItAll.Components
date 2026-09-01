@@ -1,0 +1,23 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
+
+<StickyActionFooter StatusLabel="Layout state"
+                    StatusMessage="@FooterMessage"
+                    StatusTone="@FooterTone"
+                    data-testid="sandbox-layout-sticky-footer">
+    <SecondaryActions>
+        <Button Text="Save draft" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Disabled="@IsActionDisabled" />
+    </SecondaryActions>
+    <PrimaryActions>
+        <Button Text="@PrimaryActionText" Disabled="@IsActionDisabled" />
+    </PrimaryActions>
+    <DangerActions>
+        <Button Text="Discard" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Text)" Disabled="@IsActionDisabled" />
+    </DangerActions>
+</StickyActionFooter>
+
+@code {
+    private bool IsActionDisabled => false;
+    private string FooterMessage => "Shared layout components should make the next step obvious without inventing one-off page wrappers.";
+    private string FooterTone => "info";
+    private string PrimaryActionText => "Approve workspace layout and capture proof bundle";
+}

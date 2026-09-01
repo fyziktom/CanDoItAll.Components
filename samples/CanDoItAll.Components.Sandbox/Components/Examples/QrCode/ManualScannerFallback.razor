@@ -1,0 +1,21 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.QrCode
+
+<Stack GapScale="LayoutGap.Medium">
+    <QrScanButton Label="Open manual scanner"
+                  EnableCamera="false"
+                  Scanned="HandleScanned"
+                  TestId="sandbox-qr-scan-button" />
+    <Alert AlertStyle="AlertStyle.Info">
+        Last decoded payload: @(lastScan?.Text ?? "none")
+    </Alert>
+</Stack>
+
+@code {
+    private QrScanResult? lastScan;
+
+    private Task HandleScanned(QrScanResult result)
+    {
+        lastScan = result;
+        return Task.CompletedTask;
+    }
+}

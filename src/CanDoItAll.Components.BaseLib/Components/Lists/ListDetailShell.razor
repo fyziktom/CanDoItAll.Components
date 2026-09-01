@@ -32,27 +32,35 @@
 </div>
 
 @code {
+    /// <summary>The width of the list pane, as a CSS length (e.g. "24rem").</summary>
     [Parameter]
     public string ListPaneWidth { get; set; } = "24rem";
 
+    /// <summary>Additional CSS classes applied to the list pane.</summary>
     [Parameter]
     public string? ListPaneClass { get; set; }
 
+    /// <summary>Additional CSS classes applied to the detail pane.</summary>
     [Parameter]
     public string? DetailPaneClass { get; set; }
 
+    /// <summary>When <c>true</c>, reduces header and content padding for a more compact layout.</summary>
     [Parameter]
     public bool Dense { get; set; }
 
+    /// <summary>Content rendered in the list pane's header, above <see cref="ListContent"/>.</summary>
     [Parameter]
     public RenderFragment? ListHeader { get; set; }
 
+    /// <summary>The list pane's scrollable body content.</summary>
     [Parameter]
     public RenderFragment? ListContent { get; set; }
 
+    /// <summary>Content rendered in the detail pane's header, above <see cref="DetailContent"/>.</summary>
     [Parameter]
     public RenderFragment? DetailHeader { get; set; }
 
+    /// <summary>The detail pane's scrollable body content.</summary>
     [Parameter]
     public RenderFragment? DetailContent { get; set; }
 

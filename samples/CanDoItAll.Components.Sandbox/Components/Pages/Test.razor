@@ -1,0 +1,593 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/test"
+@inject NavigationManager NavigationManager
+
+@{
+    var testUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase);
+    var isRaw = testUri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
+        || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
+}
+
+<main class="min-h-screen @(isRaw ? "p-10" : "")" data-cad-theme="@(isDark ? "dark" : "light")" data-testid="test-page">
+    <div class="space-y-10">
+        <section class="space-y-5" aria-labelledby="test-buttons">
+            <h2 id="test-buttons" class="text-2xl font-semibold">Buttons</h2>
+            <section class="space-y-4" aria-labelledby="test-button">
+                <h3 id="test-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/buttons#button">&lt;Button&gt;</a></h3>
+
+                <div class="grid gap-x-10 gap-y-8 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-4">
+                    @foreach (var style in ButtonStyles)
+                    {
+                        <section class="space-y-4">
+                            @foreach (var size in ButtonSizes)
+                            {
+                                <div class="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
+                                    @foreach (var variant in ButtonVariants)
+                                    {
+                                        <Button Text="@variant.ToString()" ButtonStyle="@style" Size="@size" Variant="@variant" />
+                                        <Button Text="@variant.ToString()" ButtonStyle="@style" Size="@size" Variant="@variant" Disabled="true" />
+                                    }
+                                </div>
+                            }
+                        </section>
+                    }
+                </div>
+            </section>
+
+            <section class="space-y-3" aria-labelledby="test-copy-button">
+                <h3 id="test-copy-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/buttons#copy-button">&lt;CopyButton&gt;</a></h3>
+                <div class="space-y-3">
+                    <CopyButton Text="Copy token" Value="cda_test_token" />
+                    <CopyButton Text="Copy token" Value="cda_test_token" Disabled="true" />
+                </div>
+            </section>
+        </section>
+
+        <section class="mt-10 space-y-5" aria-labelledby="test-badges">
+            <h2 id="test-badges" class="text-2xl font-semibold">Badges</h2>
+            <section class="space-y-4" aria-labelledby="test-badge">
+                <h3 id="test-badge" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/badges#badge">&lt;Badge&gt;</a></h3>
+                <div class="flex flex-wrap gap-2">
+                    @foreach (var tone in BadgeTones)
+                    {
+                        <Badge Tone="@tone" Text="@tone.ToString()" />
+                    }
+                </div>
+            </section>
+
+            @foreach (var component in BadgeComponents)
+            {
+                <section class="space-y-3" aria-labelledby="@($"test-{component.Name}")">
+                    <h3 id="@($"test-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/badges", component.Name)">&lt;@component.Name&gt;</a></h3>
+                    @if (component.Name == "Pill")
+                    {
+                        <div class="space-y-3">
+                            @foreach (var tone in PillTones)
+                            {
+                                <div class="flex flex-wrap gap-2">
+                                    <Pill Tone="@tone" Text="@tone.ToString()" AsButton="true" />
+                                    <Pill Tone="@tone" Text="@tone.ToString()" Token="4" AsButton="true" />
+                                    <Pill Tone="@tone" Text="@tone.ToString()" AsButton="true" Disabled="true" />
+                                    <Pill Tone="@tone" Text="@tone.ToString()" Token="4" AsButton="true" Disabled="true" />
+                                </div>
+                            }
+                        </div>
+                    }
+                    else if (component.Name == "StatusBadge")
+                    {
+                        <div class="flex gap-2">
+                            @foreach (var tone in StatusBadgeTones)
+                            {
+                                <StatusBadge Text="@tone" Tone="@tone" />
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <DynamicComponent Type="@component.Type" Parameters="@BuildParameters(component.Name)" />
+                    }
+                </section>
+            }
+        </section>
+
+        @foreach (var group in RemainingPriorityGroups)
+        {
+            <section class="mt-10 space-y-5" aria-labelledby="@($"test-{group.Slug}")">
+                <h2 id="@($"test-{group.Slug}")" class="text-2xl font-semibold">@group.Title</h2>
+                <div class="space-y-10">
+                    @foreach (var component in group.Components)
+                    {
+                        <section class="space-y-3" aria-labelledby="@($"test-{group.Slug}-{component.Name}")">
+                            <h3 id="@($"test-{group.Slug}-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl(group.Route, component.Name)">&lt;@component.Name&gt;</a></h3>
+                            @if (component.Name == "CheckBox")
+                            {
+                                <div class="flex gap-4">
+                                    <CheckBox TValue="bool" Value="true" aria-label="Checked" />
+                                    <CheckBox TValue="bool" Value="false" aria-label="Unchecked" />
+                                    <CheckBox TValue="bool" Value="true" Disabled="true" aria-label="Checked and disabled" />
+                                    <CheckBox TValue="bool" Value="false" Disabled="true" aria-label="Unchecked and disabled" />
+                                </div>
+                            }
+                            else if (component.Name == "Alert")
+                            {
+                                <div class="space-y-2">
+                                    @foreach (var alertStyle in AlertStyles)
+                                    {
+                                        <Alert AlertStyle="@alertStyle">@alertStyle</Alert>
+                                    }
+                                </div>
+                            }
+                            else if (component.Name == "TagEditor")
+                            {
+                                <div class="space-y-3">
+                                    <TagEditor Value="@(Array.Empty<string>())" Placeholder="Empty tags" AriaLabel="Empty tags" />
+                                    <TagEditor Value="@(new[] { "design", "priority" })" Placeholder="Add tag" AriaLabel="Filled tags" />
+                                    <TagEditor Value="@(new[] { "design", "priority" })" Placeholder="Disabled tags" AriaLabel="Disabled tags" Disabled="true" />
+                                </div>
+                            }
+                            else if (component.Name == "Avatar")
+                            {
+                                <div class="flex gap-2">
+                                    <Avatar DefaultImageSeed="tomas" Alt="Tomas" Size="AvatarSize.Large" />
+                                    <Avatar DefaultImageSeed="tomas" Alt="Tomas" Size="AvatarSize.Medium" />
+                                    <Avatar DefaultImageSeed="tomas" Alt="Tomas" Size="AvatarSize.Small" />
+                                    <Avatar DefaultImageSeed="morgan" Alt="Morgan" Size="AvatarSize.Large" Shape="AvatarShape.Rounded" />
+                                    <Avatar DefaultImageSeed="morgan" Alt="Morgan" Size="AvatarSize.Medium" Shape="AvatarShape.Rounded" />
+                                    <Avatar DefaultImageSeed="morgan" Alt="Morgan" Size="AvatarSize.Small" Shape="AvatarShape.Rounded" />
+                                    <Avatar FallbackText="AL" Alt="Ada Lovelace" UseDefaultImageWhenMissing="false" Shape="AvatarShape.Rounded" Size="AvatarSize.Large" />
+                                    <Avatar FallbackText="AL" Alt="Ada Lovelace" UseDefaultImageWhenMissing="false" Shape="AvatarShape.Rounded" Size="AvatarSize.Medium" />
+                                    <Avatar FallbackText="AL" Alt="Ada Lovelace" UseDefaultImageWhenMissing="false" Shape="AvatarShape.Rounded" Size="AvatarSize.Small" />
+                                    <Avatar FallbackText="AL" Alt="Ada Lovelace" UseDefaultImageWhenMissing="false" Shape="AvatarShape.Rounded" Size="AvatarSize.Large" />
+                                    <Avatar FallbackText="AL" Alt="Ada Lovelace" UseDefaultImageWhenMissing="false" Shape="AvatarShape.Rounded" Size="AvatarSize.Medium" />
+                                    <Avatar FallbackText="AL" Alt="Ada Lovelace" UseDefaultImageWhenMissing="false" Shape="AvatarShape.Rounded" Size="AvatarSize.Small" />
+                                </div>
+                            }
+                            else if (component.Name == "Editable")
+                            {
+                                <div class="space-y-3">
+                                    <Editable TItem="TestDataRow" Item="@(new TestDataRow("Review title"))" ParameterName="@nameof(TestDataRow.Name)" Placeholder="Review title" />
+                                    <Editable TItem="TestDataRow" Item="@(new TestDataRow("Review title"))" ParameterName="@nameof(TestDataRow.Name)" Placeholder="Review title" Disabled="true" />
+                                </div>
+                            }
+                            else if (component.Name == "DropDown")
+                            {
+                                <div class="space-y-3">
+                                    <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" aria-label="Enabled status" />
+                                    <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" Disabled="true" aria-label="Disabled status" />
+                                </div>
+                            }
+                            else if (component.Name == "EntityPicker")
+                            {
+                                <div class="space-y-3">
+                                    <EntityPicker Title="Owner" SelectedId="ada" Items="@TestPickerItems" />
+                                    <EntityPicker Title="Owner" SelectedId="ada" Items="@TestPickerItems" Disabled="true" />
+                                </div>
+                            }
+                            else if (component.Name == "FileUpload")
+                            {
+                                <div class="space-y-3">
+                                    <FileUpload />
+                                    <FileUpload Disabled="true" />
+                                </div>
+                            }
+                            else if (component.Name == "FormField")
+                            {
+                                <div class="space-y-3">
+                                    <FormField Label="Project name"><TextBox Value="Project Aurora" /></FormField>
+                                    <FormField Label="Project name"><TextBox Value="Project Aurora" Disabled="true" /></FormField>
+                                </div>
+                            }
+                            else if (component.Name == "Numeric")
+                            {
+                                <div class="space-y-3">
+                                    <Numeric TValue="int" Value="42" aria-label="Enabled quantity" />
+                                    <Numeric TValue="int" Value="42" Disabled="true" aria-label="Disabled quantity" />
+                                </div>
+                            }
+                            else if (component.Name == "PrefixedField")
+                            {
+                                <div class="space-y-3">
+                                    <PrefixedField Prefix="$"><TextBox Value="120" aria-label="Prefix only" /></PrefixedField>
+                                    <PrefixedField Suffix="USD"><TextBox Value="120" aria-label="Suffix only" /></PrefixedField>
+                                    <PrefixedField Prefix="$" Suffix="USD"><TextBox Value="120" aria-label="Prefix and suffix" /></PrefixedField>
+                                    <PrefixedField Prefix="$" Suffix="USD"><TextBox Value="120" Disabled="true" aria-label="Disabled prefix and suffix" /></PrefixedField>
+                                </div>
+                            }
+                            else if (component.Name == "LineSeries")
+                            {
+                                <Chart>
+                                    <ValueAxis Min="0" Max="100" />
+                                    <LineSeries Title="API latency" Data="@LineChartPoints" ValueProperty="@nameof(TestChartPoint.Value)" />
+                                </Chart>
+                            }
+                            else if (component.Name == "DataGrid")
+                            {
+                                <DataGrid TItem="TestDataRow"
+                                          Data="@TestDataRows"
+                                          Caption="Component refactoring review queue"
+                                          AllowPaging="true"
+                                          PageSize="5">
+                                    <Columns>
+                                        <DataGridColumn TItem="TestDataRow" Property="@nameof(TestDataRow.Id)" Title="ID" />
+                                        <DataGridColumn TItem="TestDataRow" Property="@nameof(TestDataRow.Name)" Title="Component" />
+                                        <DataGridColumn TItem="TestDataRow" Property="@nameof(TestDataRow.Owner)" Title="Owner" />
+                                        <DataGridColumn TItem="TestDataRow" Property="@nameof(TestDataRow.Status)" Title="Status" />
+                                        <DataGridColumn TItem="TestDataRow" Property="@nameof(TestDataRow.Updated)" Title="Updated" />
+                                        <DataGridColumn TItem="TestDataRow" Property="@nameof(TestDataRow.Coverage)" Title="Coverage" />
+                                    </Columns>
+                                </DataGrid>
+                            }
+                            else if (component.Name == "SecretField")
+                            {
+                                <div class="space-y-3">
+                                    <SecretField Value="top-secret" />
+                                    <SecretField Value="top-secret" Disabled="true" />
+                                </div>
+                            }
+                            else if (component.Name == "Tabs")
+                            {
+                                <div class="space-y-6">
+                                    @foreach (var tone in TabsTones)
+                                    {
+                                        <Tabs Variant="TabsVariant.WorkspaceSecondary" Tone="@tone" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{tone} tone tabs")">
+                                            <TabsItem Text="@tone.ToString()" Icon="palette">@tone.ToString() tone</TabsItem>
+                                            <TabsItem Text="Inactive">Inactive tab</TabsItem>
+                                            <TabsItem Text="Disabled" Disabled="true">Disabled tab</TabsItem>
+                                        </Tabs>
+                                    }
+
+                                    @foreach (var borderMode in TabsBorderModes)
+                                    {
+                                        <Tabs Variant="TabsVariant.WorkspacePrimary" Tone="TabsTone.Primary" BorderMode="@borderMode" AriaLabel="@($"{borderMode} border tabs")">
+                                            <TabsItem Text="@borderMode.ToString()">@borderMode.ToString() border</TabsItem>
+                                            <TabsItem Text="Border mode">Second tab</TabsItem>
+                                        </Tabs>
+                                    }
+
+                                    @foreach (var variant in TabsVariants)
+                                    {
+                                        <Tabs Variant="@variant" Tone="TabsTone.Info" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{variant} variant tabs")">
+                                            <TabsItem Text="@variant.ToString()" Icon="tabs">@variant.ToString() variant</TabsItem>
+                                            <TabsItem Text="With badge" BadgeText="3">Badge tab</TabsItem>
+                                        </Tabs>
+                                    }
+
+                                    @foreach (var position in TabPositions)
+                                    {
+                                        <Tabs Variant="TabsVariant.WorkspaceTertiary" Tone="TabsTone.Success" BorderMode="TabsBorderMode.Soft" TabPosition="@position" AriaLabel="@($"{position} position tabs")">
+                                            <TabsItem Text="@position.ToString()" Icon="@GetTabPositionIcon(position)">@position.ToString() position</TabsItem>
+                                            <TabsItem Text="Details">Positioned panel</TabsItem>
+                                        </Tabs>
+                                    }
+                                </div>
+                            }
+                            else if (component.Name == "TreeView")
+                            {
+                                <TreeView Items="@TestTreeNodes" AriaLabel="Test tree" />
+                            }
+                            else if (component.Name == "TextBlock")
+                            {
+                                <div class="space-y-2">
+                                    @foreach (var textStyle in TextStyles)
+                                    {
+                                        <TextBlock TextStyle="@textStyle" Value="@textStyle.ToString()" />
+                                    }
+                                </div>
+                            }
+                            else if (component.Name == "TextArea")
+                            {
+                                <div class="space-y-3">
+                                    <TextArea Value="Review notes" />
+                                    <TextArea Value="Review notes" Disabled="true" />
+                                </div>
+                            }
+                            else if (component.Name == "TextBox")
+                            {
+                                <div class="space-y-3">
+                                    <TextBox Value="Project Aurora" />
+                                    <TextBox Value="Project Aurora" Disabled="true" />
+                                </div>
+                            }
+                            else
+                            {
+                                <DynamicComponent Type="@component.Type" Parameters="@BuildParameters(component.Name)" />
+                            }
+                        </section>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+</main>
+
+@code {
+    /// <summary>Accepted for the WASM hash router; the page reads route state directly from NavigationManager.</summary>
+    [Parameter]
+    public string? HashRouteState { get; set; }
+
+    private static readonly ButtonStyle[] ButtonStyles = Enum.GetValues<ButtonStyle>();
+    private static readonly ButtonSize[] ButtonSizes = Enum.GetValues<ButtonSize>();
+    private static readonly Variant[] ButtonVariants = Enum.GetValues<Variant>();
+    private static readonly Shade[] Shades = Enum.GetValues<Shade>();
+    private static readonly BadgeTone[] BadgeTones = Enum.GetValues<BadgeTone>();
+    private static readonly PillTone[] PillTones = Enum.GetValues<PillTone>();
+    private static readonly AlertStyle[] AlertStyles = Enum.GetValues<AlertStyle>();
+    private static readonly TabsTone[] TabsTones = Enum.GetValues<TabsTone>();
+    private static readonly TabsBorderMode[] TabsBorderModes = Enum.GetValues<TabsBorderMode>();
+    private static readonly TabsVariant[] TabsVariants = Enum.GetValues<TabsVariant>();
+    private static readonly TabPosition[] TabPositions = Enum.GetValues<TabPosition>();
+    private static readonly string[] StatusBadgeTones = ["neutral", "success", "warning", "danger", "info", "accent"];
+    private static readonly TextStyle[] TextStyles = Enum.GetValues<TextStyle>();
+    private static readonly TreeViewNode[] TestTreeNodes =
+    [
+        new()
+        {
+            Id = "workspace",
+            Text = "Workspace",
+            Icon = "folder",
+            IsExpanded = true,
+            Children =
+            [
+                new() { Id = "design", Text = "Design review", Icon = "palette", IsSelected = true },
+                new()
+                {
+                    Id = "release",
+                    Text = "Release",
+                    Icon = "rocket_launch",
+                    IsExpanded = true,
+                    Children = [new() { Id = "qa", Text = "Quality assurance", Icon = "fact_check" }]
+                }
+            ]
+        }
+    ];
+    private static readonly EntityPickerItem[] TestPickerItems =
+    [
+        new() { Id = "ada", Label = "Ada Lovelace", Description = "Engineering", Meta = "Owner" },
+        new() { Id = "grace", Label = "Grace Hopper", Description = "Platform", Meta = "Reviewer" },
+        new() { Id = "lin", Label = "Lin Chen", Description = "Design", Meta = "Contributor" }
+    ];
+    private static readonly string[] DropDownValues = ["Draft", "Published"];
+    private static readonly TestDataRow[] TestDataRows =
+    [
+        new("CDA-001", "Button", "Ada", "Ready", "Today", "100%"),
+        new("CDA-002", "Badge", "Lin", "Ready", "Today", "100%"),
+        new("CDA-003", "Pill", "Marta", "Review", "Yesterday", "92%"),
+        new("CDA-004", "StatusBadge", "Ada", "Review", "Yesterday", "88%"),
+        new("CDA-005", "DataGrid", "Lin", "Active", "Aug 21", "75%"),
+        new("CDA-006", "Tabs", "Marta", "Active", "Aug 21", "70%"),
+        new("CDA-007", "TreeView", "Ada", "Planned", "Aug 20", "45%"),
+        new("CDA-008", "TextBlock", "Lin", "Ready", "Aug 19", "100%"),
+        new("CDA-009", "Avatar", "Marta", "Review", "Aug 18", "90%"),
+        new("CDA-010", "TagEditor", "Ada", "Active", "Aug 18", "60%"),
+        new("CDA-011", "Alert", "Lin", "Planned", "Aug 17", "35%"),
+        new("CDA-012", "EntityPicker", "Marta", "Planned", "Aug 16", "20%")
+    ];
+    private static readonly TestChartPoint[] LineChartPoints = [new(42), new(48), new(39), new(55), new(51), new(60)];
+    private static readonly PriorityComponent[] BadgeComponents = [
+        new("Pill", typeof(Pill)),
+        new("StatusBadge", typeof(StatusBadge))];
+
+    private static readonly PriorityGroup[] RemainingPriorityGroups =
+    [
+        new("Cards", "cards", "/cards", [
+            new("CardActions", typeof(CardActions)),
+            new("CardButton", typeof(CardButton)),
+            new("PanelCard", typeof(PanelCard)),
+            new("SurfaceCard", typeof(SurfaceCard))]),
+        new("Data visualization", "data-visualization", "/data-visualization", [
+            new("DataGrid", typeof(DataGrid<TestDataRow>)),
+            new("DataGridColumn", typeof(DataGridColumn<TestDataRow>)),
+            new("LineSeries", typeof(LineSeries)),
+            new("ProgressBar", typeof(ProgressBar))]),
+        new("Feedback", "feedback", "/feedback", [
+            new("Alert", typeof(Alert)),
+            new("Notification", typeof(Notification)),
+            new("Tooltip", typeof(Tooltip)),
+            new("TooltipTarget", typeof(TooltipTarget))]),
+        new("Forms", "forms", "/forms", [
+            new("CheckBox", typeof(CheckBox<bool>)),
+            new("DropDown", typeof(DropDown<string>)),
+            new("Editable", typeof(Editable<TestDataRow>)),
+            new("EntityPicker", typeof(EntityPicker)),
+            new("FileUpload", typeof(FileUpload)),
+            new("FormField", typeof(FormField)),
+            new("Numeric", typeof(Numeric<int>)),
+            new("PrefixedField", typeof(PrefixedField)),
+            new("SecretField", typeof(SecretField)),
+            new("TagEditor", typeof(TagEditor)),
+            new("TextArea", typeof(TextArea)),
+            new("TextBox", typeof(TextBox))]),
+        new("Identity", "identity", "/identity", [
+            new("Avatar", typeof(Avatar)),
+            new("Icon", typeof(Icon))]),
+        new("Layout", "layout", "/layout", [
+            new("Body", typeof(Body)),
+            new("Grid", typeof(Grid)),
+            new("Stack", typeof(Stack))]),
+        new("Lists", "lists", "/lists", [
+            new("SelectionListItem", typeof(SelectionListItem))]),
+        new("Modals", "modals", "/modals", [
+            new("Dialog", typeof(Dialog)),
+            new("DialogHost", typeof(DialogHost)),
+            new("DialogScaffold", typeof(DialogScaffold))]),
+        new("Navigation", "navigation", "/navigation", [
+            new("SecondaryTabs", typeof(SecondaryTabs)),
+            new("Steps", typeof(Steps)),
+            new("StepsItem", typeof(StepsItem)),
+            new("Tabs", typeof(Tabs)),
+            new("TabsItem", typeof(TabsItem)),
+            new("Toolbar", typeof(Toolbar)),
+            new("TreeView", typeof(TreeView)),
+            new("TreeViewNodeRow", typeof(TreeViewNodeRow))]),
+        new("Typography", "typography", "/typography", [
+            new("Header", typeof(Header)),
+            new("MonoText", typeof(MonoText)),
+            new("SmallText", typeof(SmallText)),
+            new("TextBlock", typeof(TextBlock))])
+    ];
+
+    private static string BuildCatalogUrl(string route, string componentName)
+    {
+        var anchor = SandboxCatalogRegistry.GetSections(route)
+            .FirstOrDefault(section => string.Equals(section.ComponentName, componentName, StringComparison.Ordinal))
+            ?.Anchor;
+
+        return string.IsNullOrWhiteSpace(anchor)
+            ? $"{route}#{System.Text.RegularExpressions.Regex.Replace(componentName, "(?<!^)([A-Z])", "-$1").ToLowerInvariant()}"
+            : $"{route}#{anchor}";
+    }
+
+    private static string GetTabPositionIcon(TabPosition position)
+        => position switch
+        {
+            TabPosition.Top => "arrow_upward",
+            TabPosition.Bottom => "arrow_downward",
+            TabPosition.Left => "arrow_back",
+            TabPosition.Right => "arrow_forward",
+            _ => "tabs"
+        };
+
+    private sealed record PriorityGroup(string Title, string Slug, string Route, IReadOnlyList<PriorityComponent> Components);
+    private static IDictionary<string, object> BuildParameters(string componentName)
+    {
+        var parameters = new Dictionary<string, object>();
+
+        switch (componentName)
+        {
+            case "Pill":
+                parameters["Text"] = "Live";
+                parameters["Token"] = "4";
+                parameters["Tone"] = PillTone.Ok;
+                break;
+            case "StatusBadge":
+                parameters["Text"] = "Active";
+                parameters["Tone"] = "success";
+                break;
+            case "CopyButton":
+                parameters["Text"] = "Copy token";
+                parameters["Value"] = "cda_test_token";
+                break;
+            case "CardActions":
+                parameters["ChildContent"] = TextContent("Save  Cancel");
+                break;
+            case "CardButton":
+                parameters["Text"] = "Open details";
+                break;
+            case "PanelCard":
+            case "SurfaceCard":
+                parameters["ChildContent"] = TextContent("Review summary");
+                break;
+            case "DataGrid":
+                parameters["Data"] = new[] { new TestDataRow("Alpha"), new TestDataRow("Beta") };
+                parameters["Columns"] = DataGridColumns;
+                break;
+            case "ProgressBar":
+                parameters["Value"] = 72d;
+                parameters["Unit"] = "%";
+                break;
+            case "Alert":
+                parameters["AlertStyle"] = AlertStyle.Success;
+                parameters["ChildContent"] = TextContent("Changes saved successfully.");
+                break;
+            case "TooltipTarget":
+                parameters["Text"] = "Helpful context";
+                parameters["ChildContent"] = TextContent("Hover me");
+                break;
+            case "CheckBox":
+                parameters["Value"] = true;
+                parameters["AdditionalAttributes"] = new Dictionary<string, object> { ["aria-label"] = "Enabled" };
+                break;
+            case "DropDown":
+                parameters["Data"] = new[] { "Draft", "Published" };
+                parameters["Value"] = "Draft";
+                break;
+            case "EntityPicker":
+                parameters["Title"] = "Owner";
+                parameters["Items"] = new[] { new EntityPickerItem { Id = "ada", Label = "Ada Lovelace" } };
+                parameters["SelectedId"] = "ada";
+                break;
+            case "FormField":
+                parameters["Label"] = "Project name";
+                parameters["ChildContent"] = TextContent("Demo field");
+                break;
+            case "Numeric":
+                parameters["Value"] = 42;
+                break;
+            case "PrefixedField":
+                parameters["Prefix"] = "$";
+                parameters["Suffix"] = "USD";
+                parameters["ChildContent"] = TextContent("120");
+                break;
+            case "TextArea":
+                parameters["Value"] = "Review notes";
+                parameters["Placeholder"] = "Add a note";
+                break;
+            case "TextBox":
+                parameters["Value"] = "Project Aurora";
+                break;
+            case "Avatar":
+                parameters["FallbackText"] = "AL";
+                parameters["UseDefaultImageWhenMissing"] = false;
+                break;
+            case "Icon":
+                parameters["Name"] = "settings";
+                break;
+            case "Body":
+            case "Stack":
+                parameters["ChildContent"] = TextContent("Component content");
+                break;
+            case "Grid":
+                parameters["Columns"] = 2;
+                parameters["ChildContent"] = TextContent("One  Two");
+                break;
+            case "SelectionListItem":
+                parameters["Title"] = "Release candidate";
+                parameters["Meta"] = "Ready for review";
+                parameters["IsSelected"] = true;
+                break;
+            case "TreeView":
+                parameters["Items"] = new[] { new TreeViewNode { Id = "test", Text = "Test node", Icon = "folder" } };
+                break;
+            case "TreeViewNodeRow":
+                parameters["Node"] = new TreeViewNode { Id = "test", Text = "Test node" };
+                parameters["TreeId"] = "test-tree";
+                break;
+            case "Header":
+                parameters["ChildContent"] = TextContent("Section heading");
+                break;
+            case "MonoText":
+                parameters["Text"] = "build-9f7a";
+                break;
+            case "SmallText":
+                parameters["Text"] = "Supporting text";
+                break;
+            case "TextBlock":
+                parameters["Value"] = "Clear, readable component copy.";
+                break;
+        }
+
+        return parameters;
+    }
+
+    private static RenderFragment TextContent(string text)
+        => builder => builder.AddContent(0, text);
+
+    private static readonly RenderFragment DataGridColumns = builder =>
+    {
+        builder.OpenComponent<DataGridColumn<TestDataRow>>(0);
+        builder.AddAttribute(1, "Title", "Name");
+        builder.AddAttribute(2, "Property", nameof(TestDataRow.Name));
+        builder.CloseComponent();
+    };
+
+    private sealed record PriorityComponent(string Name, Type Type);
+    private sealed record TestDataRow(
+        string Id = "CDA-000",
+        string Name = "Test",
+        string Owner = "Ada",
+        string Status = "Ready",
+        string Updated = "Today",
+        string Coverage = "100%");
+    private sealed record TestChartPoint(double Value);
+}

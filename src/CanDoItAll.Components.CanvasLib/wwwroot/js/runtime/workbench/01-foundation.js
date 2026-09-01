@@ -767,7 +767,16 @@
             return measured;
         }
 
-        return getDefaultNodeSize(node);
+        // Node content is replaced at the refresh boundary, where this cache is cleared.
+        // Dragging only changes positions, so repeated geometry reads can reuse the estimate.
+        const cached = state?.estimatedNodeSizes?.get(node.id);
+        if (cached?.node === node) {
+            return cached.size;
+        }
+
+        const size = getDefaultNodeSize(node);
+        state?.estimatedNodeSizes?.set(node.id, { node, size });
+        return size;
     }
 
     function buildNodeLookup(nodes) {

@@ -1,0 +1,36 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormStack data-testid="sandbox-inputs-specialized">
+    <Fieldset>
+        <HeaderTemplate>
+            <span>Scoring and reference fields</span>
+        </HeaderTemplate>
+        <ChildContent>
+            <FormRow Split="true">
+                <FormField Text="Priority threshold">
+                    <Slider TValue="int"
+                            Value="@AdvancedState.Priority"
+                            ValueChanged="HandlePriorityChanged"
+                            Min="0"
+                            Max="100"
+                            Step="5"
+                            Disabled="@IsDisabled" />
+                </FormField>
+
+                <FormField Text="Budget reference">
+                    <PrefixedField Prefix="@BudgetPrefix"
+                                   Suffix="@BudgetSuffix"
+                                   StackOnMobile="true">
+                        <TextBox Value="@AdvancedState.BudgetCode"
+                                 ValueChanged="HandleBudgetCodeChanged"
+                                 Immediate="true"
+                                 Placeholder="@BudgetCodePlaceholder"
+                                 Disabled="@IsDisabled"
+                                 Class="cda-input" />
+                    </PrefixedField>
+                </FormField>
+            </FormRow>
+        </ChildContent>
+    </Fieldset>
+</FormStack>

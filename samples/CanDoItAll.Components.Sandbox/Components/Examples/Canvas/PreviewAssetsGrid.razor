@@ -1,0 +1,20 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Canvas
+
+<div class="sandbox-demo-grid--three">
+    <CanvasSceneHostPreview Snapshot="@CanvasSceneHostPreviewFactory.CreateForWorkbench(Surface)" />
+    <LayerStackPreview Snapshot="@LayerStackPreviewFactory.CreateForWorkbench()" />
+    <ViewportControllerPreview Snapshot="@ViewportControllerPreviewFactory.CreateForWorkbench(Surface)" />
+    <SerializationPersistencePackPreview
+        Snapshot="@SerializationPersistencePackPreviewFactory.CreateForWorkbench(Surface)" />
+    <TextMeasureServicePreview Snapshot="@TextMeasurePreviewFactory.CreateForWorkbench(Surface)" />
+    <JsInteropBridgePreview Snapshot="@JsInteropBridgePreviewFactory.CreateForWorkbench(Surface)" />
+    <CommandHistoryStorePreview Snapshot="@CommandHistoryStorePreviewFactory.CreateForWorkbench(Surface)" />
+    <AnimationTimelinePreview Snapshot="@AnimationTimelinePreviewFactory.CreateForWorkbench(Surface)" />
+</div>
+
+@code {
+    private CanvasWorkbenchSurface Surface => SandboxCanvasSamples.CreateWorkbenchSurface(
+        SandboxCanvasSamples.CreateWorkbenchUiState(),
+        SandboxCanvasSamples.CreateInspectorWindowState());
+
+}

@@ -1,0 +1,54 @@
+@layer components {
+  .cad-sheet-field,
+  .zy-sheet-field {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    background: rgba(255, 255, 255, 0.96);
+    color: #334155;
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  .cad-sheet-field--search,
+  .zy-sheet-field--search,
+  .cad-sheet-field--tag,
+  .zy-sheet-field--tag {
+    min-width: 0;
+  }
+
+  .cad-sheet-field--submit-wrap,
+  .zy-sheet-field--submit-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .cad-sheet-field .cad-tag-textedit__surface,
+  .cad-sheet-field .zy-tag-textedit__surface,
+  .zy-sheet-field .cad-tag-textedit__surface,
+  .zy-sheet-field .zy-tag-textedit__surface {
+    flex: 1 1 auto;
+    min-height: auto;
+    flex-wrap: wrap;
+    align-items: center;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .cad-sheet-field .cad-tag-textedit__hint,
+  .cad-sheet-field .zy-tag-textedit__hint,
+  .zy-sheet-field .cad-tag-textedit__hint,
+  .zy-sheet-field .zy-tag-textedit__hint {
+    display: none;
+  }
+}

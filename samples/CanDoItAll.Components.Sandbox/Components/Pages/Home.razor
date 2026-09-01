@@ -1,151 +1,75 @@
 @namespace CanDoItAll.Components.Sandbox.Components
 @page "/"
-@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
 
 <PageTitle>Components Sandbox</PageTitle>
 
 <div class="sandbox-page">
     <PageScaffold MaxWidthClass="max-w-[1720px]">
         <Header>
-            <PageHeader Eyebrow="Shared UI" Title="Component catalog" Description="Use the sandbox as the acceptance gate for standard BaseLib, Charts, Mermaid, and overlay surfaces. Canvas/WebGL proof is visible but deferred to its own publishing pass." />
+            <PageHeader Title="Components Sandbox">
+                <Actions>
+                    <StatusBadge Text="@($"{VisibleComponentCount} components")" />
+                </Actions>
+            </PageHeader>
         </Header>
 
-        <Lead>
-            <div class="sandbox-hero">
-                <div class="sandbox-hero__copy">
-                    <span class="sandbox-hero__eyebrow">Visual thesis</span>
-                    <h2 class="sandbox-hero__title">A calm laboratory for behavior, state, and proof.</h2>
-                    <p class="sandbox-hero__summary">The catalog avoids decorative hero sections and card mosaics. Each standard group page focuses on scanning, state variation, and whether the shared components still feel intentional under pressure.</p>
-                    <div class="sandbox-hero__chips">
-                        <StatusBadge Text="Sticky group nav" Tone="info" />
-                        <StatusBadge Text="Scenario switching" Tone="success" />
-                        <StatusBadge Text="Mobile + desktop proof" Tone="warning" />
-                    </div>
-                </div>
-
-                <SummaryTiles ColumnsLg="2" ColumnsXl="2">
-                    <SummaryTile Label="Standard groups" Value="@SandboxCatalogRegistry.StandardGroups.Count.ToString()" HelperText="Publishing proof routes exclude Canvas/WebGL implementation work." Tone="info" />
-                    <SummaryTile Label="Standard examples" Value="@SandboxCatalogRegistry.StandardExamples.Count.ToString()" HelperText="Curated scenarios drive screenshots and MCP answers." Tone="success" />
-                    <SummaryTile Label="Deferred groups" Value="@SandboxCatalogRegistry.DeferredGroups.Count.ToString()" HelperText="Canvas/WebGL remains visible but outside this standard bundle." Tone="warning" />
-                    <SummaryTile Label="Output" Value="Coverage proof" HelperText="Desktop and mobile screenshots back the standard route matrix." />
-                </SummaryTiles>
-            </div>
-        </Lead>
-
-        <SecondaryRail>
-            <SectionCard Title="Acceptance Gate" Description="The sandbox only counts if the catalog is tuned after screenshots.">
-                <div class="sandbox-proof-list">
-                    @foreach (var question in SandboxCatalogRegistry.ValidationQuestions.Take(6))
-                    {
-                        <p>@question</p>
-                    }
-                </div>
-            </SectionCard>
-        </SecondaryRail>
-
         <ChildContent>
-            <div class="sandbox-home-grid">
-                <ListDetailShell ListPaneWidth="28rem">
-                    <ListHeader>
-                        <div class="space-y-1">
-                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Groups" />
-                            <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="Navigate by function" />
-                        </div>
-                    </ListHeader>
+            <div class="sandbox-list">
+                @foreach (var group in SandboxCatalogRegistry.Groups)
+                {
+                    var sections = VisibleSections(SandboxCatalogRegistry.GetSections(group.Route));
+                    if (sections.Count == 0)
+                    {
+                        continue;
+                    }
 
-                    <ListContent>
-                        <div class="sandbox-list">
-                            @foreach (var group in SandboxCatalogRegistry.StandardGroups)
+                    <div class="space-y-1">
+                        <a href="@BuildGroupLink(group.Route)" data-sandbox-route
+                           class="sandbox-toc-group block @(SandboxCatalogRegistry.IsGroupUnused(group.Route) ? "is-unused" : string.Empty)">@group.Title</a>
+
+                        <p class="sandbox-toc-items">
+                            @for (var i = 0; i < sections.Count; i++)
                             {
-                                <SelectionListItem IsSelected="@(group.Key == selectedGroupKey)"
-                                                   Title="@group.Title"
-                                                   Eyebrow="@group.FocusAreas.First()"
-                                                   Meta="@group.Route"
-                                                   Summary="@group.Summary"
-                                                   OnSelect="@(() => SelectGroup(group.Key))">
-                                    <div class="flex flex-wrap gap-2">
-                                        @foreach (var focusArea in group.FocusAreas.Take(3))
-                                        {
-                                            <StatusBadge Text="@focusArea" Tone="info" />
-                                        }
-                                    </div>
-                                </SelectionListItem>
+                                var section = sections[i];
+                                <a href="@BuildGroupLink(group.Route, section.Anchor)" data-sandbox-route
+                                   class="@(SandboxCatalogRegistry.IsUnused(section.ComponentName) ? "is-unused" : string.Empty)">@(section.ComponentName)</a>@(i < sections.Count - 1 ? ", " : "")
                             }
-                        </div>
-                    </ListContent>
-
-                    <DetailHeader>
-                        <div class="space-y-1">
-                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Selected group" />
-                            <TextBlock TextStyle="@(TextStyle.Subtitle1)" Value="@SelectedGroup.Title" />
-                        </div>
-                    </DetailHeader>
-
-                    <DetailContent>
-                        <div class="space-y-6">
-                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="@SelectedGroup.Summary" />
-
-                            <FormSection Title="Coverage focus" Description="These are the areas the screenshots must make obvious.">
-                                <div class="sandbox-demo-grid sandbox-demo-grid--two">
-                                    @foreach (var note in SelectedGroup.ProofNotes)
-                                    {
-                                        <Card>
-                                            <div class="space-y-2">
-                                                <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="@note" />
-                                                <TextBlock TextStyle="@(TextStyle.Note)" Value="Tune spacing, hierarchy, or variant usage if the proof is weak or uncertain." />
-                                            </div>
-                                        </Card>
-                                    }
-                                </div>
-                            </FormSection>
-
-                            <SectionCard Title="Example routes" Description="The same routes back the future MCP example responses.">
-                                <div class="sandbox-list">
-                                    @foreach (var example in SelectedExamples)
-                                    {
-                                        <SelectionListItem Title="@example.Title"
-                                                           Eyebrow="@example.Scenario.ToLabel()"
-                                                           Meta="@example.Route"
-                                                           Summary="@example.Summary">
-                                            <div class="flex flex-wrap gap-2">
-                                                @foreach (var componentName in example.ComponentNames.Take(3))
-                                                {
-                                                    <StatusBadge Text="@componentName" Tone="neutral" />
-                                                }
-                                            </div>
-                                        </SelectionListItem>
-                                    }
-                                </div>
-                            </SectionCard>
-
-                            <div class="flex flex-wrap gap-3">
-                                <Button Text="Open coverage index" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => NavigateTo("/groups/coverage"))" />
-                                <Button Text="Open happy path" Click="@(() => NavigateTo(SelectedGroup.Route))" />
-                                <Button Text="Open dense proof" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => NavigateTo($"{SelectedGroup.Route}?scenario=dense-content"))" />
-                                <Button Text="Open empty proof" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => NavigateTo($"{SelectedGroup.Route}?scenario=empty-state"))" />
-                            </div>
-                        </div>
-                    </DetailContent>
-                </ListDetailShell>
+                        </p>
+                    </div>
+                }
+                <div class="space-y-1">
+                    <a href="test" data-sandbox-route class="sandbox-toc-group block">Test</a>
+                    <p class="sandbox-toc-items"><a href="@BuildGroupLink("/test")" data-sandbox-route>All</a>, <a href="@BuildRawTestLink()" data-sandbox-route>All (raw)</a></p>
+                </div>
             </div>
         </ChildContent>
     </PageScaffold>
 </div>
 
 @code {
-    private SandboxGroupKey selectedGroupKey = SandboxGroupKey.Foundations;
+    [CascadingParameter]
+    public SandboxToolbarState? ToolbarState { get; set; }
 
-    private SandboxGroupDefinition SelectedGroup => SandboxCatalogRegistry.GetGroup(selectedGroupKey);
+    /// <summary>Unused directly; accepted so the hash-routing shim in Routes.razor can route
+    /// here (as it does for every other catalog page) without an unknown-parameter error.</summary>
+    [Parameter]
+    public string? HashRouteState { get; set; }
 
-    private IReadOnlyList<SandboxExampleDefinition> SelectedExamples => SandboxCatalogRegistry.GetExamples(selectedGroupKey);
+    private string BuildGroupLink(string route, string? anchor = null)
+        => SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            route,
+            frame: SandboxQueryLinks.GetCurrentFrame(NavigationManager),
+            isDark: false,
+            fragment: anchor);
 
-    private void SelectGroup(SandboxGroupKey key)
-    {
-        selectedGroupKey = key;
-    }
+    private static string BuildRawTestLink()
+        => SandboxQueryLinks.UseHashRouting ? "#test?raw" : "test?raw";
 
-    private void NavigateTo(string route)
-    {
-        Navigation.NavigateTo(route);
-    }
+    private IReadOnlyList<SandboxPageSection> VisibleSections(IReadOnlyList<SandboxPageSection> sections)
+        => SandboxCatalogRegistry.FilterVisible(sections, ToolbarState is { ShowUnused: true });
+
+    private int VisibleComponentCount
+        => SandboxCatalogRegistry.VisibleComponentCount(ToolbarState is { ShowUnused: true });
 }

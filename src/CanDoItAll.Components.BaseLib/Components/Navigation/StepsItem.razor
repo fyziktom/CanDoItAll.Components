@@ -5,18 +5,23 @@
     [CascadingParameter]
     private Steps? Parent { get; set; }
 
+    /// <summary>The step's label.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Material icon token shown in the step badge in place of its number.</summary>
     [Parameter]
     public string? Icon { get; set; }
 
+    /// <summary>Optional supporting text shown alongside <see cref="Text"/> when the step is active.</summary>
     [Parameter]
     public string? Description { get; set; }
 
+    /// <summary>When <c>true</c>, the step cannot be selected.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>The content shown when this step is active.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

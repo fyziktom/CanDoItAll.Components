@@ -29,24 +29,31 @@
 </div>
 
 @code {
+    /// <summary>Eyebrow label shown above the value.</summary>
     [Parameter, EditorRequired]
     public string Label { get; set; } = string.Empty;
 
+    /// <summary>The tile's headline metric.</summary>
     [Parameter, EditorRequired]
     public string Value { get; set; } = string.Empty;
 
+    /// <summary>Supporting text. Rendered inline below the value, or in a hover popover when <see cref="ShowHelperTextAsTooltip"/> is set.</summary>
     [Parameter]
     public string? HelperText { get; set; }
 
+    /// <summary>Moves <see cref="HelperText"/> into a hover popover next to the label instead of an inline line under the value.</summary>
     [Parameter]
     public bool ShowHelperTextAsTooltip { get; set; }
 
+    /// <summary>Tone as a loosely-typed string (<c>"success"</c>, <c>"warning"</c>, <c>"danger"</c>, <c>"info"</c>, <c>"accent"</c>/<c>"secondary"</c>, or any other value for neutral).</summary>
     [Parameter]
     public string Tone { get; set; } = "neutral";
 
+    /// <summary>Reduces the tile's internal padding for denser grids.</summary>
     [Parameter]
     public bool Compact { get; set; }
 
+    /// <summary>Renders the tile with badge-style emphasis instead of the default card treatment.</summary>
     [Parameter]
     public bool Badge { get; set; }
 

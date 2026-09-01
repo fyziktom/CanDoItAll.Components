@@ -1,0 +1,76 @@
+.sandbox-kv-list {
+  @apply grid gap-[0.85rem];
+}
+
+.sandbox-kv-item {
+  @apply flex min-w-0 items-start flex-wrap justify-between gap-4 pb-[0.85rem];
+  @apply last:border-b-0 last:pb-0;
+  @apply max-sm:gap-[0.35rem];
+  border-bottom: 1px solid color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
+}
+
+.sandbox-kv-item strong {
+  @apply min-w-0 text-(--cad-color-text-strong) wrap-anywhere;
+}
+
+.sandbox-kv-item span {
+  @apply min-w-0 wrap-anywhere text-right;
+}
+
+.sandbox-kv-item strong,
+.sandbox-kv-item span {
+  @apply max-sm:basis-full max-sm:text-left;
+}
+
+.sandbox-list {
+  @apply flex flex-col gap-6;
+}
+
+.sandbox-toc-group {
+  @apply font-bold text-(--cad-color-text-strong) no-underline;
+}
+
+.sandbox-toc-group:hover,
+.sandbox-toc-group:focus-visible {
+  @apply underline;
+}
+
+.sandbox-toc-items {
+  @apply text-sm;
+  word-spacing: .125rem;
+}
+
+.sandbox-toc-items a {
+  @apply text-(--cad-tone-info-soft-fg) no-underline;
+  line-height: 1.8;
+}
+
+.sandbox-toc-items a:hover,
+.sandbox-toc-items a:focus-visible {
+  @apply underline;
+}
+
+.sandbox-toc-group.is-unused {
+  color: var(--cad-tone-danger-soft-fg);
+}
+
+.sandbox-toc-items a.is-unused:after {
+  content: '∅';
+  vertical-align: super;
+  margin-top: -1em;
+  margin-left: .125em;
+  display: inline-block;
+  @apply font-normal;
+}
+
+.sandbox-toc-items a.is-unused {
+  color: var(--cad-tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
+}
+
+.sandbox-proof-list {
+  @apply flex flex-col gap-[0.65rem];
+}
+
+.sandbox-proof-list p {
+  @apply m-0 text-[0.92rem] leading-[1.6] text-(--cad-color-text-muted);
+}

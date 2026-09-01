@@ -2,52 +2,71 @@ using Microsoft.AspNetCore.Components;
 
 namespace CanDoItAll.Components.Sandbox;
 
-public abstract class CatalogPageBase : ComponentBase
+public abstract class CatalogPageBase : ComponentBase, IDisposable
 {
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = default!;
 
-    [Parameter, SupplyParameterFromQuery(Name = "scenario")]
-    public string? ScenarioQuery { get; set; }
+    [CascadingParameter]
+    protected SandboxToolbarState? ToolbarState { get; set; }
 
     [Parameter, SupplyParameterFromQuery(Name = "frame")]
     public string? FrameQuery { get; set; }
 
-    protected SandboxScenarioKey CurrentScenario => SandboxScenarioKeyExtensions.Parse(ScenarioQuery);
+    /// <summary>Changes whenever the client-side hash state changes, so a retained WASM route refreshes its frame.</summary>
+    [Parameter]
+    public string? HashRouteState { get; set; }
 
-    protected SandboxFramePreset CurrentFrame => SandboxFramePresetExtensions.Parse(FrameQuery);
+    protected SandboxFramePreset CurrentFrame => SandboxQueryLinks.UseHashRouting
+        ? SandboxQueryLinks.GetHashFrame(NavigationManager)
+        : SandboxFramePresetExtensions.Parse(FrameQuery);
 
-    protected void NavigateScenario(SandboxScenarioKey scenario)
+    protected IReadOnlyList<SandboxPageSection> VisibleSections(IReadOnlyList<SandboxPageSection> sections)
+        => SandboxCatalogRegistry.FilterVisible(sections, ToolbarState is { ShowUnused: true });
+
+    protected static RenderFragment RenderSectionHeading(SandboxPageSection section) => builder =>
     {
-        NavigationManager.NavigateTo(BuildUri(scenario, CurrentFrame));
+        var isUnused = SandboxCatalogRegistry.IsUnused(section.ComponentName);
+
+        builder.OpenElement(0, "h2");
+        builder.AddAttribute(1, "class", isUnused
+            ? "sandbox-component-section__heading is-unused"
+            : "sandbox-component-section__heading");
+        builder.AddContent(2, $"<{section.ComponentName}>");
+        builder.CloseElement();
+    };
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        await base.SetParametersAsync(parameters);
+
+        ToolbarState?.Register(
+            this,
+            CurrentFrame,
+            EventCallback.Factory.Create<SandboxFramePreset>(this, NavigateFrame));
     }
 
     protected void NavigateFrame(SandboxFramePreset frame)
     {
-        NavigationManager.NavigateTo(BuildUri(CurrentScenario, frame));
+        var destination = SandboxQueryLinks.WithFrame(NavigationManager, frame);
+        if (SandboxQueryLinks.UseHashRouting)
+        {
+            // NavigateTo updates history with pushState, which does not raise the browser's
+            // hashchange event. Apply the state now so this retained page and the fixed
+            // toolbar/sidebar rerender at once.
+            SandboxQueryLinks.UpdateHashState(destination);
+            ToolbarState?.Register(
+                this,
+                frame,
+                EventCallback.Factory.Create<SandboxFramePreset>(this, NavigateFrame));
+            _ = InvokeAsync(StateHasChanged);
+        }
+
+        NavigationManager.NavigateTo(destination);
     }
 
-    protected string BuildUri(SandboxScenarioKey scenario, SandboxFramePreset frame)
+    public virtual void Dispose()
     {
-        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        var route = relativePath.Split('?', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
-        var path = string.IsNullOrWhiteSpace(route)
-            ? "/"
-            : $"/{route.TrimStart('/')}";
-        var query = new List<string>();
-
-        if (scenario != SandboxScenarioKey.HappyPath)
-        {
-            query.Add($"scenario={Uri.EscapeDataString(scenario.ToSlug())}");
-        }
-
-        if (frame != SandboxFramePreset.LiveViewport)
-        {
-            query.Add($"frame={Uri.EscapeDataString(frame.ToSlug())}");
-        }
-
-        return query.Count == 0
-            ? path
-            : $"{path}?{string.Join("&", query)}";
+        ToolbarState?.Unregister(this);
     }
 }

@@ -11,9 +11,11 @@
 </Grid>
 
 @code {
+    /// <summary>Renders the grid as a <c>&lt;section&gt;</c> element instead of a <c>&lt;div&gt;</c>.</summary>
     [Parameter]
     public bool Section { get; set; }
 
+    /// <summary>The <c>Card</c> elements to lay out in the responsive grid.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 }

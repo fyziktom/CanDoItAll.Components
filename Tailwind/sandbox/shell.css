@@ -1,0 +1,158 @@
+:root {
+  --sandbox-toolbar-height: 3.75rem;
+}
+
+body {
+  @apply m-0;
+}
+
+/* TODO: V2: keep the refactoring palette scoped to Sandbox until it becomes the
+   shared component-library default. The main app retains the established tokens. */
+.sandbox-theme-host[data-cad-theme="light"] {
+  --cad-color-page-bg: #fff;
+  --cad-color-surface: #fff;
+  --cad-color-surface-soft: #fff;
+  --cad-color-border: #e0e0e0;
+  --cad-color-border-soft: #aaa;
+  --cad-color-text-strong: rgba(0, 0, 0, 0.7);
+  --cad-color-text: rgba(0, 0, 0, 0.87);
+  --cad-color-text-muted: rgba(64, 64, 64, 0.87);
+  --cad-color-text-soft: rgba(96, 96, 96, 0.87);
+  --cad-color-inverse: #fafafa;
+}
+
+/* TODO: V2: retain the Sandbox header and tab geometry without changing shared
+   component consumers. */
+.sandbox-theme-host .cda-page-header:not(.cda-page-header--compact) {
+  border-bottom-width: 0;
+}
+
+.sandbox-theme-host .cda-page-header__description:not(.cda-page-header__description--compact) {
+  margin-top: 1rem;
+}
+
+.sandbox-theme-host .cad-tabs {
+  --cad-tabs-tab-radius: 0;
+}
+
+.sandbox-theme-host .cad-tabs__list {
+  padding: 0;
+}
+
+.sandbox-theme-host .cad-tabs--variant-modal-compact {
+  --cad-tabs-tab-radius: 0;
+}
+
+.sandbox-layout {
+  @apply min-h-screen text-(--cad-color-text);
+}
+
+.sandbox-layout__backdrop {
+  @apply fixed inset-0 pointer-events-none;
+}
+
+.sandbox-layout__shell {
+  @apply relative z-1 grid min-h-screen gap-6 px-4 pb-4 pt-[calc(1rem_+_var(--sandbox-toolbar-height,_0px))];
+}
+
+.sandbox-sidebar {
+  @apply hidden flex-col gap-1 p-5;
+  background: var(--cad-color-surface);
+  border-bottom: 1px solid var(--cad-color-border-soft);
+}
+
+.sandbox-nav__search {
+  @apply px-0 py-2;
+}
+
+.sandbox-nav__search-input {
+  @apply w-full rounded-md border px-3 py-[0.4rem] text-[0.85rem];
+  border-color: var(--cad-color-border-soft);
+  background: var(--cad-color-surface);
+  color: var(--cad-color-text);
+}
+
+.sandbox-nav__search-input:focus-visible {
+  outline: 2px solid var(--cad-tone-primary-soft-border);
+  outline-offset: 1px;
+}
+
+.sandbox-nav__match {
+  @apply rounded-[0.2rem] px-[0.15rem];
+  background: var(--cad-tone-warning-soft-bg);
+  color: var(--cad-tone-warning-soft-fg);
+}
+
+.sandbox-nav {
+  @apply flex flex-col gap-0.5;
+}
+
+.sandbox-nav__link {
+  @apply flex flex-col gap-[0.15rem] -mx-5 py-[0.55rem] px-5 no-underline;
+  transition: background-color 0.18s ease;
+}
+
+.sandbox-nav__link:hover,
+.sandbox-nav__link:focus-visible {
+  background: color-mix(in srgb, var(--cad-tone-info-soft-bg) 55%, transparent);
+}
+
+.sandbox-nav__link.is-active {
+  @apply shadow-[inset_3px_0_0_var(--cad-tone-primary-soft-border)];
+  background: color-mix(in srgb, var(--cad-tone-primary-soft-bg) 55%, transparent);
+}
+
+.sandbox-nav__link.is-unused .sandbox-nav__title:after {
+  content: '∅';
+  vertical-align: super;
+  margin-top: -1em;
+  margin-left: .125em;
+  display: inline-block;
+  @apply font-normal;
+}
+
+.sandbox-nav__link.is-unused .sandbox-nav__title {
+  color: var(--cad-tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
+}
+
+.sandbox-nav__title {
+  @apply text-[0.95rem] font-semibold text-(--cad-color-text-strong);
+}
+
+.sandbox-nav__meta {
+  @apply text-[0.72rem] tracking-[0.12em] uppercase text-(--cad-color-text-soft);
+}
+
+.sandbox-main {
+  @apply min-w-0;
+}
+
+.sandbox-page {
+  @apply pb-4;
+}
+
+@media (min-width: 1100px) {
+  .sandbox-layout__shell {
+    grid-template-columns: 18rem minmax(0, 1fr);
+    align-items: start;
+    gap: 0;
+    padding: 0;
+    padding-top: var(--sandbox-toolbar-height, 0px);
+  }
+
+  .sandbox-sidebar {
+    display: flex;
+    position: sticky;
+    top: var(--sandbox-toolbar-height, 0px);
+    height: calc(100vh - var(--sandbox-toolbar-height, 0px));
+    overflow-y: auto;
+    border-bottom: 0;
+    border-right: 1px solid var(--cad-color-border-soft);
+    padding: 1.25rem;
+  }
+
+  .sandbox-main {
+    min-width: 0;
+    padding: 1.5rem 1.75rem 2rem;
+  }
+}

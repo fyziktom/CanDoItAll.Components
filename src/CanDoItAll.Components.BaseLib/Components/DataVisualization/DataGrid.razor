@@ -90,36 +90,47 @@
     private IReadOnlyList<TItem> visibleItems = [];
     private int currentPage;
 
+    /// <summary>The rows to display. Re-evaluated into an internal list on every parameter change.</summary>
     [Parameter]
     public IEnumerable<TItem>? Data { get; set; }
 
+    /// <summary>Invoked when a row is activated by click, Enter, or Space. Supplying a handler also makes rows keyboard-focusable.</summary>
     [Parameter]
     public EventCallback<TItem> RowSelect { get; set; }
 
+    /// <summary>Enables the built-in pager, splitting <see cref="Data"/> into pages of <see cref="PageSize"/> rows.</summary>
     [Parameter]
     public bool AllowPaging { get; set; }
 
+    /// <summary>Rows per page when <see cref="AllowPaging"/> is enabled.</summary>
     [Parameter]
     public int PageSize { get; set; } = 10;
 
+    /// <summary>Screen-reader-only table caption.</summary>
     [Parameter]
     public string Caption { get; set; } = "Data grid";
 
+    /// <summary>Shows a single loading row spanning all columns instead of <see cref="Data"/>.</summary>
     [Parameter]
     public bool Loading { get; set; }
 
+    /// <summary>Message shown in the loading row.</summary>
     [Parameter]
     public string LoadingText { get; set; } = "Loading data…";
 
+    /// <summary>Message shown when there are no rows to display and <see cref="Loading"/> is <c>false</c>.</summary>
     [Parameter]
     public string EmptyText { get; set; } = "No data to display.";
 
+    /// <summary>The <c>DataGridColumn</c> declarations describing each column, in display order.</summary>
     [Parameter]
     public RenderFragment? Columns { get; set; }
 
+    /// <summary>Alternate slot for column declarations. Rendered alongside <see cref="Columns"/> in the same hidden registration region.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Additional HTML attributes splatted onto the root element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 

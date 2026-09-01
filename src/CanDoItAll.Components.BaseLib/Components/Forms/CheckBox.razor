@@ -12,21 +12,27 @@
         />
 
 @code {
+    /// <summary>The checkbox's value; supports <c>bool</c> and <c>bool?</c>.</summary>
     [Parameter]
     public TValue? Value { get; set; }
 
+    /// <summary>Raised whenever <see cref="Value"/> changes.</summary>
     [Parameter]
     public EventCallback<TValue?> ValueChanged { get; set; }
 
+    /// <summary>Raised after the value changes, with the new value.</summary>
     [Parameter]
     public EventCallback<TValue?> Change { get; set; }
 
+    /// <summary>Value applied to the input's <c>name</c> attribute.</summary>
     [Parameter]
     public string? Name { get; set; }
 
+    /// <summary>When <c>true</c>, the checkbox cannot be interacted with.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>The visual style applied to the input element.</summary>
     [Parameter]
     public InputLook Look { get; set; } = InputLook.Default;
 

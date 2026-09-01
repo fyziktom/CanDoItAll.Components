@@ -1,0 +1,85 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@inject NavigationManager NavigationManager
+
+<div class="sandbox-toolbar" data-testid="sandbox-toolbar">
+    <a class="flex justify-center items-center gap-2.5 no-underline text-inherit" href="@BuildHomeLink()" data-sandbox-route><img class="inline-block" src="assets/logo.svg" alt="CanDoItAll" height="32" width="32"> CanDoItAll</a>
+
+    <div class="sandbox-toolbar__controls">
+        @if (ToolbarState is { HasContext: true } toolbarState)
+        {
+            <div class="sandbox-toolbar__frame">
+                <DropDown TValue="SandboxFramePreset"
+                          Data="@FrameOptions"
+                          TextProperty="Text"
+                          ValueProperty="Value"
+                          Value="@toolbarState.Frame"
+                          ValueChanged="HandleFrameChanged"
+                          aria-label="Frame preset"
+                          data-testid="sandbox-toolbar-frame"/>
+            </div>
+
+            <Button Text="Coverage"
+                    class="sandbox-toolbar__coverage"
+                    ButtonStyle="@(toolbarState.ShowCoverage ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Variant="@(toolbarState.ShowCoverage ? Variant.Filled : Variant.Outlined)"
+                    Size="ButtonSize.Small"
+                    Click="@(() => toolbarState.ToggleCoverage())"
+                    aria-pressed="@(toolbarState.ShowCoverage ? "true" : "false")"
+                    data-testid="sandbox-toolbar-coverage-toggle"/>
+        }
+
+        @if (ToolbarState is not null)
+        {
+            <Button Text="Unused"
+                    ButtonStyle="@(ToolbarState.ShowUnused ? ButtonStyle.Danger : ButtonStyle.Light)"
+                    Variant="@(ToolbarState.ShowUnused ? Variant.Filled : Variant.Outlined)"
+                    Size="ButtonSize.Small"
+                    class="@(ToolbarState.ShowUnused ? "sandbox-toolbar__controls--unused" : "")"
+                    Click="@(() => ToolbarState.ToggleShowUnused())"
+                    aria-pressed="@(ToolbarState.ShowUnused ? "true" : "false")"
+                    data-testid="sandbox-toolbar-unused-toggle"/>
+        }
+
+        @if (ThemeState is not null)
+        {
+            <Button Text="@(ThemeState.IsDark ? "Dark" : "Light")"
+                    Icon="@(ThemeState.IsDark ? "dark_mode" : "light_mode")"
+                    ButtonStyle="ButtonStyle.Light"
+                    Variant="Variant.Outlined"
+                    Size="ButtonSize.Small"
+                    Click="ToggleDarkMode"
+                    aria-pressed="@(ThemeState.IsDark ? "true" : "false")"
+                    data-testid="sandbox-toolbar-dark-toggle"/>
+        }
+    </div>
+</div>
+
+@code {
+    private static readonly IReadOnlyList<FrameOption> FrameOptions = Enum.GetValues<SandboxFramePreset>()
+        .Select(value => new FrameOption(value.ToLabel(), value))
+        .ToArray();
+
+    [CascadingParameter]
+    public SandboxToolbarState? ToolbarState { get; set; }
+
+    [CascadingParameter]
+    public SandboxThemeState? ThemeState { get; set; }
+
+    private Task HandleFrameChanged(SandboxFramePreset frame)
+        => ToolbarState!.FrameChanged.InvokeAsync(frame);
+
+    private void ToggleDarkMode()
+        => NavigationManager.NavigateTo(SandboxQueryLinks.WithDark(NavigationManager, !ThemeState!.IsDark));
+
+    private string BuildHomeLink()
+    {
+        var hasContext = ToolbarState is { HasContext: true };
+        return SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            "/",
+            hasContext ? ToolbarState!.Frame : null,
+            ThemeState?.IsDark ?? false);
+    }
+
+    private sealed record FrameOption(string Text, SandboxFramePreset Value);
+}

@@ -1,0 +1,96 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@using CanDoItAll.Components.Sandbox.Documentation
+
+@foreach (var api in Apis)
+{
+    <section class="sandbox-api" data-testid="@($"sandbox-api-{api.Name.ToLowerInvariant()}")">
+        <header class="sandbox-api__header">
+            <div class="sandbox-api__heading">
+                <h5 class="font-bold tracking-wider font-mono pl-1">@('<' + api.Name + '>')</h5>
+                @if (!string.IsNullOrWhiteSpace(api.Description))
+                {
+                    <TextBlock TextStyle="@(TextStyle.Body2)" Value="@api.Description" />
+                }
+            </div>
+
+            <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.NoWrap">
+                <StatusBadge Text="@($"{api.Parameters.Count} parameters")" Tone="neutral" />
+                @if (api.UndocumentedCount > 0)
+                {
+                    <StatusBadge Text="@($"{api.UndocumentedCount} undocumented")" Tone="warning" />
+                }
+            </Cluster>
+        </header>
+
+        <div class="sandbox-api__scroll">
+            <table class="sandbox-api__table">
+                <caption class="sr-only">Parameters of @api.Name</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Parameter</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var parameter in api.Parameters)
+                    {
+                        <tr class="@(parameter.IsInherited ? "sandbox-api__row--inherited" : null)">
+                            <th scope="row">
+                                <code class="sandbox-api__name">@parameter.Name</code>
+                                @if (parameter.IsRequired)
+                                {
+                                    <span class="sandbox-api__flag sandbox-api__flag--required">required</span>
+                                }
+                                @if (parameter.IsCaptureUnmatched)
+                                {
+                                    <span class="sandbox-api__flag">splatted</span>
+                                }
+                                @if (parameter.IsInherited)
+                                {
+                                    <span class="sandbox-api__flag">inherited</span>
+                                }
+                            </th>
+                            <td>
+                                <code class="sandbox-api__type">@parameter.TypeLabel</code>
+                                @if (parameter.EnumValues.Count > 0)
+                                {
+                                    <span class="sandbox-api__enum">@string.Join(" · ", parameter.EnumValues)</span>
+                                }
+                            </td>
+                            <td>
+                                @if (parameter.DefaultValue is null)
+                                {
+                                    <span class="sandbox-api__none">—</span>
+                                }
+                                else
+                                {
+                                    <code class="sandbox-api__default">@parameter.DefaultValue</code>
+                                }
+                            </td>
+                            <td>
+                                @if (string.IsNullOrWhiteSpace(parameter.Description))
+                                {
+                                    <span class="sandbox-api__undocumented">Undocumented</span>
+                                }
+                                else
+                                {
+                                    @parameter.Description
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
+
+@code {
+    /// <summary>Component types whose parameter surface should be tabulated, in display order.</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<Type> Types { get; set; } = [];
+
+    private IReadOnlyList<ComponentApiInfo> Apis => ComponentApiReflector.Describe(Types);
+}

@@ -30,51 +30,67 @@ else
 }
 
 @code {
+    /// <summary>Label rendered inside the button. Ignored when <see cref="ChildContent"/> is supplied.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Short badge rendered before the label, for a keyboard hint or count.</summary>
     [Parameter]
     public string? Token { get; set; }
 
+    /// <summary>Custom label content. Takes precedence over <see cref="Text"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Material icon token, for example <c>download</c>. When no label is present the token also supplies the accessible name.</summary>
     [Parameter]
     public string? Icon { get; set; }
 
+    /// <summary>Semantic tone of the action. Reserve <c>Primary</c> for the one action that carries the surface.</summary>
     [Parameter]
     public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Primary;
 
+    /// <summary>Control height and padding scale.</summary>
     [Parameter]
     public ButtonSize Size { get; set; } = ButtonSize.Medium;
 
+    /// <summary>Emphasis treatment: filled, outlined, or text.</summary>
     [Parameter]
     public Variant Variant { get; set; } = Variant.Filled;
 
+    /// <summary>Tonal shade applied on top of <see cref="ButtonStyle"/>.</summary>
     [Parameter]
     public Shade Shade { get; set; } = Shade.Default;
 
+    /// <summary>Escape hatch to legacy or sheet-card presets. Leave at <c>Default</c> for the standard button language.</summary>
     [Parameter]
     public ButtonLook Look { get; set; } = ButtonLook.Default;
 
+    /// <summary>Blocks interaction. The button is also disabled while busy or while a click is in flight.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Swaps the icon for a spinner and blocks further clicks. Set this for in-flight work rather than disabling manually.</summary>
     [Parameter]
     public bool IsBusy { get; set; }
 
+    /// <summary>Invoked on activation. Re-entrant clicks are suppressed until the handler completes, so the handler may be async without extra guarding.</summary>
     [Parameter]
     public EventCallback Click { get; set; }
 
+    /// <summary>Native button type. Set to <c>submit</c> inside a form.</summary>
     [Parameter]
     public string Type { get; set; } = "button";
 
+    /// <summary>Renders an anchor instead of a button. Presentation is unchanged.</summary>
     [Parameter]
     public string? Href { get; set; }
 
+    /// <summary>Anchor target. Only meaningful together with <see cref="Href"/>.</summary>
     [Parameter]
     public string? Target { get; set; }
 
+    /// <summary>Anchor rel. Defaults to <c>noopener noreferrer</c> when the target is <c>_blank</c>.</summary>
     [Parameter]
     public string? Rel { get; set; }
 
@@ -165,7 +181,7 @@ else
             else if (iconName is not null)
             {
                 builder.OpenElement(sequence++, "span");
-                builder.AddAttribute(sequence++, "class", "rz-icon cda-material-icon material-icons");
+                builder.AddAttribute(sequence++, "class", "rz-icon cda-material-icon material-symbols-rounded");
                 builder.AddAttribute(sequence++, "aria-hidden", "true");
                 builder.AddContent(sequence++, iconName);
                 builder.CloseElement();

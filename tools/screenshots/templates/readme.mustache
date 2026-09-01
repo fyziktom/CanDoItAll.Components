@@ -1,0 +1,23 @@
+# {{{title}}}
+
+{{#against}}
+Baseline branch: `{{{against}}}`{{#agoText}} ({{{agoText}}}){{/agoText}}
+{{/against}}
+{{^against}}
+No baseline branch — this is the first snapshot in this repo.
+{{/against}}
+
+| Total | Unchanged | Changed | Added | Removed | Capture errors |
+| --- | --- | --- | --- | --- | --- |
+| {{summary.total}} | {{summary.unchanged}} | {{summary.changed}} | {{summary.added}} | {{summary.removed}} | {{summary.errors}} |
+
+{{#alternatives}}
+{{#showAlternativeHeadings}}
+## Alternative: {{{name}}}
+
+{{/showAlternativeHeadings}}
+{{{screenshotsTable}}}
+
+{{{pagesTable}}}
+
+{{/alternatives}}

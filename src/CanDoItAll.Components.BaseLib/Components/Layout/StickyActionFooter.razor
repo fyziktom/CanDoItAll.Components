@@ -41,21 +41,27 @@
 </div>
 
 @code {
+    /// <summary>Eyebrow label shown next to the status message.</summary>
     [Parameter]
     public string? StatusLabel { get; set; }
 
+    /// <summary>Status text explaining the current state of the pending action.</summary>
     [Parameter]
     public string? StatusMessage { get; set; }
 
+    /// <summary>Tone as a loosely-typed string (<c>"success"</c>, <c>"warning"</c>, <c>"danger"</c>, <c>"info"</c>, or any other value for neutral).</summary>
     [Parameter]
     public string StatusTone { get; set; } = "neutral";
 
+    /// <summary>The primary, most emphasized action(s), typically a single confirm button.</summary>
     [Parameter]
     public RenderFragment? PrimaryActions { get; set; }
 
+    /// <summary>Secondary, lower-emphasis actions such as "Save draft".</summary>
     [Parameter]
     public RenderFragment? SecondaryActions { get; set; }
 
+    /// <summary>Destructive actions, visually separated from <see cref="PrimaryActions"/> and <see cref="SecondaryActions"/>.</summary>
     [Parameter]
     public RenderFragment? DangerActions { get; set; }
 

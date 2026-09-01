@@ -4,15 +4,19 @@
 <span @attributes='BuildAttributes(ResolveCssClass(), ResolveBadgeStyle())'>@Text</span>
 
 @code {
+    /// <summary>Label rendered inside the badge.</summary>
     [Parameter, EditorRequired]
     public string Text { get; set; } = string.Empty;
 
+    /// <summary>Tone as a loosely-typed string (<c>"success"</c>, <c>"warning"</c>, <c>"danger"</c>, <c>"info"</c>, <c>"accent"</c>, or any other value for neutral). Ignored when <see cref="TypedTone"/> is set.</summary>
     [Parameter]
     public string Tone { get; set; } = "neutral";
 
+    /// <summary>Tone as a <see cref="BadgeTone"/> enum value. Takes precedence over <see cref="Tone"/> when set.</summary>
     [Parameter]
     public BadgeTone? TypedTone { get; set; }
 
+    /// <summary>Truncates the label to a single line with an ellipsis instead of wrapping.</summary>
     [Parameter]
     public bool NoWrap { get; set; }
 

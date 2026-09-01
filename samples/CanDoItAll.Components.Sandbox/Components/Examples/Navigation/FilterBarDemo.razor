@@ -1,0 +1,12 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<FilterBar ResultText="128 results" data-testid="sandbox-navigation-filter-bar">
+    <ChildContent>
+        <TextBox Value="@filterBarQuery" ValueChanged="@(value => filterBarQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search" aria-label="Search" />
+        <DropDown TValue="string" Data="@ToolbarScopes" Value="@filterBarScope" ValueChanged="@(value => filterBarScope = value ?? ToolbarScopeAll)" aria-label="Scope" />
+    </ChildContent>
+    <Actions>
+        <Button Text="Reset" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => { filterBarQuery = string.Empty; filterBarScope = ToolbarScopeAll; })" />
+    </Actions>
+</FilterBar>

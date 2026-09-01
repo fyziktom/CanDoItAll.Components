@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loader</title>
+
+    <style>
+    svg {
+        overflow: visible;
+    }
+
+    svg {
+        --wave-duration: 2.6s;
+        --wave-step: calc(var(--wave-duration) / 6);
+    }
+
+    path:nth-child(7), path:nth-child(8), path:nth-child(9),
+    path:nth-child(10), path:nth-child(11), path:nth-child(12) {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: wave var(--wave-duration) ease-out infinite;
+    }
+
+    path:nth-child(1), path:nth-child(2), path:nth-child(3),
+    path:nth-child(4), path:nth-child(5), path:nth-child(6) {
+        transform-origin: 12px 12px;
+        transform-box: view-box;
+        animation: wave-in var(--wave-duration) ease-out infinite;
+    }
+
+    path:nth-child(7),
+    path:nth-child(1) {
+        animation-delay: calc(var(--wave-step) * -5);
+    }
+
+    path:nth-child(8),
+    path:nth-child(2) {
+        animation-delay: calc(var(--wave-step) * -4);
+    }
+
+    path:nth-child(9),
+    path:nth-child(3) {
+        animation-delay: calc(var(--wave-step) * -3);
+    }
+
+    path:nth-child(10),
+    path:nth-child(4) {
+        animation-delay: calc(var(--wave-step) * -2);
+    }
+
+    path:nth-child(11),
+    path:nth-child(5) {
+        animation-delay: calc(var(--wave-step) * -1);
+    }
+
+    path:nth-child(12),
+    path:nth-child(6) {
+        animation-delay: calc(var(--wave-step) * 0);
+    }
+
+    @keyframes wave {
+        0%, 50%, 100% {
+            transform: scale(1) rotate3d(1, 1, 0, 0) rotate(0);
+            opacity: 1;
+        }
+        25% {
+            transform: scale(1.06) rotate3d(1, 1, 0, 15deg) rotate(1deg);
+            opacity: .9;
+        }
+        75% {
+            transform: scale(1.06) rotate3d(1, 1, 0, 15deg) rotate(-1deg);
+            opacity: .85;
+        }
+    }
+
+    @keyframes wave-in {
+        0%, 50%, 100% {
+            transform: scale(1) rotate3d(1, 1, 0, 0deg) rotate(0);
+            opacity: 1;
+        }
+        25% {
+            transform: scale(.996) rotate3d(1, 1, 0, -15deg) rotate(-2deg);
+            opacity: 0.25;
+        }
+        75% {
+            transform: scale(.996) rotate3d(1, 1, 0, 15deg) rotate(2deg);
+            opacity: 0.35;
+        }
+    }
+
+    body {
+        text-align: center;
+        font-family: sans-serif;
+        color: rgba(0, 0, 0, .4);
+        padding: 60px 60px 0 60px;
+    }
+
+    p {
+        margin: .75em;
+        padding-left: 1em;
+        text-transform: uppercase;
+    }
+    </style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24">
+    <path d="m3.34 7 4 2.31L12 6.618z" fill="#63b3c8"/>
+    <path d="M12 2v4.619l4.66 2.69Z" fill="#6dbfdd" />
+    <path d="M16.66 14.69V9.31l4-2.31z" fill="#5ba3da" />
+    <path d="m20.66 17-4-2.31L12 17.382Z" fill="#3d64d2" />
+    <path d="M12 22v-4.619l-4.66-2.69Z" fill="#364dbe" />
+    <path d="m7.34 14.69-4 2.31 4-7.69z" fill="#5091d0" />
+    <path d="M3.34 7 12 6.62V2Z" fill="#8fe6ed" />
+    <path d="m12 2 4.66 7.31 4-2.31Z" fill="#8ce0f2" />
+    <path d="m16.66 14.69 4 2.31V7z" fill="#74c4ec" />
+    <path d="M12 17.381v4.62l8.66-5z" fill="#5784e6" />
+    <path d="M7.34 14.69 12 22l-8.66-5Z" fill="#4a63d6" />
+    <path d="M7.34 9.31 3.34 7v10z" fill="#79d0eb" />
+</svg>
+
+<p>Loading&hellip;</p>
+</body>
+</html>

@@ -1,0 +1,93 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/modals"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Modals
+@inject DialogService DialogService
+
+<PageTitle>Modals</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in VisibleSections(Sections))
+            {
+                <section id="@(section.Anchor)" class="sandbox-component-section">
+                    @RenderSectionHeading(section)
+
+                    @if (section.ComponentName == "Dialog")
+                    {
+                        <ExampleBlock Title="Record editor dialog"
+                                      Description="Opened on demand; edited state stays dialog-only until saved."
+                                      SourceId="examples/Modals/RecordDialog.razor"
+                                      ApiTypes="@DialogApiTypes">
+                            <RecordDialog />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "DialogScaffold")
+                    {
+                        <ExampleBlock Title="Dialog scaffold layout"
+                                      Description="Generic rail / main / review / footer layout used to build dialog bodies."
+                                      SourceId="examples/Modals/ScaffoldLayout.razor"
+                                      ApiTypes="@DialogScaffoldApiTypes">
+                            <ScaffoldLayout />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "DangerActionDialog")
+                    {
+                        <ExampleBlock Title="Danger action confirmation"
+                                      Description="Type-to-confirm body for destructive actions; the confirm button stays disabled until the phrase matches."
+                                      SourceId="examples/Modals/DangerActionConfirm.razor"
+                                      ApiTypes="@DangerActionDialogApiTypes">
+                            <DangerActionConfirm />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "InspectorDialogLayout")
+                    {
+                        <ExampleBlock Title="Inspector layout"
+                                      Description="Rail/panel-named wrapper over DialogScaffold for entity inspection."
+                                      SourceId="examples/Modals/InspectorLayout.razor"
+                                      ApiTypes="@InspectorDialogLayoutApiTypes">
+                            <InspectorLayout />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "PickerDialogShell")
+                    {
+                        <ExampleBlock Title="Entity picker"
+                                      Description="Select one entity from a list, with the review panel reflecting the current selection."
+                                      SourceId="examples/Modals/PickerShell.razor"
+                                      ApiTypes="@PickerDialogShellApiTypes">
+                            <PickerShell />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "DialogHost")
+                    {
+                        <ExampleBlock Title="Dialog host"
+                                      Description="DialogHost takes no parameters — mount it once (see MainLayout) and open dialogs anywhere through DialogService."
+                                      SourceId="examples/Modals/DialogHostTrigger.razor"
+                                      ApiTypes="@DialogHostApiTypes">
+                            <DialogHostTrigger />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Modals);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Modals);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/modals");
+
+    private static readonly IReadOnlyList<Type> DialogApiTypes = [typeof(Dialog)];
+    private static readonly IReadOnlyList<Type> DialogScaffoldApiTypes = [typeof(DialogScaffold)];
+    private static readonly IReadOnlyList<Type> DangerActionDialogApiTypes = [typeof(DangerActionDialog)];
+    private static readonly IReadOnlyList<Type> InspectorDialogLayoutApiTypes = [typeof(InspectorDialogLayout)];
+    private static readonly IReadOnlyList<Type> PickerDialogShellApiTypes = [typeof(PickerDialogShell)];
+    private static readonly IReadOnlyList<Type> DialogHostApiTypes = [typeof(DialogHost), typeof(DialogService)];
+
+}

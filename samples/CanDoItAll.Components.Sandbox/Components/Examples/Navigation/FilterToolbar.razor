@@ -1,0 +1,28 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<Toolbar data-testid="sandbox-navigation-toolbar">
+    <ToolbarRow>
+        <ToolbarFields>
+            <TextBox Value="@toolbarQuery"
+                     ValueChanged="HandleToolbarQueryChanged"
+                     Immediate="true"
+                     Placeholder="Filter standard navigation"
+                     aria-label="Filter standard navigation"
+                     data-testid="sandbox-navigation-toolbar-query" />
+            <DropDown TValue="string"
+                      Data="@ToolbarScopes"
+                      Value="@toolbarScope"
+                      ValueChanged="HandleToolbarScopeChanged"
+                      aria-label="Navigation scope"
+                      data-testid="sandbox-navigation-toolbar-scope" />
+        </ToolbarFields>
+        <ToolbarActions>
+            <Button Text="Reset"
+                    ButtonStyle="@(ButtonStyle.Light)"
+                    Variant="@(Variant.Outlined)"
+                    Click="@ResetNavigationTools"
+                    data-testid="sandbox-navigation-toolbar-reset" />
+        </ToolbarActions>
+    </ToolbarRow>
+</Toolbar>

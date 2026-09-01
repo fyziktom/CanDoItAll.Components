@@ -1,0 +1,39 @@
+@layer components {
+  .cda-prefixed-field {
+    @apply flex min-w-0 w-full flex-1 max-w-full items-stretch overflow-hidden rounded-md border bg-white;
+    border-color: var(--cad-color-border);
+  }
+
+  .cda-prefixed-field .cda-input,
+  .cda-prefixed-field .rz-input,
+  .cda-prefixed-field .rz-numeric,
+  .cda-prefixed-field .rz-select {
+    @apply min-w-0 flex-1 rounded-none border-0 bg-transparent shadow-none;
+  }
+
+  @media (max-width: 639px) {
+    .cda-prefixed-field--stack-mobile {
+      @apply flex flex-col items-stretch;
+    }
+
+    .cda-prefixed-field--stack-mobile .cda-prefixed-field__prefix {
+      @apply w-full max-w-full justify-start whitespace-normal break-words border-b border-r-0 leading-4;
+    }
+
+    .cda-prefixed-field--stack-mobile .cda-prefixed-field__suffix {
+      @apply w-full max-w-full justify-start whitespace-normal break-words border-l-0 border-t leading-4;
+    }
+  }
+
+  .cda-prefixed-field__prefix {
+    @apply pointer-events-none inline-flex min-h-10 max-w-[45%] shrink-0 items-center whitespace-normal break-words border-r bg-slate-50 px-3 text-[10px] font-bold uppercase leading-4 tracking-[0.18em];
+    border-color: var(--cad-color-border);
+    color: var(--cad-color-text-soft);
+  }
+
+  .cda-prefixed-field__suffix {
+    @apply pointer-events-none inline-flex min-h-10 max-w-[45%] shrink-0 items-center whitespace-normal break-words border-l bg-slate-50 px-3 text-[10px] font-bold uppercase leading-4 tracking-[0.18em];
+    border-color: var(--cad-color-border);
+    color: var(--cad-color-text-soft);
+  }
+}

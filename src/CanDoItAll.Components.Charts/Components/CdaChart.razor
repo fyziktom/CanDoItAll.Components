@@ -49,36 +49,47 @@ else
     private ApexChartOptions<CdaChartPoint> _apexOptions = new();
     private IReadOnlyList<CdaChartSeries> _renderSeries = [];
 
+    /// <summary>Heading rendered above the chart. Omitted entirely when both this and <see cref="Description"/> are empty.</summary>
     [Parameter]
     public string? Title { get; set; }
 
+    /// <summary>Supporting sentence rendered under <see cref="Title"/>.</summary>
     [Parameter]
     public string? Description { get; set; }
 
+    /// <summary>Accessible name for the chart's <c>role="figure"</c> container. Falls back to <see cref="Title"/>, then <c>"Chart"</c>.</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>Screen-reader-only text summarizing the series. A per-series min/max summary is generated automatically when omitted.</summary>
     [Parameter]
     public string? AccessibleSummary { get; set; }
 
+    /// <summary>The series to plot. Series with no points are dropped before rendering.</summary>
     [Parameter]
     public IReadOnlyList<CdaChartSeries> Series { get; set; } = [];
 
+    /// <summary>Axis, legend, palette, and formatting configuration shared across every series.</summary>
     [Parameter]
     public CdaChartOptions Options { get; set; } = new();
 
+    /// <summary>Chart height, passed through to the underlying ApexCharts instance as-is.</summary>
     [Parameter]
     public object Height { get; set; } = 320;
 
+    /// <summary>Message shown in the placeholder surface when no series has renderable points.</summary>
     [Parameter]
     public string EmptyText { get; set; } = "No chart data.";
 
+    /// <summary>Additional CSS class merged onto the root element.</summary>
     [Parameter]
     public string? Class { get; set; }
 
+    /// <summary>Inline style applied to the root element.</summary>
     [Parameter]
     public string? Style { get; set; }
 
+    /// <summary>Additional HTML attributes splatted onto the root element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 

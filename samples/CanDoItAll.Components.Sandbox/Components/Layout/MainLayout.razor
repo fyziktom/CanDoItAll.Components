@@ -1,114 +1,241 @@
 @namespace CanDoItAll.Components.Sandbox.Components
+@using Microsoft.JSInterop
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @inherits LayoutComponentBase
 @implements IDisposable
 
-<ThemeHost ThemeKey="@themeState.ThemeKey">
+<ThemeHost ThemeKey="@themeState.ThemeKey" Class="sandbox-theme-host">
     <CascadingValue Value="@themeState">
-        <div class="sandbox-layout">
-            <div class="sandbox-layout__backdrop" aria-hidden="true"></div>
-            <div class="sandbox-layout__shell">
-                <header class="sandbox-mobile-header">
-                    <a class="sandbox-brand" href="/">
-                        <span class="sandbox-brand__eyebrow">CanDoItAll</span>
-                        <span class="sandbox-brand__title">Components Sandbox</span>
-                    </a>
-                    <Button Text="@(mobileNavigationOpen ? "Close navigation" : "Open navigation")"
-                            Icon="@(mobileNavigationOpen ? "close" : "menu")"
-                            ButtonStyle="ButtonStyle.Light"
-                            Variant="Variant.Outlined"
-                            Click="ToggleMobileNavigationAsync"
-                            aria-controls="sandbox-navigation"
-                            aria-expanded="@(mobileNavigationOpen ? "true" : "false")" />
-                </header>
-
-                <aside id="sandbox-navigation" class="sandbox-sidebar @(mobileNavigationOpen ? "is-open" : null)">
-                    <a class="sandbox-brand" href="/">
-                        <span class="sandbox-brand__eyebrow">CanDoItAll</span>
-                        <span class="sandbox-brand__title">Components Sandbox</span>
-                    </a>
-
-                    <p class="sandbox-brand__summary">A calm validation lab for standard shared surfaces, route coverage, and future MCP examples.</p>
-
-                    <nav class="sandbox-nav" aria-label="Standard proof groups">
-                        <a href="/groups/coverage"
-                           class="sandbox-nav__link @(IsActiveRoute("/groups/coverage") ? "is-active" : string.Empty)">
-                            <span class="sandbox-nav__title">Coverage Index</span>
-                            <span class="sandbox-nav__meta">standard / routes / exceptions</span>
+        <CascadingValue Value="@toolbarState">
+            <div class="sandbox-layout">
+                <SandboxToolbar />
+                <div class="sandbox-layout__backdrop" aria-hidden="true"></div>
+                <div class="sandbox-layout__shell">
+                    <aside id="sandbox-navigation" class="sandbox-sidebar">
+                        <a href="@BuildSidebarLink("/")" data-sandbox-route
+                           class="sandbox-nav__link @(IsActiveRoute("/") ? "is-active" : string.Empty)">
+                            <span class="sandbox-nav__title">Components Sandbox</span>
+                            @* <span class="sandbox-nav__meta">Home</span> *@
                         </a>
 
-                        @foreach (var group in SandboxCatalogRegistry.StandardGroups)
-                        {
-                            <a href="@group.Route"
-                               class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
-                                <span class="sandbox-nav__title">@group.Title</span>
-                                <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
-                            </a>
+                        <div class="sandbox-nav__search">
+                            <TextBox Value="@searchQuery"
+                                     ValueChanged="@OnSearchQueryChanged"
+                                     Immediate="true"
+                                     Look="InputLook.Plain"
+                                     Placeholder="Search components…"
+                                     class="sandbox-nav__search-input"
+                                     aria-label="Search components" />
+                        </div>
 
-                            @if (group.Key == SandboxGroupKey.Navigation)
+                        <nav class="sandbox-nav" aria-label="Standard proof groups">
+                            @foreach (var group in SandboxCatalogRegistry.StandardGroups)
                             {
-                                <a href="/groups/navigation/side-menu"
-                                   class="sandbox-nav__link @(IsActiveRoute("/groups/navigation/side-menu") ? "is-active" : string.Empty)">
-                                    <span class="sandbox-nav__title">Side Menu Lab</span>
-                                    <span class="sandbox-nav__meta">collapse / overflow / responsive</span>
-                                </a>
-                            }
-                        }
-                    </nav>
-
-                    @if (SandboxCatalogRegistry.DeferredGroups.Count > 0)
-                    {
-                        <div class="space-y-2">
-                            <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Deferred proof scope" />
-                            <nav class="sandbox-nav" aria-label="Deferred proof groups">
-                                @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
+                                if (!ShouldShowGroup(group))
                                 {
-                                    <a href="@group.Route"
-                                       class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
-                                        <span class="sandbox-nav__title">@group.Title</span>
-                                        <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
-                                    </a>
+                                    continue;
                                 }
-                            </nav>
-                        </div>
-                    }
 
-                    <SectionCard Title="Validation Gate" Description="Each page needs happy, dense, and empty proof before sign-off.">
-                        <div class="space-y-2">
-                            @foreach (var question in SandboxCatalogRegistry.ValidationQuestions.Take(4))
-                            {
-                                <p class="cda-body-muted">@question</p>
+                                <a href="@BuildSidebarLink(group.Route)" data-sandbox-route
+                                   class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty) @(SandboxCatalogRegistry.IsGroupUnused(group.Route) ? "is-unused" : string.Empty)">
+                                    <span class="sandbox-nav__title">@group.Title</span>
+                                    <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
+                                </a>
+
+                                @if (ShouldExpandGroup(group))
+                                {
+                                    var sections = GetVisibleSections(group);
+                                    if (sections.Count > 0)
+                                    {
+                                        <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
+                                            @foreach (var section in sections)
+                                            {
+                                                <a href="@BuildSectionLink(group.Route, section.Anchor)" data-sandbox-route
+                                                   class="sandbox-nav__link sandbox-nav__link--sub @(SandboxCatalogRegistry.IsUnused(section.ComponentName) ? "is-unused" : string.Empty)">
+                                                    <span class="sandbox-nav__title">@BuildHighlightedName(section.ComponentName)</span>
+                                                </a>
+                                            }
+                                        </nav>
+                                    }
+                                }
                             }
-                        </div>
-                    </SectionCard>
-                </aside>
+                        </nav>
 
-                <main class="sandbox-main">
-                    <DialogHost />
-                    <Tooltip />
-                    <Notification />
-                    @Body
-                </main>
+                        @if (IsSearching && !HasAnyVisibleGroup())
+                        {
+                            <p class="sandbox-nav__meta">No components found.</p>
+                        }
+
+                        @if (SandboxCatalogRegistry.DeferredGroups.Count > 0)
+                        {
+                            <div class="space-y-2">
+                                @* <TextBlock TextStyle="@(TextStyle.Eyebrow)" Value="Deferred proof scope" /> *@
+                                <nav class="sandbox-nav" aria-label="Deferred proof groups">
+                                    @foreach (var group in SandboxCatalogRegistry.DeferredGroups)
+                                    {
+                                        if (!ShouldShowGroup(group))
+                                        {
+                                            continue;
+                                        }
+
+                                        <a href="@BuildSidebarLink(group.Route)" data-sandbox-route
+                                           class="sandbox-nav__link @(IsActive(group) ? "is-active" : string.Empty)">
+                                            <span class="sandbox-nav__title">@group.Title</span>
+                                            <span class="sandbox-nav__meta">@string.Join(" / ", group.FocusAreas.Take(3))</span>
+                                        </a>
+
+                                        @if (ShouldExpandGroup(group))
+                                        {
+                                            var deferredSections = GetVisibleSections(group);
+                                            if (deferredSections.Count > 0)
+                                            {
+                                                <nav class="sandbox-nav sandbox-nav--sub" aria-label="@($"{group.Title} sections")">
+                                                    @foreach (var section in deferredSections)
+                                                    {
+                                                        <a href="@BuildSectionLink(group.Route, section.Anchor)" data-sandbox-route
+                                                           class="sandbox-nav__link sandbox-nav__link--sub">
+                                                            <span class="sandbox-nav__title">@BuildHighlightedName(section.ComponentName)</span>
+                                                        </a>
+                                                    }
+                                                </nav>
+                                            }
+                                        }
+                                    }
+                                </nav>
+                            </div>
+                        }
+
+                        <nav class="sandbox-nav" aria-label="Test page">
+                            <a href="@BuildSidebarLink("/test")" data-sandbox-route
+                               class="@GetTestNavClass()">
+                                <span class="sandbox-nav__title">Test</span>
+                                <span class="sandbox-nav__meta">All / All (raw)</span>
+                            </a>
+                        </nav>
+                    </aside>
+
+                    <main class="sandbox-main">
+                        <DialogHost />
+                        <Tooltip />
+                        <Notification />
+                        @Body
+                    </main>
+                </div>
             </div>
-        </div>
+        </CascadingValue>
     </CascadingValue>
 </ThemeHost>
 
 @code {
     private readonly SandboxThemeState themeState = new();
-    private bool mobileNavigationOpen;
+    private readonly SandboxToolbarState toolbarState = new();
+    private string searchQuery = string.Empty;
 
     protected override void OnInitialized()
     {
         themeState.Changed += HandleThemeChanged;
+        toolbarState.Changed += HandleToolbarChanged;
+        NavigationManager.LocationChanged += HandleLocationChanged;
+        SyncThemeFromQuery();
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/sandbox-toolbar.js");
+            await module.InvokeVoidAsync("observeToolbarHeight", ".sandbox-toolbar");
+        }
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        searchQuery = string.Empty;
+        SyncThemeFromQuery();
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void SyncThemeFromQuery()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var isDark = uri.Query.TrimStart('?')
+            .Split('&', StringSplitOptions.RemoveEmptyEntries)
+            .Select(static pair => pair.Split('=', 2))
+            .Any(static pair => pair.Length == 2
+                && string.Equals(Uri.UnescapeDataString(pair[0]), "dark", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Uri.UnescapeDataString(pair[1]), "true", StringComparison.OrdinalIgnoreCase));
+
+        themeState.SetTheme(isDark ? CadThemes.Dark : CadThemes.Light);
+    }
+
+    private string NormalizedQuery => searchQuery.Trim();
+
+    private bool IsSearching => NormalizedQuery.Length > 0;
+
+    private void OnSearchQueryChanged(string? value) => searchQuery = value ?? string.Empty;
+
+    private IReadOnlyList<SandboxPageSection> GetVisibleSections(SandboxGroupDefinition group)
+    {
+        var sections = SandboxCatalogRegistry.FilterVisible(SandboxCatalogRegistry.GetSections(group.Route), toolbarState.ShowUnused);
+        if (!IsSearching)
+        {
+            return sections;
+        }
+
+        return sections
+            .Where(section => section.ComponentName.Contains(NormalizedQuery, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private bool ShouldShowGroup(SandboxGroupDefinition group)
+        => GetVisibleSections(group).Count > 0;
+
+    private bool ShouldExpandGroup(SandboxGroupDefinition group)
+        => IsActive(group) || (IsSearching && GetVisibleSections(group).Count > 0);
+
+    private bool HasAnyVisibleGroup()
+        => SandboxCatalogRegistry.StandardGroups.Concat(SandboxCatalogRegistry.DeferredGroups).Any(ShouldShowGroup);
+
+    // Highlights only the first match; component names are short enough that
+    // additional occurrences are unlikely and not worth the added complexity.
+    private RenderFragment BuildHighlightedName(string name) => builder =>
+    {
+        var query = NormalizedQuery;
+        var matchIndex = query.Length == 0 ? -1 : name.IndexOf(query, StringComparison.OrdinalIgnoreCase);
+        if (matchIndex < 0)
+        {
+            builder.AddContent(0, name);
+            return;
+        }
+
+        var seq = 0;
+        if (matchIndex > 0)
+        {
+            builder.AddContent(seq++, name[..matchIndex]);
+        }
+
+        builder.OpenElement(seq++, "mark");
+        builder.AddAttribute(seq++, "class", "sandbox-nav__match");
+        builder.AddContent(seq++, name.Substring(matchIndex, query.Length));
+        builder.CloseElement();
+
+        var afterIndex = matchIndex + query.Length;
+        if (afterIndex < name.Length)
+        {
+            builder.AddContent(seq, name[afterIndex..]);
+        }
+    };
 
     private bool IsActive(SandboxGroupDefinition group)
         => IsActiveRoute(group.Route);
 
+    private string GetTestNavClass()
+        => $"sandbox-nav__link {(IsActiveRoute("/test") ? "is-active" : string.Empty)}";
+
     private bool IsActiveRoute(string route)
     {
-        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var relativePath = SandboxQueryLinks.GetCurrentRoute(NavigationManager);
         var currentPath = relativePath.Split('?', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
         if (string.IsNullOrWhiteSpace(currentPath))
         {
@@ -118,19 +245,41 @@
         return string.Equals($"/{currentPath.TrimStart('/')}", route, StringComparison.OrdinalIgnoreCase);
     }
 
+    private string BuildSidebarLink(string route)
+    {
+        return SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            route,
+            toolbarState.HasContext ? toolbarState.Frame : null,
+            themeState.IsDark);
+    }
+
+    private string BuildSectionLink(string route, string anchor)
+    {
+        return IsActiveRoute(route)
+            ? SandboxQueryLinks.WithFragment(NavigationManager, anchor)
+            : SandboxQueryLinks.BuildCrossPageLink(
+                NavigationManager,
+                route,
+                toolbarState.HasContext ? toolbarState.Frame : null,
+                themeState.IsDark,
+                anchor);
+    }
+
     private void HandleThemeChanged()
     {
         _ = InvokeAsync(StateHasChanged);
     }
 
-    private Task ToggleMobileNavigationAsync()
+    private void HandleToolbarChanged()
     {
-        mobileNavigationOpen = !mobileNavigationOpen;
-        return Task.CompletedTask;
+        _ = InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()
     {
         themeState.Changed -= HandleThemeChanged;
+        toolbarState.Changed -= HandleToolbarChanged;
+        NavigationManager.LocationChanged -= HandleLocationChanged;
     }
 }

@@ -1,0 +1,16 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<div class="min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60"
+     data-testid="sandbox-navigation-tree-view-node-row">
+    <ul class="cda-treeview" role="tree" aria-label="Adaptive row proof">
+        <TreeViewNodeRow Node="@adaptiveRowNode"
+                         Level="0"
+                         TreeId="sandbox-adaptive-row"
+                         Style="@(TreeViewStyle.Workbench)"
+                         ActiveNodeId="@adaptiveRowActiveId"
+                         OnActivate="@(id => adaptiveRowActiveId = id)"
+                         OnSelect="@(id => adaptiveRowActiveId = id)"
+                         OnToggle="HandleAdaptiveRowToggle" />
+    </ul>
+</div>

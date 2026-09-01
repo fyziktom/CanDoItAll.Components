@@ -1,0 +1,71 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Layout
+@inherits LayoutCompositionShowcaseBase
+
+<div class="@HeroSurfaceClass" data-testid="layout-composition-row-column-fixed">
+    <Grid Columns="1"
+          ColumnsLg="2"
+          ColumnTemplateLg="minmax(0,1fr) minmax(0,0.85fr)"
+          Gap="LayoutGap.XLarge"
+          Class="w-full">
+        <Row GapScale="LayoutGap.XLarge">
+            <Column GapScale="LayoutGap.Medium" JustifyContent="JustifyContent.Center">
+                <span class="cda-shell-pill cda-shell-pill--neutral">@HeroEyebrow</span>
+                <p class="text-base font-semibold text-slate-950">@HeroTitle</p>
+                <p class="text-sm leading-6 text-slate-600">@HeroDescription</p>
+            </Column>
+
+            <Column GapScale="LayoutGap.Large"
+                    AlignItems="AlignItems.End"
+                    JustifyContent="JustifyContent.SpaceBetween">
+                <PillList>
+                    <Pill>@SelectedModeLabel</Pill>
+                    <Pill>@WindowLabel</Pill>
+                    <Pill>@FreshnessLabel</Pill>
+                </PillList>
+
+                <Row Columns="1" ColumnsSm="2" GapScale="LayoutGap.Large">
+                    <Column>
+                        <Button Text="Refresh"
+                                Icon="refresh"
+                                ButtonStyle="ButtonStyle.Light"
+                                Click="HandleRefreshAsync"
+                                Disabled="@ActionsDisabled" />
+                    </Column>
+                    <Column>
+                        <Button Text="Reset Data"
+                                Icon="delete"
+                                ButtonStyle="ButtonStyle.Danger"
+                                Click="HandleResetAsync"
+                                Disabled="@ActionsDisabled" />
+                    </Column>
+                </Row>
+            </Column>
+        </Row>
+
+        <Row Columns="1" ColumnsMd="2" GapScale="LayoutGap.XLarge">
+            <Column>
+                <FormField Text="Mode" ContainerClass="w-full">
+                    <ChildContent>
+                        <DropDown TValue="string"
+                                  Data="@ModeOptions"
+                                  Value="@selectedMode"
+                                  Change="OnModeChanged"
+                                  Style="width:100%" />
+                    </ChildContent>
+                </FormField>
+            </Column>
+
+            <Column>
+                <FormField Text="Time Window" ContainerClass="w-full">
+                    <ChildContent>
+                        <DropDown TValue="int"
+                                  Data="@WindowOptions"
+                                  Value="@selectedWindowDays"
+                                  Change="OnWindowChanged"
+                                  Style="width:100%" />
+                    </ChildContent>
+                </FormField>
+            </Column>
+        </Row>
+    </Grid>
+</div>

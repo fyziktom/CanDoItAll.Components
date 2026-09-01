@@ -1,0 +1,122 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/badges"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Badges
+
+<PageTitle>Badges</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in VisibleSections(Sections))
+            {
+                <section id="@(section.Anchor)" class="sandbox-component-section">
+                    @RenderSectionHeading(section)
+
+                    @if (section.ComponentName == "Badge")
+                    {
+                        <ExampleBlock Title="Badges and status"
+                                      Description="Small feedback tokens need to wrap and stay distinct."
+                                      SourceId="examples/Badges/BadgesAndStatus.razor"
+                                      ApiTypes="@BadgeApiTypes">
+                            <BadgesAndStatus />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "BadgesGroup")
+                    {
+                        <ExampleBlock Title="Badges group spacing"
+                                      Description="PillStack tightens the gap for denser badge clusters."
+                                      SourceId="examples/Badges/BadgesGroupShowcase.razor"
+                                      ApiTypes="@BadgesGroupApiTypes">
+                            <BadgesGroupShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "StatusBadge")
+                    {
+                        <ExampleBlock Title="Status badge tones"
+                                      Description="Every tone plus a NoWrap example that truncates instead of wrapping."
+                                      SourceId="examples/Badges/StatusBadgeShowcase.razor"
+                                      ApiTypes="@StatusBadgeApiTypes">
+                            <StatusBadgeShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Chip")
+                    {
+                        <ExampleBlock Title="Chips"
+                                      Description="Compact tag-style affordances for lightweight labeling."
+                                      SourceId="examples/Badges/ChipRowExample.razor"
+                                      ApiTypes="@ChipApiTypes">
+                            <ChipRowExample />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "ChipRow")
+                    {
+                        <ExampleBlock Title="Chip row wrapping"
+                                      Description="A ChipRow wraps its chips onto multiple lines instead of overflowing."
+                                      SourceId="examples/Badges/ChipRowShowcase.razor"
+                                      ApiTypes="@ChipRowApiTypes">
+                            <ChipRowShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CompactStat")
+                    {
+                        <ExampleBlock Title="Supporting metrics"
+                                      Description="Simple counts stay inline so the record list remains the dominant surface."
+                                      SourceId="examples/Badges/SupportingMetrics.razor"
+                                      ApiTypes="@CompactStatApiTypes">
+                            <SupportingMetrics />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CompactStatStrip")
+                    {
+                        <ExampleBlock Title="Wider stat strip"
+                                      Description="A CompactStatStrip holding more tiles than the summary example, proving it stays a single row of stats."
+                                      SourceId="examples/Badges/CompactStatStripShowcase.razor"
+                                      ApiTypes="@CompactStatStripApiTypes">
+                            <CompactStatStripShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Pill")
+                    {
+                        <ExampleBlock Title="Pill tones"
+                                      Description="Tone variants, an optional token prefix, and an interactive AsButton pill."
+                                      SourceId="examples/Badges/PillShowcase.razor"
+                                      ApiTypes="@PillApiTypes">
+                            <PillShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "PillList")
+                    {
+                        <ExampleBlock Title="Pill list density"
+                                      Description="Compact reduces the gap between pills for denser filter rows."
+                                      SourceId="examples/Badges/PillListShowcase.razor"
+                                      ApiTypes="@PillListApiTypes">
+                            <PillListShowcase />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Badges);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Badges);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/badges");
+
+    private static readonly IReadOnlyList<Type> BadgeApiTypes = [typeof(Badge)];
+    private static readonly IReadOnlyList<Type> BadgesGroupApiTypes = [typeof(BadgesGroup)];
+    private static readonly IReadOnlyList<Type> StatusBadgeApiTypes = [typeof(StatusBadge)];
+    private static readonly IReadOnlyList<Type> ChipApiTypes = [typeof(Chip)];
+    private static readonly IReadOnlyList<Type> ChipRowApiTypes = [typeof(ChipRow)];
+    private static readonly IReadOnlyList<Type> CompactStatApiTypes = [typeof(CompactStat)];
+    private static readonly IReadOnlyList<Type> CompactStatStripApiTypes = [typeof(CompactStatStrip)];
+    private static readonly IReadOnlyList<Type> PillApiTypes = [typeof(Pill)];
+    private static readonly IReadOnlyList<Type> PillListApiTypes = [typeof(PillList)];
+
+}

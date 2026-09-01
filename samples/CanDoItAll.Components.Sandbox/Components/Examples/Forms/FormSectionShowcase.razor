@@ -1,0 +1,32 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<FormSection Title="Review readiness"
+             Description="Confirm the fields below before requesting sign-off."
+             Icon="fact_check"
+             HelpText="Sign-off requires a reviewer lane, a priority threshold, and a budget reference."
+             HelpHeading="Review readiness help">
+    <Actions>
+        <Button Text="Request sign-off" Size="ButtonSize.Small" Disabled="@IsDisabled" />
+    </Actions>
+    <ChildContent>
+        <FormRow Split="true">
+            <FormField Text="Priority threshold">
+                <Slider TValue="int"
+                        Value="@AdvancedState.Priority"
+                        ValueChanged="HandlePriorityChanged"
+                        Min="0"
+                        Max="100"
+                        Step="5"
+                        Disabled="@IsDisabled" />
+            </FormField>
+            <FormField Text="Budget reference">
+                <TextBox Value="@AdvancedState.BudgetCode"
+                         ValueChanged="HandleBudgetCodeChanged"
+                         Placeholder="Review budget code"
+                         Disabled="@IsDisabled"
+                         Class="cda-input" />
+            </FormField>
+        </FormRow>
+    </ChildContent>
+</FormSection>

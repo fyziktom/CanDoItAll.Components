@@ -1,0 +1,25 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Modals
+@inject DialogService DialogService
+
+<Button Text="Open via DialogService"
+        Icon="open_in_new"
+        ButtonStyle="@(ButtonStyle.Secondary)"
+        Variant="@(Variant.Outlined)"
+        Click="OpenDangerDialogViaService" />
+
+@code {
+
+    private RenderFragment<DialogReference> DangerDialogContent => dialog => @<DangerActionDialog
+                                                                                 Eyebrow="Danger action" Title=""
+                                                                                 Description="This permanently removes the workspace and all of its data."
+                                                                                 RequiredConfirmation="delete workspace"
+                                                                                 Confirmed="@(() => dialog.CloseAsync("confirmed"))"
+                                                                                 Cancelled="@(() => dialog.CloseAsync("cancelled"))" />;
+
+    private Task OpenDangerDialogViaService()
+    {
+        _ = DialogService.OpenAsync("Delete workspace", DangerDialogContent, new DialogOptions { DenseChrome = true });
+        return Task.CompletedTask;
+    }
+
+}

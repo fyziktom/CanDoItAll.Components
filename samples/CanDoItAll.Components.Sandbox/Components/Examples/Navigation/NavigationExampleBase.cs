@@ -1,0 +1,613 @@
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using CanDoItAll.Components.BaseLib;
+using CanDoItAll.Components.Sandbox;
+
+namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation;
+
+public abstract class NavigationExampleBase : ComponentBase, IDisposable
+{
+    [Inject]
+    protected SideMenuService SideMenus { get; set; } = default!;
+
+    protected const string SideMenuId = "sandbox-side-menu";
+
+    protected static readonly IReadOnlyList<ISideMenuItem> SideMenuBasePropertyItems =
+    [
+        new SideMenuItemDefinition { Id = "overview", Text = "Overview", Icon = "dashboard", Description = "Current delivery status and decisions.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "inbox", Text = "Inbox", Icon = "inbox", Description = "Requests that need review.", BadgeText = "12", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "projects", Text = "Projects", Icon = "folder_open", Description = "Active project portfolio and context." }
+    ];
+
+    protected static readonly IReadOnlyList<ISideMenuItem> SideMenuDeclaredMoreItems =
+    [
+        new SideMenuItemDefinition { Id = "command-center", Text = "Command center", Icon = "terminal", Description = "Open advanced workspace commands." }
+    ];
+
+    protected static readonly IReadOnlyList<ISideMenuItem> SideMenuDeclaredBottomItems =
+    [
+        new SideMenuItemDefinition { Id = "help", Text = "Help", Icon = "help", Description = "Open contextual documentation." }
+    ];
+
+    protected static readonly IReadOnlyList<ISideMenuItem> SideMenuAccountItems =
+    [
+        new SideMenuItemDefinition { Id = "profile", Text = "Your profile", Icon = "person", Description = "Identity and personal preferences." },
+        new SideMenuItemDefinition { Id = "team", Text = "Switch team", Icon = "groups", Description = "Change the active delivery team.", BadgeText = "3" },
+        new SideMenuItemDefinition { Id = "sign-out", Text = "Sign out", Icon = "logout", Description = "End the current session." }
+    ];
+
+    protected static readonly IReadOnlyList<ISideMenuItem> SideMenuProjectContextItems =
+    [
+        new SideMenuItemDefinition { Id = "project-health", Text = "Project health", Icon = "monitor_heart", Description = "Delivery, cost, and quality signals.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "project-board", Text = "Delivery board", Icon = "view_kanban", Description = "Work moving through the current phase.", BadgeText = "24" },
+        new SideMenuItemDefinition { Id = "project-plan", Text = "Plan", Icon = "account_tree", Description = "Scope and dependency model." },
+        new SideMenuItemDefinition { Id = "project-team", Text = "Team", Icon = "groups", Description = "People and agent assignments." },
+        new SideMenuItemDefinition { Id = "project-calendar", Text = "Calendar", Icon = "calendar_month", Description = "Milestones and scheduled runs." },
+        new SideMenuItemDefinition { Id = "project-risk", Text = "Risks", Icon = "warning", Description = "Open threats and mitigations.", BadgeText = "5" },
+        new SideMenuItemDefinition { Id = "project-budget", Text = "Budget", Icon = "payments", Description = "Budget, actuals, and forecast." },
+        new SideMenuItemDefinition { Id = "project-quality", Text = "Quality", Icon = "verified", Description = "Evidence and release gates." },
+        new SideMenuItemDefinition { Id = "project-history", Text = "History", Icon = "history", Description = "Decisions and previous phases." },
+        new SideMenuItemDefinition { Id = "project-archive", Text = "Archive", Icon = "inventory", Description = "Closed work and snapshots.", OverflowBehavior = SideMenuOverflowBehavior.AlwaysInMore }
+    ];
+
+    protected static readonly IReadOnlyList<ISideMenuItem> SideMenuAnalyticsContextItems =
+    [
+        new SideMenuItemDefinition { Id = "analytics-summary", Text = "Analytics summary", Icon = "analytics", Description = "Current performance indicators.", OverflowBehavior = SideMenuOverflowBehavior.PreferVisible },
+        new SideMenuItemDefinition { Id = "analytics-throughput", Text = "Throughput", Icon = "speed", Description = "Delivery rate and cycle time." },
+        new SideMenuItemDefinition { Id = "analytics-quality", Text = "Quality trends", Icon = "query_stats", Description = "Defects, tests, and reliability." },
+        new SideMenuItemDefinition { Id = "analytics-cost", Text = "Cost trends", Icon = "payments", Description = "Spend and forecast variance." },
+        new SideMenuItemDefinition { Id = "analytics-capacity", Text = "Capacity", Icon = "groups", Description = "Team and agent utilization." },
+        new SideMenuItemDefinition { Id = "analytics-exports", Text = "Exports", Icon = "download", Description = "Reports and downstream datasets.", OverflowBehavior = SideMenuOverflowBehavior.AlwaysInMore }
+    ];
+
+    protected IDisposable? sideMenuServiceSubscription;
+    protected bool sideMenuExpanded = true;
+    protected string sideMenuContextLabel = "Declared + parameter items";
+    protected string sideMenuSelectedHeading = "No destination selected";
+    protected string lastSideMenuServiceSelection = "Waiting for selection";
+    protected string lastSideMenuComponentSelection = "Waiting for selection";
+    protected string lastSideMenuDeclarativeSelection = "Select Timeline to prove this callback";
+
+    protected IReadOnlyList<ISideMenuItem> SideMenuDeclaredPropertyItems => SideMenuBasePropertyItems
+        .Select(item => item is SideMenuItemDefinition definition
+            ? definition with { Text = $"{definition.Text} with a deliberately extended navigation label" }
+            : item)
+        .ToArray();
+
+    protected int basicTabIndex = 1;
+    protected int classTabIndex = 1;
+    protected int workstationTabIndex = 1;
+    protected int modalTabIndex;
+    protected int missingTitleTabIndex = 1;
+    protected int wrapTabIndex = 2;
+    protected int scrollTabIndex = 2;
+    protected int verticalTabIndex;
+
+    protected static readonly IReadOnlyList<ContextMenuItem> TreeContextMenuItems =
+    [
+        new() { Id = "select", Text = "Select node", Icon = "check", Description = "Make this node the active detail target." },
+        new() { Id = "open-details", Text = "Open details", Icon = "open_in_new", Description = "Exercise a second keyboard-selectable action." },
+        new() { Id = "unavailable", Text = "Unavailable action", Icon = "block", Disabled = true, SeparatorBefore = true }
+    ];
+    protected int stepIndex = 1;
+    protected string toolbarQuery = string.Empty;
+    protected string toolbarScope = ToolbarScopeAll;
+    protected string selectedTreeNodeId = "navigation-tabs";
+    protected TreeViewNodeContextMenuRequest? treeContextMenuRequest;
+    protected readonly HashSet<string> expandedTreeNodeIds = new(StringComparer.Ordinal)
+    {
+        "navigation-foundations",
+        "navigation-controls",
+        "navigation-adaptive-rows"
+    };
+
+    protected const string ToolbarScopeAll = "All standard groups";
+    protected const string ToolbarScopeNavigation = "Navigation only";
+    protected const string ToolbarScopeOverlays = "Overlay dependencies";
+
+    protected static readonly IReadOnlyList<string> ToolbarScopes =
+    [
+        ToolbarScopeAll,
+        ToolbarScopeNavigation,
+        ToolbarScopeOverlays
+    ];
+
+    protected bool navigationContextMenuOpen;
+    protected double navigationContextMenuX = 24;
+    protected double navigationContextMenuY = 24;
+
+    protected static readonly IReadOnlyList<ContextMenuItem> NavigationContextMenuItems =
+    [
+        new() { Id = "rename", Text = "Rename", Icon = "edit" },
+        new() { Id = "duplicate", Text = "Duplicate", Icon = "content_copy" },
+        new() { Id = "delete", Text = "Delete", Icon = "delete", Danger = true, SeparatorBefore = true }
+    ];
+
+    protected string filterBarQuery = string.Empty;
+    protected string filterBarScope = ToolbarScopeAll;
+
+    protected static readonly IReadOnlyList<string> RibbonTools = ["Format", "Insert", "Review"];
+    protected string ribbonSelectedTool = "Format";
+    protected bool ribbonCollapsed;
+
+    protected static readonly IReadOnlyList<SecondaryTabItem> SecondaryStatusTabs =
+    [
+        new("all", "All", "24", null),
+        new("open", "Open", "9", "Still awaiting review."),
+        new("done", "Done", "15", "Marked complete this sprint.")
+    ];
+    protected string secondaryTabsSelectedKey = "open";
+
+    protected static readonly IReadOnlyList<ISideMenuItem> SideMenuItemDemoChildren =
+    [
+        new SideMenuItemDefinition { Id = "member-a", Text = "A. Rossi", Icon = "person" },
+        new SideMenuItemDefinition { Id = "member-b", Text = "J. Alvarez", Icon = "person" }
+    ];
+
+    protected int stepsItemDemoIndex;
+
+    protected int tabsItemDemoIndex;
+    protected bool tabsItemAuditVisible = true;
+
+    protected string toolbarActionsLastAction = "None yet";
+    protected string toolbarFieldsQuery = string.Empty;
+    protected string toolbarFieldsScope = ToolbarScopeAll;
+    protected string toolbarRowsQuery = string.Empty;
+
+    protected string? adaptiveRowActiveId;
+
+    protected TreeViewNode adaptiveRowNode = new()
+    {
+        Id = "vendors",
+        Text = "Vendors and external dependencies requiring quarterly review",
+        Icon = "handshake",
+        BadgeText = "New",
+        Tooltip = "Partners, contracts, and outside delivery risk.",
+        IsExpanded = true,
+        Children =
+        [
+            new() { Id = "vendor-a", Text = "Acme Logistics", Icon = "local_shipping" }
+        ]
+    };
+
+    protected bool IsDisabled => false;
+    protected string ActivityBadgeText => "7";
+    protected string EvidenceTabLabel => "Evidence and notes that must wrap cleanly";
+    protected string WrapFirstTabLabel => "A very long tab label that should wrap with control";
+    protected string WrapThirdTabLabel => "Another long label so two wrapped buttons can coexist without chaos";
+    protected string VerticalNotificationsTabLabel => "Notifications and preference routing";
+    protected string HeaderTitle => "Migration acceptance workspace with extended release notes and validation guidance";
+    protected string HeaderDescription => "Longer page descriptions should not force the header into awkward wrapping or a first viewport that feels like a document instead of a workspace.";
+
+    protected IReadOnlyList<TreeViewNode> TreeNodes => FilterTreeNodes(ResolveScopedTreeNodes());
+
+    protected string TreeFilterStatus => string.IsNullOrWhiteSpace(toolbarQuery)
+        ? "Unfiltered"
+        : $"Filtered: {toolbarQuery}";
+
+    protected string ExpandedTreeStatus => $"{expandedTreeNodeIds.Count} expanded";
+
+    protected override void OnInitialized()
+    {
+        sideMenuServiceSubscription = SideMenus.Subscribe(SideMenuId, HandleSideMenuServiceSelectionAsync);
+    }
+
+    protected Task UseProjectContextAsync()
+    {
+        SideMenus.SetItems(SideMenuId, SideMenuProjectContextItems);
+        sideMenuContextLabel = "Project tab context";
+        sideMenuSelectedHeading = "No destination selected";
+        return InvokeAsync(StateHasChanged);
+    }
+
+    protected Task UseAnalyticsContextAsync()
+    {
+        SideMenus.SetItems(SideMenuId, SideMenuAnalyticsContextItems);
+        sideMenuContextLabel = "Analytics tab context";
+        sideMenuSelectedHeading = "No destination selected";
+        return InvokeAsync(StateHasChanged);
+    }
+
+    protected Task RestoreDeclaredItemsAsync()
+    {
+        SideMenus.ResetItems(SideMenuId);
+        sideMenuContextLabel = "Declared + parameter items";
+        sideMenuSelectedHeading = "No destination selected";
+        return InvokeAsync(StateHasChanged);
+    }
+
+    protected async Task SelectFirstExternallyAsync()
+    {
+        var firstItem = SideMenus.GetSnapshot(SideMenuId).Items.FirstOrDefault(item => item.Visible && !item.Disabled);
+        if (firstItem is not null)
+        {
+            await SideMenus.SelectAsync(SideMenuId, firstItem.Id);
+        }
+    }
+
+    protected Task ToggleFromServiceAsync()
+    {
+        SideMenus.ToggleExpanded(SideMenuId);
+        return Task.CompletedTask;
+    }
+
+    protected Task RunSideMenuReadinessActionAsync()
+        => SideMenus.SelectAsync(SideMenuId, "command-center");
+
+    protected Task HandleSideMenuExpandedChanged(bool isExpanded)
+    {
+        sideMenuExpanded = isExpanded;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleSideMenuComponentSelection(SideMenuSelection selection)
+    {
+        lastSideMenuComponentSelection = $"{selection.Item.Text} / {selection.Source}";
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleSideMenuDeclarativeSelection(SideMenuSelection selection)
+    {
+        lastSideMenuDeclarativeSelection = $"{selection.Item.Text} callback received";
+        return Task.CompletedTask;
+    }
+
+    protected async ValueTask HandleSideMenuServiceSelectionAsync(SideMenuSelection selection)
+    {
+        await InvokeAsync(() =>
+        {
+            sideMenuSelectedHeading = selection.Item.Text;
+            lastSideMenuServiceSelection = $"{selection.Item.Text} / {selection.Source}";
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        sideMenuServiceSubscription?.Dispose();
+    }
+
+    protected Task HandleStepChanged(int value)
+    {
+        stepIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleBasicTabChanged(int value)
+    {
+        basicTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleClassTabChanged(int value)
+    {
+        classTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleWorkstationTabChanged(int value)
+    {
+        workstationTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleModalTabChanged(int value)
+    {
+        modalTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleMissingTitleTabChanged(int value)
+    {
+        missingTitleTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleWrapTabChanged(int value)
+    {
+        wrapTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleScrollTabChanged(int value)
+    {
+        scrollTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleVerticalTabChanged(int value)
+    {
+        verticalTabIndex = value;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleToolbarQueryChanged(string? value)
+    {
+        toolbarQuery = value ?? string.Empty;
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleToolbarScopeChanged(string? value)
+    {
+        toolbarScope = string.IsNullOrWhiteSpace(value)
+            ? ToolbarScopeAll
+            : value;
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    protected Task ResetNavigationTools()
+    {
+        toolbarQuery = string.Empty;
+        toolbarScope = ToolbarScopeAll;
+        selectedTreeNodeId = "navigation-tabs";
+        treeContextMenuRequest = null;
+        expandedTreeNodeIds.Clear();
+        expandedTreeNodeIds.Add("navigation-foundations");
+        expandedTreeNodeIds.Add("navigation-controls");
+        return Task.CompletedTask;
+    }
+
+    protected Task SelectTreeNode(string id)
+    {
+        selectedTreeNodeId = id;
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    protected Task ToggleTreeNode(string id)
+    {
+        if (!expandedTreeNodeIds.Add(id))
+        {
+            expandedTreeNodeIds.Remove(id);
+        }
+
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    protected Task OpenTreeContextMenu(TreeViewNodeContextMenuRequest request)
+    {
+        selectedTreeNodeId = request.NodeId;
+        treeContextMenuRequest = request;
+        return Task.CompletedTask;
+    }
+
+    protected Task FocusTreeContextNode()
+    {
+        if (treeContextMenuRequest is not null)
+        {
+            selectedTreeNodeId = treeContextMenuRequest.NodeId;
+        }
+
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    protected Task HandleTreeContextMenuItemSelected(string itemId)
+    {
+        return itemId switch
+        {
+            "select" => FocusTreeContextNode(),
+            "open-details" => FocusTreeContextNode(),
+            _ => Task.CompletedTask
+        };
+    }
+
+    protected Task CloseTreeContextMenu()
+    {
+        treeContextMenuRequest = null;
+        return Task.CompletedTask;
+    }
+
+    protected void OpenNavigationContextMenu(MouseEventArgs args)
+    {
+        navigationContextMenuX = args.ClientX;
+        navigationContextMenuY = args.ClientY;
+        navigationContextMenuOpen = true;
+    }
+
+    protected void OpenNavigationContextMenuFromButton()
+    {
+        navigationContextMenuOpen = true;
+    }
+
+    protected Task HandleNavigationContextMenuItemSelected(string itemId)
+    {
+        navigationContextMenuOpen = false;
+        return Task.CompletedTask;
+    }
+
+    protected Task CloseNavigationContextMenu()
+    {
+        navigationContextMenuOpen = false;
+        return Task.CompletedTask;
+    }
+
+    protected void HandleAdaptiveRowToggle(string id)
+    {
+        if (adaptiveRowNode.Id == id)
+        {
+            adaptiveRowNode = adaptiveRowNode with { IsExpanded = !adaptiveRowNode.IsExpanded };
+        }
+    }
+
+    protected IReadOnlyList<TreeViewNode> ResolveScopedTreeNodes()
+    {
+        var foundationNode = CreateBranch(
+            "navigation-foundations",
+            "Layout and shell foundations",
+            "bars_staggered",
+            "Core layout and shell primitives.",
+            "sandbox-navigation-tree-foundations",
+            "sandbox-navigation-tree-foundations-children",
+            [
+                CreateLeaf("navigation-page-scaffold", "Page scaffold", "Reusable page width and rail structure.", "space_dashboard", "sandbox-navigation-tree-page-scaffold"),
+                CreateLeaf("navigation-list-detail", "List-detail shell", "Shared list and detail layout with stable pane widths.", "view_sidebar", "sandbox-navigation-tree-list-detail")
+            ]);
+
+        var controlsNode = CreateBranch(
+            "navigation-controls",
+            "Tabs, steps, toolbar and tree controls",
+            "account_tree",
+            "Standard movement and selection primitives.",
+            "sandbox-navigation-tree-controls",
+            "sandbox-navigation-tree-controls-children",
+            [
+                CreateLeaf("navigation-tabs", "Long navigation labels should remain understandable", "Workspace tabs with wrapping and active-state proof.", "tab", "sandbox-navigation-tree-tabs"),
+                CreateLeaf("navigation-steps", "Steps", "Linear and selectable step movement.", "timeline", "sandbox-navigation-tree-steps"),
+                CreateLeaf("navigation-toolbar", "Toolbar", "Shared sheet toolbar structure for filters and actions.", "tune", "sandbox-navigation-tree-toolbar"),
+                CreateLeaf("navigation-tree", "Tree view", "Hierarchical navigation with context-menu requests.", "account_tree", "sandbox-navigation-tree-treeview"),
+                CreateBranch(
+                    "navigation-adaptive-rows",
+                    "Adaptive rows with constrained labels and badges",
+                    "width",
+                    "Tree rows preserve their hierarchy while labels and badges adapt to the available inline space.",
+                    "sandbox-navigation-tree-adaptive",
+                    "sandbox-navigation-tree-adaptive-children",
+                    [
+                        CreateLeaf(
+                            "navigation-adaptive-leaf",
+                            "Third-level project configuration details remain readable",
+                            "Full label, badge, and supporting details remain available from the right-side service tooltip.",
+                            "description",
+                            "sandbox-navigation-tree-adaptive-leaf",
+                            "DocumentationReviewRequired")
+                    ])
+            ]);
+
+        var overlayNode = CreateBranch(
+            "navigation-overlays",
+            "Overlay hosts and contextual surfaces",
+            "layers",
+            "Overlay primitives reached from navigation flows.",
+            "sandbox-navigation-tree-overlays",
+            "sandbox-navigation-tree-overlays-children",
+            [
+                CreateLeaf("navigation-context-menu", "Context menu", "Right-click action surface connected to TreeView.", "ads_click", "sandbox-navigation-tree-context-node"),
+                CreateLeaf("navigation-dialog-host", "Dialog host", "Shared modal host used by page-level actions.", "capture", "sandbox-navigation-tree-dialog-host"),
+                CreateLeaf("navigation-overlay-window", "Overlay window", "Floating overlay window with bounded geometry.", "open_in_new", "sandbox-navigation-tree-overlay-window")
+            ]);
+
+        return toolbarScope switch
+        {
+            ToolbarScopeNavigation => [foundationNode, controlsNode],
+            ToolbarScopeOverlays => [overlayNode],
+            _ => [foundationNode, controlsNode, overlayNode]
+        };
+    }
+
+    protected IReadOnlyList<TreeViewNode> FilterTreeNodes(IReadOnlyList<TreeViewNode> nodes)
+    {
+        if (string.IsNullOrWhiteSpace(toolbarQuery))
+        {
+            return nodes;
+        }
+
+        var query = toolbarQuery.Trim();
+        return nodes
+            .Select(node => FilterTreeNode(node, query))
+            .Where(node => node is not null)
+            .Cast<TreeViewNode>()
+            .ToArray();
+    }
+
+    protected static TreeViewNode? FilterTreeNode(TreeViewNode node, string query)
+    {
+        var filteredChildren = node.Children
+            .Select(child => FilterTreeNode(child, query))
+            .Where(child => child is not null)
+            .Cast<TreeViewNode>()
+            .ToArray();
+
+        var isMatch = node.Text.Contains(query, StringComparison.OrdinalIgnoreCase)
+            || node.Tooltip.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+        if (!isMatch && filteredChildren.Length == 0)
+        {
+            return null;
+        }
+
+        return node with
+        {
+            Children = filteredChildren,
+            IsExpanded = true
+        };
+    }
+
+    protected TreeViewNode CreateBranch(
+        string id,
+        string text,
+        string icon,
+        string tooltip,
+        string dataTestId,
+        string childrenDataTestId,
+        IReadOnlyList<TreeViewNode> children)
+        => new()
+        {
+            Id = id,
+            Text = text,
+            Icon = icon,
+            Tooltip = tooltip,
+            BadgeText = children.Count.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            Children = children,
+            ChildrenDataTestId = childrenDataTestId,
+            DataTestId = dataTestId,
+            IsExpanded = expandedTreeNodeIds.Contains(id),
+            IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal)
+        };
+
+    protected TreeViewNode CreateLeaf(
+        string id,
+        string text,
+        string tooltip,
+        string icon,
+        string dataTestId,
+        string badgeText = "")
+        => new()
+        {
+            Id = id,
+            Text = text,
+            Icon = icon,
+            Tooltip = tooltip,
+            BadgeText = badgeText,
+            DataTestId = dataTestId,
+            IsSelected = string.Equals(selectedTreeNodeId, id, StringComparison.Ordinal),
+            IsDisabled = false
+        };
+
+    protected static string ResolveTreeNodeLabel(string id)
+        => id switch
+        {
+            "navigation-foundations" => "Foundations",
+            "navigation-page-scaffold" => "Page scaffold",
+            "navigation-list-detail" => "List-detail shell",
+            "navigation-controls" => "Navigation controls",
+            "navigation-tabs" => "Tabs",
+            "navigation-steps" => "Steps",
+            "navigation-toolbar" => "Toolbar",
+            "navigation-tree" => "Tree view",
+            "navigation-overlays" => "Overlay dependencies",
+            "navigation-context-menu" => "Context menu",
+            "navigation-dialog-host" => "Dialog host",
+            "navigation-overlay-window" => "Overlay window",
+            _ => "Navigation node"
+        };
+
+    protected static string ResolveTreeNodeSummary(string id)
+        => id switch
+        {
+            "navigation-page-scaffold" => "PageScaffold keeps page width, rails, and section flow consistent.",
+            "navigation-list-detail" => "ListDetailShell protects list and detail panes from accidental width collapse.",
+            "navigation-tabs" => "Tabs handle selection, keyboard movement, wrapping, scrolling, and disabled states.",
+            "navigation-steps" => "Steps keep linear progression clear while allowing controlled navigation.",
+            "navigation-toolbar" => "Toolbar groups filters and actions without custom page chrome.",
+            "navigation-tree" => "TreeView supports hierarchical selection, expansion, and context-menu requests.",
+            "navigation-context-menu" => "Context-menu behavior should stay bounded, closeable, and connected to the selected node.",
+            "navigation-dialog-host" => "DialogHost owns modal layering so page content can stay focused.",
+            "navigation-overlay-window" => "OverlayWindow adds a bounded floating surface for complex supporting tools.",
+            _ => "Shared navigation components should remain readable under dense, long-text, and mobile conditions."
+        };
+
+}

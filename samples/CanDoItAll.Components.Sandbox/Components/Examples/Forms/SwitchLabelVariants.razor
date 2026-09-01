@@ -1,0 +1,26 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Stack GapScale="LayoutGap.Medium" data-testid="sandbox-forms-switch-label-variants">
+    <Split Breakpoint="LayoutBreakpoint.None"
+           AlignItems="AlignItems.Center"
+           JustifyContent="JustifyContent.SpaceBetween"
+           Gap="LayoutGap.Medium"
+           Class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+        <SettingsSwitchLabel Text="Publish externally" />
+        <Switch Value="@FormState.PublishExternally" ValueChanged="HandlePublishChanged" Disabled="@IsDisabled" />
+    </Split>
+    <Split Breakpoint="LayoutBreakpoint.None"
+           AlignItems="AlignItems.Center"
+           JustifyContent="JustifyContent.SpaceBetween"
+           Gap="LayoutGap.Medium"
+           Class="rounded-[1rem] border border-slate-200 bg-white px-4 py-3">
+        <SettingsSwitchLabel>
+            <Cluster AlignItems="AlignItems.Center" Gap="LayoutGap.Small">
+                <span>Notify reviewer leads</span>
+                <StatusBadge Text="Recommended" Tone="info" />
+            </Cluster>
+        </SettingsSwitchLabel>
+        <Switch Value="@AdvancedState.NotifyLeads" ValueChanged="HandleNotifyLeadsChanged" Disabled="@IsDisabled" />
+    </Split>
+</Stack>

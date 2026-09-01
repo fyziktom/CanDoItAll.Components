@@ -27,33 +27,43 @@ else
 }
 
 @code {
+    /// <summary>Semantic tone driving the badge's coloring.</summary>
     [Parameter]
     public BadgeTone Tone { get; set; } = BadgeTone.Default;
 
+    /// <summary>Label rendered inside the badge. Ignored when <see cref="ChildContent"/> is supplied.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Renders as a <c>&lt;button&gt;</c> instead of a <c>&lt;span&gt;</c>, even without a <see cref="Click"/> handler.</summary>
     [Parameter]
     public bool Button { get; set; }
 
+    /// <summary>Blocks interaction. Only meaningful when rendered as a button (see <see cref="Button"/> and <see cref="Click"/>).</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Native button type. Only applied when rendered as a button.</summary>
     [Parameter]
     public string Type { get; set; } = "button";
 
+    /// <summary>Renders an anchor instead of a span or button. Presentation is unchanged.</summary>
     [Parameter]
     public string? Href { get; set; }
 
+    /// <summary>Anchor target. Only meaningful together with <see cref="Href"/>.</summary>
     [Parameter]
     public string? Target { get; set; }
 
+    /// <summary>Anchor rel. Only meaningful together with <see cref="Href"/>.</summary>
     [Parameter]
     public string? Rel { get; set; }
 
+    /// <summary>Invoked on activation. Supplying a handler renders the badge as a button even when <see cref="Button"/> is <c>false</c>.</summary>
     [Parameter]
     public EventCallback<MouseEventArgs> Click { get; set; }
 
+    /// <summary>Custom badge content. Takes precedence over <see cref="Text"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

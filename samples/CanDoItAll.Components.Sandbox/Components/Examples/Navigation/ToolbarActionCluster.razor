@@ -1,0 +1,15 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<Stack GapScale="LayoutGap.Small">
+    <Toolbar data-testid="sandbox-navigation-toolbar-actions">
+        <ToolbarRow>
+            <ToolbarActions>
+                <Button Text="Save" Click="@(() => toolbarActionsLastAction = "Save")" />
+                <Button Text="Export" ButtonStyle="@(ButtonStyle.Light)" Variant="@(Variant.Outlined)" Click="@(() => toolbarActionsLastAction = "Export")" />
+                <Button Text="Delete" ButtonStyle="@(ButtonStyle.Danger)" Variant="@(Variant.Outlined)" Click="@(() => toolbarActionsLastAction = "Delete")" />
+            </ToolbarActions>
+        </ToolbarRow>
+    </Toolbar>
+    <TextBlock TextStyle="@(TextStyle.Note)" Value="@($"Last action: {toolbarActionsLastAction}")" />
+</Stack>

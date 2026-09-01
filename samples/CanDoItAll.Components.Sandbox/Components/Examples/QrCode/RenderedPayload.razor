@@ -1,0 +1,13 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.QrCode
+
+<QrCodeView Payload="@Payload"
+            Caption="@Caption"
+            AriaLabel="QR code for the sandbox verification payload"
+            Options="@Options"
+            TestId="sandbox-qr-view" />
+
+@code {
+    [Parameter] public string Payload { get; set; } = "https://github.com/fyziktom/CanDoItAll.Components";
+    [Parameter] public string Caption { get; set; } = "CanDoItAll.Components repository";
+    [Parameter] public QrCodeRenderOptions Options { get; set; } = new() { BorderModules = 4, ErrorCorrectionLevel = QrErrorCorrectionLevel.Medium };
+}

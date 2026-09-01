@@ -1,0 +1,12 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<div class="sandbox-side-menu-host" style="height: 22rem;">
+    <SideMenu MenuId="sandbox-side-menu-item-demo" Title="Item showcase" Icon="widgets" data-testid="sandbox-navigation-side-menu-item">
+        <MenuItems>
+            <SideMenuItem Id="inbox" Text="Inbox" Icon="inbox" BadgeText="5" Description="Unread requests." />
+            <SideMenuItem Id="archive" Text="Archive" Icon="inventory" Disabled="true" Description="Read-only history." />
+            <SideMenuItem Id="team" Text="Team" Icon="groups" PanelTitle="Team members" Children="@SideMenuItemDemoChildren" />
+        </MenuItems>
+    </SideMenu>
+</div>

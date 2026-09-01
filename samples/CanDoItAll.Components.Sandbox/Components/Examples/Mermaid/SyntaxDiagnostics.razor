@@ -1,0 +1,21 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Mermaid
+
+<MermaidDiagram Title="Invalid flowchart" Description="Mermaid parser errors are normalized into line, column, excerpt, token, and expected-token fields when available."
+                Source="@InvalidSource" Options="@ErrorOptions" PanZoomEnabled="false" ShowControls="false"
+                Error="HandleError" data-testid="mermaid-error-example" />
+
+@if (_lastError is not null)
+{
+    <Alert AlertStyle="@(AlertStyle.Warning)" data-testid="mermaid-last-error">@_lastError.LocationText @_lastError.Message</Alert>
+}
+
+@code {
+    private static readonly MermaidDiagramOptions ErrorOptions = new() { Theme = "default", SecurityLevel = "loose" };
+    private static readonly string InvalidSource = """
+        flowchart LR
+            start[Start]
+            start --> ??? bad target
+        """;
+    private MermaidRenderError? _lastError;
+    private void HandleError(MermaidRenderError error) => _lastError = error;
+}

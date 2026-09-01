@@ -6,42 +6,55 @@
 </div>
 
 @code {
+    /// <summary>Number of column tracks this column spans, out of the enclosing <see cref="Row"/>'s total; defaults to the row's default span.</summary>
     [Parameter]
     public int? Size { get; set; }
 
+    /// <summary>Column span at the <c>sm</c> breakpoint and up.</summary>
     [Parameter]
     public int? SizeSM { get; set; }
 
+    /// <summary>Column span at the <c>md</c> breakpoint and up.</summary>
     [Parameter]
     public int? SizeMD { get; set; }
 
+    /// <summary>Column span at the <c>lg</c> breakpoint and up.</summary>
     [Parameter]
     public int? SizeLG { get; set; }
 
+    /// <summary>Column span at the <c>xl</c> breakpoint and up.</summary>
     [Parameter]
     public int? SizeXL { get; set; }
 
+    /// <summary>Column span at the <c>2xl</c> breakpoint and up.</summary>
     [Parameter]
     public int? Size2XL { get; set; }
 
+    /// <summary>The flex direction of this column's own content: stacked vertically or laid out horizontally.</summary>
     [Parameter]
     public Orientation Orientation { get; set; } = Orientation.Vertical;
 
+    /// <summary>Cross-axis alignment of this column's content.</summary>
     [Parameter]
     public AlignItems AlignItems { get; set; } = AlignItems.Stretch;
 
+    /// <summary>Main-axis alignment of this column's content.</summary>
     [Parameter]
     public JustifyContent JustifyContent { get; set; } = JustifyContent.Start;
 
+    /// <summary>Whether this column's content wraps onto multiple lines when it exceeds the available space.</summary>
     [Parameter]
     public FlexWrap Wrap { get; set; } = FlexWrap.NoWrap;
 
+    /// <summary>A raw CSS gap value between this column's items; ignored when <see cref="GapScale"/> is set.</summary>
     [Parameter]
     public string? Gap { get; set; }
 
+    /// <summary>A design-token gap between this column's items. Takes precedence over <see cref="Gap"/>.</summary>
     [Parameter]
     public LayoutGap? GapScale { get; set; }
 
+    /// <summary>The column's content.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

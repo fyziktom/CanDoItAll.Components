@@ -1,0 +1,19 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<div class="relative rounded-[1.25rem] border border-dashed border-slate-300 bg-slate-50/80 p-6 text-sm text-slate-500"
+     @oncontextmenu="OpenNavigationContextMenu"
+     @oncontextmenu:preventDefault="true"
+     data-testid="sandbox-navigation-context-menu-zone">
+    Right-click anywhere in this panel, or
+    <Button Text="Open menu" Size="ButtonSize.Small" Click="OpenNavigationContextMenuFromButton" data-testid="sandbox-navigation-context-menu-trigger" />
+    <ContextMenu IsOpen="@navigationContextMenuOpen"
+                 X="@navigationContextMenuX"
+                 Y="@navigationContextMenuY"
+                 Items="@NavigationContextMenuItems"
+                 Heading="Row actions"
+                 AriaLabel="Demo row actions"
+                 ItemSelected="HandleNavigationContextMenuItemSelected"
+                 OnClose="CloseNavigationContextMenu"
+                 TestId="sandbox-navigation-context-menu" />
+</div>

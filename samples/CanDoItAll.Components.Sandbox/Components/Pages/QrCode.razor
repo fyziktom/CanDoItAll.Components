@@ -1,81 +1,72 @@
 @namespace CanDoItAll.Components.Sandbox.Components
-@page "/groups/qr"
+@page "/qr"
 @inherits CatalogPageBase
+@using CanDoItAll.Components.QRCode.Components
+@using CanDoItAll.Components.Sandbox.Components.Examples.QrCode
 
 <PageTitle>QR Code</PageTitle>
 
 <CatalogPageFrame Group="@Group"
-                  Scenario="@CurrentScenario"
                   Frame="@CurrentFrame"
                   ExampleCount="@Examples.Count"
-                  HeroTitle="QR rendering and scanning that degrade safely."
-                  HeroSummary="This page proves square SVG output, long payload handling, dialog composition, and a manual scanner path that does not depend on camera permission."
-                  DemoTitle="QR component states"
-                  DemoSummary="Render, empty, long-content, and camera-disabled scanner scenarios."
-                  ScenarioChanged="NavigateScenario"
                   FrameChanged="NavigateFrame">
-    <Notes>
-        <div class="sandbox-proof-list">
-            <p>The SVG stays square, labelled, and contained at desktop and mobile widths.</p>
-            <p>Long payloads increase QR density without leaking text or overflowing the card.</p>
-            <p>The scanner dialog always offers manual paste when camera access is disabled or unavailable.</p>
-        </div>
-    </Notes>
-
     <ChildContent>
-        <Grid Gap="LayoutGap.Large" ColumnTemplate="repeat(auto-fit,minmax(min(100%,18rem),1fr))">
-            <SectionCard Title="Rendered payload" Description="Direct SVG output with a visible caption and accessible name.">
-                <QrCodeView Payload="@CurrentPayload"
-                            Caption="@CurrentCaption"
-                            AriaLabel="QR code for the sandbox verification payload"
-                            Options="@CurrentOptions"
-                            TestId="sandbox-qr-view" />
-            </SectionCard>
+        @foreach (var section in VisibleSections(Sections))
+        {
+            <section id="@(section.Anchor)" class="sandbox-component-section">
+                @RenderSectionHeading(section)
 
-            <SectionCard Title="Dialog actions" Description="Show and scan actions compose with BaseLib dialogs and preserve a manual fallback.">
-                <Stack GapScale="LayoutGap.Medium">
-                    <QrCodeButton Payload="@DialogPayload" Label="Show QR dialog" TestId="sandbox-qr-dialog-button" />
-                    <QrScanButton Label="Open manual scanner"
-                                  EnableCamera="false"
-                                  Scanned="HandleScanned"
-                                  TestId="sandbox-qr-scan-button" />
-                    <Alert AlertStyle="AlertStyle.Info">
-                        Last decoded payload: @(lastScan?.Text ?? "none")
-                    </Alert>
-                </Stack>
-            </SectionCard>
-        </Grid>
+                @if (section.ComponentName == "QrCodeView")
+                {
+                    <ExampleBlock Title="Rendered payload"
+                                  Description="Direct SVG output with a visible caption and accessible name."
+                                  SourceId="examples/QrCode/RenderedPayload.razor"
+                                  ApiTypes="@QrCodeViewApiTypes">
+                        <RenderedPayload />
+                    </ExampleBlock>
+                    <ExampleBlock Title="Long verification payload"
+                                  Description="A dense payload with high error correction proves the rendered surface stays readable."
+                                  SourceId="examples/QrCode/RenderedPayload.razor">
+                        <RenderedPayload Payload="@LongPayload" Caption="Long verification payload with high error correction" Options="@LongPayloadOptions" />
+                    </ExampleBlock>
+                    <ExampleBlock Title="Empty payload"
+                                  Description="An explicit empty value proves the renderer's no-payload state."
+                                  SourceId="examples/QrCode/RenderedPayload.razor">
+                        <RenderedPayload Payload="" Caption="No verification payload" />
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "QrCodeButton")
+                {
+                    <ExampleBlock Title="Dialog show action"
+                                  Description="Opens the payload inside a BaseLib dialog instead of rendering it inline."
+                                  SourceId="examples/QrCode/DialogShowAction.razor"
+                                  ApiTypes="@QrCodeButtonApiTypes">
+                        <DialogShowAction />
+                    </ExampleBlock>
+                }
+                else if (section.ComponentName == "QrScanButton")
+                {
+                    <ExampleBlock Title="Manual scanner fallback"
+                                  Description="Camera access is disabled here, so the scan dialog always offers a manual paste fallback."
+                                  SourceId="examples/QrCode/ManualScannerFallback.razor"
+                                  ApiTypes="@QrScanButtonApiTypes">
+                        <ManualScannerFallback />
+                    </ExampleBlock>
+                }
+            </section>
+        }
     </ChildContent>
 </CatalogPageFrame>
 
 @code {
     private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.QrCode);
     private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.QrCode);
-    private const string BaselinePayload = "https://github.com/fyziktom/CanDoItAll.Components";
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/qr");
+
+    private static readonly IReadOnlyList<Type> QrCodeViewApiTypes = [typeof(QrCodeView)];
+    private static readonly IReadOnlyList<Type> QrCodeButtonApiTypes = [typeof(QrCodeButton)];
+    private static readonly IReadOnlyList<Type> QrScanButtonApiTypes = [typeof(QrScanButton)];
     private const string LongPayload = "candoitall://verify?package=CanDoItAll.Components.BaseLib&version=0.1.0&commit=0123456789abcdef0123456789abcdef01234567&scope=dialog,tooltip,context-menu,tree,data-grid,canvas,charts,mermaid,qr";
-    private QrScanResult? lastScan;
+    private static readonly QrCodeRenderOptions LongPayloadOptions = new() { BorderModules = 2, ErrorCorrectionLevel = QrErrorCorrectionLevel.High };
 
-    private string CurrentPayload => CurrentScenario == SandboxScenarioKey.EmptyState
-        ? string.Empty
-        : CurrentScenario == SandboxScenarioKey.LongText ? LongPayload : BaselinePayload;
-
-    private string CurrentCaption => CurrentScenario == SandboxScenarioKey.LongText
-        ? "Long verification payload with high error correction"
-        : "CanDoItAll.Components repository";
-
-    private QrCodeRenderOptions CurrentOptions => new()
-    {
-        BorderModules = CurrentScenario == SandboxScenarioKey.DenseContent ? 2 : 4,
-        ErrorCorrectionLevel = CurrentScenario == SandboxScenarioKey.LongText
-            ? QrErrorCorrectionLevel.High
-            : QrErrorCorrectionLevel.Medium
-    };
-
-    private QrCodePayload DialogPayload => new(CurrentPayload, QrPayloadKind.Generic, "Component repository", CurrentCaption);
-
-    private Task HandleScanned(QrScanResult result)
-    {
-        lastScan = result;
-        return Task.CompletedTask;
-    }
 }

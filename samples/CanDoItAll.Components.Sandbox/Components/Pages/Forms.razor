@@ -1,0 +1,253 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/forms"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Forms</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@Examples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in VisibleSections(Sections))
+            {
+                <section id="@(section.Anchor)" class="sandbox-component-section">
+                    @RenderSectionHeading(section)
+
+                    @if (section.ComponentName == "TextBox")
+                    {
+                        <ExampleBlock Title="Title field"
+                                      Description="A standard text field with placeholder guidance."
+                                      SourceId="examples/Forms/TitleField.razor"
+                                      ApiTypes="@TextBoxApiTypes">
+                            <TitleField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "DropDown")
+                    {
+                        <ExampleBlock Title="Status field"
+                                      Description="A typed dropdown backed by a data source, text property, and value property."
+                                      SourceId="examples/Forms/StatusField.razor"
+                                      ApiTypes="@DropDownApiTypes">
+                            <StatusField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Numeric")
+                    {
+                        <ExampleBlock Title="Confidence field"
+                                      Description="A numeric input with clamped min/max and a step increment."
+                                      SourceId="examples/Forms/ConfidenceField.razor"
+                                      ApiTypes="@NumericApiTypes">
+                            <ConfidenceField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Password")
+                    {
+                        <ExampleBlock Title="Password field"
+                                      Description="A masked text input for short-lived credentials."
+                                      SourceId="examples/Forms/PasswordField.razor"
+                                      ApiTypes="@PasswordApiTypes">
+                            <PasswordField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SecretField")
+                    {
+                        <ExampleBlock Title="Timed secret"
+                                      Description="A managed secret with copy actions and a timed reveal."
+                                      SourceId="examples/Forms/TimedSecretField.razor"
+                                      ApiTypes="@SecretFieldApiTypes">
+                            <TimedSecretField />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Switch")
+                    {
+                        <ExampleBlock Title="Reminders toggle"
+                                      Description="A boolean switch paired with supporting copy."
+                                      SourceId="examples/Forms/ReminderSwitch.razor"
+                                      ApiTypes="@SwitchApiTypes">
+                            <ReminderSwitch />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Slider")
+                    {
+                        <ExampleBlock Title="Priority threshold"
+                                      Description="A range slider paired with a derived label and status badge."
+                                      SourceId="examples/Forms/PriorityThreshold.razor"
+                                      ApiTypes="@SliderApiTypes">
+                            <PriorityThreshold />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "PrefixedField")
+                    {
+                        <ExampleBlock Title="Budget reference"
+                                      Description="A prefixed/suffixed field wrapping a plain text input."
+                                      SourceId="examples/Forms/BudgetReference.razor"
+                                      ApiTypes="@PrefixedFieldApiTypes">
+                            <BudgetReference />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "TagEditor")
+                    {
+                        <ExampleBlock Title="Review tags"
+                                      Description="Free-form tag entry with suggestions and a maximum count."
+                                      SourceId="examples/Forms/ReviewTags.razor"
+                                      ApiTypes="@TagEditorApiTypes">
+                            <ReviewTags />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "EntityPicker")
+                    {
+                        <ExampleBlock Title="Reviewer lane picker"
+                                      Description="A selectable list of entities with icon, description, and meta."
+                                      SourceId="examples/Forms/ReviewerLanePicker.razor"
+                                      ApiTypes="@EntityPickerApiTypes">
+                            <ReviewerLanePicker />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SettingsSwitchRow")
+                    {
+                        <ExampleBlock Title="Notify reviewer leads"
+                                      Description="A labeled settings row pairing a switch with an inline reset action and change summary."
+                                      SourceId="examples/Forms/NotifyLeadsRow.razor"
+                                      ApiTypes="@SettingsSwitchRowApiTypes">
+                            <NotifyLeadsRow />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Editable")
+                    {
+                        <ExampleBlock Title="Inline editable values"
+                                      Description="Editable switches a displayed property into a shared BaseLib input, then saves the value back to the source item."
+                                      SourceId="examples/Forms/EditableReviewFields.razor"
+                                      ApiTypes="@EditableApiTypes">
+                            <EditableReviewFields />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "TextArea")
+                    {
+                        <ExampleBlock Title="Review notes"
+                                      Description="A multi-line text field whose height scales with the dense scenario."
+                                      SourceId="examples/Forms/ReviewNotes.razor"
+                                      ApiTypes="@TextAreaApiTypes">
+                            <ReviewNotes />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CheckBox")
+                    {
+                        <ExampleBlock Title="Approval toggles"
+                                      Description="Boolean checkboxes paired with supporting copy in bordered rows."
+                                      SourceId="examples/Forms/ApprovalCheckboxes.razor"
+                                      ApiTypes="@CheckBoxApiTypes">
+                            <ApprovalCheckboxes />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FileUpload")
+                    {
+                        <ExampleBlock Title="MusicXML upload"
+                                      Description="The picker stays native while drag and drop route through the same shared change callback."
+                                      SourceId="examples/Forms/MusicXmlUpload.razor"
+                                      ApiTypes="@FileUploadApiTypes">
+                            <MusicXmlUpload />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "Fieldset")
+                    {
+                        <ExampleBlock Title="Scoring and reference fields"
+                                      Description="A collapsible group heading wraps related fields without inventing custom page structure."
+                                      SourceId="examples/Forms/ScoringFieldset.razor"
+                                      ApiTypes="@FieldsetApiTypes">
+                            <ScoringFieldset />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FormField")
+                    {
+                        <ExampleBlock Title="Field slots"
+                                      Description="FormField pairs a label with leading and trailing slots around the input, not just a bare label plus control."
+                                      SourceId="examples/Forms/FieldSlots.razor"
+                                      ApiTypes="@FormFieldApiTypes">
+                            <FieldSlots />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FormRow")
+                    {
+                        <ExampleBlock Title="Split vs stacked"
+                                      Description="FormRow arranges one or two fields either side by side or stacked in a single column."
+                                      SourceId="examples/Forms/FormRowVariants.razor"
+                                      ApiTypes="@FormRowApiTypes">
+                            <FormRowVariants />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FormSection")
+                    {
+                        <ExampleBlock Title="Grouped section"
+                                      Description="FormSection pairs a title, description, icon, and optional help popover with a right-aligned actions cluster."
+                                      SourceId="examples/Forms/FormSectionShowcase.razor"
+                                      ApiTypes="@FormSectionApiTypes">
+                            <FormSectionShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "FormStack")
+                    {
+                        <ExampleBlock Title="Stacked field groups"
+                                      Description="FormStack applies consistent vertical rhythm across FormRow and FormField groups without one-off spacing."
+                                      SourceId="examples/Forms/FormStackShowcase.razor"
+                                      ApiTypes="@FormStackApiTypes">
+                            <FormStackShowcase />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "InlineActions")
+                    {
+                        <ExampleBlock Title="Inline action row"
+                                      Description="A flex-wrap row for grouping buttons and status badges, independent of any specific field."
+                                      SourceId="examples/Forms/InlineActionsRow.razor"
+                                      ApiTypes="@InlineActionsApiTypes">
+                            <InlineActionsRow />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "SettingsSwitchLabel")
+                    {
+                        <ExampleBlock Title="Switch label"
+                                      Description="SettingsSwitchLabel accepts plain text or custom child content, such as a label paired with a badge."
+                                      SourceId="examples/Forms/SwitchLabelVariants.razor"
+                                      ApiTypes="@SettingsSwitchLabelApiTypes">
+                            <SwitchLabelVariants />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Forms);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> Examples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Forms);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/forms");
+
+    private static readonly IReadOnlyList<Type> TextBoxApiTypes = [typeof(TextBox)];
+    private static readonly IReadOnlyList<Type> DropDownApiTypes = [typeof(DropDown<string>)];
+    private static readonly IReadOnlyList<Type> NumericApiTypes = [typeof(Numeric<int>)];
+    private static readonly IReadOnlyList<Type> PasswordApiTypes = [typeof(Password)];
+    private static readonly IReadOnlyList<Type> SecretFieldApiTypes = [typeof(SecretField)];
+    private static readonly IReadOnlyList<Type> SwitchApiTypes = [typeof(Switch)];
+    private static readonly IReadOnlyList<Type> SliderApiTypes = [typeof(Slider<int>)];
+    private static readonly IReadOnlyList<Type> PrefixedFieldApiTypes = [typeof(PrefixedField)];
+    private static readonly IReadOnlyList<Type> TagEditorApiTypes = [typeof(TagEditor)];
+    private static readonly IReadOnlyList<Type> EntityPickerApiTypes = [typeof(EntityPicker)];
+    private static readonly IReadOnlyList<Type> SettingsSwitchRowApiTypes = [typeof(SettingsSwitchRow), typeof(SettingsSwitchLabel)];
+    private static readonly IReadOnlyList<Type> EditableApiTypes = [typeof(Editable<FormsShowcaseBase.EditableReviewItem>)];
+    private static readonly IReadOnlyList<Type> TextAreaApiTypes = [typeof(TextArea)];
+    private static readonly IReadOnlyList<Type> CheckBoxApiTypes = [typeof(CheckBox<bool>)];
+    private static readonly IReadOnlyList<Type> FileUploadApiTypes = [typeof(FileUpload)];
+    private static readonly IReadOnlyList<Type> FieldsetApiTypes = [typeof(Fieldset)];
+    private static readonly IReadOnlyList<Type> FormFieldApiTypes = [typeof(FormField)];
+    private static readonly IReadOnlyList<Type> FormRowApiTypes = [typeof(FormRow)];
+    private static readonly IReadOnlyList<Type> FormSectionApiTypes = [typeof(FormSection)];
+    private static readonly IReadOnlyList<Type> FormStackApiTypes = [typeof(FormStack)];
+    private static readonly IReadOnlyList<Type> InlineActionsApiTypes = [typeof(InlineActions)];
+    private static readonly IReadOnlyList<Type> SettingsSwitchLabelApiTypes = [typeof(SettingsSwitchLabel)];
+
+}

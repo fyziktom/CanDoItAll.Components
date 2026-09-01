@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Modals
+
+<PickerDialogShell Eyebrow="Assign owner"
+                   Title="Choose a reviewer"
+                   PickerTitle="Available reviewers"
+                   Items="@PickerItems"
+                   SelectedId="@pickerSelectedId"
+                   SelectedIdChanged="@(id => pickerSelectedId = id)">
+    <ReviewPanel>
+        <TextBlock TextStyle="@(TextStyle.Body2)" Value="@PickerSelectionSummary" />
+    </ReviewPanel>
+</PickerDialogShell>
+
+@code {
+    private string? pickerSelectedId = "reviewer-2";
+    private static readonly IReadOnlyList<EntityPickerItem> PickerItems = [new() { Id = "reviewer-1", Label = "Priya Shah", Description = "Platform UI", Icon = "person" }, new() { Id = "reviewer-2", Label = "Marcus Lee", Description = "Design systems", Icon = "person" }, new() { Id = "reviewer-3", Label = "Alex Kim", Description = "Accessibility", Icon = "person" }];
+    private string PickerSelectionSummary => PickerItems.FirstOrDefault(item => item.Id == pickerSelectedId) is { } selected ? $"{selected.Label} — {selected.Description}" : "No reviewer selected.";
+}

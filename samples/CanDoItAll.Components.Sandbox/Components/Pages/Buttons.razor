@@ -1,0 +1,58 @@
+@namespace CanDoItAll.Components.Sandbox.Components
+@page "/buttons"
+@inherits CatalogPageBase
+@using CanDoItAll.Components.Common
+@using CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<PageTitle>Buttons</PageTitle>
+
+<CatalogPageFrame Group="@Group"
+                  Frame="@CurrentFrame"
+                  ExampleCount="@RegisteredExamples.Count"
+                  FrameChanged="NavigateFrame">
+    <ChildContent>
+
+            @foreach (var section in VisibleSections(Sections))
+            {
+                <section id="@(section.Anchor)" class="sandbox-component-section">
+                    @RenderSectionHeading(section)
+
+                    @if (section.ComponentName == "Button")
+                    {
+                        <ExampleBlock Title="Primary hierarchy"
+                                      Description="One filled primary action carries the page; everything else steps down through outlined and text variants."
+                                      SourceId="examples/Buttons/PrimaryHierarchy.razor"
+                                      ApiTypes="@ButtonApiTypes">
+                            <PrimaryHierarchy />
+                        </ExampleBlock>
+
+                        <ExampleBlock Title="Icon-only actions"
+                                      Description="Icon-only buttons derive their accessible name from the icon token when no text is supplied; a long label button proves wrapping stays calm under long text."
+                                      SourceId="examples/Buttons/IconOnlyActions.razor"
+                                      ComponentType="typeof(Button)">
+                            <IconOnlyActions />
+                        </ExampleBlock>
+                    }
+                    else if (section.ComponentName == "CopyButton")
+                    {
+                        <ExampleBlock Title="Copy affordances"
+                                      Description="All four display modes read from the same target element and confirm success in place."
+                                      SourceId="examples/Buttons/CopyAffordances.razor"
+                                      ApiTypes="@CopyButtonApiTypes">
+                            <CopyAffordances />
+                        </ExampleBlock>
+                    }
+                </section>
+            }
+
+    </ChildContent>
+</CatalogPageFrame>
+
+@code {
+    private static readonly SandboxGroupDefinition Group = SandboxCatalogRegistry.GetGroup(SandboxGroupKey.Buttons);
+    private static readonly IReadOnlyList<SandboxExampleDefinition> RegisteredExamples = SandboxCatalogRegistry.GetExamples(SandboxGroupKey.Buttons);
+    private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/buttons");
+    private static readonly IReadOnlyList<Type> ButtonApiTypes = [typeof(Button)];
+    private static readonly IReadOnlyList<Type> CopyButtonApiTypes = [typeof(CopyButton)];
+
+}

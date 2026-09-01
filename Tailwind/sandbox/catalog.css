@@ -1,0 +1,73 @@
+/* Flatten the shared SectionCard when it's used as sandbox chrome (wrapping the
+   Demo/Examples/API/Coverage sections). Demo-content SectionCards shown as the
+   component under test live deeper inside .sandbox-demo-stage and are never a
+   direct child of .sandbox-page-section, so they're unaffected. */
+.sandbox-page-section > .cda-section-card {
+  @apply border-0 rounded-none bg-transparent shadow-none p-0;
+}
+
+.sandbox-page-section > .cda-section-card > .cda-section-card__title {
+  @apply text-[1.05rem];
+}
+
+.sandbox-demo-frame {
+  @apply overflow-hidden py-4 px-0;
+  background: var(--cad-color-surface);
+}
+
+.sandbox-demo-frame--tablet {
+  @apply mx-auto w-[min(100%,_820px)] rounded-(--cad-radius-control) p-4;
+  border: 1px solid var(--cad-color-border-soft);
+}
+
+.sandbox-demo-frame--mobile {
+  @apply mx-auto w-[min(100%,_390px)] rounded-(--cad-radius-control) p-4;
+  border: 1px solid var(--cad-color-border-soft);
+}
+
+.sandbox-demo-stage {
+  @apply flex flex-col gap-4;
+  /*@apply animate-[sandbox-fade-in_180ms_ease-out]*/
+}
+
+@keyframes sandbox-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sandbox-demo-grid--two {
+  @apply grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(100%,16rem),1fr))];
+}
+
+.sandbox-demo-grid--three {
+  @apply grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))];
+}
+
+.sandbox-component-section {
+  @apply flex flex-col gap-4 scroll-mt-[calc(var(--sandbox-toolbar-height,0px)+1rem)];
+}
+
+.sandbox-component-section__heading {
+  @apply text-(--cad-color-text-strong);
+  @apply mb-6 text-xl font-bold font-mono tracking-wider;
+}
+
+.sandbox-component-section__heading.is-unused:after {
+  content: '∅';
+  vertical-align: super;
+  margin-top: -1em;
+  margin-left: .125em;
+  display: inline-block;
+  @apply font-normal font-sans;
+}
+
+.sandbox-component-section__heading.is-unused {
+  color: var(--cad-tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
+}

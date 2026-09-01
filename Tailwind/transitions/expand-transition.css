@@ -1,0 +1,12 @@
+@layer components {
+  .cda-expand-transition {
+    @apply grid grid-rows-[0fr] opacity-0 overflow-hidden;
+    transition: grid-template-rows 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  .cda-expand-transition.cda-expand-transition--expanded {
+    @apply opacity-100 grid-rows-[1fr];
+  }
+  .cda-expand-transition > * {
+    @apply min-h-0 overflow-hidden;
+  }
+}

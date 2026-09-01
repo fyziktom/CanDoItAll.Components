@@ -1,0 +1,33 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.DataDisplay
+
+<Timeline AriaLabel="Deployment timeline"
+          Items="@(new List<TimelineItem>
+                 {
+                     new()
+                     {
+                         Label = "Rollout started",
+                         Description = "Deploy pipeline picked up the release candidate.",
+                         Meta = "v2.4.0",
+                         Timestamp = new DateTimeOffset(2026, 8, 12, 9, 15, 0, TimeSpan.Zero),
+                         Icon = "rocket_launch",
+                         Tone = "neutral"
+                     },
+                     new()
+                     {
+                         Label = "Canary healthy",
+                         Description = "5% traffic shifted with no elevated error rate.",
+                         Meta = "10% -> 5%",
+                         Timestamp = new DateTimeOffset(2026, 8, 12, 9, 42, 0, TimeSpan.Zero),
+                         Icon = "monitor_heart",
+                         Tone = "success"
+                     },
+                     new()
+                     {
+                         Label = "Latency warning",
+                         Description = "p95 latency briefly exceeded budget on one region.",
+                         Meta = "us-east-1",
+                         Timestamp = new DateTimeOffset(2026, 8, 12, 10, 5, 0, TimeSpan.Zero),
+                         Icon = "warning",
+                         Tone = "warning"
+                     }
+                 })" />

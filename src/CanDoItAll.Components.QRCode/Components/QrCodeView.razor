@@ -27,21 +27,27 @@
     private string? renderedSvg;
     private string? renderError;
 
+    /// <summary>Raw text encoded into the QR symbol. An empty or whitespace value renders the "No QR payload" placeholder instead.</summary>
     [Parameter, EditorRequired]
     public string Payload { get; set; } = string.Empty;
 
+    /// <summary>Optional caption rendered under the SVG as a <c>&lt;figcaption&gt;</c>.</summary>
     [Parameter]
     public string? Caption { get; set; }
 
+    /// <summary>Accessible name applied to the rendered SVG's <c>role="img"</c> container.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "QR code";
 
+    /// <summary>Rendering options such as border modules and error correction level. Defaults to the renderer's own defaults when omitted.</summary>
     [Parameter]
     public QrCodeRenderOptions? Options { get; set; }
 
+    /// <summary>Additional CSS class merged onto the root <c>&lt;figure&gt;</c>.</summary>
     [Parameter]
     public string? Class { get; set; }
 
+    /// <summary>Value applied to <c>data-testid</c> on the root element, for test targeting.</summary>
     [Parameter]
     public string? TestId { get; set; } = "cda-qr-code-view";
 

@@ -1372,6 +1372,8 @@
             recentDoubleActivationAt: 0,
             wheelZoom: null,
             measuredNodeSizes: new Map(),
+            estimatedNodeSizes: new Map(),
+            nodeTextLayouts: new Map(),
             renderedFrames: new Map(),
             layoutPositions: null,
             layoutKey: "",
@@ -1425,6 +1427,8 @@
         }
 
         state.surface = workbenchInternals.stateStore.normalizeSurface(surface);
+        state.estimatedNodeSizes.clear();
+        state.nodeTextLayouts.clear();
         state.lookups = workbenchInternals.stateStore.buildNodeLookup(state.surface.nodes);
         state.ui = state.surface.uiState;
         const incomingViewport = {

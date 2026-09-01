@@ -79,48 +79,63 @@
     private bool editBool;
     private string? validationMessage;
 
+    /// <summary>The object whose property is displayed and edited.</summary>
     [Parameter]
     public TItem? Item { get; set; }
 
+    /// <summary>Raised with the updated <see cref="Item"/> after a save.</summary>
     [Parameter]
     public EventCallback<TItem> ItemChanged { get; set; }
 
+    /// <summary>Name of the public property on <see cref="Item"/> to display and edit; supports <c>string</c>, <c>int</c>, <c>double</c>, and <c>bool</c>.</summary>
     [Parameter]
     public string? ParameterName { get; set; }
 
+    /// <summary>Text prepended to the displayed (non-editing) value.</summary>
     [Parameter]
     public string Prefix { get; set; } = string.Empty;
 
+    /// <summary>Text appended to the displayed (non-editing) value.</summary>
     [Parameter]
     public string Extension { get; set; } = string.Empty;
 
+    /// <summary>Placeholder text shown in the edit input when empty.</summary>
     [Parameter]
     public string? Placeholder { get; set; }
 
+    /// <summary>When <c>true</c>, editing is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Text shown in place of an empty formatted value.</summary>
     [Parameter]
     public string EmptyText { get; set; } = "Empty";
 
+    /// <summary>Text shown when the target property's type isn't supported for editing.</summary>
     [Parameter]
     public string UnsupportedText { get; set; } = "Not supported type";
 
+    /// <summary>Display text for a boolean property when its value is <c>true</c>.</summary>
     [Parameter]
     public string TrueText { get; set; } = "True";
 
+    /// <summary>Display text for a boolean property when its value is <c>false</c>.</summary>
     [Parameter]
     public string FalseText { get; set; } = "False";
 
+    /// <summary>A standard .NET format string applied to <see cref="IFormattable"/> values.</summary>
     [Parameter]
     public string? Format { get; set; }
 
+    /// <summary>Material icon token for the edit-trigger button.</summary>
     [Parameter]
     public string EditIcon { get; set; } = "edit";
 
+    /// <summary>Material icon token for the save button.</summary>
     [Parameter]
     public string SaveIcon { get; set; } = "save";
 
+    /// <summary>The component's overall density.</summary>
     [Parameter]
     public EditableSize Size { get; set; } = EditableSize.Compact;
 

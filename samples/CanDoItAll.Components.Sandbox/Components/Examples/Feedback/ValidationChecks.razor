@@ -1,0 +1,102 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Feedback
+
+<StatusCheckList Title="Validation checks"
+                 Description="Status lists prove icon, label, description, and badge rhythm."
+                 Items="@StatusItems"
+                 EmptyText="No validation checks are waiting."
+                 data-testid="sandbox-feedback-status-check-list" />
+
+@code {
+    private string LongCalloutText => true
+        ? "Long callout text should maintain a useful line length and avoid pushing adjacent feedback examples wider than their grid column."
+        : "Default feedback callouts carry neutral next-step guidance.";
+
+    private string TooltipText => true
+        ? "Tooltip text can be longer, but it still needs to stay inside the viewport and wrap in a readable block."
+        : "Tooltip text stays compact and viewport constrained.";
+
+    private string HelpPopoverBody => true
+        ? "HelpPopover panels should stay readable with longer explanatory copy and remain close to the trigger without clipping."
+        : "HelpPopover panels explain why a feedback state appears.";
+
+    private IReadOnlyList<StatusCheckItem> StatusItems => true
+        ? LongStatusItems
+        : BaseStatusItems;
+
+    private IReadOnlyList<StatusCheckItem> VerificationItems => true
+        ? DenseVerificationItems
+        : BaseVerificationItems;
+
+    private static readonly IReadOnlyList<StatusCheckItem> BaseStatusItems =
+    [
+        new()
+        {
+            Label = "Alert hierarchy",
+            Description = "Info, success, warning, and danger treatments remain distinct.",
+            Status = "Ready",
+            Tone = "success",
+            Complete = true
+        },
+        new()
+        {
+            Label = "Toast open state",
+            Description = "Notification host renders service messages without clipping.",
+            Status = "Needs proof",
+            Tone = "warning",
+            Complete = false
+        }
+    ];
+
+    private static readonly IReadOnlyList<StatusCheckItem> LongStatusItems =
+    [
+        new()
+        {
+            Label = "Extended mobile feedback validation with long status copy",
+            Description = "This row intentionally carries a longer label and description so the status list can prove wrapping without horizontal overflow.",
+            Status = "Awaiting screenshot review",
+            Tone = "warning",
+            Complete = false
+        },
+        new()
+        {
+            Label = "Notification host",
+            Description = "Persistent notifications should stay inside the viewport even with action affordances.",
+            Status = "Ready",
+            Tone = "success",
+            Complete = true
+        }
+    ];
+
+    private static readonly IReadOnlyList<StatusCheckItem> BaseVerificationItems =
+    [
+        new()
+        {
+            Label = "Copyable warning",
+            Description = "Warning notifications expose copy affordances.",
+            Status = "Ready",
+            Tone = "success",
+            Complete = true
+        }
+    ];
+
+    private static readonly IReadOnlyList<StatusCheckItem> DenseVerificationItems =
+    [
+        new()
+        {
+            Label = "Copyable warning",
+            Description = "Warning notifications expose copy affordances.",
+            Status = "Ready",
+            Tone = "success",
+            Complete = true
+        },
+        new()
+        {
+            Label = "Persistent toast",
+            Description = "Duration zero notifications remain until dismissed or cleared.",
+            Status = "Review",
+            Tone = "info",
+            Complete = false
+        }
+    ];
+
+}

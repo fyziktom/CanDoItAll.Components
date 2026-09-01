@@ -17,36 +17,47 @@
     private DotNetObjectReference<CanvasCalendar>? objectReference;
     private string? pendingSurfaceKey;
 
+    /// <summary>The events, view state, and options that drive the live JS-hosted calendar scene.</summary>
     [Parameter, EditorRequired]
     public CanvasCalendarSurface Surface { get; set; } = default!;
 
+    /// <summary>Additional CSS class applied to the calendar host element.</summary>
     [Parameter]
     public string HostClass { get; set; } = string.Empty;
 
+    /// <summary>Raised when the selected event changes.</summary>
     [Parameter]
     public EventCallback<CanvasCalendarSelectionChangedEventArgs> SelectionChanged { get; set; }
 
+    /// <summary>Raised when the client-side view state (selected date, view, scope, timezone) changes.</summary>
     [Parameter]
     public EventCallback<CanvasCalendarStateChangedEventArgs> StateChanged { get; set; }
 
+    /// <summary>Callback invoked to persist a created or edited event; returns the saved event.</summary>
     [Parameter]
     public Func<CanvasCalendarSaveRequest, Task<CanvasCalendarEvent?>>? SaveEventAsync { get; set; }
 
+    /// <summary>Callback invoked to delete an event.</summary>
     [Parameter]
     public Func<CanvasCalendarDeleteRequest, Task>? DeleteEventAsync { get; set; }
 
+    /// <summary>Callback invoked to search for playlists matching a query, for playlist-linking UI.</summary>
     [Parameter]
     public Func<CanvasCalendarPlaylistSearchRequest, Task<IReadOnlyList<CanvasCalendarPlaylist>>>? SearchPlaylistsAsync { get; set; }
 
+    /// <summary>Callback invoked to link a playlist to an event.</summary>
     [Parameter]
     public Func<CanvasCalendarPlaylistMutationRequest, Task<CanvasCalendarEvent?>>? LinkPlaylistAsync { get; set; }
 
+    /// <summary>Callback invoked to clone a linked playlist onto an event.</summary>
     [Parameter]
     public Func<CanvasCalendarPlaylistMutationRequest, Task<CanvasCalendarEvent?>>? ClonePlaylistAsync { get; set; }
 
+    /// <summary>Callback invoked to unlink a playlist from an event.</summary>
     [Parameter]
     public Func<CanvasCalendarPlaylistMutationRequest, Task<CanvasCalendarEvent?>>? UnlinkPlaylistAsync { get; set; }
 
+    /// <summary>Callback invoked when the visible events are exported in a given format.</summary>
     [Parameter]
     public Func<CanvasCalendarExportRequest, Task>? ExportAsync { get; set; }
 

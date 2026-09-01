@@ -23,21 +23,27 @@
     private string payload = string.Empty;
     private (string Payload, string DataFormat)? registeredKey;
 
+    /// <summary>The task offered for insertion when this element is dragged onto a <see cref="GanttChart"/> dependency bridge.</summary>
     [Parameter, EditorRequired]
     public GanttTask Task { get; set; } = default!;
 
+    /// <summary>Custom drag handle content. Falls back to a <c>Pill</c> showing <see cref="Task"/>'s title when omitted.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Disables the drag interaction, for example after the task has already been accepted by the host.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Must match the target <see cref="GanttChart.DragDataFormat"/> for the drop to be recognized.</summary>
     [Parameter]
     public string DragDataFormat { get; set; } = GanttTaskDragSerialization.DataFormat;
 
+    /// <summary>Accessible name for the drag handle. Defaults to a generated label naming <see cref="Task"/>.</summary>
     [Parameter]
     public string? AriaLabel { get; set; }
 
+    /// <summary>Additional CSS class merged onto the root element.</summary>
     [Parameter]
     public string? Class { get; set; }
 
