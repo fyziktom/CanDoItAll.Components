@@ -18,7 +18,11 @@
     @apply min-w-0 w-full max-w-full;
     @apply rounded-md px-3 py-2 text-sm;
     @apply transition;
-    @apply focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    /* ring-inset: the focus ring must stay inside the input's own border box. An
+       outward ring depends on every ancestor leaving it enough clearance (padding,
+       no overflow-hidden) -- consumers can't be relied on to always provide that,
+       so an inset ring is the only variant that can never get edge-clipped. */
+    @apply focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-inset focus:ring-(--tone-primary-soft-border);
     border-color: var(--tone-border);
     color: var(--tone-text);
   }
@@ -65,11 +69,11 @@
      even though Chromium/Firefox already respect the padding-only rule above. Values match
      text-sm's line-height (1.25rem) + the 1px top/bottom border + each density's padding. */
   .ui-select--density-comfortable {
-    height: 1.875rem;
+    min-height: 1.875rem;
   }
 
   .ui-select--density-compact {
-    height: 1.625rem;
+    min-height: 1.625rem;
   }
 
   .ui-input--mono {

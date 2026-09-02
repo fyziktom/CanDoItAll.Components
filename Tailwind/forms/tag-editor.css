@@ -16,7 +16,7 @@
     @apply border;
     @apply rounded-md px-3 py-2 text-sm;
     /*rounded-[0.85rem] border px-2 py-1;*/
-    min-height: 2.625rem;
+    /*min-height: 2.625rem;*/
     border-color: var(--tone-border);
     /*background: var(--tone-surface);*/
     /*box-shadow: var(--cad-shadow-soft);*/
@@ -24,8 +24,9 @@
 
   .cad-tag-textedit__surface:focus-within,
   .zy-tag-textedit__surface:focus-within {
-    border-color: var(--tone-success-soft-border);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone-success-solid-bg) 12%, transparent);
+    /*border-color: var(--tone-success-soft-border);*/
+    /*box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone-success-solid-bg) 12%, transparent);*/
+    @apply border-(--tone-primary-soft-border) ring-2 ring-inset ring-(--tone-primary-soft-border);
   }
 
   .cad-tag-textedit__surface.is-disabled,
@@ -187,10 +188,11 @@
     /*flex: 1 1 6rem;*/
     max-width: 100%;
     @apply border-0 px-1 py-0.5 text-xs;
-    @apply focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    /*@apply focus:border-(--tone-primary-soft-border) focus:outline-none focus:ring-2 focus:ring-(--tone-primary-soft-border);*/
+    @apply focus:border-0 focus:outline-none focus:ring-0;
     /*border: 0 !important;*/
     /*border-radius: 0 !important;*/
-    /*background: transparent !important;*/
+    background: transparent;
     /*color: var(--tone-text);*/
     /*padding: 0.14rem 0.2rem !important;*/
     /*font-family: inherit;*/
