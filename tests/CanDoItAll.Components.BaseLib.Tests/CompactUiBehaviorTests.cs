@@ -6,6 +6,19 @@ namespace CanDoItAll.Components.BaseLib.Tests;
 public sealed class CompactUiBehaviorTests
 {
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ExpandTransitionPreservesContentAndExplicitExpansionState(bool isExpanded) {
+        using var context = new BunitContext();
+        var cut = context.Render<ExpandTransition>(parameters => parameters
+            .Add(component => component.IsExpanded, isExpanded)
+            .Add(component => component.ChildContent, Markup("<p>Project details</p>")));
+
+        Assert.Equal("Project details", cut.Find(".cda-expand-transition > p").TextContent);
+        Assert.Equal(isExpanded, cut.Find(".cda-expand-transition").ClassList.Contains("cda-expand-transition--expanded"));
+    }
+
+    [Theory]
     [InlineData(TextAreaSize.Compact, "3")]
     [InlineData(TextAreaSize.Standard, "5")]
     [InlineData(TextAreaSize.Extended, "10")]

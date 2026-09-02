@@ -22,6 +22,23 @@ npm run watch
 
 The output is written to `..\src\CanDoItAll.Components.BaseLib\wwwroot\css\output.css`.
 
+## Source-consumer asset contract
+
+The distributed BaseLib `output.css` is committed generated source. Clean sibling-project
+consumers and container builds must receive it without an implicit npm build. Regenerate it
+with the locked toolchain from the repository root and include the result with style changes:
+
+```powershell
+npm ci
+npm ci --prefix Tailwind
+npm run build:tailwind
+git diff -- src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css
+```
+
+Do not hand-edit the output. CI verifies that this exact file is tracked and that regeneration
+produces no diff. Sandbox and test-page CSS remains generated and ignored. Both
+`css/material-symbols.css` and `css/output.css` are required BaseLib static web assets.
+
 Keep reusable component selectors, tokens, and patterns here. Keep application-only selectors in the consuming application's Tailwind workspace. After changing the shared styles, build them and verify the relevant Sandbox route so a component's markup and CSS remain aligned.
 
 ## Structure
