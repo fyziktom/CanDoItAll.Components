@@ -133,6 +133,19 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Internal
 
+- Fixed `wwwroot/js/appShellNavigation.js` (the `ResizeObserver`/`MutationObserver`-driven row-capacity
+  measurement behind `AppShell`'s nav overflow) silently doing nothing: `resolveRows()` and `observe()`
+  looked up the nav list and its buttons via `.cda-shell-nav`/`.cda-shell-nav-button` selectors that
+  never matched any class actually rendered by a consumer's `AppShell` (e.g. `CanDoItAll.AppComponents`
+  renders `.app-shell-nav`/`.app-shell-nav-button`) — a naming drift between this library and a
+  downstream app repo that nothing caught at compile time, so `UpdateNavigationRowCapacity` was never
+  invoked and the nav always fell back to its hardcoded row-capacity constant regardless of viewport
+  size or zoom. Removed the hardcoded class-name coupling entirely rather than re-syncing the strings:
+  `observe(id, sidebar, dotNetRef)` is now `observe(id, sidebar, navigation, dotNetRef)` — the caller
+  passes its own nav container element explicitly instead of BaseLib guessing its class name — and
+  `resolveRows()` measures row height off `navigation.firstElementChild` instead of a hardcoded button
+  selector. **Breaking (internal JS API):** any direct caller of
+  `CanDoItAll.appShellNavigation.observe` must add the nav element as the third argument.
 - Added `StyledInputBase<TValue>` (`Components/Forms/StyledInputBase.cs`) — the shared base class for
   the new `TextInput`/`NumberInput<TValue>`/`DateInput<TValue>`/`TextAreaInput`/`SelectInput<TValue>`
   family above. It replicates `StyledComponentBase`'s `Class`/`Style`/`BuildAttributes` contract by
@@ -167,6 +180,10 @@ All notable changes to this repository's packages are recorded here, per the cha
 - The Buttons sandbox page (`Pages/Buttons.razor`) now passes `ApiTypes="@ButtonApiTypes"`
   (`typeof(Button)`) to each of its `Button` `ExampleBlock`s, which previously had no "API" tab because
   `ApiTypes` was never supplied.
+- Widened `.sandbox-demo-frame` (`Tailwind/sandbox/catalog.css`) from `px-0` to `px-4` (matching its
+  existing `py-4`) as extra clearance around demo content — belt-and-suspenders alongside the
+  `focus:ring-inset` fix below, since the frame also has `overflow-hidden` for wide demo content.
+  `ExampleBlock.razor`'s Example panel is the only consumer of this class.
 
 ## [Unreleased] — 2.0.0
 
