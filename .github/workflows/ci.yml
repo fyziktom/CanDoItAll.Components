@@ -38,6 +38,15 @@ jobs:
           npm run build:tailwind
           npm run assets:verify
 
+      - name: Verify committed BaseLib stylesheet
+        shell: pwsh
+        run: |
+          git ls-files --error-unmatch -- src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+          git diff --exit-code -- src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css
+
       - name: Restore .NET dependencies
         run: dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
 

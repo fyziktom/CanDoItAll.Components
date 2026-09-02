@@ -78,6 +78,16 @@ public sealed class StandardPublishingApprovalTests
         AssertApproved("standard-source-package-inputs.approved.txt", actual);
     }
 
+    [Theory]
+    [InlineData("material-symbols.css", ".cda-material-icon")]
+    [InlineData("output.css", ".cda-expand-transition")]
+    public void BaseLibRequiredStylesheetsContainRuntimeContracts(string fileName, string expectedContract) {
+        string stylesheetPath = Path.Combine(FindRepoRoot(), "src", "CanDoItAll.Components.BaseLib", "wwwroot", "css", fileName);
+        string stylesheet = File.ReadAllText(stylesheetPath);
+
+        Assert.Contains(expectedContract, stylesheet, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void CompatibilityShimManifestMatchesFreezeSnapshot()
     {
