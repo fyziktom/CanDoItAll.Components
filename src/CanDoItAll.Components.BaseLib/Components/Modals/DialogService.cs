@@ -8,11 +8,20 @@ public sealed class DialogService : IDisposable
     private readonly NavigationManager navigationManager;
     private readonly List<DialogReference> dialogs = [];
     private bool disposed;
+    private int samePageNavigationOwners;
+    private string currentPage;
 
     public DialogService(NavigationManager navigationManager)
     {
         this.navigationManager = navigationManager;
+        currentPage = new Uri(navigationManager.Uri).GetLeftPart(UriPartial.Path);
         this.navigationManager.LocationChanged += HandleLocationChanged;
+    }
+
+    public IDisposable PreserveDialogsOnSamePageNavigation() {
+        ThrowIfDisposed();
+        samePageNavigationOwners++;
+        return new SamePageNavigationOwner(this);
     }
 
     public event Action? Changed;
@@ -133,13 +142,14 @@ public sealed class DialogService : IDisposable
             childContent,
             resolvedOptions);
 
-        if (cancellationToken.CanBeCanceled)
-        {
+        dialogs.Add(reference);
+        if (cancellationToken.CanBeCanceled) {
             reference.RegisterCancellation(cancellationToken);
         }
 
-        dialogs.Add(reference);
-        NotifyChanged();
+        if (!reference.Result.IsCompleted) {
+            NotifyChanged();
+        }
         return reference.Result;
     }
 
@@ -157,7 +167,24 @@ public sealed class DialogService : IDisposable
 
     private void HandleLocationChanged(object? sender, LocationChangedEventArgs args)
     {
+        var nextPage = new Uri(args.Location).GetLeftPart(UriPartial.Path);
+        var samePage = string.Equals(currentPage, nextPage, StringComparison.Ordinal);
+        currentPage = nextPage;
+        if (samePageNavigationOwners > 0 && samePage) {
+            return;
+        }
         CloseAll();
+    }
+
+    private sealed class SamePageNavigationOwner(DialogService service) : IDisposable {
+        private DialogService? owner = service;
+
+        public void Dispose() {
+            var current = Interlocked.Exchange(ref owner, null);
+            if (current is not null) {
+                current.samePageNavigationOwners--;
+            }
+        }
     }
 
     private void NotifyChanged()
@@ -233,6 +260,9 @@ public sealed class DialogReference
     internal void RegisterCancellation(CancellationToken cancellationToken)
     {
         cancellationRegistration = cancellationToken.Register(() => _ = owner.CancelAsync(this, cancellationToken));
+        if (completion.Task.IsCompleted) {
+            cancellationRegistration.Dispose();
+        }
     }
 
     internal void TrySetResult(object? result)
