@@ -1,8 +1,65 @@
+using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CanDoItAll.Components.BaseLib.Tests;
 
 public sealed class DialogNavigationOwnershipTests {
+
+    [Fact]
+    public async Task Fragment_dialogs_keep_their_reference_and_rendered_content_until_explicit_close_all() {
+        using var context = new BunitContext();
+        context.JSInterop.Mode = JSRuntimeMode.Loose;
+        var navigation = new TestNavigation();
+        using var service = new DialogService(navigation);
+        context.Services.AddSingleton(service);
+        using var lease = service.PreserveDialogsOnSamePageNavigation();
+        using var cancellation = new CancellationTokenSource();
+        var first = service.OpenAsync("First", reference => builder => builder.AddContent(0, "First " + reference.Id), cancellationToken: cancellation.Token);
+        var second = service.OpenAsync("Second", reference => builder => builder.AddContent(0, "Second " + reference.Id));
+        var references = service.Dialogs.ToArray();
+        var host = context.Render<DialogHost>();
+        Assert.Equal(2, host.FindAll(".cda-dialog").Count);
+        Assert.Contains("First " + references[0].Id, host.Markup);
+        Assert.Contains("Second " + references[1].Id, host.Markup);
+        await host.InvokeAsync(() => navigation.NavigateTo("/agents?tab=providers#details"));
+        Assert.Equal(references, service.Dialogs);
+        Assert.Equal(2, host.FindAll(".cda-dialog").Count);
+        await host.InvokeAsync(() => service.CloseAll("closed"));
+        Assert.Equal("closed", await first);
+        Assert.Equal("closed", await second);
+        Assert.Empty(host.FindAll(".cda-dialog"));
+        var changes = 0;
+        service.Changed += () => changes++;
+        cancellation.Cancel();
+        Assert.Equal(0, changes);
+    }
+
+    [Fact]
+    public async Task Nested_owner_cancellation_removes_only_its_fragment_and_keeps_outer_dialog_active() {
+        using var context = new BunitContext();
+        context.JSInterop.Mode = JSRuntimeMode.Loose;
+        var navigation = new TestNavigation();
+        using var service = new DialogService(navigation);
+        context.Services.AddSingleton(service);
+        using var outerLease = service.PreserveDialogsOnSamePageNavigation();
+        var outerResult = service.OpenAsync("Outer", _ => builder => builder.AddContent(0, "Outer content"));
+        using var innerLease = service.PreserveDialogsOnSamePageNavigation();
+        using var cancellation = new CancellationTokenSource();
+        var innerResult = service.OpenAsync("Inner", _ => builder => builder.AddContent(0, "Inner content"), cancellationToken: cancellation.Token);
+        var host = context.Render<DialogHost>();
+        Assert.Equal(2, host.FindAll(".cda-dialog").Count);
+        await host.InvokeAsync(cancellation.Cancel);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => innerResult);
+        innerLease.Dispose();
+        await host.InvokeAsync(() => navigation.NavigateTo("/agents?tab=overview"));
+        Assert.Contains("Outer content", host.Markup);
+        Assert.DoesNotContain("Inner content", host.Markup);
+        Assert.False(outerResult.IsCompleted);
+        await host.InvokeAsync(() => navigation.NavigateTo("/projects"));
+        Assert.Null(await outerResult);
+        Assert.Empty(host.FindAll(".cda-dialog"));
+    }
 
     [Fact]
     public async Task Already_canceled_owner_never_adds_an_orphan_dialog() {
