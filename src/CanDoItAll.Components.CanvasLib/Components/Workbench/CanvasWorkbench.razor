@@ -391,6 +391,7 @@
     private long lastSelectionDispatchId;
     private long lastStateDispatchId;
     private bool awaitingParentUiStateCommit;
+    private long uiStateCommitGeneration;
     private bool preserveViewportOnNextUpdate;
     private bool? appliedHasClipboardHandler;
 
@@ -439,7 +440,9 @@
     public RenderFragment? OverlayContent { get; set; }
 
     protected override void OnParametersSet()
-    {
+        => SynchronizeSurface();
+
+    private void SynchronizeSurface() {
         isMaximized = Surface.UiState.IsMaximized;
         zoomPercent = ClampZoomPercent(Surface.UiState.Zoom);
         menuScalePercent = ClampMenuScalePercent(Surface.UiState.MenuActionScale);
@@ -570,13 +573,7 @@
 
         var state = CanvasWorkbenchUiState.Parse(stateJson);
         state.IsMaximized = isMaximized;
-        clientUiStateKey = state.ToJson();
-        processedUiStateKey = clientUiStateKey;
-        awaitingParentUiStateCommit = true;
-        zoomPercent = ClampZoomPercent(state.Zoom);
-        menuScalePercent = ClampMenuScalePercent(state.MenuActionScale);
-        await StateChanged.InvokeAsync(clientUiStateKey);
-        await InvokeAsync(StateHasChanged);
+        await CommitClientUiStateAsync(state);
     }
 
     [JSInvokable]
@@ -764,11 +761,28 @@
 
         var state = CanvasWorkbenchUiState.Parse(json);
         state.IsMaximized = isMaximized;
+        await CommitClientUiStateAsync(state);
+    }
+
+    private async Task CommitClientUiStateAsync(CanvasWorkbenchUiState state) {
+        var generation = ++uiStateCommitGeneration;
         clientUiStateKey = state.ToJson();
         processedUiStateKey = clientUiStateKey;
         awaitingParentUiStateCommit = true;
         zoomPercent = ClampZoomPercent(state.Zoom);
-        await StateChanged.InvokeAsync(clientUiStateKey);
+        menuScalePercent = ClampMenuScalePercent(state.MenuActionScale);
+        var callback = StateChanged;
+        try {
+            await callback.InvokeAsync(clientUiStateKey);
+        } finally {
+            if (generation == uiStateCommitGeneration && callback.HasDelegate) {
+                awaitingParentUiStateCommit = false;
+            }
+        }
+        if (generation == uiStateCommitGeneration && callback.HasDelegate) {
+            SynchronizeSurface();
+        }
+        await InvokeAsync(StateHasChanged);
     }
 
     private T? Deserialize<T>(string json)
