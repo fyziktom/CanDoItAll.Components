@@ -467,3 +467,11 @@ For agent-driven changes, query the Components MCP metadata for `Notification`, 
 
 - [Repository overview](../../README.md)
 - [Canvas workspace guide](../../docs/canvas/README.md)
+
+## Dialog navigation ownership
+
+`DialogService` closes pending dialogs with a null result on navigation by default. A component may hold the disposable lease returned by `PreserveDialogsOnSamePageNavigation()` while it owns same-page overlay policy. Query and fragment changes on the same URI-canonical application path preserve the exact `DialogReference`, result task and cancellation registration. A different path closes dialogs; path casing and trailing slashes are compared conservatively and are not route aliases.
+
+Every owner must dispose its lease. Multiple leases are independent and disposal is idempotent. Service disposal unsubscribes navigation, cancels remaining results and safely permits outstanding lease disposal. Full document departure disposes the application owner.
+
+The lease does not make dialogs children of each other. Pass an owner cancellation token to every nested `OpenAsync` call, cancel it when its component/session ends, and fence late results. Cancellation closes only that reference; explicit close retains its normal result. An already-canceled token returns a canceled result without leaving an orphan overlay. Do not use `CloseAll` to implement a single component's lifetime.
