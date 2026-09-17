@@ -29,6 +29,14 @@ export function openDialog(dialog, instanceId, dotNetReference) {
         dialog.showModal();
     }
 
+    // A dialog rendered inside another dialog's content belongs to it and stacks above it. When the owner opens after
+    // such a descendant (both opened by one render, their module loads completing in either order), the owner's
+    // showModal puts it on top of the top layer: raise the open descendants again, outermost first.
+    for (const descendant of dialog.querySelectorAll('dialog[open]')) {
+        descendant.close();
+        descendant.showModal();
+    }
+
     requestAnimationFrame(() => {
         const initialFocus = dialog.querySelector(
             '[autofocus], button:not([disabled]), [href]:not([aria-disabled="true"]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
