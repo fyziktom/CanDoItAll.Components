@@ -2,6 +2,26 @@ const ON_DISMISS_REQUESTED = 'OnDialogDismissRequested';
 const controllers = new Map();
 
 let originalBodyOverflow;
+let focusOwnershipInitialized = false;
+let disabledFocusOwner;
+
+export function initializeFocusOwnership() {
+    if (focusOwnershipInitialized) {
+        return;
+    }
+
+    focusOwnershipInitialized = true;
+    const clearOwner = () => { disabledFocusOwner = undefined; };
+    document.addEventListener('focusout', event => {
+        disabledFocusOwner = event.target instanceof HTMLElement && event.target.matches(':disabled')
+            ? new WeakRef(event.target)
+            : undefined;
+    }, true);
+    document.addEventListener('focusin', clearOwner, true);
+    document.addEventListener('pointerdown', clearOwner, true);
+    document.addEventListener('keydown', clearOwner, true);
+}
+
 const removalObserver = new MutationObserver(() => {
     for (const [instanceId, controller] of controllers) {
         if (!controller.dialog.isConnected) {
@@ -16,7 +36,11 @@ export function openDialog(dialog, instanceId, dotNetReference) {
         return;
     }
 
-    const previousActiveElement = document.activeElement;
+    const disabledOwner = disabledFocusOwner?.deref();
+    const previousActiveElement = document.activeElement === document.body && disabledOwner?.isConnected
+        ? disabledOwner
+        : document.activeElement;
+    disabledFocusOwner = undefined;
     const onCancel = async event => {
         event.preventDefault();
 
