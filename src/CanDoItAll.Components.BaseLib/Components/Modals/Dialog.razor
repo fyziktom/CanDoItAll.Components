@@ -1,5 +1,6 @@
 @namespace CanDoItAll.Components.BaseLib
 @using Microsoft.JSInterop
+@using System.Runtime.ExceptionServices
 @inherits StyledComponentBase
 @inject IJSRuntime JS
 @implements IAsyncDisposable
@@ -178,6 +179,9 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (isDisposed) {
+            return;
+        }
         if (IsOpen && !browserDialogOpen)
         {
             dialogInterop ??= new DialogInterop(JS);
@@ -205,7 +209,10 @@
             browserDialogOpen = false;
             if (dialogInterop is not null)
             {
-                await dialogInterop.CloseAsync(dialogInstanceId);
+                try {
+                    await dialogInterop.CloseAsync(dialogInstanceId);
+                } catch (Exception exception) when (isDisposed && exception is JSDisconnectedException or OperationCanceledException) {
+                }
             }
         }
     }
@@ -260,12 +267,12 @@
 
     private Task HandleCloseAsync()
     {
-        return OnClose.InvokeAsync();
+        return isDisposed ? Task.CompletedTask : OnClose.InvokeAsync();
     }
 
     private Task HandleBackdropCloseAsync()
     {
-        return CloseOnBackdrop
+        return !isDisposed && CloseOnBackdrop
             ? OnClose.InvokeAsync()
             : Task.CompletedTask;
     }
@@ -273,19 +280,43 @@
     [JSInvokable]
     public Task OnDialogDismissRequested()
     {
-        return OnClose.InvokeAsync();
+        return HandleCloseAsync();
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        isDisposed = true;
-        if (dialogInterop is not null)
-        {
-            await dialogInterop.CloseAsync(dialogInstanceId);
-            await dialogInterop.DisposeAsync();
-        }
+    private Task? retirementTask;
 
-        dotNetReference?.Dispose();
+    public ValueTask DisposeAsync() {
+        return new(retirementTask ??= RetireAsync());
+    }
+
+    private async Task RetireAsync() {
+        isDisposed = true;
+        openRequest++;
+        var ownedInterop = dialogInterop;
+        var ownedReference = dotNetReference;
+        dotNetReference = null;
+        ownedInterop?.Retire();
+        try {
+            if (ownedInterop is not null) {
+                Exception? closeFailure = null;
+                try {
+                    await ownedInterop.CloseAsync(dialogInstanceId);
+                } catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException) {
+                } catch (Exception exception) {
+                    closeFailure = exception;
+                }
+                try {
+                    await ownedInterop.DisposeAsync();
+                } catch (Exception exception) when (closeFailure is not null) {
+                    throw new AggregateException(closeFailure, exception);
+                }
+                if (closeFailure is not null) {
+                    ExceptionDispatchInfo.Capture(closeFailure).Throw();
+                }
+            }
+        } finally {
+            ownedReference?.Dispose();
+        }
     }
 }
 

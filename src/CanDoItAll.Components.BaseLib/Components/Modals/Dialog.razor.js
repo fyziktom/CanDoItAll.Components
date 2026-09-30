@@ -2,27 +2,65 @@ const ON_DISMISS_REQUESTED = 'OnDialogDismissRequested';
 const controllers = new Map();
 
 let originalBodyOverflow;
+let focusOwnershipInitialized = false;
+let disabledFocusOwner;
+
+export function initializeFocusOwnership() {
+    if (focusOwnershipInitialized) {
+        return;
+    }
+
+    focusOwnershipInitialized = true;
+    const clearOwner = () => { disabledFocusOwner = undefined; };
+    document.addEventListener('focusout', event => {
+        disabledFocusOwner = event.target instanceof HTMLElement && event.target.matches(':disabled')
+            ? new WeakRef(event.target)
+            : undefined;
+    }, true);
+    document.addEventListener('focusin', clearOwner, true);
+    document.addEventListener('pointerdown', clearOwner, true);
+    document.addEventListener('keydown', clearOwner, true);
+}
+
+const removalObserver = new MutationObserver(() => {
+    for (const [instanceId, controller] of controllers) {
+        if (!controller.dialog.isConnected) {
+            closeDialog(instanceId);
+        }
+    }
+});
 
 export function openDialog(dialog, instanceId, dotNetReference) {
     closeDialog(instanceId);
+    if (!dialog.isConnected) {
+        return;
+    }
 
-    const previousActiveElement = document.activeElement;
+    const disabledOwner = disabledFocusOwner?.deref();
+    const previousActiveElement = document.activeElement === document.body && disabledOwner?.isConnected
+        ? disabledOwner
+        : document.activeElement;
+    disabledFocusOwner = undefined;
     const onCancel = async event => {
         event.preventDefault();
 
         try {
             await dotNetReference.invokeMethodAsync(ON_DISMISS_REQUESTED);
         } catch {
-            // The Blazor circuit may have disconnected while the dialog was open.
+            if (controllers.get(instanceId) === controller) {
+                closeDialog(instanceId);
+            }
         }
     };
 
+    const controller = { dialog, onCancel, previousActiveElement };
     dialog.addEventListener('cancel', onCancel);
-    controllers.set(instanceId, { dialog, onCancel, previousActiveElement });
+    controllers.set(instanceId, controller);
 
     if (controllers.size === 1) {
         originalBodyOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
+        removalObserver.observe(document.body, { childList: true, subtree: true });
     }
 
     if (!dialog.open) {
@@ -38,6 +76,9 @@ export function openDialog(dialog, instanceId, dotNetReference) {
     }
 
     requestAnimationFrame(() => {
+        if (controllers.get(instanceId) !== controller || !dialog.isConnected || !dialog.open) {
+            return;
+        }
         const initialFocus = dialog.querySelector(
             '[autofocus], button:not([disabled]), [href]:not([aria-disabled="true"]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
 
@@ -52,6 +93,7 @@ export function closeDialog(instanceId) {
     }
 
     const { dialog, onCancel, previousActiveElement } = controller;
+    const restoreFocus = dialog.contains(document.activeElement) || document.activeElement === document.body;
     dialog.removeEventListener('cancel', onCancel);
 
     if (dialog.open) {
@@ -61,11 +103,12 @@ export function closeDialog(instanceId) {
     controllers.delete(instanceId);
 
     if (controllers.size === 0) {
+        removalObserver.disconnect();
         document.body.style.overflow = originalBodyOverflow ?? '';
         originalBodyOverflow = undefined;
     }
 
-    if (previousActiveElement instanceof HTMLElement && previousActiveElement.isConnected) {
+    if (restoreFocus && previousActiveElement instanceof HTMLElement && previousActiveElement.isConnected) {
         previousActiveElement.focus({ preventScroll: true });
     }
 }

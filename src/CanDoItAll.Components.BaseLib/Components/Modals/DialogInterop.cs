@@ -10,7 +10,11 @@ internal sealed class DialogInterop(IJSRuntime js) : IAsyncDisposable
     internal const string CloseMethod = "closeDialog";
 
     private Task<IJSObjectReference>? moduleTask;
+    private Task? moduleDisposal;
+    private Task? closeTask;
     private bool disposed;
+
+    public void Retire() => disposed = true;
 
     private Task<IJSObjectReference> GetModuleAsync()
         => moduleTask ??= js.InvokeAsync<IJSObjectReference>("import", ModulePath).AsTask();
@@ -23,10 +27,15 @@ internal sealed class DialogInterop(IJSRuntime js) : IAsyncDisposable
         DotNetObjectReference<Dialog> dotNetReference,
         Func<bool> isCurrentRequest)
     {
-        var currentModule = await GetModuleAsync();
+        IJSObjectReference currentModule;
+        try {
+            currentModule = await GetModuleAsync();
+        } catch (Exception exception) when (disposed && exception is JSDisconnectedException or OperationCanceledException) {
+            return false;
+        }
         if (disposed)
         {
-            await DisposeModuleAsync(currentModule);
+            await ReleaseModuleAsync(currentModule);
             return false;
         }
 
@@ -35,22 +44,24 @@ internal sealed class DialogInterop(IJSRuntime js) : IAsyncDisposable
             return false;
         }
 
-        await currentModule.InvokeVoidAsync(OpenMethod, dialog, instanceId, dotNetReference);
-        return true;
+        try {
+            await currentModule.InvokeVoidAsync(OpenMethod, dialog, instanceId, dotNetReference);
+            return !disposed && isCurrentRequest();
+        } catch (Exception exception) when (disposed && exception is JSDisconnectedException or OperationCanceledException) {
+            return false;
+        }
     }
 
-    public async ValueTask CloseAsync(string instanceId)
-    {
-        try
-        {
-            // A module that has not loaded yet has opened nothing to close.
-            if (moduleTask is { IsCompletedSuccessfully: true } loaded)
-            {
-                await loaded.Result.InvokeVoidAsync(CloseMethod, instanceId);
-            }
+    public ValueTask CloseAsync(string instanceId) {
+        if (closeTask is not { IsCompleted: false }) {
+            closeTask = CloseCoreAsync(instanceId);
         }
-        catch (JSDisconnectedException)
-        {
+        return new(closeTask);
+    }
+
+    private async Task CloseCoreAsync(string instanceId) {
+        if (moduleTask is { IsCompletedSuccessfully: true } loaded) {
+            await loaded.Result.InvokeVoidAsync(CloseMethod, instanceId);
         }
     }
 
@@ -60,18 +71,19 @@ internal sealed class DialogInterop(IJSRuntime js) : IAsyncDisposable
         // A pending import is released by the open request that awaits it.
         if (moduleTask is { IsCompletedSuccessfully: true } loaded)
         {
-            await DisposeModuleAsync(loaded.Result);
+            await ReleaseModuleAsync(loaded.Result);
         }
     }
 
-    private static async ValueTask DisposeModuleAsync(IJSObjectReference module)
+    private Task ReleaseModuleAsync(IJSObjectReference module) => moduleDisposal ??= DisposeModuleAsync(module);
+
+    private static async Task DisposeModuleAsync(IJSObjectReference module)
     {
         try
         {
             await module.DisposeAsync();
         }
-        catch (JSDisconnectedException)
-        {
+        catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException) {
         }
     }
 }
