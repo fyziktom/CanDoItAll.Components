@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace CanDoItAll.Components.BaseLib;
 
-public sealed class TooltipService : IDisposable
-{
+public sealed class TooltipService : IDisposable {
     private readonly NavigationManager navigationManager;
     private CancellationTokenSource? activeLifetime;
+    private string? requestedTooltipId;
     private bool disposed;
 
-    public TooltipService(NavigationManager navigationManager)
-    {
+    public TooltipService(NavigationManager navigationManager) {
         this.navigationManager = navigationManager;
         this.navigationManager.LocationChanged += HandleLocationChanged;
     }
@@ -20,13 +19,11 @@ public sealed class TooltipService : IDisposable
 
     public TooltipState? Current { get; private set; }
 
-    public void Open(MouseEventArgs args, string text, TooltipOptions? options = null)
-    {
+    public void Open(MouseEventArgs args, string text, TooltipOptions? options = null) {
         Open(text, args.ClientX, args.ClientY, options);
     }
 
-    public void Open(string text, double clientX, double clientY, TooltipOptions? options = null)
-    {
+    public void Open(string text, double clientX, double clientY, TooltipOptions? options = null) {
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
         OpenCore(text, childContent: null, clientX, clientY, options);
     }
@@ -35,20 +32,18 @@ public sealed class TooltipService : IDisposable
         RenderFragment<TooltipService> childContent,
         double clientX,
         double clientY,
-        TooltipOptions? options = null)
-    {
+        TooltipOptions? options = null) {
         ArgumentNullException.ThrowIfNull(childContent);
         OpenCore(text: null, childContent, clientX, clientY, options);
     }
 
-    public void Close()
-    {
+    public void Close() {
         activeLifetime?.Cancel();
         activeLifetime?.Dispose();
         activeLifetime = null;
+        requestedTooltipId = null;
 
-        if (Current is null)
-        {
+        if (Current is null) {
             return;
         }
 
@@ -56,13 +51,21 @@ public sealed class TooltipService : IDisposable
         NotifyChanged();
     }
 
+    internal void Close(string tooltipId) {
+        if (requestedTooltipId == tooltipId) {
+            Close();
+        } else if (Current?.Options.Id == tooltipId) {
+            Current = null;
+            NotifyChanged();
+        }
+    }
+
     private void OpenCore(
         string? text,
         RenderFragment<TooltipService>? childContent,
         double clientX,
         double clientY,
-        TooltipOptions? options)
-    {
+        TooltipOptions? options) {
         ThrowIfDisposed();
 
         var resolvedOptions = options?.Clone() ?? new TooltipOptions();
@@ -77,55 +80,44 @@ public sealed class TooltipService : IDisposable
         activeLifetime?.Cancel();
         activeLifetime?.Dispose();
         activeLifetime = new CancellationTokenSource();
+        requestedTooltipId = resolvedOptions.Id;
         _ = ShowWithLifetimeAsync(state, activeLifetime.Token);
     }
 
-    private async Task ShowWithLifetimeAsync(TooltipState state, CancellationToken cancellationToken)
-    {
-        try
-        {
-            if (state.Options.Delay is { } delay && delay > TimeSpan.Zero)
-            {
+    private async Task ShowWithLifetimeAsync(TooltipState state, CancellationToken cancellationToken) {
+        try {
+            if (state.Options.Delay is { } delay && delay > TimeSpan.Zero) {
                 await Task.Delay(delay, cancellationToken);
             }
 
             Current = state;
             NotifyChanged();
 
-            if (state.Options.Duration is { } duration && duration > TimeSpan.Zero)
-            {
+            if (state.Options.Duration is { } duration && duration > TimeSpan.Zero) {
                 await Task.Delay(duration, cancellationToken);
-                if (Current?.Id == state.Id)
-                {
+                if (Current?.Id == state.Id) {
                     Current = null;
                     NotifyChanged();
                 }
             }
-        }
-        catch (OperationCanceledException)
-        {
+        } catch (OperationCanceledException) {
         }
     }
 
-    private void HandleLocationChanged(object? sender, LocationChangedEventArgs args)
-    {
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs args) {
         Close();
     }
 
-    private void NotifyChanged()
-    {
+    private void NotifyChanged() {
         Changed?.Invoke();
     }
 
-    private void ThrowIfDisposed()
-    {
+    private void ThrowIfDisposed() {
         ObjectDisposedException.ThrowIf(disposed, this);
     }
 
-    public void Dispose()
-    {
-        if (disposed)
-        {
+    public void Dispose() {
+        if (disposed) {
             return;
         }
 
@@ -133,6 +125,10 @@ public sealed class TooltipService : IDisposable
         navigationManager.LocationChanged -= HandleLocationChanged;
         activeLifetime?.Cancel();
         activeLifetime?.Dispose();
+        activeLifetime = null;
+        requestedTooltipId = null;
+        Current = null;
+        Changed = null;
     }
 }
 
@@ -144,8 +140,7 @@ public sealed record TooltipState(
     double ClientY,
     TooltipOptions Options);
 
-public sealed class TooltipOptions
-{
+public sealed class TooltipOptions {
     public string? Id { get; set; }
 
     public TooltipPosition Position { get; set; } = TooltipPosition.Top;
@@ -162,10 +157,8 @@ public sealed class TooltipOptions
 
     public bool CloseOnMouseLeave { get; set; } = true;
 
-    internal TooltipOptions Clone()
-    {
-        return new TooltipOptions
-        {
+    internal TooltipOptions Clone() {
+        return new TooltipOptions {
             Id = Id,
             Position = Position,
             Delay = Delay,
@@ -178,8 +171,7 @@ public sealed class TooltipOptions
     }
 }
 
-public enum TooltipPosition
-{
+public enum TooltipPosition {
     Top,
     Bottom,
     Left,

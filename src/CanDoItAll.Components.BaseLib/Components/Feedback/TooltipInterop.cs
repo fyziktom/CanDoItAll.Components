@@ -3,8 +3,7 @@ using Microsoft.JSInterop;
 
 namespace CanDoItAll.Components.BaseLib;
 
-internal sealed class TooltipInterop : IAsyncDisposable
-{
+internal sealed class TooltipInterop : IAsyncDisposable {
     internal const string ModulePath = "./_content/CanDoItAll.Components.BaseLib/Components/Feedback/Tooltip.razor.js";
     internal const string AnchorMethod = "getAnchorPoint";
     internal const string ClearFocusedTargetMethod = "clearFocusedTarget";
@@ -15,8 +14,7 @@ internal sealed class TooltipInterop : IAsyncDisposable
     private IJSObjectReference? module;
     private int disposalStarted;
 
-    public TooltipInterop(IJSRuntime js)
-    {
+    public TooltipInterop(IJSRuntime js) {
         this.js = js ?? throw new ArgumentNullException(nameof(js));
     }
 
@@ -29,74 +27,54 @@ internal sealed class TooltipInterop : IAsyncDisposable
     public ValueTask ClampToViewportAsync(ElementReference element)
         => InvokeVoidAsync(ClampMethod, element);
 
-    private async ValueTask<TResult?> InvokeAsync<TResult>(string method, params object?[] arguments)
-    {
-        if (IsDisposalStarted)
-        {
+    private async ValueTask<TResult?> InvokeAsync<TResult>(string method, params object?[] arguments) {
+        if (IsDisposalStarted) {
             return default;
         }
 
         await operationGate.WaitAsync();
-        try
-        {
+        try {
             var currentModule = await GetModuleWhileLockedAsync();
-            if (currentModule is null || IsDisposalStarted)
-            {
+            if (currentModule is null || IsDisposalStarted) {
                 return default;
             }
 
             return await currentModule.InvokeAsync<TResult>(method, arguments);
-        }
-        catch (Exception exception) when (IsLifecycleException(exception))
-        {
+        } catch (Exception exception) when (IsLifecycleException(exception)) {
             return default;
-        }
-        finally
-        {
+        } finally {
             operationGate.Release();
         }
     }
 
-    private async ValueTask InvokeVoidAsync(string method, params object?[] arguments)
-    {
-        if (IsDisposalStarted)
-        {
+    private async ValueTask InvokeVoidAsync(string method, params object?[] arguments) {
+        if (IsDisposalStarted) {
             return;
         }
 
         await operationGate.WaitAsync();
-        try
-        {
+        try {
             var currentModule = await GetModuleWhileLockedAsync();
-            if (currentModule is not null && !IsDisposalStarted)
-            {
+            if (currentModule is not null && !IsDisposalStarted) {
                 await currentModule.InvokeVoidAsync(method, arguments);
             }
-        }
-        catch (Exception exception) when (IsLifecycleException(exception))
-        {
-        }
-        finally
-        {
+        } catch (Exception exception) when (IsLifecycleException(exception)) {
+        } finally {
             operationGate.Release();
         }
     }
 
-    private async ValueTask<IJSObjectReference?> GetModuleWhileLockedAsync()
-    {
-        if (IsDisposalStarted)
-        {
+    private async ValueTask<IJSObjectReference?> GetModuleWhileLockedAsync() {
+        if (IsDisposalStarted) {
             return null;
         }
 
-        if (module is not null)
-        {
+        if (module is not null) {
             return module;
         }
 
         var imported = await js.InvokeAsync<IJSObjectReference>("import", ModulePath);
-        if (IsDisposalStarted)
-        {
+        if (IsDisposalStarted) {
             await DisposeModuleAsync(imported);
             return null;
         }
@@ -105,44 +83,35 @@ internal sealed class TooltipInterop : IAsyncDisposable
         return module;
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (Interlocked.Exchange(ref disposalStarted, 1) != 0)
-        {
+    public async ValueTask DisposeAsync() {
+        if (Interlocked.Exchange(ref disposalStarted, 1) != 0) {
             return;
         }
 
         IJSObjectReference? currentModule;
         await operationGate.WaitAsync();
-        try
-        {
+        try {
             currentModule = module;
             module = null;
-        }
-        finally
-        {
+        } finally {
             operationGate.Release();
         }
 
-        if (currentModule is not null)
-        {
+        if (currentModule is not null) {
             await DisposeModuleAsync(currentModule);
         }
     }
 
     private bool IsDisposalStarted => Volatile.Read(ref disposalStarted) != 0;
 
-    private static bool IsLifecycleException(Exception exception)
-        => exception is JSDisconnectedException or ObjectDisposedException;
+    private bool IsLifecycleException(Exception exception)
+        => exception is JSDisconnectedException or ObjectDisposedException
+            || IsDisposalStarted && exception is OperationCanceledException;
 
-    private static async ValueTask DisposeModuleAsync(IJSObjectReference module)
-    {
-        try
-        {
+    private async ValueTask DisposeModuleAsync(IJSObjectReference module) {
+        try {
             await module.DisposeAsync();
-        }
-        catch (Exception exception) when (IsLifecycleException(exception))
-        {
+        } catch (Exception exception) when (IsLifecycleException(exception)) {
         }
     }
 }
