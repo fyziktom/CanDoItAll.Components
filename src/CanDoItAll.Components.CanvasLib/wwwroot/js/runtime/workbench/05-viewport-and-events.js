@@ -84,7 +84,10 @@
 
     function startDragForNodeIds(state, event, nodeIds, options) {
         cancelActiveDragRender(state);
-        const draggedNodes = [...new Set((nodeIds || []).filter(id => state.lookups.byId.has(id)))];
+        const draggedNodes = [...new Set((nodeIds || []).filter(id => {
+            const node = state.lookups.byId.get(id);
+            return node && !node.isReadOnly;
+        }))];
         if (!draggedNodes.length) {
             return;
         }
