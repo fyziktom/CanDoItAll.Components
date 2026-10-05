@@ -54,6 +54,9 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private bool titleCommitInFlight;
     private bool timeScaleInitialized;
     private bool interopUpdateRequired = true;
+    private long interopRevision;
+    private bool interopInFlight;
+    private Task pendingInterop = Task.CompletedTask;
     private double zoomedPixelsPerHour;
     private double lastPixelsPerHourParameter;
     private double dependencyEndpointGutter;
@@ -286,7 +289,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         ArgumentNullException.ThrowIfNull(Tasks);
         ArgumentNullException.ThrowIfNull(Dependencies);
 
-        interopUpdateRequired = true;
+        RequestInteropUpdate();
         cachedTimeline = null;
         criticalTaskIds.Clear();
         try
@@ -316,34 +319,24 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (disposed || mutationInFlight)
-        {
-            return;
+    protected override Task OnAfterRenderAsync(bool firstRender) {
+        if (disposed || mutationInFlight || interopInFlight || interopFaulted ||
+            (validationError is null && interopInitialized && !interopUpdateRequired)) {
+            return Task.CompletedTask;
         }
+        interopInFlight = true;
+        return pendingInterop = UpdateInteropAsync();
+    }
 
-        if (validationError is not null)
-        {
-            await DisposeInteropAsync();
-            return;
-        }
-
-        if (interopFaulted)
-        {
-            return;
-        }
-
-        if (interopInitialized && !interopUpdateRequired)
-        {
-            return;
-        }
-
-        try
-        {
+    private async Task UpdateInteropAsync() {
+        var revision = interopRevision;
+        try {
+            if (validationError is not null) {
+                await DisposeInteropAsync();
+                return;
+            }
             var model = BuildInteropModel();
-            if (!interopInitialized)
-            {
+            if (!interopInitialized) {
                 dotNetReference ??= DotNetObjectReference.Create(this);
                 await JsRuntime.InvokeVoidAsync(
                     "CanDoItAll.ganttChart.create",
@@ -352,20 +345,25 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
                     dotNetReference,
                     model);
                 interopInitialized = true;
-                interopUpdateRequired = false;
-                return;
+            } else {
+                await JsRuntime.InvokeVoidAsync("CanDoItAll.ganttChart.update", hostElement, model);
             }
-
-            await JsRuntime.InvokeVoidAsync("CanDoItAll.ganttChart.update", hostElement, model);
-            interopUpdateRequired = false;
-        }
-        catch (JSException exception)
-        {
+            interopUpdateRequired = revision != interopRevision;
+        } catch (JSException exception) {
             interopFaulted = true;
             runtimeError = $"The Gantt canvas could not start: {exception.Message}";
             Logger.LogError(exception, "Gantt canvas interop failed for {TaskCount} tasks.", Tasks.Count);
-            await InvokeAsync(StateHasChanged);
+        } finally {
+            interopInFlight = false;
+            if (!disposed && (revision != interopRevision || interopFaulted)) {
+                await InvokeAsync(StateHasChanged);
+            }
         }
+    }
+
+    private void RequestInteropUpdate() {
+        interopRevision++;
+        interopUpdateRequired = true;
     }
 
     [JSInvokable]
@@ -540,7 +538,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         if (!tableVisible)
         {
             tableVisible = true;
-            interopUpdateRequired = true;
+            RequestInteropUpdate();
             await ShowTaskTableChanged.InvokeAsync(true);
         }
 
@@ -599,9 +597,13 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        if (disposed) {
+            return;
+        }
         disposed = true;
         try
         {
+            await pendingInterop;
             await DisposeInteropAsync();
         }
         finally
@@ -615,7 +617,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private async Task ToggleTaskTableAsync()
     {
         tableVisible = !tableVisible;
-        interopUpdateRequired = true;
+        RequestInteropUpdate();
         await ShowTaskTableChanged.InvokeAsync(tableVisible);
     }
 
@@ -784,7 +786,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         }
 
         mutationInFlight = true;
-        interopUpdateRequired = true;
+        RequestInteropUpdate();
         runtimeError = null;
         await InvokeAsync(StateHasChanged);
         try
@@ -799,7 +801,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         finally
         {
             mutationInFlight = false;
-            interopUpdateRequired = true;
+            RequestInteropUpdate();
             if (!disposed)
             {
                 await InvokeAsync(StateHasChanged);
@@ -971,7 +973,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private void InvalidateTimeline()
     {
         cachedTimeline = null;
-        interopUpdateRequired = true;
+        RequestInteropUpdate();
     }
 
     private static double ResolvePixelsPerHour(GanttTimeScale scale, double customPixelsPerHour)

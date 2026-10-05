@@ -4,6 +4,11 @@ Reusable controlled Gantt chart for Blazor, rendered through the generic CanvasL
 
 The host owns persistence and supplies immutable tasks and dependencies. The chart never writes data or accepts an edit internally. Title, schedule, dependency, insertion, and row-order gestures are returned as typed requests; task and empty-row double-clicks are returned as typed events. The host must handle the intent and then replace the input model when data changes.
 
+Canvas updates are serialized. If the controlled model changes during a pending
+JavaScript create or update, the chart applies the newest model after that call
+finishes. Disposal waits for an outstanding call before releasing its canvas and
+callback reference, so a late create cannot leave an orphaned instance.
+
 ## Assets
 
 Load the shared assets once in the host document:
