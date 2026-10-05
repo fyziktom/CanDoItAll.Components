@@ -57,6 +57,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private long interopRevision;
     private bool interopInFlight;
     private Task pendingInterop = Task.CompletedTask;
+    private readonly string interopOwnerId = Guid.NewGuid().ToString("N");
     private double zoomedPixelsPerHour;
     private double lastPixelsPerHourParameter;
     private double dependencyEndpointGutter;
@@ -595,19 +596,29 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         }
     }
 
-    public async ValueTask DisposeAsync()
-    {
+    public async ValueTask DisposeAsync() {
         if (disposed) {
             return;
         }
         disposed = true;
-        try
-        {
-            await pendingInterop;
-            await DisposeInteropAsync();
-        }
-        finally
-        {
+        try {
+            Exception? pendingFailure = null;
+            try {
+                await pendingInterop;
+            } catch (Exception exception) {
+                pendingFailure = exception;
+            }
+
+            try {
+                await DisposeInteropAsync();
+            } catch (Exception cleanupFailure) when (pendingFailure is not null) {
+                throw new AggregateException("Gantt interop and canvas cleanup both failed.", pendingFailure, cleanupFailure);
+            }
+
+            if (pendingFailure is not null) {
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(pendingFailure).Throw();
+            }
+        } finally {
             dotNetReference?.Dispose();
             dotNetReference = null;
             GC.SuppressFinalize(this);
@@ -877,7 +888,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             !mutationInFlight && AllowTaskInsertion && TaskInsertionRequested.HasDelegate,
             !mutationInFlight && IsTimelineTaskCreationEnabled,
             DragDataFormat);
-        return new GanttInteropModel(tasks, dependencies, options);
+        return new GanttInteropModel(tasks, dependencies, options, interopOwnerId);
     }
 
     private GanttTimeline CalculateTimeline()
@@ -1261,7 +1272,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
         try
         {
-            await JsRuntime.InvokeVoidAsync("CanDoItAll.ganttChart.dispose", hostElement);
+            await JsRuntime.InvokeVoidAsync("CanDoItAll.ganttChart.dispose", hostElement, interopOwnerId);
         }
         catch (JSDisconnectedException)
         {
@@ -1275,7 +1286,8 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private sealed record GanttInteropModel(
         IReadOnlyList<GanttInteropTask> Tasks,
         IReadOnlyList<GanttInteropDependency> Dependencies,
-        GanttInteropOptions Options);
+        GanttInteropOptions Options,
+        string OwnerId);
 
     private sealed record GanttInteropTask(
         string Id,

@@ -3,6 +3,7 @@
 
     const root = window.CanDoItAll = window.CanDoItAll || {};
     const chartStates = new WeakMap();
+    const chartOwners = new Map();
     const dragSources = new WeakMap();
     const hourMs = 60 * 60 * 1000;
     const dayMs = 24 * hourMs;
@@ -1895,6 +1896,9 @@
                 }
                 finally {
                     chartStates.delete(state.host);
+                    if (state.ownerId) {
+                        chartOwners.delete(state.ownerId);
+                    }
                 }
             }
         }
@@ -1929,6 +1933,7 @@
             canvas.style.height = `${model.options.canvasHeight}px`;
             const state = {
                 host,
+                ownerId: modelValue.ownerId || modelValue.OwnerId,
                 canvas,
                 viewport,
                 dotNetRef,
@@ -1962,6 +1967,9 @@
             });
             attachDomEvents(state);
             chartStates.set(host, state);
+            if (state.ownerId) {
+                chartOwners.set(state.ownerId, state);
+            }
             updateCursor(state);
             state.surface.measure();
             state.surface.requestRender();
@@ -2061,7 +2069,11 @@
             return registration;
         },
 
-        dispose(hostValue) {
+        dispose(hostValue, ownerId) {
+            if (ownerId) {
+                disposeState(chartOwners.get(ownerId));
+                return;
+            }
             const host = requireElement(hostValue, "host");
             disposeState(chartStates.get(host));
         }
