@@ -18,6 +18,7 @@ Use CanvasLib for an authoring workspace, graph, process map, planning board, vi
 | `CanvasWorkbench` | Handling selection, movement, context actions, editing, clipboard, and persistence callbacks. | Canvas lifecycle, pan/zoom interaction, toolbar, accessibility mirror, and runtime interop. |
 | `CanDoItAll.canvasRuntime` | Scene models, layout, hit-region metadata, gesture meaning, and persistence. | DPR-aware canvas sizing, render invalidation, pointer capture, hit testing, and PNG mechanics for reusable canvas components. |
 | `CanvasFloatingWindow` | `CanvasWorkbenchWindowState` and the inspector's content. | A canvas-bounded, draggable, resizable window backed by OverlayLib. |
+| `CanvasOverlayDialog` | Title, content, actions, and whether a close request is accepted. | A bounded overlay with optional maximize/restore; `CanvasScoped` uses the nearest positioned canvas host. |
 | `CanvasCalendar` | Events, commands, and save/export/search callbacks. | Interactive calendar surface and its browser-side behavior. |
 
 The boundary is intentional: do not place business rules in JavaScript, and do not rebuild the workbench shell in every consuming page.
