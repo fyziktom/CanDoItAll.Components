@@ -31,12 +31,21 @@ public sealed record CanvasWorkbenchCreateActionRequest(
     string CreateMode,
     string ObjectSubtype,
     CanvasWorkbenchUploadedFile? UploadedFile,
-    IReadOnlyList<CanvasWorkbenchInputValue>? InputValues = null);
+    IReadOnlyList<CanvasWorkbenchInputValue>? InputValues = null) {
+    public Guid? ComposerOpeningId { get; init; }
+}
 
 public sealed record CanvasWorkbenchNodeEditRequest(
     string NodeId,
     string Title,
-    string Notes);
+    string Notes) {
+    public Guid? ComposerOpeningId { get; init; }
+}
+
+public sealed record CanvasWorkbenchComposerOpening(
+    Guid OpeningId,
+    CanvasWorkbenchCreateActionRequest? CreateRequest,
+    CanvasWorkbenchNodeEditRequest? EditRequest);
 
 public sealed record CanvasWorkbenchNodePositionChange(
     string NodeId,

@@ -394,6 +394,7 @@
     private long uiStateCommitGeneration;
     private bool preserveViewportOnNextUpdate;
     private bool? appliedHasClipboardHandler;
+    private bool? appliedTracksComposerOpenings;
 
     /// <summary>The nodes, links, chrome, and UI state that drive the live JS-hosted canvas scene.</summary>
     [Parameter, EditorRequired]
@@ -439,6 +440,12 @@
     [Parameter]
     public RenderFragment? OverlayContent { get; set; }
 
+    [Parameter]
+    public EventCallback<CanvasWorkbenchComposerOpening> ComposerOpened { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> ComposerClosed { get; set; }
+
     protected override void OnParametersSet()
         => SynchronizeSurface();
 
@@ -462,7 +469,7 @@
         preserveViewportOnNextUpdate = dataChanged &&
             sceneHost.IsInitialized &&
             string.Equals(appliedSurfaceId, Surface.SurfaceId, StringComparison.Ordinal);
-        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged);
+        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged || appliedTracksComposerOpenings != ComposerOpened.HasDelegate);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -540,6 +547,15 @@
             ? Task.CompletedTask
             : DispatchContextActionAsync(request);
     }
+
+    [JSInvokable]
+    public Task OnComposerOpened(string requestJson) {
+        var opening = Deserialize<CanvasWorkbenchComposerOpening>(requestJson);
+        return opening is null ? Task.CompletedTask : ComposerOpened.InvokeAsync(opening);
+    }
+
+    [JSInvokable]
+    public Task OnComposerClosed(Guid openingId) => ComposerClosed.InvokeAsync(openingId);
 
     [JSInvokable]
     public Task OnCreateAction(string requestJson)
@@ -882,6 +898,7 @@
         appliedSurfaceId = Surface.SurfaceId;
         processedUiStateKey = pendingUiStateKey;
         appliedHasClipboardHandler = ClipboardRequested.HasDelegate;
+        appliedTracksComposerOpenings = ComposerOpened.HasDelegate;
     }
 
     private static bool IsExpectedJsInteropCancellation(Exception exception)
@@ -894,7 +911,8 @@
             !includeAutoFit && preserveViewportOnNextUpdate,
             [.. Surface.UiState.SelectedNodeIds],
             Surface.UiState.SelectedNodeIds.FirstOrDefault(),
-            ClipboardRequested.HasDelegate);
+            ClipboardRequested.HasDelegate,
+            ComposerOpened.HasDelegate);
 
     private bool ShouldAutoFitInitialView()
     {
@@ -919,6 +937,9 @@
     {
         if (!sceneHost.IsInitialized)
         {
+            if (action.RequiresInput && ComposerOpened.HasDelegate) {
+                throw new InvalidOperationException("The canvas editor has not initialized yet.");
+            }
             await CreateActionInvoked.InvokeAsync(request);
             return;
         }
@@ -1012,7 +1033,8 @@
         bool PreserveViewport,
         IReadOnlyList<string> SelectedNodeIds,
         string? PrimaryNodeId,
-        bool HasClipboardHandler);
+        bool HasClipboardHandler,
+        bool TracksComposerOpenings);
 }
 
 

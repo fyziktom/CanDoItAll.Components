@@ -30,6 +30,16 @@
         });
     }
 
+    function registerComposerOpening(state, createRequest, editRequest) {
+        if (!state.tracksComposerOpenings) {
+            return;
+        }
+        const openingId = window.crypto.randomUUID();
+        state.composer.openingId = openingId;
+        state.composer.opened = state.dotNetRef.invokeMethodAsync("OnComposerOpened",
+            JSON.stringify({ openingId, createRequest, editRequest }));
+    }
+
     function commitComposer(state) {
         if (!state.composer) {
             return;
@@ -40,6 +50,11 @@
                 return;
             }
 
+            const invalid = state.composer.inputFieldEntries?.find(entry => !entry.input.checkValidity());
+            if (invalid) {
+                invalid.input.reportValidity();
+                return;
+            }
             const inputValues = Array.isArray(state.composer.inputFieldEntries)
                 ? state.composer.inputFieldEntries.map(entry => ({
                     key: entry.key,
@@ -188,7 +203,9 @@
         clearContextMenu(state);
         closeComposer(state, { focusHost: false });
 
-        const shell = decorateComposerShell(state, `Create ${action.label || "item"}`, action.label || "Create", "dialog");
+        const title = state.tracksComposerOpenings && request?.placementKind === "edit"
+            ? action.label || "Edit item" : `Create ${action.label || "item"}`;
+        const shell = decorateComposerShell(state, title, action.label || "Create", "dialog");
         const setupRendererKey = (action.setupRendererKey || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "-");
         if (setupRendererKey) {
             shell.composer.dataset.setupRenderer = setupRendererKey;
@@ -324,6 +341,10 @@
                                         "text";
             }
 
+            input.required = !!field.isRequired;
+            if (inputMode === "number" || inputMode === "datetime-local") {
+                input.step = "any";
+            }
             let inputValue = inputValueLookup.get(field.key) || "";
             if (isSelect && !inputValue && field.isRequired) {
                 const selectableOptions = Array.from(input.options).filter(option => !!option.value);
@@ -505,6 +526,7 @@
             filePrompt: action.filePrompt || "Drop a file here or choose one."
         };
 
+        registerComposerOpening(state, request, null);
         window.requestAnimationFrame(() => {
             layoutComposer(state);
             updateComposerFileState(state.composer);
@@ -543,6 +565,14 @@
             textInput
         };
 
+        registerComposerOpening(state,
+            options.kind === "note-create" ? {
+                actionId: state.composer.actionId, sourceNodeId: state.composer.sourceNodeId,
+                parentNodeId: state.composer.parentNodeId, placementKind: state.composer.placementKind,
+                x: round(options.anchorWorld.x), y: round(options.anchorWorld.y),
+                title: "", subtitle: "", notes: "", objectSubtype: "", createMode: "quick-note"
+            } : null,
+            options.kind === "note-edit" ? { nodeId: options.nodeId, title: "", notes: options.value || "" } : null);
         window.requestAnimationFrame(() => {
             layoutComposer(state);
             textInput.focus();

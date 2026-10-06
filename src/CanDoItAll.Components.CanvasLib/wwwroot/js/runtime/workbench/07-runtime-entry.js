@@ -636,6 +636,7 @@
         }
 
         state.hasClipboardHandler = options?.hasClipboardHandler === true;
+        state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
         if (!options) {
             return;
         }
@@ -695,6 +696,7 @@
                 selectionDispatchSeed,
                 stateDispatchSeed);
             state.hasClipboardHandler = options?.hasClipboardHandler === true;
+        state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
             workbenchInternals.runtime.buildWorkbench(state);
             workbenchInternals.runtime.attachEvents(state);
             workbenchInternals.runtime.setMaximized(state, resolveMaximizedState(state, options));

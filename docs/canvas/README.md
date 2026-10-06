@@ -15,6 +15,15 @@ Keep application truth in .NET and use CanvasLib as the renderer and interaction
 
 The browser runtime draws and manages the stage; it does not become the source of truth for domain data. This makes a reload, navigation, collaboration update, or server-side validation a normal state-management problem instead of a canvas-specific exception.
 
+Hosts that require original editor ownership can provide `ComposerOpened` and
+`ComposerClosed`. This opts into a unique opening ID carried by subsequent generic
+create and inline note edit requests. Capture native admission and original targets
+when the opening arrives, retire canceled openings, and admit each submission once.
+The composer continues to close after submission; its host must retain accepted IDs
+and uncertain results independently of any replacement editor. Other consumers do
+not opt in implicitly. Invalid browser input prevents submission and remains in the
+editor; numeric and local timestamp inputs accept fractional precision.
+
 ## When to choose it
 
 Choose CanvasLib when the primary task benefits from spatial work: mapping dependencies, arranging plans, authoring a graph, inspecting a network, or operating a dense calendar. It earns its complexity when selection, viewport position, movable context, and visual relationships are part of the user task.
