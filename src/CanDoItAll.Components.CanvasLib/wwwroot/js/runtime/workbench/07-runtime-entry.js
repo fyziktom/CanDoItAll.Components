@@ -46,6 +46,7 @@
         const diagnosticsBody = createElement(state.document, "div", "cw-diagnostics__body");
         const minimapShell = createElement(state.document, "div", "cw-minimap");
         const minimapTitle = createElement(state.document, "p", "cw-minimap__title");
+        const minimapViewport = createElement(state.document, "div", "cw-minimap__viewport");
         const minimapCanvas = createElement(state.document, "canvas", "cw-minimap__canvas");
         const popover = createElement(state.document, "div", "cw-workbench__popover");
         const popoverTitle = createElement(state.document, "strong", "cw-workbench__popover-title");
@@ -83,7 +84,8 @@
             event.stopPropagation();
             navigateViaMinimap(state, event);
         });
-        minimapShell.appendChild(minimapCanvas);
+        minimapViewport.appendChild(minimapCanvas);
+        minimapShell.appendChild(minimapViewport);
         popover.appendChild(popoverTitle);
         popover.appendChild(popoverBody);
 
@@ -141,7 +143,7 @@
         // Measure the minimap against the canvas element itself. Measuring against the shell
         // creates a circular layout dependency where the shell grows to the canvas and the
         // canvas then re-measures to the enlarged shell, which can cover the stage on first load.
-        state.minimapSurface = createCanvasSurfaceHost(minimapCanvas, minimapCanvas);
+        state.minimapSurface = createCanvasSurfaceHost(minimapCanvas, minimapViewport);
         resize(state);
     }
 
