@@ -736,24 +736,28 @@
 
         const bounds = getSceneBounds(state, visibleNodes);
         const rect = state.host.getBoundingClientRect();
+        const toolbarRect = state.shell?.querySelector?.(".cw-toolbar")?.getBoundingClientRect();
+        const topInset = toolbarRect ? clamp(toolbarRect.bottom - rect.top, 0, rect.height / 2) : 0;
+        const availableHeight = rect.height - topInset;
         const viewportController = getViewportControllerService();
         const target = viewportController?.createFitViewTarget
             ? viewportController.createFitViewTarget({
                 bounds,
                 hostWidth: rect.width,
-                hostHeight: rect.height
+                hostHeight: availableHeight
             })
             : (() => {
                 const padding = 120;
                 const width = Math.max(bounds.maxX - bounds.minX, 320);
                 const height = Math.max(bounds.maxY - bounds.minY, 240);
-                const zoom = clamp(Math.min((rect.width - padding) / width, (rect.height - padding) / height), MIN_ZOOM, MAX_ZOOM);
+                const zoom = clamp(Math.min((rect.width - padding) / width, (availableHeight - padding) / height), MIN_ZOOM, MAX_ZOOM);
                 return {
                     zoom,
                     panX: (rect.width / 2) - ((bounds.minX + (width / 2)) * zoom),
-                    panY: (rect.height / 2) - ((bounds.minY + (height / 2)) * zoom)
+                    panY: (availableHeight / 2) - ((bounds.minY + (height / 2)) * zoom)
                 };
             })();
+        target.panY += topInset;
 
         animateViewportTransition(state, target, {
             key: "viewport",

@@ -57,6 +57,21 @@ The chart includes an aligned hideable task table, compact process/workflow/agen
 
 `GanttTimeScale` exposes `QuarterHour`, `Hour`, `Day`, and `Week` presets with toolbar labels `0.25 h`, `1 h`, `1 d`, and `1 w`. `Custom` preserves the existing `PixelsPerHour` contract. Fine scales create real horizontal overflow; use the scrollbar or drag empty timeline space left/right to pan. `TimeScaleChanged` and `PixelsPerHourChanged` let a host control that view state. Extremely wide timelines use an explicit fitted scale, and large PNG exports are proportionally downsampled to a bounded backing store.
 
+## Table width and viewport
+
+Drag the right edge of the **Task** header to widen task names. The separator also
+supports Left/Right arrows (16 px), Shift+Left/Right (64 px), and Home/End bounds.
+Escape or pointer cancellation restores the previous width. Preview stays in the
+browser; only the committed width crosses into .NET. The chart retains the width
+across model refreshes, zoom changes and table toggles. `TaskTableWidthChanged`
+lets the host persist it; a changed `TaskTableWidth` parameter overrides local state.
+Resizing changes view state only and remains available for read-only task models.
+
+Set `FillHeight="true"` inside a bounded flex or grid workspace to use its remaining
+height. The chart owns one vertical/horizontal scroll viewport for both task rows
+and timeline. Ancestors must allow shrinking (`min-height: 0`). Without `FillHeight`,
+the existing `MaxHeight` limit applies.
+
 ## Validation
 
 ```powershell

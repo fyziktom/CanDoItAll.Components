@@ -1,8 +1,8 @@
 @namespace CanDoItAll.Components.Gantt
 
 <section @ref="hostElement"
-         class="cda-gantt @Class"
-         style="--cda-gantt-max-height: @MaxHeight;"
+         class="cda-gantt @(FillHeight ? "cda-gantt--fill-height" : null) @Class"
+         style="--cda-gantt-max-height: @MaxHeight; --cda-gantt-table-width: @TaskTableWidthCss;"
          aria-label="@AriaLabel">
     @if (ShowToolbar)
     {
@@ -66,13 +66,20 @@
             @if (tableVisible)
             {
                 <div class="cda-gantt__table"
-                     style="width: @TaskTableWidthCss; height: @CanvasHeightCss;"
+                     style="width: var(--cda-gantt-table-width); height: @CanvasHeightCss;"
                      role="table"
                      aria-label="Gantt task delivery dates, delivery durations, and expected pure effort">
                     <div class="cda-gantt__table-row cda-gantt__table-row--header"
                          style="height: @HeaderHeightCss;"
                          role="row">
-                        <div class="cda-gantt__cell" role="columnheader">Task</div>
+                        <div class="cda-gantt__cell cda-gantt__cell--task-heading" role="columnheader">
+                            Task
+                            <span class="cda-gantt__column-resize" data-gantt-column-resize
+                                  role="separator" tabindex="0" aria-orientation="vertical"
+                                  aria-label="Resize task name column" title="Drag to resize task names; use Left and Right arrow keys"
+                                  aria-valuemin="@MinimumTaskTableWidth" aria-valuemax="@MaximumTaskTableWidth"
+                                  aria-valuenow="@displayedTaskTableWidth" />
+                        </div>
                         <div class="cda-gantt__cell" role="columnheader">Start UTC</div>
                         <div class="cda-gantt__cell" role="columnheader">End UTC</div>
                         <div class="cda-gantt__cell" role="columnheader">Delivery</div>
