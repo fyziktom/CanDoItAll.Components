@@ -1142,6 +1142,10 @@
 
             const parentPosition = positions.get(parent.id);
             const itemPosition = positions.get(item.id);
+            const requiredVerticalDistance = ((parent.size.height + item.size.height) / 2) + 42;
+            if (Math.abs(itemPosition.y - parentPosition.y) >= requiredVerticalDistance) {
+                continue;
+            }
             const preferredSide = item.preferredSideX || 1;
             const requiredDistance = ((parent.size.width + item.size.width) / 2) + 42;
             const targetX = parentPosition.x + (preferredSide * requiredDistance);
