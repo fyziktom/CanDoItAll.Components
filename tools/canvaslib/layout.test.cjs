@@ -14,7 +14,7 @@ function resolve(nodes, manualPositions = {}) {
     const state = {
         ui: { manualPositions },
         lookups: runtime.buildNodeLookup(nodes),
-        measuredNodeSizes: new Map(nodes.map(node => [node.id, { width: 272, height: 196 }])),
+        measuredNodeSizes: new Map(nodes.map(node => [node.id, { width: 272, height: 232 }])),
         interaction: null
     };
     return runtime.computeResolvedNodePositions(state, nodes);
@@ -51,7 +51,7 @@ test("deliberate phase columns and their vertical tasks are stable across node o
         const id = `phase-${column}`;
         nodes.push({ id, parentId: "root", x: column * 620, y: 0 });
         for (let row = 1; row < 4; row++) {
-            nodes.push({ id: `${id}-task-${row}`, parentId: id, x: column * 620 + 170, y: row * 260 });
+            nodes.push({ id: `${id}-task-${row}`, parentId: id, x: column * 620 + 170, y: row * 320 });
         }
     }
     for (const order of [nodes, [...nodes].reverse()]) {
