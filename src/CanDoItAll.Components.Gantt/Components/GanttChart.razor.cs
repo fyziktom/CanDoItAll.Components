@@ -9,6 +9,8 @@ namespace CanDoItAll.Components.Gantt;
 public partial class GanttChart : ComponentBase, IAsyncDisposable
 {
     private const double ZoomFactor = 1.25;
+    private const double MinimumTaskTableWidth = 512;
+    private const double MaximumTaskTableWidth = 1600;
     private const double MinimumPixelsPerHour = 0.25;
     private const double MaximumPixelsPerHour = 96;
     private const double MinimumTimelineContentWidth = 800;
@@ -46,6 +48,8 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private bool tableVisible;
     private bool tableVisibilityInitialized;
     private bool lastTableVisibilityParameter;
+    private double displayedTaskTableWidth;
+    private double? lastTaskTableWidthParameter;
     private bool interopInitialized;
     private bool interopFaulted;
     private bool mutationInFlight;
@@ -209,6 +213,12 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     [Parameter]
     public double TaskTableWidth { get; set; } = 600;
 
+    [Parameter]
+    public EventCallback<double> TaskTableWidthChanged { get; set; }
+
+    [Parameter]
+    public bool FillHeight { get; set; }
+
     /// <summary>Granularity that drag and resize gestures snap to.</summary>
     [Parameter]
     public TimeSpan SnapInterval { get; set; } = TimeSpan.FromHours(1);
@@ -268,9 +278,9 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     private string HeaderHeightCss => ToPixels(HeaderHeight);
 
-    private string TaskTableWidthCss => ToPixels(TaskTableWidth);
+    private string TaskTableWidthCss => ToPixels(displayedTaskTableWidth);
 
-    private string CanvasLeftCss => tableVisible ? TaskTableWidthCss : "0px";
+    private string CanvasLeftCss => tableVisible ? "var(--cda-gantt-table-width)" : "0px";
 
     private string CanvasAriaLabel => IsTimelineTaskCreationEnabled
         ? "Interactive Gantt timeline. Drag a bar to move it, drag green ends to resize it, drag blue ports to change dependencies, or double-click empty row space to request a task at that time."
@@ -282,7 +292,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private string CanvasHeightCss => ToPixels(HeaderHeight + Tasks.Count * RowHeight);
 
     private string ContentWidthCss => validationError is null
-        ? ToPixels((tableVisible ? TaskTableWidth : 0) + CalculateTimeline().Width)
+        ? $"calc({CanvasLeftCss} + {ToPixels(CalculateTimeline().Width)})"
         : "0px";
 
     protected override void OnParametersSet()
@@ -365,6 +375,20 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
     private void RequestInteropUpdate() {
         interopRevision++;
         interopUpdateRequired = true;
+    }
+
+    [JSInvokable]
+    public async Task ResizeTaskTableAsync(double width) {
+        if (disposed) {
+            return;
+        }
+        if (!double.IsFinite(width) || width < MinimumTaskTableWidth || width > MaximumTaskTableWidth) {
+            throw new ArgumentOutOfRangeException(nameof(width));
+        }
+        displayedTaskTableWidth = width;
+        RequestInteropUpdate();
+        await TaskTableWidthChanged.InvokeAsync(width);
+        await InvokeAsync(StateHasChanged);
     }
 
     [JSInvokable]
@@ -880,7 +904,7 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
             DependencyEndpointEdgeOffset,
             DependencyRouteClearance,
             HeaderHeight + Tasks.Count * RowHeight,
-            TaskTableWidth,
+            displayedTaskTableWidth,
             HoursPerManDay,
             tableVisible,
             !mutationInFlight && AllowTaskEditing && TaskScheduleChangeRequested.HasDelegate,
@@ -1022,6 +1046,10 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
 
     private void SynchronizeViewParameters()
     {
+        if (lastTaskTableWidthParameter != TaskTableWidth) {
+            displayedTaskTableWidth = TaskTableWidth;
+            lastTaskTableWidthParameter = TaskTableWidth;
+        }
         if (!tableVisibilityInitialized || ShowTaskTable != lastTableVisibilityParameter)
         {
             tableVisible = ShowTaskTable;

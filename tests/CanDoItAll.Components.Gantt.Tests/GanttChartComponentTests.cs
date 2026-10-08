@@ -11,6 +11,45 @@ public sealed class GanttChartComponentTests
     private static readonly DateTimeOffset Start = new(2026, 7, 14, 8, 0, 0, TimeSpan.Zero);
 
     [Fact]
+    public async Task Column_resize_survives_parent_renders_and_updates_export_model_without_mutating_tasks() {
+        using var context = CreateContext();
+        var task = Task("welcome", "Prepare the private welcome dinner", 0, 2);
+        var widths = new List<double>();
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, [task])
+            .Add(component => component.AllowTaskEditing, false)
+            .Add(component => component.TaskTableWidthChanged, width => widths.Add(width)));
+
+        await cut.InvokeAsync(() => cut.Instance.ResizeTaskTableAsync(920));
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, [task]));
+
+        Assert.Equal([920d], widths);
+        Assert.Equal("920", cut.Find("[data-gantt-column-resize]").GetAttribute("aria-valuenow"));
+        Assert.Contains("--cda-gantt-table-width: 920px", cut.Find(".cda-gantt").GetAttribute("style"), StringComparison.Ordinal);
+        var update = context.JSInterop.Invocations.Last(invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
+        Assert.Equal(920, GetProperty<double>(GetProperty(update.Arguments[1]!, "Options"), "TaskTableWidth"));
+        Assert.Equal(task, Assert.Single(cut.Instance.Tasks));
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.TaskTableWidth, 700));
+        Assert.Equal("700", cut.Find("[data-gantt-column-resize]").GetAttribute("aria-valuenow"));
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(511)]
+    [InlineData(1601)]
+    public async Task Column_resize_rejects_invalid_width_without_corrupting_view_state(double width) {
+        using var context = CreateContext();
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters.Add(component => component.Tasks,
+            [Task("welcome", "Welcome", 0, 2)]));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => cut.InvokeAsync(() => cut.Instance.ResizeTaskTableAsync(width)));
+
+        Assert.Equal("600", cut.Find("[data-gantt-column-resize]").GetAttribute("aria-valuenow"));
+    }
+
+    [Fact]
     public void Task_table_rows_share_the_canvas_row_contract_and_separate_delivery_from_pure_effort()
     {
         using var context = CreateContext();
