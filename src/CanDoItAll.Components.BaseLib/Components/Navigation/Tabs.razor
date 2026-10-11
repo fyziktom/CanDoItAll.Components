@@ -195,10 +195,11 @@
         }
     }
 
-    internal void RegisterItem(TabsItem item)
-    {
-        if (items.Contains(item))
-        {
+    internal void RegisterItem(TabsItem item, bool presentationChanged = false) {
+        if (items.Contains(item)) {
+            if (presentationChanged) {
+                _ = InvokeAsync(StateHasChanged);
+            }
             return;
         }
 
