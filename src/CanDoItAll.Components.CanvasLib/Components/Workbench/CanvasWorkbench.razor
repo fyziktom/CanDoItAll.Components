@@ -395,6 +395,7 @@
     private bool preserveViewportOnNextUpdate;
     private bool? appliedHasClipboardHandler;
     private bool? appliedTracksComposerOpenings;
+    private bool? appliedRequiresComposerAcknowledgement;
 
     /// <summary>The nodes, links, chrome, and UI state that drive the live JS-hosted canvas scene.</summary>
     [Parameter, EditorRequired]
@@ -446,6 +447,9 @@
     [Parameter]
     public EventCallback<Guid> ComposerClosed { get; set; }
 
+    [Parameter]
+    public bool RequiresComposerAcknowledgement { get; set; }
+
     protected override void OnParametersSet()
         => SynchronizeSurface();
 
@@ -469,7 +473,10 @@
         preserveViewportOnNextUpdate = dataChanged &&
             sceneHost.IsInitialized &&
             string.Equals(appliedSurfaceId, Surface.SurfaceId, StringComparison.Ordinal);
-        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged || appliedTracksComposerOpenings != ComposerOpened.HasDelegate);
+        if (RequiresComposerAcknowledgement && !ComposerOpened.HasDelegate) {
+            throw new InvalidOperationException("Composer acknowledgements require an opening handler.");
+        }
+        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged || appliedTracksComposerOpenings != ComposerOpened.HasDelegate || appliedRequiresComposerAcknowledgement != RequiresComposerAcknowledgement);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -899,6 +906,7 @@
         processedUiStateKey = pendingUiStateKey;
         appliedHasClipboardHandler = ClipboardRequested.HasDelegate;
         appliedTracksComposerOpenings = ComposerOpened.HasDelegate;
+        appliedRequiresComposerAcknowledgement = RequiresComposerAcknowledgement;
     }
 
     private static bool IsExpectedJsInteropCancellation(Exception exception)
@@ -912,7 +920,8 @@
             [.. Surface.UiState.SelectedNodeIds],
             Surface.UiState.SelectedNodeIds.FirstOrDefault(),
             ClipboardRequested.HasDelegate,
-            ComposerOpened.HasDelegate);
+            ComposerOpened.HasDelegate,
+            RequiresComposerAcknowledgement);
 
     private bool ShouldAutoFitInitialView()
     {
@@ -931,6 +940,12 @@
             && Math.Abs(Surface.UiState.PanY - 110d) < 0.001d;
 
         return usesDefaultViewport;
+    }
+
+    public async Task AcknowledgeComposerAsync(CanvasWorkbenchComposerResult result) {
+        if (sceneHost.IsInitialized) {
+            await JsRuntime.InvokeVoidAsync("CanDoItAll.canvasWorkbench.acknowledgeComposer", host, result);
+        }
     }
 
     public async Task OpenCreateDialogAsync(CanvasWorkbenchAction action, CanvasWorkbenchCreateActionRequest request)
@@ -1034,7 +1049,8 @@
         IReadOnlyList<string> SelectedNodeIds,
         string? PrimaryNodeId,
         bool HasClipboardHandler,
-        bool TracksComposerOpenings);
+        bool TracksComposerOpenings,
+        bool RequiresComposerAcknowledgement);
 }
 
 

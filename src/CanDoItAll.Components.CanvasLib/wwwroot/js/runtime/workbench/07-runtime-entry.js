@@ -639,6 +639,7 @@
 
         state.hasClipboardHandler = options?.hasClipboardHandler === true;
         state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
+        state.requiresComposerAcknowledgement = options?.requiresComposerAcknowledgement === true;
         if (!options) {
             return;
         }
@@ -699,6 +700,7 @@
                 stateDispatchSeed);
             state.hasClipboardHandler = options?.hasClipboardHandler === true;
         state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
+        state.requiresComposerAcknowledgement = options?.requiresComposerAcknowledgement === true;
             workbenchInternals.runtime.buildWorkbench(state);
             workbenchInternals.runtime.attachEvents(state);
             workbenchInternals.runtime.setMaximized(state, resolveMaximizedState(state, options));
@@ -845,6 +847,12 @@
                 width: window.innerWidth || 0,
                 height: window.innerHeight || 0
             };
+        },
+        acknowledgeComposer(host, result) {
+            const state = resolveWorkbenchState(host);
+            if (state) {
+                shared.acknowledgeComposer(state, result);
+            }
         },
         selectNodes(host, nodeIds, primaryNodeId) {
             const state = resolveWorkbenchState(host);
