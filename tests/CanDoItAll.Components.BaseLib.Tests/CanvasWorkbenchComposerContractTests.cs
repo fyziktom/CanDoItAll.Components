@@ -25,10 +25,14 @@ public sealed class CanvasWorkbenchComposerContractTests {
     [Fact]
     public async Task Submission_retains_opening_identity_and_untracked_consumers_remain_compatible() {
         var id = Guid.NewGuid();
+        var submissionId = Guid.NewGuid();
         CanvasWorkbenchNodeEditRequest? edited = null;
         var component = new ComposerCanvas(EventCallback.Factory.Create<CanvasWorkbenchNodeEditRequest>(this, value => edited = value));
-        await component.OnNodeEdited(JsonSerializer.Serialize(new CanvasWorkbenchNodeEditRequest("note", "Title", "Draft") { ComposerOpeningId = id }));
+        await component.OnNodeEdited(JsonSerializer.Serialize(new CanvasWorkbenchNodeEditRequest("note", "Title", "Draft") {
+            ComposerOpeningId = id, ComposerSubmissionId = submissionId
+        }));
         Assert.Equal(id, edited!.ComposerOpeningId);
+        Assert.Equal(submissionId, edited.ComposerSubmissionId);
         await component.OnNodeEdited("""{"nodeId":"legacy","title":"Title","notes":"Draft"}""");
         Assert.Null(edited!.ComposerOpeningId);
         Assert.Equal("legacy", edited.NodeId);

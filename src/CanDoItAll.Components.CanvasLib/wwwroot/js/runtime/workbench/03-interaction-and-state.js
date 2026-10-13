@@ -1426,9 +1426,9 @@
         if (composer?.openingId) {
             composer.submitted = true;
             payload = { ...payload, composerOpeningId: composer.openingId };
-            composer.opened.then(() => state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload)));
+            return composer.opened.then(() => state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload)));
         } else {
-            state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload));
+            return state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload));
         }
     }
 
@@ -1437,9 +1437,9 @@
         if (composer?.openingId) {
             composer.submitted = true;
             payload = { ...payload, composerOpeningId: composer.openingId };
-            composer.opened.then(() => state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload)));
+            return composer.opened.then(() => state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload)));
         } else {
-            state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload));
+            return state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload));
         }
     }
 

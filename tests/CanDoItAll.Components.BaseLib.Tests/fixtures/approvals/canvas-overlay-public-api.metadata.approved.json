@@ -1082,6 +1082,7 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
+          "method System.Threading.Tasks.Task AcknowledgeComposerAsync(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult result)",
           "method System.Threading.Tasks.Task FitViewToSceneAsync()",
           "method System.Threading.Tasks.Task OnClipboardAction(System.String requestJson)",
           "method System.Threading.Tasks.Task OnComposerClosed(System.Guid openingId)",
@@ -1113,7 +1114,8 @@
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E NodeOpened {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E StateChanged {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment OverlayContent {get;set;}",
-          "property Microsoft.AspNetCore.Components.RenderFragment ToolbarLeftContent {get;set;}"
+          "property Microsoft.AspNetCore.Components.RenderFragment ToolbarLeftContent {get;set;}",
+          "property System.Boolean RequiresComposerAcknowledgement {get;set;}"
         ]
       },
       {
@@ -1315,6 +1317,40 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Guid OpeningId, System.Guid SubmissionId, CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Kind, System.String Message)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Guid OpeningId, out System.Guid SubmissionId, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Kind, out System.String Message)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Kind {get;set;}",
+          "property System.Guid OpeningId {get;set;}",
+          "property System.Guid SubmissionId {get;set;}",
+          "property System.String Message {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Committed",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind HandedOff",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Rejected",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Unconfirmed"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchConnectorAnchorOptions",
         "kind": "class",
         "isAbstract": false,
@@ -1373,6 +1409,7 @@
           "property System.Double X {get;set;}",
           "property System.Double Y {get;set;}",
           "property System.Nullable\u003CSystem.Guid\u003E ComposerOpeningId {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E ComposerSubmissionId {get;set;}",
           "property System.String ActionId {get;set;}",
           "property System.String CreateMode {get;set;}",
           "property System.String Notes {get;set;}",
@@ -1591,6 +1628,7 @@
           "method System.String ToString()",
           "method System.Void Deconstruct(out System.String NodeId, out System.String Title, out System.String Notes)",
           "property System.Nullable\u003CSystem.Guid\u003E ComposerOpeningId {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E ComposerSubmissionId {get;set;}",
           "property System.String NodeId {get;set;}",
           "property System.String Notes {get;set;}",
           "property System.String Title {get;set;}"

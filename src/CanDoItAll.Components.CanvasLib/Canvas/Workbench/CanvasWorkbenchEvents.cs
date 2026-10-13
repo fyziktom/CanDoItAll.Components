@@ -33,6 +33,7 @@ public sealed record CanvasWorkbenchCreateActionRequest(
     CanvasWorkbenchUploadedFile? UploadedFile,
     IReadOnlyList<CanvasWorkbenchInputValue>? InputValues = null) {
     public Guid? ComposerOpeningId { get; init; }
+    public Guid? ComposerSubmissionId { get; init; }
 }
 
 public sealed record CanvasWorkbenchNodeEditRequest(
@@ -40,12 +41,27 @@ public sealed record CanvasWorkbenchNodeEditRequest(
     string Title,
     string Notes) {
     public Guid? ComposerOpeningId { get; init; }
+    public Guid? ComposerSubmissionId { get; init; }
 }
 
 public sealed record CanvasWorkbenchComposerOpening(
     Guid OpeningId,
     CanvasWorkbenchCreateActionRequest? CreateRequest,
     CanvasWorkbenchNodeEditRequest? EditRequest);
+
+[JsonConverter(typeof(JsonStringEnumConverter<CanvasWorkbenchComposerResultKind>))]
+public enum CanvasWorkbenchComposerResultKind {
+    Committed,
+    Rejected,
+    Unconfirmed,
+    HandedOff
+}
+
+public sealed record CanvasWorkbenchComposerResult(
+    Guid OpeningId,
+    Guid SubmissionId,
+    CanvasWorkbenchComposerResultKind Kind,
+    string Message);
 
 public sealed record CanvasWorkbenchNodePositionChange(
     string NodeId,
