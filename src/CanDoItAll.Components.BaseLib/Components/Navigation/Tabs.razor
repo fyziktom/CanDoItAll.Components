@@ -88,7 +88,7 @@
                          aria-labelledby="@GetTabId(index)"
                          aria-hidden="@(!isSelected ? "true" : "false")"
                          hidden="@(!isSelected)">
-                        @tab.ChildContent
+                        @RenderPanel(tab)
                     </div>
                 }
             }
@@ -101,7 +101,7 @@
                      class="cad-tabs__panel"
                      role="tabpanel"
                      aria-labelledby="@GetTabId(selectedVisibleIndex)">
-                    @activeTab.ChildContent
+                    @RenderPanel(activeTab)
                 </div>
             }
         </div>
@@ -109,6 +109,12 @@
 }
 
 @code {
+    private static RenderFragment RenderPanel(TabsItem item) => builder => {
+        builder.OpenComponent<TabsPanelContent>(0);
+        builder.AddAttribute(1, nameof(TabsPanelContent.Item), item);
+        builder.CloseComponent();
+    };
+
     private readonly List<TabsItem> items = [];
     private readonly string componentId = $"cad-tabs-{Guid.NewGuid():N}";
 
