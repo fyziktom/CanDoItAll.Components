@@ -11,6 +11,8 @@ public sealed class CanvasWorkbenchSurface
 {
     public string SurfaceId { get; set; } = string.Empty;
 
+    public string RootNodeId { get; set; } = string.Empty;
+
     public string Mode { get; set; } = CanvasWorkbenchModes.Authoring;
 
     public string DependencySourceId { get; set; } = string.Empty;
