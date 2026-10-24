@@ -101,6 +101,8 @@
     private DotNetObjectReference<OverlayWindow>? objectReference;
     private string? appliedStateKey;
     private string? pendingStateKey;
+    private bool hidePending;
+    private bool disposed;
 
     /// <summary>Stable identifier for this window instance, used as the JS interop key and persisted with its geometry.</summary>
     [Parameter, EditorRequired]
@@ -231,8 +233,10 @@
     }
 
     [JSInvokable]
-    public Task OnGeometryChanged(double? left, double? top, double? width, double? height)
-    {
+    public Task OnGeometryChanged(double? left, double? top, double? width, double? height) {
+        if (disposed || hidePending || !State.IsVisible) {
+            return Task.CompletedTask;
+        }
         var next = OverlayWindowState.Normalize(
             new OverlayWindowState
             {
@@ -266,12 +270,16 @@
     private Task NormalizeWindowAsync()
         => PublishStateAsync(new OverlayWindowState { IsVisible = true });
 
-    private Task HideWindowAsync()
-    {
+    private async Task HideWindowAsync() {
         var next = State.Clone();
         next.IsVisible = false;
         next.IsMinimized = false;
-        return PublishStateAsync(next);
+        hidePending = true;
+        try {
+            await PublishStateAsync(next);
+        } finally {
+            hidePending = false;
+        }
     }
 
     private bool IsNormalized => !State.IsMinimized && !State.HasCustomGeometry;
@@ -304,8 +312,11 @@
         return StateChanged.InvokeAsync(normalized);
     }
 
-    public async ValueTask DisposeAsync()
-    {
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
         if (string.IsNullOrWhiteSpace(appliedStateKey))
         {
             objectReference?.Dispose();

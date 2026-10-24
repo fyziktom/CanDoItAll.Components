@@ -30,6 +30,10 @@ The host frame must be positioned and have a meaningful size. Pass selectors for
 can keep an index between left and right tools on a desktop canvas. Saved coordinates
 override the default; reset restores it within the same container and safe toolbar inset.
 
+Delayed geometry notifications cannot reopen a hidden or disposed window. They are ignored
+while the host processes Hide; a rejected Hide still propagates its error and leaves the
+visible window usable. The host continues to own and echo the controlled window state.
+
 ```razor
 <div class="relative min-h-[28rem] overflow-hidden rounded-2xl border"
      data-testid="review-frame">
