@@ -110,7 +110,9 @@
         const maxTop = Math.max(safeTop, container.clientHeight - size.height - margin);
         const defaultLeft = options.placement === "top-left"
             ? margin
-            : Math.max(margin, container.clientWidth - size.width - margin);
+            : options.placement === "top-center"
+                ? (container.clientWidth - size.width) / 2
+                : Math.max(margin, container.clientWidth - size.width - margin);
         const left = clamp(state.left ?? defaultLeft, margin, maxLeft);
         const top = clamp(state.top ?? safeTop, safeTop, maxTop);
 

@@ -26,6 +26,10 @@ Import the namespace and include the generated assets in the host document. This
 
 The host frame must be positioned and have a meaningful size. Pass selectors for the container and, when present, the toolbar that the window must not cover. Store `OverlayWindowState` in the page or feature state; the `StateChanged` callback is where drag, resize, and visibility changes come back to your application.
 
+`DefaultPlacement` accepts `top-left`, `top-center` and `top-right`. Centered placement
+can keep an index between left and right tools on a desktop canvas. Saved coordinates
+override the default; reset restores it within the same container and safe toolbar inset.
+
 ```razor
 <div class="relative min-h-[28rem] overflow-hidden rounded-2xl border"
      data-testid="review-frame">
