@@ -494,20 +494,27 @@ public partial class GanttChart : ComponentBase, IAsyncDisposable
         var predecessor = new GanttTaskId(predecessorId);
         var successor = new GanttTaskId(successorId);
         RequireDependencyEditableTasks(predecessor, successor);
-        GanttDependencyMutationRequest request = mutation switch
-        {
-            "add" => GanttDependencyPlanner.PlanAdd(
-                Tasks,
-                Dependencies,
-                new GanttDependency(CreateDependencyId(predecessor, successor), predecessor, successor)),
-            "reconnect" => GanttDependencyPlanner.PlanReconnect(
-                Tasks,
-                Dependencies,
-                new GanttDependencyId(dependencyId ?? throw new InvalidOperationException("A dependency id is required for reconnection.")),
-                predecessor,
-                successor),
-            _ => throw new InvalidOperationException($"Dependency mutation '{mutation}' is not supported.")
-        };
+        GanttDependencyMutationRequest request;
+        try {
+            request = mutation switch {
+                "add" => GanttDependencyPlanner.PlanAdd(
+                    Tasks,
+                    Dependencies,
+                    new GanttDependency(CreateDependencyId(predecessor, successor), predecessor, successor)),
+                "reconnect" => GanttDependencyPlanner.PlanReconnect(
+                    Tasks,
+                    Dependencies,
+                    new GanttDependencyId(dependencyId ?? throw new InvalidOperationException("A dependency id is required for reconnection.")),
+                    predecessor,
+                    successor),
+                _ => throw new InvalidOperationException($"Dependency mutation '{mutation}' is not supported.")
+            };
+        } catch (GanttScheduleException exception) {
+            runtimeError = exception.Message;
+            Logger.LogInformation("Rejected Gantt dependency request: {Code}.", exception.Code);
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
 
         if (request.PreviousDependency is { } previousDependency)
         {

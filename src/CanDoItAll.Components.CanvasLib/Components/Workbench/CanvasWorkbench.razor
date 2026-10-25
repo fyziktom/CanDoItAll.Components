@@ -679,14 +679,13 @@
         return FitViewAsync();
     }
 
-    private async Task FocusPrimaryNodeAsync()
-    {
-        var targetNodeId = Surface.Nodes.FirstOrDefault(node => string.Equals(node.Family, "root", StringComparison.OrdinalIgnoreCase))?.Id
+    private async Task FocusPrimaryNodeAsync() {
+        var targetNodeId = !string.IsNullOrWhiteSpace(Surface.RootNodeId) ? Surface.RootNodeId
+            : Surface.Nodes.FirstOrDefault(node => string.Equals(node.Family, "root", StringComparison.OrdinalIgnoreCase))?.Id
             ?? Surface.Nodes.FirstOrDefault(node => string.IsNullOrWhiteSpace(node.ParentId))?.Id
             ?? Surface.UiState.SelectedNodeIds.FirstOrDefault()
             ?? Surface.Nodes.FirstOrDefault()?.Id;
-        if (!sceneHost.IsInitialized || string.IsNullOrWhiteSpace(targetNodeId))
-        {
+        if (!sceneHost.IsInitialized || !Surface.Nodes.Any(node => string.Equals(node.Id, targetNodeId, StringComparison.Ordinal))) {
             return;
         }
 

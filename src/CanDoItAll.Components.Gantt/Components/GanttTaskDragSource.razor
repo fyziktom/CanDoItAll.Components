@@ -22,6 +22,8 @@
     private IJSObjectReference? registration;
     private string payload = string.Empty;
     private (string Payload, string DataFormat)? registeredKey;
+    private readonly SemaphoreSlim registrationGate = new(1, 1);
+    private bool disposed;
 
     /// <summary>The task offered for insertion when this element is dragged onto a <see cref="GanttChart"/> dependency bridge.</summary>
     [Parameter, EditorRequired]
@@ -60,55 +62,60 @@
         payload = GanttTaskDragSerialization.Serialize(Task);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (Disabled)
-        {
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (disposed) {
+            return;
+        }
+        await registrationGate.WaitAsync();
+        try {
+            if (disposed || !Disabled && registeredKey == (payload, DragDataFormat)) {
+                return;
+            }
             await DisposeRegistrationAsync();
-            return;
+            if (disposed || Disabled) {
+                return;
+            }
+            var registrationKey = (Payload: payload, DataFormat: DragDataFormat);
+            registration = await JsRuntime.InvokeAsync<IJSObjectReference>(
+                "CanDoItAll.ganttChart.registerDragSource",
+                dragElement,
+                registrationKey.Payload,
+                registrationKey.DataFormat);
+            registeredKey = registrationKey;
+        } finally {
+            registrationGate.Release();
         }
-
-        var registrationKey = (payload, DragDataFormat);
-        if (registeredKey == registrationKey)
-        {
-            return;
-        }
-
-        await DisposeRegistrationAsync();
-        registration = await JsRuntime.InvokeAsync<IJSObjectReference>(
-            "CanDoItAll.ganttChart.registerDragSource",
-            dragElement,
-            payload,
-            DragDataFormat);
-        registeredKey = registrationKey;
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        await DisposeRegistrationAsync();
-        GC.SuppressFinalize(this);
-    }
-
-    private async ValueTask DisposeRegistrationAsync()
-    {
-        if (registration is null)
-        {
-            registeredKey = null;
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
             return;
         }
+        disposed = true;
+        await registrationGate.WaitAsync();
+        try {
+            await DisposeRegistrationAsync();
+        } finally {
+            registrationGate.Release();
+            GC.SuppressFinalize(this);
+        }
+    }
 
-        try
-        {
-            await registration.InvokeVoidAsync("dispose");
-            await registration.DisposeAsync();
+    private async ValueTask DisposeRegistrationAsync() {
+        var ownedRegistration = registration;
+        registration = null;
+        registeredKey = null;
+        if (ownedRegistration is null) {
+            return;
         }
-        catch (JSDisconnectedException)
-        {
-        }
-        finally
-        {
-            registration = null;
-            registeredKey = null;
+        try {
+            await ownedRegistration.InvokeVoidAsync("dispose");
+        } catch (JSDisconnectedException) {
+        } finally {
+            try {
+                await ownedRegistration.DisposeAsync();
+            } catch (JSDisconnectedException) {
+            }
         }
     }
 }

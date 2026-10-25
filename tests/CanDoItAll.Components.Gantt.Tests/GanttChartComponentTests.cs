@@ -10,6 +10,33 @@ public sealed class GanttChartComponentTests
 {
     private static readonly DateTimeOffset Start = new(2026, 7, 14, 8, 0, 0, TimeSpan.Zero);
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Cyclic_dependency_gesture_shows_a_business_error_without_dispatching_and_allows_correction(bool reconnect) {
+        using var context = CreateContext();
+        GanttTask[] tasks = [Task("a", "A", 0, 2), Task("b", "B", 2, 4), Task("c", "C", 4, 6)];
+        GanttDependency[] dependencies = [new(new("a-b"), new("a"), new("b")), new(new("b-c"), new("b"), new("c"))];
+        var requests = new List<GanttDependencyMutationRequest>();
+        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+            .Add(component => component.Tasks, tasks)
+            .Add(component => component.Dependencies, dependencies)
+            .Add(component => component.DependencyMutationRequested, requests.Add));
+
+        await cut.InvokeAsync(() => cut.Instance.CommitDependencyChangeAsync(
+            reconnect ? "reconnect" : "add", reconnect ? "a-b" : null, "c", "b"));
+
+        Assert.Empty(requests);
+        Assert.Equal(dependencies, cut.Instance.Dependencies);
+        Assert.Equal("The Gantt dependency graph contains a cycle.", cut.Find("[role='alert']").TextContent.Trim());
+        Assert.False(cut.Find("[data-gantt-viewport]").HasAttribute("hidden"));
+
+        await cut.InvokeAsync(() => cut.Instance.CommitDependencyChangeAsync("reconnect", "a-b", "a", "c"));
+
+        Assert.Single(requests);
+        Assert.Empty(cut.FindAll("[role='alert']"));
+    }
+
     [Fact]
     public async Task Column_resize_survives_parent_renders_and_updates_export_model_without_mutating_tasks() {
         using var context = CreateContext();

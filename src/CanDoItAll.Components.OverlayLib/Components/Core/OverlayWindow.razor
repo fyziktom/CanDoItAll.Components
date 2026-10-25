@@ -85,7 +85,9 @@
             </header>
         }
 
-        <div class="cda-overlay-window__body cw-floating-window__body @BodyClass">
+    }
+    @if (!State.IsMinimized || KeepContentMountedWhenMinimized) {
+        <div class="cda-overlay-window__body cw-floating-window__body @BodyClass" hidden="@State.IsMinimized">
             @ChildContent
         </div>
     }
@@ -101,6 +103,8 @@
     private DotNetObjectReference<OverlayWindow>? objectReference;
     private string? appliedStateKey;
     private string? pendingStateKey;
+    private bool hidePending;
+    private bool disposed;
 
     /// <summary>Stable identifier for this window instance, used as the JS interop key and persisted with its geometry.</summary>
     [Parameter, EditorRequired]
@@ -194,6 +198,9 @@
     [Parameter]
     public bool ShowHeader { get; set; } = true;
 
+    [Parameter]
+    public bool KeepContentMountedWhenMinimized { get; set; }
+
     /// <summary>Controlled geometry and visibility state (position, size, minimized, hidden). The host owns this value and updates it via <see cref="StateChanged"/>.</summary>
     [Parameter, EditorRequired]
     public OverlayWindowState State { get; set; } = new();
@@ -231,8 +238,10 @@
     }
 
     [JSInvokable]
-    public Task OnGeometryChanged(double? left, double? top, double? width, double? height)
-    {
+    public Task OnGeometryChanged(double? left, double? top, double? width, double? height) {
+        if (disposed || hidePending || !State.IsVisible) {
+            return Task.CompletedTask;
+        }
         var next = OverlayWindowState.Normalize(
             new OverlayWindowState
             {
@@ -266,12 +275,16 @@
     private Task NormalizeWindowAsync()
         => PublishStateAsync(new OverlayWindowState { IsVisible = true });
 
-    private Task HideWindowAsync()
-    {
+    private async Task HideWindowAsync() {
         var next = State.Clone();
         next.IsVisible = false;
         next.IsMinimized = false;
-        return PublishStateAsync(next);
+        hidePending = true;
+        try {
+            await PublishStateAsync(next);
+        } finally {
+            hidePending = false;
+        }
     }
 
     private bool IsNormalized => !State.IsMinimized && !State.HasCustomGeometry;
@@ -304,8 +317,11 @@
         return StateChanged.InvokeAsync(normalized);
     }
 
-    public async ValueTask DisposeAsync()
-    {
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
         if (string.IsNullOrWhiteSpace(appliedStateKey))
         {
             objectReference?.Dispose();

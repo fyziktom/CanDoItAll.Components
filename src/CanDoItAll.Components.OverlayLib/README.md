@@ -26,6 +26,29 @@ Import the namespace and include the generated assets in the host document. This
 
 The host frame must be positioned and have a meaningful size. Pass selectors for the container and, when present, the toolbar that the window must not cover. Store `OverlayWindowState` in the page or feature state; the `StateChanged` callback is where drag, resize, and visibility changes come back to your application.
 
+`DefaultPlacement` accepts `top-left`, `top-center` and `top-right`. Centered placement
+can keep an index between left and right tools on a desktop canvas. Saved coordinates
+override the default; reset restores it within the same container and safe toolbar inset.
+
+Delayed geometry notifications cannot reopen a hidden or disposed window. They are ignored
+while the host processes Hide; a rejected Hide still propagates its error and leaves the
+visible window usable. The host continues to own and echo the controlled window state.
+
+Set `KeepContentMountedWhenMinimized="true"` for an editor or active conversation whose
+unsent input and component state must survive minimize/restore. Its body stays mounted
+under a hidden element, so subscriptions also stay alive. The default remains false and
+disposes minimized content. The host still owns hiding, closing and final disposal.
+
+Pointer resizing stays in the browser until release. Geometry acknowledgements from an
+earlier gesture do not rewind a newer local size; reset, minimize and visibility changes
+remain controlled by the host. The same observer clamps the current geometry when its
+container changes. Disposal releases pointer listeners and pending geometry work.
+The outer frame keeps zero scroll offsets so focus after resize cannot clip its header;
+the body and nested transcripts still own their ordinary scrolling.
+Run `npm run overlaylib:test-resize` for the deterministic resize/echo regression cases;
+`npm run assets:verify` includes them. Browser proof should include a delayed state echo
+while the user performs a second resize and content continues updating.
+
 ```razor
 <div class="relative min-h-[28rem] overflow-hidden rounded-2xl border"
      data-testid="review-frame">
