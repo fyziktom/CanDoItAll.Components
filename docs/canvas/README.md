@@ -57,6 +57,11 @@ For a stable implementation:
 - Normalize `CanvasWorkbenchWindowState` when receiving it from `StateChanged`.
 - Restore saved UI state only after validating it against the currently available domain data.
 
+Node selection does not activate dragging. A six-screen-pixel movement threshold keeps
+crowded nodes stationary during clicks and double-clicks, then admits the existing drag,
+snap and release path. See [node drag intent](node-drag-intent.md) for the interaction
+boundary and validation contract.
+
 ## Adding a floating inspector
 
 Place canvas-specific windows in `CanvasWorkbench.OverlayContent`. The `CanvasFloatingWindow` wrapper is already restricted to the canvas stage and below the workbench toolbar. Its state type makes it natural to persist a user's chosen geometry with `CanvasWorkbenchUiState.WindowStates`.

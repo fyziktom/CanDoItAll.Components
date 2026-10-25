@@ -646,6 +646,10 @@
                 render(state);
             },
             doubleClick: event => {
+                if (!state.lastPointerTarget) {
+                    return;
+                }
+
                 if (state.recentDoubleActivationAt && (Date.now() - state.recentDoubleActivationAt) <= 340) {
                     return;
                 }

@@ -2,6 +2,7 @@
     const root = window.CanDoItAll = window.CanDoItAll || {};
     const shared = root.canvasWorkbenchModule;
     if (!shared) { throw new Error('CanvasLib workbench foundation must load before 05-viewport-and-events.js.'); }
+    const nodeDragActivationDistancePx = 6;
     const workbenchInternals = new Proxy({}, {
         get(_target, property) {
             return shared.workbenchInternals?.[property];
@@ -111,9 +112,6 @@
             dragContext: null
         };
         clearSnapGuides(state);
-        render(state);
-        state.interaction.dragContext = buildActiveDragContext(state);
-        captureActiveDragBaseLayout(state, state.interaction);
     }
 
     function startDrag(state, event, nodeId) {
@@ -161,6 +159,13 @@
         const visibleNodes = getVisibleNodes(state);
         const layoutPositions = ensureLayoutPositions(state, visibleNodes);
         interaction.baseLayoutPositions = cloneLayoutPositionMap(layoutPositions);
+        interaction.nodeIds = interaction.nodeIds.filter(nodeId => {
+            const node = state.lookups.byId.get(nodeId);
+            return node && !node.isReadOnly && layoutPositions.has(nodeId);
+        });
+        for (const nodeId of interaction.nodeIds) {
+            interaction.startPositions[nodeId] = { ...layoutPositions.get(nodeId) };
+        }
     }
 
     function prepareActiveDragLayoutPositions(state, interaction) {
@@ -308,8 +313,23 @@
     }
 
     function updateDrag(state, event) {
-        const rawDeltaX = (event.clientX - state.interaction.startClientX) / state.ui.zoom;
-        const rawDeltaY = (event.clientY - state.interaction.startClientY) / state.ui.zoom;
+        const clientDeltaX = event.clientX - state.interaction.startClientX;
+        const clientDeltaY = event.clientY - state.interaction.startClientY;
+        const isStarting = !state.interaction.moved;
+        if (isStarting) {
+            if (Math.hypot(clientDeltaX, clientDeltaY) < nodeDragActivationDistancePx) {
+                return;
+            }
+
+            captureActiveDragBaseLayout(state, state.interaction);
+            if (!state.interaction.nodeIds.length) {
+                state.interaction = null;
+                return;
+            }
+        }
+
+        const rawDeltaX = clientDeltaX / state.ui.zoom;
+        const rawDeltaY = clientDeltaY / state.ui.zoom;
         const modifierPolicy = state.surface?.chrome?.snapGuides?.modifierPolicy || "shift-bypasses-snap";
         const bypassSnap = event.shiftKey && modifierPolicy === "shift-bypasses-snap";
         const snapResult = bypassSnap
@@ -322,7 +342,8 @@
             state.metrics.lastResolvedDragDeltaX = round(deltaX);
             state.metrics.lastResolvedDragDeltaY = round(deltaY);
         }
-        state.interaction.moved = state.interaction.moved || Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5;
+        state.interaction.moved = true;
+        state.lastPointerTarget = null;
 
         for (const nodeId of state.interaction.nodeIds) {
             const startPosition = state.interaction.startPositions[nodeId];
@@ -334,7 +355,12 @@
 
         state.interaction.resolvedPositions = null;
         prepareActiveDragLayoutPositions(state, state.interaction);
-        scheduleActiveDragRender(state);
+        if (isStarting) {
+            render(state);
+            state.interaction.dragContext = buildActiveDragContext(state);
+        } else {
+            scheduleActiveDragRender(state);
+        }
     }
 
     function updatePan(state, event) {
@@ -1142,6 +1168,10 @@
             pointerUp: () => finishInteraction(state),
             blur: () => finishInteraction(state),
             doubleClick: event => {
+                if (!state.lastPointerTarget) {
+                    return;
+                }
+
                 if (state.recentDoubleActivationAt && (Date.now() - state.recentDoubleActivationAt) <= 340) {
                     return;
                 }
