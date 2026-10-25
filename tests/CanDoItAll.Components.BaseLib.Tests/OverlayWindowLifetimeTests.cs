@@ -1,10 +1,50 @@
 using Bunit;
 using CanDoItAll.Components.OverlayLib;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace CanDoItAll.Components.BaseLib.Tests;
 
 public sealed class OverlayWindowLifetimeTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Minimize_preserves_editor_state_only_when_retention_is_requested(bool retain) {
+        using var context = new BunitContext();
+        context.JSInterop.Mode = JSRuntimeMode.Loose;
+        var window = context.Render<OverlayWindow>(parameters => parameters
+            .Add(component => component.KeepContentMountedWhenMinimized, retain)
+            .AddChildContent<EditorProbe>());
+        var editor = window.FindComponent<EditorProbe>().Instance;
+        editor.Draft = "Unsent draft";
+
+        window.Render(parameters => parameters.Add(component => component.State, new() { IsMinimized = true }));
+
+        Assert.Equal(!retain, editor.Disposed);
+        if (retain) {
+            Assert.Same(editor, window.FindComponent<EditorProbe>().Instance);
+            Assert.True(window.Find(".cda-overlay-window__body").HasAttribute("hidden"));
+        } else {
+            Assert.Empty(window.FindComponents<EditorProbe>());
+        }
+
+        window.Render(parameters => parameters.Add(component => component.State, new()));
+        var restored = window.FindComponent<EditorProbe>().Instance;
+        Assert.Equal(retain ? "Unsent draft" : string.Empty, restored.Draft);
+        Assert.False(window.Find(".cda-overlay-window__body").HasAttribute("hidden"));
+        if (retain) {
+            Assert.Same(editor, restored);
+        } else {
+            Assert.NotSame(editor, restored);
+        }
+    }
+
+    public sealed class EditorProbe : ComponentBase, IDisposable {
+        public string Draft { get; set; } = string.Empty;
+        public bool Disposed { get; private set; }
+        public void Dispose() => Disposed = true;
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

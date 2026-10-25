@@ -85,7 +85,9 @@
             </header>
         }
 
-        <div class="cda-overlay-window__body cw-floating-window__body @BodyClass">
+    }
+    @if (!State.IsMinimized || KeepContentMountedWhenMinimized) {
+        <div class="cda-overlay-window__body cw-floating-window__body @BodyClass" hidden="@State.IsMinimized">
             @ChildContent
         </div>
     }
@@ -195,6 +197,9 @@
     /// <summary>Shows the header bar with title, kicker, summary, and window controls.</summary>
     [Parameter]
     public bool ShowHeader { get; set; } = true;
+
+    [Parameter]
+    public bool KeepContentMountedWhenMinimized { get; set; }
 
     /// <summary>Controlled geometry and visibility state (position, size, minimized, hidden). The host owns this value and updates it via <see cref="StateChanged"/>.</summary>
     [Parameter, EditorRequired]

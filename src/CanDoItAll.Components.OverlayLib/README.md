@@ -34,6 +34,11 @@ Delayed geometry notifications cannot reopen a hidden or disposed window. They a
 while the host processes Hide; a rejected Hide still propagates its error and leaves the
 visible window usable. The host continues to own and echo the controlled window state.
 
+Set `KeepContentMountedWhenMinimized="true"` for an editor or active conversation whose
+unsent input and component state must survive minimize/restore. Its body stays mounted
+under a hidden element, so subscriptions also stay alive. The default remains false and
+disposes minimized content. The host still owns hiding, closing and final disposal.
+
 Pointer resizing stays in the browser until release. Geometry acknowledgements from an
 earlier gesture do not rewind a newer local size; reset, minimize and visibility changes
 remain controlled by the host. The same observer clamps the current geometry when its
