@@ -210,6 +210,9 @@
     }
 
     function publishGeometry(state) {
+        if (state.disposed || state.pointerId !== null || state.resizePointerId !== null) {
+            return;
+        }
         if (!state.dotNetRef) {
             rememberGeometry(state);
             return;
@@ -229,6 +232,10 @@
         }
 
         state.lastPayload = payload;
+        state.sentGeometry.push(payload);
+        if (state.sentGeometry.length > 16) {
+            state.sentGeometry.shift();
+        }
         state.dotNetRef.invokeMethodAsync("OnGeometryChanged", payload.left, payload.top, payload.width, payload.height)
             .catch(() => { });
     }
@@ -245,7 +252,7 @@
 
         window.requestAnimationFrame(() => {
             window.requestAnimationFrame(() => {
-                if (!state.host.isConnected || !state.container || hasCustomGeometry(state.options.state)) {
+                if (state.disposed || !state.host.isConnected || !state.container || state.locallyChanged || hasCustomGeometry(state.options.state)) {
                     return;
                 }
 
@@ -285,7 +292,35 @@
                 state,
                 state.startLeft + (event.clientX - state.startX),
                 state.startTop + (event.clientY - state.startY));
+            state.locallyChanged = true;
         };
+
+        state.resizeEnd = event => {
+            if (event.pointerId !== state.resizePointerId) {
+                return;
+            }
+            state.resizePointerId = null;
+            window.removeEventListener("pointerup", state.resizeEnd, true);
+            window.removeEventListener("pointercancel", state.resizeEnd, true);
+            scheduleGeometryCommit(state, 0);
+        };
+
+        state.hostPointerDown = event => {
+            bringToFront(state.host);
+            if (event.button !== 0 || !state.options.allowResize || state.options.state.isMinimized) {
+                return;
+            }
+            const rect = state.host.getBoundingClientRect();
+            if (event.clientX < rect.right - 24 || event.clientY < rect.bottom - 24) {
+                return;
+            }
+            state.resizePointerId = event.pointerId;
+            state.locallyChanged = true;
+            window.clearTimeout(state.geometryTimer);
+            window.addEventListener("pointerup", state.resizeEnd, true);
+            window.addEventListener("pointercancel", state.resizeEnd, true);
+        };
+        state.focusIn = () => bringToFront(state.host);
 
         state.pointerUp = event => {
             if (event.pointerId !== state.pointerId) {
@@ -321,8 +356,8 @@
             window.addEventListener("pointercancel", state.pointerUp, true);
         };
 
-        state.host.addEventListener("pointerdown", () => bringToFront(state.host), true);
-        state.host.addEventListener("focusin", () => bringToFront(state.host), true);
+        state.host.addEventListener("pointerdown", state.hostPointerDown, true);
+        state.host.addEventListener("focusin", state.focusIn, true);
         state.eventsAttached = true;
     }
 
@@ -347,15 +382,17 @@
             state.resizeObserver.disconnect();
         }
 
-        state.resizeObserver = createResizeObserver(() => {
-            if (!state.host.isConnected || !state.container || state.host.classList.contains("is-dragging")) {
+        state.resizeObserver = createResizeObserver(entries => {
+            if (state.disposed || !state.host.isConnected || !state.container || state.pointerId !== null) {
                 return;
             }
 
-            if (!hasCustomGeometry(state.options.state)) {
+            if (entries.some(entry => entry.target === state.container) && state.resizePointerId === null) {
+                const geometry = buildGeometryPayload(state);
+                if (geometry && (state.locallyChanged || hasCustomGeometry(state.options.state))) {
+                    state.options.state = { ...state.options.state, ...geometry };
+                }
                 applyWindowGeometry(state);
-                scheduleGeometryCommit(state);
-                return;
             }
 
             clampDraggedWindow(
@@ -382,6 +419,10 @@
             geometryTimer: 0,
             eventsAttached: false,
             pointerId: null,
+            resizePointerId: null,
+            locallyChanged: false,
+            disposed: false,
+            sentGeometry: [],
             startX: 0,
             startY: 0,
             startLeft: 0,
@@ -411,14 +452,33 @@
             state: options.state || {}
         };
 
-        const state = windowHosts.get(host) || createWindowState(host, dotNetRef, normalized);
+        const existing = windowHosts.get(host);
+        const state = existing || createWindowState(host, dotNetRef, normalized);
+        const controlChanged = existing &&
+            (!!normalized.state.isMinimized !== !!state.options.state.isMinimized ||
+             !!normalized.state.isVisible !== !!state.options.state.isVisible ||
+             (!hasCustomGeometry(normalized.state) && hasCustomGeometry(state.options.state)));
+        const echo = state.sentGeometry.some(sent =>
+            sent.left === normalized.state.left && sent.top === normalized.state.top &&
+            sent.width === normalized.state.width && sent.height === normalized.state.height);
+        const preserveLocal = existing && !controlChanged &&
+            (echo || state.pointerId !== null || state.resizePointerId !== null);
         state.dotNetRef = dotNetRef || state.dotNetRef;
         state.container = resolveContainer(host, normalized);
         state.options = normalized;
         syncWindowHandle(state);
-        applyWindowGeometry(state);
-        scheduleLayoutRefresh(state);
-        rememberGeometry(state);
+        if (!preserveLocal) {
+            if (controlChanged) {
+                state.locallyChanged = false;
+                state.sentGeometry = [];
+                window.clearTimeout(state.geometryTimer);
+                releasePointerDrag(state);
+                state.resizeEnd({ pointerId: state.resizePointerId });
+            }
+            applyWindowGeometry(state);
+            scheduleLayoutRefresh(state);
+            rememberGeometry(state);
+        }
         bringToFront(host);
         windowHosts.set(host, state);
     }
@@ -429,7 +489,12 @@
             return;
         }
 
+        state.disposed = true;
         releasePointerDrag(state);
+        window.removeEventListener("pointerup", state.resizeEnd, true);
+        window.removeEventListener("pointercancel", state.resizeEnd, true);
+        state.host.removeEventListener("pointerdown", state.hostPointerDown, true);
+        state.host.removeEventListener("focusin", state.focusIn, true);
         window.clearTimeout(state.geometryTimer);
         if (state.handle) {
             state.handle.removeEventListener("pointerdown", state.pointerDown, true);

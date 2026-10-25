@@ -34,6 +34,14 @@ Delayed geometry notifications cannot reopen a hidden or disposed window. They a
 while the host processes Hide; a rejected Hide still propagates its error and leaves the
 visible window usable. The host continues to own and echo the controlled window state.
 
+Pointer resizing stays in the browser until release. Geometry acknowledgements from an
+earlier gesture do not rewind a newer local size; reset, minimize and visibility changes
+remain controlled by the host. The same observer clamps the current geometry when its
+container changes. Disposal releases pointer listeners and pending geometry work.
+Run `npm run overlaylib:test-resize` for the deterministic resize/echo regression cases;
+`npm run assets:verify` includes them. Browser proof should include a delayed state echo
+while the user performs a second resize and content continues updating.
+
 ```razor
 <div class="relative min-h-[28rem] overflow-hidden rounded-2xl border"
      data-testid="review-frame">
