@@ -141,6 +141,8 @@ test("reset and minimize remain explicit controlled changes", () => {
     f.echo(f.calls[0]);
     f.api.update(f.host, f.options);
     assert.equal(f.host.offsetWidth, 760);
+    f.echo(f.calls[0]);
+    assert.equal(f.host.offsetWidth, 760);
     f.api.update(f.host, { ...f.options, state: { isVisible: true, isMinimized: true } });
     assert.equal(f.host.style.resize, "none");
     f.api.update(f.host, f.options);

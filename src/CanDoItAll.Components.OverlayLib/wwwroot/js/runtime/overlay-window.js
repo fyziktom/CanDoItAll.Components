@@ -470,7 +470,6 @@
         if (!preserveLocal) {
             if (controlChanged) {
                 state.locallyChanged = false;
-                state.sentGeometry = [];
                 window.clearTimeout(state.geometryTimer);
                 releasePointerDrag(state);
                 state.resizeEnd({ pointerId: state.resizePointerId });
