@@ -169,6 +169,12 @@
             host.style.removeProperty("width");
             host.style.removeProperty("height");
         }
+        resetFrameScroll(host);
+    }
+
+    function resetFrameScroll(host) {
+        host.scrollLeft = 0;
+        host.scrollTop = 0;
     }
 
     function bringToFront(host) {
@@ -321,6 +327,11 @@
             window.addEventListener("pointercancel", state.resizeEnd, true);
         };
         state.focusIn = () => bringToFront(state.host);
+        state.frameScroll = event => {
+            if (event.target === state.host) {
+                resetFrameScroll(state.host);
+            }
+        };
 
         state.pointerUp = event => {
             if (event.pointerId !== state.pointerId) {
@@ -358,6 +369,7 @@
 
         state.host.addEventListener("pointerdown", state.hostPointerDown, true);
         state.host.addEventListener("focusin", state.focusIn, true);
+        state.host.addEventListener("scroll", state.frameScroll);
         state.eventsAttached = true;
     }
 
@@ -494,6 +506,7 @@
         window.removeEventListener("pointercancel", state.resizeEnd, true);
         state.host.removeEventListener("pointerdown", state.hostPointerDown, true);
         state.host.removeEventListener("focusin", state.focusIn, true);
+        state.host.removeEventListener("scroll", state.frameScroll);
         window.clearTimeout(state.geometryTimer);
         if (state.handle) {
             state.handle.removeEventListener("pointerdown", state.pointerDown, true);

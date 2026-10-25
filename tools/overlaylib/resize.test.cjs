@@ -173,3 +173,17 @@ test("disposal removes gesture listeners, observer and pending publications", ()
     assert.equal(f.handle.count(), 0);
     assert.equal(f.observer.disconnected, true);
 });
+
+test("focus scrolling cannot displace the frame while body scrolling remains independent", () => {
+    const f = fixture();
+    f.host.scrollLeft = 45;
+    f.host.scrollTop = 11;
+    f.host.emit("scroll", { target: f.host });
+    assert.equal(f.host.scrollLeft, 0);
+    assert.equal(f.host.scrollTop, 0);
+    const body = { scrollLeft: 80, scrollTop: 500 };
+    f.host.emit("scroll", { target: body });
+    assert.equal(body.scrollLeft, 80);
+    assert.equal(body.scrollTop, 500);
+    assert.equal(f.calls.length, 0);
+});
