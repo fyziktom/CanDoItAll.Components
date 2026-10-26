@@ -4,6 +4,101 @@ const path = require("node:path");
 const test = require("node:test");
 const vm = require("node:vm");
 
+function focusFixture(kind) {
+    const frames = [];
+    const document = {};
+    const createElement = () => ({
+        children: [],
+        dataset: {},
+        classList: { add() {} },
+        addEventListener() {},
+        get childElementCount() { return this.children.length; },
+        get isConnected() { return document.body.contains(this); },
+        appendChild(child) {
+            child.parent = this;
+            this.children.push(child);
+        },
+        contains(child) { return this === child || this.children.some(item => item.contains(child)); },
+        remove() { this.parent.children = this.parent.children.filter(child => child !== this); },
+        focus() { document.activeElement = this; },
+        select() { this.selectCount = (this.selectCount || 0) + 1; }
+    });
+    document.body = createElement();
+    document.activeElement = document.body;
+    const shared = {
+        createElement,
+        round: Math.round,
+        clearContextMenu() {},
+        layoutComposer() {},
+        closeComposer(state) {
+            state.composer?.element.remove();
+            state.composer = null;
+        }
+    };
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname,
+        "../../src/CanDoItAll.Components.CanvasLib/wwwroot/js/runtime/workbench/04-context-menu-and-composer.js"), "utf8"),
+        { window: { requestAnimationFrame: callback => frames.push(callback), CanDoItAll: { canvasWorkbenchModule: shared } } });
+    const state = { document, host: document.body };
+    const open = () => {
+        if (kind === "create") {
+            shared.openCreateComposer(state, { label: "Link" }, {});
+        } else {
+            shared.openInlineNoteComposer(state, { kind: "note-create", placeholder: "Note", value: "Initial note", anchorWorld: { x: 0, y: 0 } });
+        }
+        return state.composer;
+    };
+    const input = composer => composer.titleInput || composer.textInput;
+    return { state, shared, frames, open, input, createElement };
+}
+
+for (const kind of ["create", "note"]) {
+    test(`${kind} opening focuses its initial input if the user has not moved focus`, () => {
+        const { state, frames, open, input } = focusFixture(kind);
+        const composer = open();
+        frames.shift()();
+        assert.equal(state.document.activeElement, input(composer));
+        assert.equal(input(composer).selectCount, 1);
+    });
+
+    test(`${kind} deferred autofocus preserves an input already selected by the user`, () => {
+        const { state, frames, open, input } = focusFixture(kind);
+        const composer = open();
+        const chosen = composer.subtitleInput || input(composer);
+        chosen.focus();
+        chosen.value = "Typing already started";
+        frames.shift()();
+        assert.equal(state.document.activeElement, chosen);
+        assert.equal(chosen.value, "Typing already started");
+        assert.equal(input(composer).selectCount, undefined);
+    });
+
+    test(`${kind} opening cannot steal focus from another surface`, () => {
+        const { state, frames, open, createElement } = focusFixture(kind);
+        open();
+        const outside = createElement();
+        state.document.body.appendChild(outside);
+        outside.focus();
+        frames.shift()();
+        assert.equal(state.document.activeElement, outside);
+    });
+
+    test(`${kind} closed or replaced opening cannot run its deferred focus`, () => {
+        const { state, shared, frames, open, input } = focusFixture(kind);
+        const first = open();
+        shared.closeComposer(state);
+        frames.shift()();
+        assert.equal(input(first).selectCount, undefined);
+        const second = open();
+        const successor = open();
+        frames.shift()();
+        assert.equal(input(second).selectCount, undefined);
+        assert.equal(input(successor).selectCount, undefined);
+        frames.shift()();
+        assert.equal(state.document.activeElement, input(successor));
+        assert.equal(input(successor).selectCount, 1);
+    });
+}
+
 function fixture(valid) {
     const calls = [];
     const input = { value: "", checkValidity: () => valid, reportValidity: () => calls.push("invalid") };
