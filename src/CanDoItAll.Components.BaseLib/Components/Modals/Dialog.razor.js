@@ -79,6 +79,9 @@ export function openDialog(dialog, instanceId, dotNetReference) {
         if (controllers.get(instanceId) !== controller || !dialog.isConnected || !dialog.open) {
             return;
         }
+        if (dialog.contains(document.activeElement)) {
+            return;
+        }
         const initialFocus = dialog.querySelector(
             '[autofocus], button:not([disabled]), [href]:not([aria-disabled="true"]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
 
