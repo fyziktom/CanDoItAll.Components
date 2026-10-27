@@ -124,6 +124,17 @@ Use the `WindowStates` dictionary on `CanvasWorkbenchUiState` when several windo
 
 ## What to validate
 
+Keep collapse and expansion intent while an owner read or state callback is pending.
+The browser assigns a dispatch sequence to that intent; the component acknowledges it
+only after the owner's `StateChanged` callback completes. An older refresh of the same
+surface must retain the pending collapse state, while an acknowledged owner update can
+normalize it. Removed nodes are pruned and a different surface starts with its own state.
+The application still owns persistence; the dispatch sequence is transient bridge state.
+
+`npm run canvaslib:test-collapse-state` covers delayed and reordered refreshes, owner
+normalization and surface replacement. `CanvasWorkbenchStateCommitTests` checks the
+corresponding asynchronous Blazor callback and acknowledgement behavior.
+
 The [Sandbox Canvas route](../../samples/CanDoItAll.Components.Sandbox/README.md#canvas-and-floating-window-examples) demonstrates the real workbench, the selected-node inspector, and overlapping windows. Validate selection, drag/pan, keyboard interactions, geometry persistence, minimize/hide/show behavior, and an accessible representation of the important canvas content, not only how the stage first renders.
 
 ## Development and package checks

@@ -390,6 +390,7 @@
     private string? processedUiStateKey;
     private long lastSelectionDispatchId;
     private long lastStateDispatchId;
+    private long committedStateDispatchId;
     private bool awaitingParentUiStateCommit;
     private long uiStateCommitGeneration;
     private bool preserveViewportOnNextUpdate;
@@ -596,7 +597,7 @@
 
         var state = CanvasWorkbenchUiState.Parse(stateJson);
         state.IsMaximized = isMaximized;
-        await CommitClientUiStateAsync(state);
+        await CommitClientUiStateAsync(state, dispatchId);
     }
 
     [JSInvokable]
@@ -786,7 +787,7 @@
         await CommitClientUiStateAsync(state);
     }
 
-    private async Task CommitClientUiStateAsync(CanvasWorkbenchUiState state) {
+    private async Task CommitClientUiStateAsync(CanvasWorkbenchUiState state, long dispatchId = 0) {
         var generation = ++uiStateCommitGeneration;
         clientUiStateKey = state.ToJson();
         processedUiStateKey = clientUiStateKey;
@@ -796,6 +797,9 @@
         var callback = StateChanged;
         try {
             await callback.InvokeAsync(clientUiStateKey);
+            if (callback.HasDelegate) {
+                committedStateDispatchId = Math.Max(committedStateDispatchId, dispatchId);
+            }
         } finally {
             if (generation == uiStateCommitGeneration && callback.HasDelegate) {
                 awaitingParentUiStateCommit = false;
@@ -902,7 +906,7 @@
     {
         sceneHost.MarkApplied();
         appliedSurfaceId = Surface.SurfaceId;
-        processedUiStateKey = pendingUiStateKey;
+        processedUiStateKey = awaitingParentUiStateCommit ? clientUiStateKey : pendingUiStateKey;
         appliedHasClipboardHandler = ClipboardRequested.HasDelegate;
         appliedTracksComposerOpenings = ComposerOpened.HasDelegate;
         appliedRequiresComposerAcknowledgement = RequiresComposerAcknowledgement;
@@ -920,7 +924,8 @@
             Surface.UiState.SelectedNodeIds.FirstOrDefault(),
             ClipboardRequested.HasDelegate,
             ComposerOpened.HasDelegate,
-            RequiresComposerAcknowledgement);
+            RequiresComposerAcknowledgement,
+            committedStateDispatchId);
 
     private bool ShouldAutoFitInitialView()
     {
@@ -1049,7 +1054,8 @@
         string? PrimaryNodeId,
         bool HasClipboardHandler,
         bool TracksComposerOpenings,
-        bool RequiresComposerAcknowledgement);
+        bool RequiresComposerAcknowledgement,
+        long CommittedStateDispatchId);
 }
 
 

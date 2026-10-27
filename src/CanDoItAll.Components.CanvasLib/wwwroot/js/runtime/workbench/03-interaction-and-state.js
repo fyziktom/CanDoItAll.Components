@@ -261,6 +261,7 @@
         state.ui.collapsedNodeIds = [...state.collapsedIds];
         render(state);
         publishState(state);
+        state.collapseStateDispatchId = state.stateDispatchId;
     }
 
     function clearContextMenu(state) {
