@@ -21,6 +21,11 @@ Use CanvasLib for an authoring workspace, graph, process map, planning board, vi
 | `CanvasOverlayDialog` | Title, content, actions, and whether a close request is accepted. | A bounded overlay with optional maximize/restore; `CanvasScoped` uses the nearest positioned canvas host. |
 | `CanvasCalendar` | Events, commands, and save/export/search callbacks. | Interactive calendar surface and its browser-side behavior. |
 
+`CanvasCalendar` serializes browser initialization and updates. A rerender during a
+pending interop call queues the latest surface without creating another controller.
+Only the state sent by that call is acknowledged; a newer queued state still applies.
+Disposal waits for an outstanding initialization before releasing its controller.
+
 The boundary is intentional: do not place business rules in JavaScript, and do not rebuild the workbench shell in every consuming page.
 
 ## Add CanvasLib to a host
