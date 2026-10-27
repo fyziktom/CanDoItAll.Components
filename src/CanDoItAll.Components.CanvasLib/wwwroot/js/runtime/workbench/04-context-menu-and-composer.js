@@ -255,6 +255,26 @@
         }
     }
 
+    function scheduleComposerFocus(state, composer, input) {
+        const previousFocus = state.document.activeElement;
+        window.requestAnimationFrame(() => {
+            if (state.composer !== composer || !composer.element.isConnected) {
+                return;
+            }
+            layoutComposer(state);
+            updateComposerFileState(composer);
+            const currentFocus = state.document.activeElement;
+            if (!input || composer.element.contains(currentFocus) ||
+                (currentFocus !== previousFocus && currentFocus !== state.document.body)) {
+                return;
+            }
+            input.focus();
+            if (typeof input.select === "function") {
+                input.select();
+            }
+        });
+    }
+
     function openCreateComposer(state, action, request) {
         clearContextMenu(state);
         closeComposer(state, { focusHost: false });
@@ -583,17 +603,7 @@
         };
 
         registerComposerOpening(state, request, null);
-        window.requestAnimationFrame(() => {
-            layoutComposer(state);
-            updateComposerFileState(state.composer);
-            const firstInput = inputFieldEntries[0]?.input || titleInput || subtitleInput || notesInput;
-            if (firstInput) {
-                firstInput.focus();
-                if (typeof firstInput.select === "function") {
-                    firstInput.select();
-                }
-            }
-        });
+        scheduleComposerFocus(state, state.composer, inputFieldEntries[0]?.input || titleInput || subtitleInput || notesInput);
     }
 
     function openInlineNoteComposer(state, options) {
@@ -629,11 +639,7 @@
                 title: "", subtitle: "", notes: "", objectSubtype: "", createMode: "quick-note"
             } : null,
             options.kind === "note-edit" ? { nodeId: options.nodeId, title: "", notes: options.value || "" } : null);
-        window.requestAnimationFrame(() => {
-            layoutComposer(state);
-            textInput.focus();
-            textInput.select();
-        });
+        scheduleComposerFocus(state, state.composer, textInput);
     }
 
     function resolveChildNoteHorizontalDirection(state, node) {

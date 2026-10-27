@@ -1435,6 +1435,7 @@
             viewportStateTimer: 0,
             selectionDispatchId: Number.isFinite(selectionDispatchSeed) ? Number(selectionDispatchSeed) : 0,
             stateDispatchId: Number.isFinite(stateDispatchSeed) ? Number(stateDispatchSeed) : 0,
+            collapseStateDispatchId: 0,
             retainedFrameElements: new Map(),
             retainedLinkElements: new Map(),
             retainedNodeElements: new Map(),
@@ -1447,7 +1448,13 @@
         return state;
     }
 
-    function refresh(state, surface, isMaximized, preserveViewport) {
+    function refresh(state, surface, isMaximized, preserveViewport, committedStateDispatchId = 0) {
+        const preservePendingCollapse = state.surface?.surfaceId === surface?.surfaceId &&
+            state.collapseStateDispatchId > committedStateDispatchId;
+        const pendingCollapsedIds = preservePendingCollapse ? [...state.collapsedIds] : null;
+        if (state.surface?.surfaceId !== surface?.surfaceId) {
+            state.collapseStateDispatchId = 0;
+        }
         workbenchInternals.sceneLayout.cancelViewportAnimation(state);
         const previousNodeIds = new Set((state.surface?.nodes || []).map(node => node.id));
         const previousSelectedId = state.ui?.selectedNodeIds?.[0] || null;
@@ -1481,7 +1488,10 @@
 
         workbenchInternals.stateStore.reconcileSelection(state);
         state.highlightedIds = new Set((state.ui.highlightedNodeIds || []).filter(Boolean));
-        state.collapsedIds = toCollapsedSet(state.ui.collapsedNodeIds);
+        state.collapsedIds = toCollapsedSet(pendingCollapsedIds === null
+            ? state.ui.collapsedNodeIds
+            : pendingCollapsedIds.filter(id => state.lookups.byId.has(id)));
+        state.ui.collapsedNodeIds = [...state.collapsedIds];
         state.pointerHostPoint = null;
         state.hoveredDeleteNodeId = null;
         state.hoveredDeleteLinkKey = null;

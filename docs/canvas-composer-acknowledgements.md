@@ -6,4 +6,6 @@ Consumers with asynchronous writes can set `RequiresComposerAcknowledgement="tru
 
 CanvasLib owns only the opening, local revision, text, pending state and identity checks. The consumer owns validation, concurrency preconditions, durable outcomes and reconciliation. Closing/replacing the opening or replacing the canvas fences delayed acknowledgements. Optional acknowledgement mode leaves existing event-only consumers compatible.
 
+Deferred opening focus belongs to that same composer instance. It must not select text after the user has focused a field or another surface, and it must not run after the composer is closed or replaced. This prevents early typing into Address from replacing the Label while the first animation frame is pending. Create dialogs and inline notes share this rule.
+
 Validation: `npm run canvaslib:test-composer`, `npm run assets:verify`, and `CanvasWorkbenchComposerContractTests`. Consumer browser proof must cover a rejected save, a delayed commit with continued typing, and a replaced opening.

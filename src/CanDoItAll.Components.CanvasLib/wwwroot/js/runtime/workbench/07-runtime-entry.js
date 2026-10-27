@@ -731,7 +731,8 @@
                 state,
                 surface,
                 requestedIsMaximized,
-                options?.preserveViewport === true);
+                options?.preserveViewport === true,
+                options?.committedStateDispatchId ?? 0);
             applyRenderOptions(state, options);
             return true;
         },
