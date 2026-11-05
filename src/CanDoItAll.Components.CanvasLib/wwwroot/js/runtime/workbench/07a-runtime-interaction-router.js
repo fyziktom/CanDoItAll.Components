@@ -459,8 +459,8 @@
                     return;
                 }
 
-                if (state.composer) {
-                    closeComposer(state, { focusHost: false });
+                if (state.composer && closeComposer(state, { focusHost: false }) === false) {
+                    return;
                 }
 
                 clearContextMenu(state);

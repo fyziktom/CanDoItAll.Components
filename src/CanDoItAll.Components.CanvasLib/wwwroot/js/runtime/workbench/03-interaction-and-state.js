@@ -290,7 +290,28 @@
     function closeComposer(state, options) {
         const focusHost = options?.focusHost !== false;
         const closing = state.composer;
-        if (closing?.openingId && !closing.submitted) {
+        const request = state.supportsComposerCloseGuard && !options?.force ? shared.readComposerCloseRequest?.(state) : null;
+        if (request) {
+            if (closing.closeDecisionPending) {
+                return false;
+            }
+            closing.closeDecisionPending = true;
+            Promise.resolve(closing.opened).then(() => state.dotNetRef.invokeMethodAsync("OnComposerCloseRequested", JSON.stringify(request)))
+                .then(approved => {
+                    const current = state.composer === closing ? shared.readComposerCloseRequest(state) : null;
+                    if (approved && current && current.revision === request.revision &&
+                        current.hasPendingSubmission === request.hasPendingSubmission && current.hasUnconfirmedOutcome === request.hasUnconfirmedOutcome) {
+                        closeComposer(state, { ...options, force: true });
+                        options?.onClosed?.();
+                    }
+                }).catch(() => {
+                    if (state.composer === closing && closing.status) {
+                        closing.status.textContent = "Closing could not be confirmed. Your editor is retained.";
+                    }
+                }).finally(() => { closing.closeDecisionPending = false; });
+            return false;
+        }
+        if (closing?.openingId && (!closing.submitted || state.supportsComposerCloseGuard)) {
             closing.opened.then(() => state.dotNetRef.invokeMethodAsync("OnComposerClosed", closing.openingId));
         }
         const element = closing?.element || null;
@@ -305,6 +326,7 @@
         if (focusHost && removed) {
             deferHostFocus(state);
         }
+        return true;
     }
 
     function ensureHostFocus(state) {

@@ -294,3 +294,216 @@ test("inline note saves also wait for an acknowledgement", async () => {
     release();
     assert.equal(state.composer, null);
 });
+
+function comparisonFixture() {
+    function input(value, type = "text", allowed) {
+        return {
+            value, type, tagName: type === "select-one" ? "SELECT" : "INPUT", valid: true,
+            selectionStart: type === "text" ? 3 : null, selectionEnd: type === "text" ? 7 : null,
+            selectionDirection: "forward",
+            checkValidity() { return this.valid && (!allowed || allowed.includes(this.value)); },
+            cloneNode() { return { ...this }; },
+            setSelectionRange(start, end, direction) {
+                assert.equal(type, "text");
+                Object.assign(this, { selectionStart: start, selectionEnd: end, selectionDirection: direction });
+            }
+        };
+    }
+    const shared = { layoutComposer() {} };
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname,
+        "../../src/CanDoItAll.Components.CanvasLib/wwwroot/js/runtime/workbench/04-context-menu-and-composer.js"), "utf8"),
+        { window: { CanDoItAll: { canvasWorkbenchModule: shared } } });
+    const composer = {
+        kind: "create", openingId: "opening", requiresAcknowledgement: true, draftRevision: 9,
+        request: { actionId: "edit:original", sourceNodeId: "original", parentNodeId: "parent", objectSubtype: "note", placementKind: "edit" },
+        titleInput: input("Original title"), subtitleInput: input(""), notesInput: input(" Local raw draft \n"),
+        inputFieldEntries: [{ key: "amount", input: input("2.00", "number") }, { key: "mode", input: input("first", "select-one", ["first", "second"]) }],
+        createButton: {}, status: {}
+    };
+    const state = { composer, document: { activeElement: composer.notesInput } };
+    const request = () => ({ openingId: "opening", expectedRevision: 9,
+        createRequest: { ...shared.readComposerDraft(state).createRequest, title: "Merged title", notes: "Combined" } });
+    return { shared, state, composer, request };
+}
+
+test("comparison snapshot retains raw text, actual revision and pending native input", () => {
+    const { shared, state, composer } = comparisonFixture();
+    composer.inputFieldEntries[0].input.valid = false;
+    const snapshot = shared.readComposerDraft(state);
+    assert.equal(snapshot.revision, 9);
+    assert.equal(snapshot.createRequest.notes, " Local raw draft \n");
+    assert.equal(snapshot.hasPendingInput, true);
+    assert.equal(composer.notesInput.value, snapshot.createRequest.notes);
+});
+
+for (const [property, value, status] of [["openingId", "retired", "Retired"], ["expectedRevision", 8, "InputChanged"]]) {
+    test(`local apply refuses ${property} mismatch before changing any input`, () => {
+        const { shared, state, composer, request } = comparisonFixture();
+        const candidate = { ...request(), [property]: value };
+        assert.equal(shared.applyComposerDraft(state, candidate).status, status);
+        assert.equal(composer.titleInput.value, "Original title");
+        assert.equal(composer.notesInput.value, " Local raw draft \n");
+        assert.equal(composer.draftRevision, 9);
+    });
+}
+
+test("unfinished native input blocks local apply without clearing the original control", () => {
+    const { shared, state, composer, request } = comparisonFixture();
+    composer.inputFieldEntries[0].input.valid = false;
+    assert.equal(shared.applyComposerDraft(state, request()).status, "PendingInput");
+    assert.equal(composer.inputFieldEntries[0].input.value, "2.00");
+    assert.equal(composer.titleInput.value, "Original title");
+});
+
+for (const kind of ["Unconfirmed", "Committed"]) {
+    test(`${kind} outcome cannot become retryable from a local comparison`, () => {
+        const { shared, state, composer, request } = comparisonFixture();
+        composer.submissionFinished = true;
+        composer.lastResultKind = kind;
+        assert.equal(shared.applyComposerDraft(state, request()).status, "OutcomeRequiresReview");
+        assert.equal(composer.submissionFinished, true);
+        assert.equal(composer.notesInput.value, " Local raw draft \n");
+    });
+}
+
+test("an unknown field or invalid last result cannot partially change earlier fields", () => {
+    for (const extra of [false, true]) {
+        const { shared, state, composer, request } = comparisonFixture();
+        const candidate = request();
+        if (extra) {
+            candidate.createRequest.inputValues.push({ key: "foreign", value: "unsent" });
+        } else {
+            candidate.createRequest.inputValues[1].value = "invalid option";
+        }
+        assert.equal(shared.applyComposerDraft(state, candidate).status, "ShapeChanged");
+        assert.equal(composer.titleInput.value, "Original title");
+        assert.equal(composer.notesInput.value, " Local raw draft \n");
+        assert.equal(composer.inputFieldEntries[1].input.value, "first");
+    }
+});
+
+test("reviewed local apply keeps the actual controls, active input and caret", () => {
+    const { shared, state, composer, request } = comparisonFixture();
+    const title = composer.titleInput;
+    const notes = composer.notesInput;
+    const result = shared.applyComposerDraft(state, request());
+    assert.equal(result.status, "Applied");
+    assert.equal(result.revision, 10);
+    assert.equal(composer.titleInput, title);
+    assert.equal(composer.notesInput, notes);
+    assert.equal(state.document.activeElement, notes);
+    assert.equal(notes.value, "Combined");
+    assert.equal(notes.selectionStart, 3);
+    assert.equal(notes.selectionEnd, 7);
+    assert.equal(composer.submissionFinished, false);
+});
+
+test("focused select result is applied without invoking text selection APIs", () => {
+    const { shared, state, composer, request } = comparisonFixture();
+    const select = composer.inputFieldEntries[1].input;
+    state.document.activeElement = select;
+    const candidate = request();
+    candidate.createRequest.inputValues[1].value = "second";
+    assert.equal(shared.applyComposerDraft(state, candidate).status, "Applied");
+    assert.equal(state.document.activeElement, select);
+    assert.equal(select.value, "second");
+});
+
+test("only an explicit reviewed apply can rearm a definitely rejected opening", () => {
+    const { shared, state, composer, request } = comparisonFixture();
+    composer.submissionFinished = true;
+    composer.lastResultKind = "Rejected";
+    assert.equal(shared.readComposerDraft(state).canApply, true);
+    assert.equal(shared.applyComposerDraft(state, request()).status, "Applied");
+    assert.equal(composer.submissionFinished, false);
+    assert.equal(composer.lastResultKind, null);
+});
+
+test("inline reviewed title is explicit and cannot retarget a different note", () => {
+    const { shared, state, composer } = comparisonFixture();
+    composer.kind = "note-edit";
+    composer.nodeId = "original";
+    composer.textInput = composer.notesInput;
+    const candidate = { openingId: "opening", expectedRevision: 9,
+        editRequest: { nodeId: "foreign", title: "Reviewed title", notes: "Reviewed note", hasExplicitTitle: true } };
+    assert.equal(shared.applyComposerDraft(state, candidate).status, "ShapeChanged");
+    candidate.editRequest.nodeId = "original";
+    assert.equal(shared.applyComposerDraft(state, candidate).status, "Applied");
+    const snapshot = shared.readComposerDraft(state);
+    assert.equal(snapshot.editRequest.title, "Reviewed title");
+    assert.equal(snapshot.editRequest.hasExplicitTitle, true);
+    assert.equal(snapshot.editRequest.notes, "Reviewed note");
+});
+
+function closeGuardFixture() {
+    const calls = [];
+    let decide;
+    const decision = new Promise(resolve => { decide = resolve; });
+    const shared = {};
+    const window = { CanDoItAll: { canvasWorkbenchModule: shared }, requestAnimationFrame: callback => callback() };
+    const context = vm.createContext({ window });
+    const root = "../../src/CanDoItAll.Components.CanvasLib/wwwroot/js/runtime/workbench/";
+    for (const name of ["03-interaction-and-state.js", "04-context-menu-and-composer.js"]) {
+        vm.runInContext(fs.readFileSync(path.join(__dirname, root, name), "utf8"), context);
+    }
+    const composer = {
+        openingId: "original-opening", requiresAcknowledgement: true, draftRevision: 2, opened: Promise.resolve(),
+        element: { remove() { this.removed = true; }, setAttribute() {} }, status: {}, createButton: {}
+    };
+    const state = {
+        composer, supportsComposerCloseGuard: true,
+        host: { querySelectorAll: () => [], focus() {} },
+        dotNetRef: { invokeMethodAsync(method, payload) {
+            calls.push({ method, payload });
+            return method === "OnComposerCloseRequested" ? decision : Promise.resolve();
+        } }
+    };
+    return { shared, state, composer, calls, decide };
+}
+
+const flushCloseDecision = async () => { for (let index = 0; index < 12; index++) { await Promise.resolve(); } };
+
+test("Continue editing retains the actual composer and asks only one close question", async () => {
+    const { shared, state, composer, calls, decide } = closeGuardFixture();
+    assert.equal(shared.closeComposer(state), false);
+    assert.equal(shared.closeComposer(state), false);
+    await flushCloseDecision();
+    assert.equal(calls.filter(call => call.method === "OnComposerCloseRequested").length, 1);
+    assert.equal(state.composer, composer);
+    decide(false);
+    await flushCloseDecision();
+    assert.equal(state.composer, composer);
+    assert.equal(composer.element.removed, undefined);
+});
+
+test("a discard decision for older raw input cannot close newer input", async () => {
+    const { shared, state, composer, decide } = closeGuardFixture();
+    shared.closeComposer(state);
+    await flushCloseDecision();
+    composer.draftRevision++;
+    decide(true);
+    await flushCloseDecision();
+    assert.equal(state.composer, composer);
+    assert.equal(composer.element.removed, undefined);
+});
+
+test("an approved current close removes the original composer and runs its replacement once", async () => {
+    const { shared, state, composer, calls, decide } = closeGuardFixture();
+    let replacements = 0;
+    shared.closeComposer(state, { onClosed: () => { replacements++; } });
+    await flushCloseDecision();
+    decide(true);
+    await flushCloseDecision();
+    assert.equal(state.composer, null);
+    assert.equal(composer.element.removed, true);
+    assert.equal(replacements, 1);
+    assert.equal(calls.filter(call => call.method === "OnComposerClosed").length, 1);
+});
+
+test("only an acknowledged unchanged commit bypasses the optional close decision", () => {
+    const { shared, state, composer, calls } = closeGuardFixture();
+    composer.pendingSubmission = { id: "accepted", revision: composer.draftRevision };
+    shared.acknowledgeComposer(state, { openingId: composer.openingId, submissionId: "accepted", kind: "Committed", message: "Saved" });
+    assert.equal(state.composer, null);
+    assert.equal(calls.filter(call => call.method === "OnComposerCloseRequested").length, 0);
+});

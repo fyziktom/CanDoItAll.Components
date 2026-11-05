@@ -397,8 +397,8 @@
         const safeDeltaY = Number.isFinite(deltaY) ? deltaY : 0;
         const stepCount = Math.max(1, Math.min(32, Math.trunc(Number(request?.steps) || 10)));
 
-        if (state.composer) {
-            closeComposer(state, { focusHost: false });
+        if (state.composer && closeComposer(state, { focusHost: false }) === false) {
+            return false;
         }
 
         clearContextMenu(state);
@@ -640,6 +640,12 @@
         state.hasClipboardHandler = options?.hasClipboardHandler === true;
         state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
         state.requiresComposerAcknowledgement = options?.requiresComposerAcknowledgement === true;
+        state.supportsComposerComparison = options?.supportsComposerComparison === true;
+        state.supportsComposerCloseGuard = options?.supportsComposerCloseGuard === true;
+        if (state.composer?.comparisonButton) {
+            state.composer.comparisonButton.hidden = !state.supportsComposerComparison;
+            state.composer.element.setAttribute("data-retained-editor", state.supportsComposerComparison && state.supportsComposerCloseGuard ? "true" : "false");
+        }
         if (!options) {
             return;
         }
@@ -699,8 +705,10 @@
                 selectionDispatchSeed,
                 stateDispatchSeed);
             state.hasClipboardHandler = options?.hasClipboardHandler === true;
-        state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
-        state.requiresComposerAcknowledgement = options?.requiresComposerAcknowledgement === true;
+            state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
+            state.requiresComposerAcknowledgement = options?.requiresComposerAcknowledgement === true;
+            state.supportsComposerComparison = options?.supportsComposerComparison === true;
+            state.supportsComposerCloseGuard = options?.supportsComposerCloseGuard === true;
             workbenchInternals.runtime.buildWorkbench(state);
             workbenchInternals.runtime.attachEvents(state);
             workbenchInternals.runtime.setMaximized(state, resolveMaximizedState(state, options));
@@ -854,6 +862,15 @@
             if (state) {
                 shared.acknowledgeComposer(state, result);
             }
+        },
+        readComposerCloseRequest(host) {
+            return shared.readComposerCloseRequest(resolveWorkbenchState(host));
+        },
+        readComposerDraft(host) {
+            return shared.readComposerDraft(resolveWorkbenchState(host));
+        },
+        applyComposerDraft(host, request) {
+            return shared.applyComposerDraft(resolveWorkbenchState(host), request);
         },
         selectNodes(host, nodeIds, primaryNodeId) {
             const state = resolveWorkbenchState(host);

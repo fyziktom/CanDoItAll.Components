@@ -397,6 +397,8 @@
     private bool? appliedHasClipboardHandler;
     private bool? appliedTracksComposerOpenings;
     private bool? appliedRequiresComposerAcknowledgement;
+    private bool? appliedSupportsComposerComparison;
+    private bool? appliedSupportsComposerCloseGuard;
 
     /// <summary>The nodes, links, chrome, and UI state that drive the live JS-hosted canvas scene.</summary>
     [Parameter, EditorRequired]
@@ -451,6 +453,12 @@
     [Parameter]
     public bool RequiresComposerAcknowledgement { get; set; }
 
+    [Parameter]
+    public EventCallback<CanvasWorkbenchComposerDraft> ComposerComparisonRequested { get; set; }
+
+    [Parameter]
+    public Func<CanvasWorkbenchComposerCloseRequest, Task<bool>>? ConfirmComposerClose { get; set; }
+
     protected override void OnParametersSet()
         => SynchronizeSurface();
 
@@ -477,7 +485,13 @@
         if (RequiresComposerAcknowledgement && !ComposerOpened.HasDelegate) {
             throw new InvalidOperationException("Composer acknowledgements require an opening handler.");
         }
-        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged || appliedTracksComposerOpenings != ComposerOpened.HasDelegate || appliedRequiresComposerAcknowledgement != RequiresComposerAcknowledgement);
+        if ((ComposerComparisonRequested.HasDelegate || ConfirmComposerClose is not null) && !RequiresComposerAcknowledgement) {
+            throw new InvalidOperationException("Composer comparison requires tracked native acknowledgements.");
+        }
+        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged ||
+            appliedTracksComposerOpenings != ComposerOpened.HasDelegate || appliedRequiresComposerAcknowledgement != RequiresComposerAcknowledgement ||
+            appliedSupportsComposerComparison != ComposerComparisonRequested.HasDelegate ||
+            appliedSupportsComposerCloseGuard != (ConfirmComposerClose is not null));
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -564,6 +578,18 @@
 
     [JSInvokable]
     public Task OnComposerClosed(Guid openingId) => ComposerClosed.InvokeAsync(openingId);
+
+    [JSInvokable]
+    public Task<bool> OnComposerCloseRequested(string requestJson) {
+        var request = Deserialize<CanvasWorkbenchComposerCloseRequest>(requestJson);
+        return request is not null && ConfirmComposerClose is not null ? ConfirmComposerClose(request) : Task.FromResult(false);
+    }
+
+    [JSInvokable]
+    public Task OnComposerComparisonRequested(string requestJson) {
+        var draft = Deserialize<CanvasWorkbenchComposerDraft>(requestJson);
+        return draft is null ? Task.CompletedTask : ComposerComparisonRequested.InvokeAsync(draft);
+    }
 
     [JSInvokable]
     public Task OnCreateAction(string requestJson)
@@ -910,6 +936,8 @@
         appliedHasClipboardHandler = ClipboardRequested.HasDelegate;
         appliedTracksComposerOpenings = ComposerOpened.HasDelegate;
         appliedRequiresComposerAcknowledgement = RequiresComposerAcknowledgement;
+        appliedSupportsComposerComparison = ComposerComparisonRequested.HasDelegate;
+        appliedSupportsComposerCloseGuard = ConfirmComposerClose is not null;
     }
 
     private static bool IsExpectedJsInteropCancellation(Exception exception)
@@ -925,6 +953,8 @@
             ClipboardRequested.HasDelegate,
             ComposerOpened.HasDelegate,
             RequiresComposerAcknowledgement,
+            ComposerComparisonRequested.HasDelegate,
+            ConfirmComposerClose is not null,
             committedStateDispatchId);
 
     private bool ShouldAutoFitInitialView()
@@ -951,6 +981,18 @@
             await JsRuntime.InvokeVoidAsync("CanDoItAll.canvasWorkbench.acknowledgeComposer", host, result);
         }
     }
+
+    public async Task<CanvasWorkbenchComposerCloseRequest?> ReadComposerCloseRequestAsync() => sceneHost.IsInitialized
+        ? await JsRuntime.InvokeAsync<CanvasWorkbenchComposerCloseRequest?>("CanDoItAll.canvasWorkbench.readComposerCloseRequest", host)
+        : null;
+
+    public async Task<CanvasWorkbenchComposerDraft?> ReadComposerDraftAsync() => sceneHost.IsInitialized
+        ? await JsRuntime.InvokeAsync<CanvasWorkbenchComposerDraft?>("CanDoItAll.canvasWorkbench.readComposerDraft", host)
+        : null;
+
+    public async Task<CanvasWorkbenchComposerApplyResult> ApplyComposerDraftAsync(CanvasWorkbenchComposerApplyRequest request) => sceneHost.IsInitialized
+        ? await JsRuntime.InvokeAsync<CanvasWorkbenchComposerApplyResult>("CanDoItAll.canvasWorkbench.applyComposerDraft", host, request)
+        : new(CanvasWorkbenchComposerApplyStatus.Retired, 0);
 
     public async Task OpenCreateDialogAsync(CanvasWorkbenchAction action, CanvasWorkbenchCreateActionRequest request)
     {
@@ -1055,6 +1097,8 @@
         bool HasClipboardHandler,
         bool TracksComposerOpenings,
         bool RequiresComposerAcknowledgement,
+        bool SupportsComposerComparison,
+        bool SupportsComposerCloseGuard,
         long CommittedStateDispatchId);
 }
 

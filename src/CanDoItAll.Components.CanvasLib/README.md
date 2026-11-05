@@ -125,6 +125,24 @@ Render a `CanvasFloatingWindow` inside `OverlayContent`, and keep its state with
 
 Use the `WindowStates` dictionary on `CanvasWorkbenchUiState` when several windows should survive a route change or a saved workspace. Give each window a stable `WindowId` and dictionary key.
 
+### Optional retained composer editing
+
+Hosts using acknowledged composer submissions can opt into
+`ComposerComparisonRequested` and `ConfirmComposerClose`. The immutable
+`CanvasWorkbenchComposerDraft` identifies the opening, exact input revision, raw
+validation state and submission availability. `ApplyComposerDraftAsync` validates all
+identity, revision, outcome and field-shape conditions before changing any control.
+It changes local input only and returns a typed refusal when the original editor is
+no longer suitable. The host owns comparison policy, authorization and persistence.
+
+`ReadComposerCloseRequestAsync` and the optional close decision retain raw input on
+Continue. Replacement is delayed until the same opening/revision can close; a decision
+for old input cannot discard newer input. Pending and unconfirmed writes retain their
+existing acknowledgement barrier. Existing edit composers with both capabilities keep
+floating windows interactive; creation and consumers that do not opt in retain their
+original behavior. Inline notes can carry an explicitly reviewed title through
+`HasExplicitTitle` without deriving it again from their body.
+
 ![Canvas floating inspector over the workbench stage](../../docs/assets/canvas-floating-window.png)
 
 ## What to validate
