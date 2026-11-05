@@ -19,6 +19,7 @@ public sealed class DialogModuleLoadRaceTests
     public async Task A_dialog_removed_while_its_module_loads_is_never_opened_and_releases_the_module()
     {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         var runtime = new PendingImportRuntime();
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var module = new RecordingModule();
@@ -38,6 +39,7 @@ public sealed class DialogModuleLoadRaceTests
     public async Task A_dialog_closed_and_reopened_while_its_module_loads_opens_once_for_the_current_element()
     {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         var runtime = new PendingImportRuntime();
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var module = new RecordingModule();
@@ -70,6 +72,7 @@ public sealed class DialogModuleLoadRaceTests
     public async Task A_dialog_closed_while_its_module_loads_opens_nothing_until_it_is_opened_again()
     {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         var runtime = new PendingImportRuntime();
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var module = new RecordingModule();

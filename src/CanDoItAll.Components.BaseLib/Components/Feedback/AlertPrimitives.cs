@@ -111,9 +111,57 @@ public sealed class NotificationMessage : IEquatable<NotificationMessage>
     }
 }
 
-public sealed class NotificationService
+public sealed class NotificationService : IDisposable
 {
+    private readonly TimeProvider clock;
+    private readonly object expirySync = new();
+    private readonly Dictionary<Guid, CancellationTokenSource> expiry = [];
+    private readonly Dictionary<Guid, NotificationPosition> roots = [];
+    private Guid? activeModal;
+    private long announced;
+    private bool disposed;
+
+    public NotificationService(TimeProvider? timeProvider = null) {
+        clock = timeProvider ?? TimeProvider.System;
+        Messages.CollectionChanged += HandleMessagesChanged;
+    }
+
     public ObservableCollection<NotificationMessage> Messages { get; } = [];
+
+    public IReadOnlyList<NotificationMessage> Snapshot() {
+        lock (expirySync) {
+            return Messages.ToArray();
+        }
+    }
+
+    public Guid? ActiveOutlet => activeModal ?? (roots.Count == 0 ? null : roots.Keys.Last());
+    public NotificationPosition DefaultPosition => roots.Count == 0 ? NotificationPosition.BottomCenter : roots.Values.Last();
+    public long AnnouncementVersion { get; private set; }
+    public bool HasNewAnnouncement => AnnouncementVersion > announced;
+
+    public void RegisterRoot(Guid outletId, NotificationPosition position) {
+        roots[outletId] = position;
+        Changed?.Invoke();
+    }
+
+    public void UnregisterRoot(Guid outletId) {
+        roots.Remove(outletId);
+        Changed?.Invoke();
+    }
+
+    public void SetActiveModal(Guid? outletId) {
+        if (activeModal == outletId) {
+            return;
+        }
+        activeModal = outletId;
+        Changed?.Invoke();
+    }
+
+    public void Presented(Guid outletId, long version) {
+        if (ActiveOutlet == outletId) {
+            announced = Math.Max(announced, version);
+        }
+    }
 
     public event Action<NotificationMessage>? Notification;
 
@@ -122,10 +170,12 @@ public sealed class NotificationService
     public void Notify(NotificationMessage message)
     {
         ArgumentNullException.ThrowIfNull(message);
+        ObjectDisposedException.ThrowIf(disposed, this);
 
-        if (!Messages.Contains(message))
-        {
-            Messages.Add(message);
+        lock (expirySync) {
+            if (!Messages.Contains(message)) {
+                Messages.Add(message);
+            }
         }
 
         Notification?.Invoke(message);
@@ -211,9 +261,10 @@ public sealed class NotificationService
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        if (!Messages.Remove(message))
-        {
-            return false;
+        lock (expirySync) {
+            if (!Messages.Remove(message)) {
+                return false;
+            }
         }
 
         message.Close?.Invoke(message);
@@ -223,13 +274,13 @@ public sealed class NotificationService
 
     public bool Dismiss(Guid id)
     {
-        var message = Messages.FirstOrDefault(candidate => candidate.Id == id);
+        var message = Snapshot().FirstOrDefault(candidate => candidate.Id == id);
         return message is not null && Dismiss(message);
     }
 
     public void Clear()
     {
-        foreach (var message in Messages.ToArray())
+        foreach (var message in Snapshot())
         {
             Dismiss(message);
         }
@@ -253,5 +304,62 @@ public sealed class NotificationService
             NotificationSeverity.Error => NotificationDurations.ErrorMilliseconds,
             _ => NotificationDurations.InformationMilliseconds
         };
+    }
+
+    private void HandleMessagesChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args) {
+        lock (expirySync) {
+            if (args.OldItems is not null) {
+                foreach (NotificationMessage message in args.OldItems) {
+                    CancelExpiry(message.Id);
+                }
+            }
+            if (args.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset) {
+                foreach (var id in expiry.Keys.ToArray()) {
+                    CancelExpiry(id);
+                }
+            }
+            if (args.NewItems is not null) {
+                AnnouncementVersion++;
+                foreach (NotificationMessage message in args.NewItems) {
+                    if (!message.IsPersistent && !expiry.ContainsKey(message.Id)) {
+                        var timer = new CancellationTokenSource();
+                        expiry.Add(message.Id, timer);
+                        _ = ExpireAsync(message, timer.Token);
+                    }
+                }
+            }
+        }
+        Changed?.Invoke();
+    }
+
+    private async Task ExpireAsync(NotificationMessage message, CancellationToken cancellationToken) {
+        try {
+            await Task.Delay(TimeSpan.FromMilliseconds(message.Duration!.Value), clock, cancellationToken).ConfigureAwait(false);
+            Dismiss(message);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+        }
+    }
+
+    private void CancelExpiry(Guid id) {
+        lock (expirySync) {
+            if (expiry.Remove(id, out var timer)) {
+                timer.Cancel();
+                timer.Dispose();
+            }
+        }
+    }
+
+    public void Dispose() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
+        Messages.CollectionChanged -= HandleMessagesChanged;
+        lock (expirySync) {
+            foreach (var id in expiry.Keys.ToArray()) {
+                CancelExpiry(id);
+            }
+        }
+        roots.Clear();
     }
 }

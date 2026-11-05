@@ -1,0 +1,105 @@
+@page "/native-value-input"
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Native value input</PageTitle>
+<NativeFormInspector @ref="inspector" FormId="native-value-browser-form" />
+<PageScaffold>
+    <Header><PageHeader Title="Native value input" Description="Keep incomplete number and date edits while related information refreshes." /></Header>
+    <ChildContent>
+        <SurfaceCard>
+            <EditForm id="native-value-browser-form" EditContext="context" OnSubmit="Submit" data-testid="native-value-form" data-interactive="@interactive">
+                <ValidationSummary />
+                <Stack GapScale="LayoutGap.Medium">
+                    <Grid ColumnsMd="2" Gap="LayoutGap.Medium">
+                        <FormField Text="Optional amount">
+                            <NativeValueInput TValue="decimal?" @bind-Value="model.Amount" PendingChanged="@(pending => SetPending(Field.Amount, pending))"
+                                class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm" data-testid="native-value-amount" />
+                        </FormField>
+                        <FormField Text="Optional date">
+                            <NativeValueInput TValue="DateOnly?" @bind-Value="model.Date" PendingChanged="@(pending => SetPending(Field.Date, pending))"
+                                class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm" data-testid="native-value-date" />
+                        </FormField>
+                        <FormField Text="Count">
+                            <NativeValueInput TValue="int" @bind-Value="model.Count" PendingChanged="@(pending => SetPending(Field.Count, pending))"
+                                class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm" data-testid="native-value-count" />
+                        </FormField>
+                        <FormField Text="Local date and time">
+                            <NativeValueInput TValue="DateTime?" DateType="InputDateType.DateTimeLocal" @bind-Value="model.Scheduled" PendingChanged="@(pending => SetPending(Field.Scheduled, pending))"
+                                class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm" data-testid="native-value-scheduled" />
+                        </FormField>
+                    </Grid>
+                    <FormField Text="Immediate title">
+                        <NativeValueInput TValue="string" @bind-Value="model.Title" class="cda-input" data-testid="native-text-title" />
+                    </FormField>
+                    <TextBlock Value="@model.Title" data-testid="native-text-title-echo" />
+                    <FormField Text="Immediate multiline text">
+                        <NativeValueInput TValue="string" Multiline="true" @bind-Value="model.Body" rows="3" class="cda-input cda-input--textarea" data-testid="native-text-body" />
+                    </FormField>
+                    <TextBlock Value="@model.Body" data-testid="native-text-body-echo" />
+                    <FormField Text="Controlled note">
+                        <TextArea @bind-Value="note" Immediate="true" Rows="3" data-testid="native-value-note" />
+                    </FormField>
+                    <TextBlock Value="@note" data-testid="native-value-note-echo" />
+                    <TextBlock Value="@($"Related information refreshed {refreshes} time(s).")" data-testid="native-value-related" />
+                    <Cluster Gap="LayoutGap.Small" Wrap="FlexWrap.Wrap">
+                        <Button Text="Refresh related information" Click="@(() => refreshes++)" data-testid="native-value-refresh" />
+                        <Button Text="Inspect browser input" Click="InspectBrowserAsync" data-testid="native-value-inspect" />
+                        <Button Text="Clear note" Click="@(() => note = string.Empty)" data-testid="native-value-note-clear" />
+                        <Button Text="Clear immediate text" Click="ClearText" data-testid="native-text-clear" />
+                        <Button Text="Save values" Type="submit" Disabled="@(pendingFields.Count > 0)" data-testid="native-value-save" />
+                    </Cluster>
+                    <TextBlock Value="@(nativeValidity is { } validity ? validity.IsValid ? "Browser input is valid." : "Browser input is incomplete." : "Browser input has not been inspected.")" data-testid="native-value-validity" />
+                    <TextBlock Value="@($"Saved {saves} time(s).")" data-testid="native-value-saved" />
+                </Stack>
+            </EditForm>
+        </SurfaceCard>
+    </ChildContent>
+</PageScaffold>
+
+@code {
+    [Parameter] public string? HashRouteState { get; set; }
+    private readonly Values model = new();
+    private readonly HashSet<Field> pendingFields = [];
+    private EditContext context = default!;
+    private NativeFormInspector inspector = default!;
+    private NativeFormValidity? nativeValidity;
+    private async Task InspectBrowserAsync() {
+        nativeValidity = await inspector.InspectAsync();
+    }
+    private int refreshes;
+    private int saves;
+    private string? note = string.Empty;
+    private bool interactive;
+    protected override void OnAfterRender(bool firstRender) {
+        if (firstRender) {
+            interactive = true;
+            StateHasChanged();
+        }
+    }
+    private void ClearText() {
+        model.Title = string.Empty;
+        model.Body = string.Empty;
+    }
+    protected override void OnInitialized() => context = new(model);
+    private void SetPending(Field field, bool pending) {
+        if (pending) {
+            pendingFields.Add(field);
+        } else {
+            pendingFields.Remove(field);
+        }
+    }
+    private void Submit() {
+        if (pendingFields.Count == 0 && context.Validate()) {
+            saves++;
+        }
+    }
+    private enum Field { Amount, Date, Count, Scheduled }
+    private sealed class Values {
+        public string Title { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
+        public decimal? Amount { get; set; } = 143.50m;
+        public DateOnly? Date { get; set; } = new(2026, 11, 2);
+        public int Count { get; set; } = 4;
+        public DateTime? Scheduled { get; set; } = new(2026, 11, 5, 10, 30, 0);
+    }
+}

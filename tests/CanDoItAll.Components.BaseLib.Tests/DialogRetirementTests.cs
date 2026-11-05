@@ -10,6 +10,7 @@ public sealed class DialogRetirementTests {
     [InlineData(true)]
     public async Task Active_close_fault_is_observable_and_does_not_retire_the_dialog(bool disconnected) {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         Exception failure = disconnected ? new JSDisconnectedException("Active circuit failure") : new JSException("Active close failure");
         var module = new ControlledModule { CloseFailure = failure };
         context.Services.AddSingleton<IJSRuntime>(new Runtime(module));
@@ -30,6 +31,7 @@ public sealed class DialogRetirementTests {
     [InlineData(true)]
     public async Task Retired_close_always_releases_module_and_callback(bool disconnected) {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         var module = new ControlledModule {
             CloseFailure = disconnected ? new JSDisconnectedException("Retired circuit") : new TaskCanceledException("Retired close")
         };
@@ -48,6 +50,7 @@ public sealed class DialogRetirementTests {
     [Fact]
     public async Task Unexpected_module_release_failure_still_releases_callback() {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         var module = new ControlledModule { DisposeFailure = new JSException("Module release failed") };
         context.Services.AddSingleton<IJSRuntime>(new Runtime(module));
         var dialog = context.Render<Dialog>(parameters => parameters.Add(value => value.IsOpen, true));
@@ -62,6 +65,7 @@ public sealed class DialogRetirementTests {
     [Fact]
     public async Task Repeated_retirement_shares_pending_close_and_releases_once() {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         var module = new ControlledModule { HoldClose = true };
         context.Services.AddSingleton<IJSRuntime>(new Runtime(module));
         var dialog = context.Render<Dialog>(parameters => parameters.Add(value => value.IsOpen, true));

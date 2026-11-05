@@ -1,0 +1,128 @@
+@typeparam TValue
+@namespace CanDoItAll.Components.BaseLib
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InputBase<TValue>
+
+@RenderInput
+
+@code {
+    private ValidationMessageStore? messages;
+    private bool browserBadInput;
+    private bool pendingInput;
+    private bool displayInitialized;
+    private string displayedValue = string.Empty;
+    private TValue? observedValue;
+    private bool disposed;
+    private static Type ValueType => Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
+    private static bool IsDate => ValueType == typeof(DateOnly) || ValueType == typeof(DateTime);
+    private static bool IsText => ValueType == typeof(string);
+    private string InputType => !IsDate ? "number" : DateType == InputDateType.DateTimeLocal ? "datetime-local" : "date";
+    [Parameter] public InputDateType DateType { get; set; } = InputDateType.Date;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Multiline { get; set; }
+    [Parameter] public EventCallback<bool> PendingChanged { get; set; }
+    [CascadingParameter(Name = "FormFieldLabelId")] public string? FormFieldLabelId { get; set; }
+
+    protected override void OnParametersSet() {
+        if (DateType is not (InputDateType.Date or InputDateType.DateTimeLocal) || DateType == InputDateType.DateTimeLocal && ValueType != typeof(DateTime)) {
+            throw new InvalidOperationException("NativeValueInput supports dates, or local date and time with a DateTime value.");
+        }
+        if (Multiline && !IsText) {
+            throw new InvalidOperationException("Multiline native input requires a string value.");
+        }
+        if (!IsText && !IsDate && ValueType != typeof(decimal) && ValueType != typeof(double) && ValueType != typeof(float) &&
+            ValueType != typeof(int) && ValueType != typeof(long) && ValueType != typeof(short)) {
+            throw new InvalidOperationException($"NativeValueInput does not support {typeof(TValue)}.");
+        }
+        if (!displayInitialized || !pendingInput && !EqualityComparer<TValue>.Default.Equals(observedValue, Value)) {
+            displayedValue = CurrentValueAsString ?? string.Empty;
+        }
+        observedValue = Value;
+        displayInitialized = true;
+    }
+
+    private RenderFragment RenderInput => builder => {
+        builder.OpenElement(0, Multiline ? "textarea" : "input");
+        builder.AddMultipleAttributes(1, AdditionalAttributes);
+        if (!IsText) {
+            builder.AddAttribute(2, "type", InputType);
+            builder.AddAttribute(3, "step", IsDate && DateType == InputDateType.Date ? null : "any");
+        }
+        builder.AddAttribute(4, "class", CssClass);
+        builder.AddAttribute(5, "aria-labelledby", ResolveLabelledBy());
+        builder.AddAttribute(6, "value", displayedValue);
+        builder.AddAttribute(7, "disabled", Disabled);
+        builder.AddAttribute(8, "readonly", ReadOnly);
+        if (IsText) {
+            builder.AddAttribute(9, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
+        } else {
+            builder.AddAttribute(10, "oncadnativeinput", EventCallback.Factory.Create<NativeInputEventArgs>(this, HandleInputAsync));
+        }
+        builder.SetUpdatesAttributeName("value");
+        builder.AddAttribute(11, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
+        builder.SetUpdatesAttributeName("value");
+        builder.CloseElement();
+    };
+
+    private async Task HandleInputAsync(NativeInputEventArgs args) {
+        if (disposed || Disabled || ReadOnly) {
+            return;
+        }
+        browserBadInput = args.BadInput;
+        var valid = !args.BadInput && TryRead(args.Value, out _);
+        displayedValue = args.Value ?? string.Empty;
+        displayInitialized = true;
+        pendingInput = !valid;
+        if (EditContext is not null) {
+            messages ??= new(EditContext);
+            messages.Clear(FieldIdentifier);
+            if (!valid) {
+                messages.Add(FieldIdentifier, $"The {DisplayName ?? FieldIdentifier.FieldName} field must contain a valid {(IsDate ? "date" : "number")}.");
+            }
+            EditContext.NotifyValidationStateChanged();
+        }
+        if (valid) {
+            CurrentValueAsString = args.Value;
+            observedValue = Value;
+        }
+        await PendingChanged.InvokeAsync(!valid);
+    }
+
+    private Task HandleChangeAsync(ChangeEventArgs args) => browserBadInput ? Task.CompletedTask :
+        HandleInputAsync(new() { Value = args.Value?.ToString() ?? string.Empty });
+
+    protected override bool TryParseValueFromString(string? value, out TValue result, [System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out string? validationErrorMessage) {
+        var valid = TryRead(value, out result);
+        validationErrorMessage = valid ? null : $"Enter a valid {(IsDate ? "date" : "number")}.";
+        return valid;
+    }
+
+    private static bool TryRead(string? value, out TValue result) {
+        if (string.IsNullOrEmpty(value) && Nullable.GetUnderlyingType(typeof(TValue)) is not null) {
+            result = default!;
+            return true;
+        }
+        return BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result!);
+    }
+
+    protected override string? FormatValueAsString(TValue? value) => value switch {
+        null => string.Empty,
+        string text => text,
+        DateOnly date => date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        DateTime date => date.ToString(DateType == InputDateType.DateTimeLocal ? "yyyy-MM-ddTHH:mm:ss" : "yyyy-MM-dd", CultureInfo.InvariantCulture),
+        IFormattable number => number.ToString(null, CultureInfo.InvariantCulture),
+        _ => throw new InvalidOperationException($"NativeValueInput does not support {typeof(TValue)}.")
+    };
+
+    private string? ResolveLabelledBy() => AdditionalAttributes?.Keys.Any(key =>
+        string.Equals(key, "aria-label", StringComparison.OrdinalIgnoreCase) || string.Equals(key, "aria-labelledby", StringComparison.OrdinalIgnoreCase)) == true
+            ? null : FormFieldLabelId;
+
+    protected override void Dispose(bool disposing) {
+        disposed = true;
+        messages?.Clear();
+        base.Dispose(disposing);
+    }
+}

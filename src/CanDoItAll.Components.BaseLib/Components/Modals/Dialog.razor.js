@@ -1,5 +1,28 @@
 const ON_DISMISS_REQUESTED = 'OnDialogDismissRequested';
 const controllers = new Map();
+const layerOrder = [];
+export const DIALOG_STACK_CHANGED = 'candoitall:dialog-stack-changed';
+
+export function activeNotificationOutlet() {
+    const active = controllers.get(layerOrder.at(-1));
+    return active?.dialog.dataset.cdaNotificationOutlet ?? null;
+}
+
+function raiseLayer(dialog) {
+    const entry = Array.from(controllers).find(([, controller]) => controller.dialog === dialog);
+    if (!entry) {
+        return;
+    }
+    const index = layerOrder.indexOf(entry[0]);
+    if (index >= 0) {
+        layerOrder.splice(index, 1);
+    }
+    layerOrder.push(entry[0]);
+}
+
+function notifyLayerChanged() {
+    document.dispatchEvent(new CustomEvent(DIALOG_STACK_CHANGED));
+}
 
 let originalBodyOverflow;
 let focusOwnershipInitialized = false;
@@ -66,6 +89,7 @@ export function openDialog(dialog, instanceId, dotNetReference) {
     if (!dialog.open) {
         dialog.showModal();
     }
+    raiseLayer(dialog);
 
     // A dialog rendered inside another dialog's content belongs to it and stacks above it. When the owner opens after
     // such a descendant (both opened by one render, their module loads completing in either order), the owner's
@@ -73,7 +97,9 @@ export function openDialog(dialog, instanceId, dotNetReference) {
     for (const descendant of dialog.querySelectorAll('dialog[open]')) {
         descendant.close();
         descendant.showModal();
+        raiseLayer(descendant);
     }
+    notifyLayerChanged();
 
     requestAnimationFrame(() => {
         if (controllers.get(instanceId) !== controller || !dialog.isConnected || !dialog.open) {
@@ -104,6 +130,11 @@ export function closeDialog(instanceId) {
     }
 
     controllers.delete(instanceId);
+    const layerIndex = layerOrder.indexOf(instanceId);
+    if (layerIndex >= 0) {
+        layerOrder.splice(layerIndex, 1);
+    }
+    notifyLayerChanged();
 
     if (controllers.size === 0) {
         removalObserver.disconnect();

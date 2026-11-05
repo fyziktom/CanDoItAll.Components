@@ -1,0 +1,59 @@
+@namespace CanDoItAll.Components.BaseLib
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+@code {
+    private Task<IJSObjectReference>? moduleLoad;
+    private bool disposed;
+    [Parameter, EditorRequired] public string FormId { get; set; } = string.Empty;
+    [Parameter] public string? SectionIndexAttribute { get; set; }
+    [Parameter] public string? PanelsSelector { get; set; }
+
+    public async Task<NativeFormValidity> InspectAsync() {
+        ObjectDisposedException.ThrowIf(disposed, this);
+        ArgumentException.ThrowIfNullOrWhiteSpace(FormId);
+        var id = FormId;
+        var section = SectionIndexAttribute;
+        var panels = PanelsSelector;
+        moduleLoad ??= LoadAsync();
+        var module = await moduleLoad;
+        ObjectDisposedException.ThrowIf(disposed, this);
+        var validity = await module.InvokeAsync<NativeFormValidity>("inspect", id, section, panels);
+        ObjectDisposedException.ThrowIf(disposed, this);
+        return validity;
+    }
+
+    public async Task FocusInvalidAsync() {
+        ObjectDisposedException.ThrowIf(disposed, this);
+        ArgumentException.ThrowIfNullOrWhiteSpace(FormId);
+        var id = FormId;
+        moduleLoad ??= LoadAsync();
+        var module = await moduleLoad;
+        ObjectDisposedException.ThrowIf(disposed, this);
+        await module.InvokeVoidAsync("focusInvalid", id);
+    }
+
+    private async Task<IJSObjectReference> LoadAsync() {
+        var module = await JS.InvokeAsync<IJSObjectReference>("import",
+            "./_content/CanDoItAll.Components.BaseLib/Components/Forms/NativeFormInspector.razor.js");
+        if (disposed) {
+            await module.DisposeAsync();
+            throw new OperationCanceledException("The form inspector was disposed while its browser module loaded.");
+        }
+        return module;
+    }
+
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
+        if (moduleLoad is not null) {
+            try {
+                await (await moduleLoad).DisposeAsync();
+            } catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException) {
+            }
+        }
+    }
+}
