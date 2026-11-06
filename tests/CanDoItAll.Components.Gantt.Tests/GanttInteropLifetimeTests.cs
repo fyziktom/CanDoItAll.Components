@@ -10,16 +10,16 @@ public sealed class GanttInteropLifetimeTests {
     [InlineData(false)]
     [InlineData(true)]
     public async Task Slow_interop_cannot_replace_a_newer_controlled_model(bool holdCreate) {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime { HoldNext = holdCreate };
         context.Services.AddSingleton<IJSRuntime>(runtime);
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters.Add(component => component.Tasks, Tasks(1)));
+        var cut = context.Render<GanttChart>(parameters => parameters.Add(component => component.Tasks, Tasks(1)));
         if (!holdCreate) {
             runtime.HoldNext = true;
-            cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
+            cut.Render(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
         }
         await runtime.Entered.Task.WaitAsync(TimeSpan.FromSeconds(3));
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, Tasks(3)));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, Tasks(3)));
         runtime.Release.TrySetResult();
         await runtime.Finished.Task.WaitAsync(TimeSpan.FromSeconds(3));
         cut.WaitForAssertion(() => Assert.Equal(3, runtime.DisplayedTaskCount));
@@ -29,10 +29,10 @@ public sealed class GanttInteropLifetimeTests {
 
     [Fact]
     public async Task Disposal_waits_for_original_create_and_releases_its_javascript_instance() {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime { HoldNext = true };
         context.Services.AddSingleton<IJSRuntime>(runtime);
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters.Add(component => component.Tasks, Tasks(1)));
+        var cut = context.Render<GanttChart>(parameters => parameters.Add(component => component.Tasks, Tasks(1)));
         await runtime.Entered.Task.WaitAsync(TimeSpan.FromSeconds(3));
         var disposal = cut.InvokeAsync(() => cut.Instance.DisposeAsync().AsTask());
         runtime.Release.TrySetResult();

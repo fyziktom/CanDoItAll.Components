@@ -9,7 +9,7 @@ public sealed class GanttDisposalTests
     [Fact]
     public async Task Dispose_releases_the_callback_reference_when_javascript_cleanup_fails()
     {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         context.JSInterop.Mode = JSRuntimeMode.Loose;
         context.JSInterop
             .SetupVoid("CanDoItAll.ganttChart.dispose", static _ => true)
@@ -19,7 +19,7 @@ public sealed class GanttDisposalTests
             "Task",
             DateTimeOffset.UnixEpoch,
             DateTimeOffset.UnixEpoch.AddHours(1));
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>()));
         var callbackReference = typeof(GanttChart).GetField(

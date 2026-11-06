@@ -18,7 +18,7 @@ public sealed class GanttChartComponentTests
         GanttTask[] tasks = [Task("a", "A", 0, 2), Task("b", "B", 2, 4), Task("c", "C", 4, 6)];
         GanttDependency[] dependencies = [new(new("a-b"), new("a"), new("b")), new(new("b-c"), new("b"), new("c"))];
         var requests = new List<GanttDependencyMutationRequest>();
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, dependencies)
             .Add(component => component.DependencyMutationRequested, requests.Add));
@@ -42,13 +42,13 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var task = Task("welcome", "Prepare the private welcome dinner", 0, 2);
         var widths = new List<double>();
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, [task])
             .Add(component => component.AllowTaskEditing, false)
             .Add(component => component.TaskTableWidthChanged, width => widths.Add(width)));
 
         await cut.InvokeAsync(() => cut.Instance.ResizeTaskTableAsync(920));
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, [task]));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, [task]));
 
         Assert.Equal([920d], widths);
         Assert.Equal("920", cut.Find("[data-gantt-column-resize]").GetAttribute("aria-valuenow"));
@@ -57,7 +57,7 @@ public sealed class GanttChartComponentTests
         Assert.Equal(920, GetProperty<double>(GetProperty(update.Arguments[1]!, "Options"), "TaskTableWidth"));
         Assert.Equal(task, Assert.Single(cut.Instance.Tasks));
 
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.TaskTableWidth, 700));
+        cut.Render(parameters => parameters.Add(component => component.TaskTableWidth, 700));
         Assert.Equal("700", cut.Find("[data-gantt-column-resize]").GetAttribute("aria-valuenow"));
     }
 
@@ -68,7 +68,7 @@ public sealed class GanttChartComponentTests
     [InlineData(1601)]
     public async Task Column_resize_rejects_invalid_width_without_corrupting_view_state(double width) {
         using var context = CreateContext();
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters.Add(component => component.Tasks,
+        var cut = context.Render<GanttChart>(parameters => parameters.Add(component => component.Tasks,
             [Task("welcome", "Welcome", 0, 2)]));
 
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => cut.InvokeAsync(() => cut.Instance.ResizeTaskTableAsync(width)));
@@ -90,7 +90,7 @@ public sealed class GanttChartComponentTests
             Task("delivery", "Delivery", 16, 20)
         };
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.RowHeight, 54)
@@ -151,7 +151,7 @@ public sealed class GanttChartComponentTests
             new GanttDependency(new GanttDependencyId("design-build"), firstId, secondId)
         };
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, dependencies)
             .Add(component => component.TaskReadOnlySelector, task => task.Id == firstId)
@@ -203,7 +203,7 @@ public sealed class GanttChartComponentTests
             },
             tasks[1]
         };
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, updatedTasks));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, updatedTasks));
 
         var updateInvocation = Assert.Single(
             context.JSInterop.Invocations,
@@ -237,7 +237,7 @@ public sealed class GanttChartComponentTests
             Start.AddHours(8),
             [new GanttAssignment(GanttAssignmentKind.Workflow, workflowName)]);
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>()));
 
@@ -256,7 +256,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var task = Task("analysis", "Original title", 0, 8);
         GanttTaskTitleChangeRequest? requestedChange = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskTitleChangeRequested, request => requestedChange = request));
@@ -284,7 +284,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var task = Task("analysis", "Analysis", 0, 8);
         GanttTaskId? doubleClickedTaskId = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskDoubleClicked, taskId => doubleClickedTaskId = taskId));
@@ -300,7 +300,7 @@ public sealed class GanttChartComponentTests
     {
         using var context = CreateContext();
         var task = Task("analysis", "Analysis", 0, 8);
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskTitleChangeRequested, _ => { }));
@@ -317,7 +317,7 @@ public sealed class GanttChartComponentTests
         var task = Task("analysis", "Analysis", 0, 8);
         var clickedAt = Start.AddHours(3.5);
         GanttTimelineDoubleClickEventArgs? requestedCreation = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TimelineDoubleClicked, request => requestedCreation = request));
@@ -342,7 +342,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var task = Task("analysis", "Analysis", 0, 8);
         GanttTimelineDoubleClickEventArgs? requestedCreation = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.AllowTaskEditing, false)
@@ -367,7 +367,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var task = Task("analysis", "Analysis", 0, 8);
         var callbackCount = 0;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.AllowTaskEditing, true)
@@ -392,7 +392,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var task = Task("analysis", "Analysis", 0, 8);
         var callbackCount = 0;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.AllowTaskEditing, false)
@@ -411,7 +411,7 @@ public sealed class GanttChartComponentTests
     public async Task Empty_timeline_double_click_rejects_a_row_outside_the_controlled_model()
     {
         using var context = CreateContext();
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { Task("analysis", "Analysis", 0, 8) })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TimelineDoubleClicked, _ => { }));
@@ -432,7 +432,7 @@ public sealed class GanttChartComponentTests
             Task("last", "Last", 4, 6)
         };
         GanttTaskOrderChangeRequest? requestedOrder = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskOrderChangeRequested, request => requestedOrder = request));
@@ -470,7 +470,7 @@ public sealed class GanttChartComponentTests
         var first = Task("first", "First", 0, 2);
         var review = Task("review", "Review", 2, 4);
         var last = Task("last", "Last", 4, 6);
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { first, review, last })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskReadOnlySelector, task => task.Id == first.Id)
@@ -479,7 +479,7 @@ public sealed class GanttChartComponentTests
         Assert.True(cut.Find("button[aria-label='Move Review up']").HasAttribute("disabled"));
         Assert.False(cut.Find("button[aria-label='Move Review down']").HasAttribute("disabled"));
 
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.AllowTaskReordering, false));
+        cut.Render(parameters => parameters.Add(component => component.AllowTaskReordering, false));
 
         Assert.All(
             cut.FindAll(".cda-gantt__task-order-button"),
@@ -492,7 +492,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var callbackCount = 0;
         var task = Task("analysis", "Analysis", 0, 8);
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskTitleChangeRequested, _ => callbackCount++));
@@ -500,7 +500,7 @@ public sealed class GanttChartComponentTests
         cut.Find(".cda-gantt__task-button").Click();
         cut.Find(".cda-gantt__title-editor").Input("Renamed task");
 
-        cut.SetParametersAndRender(parameters => parameters
+        cut.Render(parameters => parameters
             .Add(component => component.AllowTaskEditing, false));
 
         Assert.Equal(0, callbackCount);
@@ -526,7 +526,7 @@ public sealed class GanttChartComponentTests
             Start.AddMinutes(20),
             Start.AddMinutes(150));
         GanttTaskScheduleChangeRequest? callbackRequest = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[]
             {
                 Task("anchor", "Anchor", 0, 1),
@@ -563,7 +563,7 @@ public sealed class GanttChartComponentTests
             callbackEntered.SetResult();
             await releaseCallback.Task;
         };
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskScheduleChangeRequested, callback));
@@ -575,12 +575,12 @@ public sealed class GanttChartComponentTests
             "move"));
         await callbackEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, new[] { task }));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, new[] { task }));
         Assert.DoesNotContain(
             context.JSInterop.Invocations,
             invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
 
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, new[] { savedTask }));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, new[] { savedTask }));
         Assert.DoesNotContain(
             context.JSInterop.Invocations,
             invocation => invocation.Identifier == "CanDoItAll.ganttChart.update");
@@ -612,7 +612,7 @@ public sealed class GanttChartComponentTests
             callbackEntered.SetResult();
             await releaseCallback.Task;
         };
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskScheduleChangeRequested, callback));
@@ -624,7 +624,7 @@ public sealed class GanttChartComponentTests
             "move"));
         await callbackEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, new[] { task }));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, new[] { task }));
         releaseCallback.SetResult();
         await commit;
 
@@ -650,7 +650,7 @@ public sealed class GanttChartComponentTests
             callbackEntered.SetResult();
             await releaseCallback.Task;
         };
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskScheduleChangeRequested, callback));
@@ -683,7 +683,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         var callbackCount = 0;
         var task = Task("analysis", "Analysis", 0, 8);
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.AllowTaskEditing, allowTaskEditing)
@@ -713,7 +713,7 @@ public sealed class GanttChartComponentTests
         var callbackCount = 0;
         var predecessor = Task("predecessor", "Predecessor", 0, 2);
         var successor = Task("successor", "Successor", 2, 4);
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { predecessor, successor })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.AllowDependencyEditing, allowDependencyEditing)
@@ -748,7 +748,7 @@ public sealed class GanttChartComponentTests
             predecessor.Id,
             successor.Id);
         var payload = SerializeDragTask(Task("inserted", "Inserted", -2, 0));
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { predecessor, successor })
             .Add(component => component.Dependencies, new[] { bridge })
             .Add(component => component.AllowTaskInsertion, allowTaskInsertion)
@@ -779,7 +779,7 @@ public sealed class GanttChartComponentTests
             ExpectedEffort = TimeSpan.FromHours(1)
         };
         GanttTaskInsertionRequest? requestedInsertion = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { predecessor, successor })
             .Add(component => component.Dependencies, new[] { bridge })
             .Add(component => component.TaskInsertionRequested, request => requestedInsertion = request));
@@ -796,7 +796,7 @@ public sealed class GanttChartComponentTests
     {
         using var context = CreateContext();
         bool? requestedVisibility = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { Task("analysis", "Analysis", 0, 8) })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.ShowTaskTableChanged, visible => requestedVisibility = visible));
@@ -827,7 +827,7 @@ public sealed class GanttChartComponentTests
             new GanttDependency(new GanttDependencyId("second-first"), secondId, firstId)
         };
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, dependencies));
 
@@ -856,7 +856,7 @@ public sealed class GanttChartComponentTests
             new GanttDependency(new GanttDependencyId("predecessor-successor"), predecessorId, successorId)
         };
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, dependencies));
 
@@ -874,7 +874,7 @@ public sealed class GanttChartComponentTests
     {
         using var context = CreateContext();
         var callbackCount = 0;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { Task("analysis", "Analysis", 0, 8) })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskTitleChangeRequested, _ => callbackCount++));
@@ -901,7 +901,7 @@ public sealed class GanttChartComponentTests
             new GanttTask(taskReadOnlyId, "Task read only", Start.AddHours(4), Start.AddHours(8))
         };
 
-        context.RenderComponent<GanttChart>(parameters => parameters
+        context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TaskDependencyReadOnlySelector, task => task.Id == dependencyReadOnlyId)
@@ -937,7 +937,7 @@ public sealed class GanttChartComponentTests
             Task("second", "Second", 8, 12)
         };
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.SnapInterval, TimeSpan.FromHours(3))
@@ -946,7 +946,7 @@ public sealed class GanttChartComponentTests
         var createOptions = GetProperty(GetCreateModel(context), "Options");
         var initialTimelineStart = GetProperty<long>(createOptions, "TimelineStartMs");
 
-        cut.SetParametersAndRender(parameters => parameters.Add(
+        cut.Render(parameters => parameters.Add(
             component => component.Tasks,
             new[]
             {
@@ -987,7 +987,7 @@ public sealed class GanttChartComponentTests
                 task.Id)))
             .ToArray();
 
-        context.RenderComponent<GanttChart>(parameters => parameters
+        context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, predecessors.Append(hub).Concat(successors).ToArray())
             .Add(component => component.Dependencies, dependencies));
 
@@ -1012,7 +1012,7 @@ public sealed class GanttChartComponentTests
         double expectedTickIntervalMs)
     {
         using var context = CreateContext();
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { Task("schedule", "Schedule", 0, 48) })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TimeScale, scale));
@@ -1030,7 +1030,7 @@ public sealed class GanttChartComponentTests
     public void Fine_time_scale_creates_real_horizontal_overflow_without_changing_row_geometry()
     {
         using var context = CreateContext();
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[]
             {
                 Task("first", "First", 0, 8),
@@ -1064,7 +1064,7 @@ public sealed class GanttChartComponentTests
                 task.Id))
             .ToArray();
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, dependencies)
             .Add(component => component.TimeScale, GanttTimeScale.Hour)
@@ -1085,7 +1085,7 @@ public sealed class GanttChartComponentTests
         using var context = CreateContext();
         GanttTimeScale? requestedScale = null;
         double? requestedPixelsPerHour = null;
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { Task("schedule", "Schedule", 0, 24) })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.TimeScaleChanged, scale => requestedScale = scale)
@@ -1124,7 +1124,7 @@ public sealed class GanttChartComponentTests
                 task.Id))
             .ToArray();
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, successors.Prepend(hub).ToArray())
             .Add(component => component.Dependencies, dependencies)
             .Add(component => component.RowHeight, 10)
@@ -1147,7 +1147,7 @@ public sealed class GanttChartComponentTests
             new GanttTask(TaskId("long-running"), "Long running", Start, Start.AddDays(365))
         };
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.PixelsPerHour, 96));
@@ -1167,7 +1167,7 @@ public sealed class GanttChartComponentTests
             new GanttTask(TaskId("long-running"), "Long running", Start, Start.AddDays(120))
         };
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, tasks)
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>())
             .Add(component => component.PixelsPerHour, 12));
@@ -1207,7 +1207,7 @@ public sealed class GanttChartComponentTests
                 new GanttAssignment(GanttAssignmentKind.Person, "Alex")
             ]);
 
-        var cut = context.RenderComponent<GanttChart>(parameters => parameters
+        var cut = context.Render<GanttChart>(parameters => parameters
             .Add(component => component.Tasks, new[] { task })
             .Add(component => component.Dependencies, Array.Empty<GanttDependency>()));
 
@@ -1233,7 +1233,7 @@ public sealed class GanttChartComponentTests
             ExpectedEffort = TimeSpan.FromHours(2)
         };
 
-        context.RenderComponent<GanttTaskDragSource>(parameters => parameters
+        context.Render<GanttTaskDragSource>(parameters => parameters
             .Add(component => component.Task, task)
             .Add(component => component.DragDataFormat, "application/x-test-gantt-task"));
 
@@ -1250,14 +1250,14 @@ public sealed class GanttChartComponentTests
         Assert.Single(payload.RootElement.GetProperty("assignments").EnumerateArray());
     }
 
-    private static TestContext CreateContext()
+    private static BunitContext CreateContext()
     {
-        var context = new TestContext();
+        var context = new BunitContext();
         context.JSInterop.Mode = JSRuntimeMode.Loose;
         return context;
     }
 
-    private static object GetCreateModel(TestContext context)
+    private static object GetCreateModel(BunitContext context)
     {
         var invocation = Assert.Single(
             context.JSInterop.Invocations,

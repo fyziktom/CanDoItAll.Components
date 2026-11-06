@@ -991,6 +991,7 @@
           "property CanDoItAll.Components.BaseLib.DialogOptions Options {get;}",
           "property Microsoft.AspNetCore.Components.RenderFragment\u003CCanDoItAll.Components.BaseLib.DialogReference\u003E ChildContent {get;}",
           "property System.Collections.Generic.IDictionary\u003CSystem.String,System.Object\u003E Parameters {get;}",
+          "property System.Func\u003CSystem.Threading.Tasks.Task\u003CSystem.Boolean\u003E\u003E BeforeClose {get;set;}",
           "property System.Guid Id {get;}",
           "property System.String Title {get;}",
           "property System.Threading.Tasks.Task\u003CSystem.Object\u003E Result {get;}",
@@ -1028,6 +1029,7 @@
           "ctor(Microsoft.AspNetCore.Components.NavigationManager navigationManager)",
           "event System.Action Changed",
           "method System.IDisposable PreserveDialogsOnSamePageNavigation()",
+          "method System.Threading.Tasks.Task CloseAllAsync(System.Object result = optional)",
           "method System.Threading.Tasks.Task CloseAsync(CanDoItAll.Components.BaseLib.DialogReference dialog, System.Object result = optional)",
           "method System.Threading.Tasks.Task CloseAsync(System.Object result = optional)",
           "method System.Threading.Tasks.Task\u003CSystem.Object\u003E OpenAsync(System.String title, Microsoft.AspNetCore.Components.RenderFragment\u003CCanDoItAll.Components.BaseLib.DialogReference\u003E childContent, CanDoItAll.Components.BaseLib.DialogOptions options = optional, System.Threading.CancellationToken cancellationToken = optional)",
@@ -1181,6 +1183,14 @@
           "property System.String Label {get;set;}",
           "property System.String Meta {get;set;}"
         ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.EventHandlers",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": []
       },
       {
         "name": "CanDoItAll.Components.BaseLib.ExpandTransition",
@@ -1872,6 +1882,67 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.NativeFormInspector",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.Task FocusInvalidAsync()",
+          "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.BaseLib.NativeFormValidity\u003E InspectAsync()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property System.String FormId {get;set;}",
+          "property System.String PanelsSelector {get;set;}",
+          "property System.String SectionIndexAttribute {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.NativeFormValidity",
+        "kind": "struct",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.ValueType",
+        "members": [
+          "ctor(System.Boolean IsValid, System.Nullable\u003CSystem.Int32\u003E SectionIndex = optional)",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.NativeFormValidity other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Boolean IsValid, out System.Nullable\u003CSystem.Int32\u003E SectionIndex)",
+          "property System.Boolean IsValid {get;set;}",
+          "property System.Nullable\u003CSystem.Int32\u003E SectionIndex {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.NativeInputEventArgs",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.EventArgs",
+        "members": [
+          "ctor()",
+          "property System.Boolean BadInput {get;set;}",
+          "property System.String Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.NativeValueInput\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.Forms.InputBase\u003CTValue\u003E",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Boolean\u003E PendingChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.Forms.InputDateType DateType {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
+          "property System.Boolean Multiline {get;set;}",
+          "property System.Boolean ReadOnly {get;set;}",
+          "property System.String FormFieldLabelId {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.Notification",
         "kind": "class",
         "isAbstract": false,
@@ -1879,8 +1950,11 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
-          "method System.Void Dispose()",
-          "property CanDoItAll.Components.BaseLib.NotificationPosition Position {get;set;}"
+          "method System.Threading.Tasks.Task OnNotificationLayerChanged(System.Nullable\u003CSystem.Guid\u003E outletId)",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.BaseLib.NotificationPosition Position {get;set;}",
+          "property System.Boolean IsModalOutlet {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E OutletId {get;set;}"
         ]
       },
       {
@@ -1959,7 +2033,7 @@
         "isSealed": true,
         "baseType": "",
         "members": [
-          "ctor()",
+          "ctor(System.TimeProvider timeProvider = optional)",
           "event System.Action Changed",
           "event System.Action\u003CCanDoItAll.Components.BaseLib.NotificationMessage\u003E Notification",
           "method CanDoItAll.Components.BaseLib.NotificationMessage Error(System.String summary, System.String detail = optional, System.Nullable\u003CSystem.Double\u003E duration = optional, System.Nullable\u003CCanDoItAll.Components.BaseLib.NotificationPosition\u003E position = optional)",
@@ -1970,10 +2044,20 @@
           "method CanDoItAll.Components.BaseLib.NotificationMessage Warning(System.String summary, System.String detail = optional, System.Nullable\u003CSystem.Double\u003E duration = optional, System.Nullable\u003CCanDoItAll.Components.BaseLib.NotificationPosition\u003E position = optional)",
           "method System.Boolean Dismiss(CanDoItAll.Components.BaseLib.NotificationMessage message)",
           "method System.Boolean Dismiss(System.Guid id)",
+          "method System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.NotificationMessage\u003E Snapshot()",
           "method System.Void Clear()",
           "method System.Void Click(CanDoItAll.Components.BaseLib.NotificationMessage message)",
+          "method System.Void Dispose()",
           "method System.Void Notify(CanDoItAll.Components.BaseLib.NotificationMessage message)",
-          "property System.Collections.ObjectModel.ObservableCollection\u003CCanDoItAll.Components.BaseLib.NotificationMessage\u003E Messages {get;}"
+          "method System.Void Presented(System.Guid outletId, System.Int64 version)",
+          "method System.Void RegisterRoot(System.Guid outletId, CanDoItAll.Components.BaseLib.NotificationPosition position)",
+          "method System.Void SetActiveModal(System.Nullable\u003CSystem.Guid\u003E outletId)",
+          "method System.Void UnregisterRoot(System.Guid outletId)",
+          "property CanDoItAll.Components.BaseLib.NotificationPosition DefaultPosition {get;}",
+          "property System.Boolean HasNewAnnouncement {get;}",
+          "property System.Collections.ObjectModel.ObservableCollection\u003CCanDoItAll.Components.BaseLib.NotificationMessage\u003E Messages {get;}",
+          "property System.Int64 AnnouncementVersion {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E ActiveOutlet {get;}"
         ]
       },
       {
@@ -3524,7 +3608,9 @@
         "members": [
           "ctor()",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E ValueChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E PendingInputChanged {get;set;}",
           "property System.Boolean Disabled {get;set;}",
+          "property System.Boolean IsInputFocused {get;}",
           "property System.Boolean SingleTag {get;set;}",
           "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Suggestions {get;set;}",
           "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Value {get;set;}",
@@ -3536,6 +3622,7 @@
           "property System.String Hint {get;set;}",
           "property System.String InputId {get;set;}",
           "property System.String InputTestId {get;set;}",
+          "property System.String PendingInput {get;set;}",
           "property System.String Placeholder {get;set;}",
           "property System.String TestId {get;set;}"
         ]
@@ -4574,6 +4661,7 @@
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.OverlayLib.OverlayWindowState\u003E StateChanged {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
           "property System.Boolean AllowResize {get;set;}",
+          "property System.Boolean KeepContentMountedWhenMinimized {get;set;}",
           "property System.Boolean ShowHeader {get;set;}",
           "property System.Double DefaultHeight {get;set;}",
           "property System.Double DefaultWidth {get;set;}",
