@@ -8,9 +8,7 @@ public sealed class CanvasWorkbenchComposerContractTests {
     [Fact]
     public async Task Optional_comparison_callback_keeps_actual_input_revision_and_unfinished_raw_draft() {
         CanvasWorkbenchComposerDraft? observed = null;
-        var component = new ComposerCanvas(default(EventCallback<CanvasWorkbenchNodeEditRequest>)) {
-            ComposerComparisonRequested = EventCallback.Factory.Create<CanvasWorkbenchComposerDraft>(this, value => observed = value)
-        };
+        var component = new ComposerCanvas(comparison: EventCallback.Factory.Create<CanvasWorkbenchComposerDraft>(this, value => observed = value));
         var opening = Guid.NewGuid();
         var draft = new CanvasWorkbenchComposerDraft(opening, 17, true, false, null,
             new("original-node", "Original title", " Unfinished Unicode draft \u017Elu\u0165ou\u010Dk\u00FD\n2e "));
@@ -27,7 +25,7 @@ public sealed class CanvasWorkbenchComposerContractTests {
 
     [Fact]
     public async Task Local_apply_reports_retirement_when_no_original_scene_is_mounted() {
-        var component = new ComposerCanvas(default(EventCallback<CanvasWorkbenchNodeEditRequest>));
+        var component = new ComposerCanvas();
 
         var result = await component.ApplyComposerDraftAsync(new(Guid.NewGuid(), 17, null,
             new("original-node", "Reviewed title", "Reviewed body") { HasExplicitTitle = true }));
@@ -71,15 +69,15 @@ public sealed class CanvasWorkbenchComposerContractTests {
 
     [Fact]
     public async Task Optional_close_decision_is_native_and_absent_or_unmounted_handlers_cannot_approve_discard() {
-        var component = new ComposerCanvas(default(EventCallback<CanvasWorkbenchNodeEditRequest>));
+        var component = new ComposerCanvas();
         var request = new CanvasWorkbenchComposerCloseRequest(Guid.NewGuid(), 17, true, false);
         Assert.False(await component.OnComposerCloseRequested(JsonSerializer.Serialize(request)));
         Assert.Null(await component.ReadComposerCloseRequestAsync());
         CanvasWorkbenchComposerCloseRequest? observed = null;
-        component.ConfirmComposerClose = value => {
+        component = new ComposerCanvas(confirmClose: value => {
             observed = value;
             return Task.FromResult(true);
-        };
+        });
 
         Assert.True(await component.OnComposerCloseRequested(JsonSerializer.Serialize(request)));
 
@@ -92,8 +90,12 @@ public sealed class CanvasWorkbenchComposerContractTests {
             ComposerClosed = closed;
         }
 
-        public ComposerCanvas(EventCallback<CanvasWorkbenchNodeEditRequest> edited) {
+        public ComposerCanvas(EventCallback<CanvasWorkbenchNodeEditRequest> edited = default,
+            EventCallback<CanvasWorkbenchComposerDraft> comparison = default,
+            Func<CanvasWorkbenchComposerCloseRequest, Task<bool>>? confirmClose = null) {
             NodeEdited = edited;
+            ComposerComparisonRequested = comparison;
+            ConfirmComposerClose = confirmClose;
         }
     }
 }

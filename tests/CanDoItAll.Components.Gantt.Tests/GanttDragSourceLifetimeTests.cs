@@ -7,7 +7,7 @@ namespace CanDoItAll.Components.Gantt.Tests;
 public sealed class GanttDragSourceLifetimeTests {
     [Fact]
     public async Task Disposal_waits_for_pending_registration_and_releases_it_once() {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime { HoldRegistration = true };
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var cut = Render(context);
@@ -25,13 +25,13 @@ public sealed class GanttDragSourceLifetimeTests {
 
     [Fact]
     public async Task Replacement_cleanup_and_disposal_share_one_registration_owner() {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime();
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var cut = Render(context);
         var original = Assert.Single(runtime.Registrations);
         original.HoldCleanup = true;
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Task, TaskModel("Replacement")));
+        cut.Render(parameters => parameters.Add(component => component.Task, TaskModel("Replacement")));
         await original.CleanupEntered.Task.WaitAsync(TimeSpan.FromSeconds(3));
 
         var disposal = cut.InvokeAsync(() => cut.Instance.DisposeAsync().AsTask());
@@ -47,12 +47,12 @@ public sealed class GanttDragSourceLifetimeTests {
     [InlineData(false)]
     [InlineData(true)]
     public async Task Changes_during_registration_apply_the_latest_parameters(bool disable) {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime { HoldRegistration = true };
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var cut = Render(context);
         await runtime.RegistrationEntered.Task.WaitAsync(TimeSpan.FromSeconds(3));
-        cut.SetParametersAndRender(parameters => parameters
+        cut.Render(parameters => parameters
             .Add(component => component.Task, TaskModel("Latest task"))
             .Add(component => component.Disabled, disable));
         runtime.RegistrationRelease.SetResult();
@@ -71,7 +71,7 @@ public sealed class GanttDragSourceLifetimeTests {
     [InlineData(false)]
     [InlineData(true)]
     public async Task Cleanup_releases_the_proxy_and_only_suppresses_a_disconnected_circuit(bool disconnected) {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime();
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var cut = Render(context);
@@ -92,8 +92,8 @@ public sealed class GanttDragSourceLifetimeTests {
         AssertReleased(registration);
     }
 
-    private static IRenderedComponent<GanttTaskDragSource> Render(TestContext context)
-        => context.RenderComponent<GanttTaskDragSource>(parameters => parameters
+    private static IRenderedComponent<GanttTaskDragSource> Render(BunitContext context)
+        => context.Render<GanttTaskDragSource>(parameters => parameters
             .Add(component => component.Task, TaskModel("Original task")));
 
     private static GanttTask TaskModel(string title)
