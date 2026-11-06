@@ -1,5 +1,6 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CanDoItAll.Components.BaseLib.Tests;
 
@@ -264,6 +265,7 @@ public sealed class CompactUiBehaviorTests
     private static BunitContext CreateDialogContext()
     {
         var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         context.JSInterop.Mode = JSRuntimeMode.Loose;
         return context;
     }
