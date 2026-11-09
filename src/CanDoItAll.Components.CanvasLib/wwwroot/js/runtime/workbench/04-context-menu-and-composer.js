@@ -35,7 +35,7 @@
         return composer?.openingId && composer.requiresAcknowledgement ? {
             openingId: composer.openingId, revision: composer.draftRevision,
             hasPendingSubmission: !!composer.pendingSubmission,
-            hasUnconfirmedOutcome: !!composer.submissionFinished && composer.lastResultKind !== "Rejected"
+            hasUnconfirmedOutcome: !!composer.submissionFinished && composer.lastResultKind === "Unconfirmed"
         } : null;
     }
 
@@ -165,7 +165,6 @@
         composer.draftUploadedFile = composer.uploadedFile;
         if (composer.requiresAcknowledgement) {
             composer.element.addEventListener("input", () => { composer.draftRevision++; });
-            composer.element.addEventListener("change", () => { composer.draftRevision++; });
             composer.status = createElement(state.document, "p", "cw-canvas-composer__hint");
             composer.status.setAttribute("role", "status");
             composer.status.setAttribute("aria-live", "polite");

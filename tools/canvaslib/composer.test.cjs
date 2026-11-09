@@ -7,11 +7,18 @@ const vm = require("node:vm");
 function focusFixture(kind) {
     const frames = [];
     const document = {};
-    const createElement = () => ({
+    const createElement = (_document, _tag, className) => ({
         children: [],
+        className,
+        listeners: {},
         dataset: {},
         classList: { add() {} },
-        addEventListener() {},
+        addEventListener(name, listener) { this.listeners[name] = listener; },
+        setAttribute() {},
+        querySelector(selector) {
+            return this.children.find(child => `.${child.className}` === selector) ||
+                this.children.map(child => child.querySelector(selector)).find(Boolean);
+        },
         get childElementCount() { return this.children.length; },
         get isConnected() { return document.body.contains(this); },
         appendChild(child) {
@@ -30,6 +37,7 @@ function focusFixture(kind) {
         round: Math.round,
         clearContextMenu() {},
         layoutComposer() {},
+        submitCreateRequest: () => Promise.resolve(),
         closeComposer(state) {
             state.composer?.element.remove();
             state.composer = null;
@@ -37,7 +45,7 @@ function focusFixture(kind) {
     };
     vm.runInNewContext(fs.readFileSync(path.join(__dirname,
         "../../src/CanDoItAll.Components.CanvasLib/wwwroot/js/runtime/workbench/04-context-menu-and-composer.js"), "utf8"),
-        { window: { requestAnimationFrame: callback => frames.push(callback), CanDoItAll: { canvasWorkbenchModule: shared } } });
+        { window: { crypto: { randomUUID: () => "opening" }, requestAnimationFrame: callback => frames.push(callback), CanDoItAll: { canvasWorkbenchModule: shared } } });
     const state = { document, host: document.body };
     const open = () => {
         if (kind === "create") {
@@ -50,6 +58,22 @@ function focusFixture(kind) {
     const input = composer => composer.titleInput || composer.textInput;
     return { state, shared, frames, open, input, createElement };
 }
+
+test("a blur change notification after note submission is not newer typing", () => {
+    const { state, shared, open } = focusFixture("note");
+    state.tracksComposerOpenings = true;
+    state.requiresComposerAcknowledgement = true;
+    state.dotNetRef = { invokeMethodAsync: () => Promise.resolve() };
+    const composer = open();
+    composer.textInput.value = "test";
+    composer.element.listeners.input();
+    shared.commitComposer(state);
+    composer.element.listeners.change?.();
+    shared.acknowledgeComposer(state, {
+        openingId: composer.openingId, submissionId: composer.pendingSubmission.id, kind: "Committed", message: "Created"
+    });
+    assert.equal(state.composer, null);
+});
 
 for (const kind of ["create", "note"]) {
     test(`${kind} opening focuses its initial input if the user has not moved focus`, () => {
@@ -507,3 +531,12 @@ test("only an acknowledged unchanged commit bypasses the optional close decision
     assert.equal(state.composer, null);
     assert.equal(calls.filter(call => call.method === "OnComposerCloseRequested").length, 0);
 });
+
+for (const kind of ["Committed", "HandedOff", "Rejected", "Unconfirmed"]) {
+    test(`the close request describes a ${kind} outcome accurately`, () => {
+        const { shared, state, composer } = closeGuardFixture();
+        composer.submissionFinished = true;
+        composer.lastResultKind = kind;
+        assert.equal(shared.readComposerCloseRequest(state).hasUnconfirmedOutcome, kind === "Unconfirmed");
+    });
+}
