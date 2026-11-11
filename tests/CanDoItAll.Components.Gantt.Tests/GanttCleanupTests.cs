@@ -19,13 +19,13 @@ public sealed class GanttCleanupTests {
     [InlineData(Completion.Success, false)]
     [InlineData(Completion.JavaScriptFault, false)]
     public async Task Created_canvas_is_released_even_when_update_fails(Completion completion, bool alreadyCompleted) {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime();
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var cut = Render(context);
         Assert.Single(runtime.Resources);
         runtime.HoldNext = true;
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
         await runtime.Entered.Task.WaitAsync(TimeSpan.FromSeconds(3));
         if (alreadyCompleted) {
             runtime.Release.SetResult(completion);
@@ -51,7 +51,7 @@ public sealed class GanttCleanupTests {
     [InlineData(Completion.Fault)]
     [InlineData(Completion.JavaScriptFault)]
     public async Task Failed_create_does_not_invent_a_resource_to_dispose(Completion completion) {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime { HoldNext = true };
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var cut = Render(context);
@@ -66,12 +66,12 @@ public sealed class GanttCleanupTests {
 
     [Fact]
     public async Task Both_failures_remain_observable_and_the_callback_is_released() {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime { CleanupFailure = new JSException("cleanup failed") };
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var cut = Render(context);
         runtime.HoldNext = true;
-        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
+        cut.Render(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
         await runtime.Entered.Task.WaitAsync(TimeSpan.FromSeconds(3));
         var disposal = cut.InvokeAsync(() => cut.Instance.DisposeAsync().AsTask());
         runtime.Release.SetResult(Completion.Fault);
@@ -85,14 +85,14 @@ public sealed class GanttCleanupTests {
 
     [Fact]
     public async Task Disposing_one_chart_leaves_the_other_chart_and_its_callback_alive() {
-        using var context = new TestContext();
+        using var context = new BunitContext();
         var runtime = new ControlledRuntime();
         context.Services.AddSingleton<IJSRuntime>(runtime);
         var first = Render(context);
         var second = Render(context);
         Assert.Equal(2, runtime.Resources.Count);
         runtime.HoldNext = true;
-        first.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
+        first.Render(parameters => parameters.Add(component => component.Tasks, Tasks(2)));
         await runtime.Entered.Task.WaitAsync(TimeSpan.FromSeconds(3));
         var disposal = first.InvokeAsync(() => first.Instance.DisposeAsync().AsTask());
         runtime.Release.SetResult(Completion.OperationCanceled);
@@ -100,13 +100,13 @@ public sealed class GanttCleanupTests {
         Assert.Single(runtime.Resources);
         Assert.Null(Callback(first.Instance));
         Assert.NotNull(Callback(second.Instance));
-        second.SetParametersAndRender(parameters => parameters.Add(component => component.Tasks, Tasks(3)));
+        second.Render(parameters => parameters.Add(component => component.Tasks, Tasks(3)));
         Assert.Equal(3, runtime.LastTaskCount);
         await second.Instance.DisposeAsync();
         Assert.Empty(runtime.Resources);
     }
 
-    private static IRenderedComponent<GanttChart> Render(TestContext context) => context.RenderComponent<GanttChart>(parameters => parameters
+    private static IRenderedComponent<GanttChart> Render(BunitContext context) => context.Render<GanttChart>(parameters => parameters
         .Add(component => component.Tasks, Tasks(1)));
 
     private static GanttTask[] Tasks(int count) => Enumerable.Range(1, count).Select(index => new GanttTask(new($"task-{index}"), $"Task {index}", DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddHours(index))).ToArray();
