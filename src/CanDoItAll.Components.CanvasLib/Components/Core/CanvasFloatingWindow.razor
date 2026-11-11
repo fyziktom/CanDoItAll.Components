@@ -5,6 +5,8 @@
                Title="@Title"
                Kicker="@Kicker"
                Summary="@Summary"
+               HeaderLeading="@HeaderLeading"
+               HeaderStatus="@HeaderStatus"
                AriaLabel="@AriaLabel"
                BodyClass="@BodyClass"
                TestId="@TestId"
@@ -45,6 +47,12 @@
     /// <summary>Short descriptive text shown near the title.</summary>
     [Parameter]
     public string Summary { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? HeaderLeading { get; set; }
+
+    [Parameter]
+    public RenderFragment? HeaderStatus { get; set; }
 
     /// <summary>Accessible label for the window's dialog role.</summary>
     [Parameter]
