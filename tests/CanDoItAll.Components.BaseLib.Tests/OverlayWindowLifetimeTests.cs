@@ -6,6 +6,23 @@ using Microsoft.AspNetCore.Components.Web;
 namespace CanDoItAll.Components.BaseLib.Tests;
 
 public sealed class OverlayWindowLifetimeTests {
+    [Fact]
+    public void Header_content_keeps_its_identity_through_minimize_and_restore() {
+        using var context = new BunitContext();
+        context.JSInterop.Mode = JSRuntimeMode.Loose;
+        var window = context.Render<OverlayWindow>(parameters => parameters
+            .Add<EditorProbe>(component => component.HeaderStatus));
+        var status = window.FindComponent<EditorProbe>().Instance;
+
+        window.Render(parameters => parameters.Add(component => component.State, new() { IsMinimized = true }));
+        Assert.Same(status, window.FindComponent<EditorProbe>().Instance);
+        Assert.False(status.Disposed);
+
+        window.Render(parameters => parameters.Add(component => component.State, new()));
+        Assert.Same(status, window.FindComponent<EditorProbe>().Instance);
+        Assert.False(status.Disposed);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

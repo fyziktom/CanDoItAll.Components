@@ -39,6 +39,12 @@ unsent input and component state must survive minimize/restore. Its body stays m
 under a hidden element, so subscriptions also stay alive. The default remains false and
 disposes minimized content. The host still owns hiding, closing and final disposal.
 
+Use `HeaderLeading` for an avatar or identifying icon and `HeaderStatus` for current
+activity. Both optional fragments stay mounted in the same header through minimize and
+restore. Activity remains visible in the minimized window; the summary and reset action
+are hidden. `CanvasFloatingWindow` forwards both slots. Keep status text short and let
+the feature own its updates, including any subscriptions retained in the body.
+
 Pointer resizing stays in the browser until release. Geometry acknowledgements from an
 earlier gesture do not rewind a newer local size; reset, minimize and visibility changes
 remain controlled by the host. The same observer clamps the current geometry when its
