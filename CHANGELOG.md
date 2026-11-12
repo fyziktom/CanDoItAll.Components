@@ -14,7 +14,8 @@ All notable changes to this repository's packages are recorded here, per the cha
 #### Internal
 
 - Changed overlay windows, toolbox search/status controls, canvas primary nodes and accent washes to retain
-  readable foreground/background pairs in dark mode. Window state, gestures and tab behavior are unchanged.
+  readable foreground/background pairs in dark mode. Viewport-preview labels and status notices also retain
+  their matching foregrounds. Window state, gestures and tab behavior are unchanged.
 
 - Fixed canceled browser cleanup during `OverlayWindow` and `AccessibilityMirrorLayer` disposal so retired components
   do not raise another renderer failure. Overlay callbacks are always released, and mirror disposal runs only once.
@@ -36,7 +37,7 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Internal
 
-- Changed fixed light cards, chips, navigation menus, ribbon/step controls, notifications and tooltips to use
+- Changed fixed light cards (including HeroCard gradients), chips, navigation menus, ribbon/step controls, notifications and tooltips to use
   the current semantic theme tokens. Existing component parameters and human-avatar defaults are unchanged.
 - Fixed checkbox and indeterminate glyph contrast at nested theme boundaries and solid default-button dark hover
   contrast. BaseLib SVG charts now consume the shared chart palette and grid-border tokens.
