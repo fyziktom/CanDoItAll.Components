@@ -37,13 +37,13 @@ public partial class TycoonVillage
     private string LayerButtonText(string layerId, string label)
         => IsLayerVisible(layerId) ? $"{label} on" : $"{label} off";
 
-    private ButtonStyle LayerButtonStyle(string layerId)
-        => IsLayerVisible(layerId) ? ButtonStyle.Light : ButtonStyle.Warning;
+    private ButtonTone LayerButtonStyle(string layerId)
+        => IsLayerVisible(layerId) ? ButtonTone.Default : ButtonTone.Warning;
 
-    private ButtonStyle ProfileStyle(string profile)
+    private ButtonTone ProfileStyle(string profile)
         => string.Equals(selectedAssetProfile, profile, StringComparison.Ordinal)
-            ? ButtonStyle.Primary
-            : ButtonStyle.Light;
+            ? ButtonTone.Primary
+            : ButtonTone.Default;
 
     private Task SetAssetProfileAsync(string profile)
     {

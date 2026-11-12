@@ -8,19 +8,22 @@
         @if (ToolbarState is { HasContext: true } toolbarState)
         {
             <div class="sandbox-toolbar__frame">
-                <DropDown TValue="SandboxFramePreset"
-                          Data="@FrameOptions"
-                          TextProperty="Text"
-                          ValueProperty="Value"
-                          Value="@toolbarState.Frame"
-                          ValueChanged="HandleFrameChanged"
-                          aria-label="Frame preset"
-                          data-testid="sandbox-toolbar-frame"/>
+                <SelectInput TValue="SandboxFramePreset"
+                             Value="@toolbarState.Frame"
+                             ValueChanged="HandleFrameChanged"
+                             ValueExpression="@(() => toolbarState.Frame)"
+                             aria-label="Frame preset"
+                             data-testid="sandbox-toolbar-frame">
+                    @foreach (var option in FrameOptions)
+                    {
+                        <option value="@option.Value">@option.Text</option>
+                    }
+                </SelectInput>
             </div>
 
             <Button Text="Coverage"
                     class="sandbox-toolbar__coverage"
-                    ButtonStyle="@(toolbarState.ShowCoverage ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Tone="@(toolbarState.ShowCoverage ? ButtonTone.Primary : ButtonTone.Default)"
                     Variant="@(toolbarState.ShowCoverage ? Variant.Filled : Variant.Outlined)"
                     Size="ButtonSize.Small"
                     Click="@(() => toolbarState.ToggleCoverage())"
@@ -31,7 +34,7 @@
         @if (ToolbarState is not null)
         {
             <Button Text="Unused"
-                    ButtonStyle="@(ToolbarState.ShowUnused ? ButtonStyle.Danger : ButtonStyle.Light)"
+                    Tone="@(ToolbarState.ShowUnused ? ButtonTone.Danger : ButtonTone.Default)"
                     Variant="@(ToolbarState.ShowUnused ? Variant.Filled : Variant.Outlined)"
                     Size="ButtonSize.Small"
                     class="@(ToolbarState.ShowUnused ? "sandbox-toolbar__controls--unused" : "")"
@@ -44,7 +47,7 @@
         {
             <Button Text="@(ThemeState.IsDark ? "Dark" : "Light")"
                     Icon="@(ThemeState.IsDark ? "dark_mode" : "light_mode")"
-                    ButtonStyle="ButtonStyle.Light"
+                    Tone="ButtonTone.Default"
                     Variant="Variant.Outlined"
                     Size="ButtonSize.Small"
                     Click="ToggleDarkMode"
@@ -69,7 +72,20 @@
         => ToolbarState!.FrameChanged.InvokeAsync(frame);
 
     private void ToggleDarkMode()
-        => NavigationManager.NavigateTo(SandboxQueryLinks.WithDark(NavigationManager, !ThemeState!.IsDark));
+    {
+        var isDark = !ThemeState!.IsDark;
+        var destination = SandboxQueryLinks.WithDark(NavigationManager, isDark);
+
+        if (SandboxQueryLinks.UseHashRouting)
+        {
+            // Hash-only NavigateTo uses pushState and does not reliably raise hashchange.
+            // Apply both pieces of client state now, as the frame selector does.
+            SandboxQueryLinks.UpdateHashState(destination);
+            ThemeState.SetTheme(isDark ? CadThemes.Dark : CadThemes.Light);
+        }
+
+        NavigationManager.NavigateTo(destination);
+    }
 
     private string BuildHomeLink()
     {

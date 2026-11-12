@@ -5,7 +5,7 @@ const path = require("node:path");
 const os = require("node:os");
 const crypto = require("node:crypto");
 const { execFileSync } = require("node:child_process");
-const { BRANCH_PREFIX } = require("./branch-name.cjs");
+const { branchPrefix } = require("./branch-name.cjs");
 
 // All operations here run against `storageRepoPath` from the tool's config, which is a
 // separate git repository from the one this tool lives in. Nothing in this file ever
@@ -35,11 +35,11 @@ function ensureRepo(repoPath) {
   return resolved;
 }
 
-function listScreenshotBranches(repoPath) {
+function listScreenshotBranches(repoPath, key) {
   const resolved = ensureRepo(repoPath);
   let output;
   try {
-    output = git(resolved, ["branch", "--list", `${BRANCH_PREFIX}*`, "--format=%(refname:short)"]);
+    output = git(resolved, ["branch", "--list", `${branchPrefix(key)}*`, "--format=%(refname:short)"]);
   } catch {
     return [];
   }

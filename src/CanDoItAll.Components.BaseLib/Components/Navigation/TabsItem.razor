@@ -25,6 +25,10 @@
     [Parameter]
     public string? BadgeText { get; set; }
 
+    /// <summary>When set, the tab renders as a link (<c>&lt;a href&gt;</c>) to this URL instead of a <c>&lt;button&gt;</c>.</summary>
+    [Parameter]
+    public string? Link { get; set; }
+
     /// <summary>Additional attributes applied to the tab's <c>&lt;button&gt;</c> element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
@@ -40,10 +44,10 @@
         Parent?.RegisterItem(this);
     }
 
-    private (string? Text, string? Icon, bool Disabled, bool Visible, string? BadgeText)? observedHeader;
+    private (string? Text, string? Icon, bool Disabled, bool Visible, string? BadgeText, string? Link)? observedHeader;
 
     protected override void OnParametersSet() {
-        var header = (Text, Icon, Disabled, Visible, BadgeText);
+        var header = (Text, Icon, Disabled, Visible, BadgeText, Link);
         var changed = observedHeader.HasValue && observedHeader.Value != header;
         observedHeader = header;
         Parent?.RegisterItem(this, presentationChanged: changed);

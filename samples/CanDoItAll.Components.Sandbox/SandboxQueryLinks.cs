@@ -6,11 +6,7 @@ public static class SandboxQueryLinks
 {
     public static bool UseHashRouting { get; set; }
 
-    public static string? CurrentHashRoute { get; set; }
-
-    private static string? CurrentHashAnchor { get; set; }
-
-    private static SandboxFramePreset CurrentHashFrame { get; set; } = SandboxFramePreset.LiveViewport;
+    private static HashRouteState? CurrentHashState { get; set; }
 
     public static string WithFrame(NavigationManager navigationManager, SandboxFramePreset frame)
     {
@@ -38,12 +34,36 @@ public static class SandboxQueryLinks
             return $"{builder.Uri.AbsoluteUri}{fragment}";
         }
 
-        var (route, anchor) = GetHashState(navigationManager);
-        return BuildHashLink(route, anchor, frame);
+        var state = GetHashState(navigationManager);
+        return BuildHashLink(state.Route, state.Anchor, frame, state.IsDark, state.ExtraTokens);
     }
 
     public static string WithDark(NavigationManager navigationManager, bool isDark)
-        => navigationManager.GetUriWithQueryParameter("dark", isDark ? "true" : null);
+    {
+        if (!UseHashRouting)
+        {
+            // The browser owns an SSR fragment, so the framework helper deliberately preserves it.
+            return navigationManager.GetUriWithQueryParameter("dark", isDark ? "true" : null);
+        }
+
+        var state = GetHashState(navigationManager);
+        return BuildHashLink(state.Route, state.Anchor, state.Frame, isDark, state.ExtraTokens);
+    }
+
+    public static bool IsDark(NavigationManager navigationManager)
+    {
+        if (UseHashRouting)
+        {
+            return GetHashState(navigationManager).IsDark;
+        }
+
+        return navigationManager.ToAbsoluteUri(navigationManager.Uri).Query.TrimStart('?')
+            .Split('&', StringSplitOptions.RemoveEmptyEntries)
+            .Select(static pair => pair.Split('=', 2))
+            .Any(static pair => pair.Length == 2
+                && string.Equals(Uri.UnescapeDataString(pair[0]), "dark", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Uri.UnescapeDataString(pair[1]), "true", StringComparison.OrdinalIgnoreCase));
+    }
 
     /// <summary>Builds a link to a different route while carrying forward the current frame/dark state.</summary>
     public static string BuildCrossPageLink(
@@ -59,7 +79,7 @@ public static class SandboxQueryLinks
         if (UseHashRouting)
         {
             var hashRoute = path.TrimStart('/');
-            return BuildHashLink(path == "/" ? string.Empty : hashRoute, fragment, frame);
+            return BuildHashLink(path == "/" ? string.Empty : hashRoute, fragment, frame, isDark);
         }
 
         if (!UseHashRouting && frame is { } frameValue && frameValue != SandboxFramePreset.LiveViewport)
@@ -84,12 +104,8 @@ public static class SandboxQueryLinks
             parameters.Select(static parameter =>
                 $"{Uri.EscapeDataString(parameter.Key)}={Uri.EscapeDataString(parameter.Value?.ToString() ?? string.Empty)}"));
 
-        var destination = UseHashRouting
-            ? $"./?{query}{target}"
-            : $"{target}?{query}";
-        return string.IsNullOrWhiteSpace(fragment) || UseHashRouting
-            ? destination
-            : $"{destination}#{fragment}";
+        var destination = $"{target}?{query}";
+        return string.IsNullOrWhiteSpace(fragment) ? destination : $"{destination}#{fragment}";
     }
 
     /// <summary>Preserves the current query string verbatim and only changes the #fragment.</summary>
@@ -97,8 +113,8 @@ public static class SandboxQueryLinks
     {
         if (UseHashRouting)
         {
-            var (route, _) = GetHashState(navigationManager);
-            return BuildHashLink(route, fragment, GetHashFrame(navigationManager));
+            var state = GetHashState(navigationManager);
+            return BuildHashLink(state.Route, fragment, state.Frame, state.IsDark, state.ExtraTokens);
         }
 
         var uri = navigationManager.Uri;
@@ -115,9 +131,9 @@ public static class SandboxQueryLinks
                 .Split('#', 2)[0];
         }
 
-        if (CurrentHashRoute is not null)
+        if (CurrentHashState is not null)
         {
-            return CurrentHashRoute;
+            return CurrentHashState.Route;
         }
 
         var route = navigationManager.ToAbsoluteUri(navigationManager.Uri).Fragment
@@ -133,8 +149,8 @@ public static class SandboxQueryLinks
             return SandboxFramePreset.LiveViewport;
         }
 
-        return CurrentHashRoute is not null
-            ? CurrentHashFrame
+        return CurrentHashState is not null
+            ? CurrentHashState.Frame
             : ParseHash(navigationManager.ToAbsoluteUri(navigationManager.Uri).Fragment.TrimStart('#')).Frame;
     }
 
@@ -158,14 +174,26 @@ public static class SandboxQueryLinks
     /// <summary>Stores the current client-side hash state before Blazor's navigation URI is updated.</summary>
     public static string? UpdateHashState(string hash)
     {
-        var (route, anchor, frame) = ParseHash(hash.TrimStart('#'));
-        CurrentHashRoute = route;
-        CurrentHashAnchor = anchor;
-        CurrentHashFrame = frame;
-        return anchor;
+        CurrentHashState = ParseHash(hash.TrimStart('#'));
+        return CurrentHashState.Anchor;
     }
 
-    private static string BuildHashLink(string route, string? anchor, SandboxFramePreset? frame)
+    public static string BuildRawTestLink(bool isDark)
+    {
+        if (UseHashRouting)
+        {
+            return BuildHashLink("test", "raw", null, isDark);
+        }
+
+        return isDark ? "test?raw&dark=true" : "test?raw";
+    }
+
+    private static string BuildHashLink(
+        string route,
+        string? anchor,
+        SandboxFramePreset? frame,
+        bool isDark,
+        IReadOnlyList<string>? extraTokens = null)
     {
         var target = string.IsNullOrWhiteSpace(route) ? "#" : $"#{route.TrimStart('/')}";
         var tokens = new List<string>();
@@ -174,34 +202,45 @@ public static class SandboxQueryLinks
             tokens.Add(Uri.EscapeDataString(anchor));
         }
 
+        if (extraTokens is not null)
+        {
+            tokens.AddRange(extraTokens);
+        }
+
         if (frame is { } frameValue && frameValue != SandboxFramePreset.LiveViewport)
         {
             tokens.Add($"frame={Uri.EscapeDataString(frameValue.ToSlug())}");
         }
 
+        if (isDark)
+        {
+            tokens.Add("dark=true");
+        }
+
         return tokens.Count == 0 ? target : $"{target}?{string.Join("&", tokens)}";
     }
 
-    private static (string Route, string? Anchor) GetHashState(NavigationManager navigationManager)
+    private static HashRouteState GetHashState(NavigationManager navigationManager)
     {
-        if (CurrentHashRoute is not null)
+        if (CurrentHashState is not null)
         {
-            return (CurrentHashRoute, CurrentHashAnchor);
+            return CurrentHashState;
         }
 
-        var (route, anchor, _) = ParseHash(navigationManager);
-        return (route, anchor);
+        return ParseHash(navigationManager);
     }
 
-    private static (string Route, string? Anchor, SandboxFramePreset Frame) ParseHash(NavigationManager navigationManager)
+    private static HashRouteState ParseHash(NavigationManager navigationManager)
         => ParseHash(navigationManager.ToAbsoluteUri(navigationManager.Uri).Fragment.TrimStart('#'));
 
-    private static (string Route, string? Anchor, SandboxFramePreset Frame) ParseHash(string rawHash)
+    private static HashRouteState ParseHash(string rawHash)
     {
         var parts = rawHash.Split('?', 2);
         var route = Uri.UnescapeDataString(parts[0]).Trim('/');
         string? anchor = null;
         var frame = SandboxFramePreset.LiveViewport;
+        var isDark = false;
+        var extraTokens = new List<string>();
 
         if (parts.Length == 2)
         {
@@ -214,15 +253,30 @@ public static class SandboxQueryLinks
                 {
                     frame = SandboxFramePresetExtensions.Parse(value);
                 }
+                else if (string.Equals(key, "dark", StringComparison.OrdinalIgnoreCase))
+                {
+                    isDark = string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+                }
                 else if (anchor is null)
                 {
                     anchor = string.Equals(key, "anchor", StringComparison.OrdinalIgnoreCase) && pair.Length == 2
                         ? value
                         : Uri.UnescapeDataString(token);
                 }
+                else
+                {
+                    extraTokens.Add(token);
+                }
             }
         }
 
-        return (route, anchor, frame);
+        return new HashRouteState(route, anchor, frame, isDark, extraTokens);
     }
+
+    private sealed record HashRouteState(
+        string Route,
+        string? Anchor,
+        SandboxFramePreset Frame,
+        bool IsDark,
+        IReadOnlyList<string> ExtraTokens);
 }

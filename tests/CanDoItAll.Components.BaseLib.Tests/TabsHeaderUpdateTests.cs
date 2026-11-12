@@ -5,6 +5,31 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CanDoItAll.Components.BaseLib.Tests;
 
 public sealed class TabsHeaderUpdateTests {
+    [Fact]
+    public void Changed_navigation_target_refreshes_without_replacing_the_item() {
+        using var context = new BunitContext();
+        var destination = "/projects";
+        RenderFragment items = builder => {
+            builder.OpenComponent<TabsItem>(0);
+            builder.AddAttribute(1, nameof(TabsItem.Text), "Workspace");
+            builder.AddAttribute(2, nameof(TabsItem.Link), destination);
+            builder.CloseComponent();
+        };
+        var cut = context.Render<Tabs>(p => p.Add(x => x.NoContent, true).Add(x => x.ChildContent, items));
+        var originalItem = cut.FindComponent<TabsItem>().Instance;
+
+        destination = "/agents";
+        cut.Render(p => p.Add(x => x.ChildContent, items));
+
+        cut.WaitForAssertion(() => {
+            var link = cut.Find("[role='tab']");
+            Assert.Equal("/agents", link.GetAttribute("href"));
+            Assert.False(link.HasAttribute("aria-controls"));
+            Assert.Empty(cut.FindAll("[role='tabpanel']"));
+            Assert.Same(originalItem, cut.FindComponent<TabsItem>().Instance);
+        });
+    }
+
     [Theory]
     [InlineData(TabRenderMode.Server)]
     [InlineData(TabRenderMode.Client)]

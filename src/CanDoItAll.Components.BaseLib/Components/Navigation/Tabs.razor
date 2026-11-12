@@ -27,7 +27,8 @@
         <div class="cad-tabs__list"
              role="tablist"
              aria-label="@ResolveAriaLabel()"
-             aria-orientation="@ResolveAriaOrientation()">
+             aria-orientation="@ResolveAriaOrientation()"
+             onkeydown="@NativeNavigationKeyHandler">
             @for (var index = 0; index < visibleItems.Count; index++)
             {
                 var visibleIndex = index;
@@ -38,73 +39,82 @@
                 var tabId = GetTabId(visibleIndex);
                 var panelId = GetPanelId(visibleIndex);
 
-                <button @key="tab"
-                        @ref="tab.ButtonReference"
-                        @attributes="BuildTabAttributes(tab, isSelected)"
-                        type="button"
-                        id="@tabId"
-                        role="tab"
-                        aria-selected="@(isSelected ? "true" : "false")"
-                        aria-controls="@panelId"
-                        aria-disabled="@(tab.Disabled ? "true" : "false")"
-                        tabindex="@(isFocused ? 0 : -1)"
-                        disabled="@tab.Disabled"
-                        @onfocus="@(() => HandleTabFocused(visibleIndex))"
-                        @onkeydown="@((args) => HandleTabKeyDownAsync(args, visibleIndex, visibleItems))"
-                        @onclick="@(() => SelectTabAsync(visibleIndex, userInitiated: true))">
-                    @if (iconName is not null)
-                    {
-                        <span class="rz-icon cda-material-icon material-symbols-rounded cad-tabs__icon" aria-hidden="true">@iconName</span>
-                    }
-                    else if (!string.IsNullOrWhiteSpace(tab.Icon))
-                    {
-                        <span class="cad-tabs__icon cad-tabs__icon--fallback"
-                              title="@($"Unknown icon token: {tab.Icon}")"
-                              aria-hidden="true">@tab.Icon</span>
-                    }
-
-                    <span class="cad-tabs__tab-text">@ResolveTabText(tab)</span>
-
-                    @if (!string.IsNullOrWhiteSpace(tab.BadgeText))
-                    {
-                        <span class="cad-tabs__badge">@tab.BadgeText</span>
-                    }
-                </button>
-            }
-        </div>
-
-        <div class="cad-tabs__panels">
-            @if (RenderMode == TabRenderMode.Client)
-            {
-                @for (var index = 0; index < visibleItems.Count; index++)
+                @if (!string.IsNullOrWhiteSpace(tab.Link))
                 {
-                    var tab = visibleItems[index];
-                    var isSelected = index == selectedVisibleIndex;
-
-                    <div @key="tab"
-                         id="@GetPanelId(index)"
-                         class="cad-tabs__panel"
-                         role="tabpanel"
-                         aria-labelledby="@GetTabId(index)"
-                         aria-hidden="@(!isSelected ? "true" : "false")"
-                         hidden="@(!isSelected)">
-                        @RenderPanel(tab)
-                    </div>
+                    <a @key="tab"
+                       @ref="tab.ButtonReference"
+                       @attributes="BuildTabAttributes(tab, isSelected)"
+                       href="@(tab.Disabled ? null : tab.Link)"
+                       id="@tabId"
+                       role="tab"
+                       aria-selected="@(isSelected ? "true" : "false")"
+                       aria-controls="@(NoContent ? null : panelId)"
+                       aria-disabled="@(tab.Disabled ? "true" : "false")"
+                       tabindex="@(tab.Disabled ? -1 : (isFocused ? 0 : -1))"
+                       @onfocus="@(() => HandleTabFocused(visibleIndex))"
+                       @onkeydown="@((args) => HandleTabKeyDownAsync(args, visibleIndex, visibleItems))"
+                       @onclick="@(() => SelectTabAsync(visibleIndex, userInitiated: true))"
+                       @onclick:preventDefault="@tab.Disabled">
+                        @BuildTabContent(tab, iconName)
+                    </a>
+                }
+                else
+                {
+                    <button @key="tab"
+                            @ref="tab.ButtonReference"
+                            @attributes="BuildTabAttributes(tab, isSelected)"
+                            type="button"
+                            id="@tabId"
+                            role="tab"
+                            aria-selected="@(isSelected ? "true" : "false")"
+                            aria-controls="@(NoContent ? null : panelId)"
+                            aria-disabled="@(tab.Disabled ? "true" : "false")"
+                            tabindex="@(isFocused ? 0 : -1)"
+                            disabled="@tab.Disabled"
+                            @onfocus="@(() => HandleTabFocused(visibleIndex))"
+                            @onkeydown="@((args) => HandleTabKeyDownAsync(args, visibleIndex, visibleItems))"
+                            @onclick="@(() => SelectTabAsync(visibleIndex, userInitiated: true))">
+                        @BuildTabContent(tab, iconName)
+                    </button>
                 }
             }
-            else if (selectedVisibleIndex >= 0)
-            {
-                var activeTab = visibleItems[selectedVisibleIndex];
-
-                <div @key="activeTab"
-                     id="@GetPanelId(selectedVisibleIndex)"
-                     class="cad-tabs__panel"
-                     role="tabpanel"
-                     aria-labelledby="@GetTabId(selectedVisibleIndex)">
-                    @RenderPanel(activeTab)
-                </div>
-            }
         </div>
+
+        @if (!NoContent)
+        {
+            <div class="cad-tabs__panels">
+                @if (RenderMode == TabRenderMode.Client)
+                {
+                    @for (var index = 0; index < visibleItems.Count; index++)
+                    {
+                        var tab = visibleItems[index];
+                        var isSelected = index == selectedVisibleIndex;
+
+                        <div @key="tab"
+                             id="@GetPanelId(index)"
+                             class="cad-tabs__panel"
+                             role="tabpanel"
+                             aria-labelledby="@GetTabId(index)"
+                             aria-hidden="@(!isSelected ? "true" : "false")"
+                             hidden="@(!isSelected)">
+                            @RenderPanel(tab)
+                        </div>
+                    }
+                }
+                else if (selectedVisibleIndex >= 0)
+                {
+                    var activeTab = visibleItems[selectedVisibleIndex];
+
+                    <div @key="activeTab"
+                         id="@GetPanelId(selectedVisibleIndex)"
+                         class="cad-tabs__panel"
+                         role="tabpanel"
+                         aria-labelledby="@GetTabId(selectedVisibleIndex)">
+                        @RenderPanel(activeTab)
+                    </div>
+                }
+            </div>
+        }
     </div>
 }
 
@@ -141,9 +151,25 @@
     [Parameter]
     public TabPosition TabPosition { get; set; } = TabPosition.Top;
 
-    /// <summary>The visual style applied to the tab strip and panels.</summary>
+    /// <summary>The spacing/scale of the tab strip and panels.</summary>
     [Parameter]
-    public TabsVariant Variant { get; set; } = TabsVariant.WorkspacePrimary;
+    public TabsDensity Density { get; set; } = TabsDensity.Normal;
+
+    /// <summary>Corner radius of each tab button. Only the outer corners round.</summary>
+    [Parameter]
+    public TabsRounded Rounded { get; set; } = TabsRounded.Default;
+
+    /// <summary>Corner radius of the content panel wrapper below the tab strip.</summary>
+    [Parameter]
+    public TabsRounded ContentRounded { get; set; } = TabsRounded.Default;
+
+    /// <summary>When <c>true</c>, the content panel wrapper is not rendered.</summary>
+    [Parameter]
+    public bool NoContent { get; set; }
+
+    /// <summary>When <c>true</c>, the active-tab underline indicator is hidden.</summary>
+    [Parameter]
+    public bool NoSlider { get; set; }
 
     /// <summary>Controls whether a border is drawn around the tab strip.</summary>
     [Parameter]
@@ -354,42 +380,102 @@
 
     private IReadOnlyDictionary<string, object>? BuildTabAttributes(TabsItem item, bool isSelected)
     {
-        return item.AdditionalAttributes.WithClass(BuildTabCssClass(isSelected));
+        return item.AdditionalAttributes.WithClass(BuildTabCssClass(item, isSelected));
     }
 
     private string BuildRootCssClass()
     {
-        return string.Join(
-            ' ',
-            [
-                "cad-tabs",
-                ResolveVariantCssClass(),
-                ResolvePositionCssClass(),
-                ResolveBorderCssClass(),
-                ResolveToneCssClass(),
-                ResolvePanelOverflowCssClass(),
-                ResolveOverflowCssClass(),
-                FillHeight ? "cad-tabs--fill-height" : null,
-                IsHorizontal ? "cad-tabs--horizontal" : "cad-tabs--vertical"
-            ]);
+        return CssClassBuilder.Join(
+            "cad-tabs",
+            ResolveDensityCssClass(),
+            ResolvePositionCssClass(),
+            ResolveBorderCssClass(),
+            ResolveToneCssClass(),
+            ResolvePanelOverflowCssClass(),
+            ResolveOverflowCssClass(),
+            ResolveRoundedCssClass(),
+            ResolveContentRoundedCssClass(),
+            FillHeight ? "cad-tabs--fill-height" : null,
+            NoSlider ? "cad-tabs--no-slider" : null,
+            IsHorizontal ? "cad-tabs--horizontal" : "cad-tabs--vertical");
     }
 
-    private string BuildTabCssClass(bool isSelected)
+    private string BuildTabCssClass(TabsItem item, bool isSelected)
     {
-        return isSelected
-            ? "cad-tabs__tab is-active"
-            : "cad-tabs__tab";
+        return CssClassBuilder.Join(
+            "cad-tabs__tab",
+            !string.IsNullOrWhiteSpace(item.Link) ? "cad-tabs__tab--link" : null,
+            isSelected ? "is-active" : null);
     }
 
-    private string ResolveVariantCssClass()
+    private RenderFragment BuildTabContent(TabsItem tab, string? iconName)
     {
-        return Variant switch
+        return builder =>
         {
-            TabsVariant.WorkspaceSecondary => "cad-tabs--variant-workspace-secondary",
-            TabsVariant.WorkspaceTertiary => "cad-tabs--variant-workspace-tertiary",
-            TabsVariant.ModalCompact => "cad-tabs--variant-modal-compact",
-            TabsVariant.Workstation => "cad-tabs--variant-workstation",
-            _ => "cad-tabs--variant-workspace-primary"
+            var sequence = 0;
+
+            if (iconName is not null)
+            {
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", "rz-icon cda-material-icon material-symbols-rounded cad-tabs__icon");
+                builder.AddAttribute(sequence++, "aria-hidden", "true");
+                builder.AddContent(sequence++, iconName);
+                builder.CloseElement();
+            }
+            else if (!string.IsNullOrWhiteSpace(tab.Icon))
+            {
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", "cad-tabs__icon cad-tabs__icon--fallback");
+                builder.AddAttribute(sequence++, "title", $"Unknown icon token: {tab.Icon}");
+                builder.AddAttribute(sequence++, "aria-hidden", "true");
+                builder.AddContent(sequence++, tab.Icon);
+                builder.CloseElement();
+            }
+
+            builder.OpenElement(sequence++, "span");
+            builder.AddAttribute(sequence++, "class", "cad-tabs__tab-text");
+            builder.AddContent(sequence++, ResolveTabText(tab));
+            builder.CloseElement();
+
+            if (!string.IsNullOrWhiteSpace(tab.BadgeText))
+            {
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", "cad-tabs__badge");
+                builder.AddContent(sequence++, tab.BadgeText);
+                builder.CloseElement();
+            }
+        };
+    }
+
+    private string ResolveDensityCssClass()
+    {
+        return Density switch
+        {
+            TabsDensity.Comfortable => "cad-tabs--density-comfortable",
+            TabsDensity.Compact => "cad-tabs--density-compact",
+            _ => "cad-tabs--density-normal"
+        };
+    }
+
+    private string ResolveRoundedCssClass()
+    {
+        return Rounded switch
+        {
+            TabsRounded.None => "cad-tabs--rounded-none",
+            TabsRounded.Medium => "cad-tabs--rounded-md",
+            TabsRounded.Large => "cad-tabs--rounded-lg",
+            _ => "cad-tabs--rounded-default"
+        };
+    }
+
+    private string ResolveContentRoundedCssClass()
+    {
+        return ContentRounded switch
+        {
+            TabsRounded.None => "cad-tabs--content-rounded-none",
+            TabsRounded.Medium => "cad-tabs--content-rounded-md",
+            TabsRounded.Large => "cad-tabs--content-rounded-lg",
+            _ => "cad-tabs--content-rounded-default"
         };
     }
 
@@ -549,4 +635,8 @@
     }
 
     private bool IsHorizontal => TabPosition is TabPosition.Top or TabPosition.Bottom;
+
+    private string NativeNavigationKeyHandler => IsHorizontal
+        ? "if (['ArrowLeft','ArrowRight','Home','End',' '].includes(event.key)) event.preventDefault();"
+        : "if (['ArrowUp','ArrowDown','Home','End',' '].includes(event.key)) event.preventDefault();";
 }

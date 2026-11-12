@@ -36,6 +36,7 @@ public static class MaterialIconCatalog
         ["fork"] = "call_split",
         ["frame"] = "crop_square",
         ["freelancer"] = "person",
+        ["help"] = "support",
         ["infra"] = "dns",
         ["issue"] = "bug_report",
         ["json"] = "code",

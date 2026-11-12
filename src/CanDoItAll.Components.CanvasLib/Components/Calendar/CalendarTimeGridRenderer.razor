@@ -10,26 +10,26 @@
                            StatePill="@Snapshot.StatePill"
                            Metrics="@Snapshot.Metrics">
     <div class="space-y-3" @ref="host">
-        <div class="rounded-[1.4rem] border border-slate-200 bg-white/85 px-4 py-3">
-            <strong class="text-sm text-slate-950">@Snapshot.RangeLabel</strong>
+        <div class="rounded-[1.4rem] border border-chrome-200 bg-chrome-50/85 px-4 py-3">
+            <strong class="text-sm text-chrome-950">@Snapshot.RangeLabel</strong>
         </div>
         <div class="grid gap-4 lg:grid-cols-[5rem_1fr]">
-            <div class="space-y-5 rounded-[1.4rem] border border-slate-200 bg-slate-50/85 px-3 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div class="space-y-5 rounded-[1.4rem] border border-chrome-200 bg-chrome-50/85 px-3 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-chrome-500">
                 @foreach (var label in Snapshot.SlotLabels)
                 {
                     <div>@label</div>
                 }
             </div>
-            <div class="relative h-[28rem] rounded-[1.4rem] border border-slate-200 bg-white/90">
+            <div class="relative h-[28rem] rounded-[1.4rem] border border-chrome-200 bg-chrome-50/90">
                 @for (var index = 0; index < Snapshot.SlotLabels.Count; index++)
                 {
                     var top = Snapshot.SlotLabels.Count <= 1 ? 0 : (index * 100d / (Snapshot.SlotLabels.Count - 1));
-                    <div class="absolute inset-x-0 border-t border-dashed border-slate-200" style="@($"top:{top:F2}%;")"></div>
+                    <div class="absolute inset-x-0 border-t border-dashed border-chrome-200" style="@($"top:{top:F2}%;")"></div>
                 }
 
                 @foreach (var block in Snapshot.Blocks)
                 {
-                    <div class="absolute left-4 right-4 rounded-2xl px-3 py-3 text-white shadow-lg"
+                    <div class="absolute left-4 right-4 rounded-2xl px-3 py-3 text-chrome-50 shadow-lg"
                          style="@($"top:{block.TopPercent:F2}%;height:{block.HeightPercent:F2}%;background:{block.Color};")">
                         <strong class="block text-sm">@block.Label</strong>
                         <span class="mt-1 block text-xs opacity-90">@block.Subtitle</span>

@@ -14,12 +14,12 @@
             {
                 var isSelected = string.Equals(item.Key, SelectedKey, StringComparison.Ordinal);
                 <button type="button"
-                        class="@(Dense ? "rounded-full border px-3.5 py-1.5 text-sm font-semibold transition" : "rounded-full border px-4 py-2 text-sm font-semibold transition") @(isSelected ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50")"
+                        class="@(Dense ? "rounded-full border px-3.5 py-1.5 text-sm font-semibold transition" : "rounded-full border px-4 py-2 text-sm font-semibold transition") @(isSelected ? "border-chrome-900 bg-chrome-900 text-white" : "border-chrome-200 bg-white text-chrome-700 hover:border-chrome-300 hover:bg-chrome-50")"
                         @onclick="() => SelectedKeyChanged.InvokeAsync(item.Key)">
                     <span>@item.Label</span>
                     @if (!string.IsNullOrWhiteSpace(item.Count))
                     {
-                        <span class="ml-2 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] @(isSelected ? "bg-white/15 text-white" : "bg-slate-100 text-slate-500")">@item.Count</span>
+                        <span class="ml-2 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] @(isSelected ? "bg-white/15 text-white" : "bg-chrome-100 text-chrome-500")">@item.Count</span>
                     }
                 </button>
             }
@@ -27,7 +27,7 @@
 
         @if (ShowActiveDescription && ActiveItem?.Description is { Length: > 0 } description)
         {
-            <p class="@(Dense ? "m-0 text-sm leading-5 text-slate-600" : "m-0 text-sm leading-6 text-slate-600")">@description</p>
+            <p class="@(Dense ? "m-0 text-sm leading-5 text-chrome-600" : "m-0 text-sm leading-6 text-chrome-600")">@description</p>
         }
     </Stack>
 }

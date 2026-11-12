@@ -67,10 +67,10 @@ public partial class ModelLab
     private string ActiveImportOptionsText
         => $"scale {localImportOptions.UnitScale:0.###}; {localImportOptions.FitMode}; {localImportOptions.CenterMode}; double-sided {localImportOptions.ForceDoubleSidedMaterial}; visibility {localImportOptions.NormalizeMaterialVisibility}; tint disabled {localImportOptions.DisableTint}.";
 
-    private ButtonStyle ProfileStyle(string profile)
+    private ButtonTone ProfileStyle(string profile)
         => string.Equals(selectedProfile, profile, StringComparison.Ordinal)
-            ? ButtonStyle.Primary
-            : ButtonStyle.Light;
+            ? ButtonTone.Primary
+            : ButtonTone.Default;
 
     private void SetProfile(string profile)
     {

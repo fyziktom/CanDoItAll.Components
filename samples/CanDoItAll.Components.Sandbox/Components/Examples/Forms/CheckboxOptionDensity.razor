@@ -1,0 +1,17 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Grid Gap="LayoutGap.Large" ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))" AlignItems="AlignItems.Start">
+    @foreach (var density in FormDensities)
+    {
+        <CheckboxOption TValue="bool"
+                        Value="@CanReadStorage"
+                        ValueChanged="HandleCanReadStorageChanged"
+                        Density="@density"
+                        Text="@density.ToString()" />
+    }
+</Grid>
+
+@code {
+    private static readonly FormDensity[] FormDensities = Enum.GetValues<FormDensity>();
+}

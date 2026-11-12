@@ -1,3 +1,27 @@
+/* Declared on the package's own root wrapper classes, not :root — see the
+   matching comment in workbench/shell/01-layout-and-shell.css. */
+.cw-editor-shell,
+.cw-workbench-shell,
+.cdi-canvas-calendar-shell {
+    --cw-toolbar-border: var(--ui-canvas-toolbar-border, rgba(255, 255, 255, 0.48));
+    --cw-toolbar-bg: var(--ui-canvas-toolbar-bg, rgba(255, 255, 255, 0.62));
+    --cw-toolbar-shadow: var(--ui-canvas-toolbar-shadow, 0 18px 34px rgba(15, 23, 42, 0.12));
+    --cw-action-border: var(--ui-canvas-action-border, rgba(15, 23, 42, 0.08));
+    --cw-action-bg: var(--ui-canvas-action-bg, rgba(255, 255, 255, 0.92));
+    --cw-action-hover-shadow: var(--ui-canvas-action-hover-shadow, 0 12px 24px rgba(15, 23, 42, 0.1));
+    --cw-primary-action-start: var(--ui-canvas-primary-action-start, #0f172a);
+    --cw-primary-action-end: var(--ui-canvas-primary-action-end, #334155);
+    --cw-primary-action-text: var(--ui-canvas-badge-text, #fff);
+    --cw-primary-action-border: var(--ui-canvas-primary-action-border, rgba(255, 255, 255, 0.28));
+    --cw-ghost-action-text: var(--ui-canvas-ghost-action-text, rgba(255, 255, 255, 0.96));
+    --cw-zoom-rail-shadow: var(--ui-canvas-zoom-rail-shadow, rgba(109, 40, 217, 0.22));
+    --cw-zoom-slider-accent: var(--ui-canvas-zoom-slider-accent, #ddd6fe);
+    --cw-zoom-pill-bg: var(--ui-canvas-zoom-pill-bg, rgba(255, 255, 255, 0.16));
+    --cw-zoom-pill-text: var(--ui-canvas-badge-text, #fff);
+    --cw-create-rail-bg: var(--ui-canvas-create-rail-bg, rgba(255, 255, 255, 0.96));
+    --cw-create-rail-shadow: var(--ui-canvas-create-rail-shadow, 0 18px 32px rgba(15, 23, 42, 0.12));
+}
+
 .cw-toolbar {
     position: absolute;
     inset: 1rem 1rem auto 1rem;
@@ -8,9 +32,9 @@
     gap: 1rem;
     padding: 0.55rem 0.7rem;
     border-radius: 1.3rem;
-    border: 1px solid rgba(255, 255, 255, 0.48);
-    background: rgba(255, 255, 255, 0.62);
-    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
+    border: 1px solid var(--cw-toolbar-border);
+    background: var(--cw-toolbar-bg);
+    box-shadow: var(--cw-toolbar-shadow);
     backdrop-filter: blur(14px);
     pointer-events: auto;
     flex-wrap: nowrap;
@@ -63,9 +87,9 @@
 .cw-button,
 .cw-list-item,
 .cw-context-menu__action {
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--cw-action-border);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
+    background: var(--cw-action-bg);
     color: var(--cw-text);
     cursor: pointer;
     font-size: 0.82rem;
@@ -79,7 +103,7 @@
 .cw-list-item:hover,
 .cw-context-menu__action:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+    box-shadow: var(--cw-action-hover-shadow);
 }
 
 .cw-toolbar-action {
@@ -109,10 +133,10 @@
     justify-content: center;
     display: inline-flex;
     align-items: center;
-    background: linear-gradient(135deg, #0f172a, #334155);
-    color: #fff;
+    background: linear-gradient(135deg, var(--cw-primary-action-start), var(--cw-primary-action-end));
+    color: var(--cw-primary-action-text);
     font-size: 1.4rem;
-    border-color: rgba(255, 255, 255, 0.28);
+    border-color: var(--cw-primary-action-border);
 }
 
 .cw-toolbar-action--primary .rz-icon,
@@ -125,7 +149,7 @@
     padding-inline: 0.75rem;
     background: transparent;
     border-color: transparent;
-    color: rgba(255, 255, 255, 0.96);
+    color: var(--cw-ghost-action-text);
     box-shadow: none;
 }
 
@@ -143,21 +167,21 @@
     padding: 0.22rem 0.3rem;
     border-radius: 999px;
     background: linear-gradient(135deg, var(--cw-accent-purple-start), var(--cw-accent-purple-end));
-    box-shadow: 0 20px 32px rgba(109, 40, 217, 0.22);
+    box-shadow: 0 20px 32px var(--cw-zoom-rail-shadow);
     min-width: 0;
 }
 
 .cw-zoom-slider {
     width: clamp(4.5rem, 10vw, 8rem);
-    accent-color: #ddd6fe;
+    accent-color: var(--cw-zoom-slider-accent);
 }
 
 .cw-zoom-pill {
     min-width: 3.25rem;
     border-radius: 999px;
     padding: 0.55rem 0.7rem;
-    background: rgba(255, 255, 255, 0.16);
-    color: #fff;
+    background: var(--cw-zoom-pill-bg);
+    color: var(--cw-zoom-pill-text);
     font-size: 0.72rem;
     font-weight: 800;
     text-align: center;
@@ -184,9 +208,9 @@
     height: 5rem;
     border: 0;
     clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
-    background: rgba(255, 255, 255, 0.96);
+    background: var(--cw-create-rail-bg);
     color: var(--cw-text);
-    box-shadow: 0 18px 32px rgba(15, 23, 42, 0.12);
+    box-shadow: var(--cw-create-rail-shadow);
     cursor: pointer;
     display: grid;
     place-items: center;

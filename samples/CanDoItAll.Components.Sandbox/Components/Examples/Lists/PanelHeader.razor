@@ -9,8 +9,9 @@
             <Button Text="Add record" Size="ButtonSize.Small" />
         </Actions>
         <Filters>
-            <TextBox Value="@panelHeaderFilter" ValueChanged="@(value => panelHeaderFilter = value ?? string.Empty)"
-                     Placeholder="Filter records" Immediate="true" />
+            <TextInput Value="@panelHeaderFilter" ValueChanged="@(value => panelHeaderFilter = value ?? string.Empty)"
+                       ValueExpression="@(() => panelHeaderFilter)"
+                       placeholder="Filter records" Immediate="true" />
         </Filters>
     </ListPanelHeader>
 </div>

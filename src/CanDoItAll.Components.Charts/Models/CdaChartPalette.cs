@@ -25,4 +25,7 @@ public static class CdaChartPalette
     ];
 
     public static IReadOnlyList<string> Default => Energetic;
+
+    /// <summary>Series stroke color used when neither a series nor point supplies its own color.</summary>
+    public const string StrokeDefault = "#64748b";
 }

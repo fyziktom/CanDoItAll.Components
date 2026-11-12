@@ -1,0 +1,12 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Buttons
+
+<Cluster Gap="LayoutGap.Medium" AlignItems="AlignItems.Center">
+    @foreach (var size in AllSizes)
+    {
+        <Button Text="@size.ToString()" Size="@size" />
+    }
+</Cluster>
+
+@code {
+    private static readonly ButtonSize[] AllSizes = Enum.GetValues<ButtonSize>();
+}

@@ -1,0 +1,86 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse" style="min-width:48rem">
+        <thead>
+            <tr class="text-left">
+                <th class="pb-2 pr-4 font-semibold">Component</th>
+                <th class="pb-2 pr-4 font-semibold">Normal</th>
+                <th class="pb-2 pr-4 font-semibold">Comfortable</th>
+                <th class="pb-2 font-semibold">Compact</th>
+            </tr>
+        </thead>
+        <tbody class="[&>tr>td]:py-2 [&>tr>td]:pr-4 [&>tr:not(:last-child)>td]:border-b [&>tr:not(:last-child)>td]:border-(--tone-border)">
+            <tr>
+                <td class="whitespace-nowrap font-medium">TextInput</td>
+                <td><TextInput Value="@FormState.Title" ValueChanged="HandleTitleChanged" Density="FormDensity.Normal" /></td>
+                <td><TextInput Value="@FormState.Title" ValueChanged="HandleTitleChanged" Density="FormDensity.Comfortable" /></td>
+                <td><TextInput Value="@FormState.Title" ValueChanged="HandleTitleChanged" Density="FormDensity.Compact" /></td>
+            </tr>
+            <tr>
+                <td class="whitespace-nowrap font-medium">NumberInput</td>
+                <td><NumberInput TValue="int" Value="@FormState.Confidence" ValueChanged="HandleConfidenceChanged" Density="FormDensity.Normal" /></td>
+                <td><NumberInput TValue="int" Value="@FormState.Confidence" ValueChanged="HandleConfidenceChanged" Density="FormDensity.Comfortable" /></td>
+                <td><NumberInput TValue="int" Value="@FormState.Confidence" ValueChanged="HandleConfidenceChanged" Density="FormDensity.Compact" /></td>
+            </tr>
+            <tr>
+                <td class="whitespace-nowrap font-medium">DateInput</td>
+                <td><DateInput TValue="DateOnly?" Value="@NativeModel.DueDate" ValueChanged="@(value => NativeModel.DueDate = value)" Density="FormDensity.Normal" /></td>
+                <td><DateInput TValue="DateOnly?" Value="@NativeModel.DueDate" ValueChanged="@(value => NativeModel.DueDate = value)" Density="FormDensity.Comfortable" /></td>
+                <td><DateInput TValue="DateOnly?" Value="@NativeModel.DueDate" ValueChanged="@(value => NativeModel.DueDate = value)" Density="FormDensity.Compact" /></td>
+            </tr>
+            <tr>
+                <td class="whitespace-nowrap font-medium">TextAreaInput</td>
+                <td><TextAreaInput Value="@FormState.Notes" ValueChanged="HandleNotesChanged" Density="FormDensity.Normal" rows="1" /></td>
+                <td><TextAreaInput Value="@FormState.Notes" ValueChanged="HandleNotesChanged" Density="FormDensity.Comfortable" rows="1" /></td>
+                <td><TextAreaInput Value="@FormState.Notes" ValueChanged="HandleNotesChanged" Density="FormDensity.Compact" rows="1" /></td>
+            </tr>
+            <tr>
+                <td class="whitespace-nowrap font-medium">SelectInput</td>
+                <td>
+                    <SelectInput TValue="ReviewStatus?" Value="@NativeModel.Status" ValueChanged="@(value => NativeModel.Status = value)" Density="FormDensity.Normal">
+                        @foreach (var status in Enum.GetValues<ReviewStatus>())
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    </SelectInput>
+                </td>
+                <td>
+                    <SelectInput TValue="ReviewStatus?" Value="@NativeModel.Status" ValueChanged="@(value => NativeModel.Status = value)" Density="FormDensity.Comfortable">
+                        @foreach (var status in Enum.GetValues<ReviewStatus>())
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    </SelectInput>
+                </td>
+                <td>
+                    <SelectInput TValue="ReviewStatus?" Value="@NativeModel.Status" ValueChanged="@(value => NativeModel.Status = value)" Density="FormDensity.Compact">
+                        @foreach (var status in Enum.GetValues<ReviewStatus>())
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    </SelectInput>
+                </td>
+            </tr>
+            <tr>
+                <td class="whitespace-nowrap font-medium">FileInput</td>
+                <td><FileInput Change="HandleFileInputChanged" Density="FormDensity.Normal" /></td>
+                <td><FileInput Change="HandleFileInputChanged" Density="FormDensity.Comfortable" /></td>
+                <td><FileInput Change="HandleFileInputChanged" Density="FormDensity.Compact" /></td>
+            </tr>
+            <tr>
+                <td class="whitespace-nowrap font-medium">Password</td>
+                <td><Password Value="@FormState.Secret" ValueChanged="HandleSecretChanged" Density="FormDensity.Normal" /></td>
+                <td><Password Value="@FormState.Secret" ValueChanged="HandleSecretChanged" Density="FormDensity.Comfortable" /></td>
+                <td><Password Value="@FormState.Secret" ValueChanged="HandleSecretChanged" Density="FormDensity.Compact" /></td>
+            </tr>
+            <tr>
+                <td class="whitespace-nowrap font-medium">CheckboxOption</td>
+                <td><CheckboxOption TValue="bool" Value="@CanReadStorage" ValueChanged="HandleCanReadStorageChanged" Density="FormDensity.Normal" Text="Normal" /></td>
+                <td><CheckboxOption TValue="bool" Value="@CanReadStorage" ValueChanged="HandleCanReadStorageChanged" Density="FormDensity.Comfortable" Text="Comfortable" /></td>
+                <td><CheckboxOption TValue="bool" Value="@CanReadStorage" ValueChanged="HandleCanReadStorageChanged" Density="FormDensity.Compact" Text="Compact" /></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

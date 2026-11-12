@@ -1,0 +1,13 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<div class="space-y-4">
+    <FileInput Accept=".pdf,.png,.jpg,.jpeg"
+               Change="HandleFileInputChanged"
+               TestHookId="sandbox-inputs-file-input" />
+
+    <div class="flex flex-wrap gap-2" data-testid="sandbox-inputs-file-input-status">
+        <StatusBadge Text="@($"Selections: {fileInputSelectionCount}")" Tone="info" />
+        <StatusBadge Text="@(fileInputFileName ?? "No file selected")" Tone="@(fileInputFileName is null ? "neutral" : "success")" />
+    </div>
+</div>
