@@ -301,23 +301,20 @@
             return;
         }
         disposed = true;
-        if (string.IsNullOrWhiteSpace(appliedStateKey))
-        {
+        if (string.IsNullOrWhiteSpace(appliedStateKey)) {
             objectReference?.Dispose();
+            objectReference = null;
             return;
         }
 
-        try
-        {
+        try {
             await JsRuntime.InvokeVoidAsync($"{InteropApiRoot}.dispose", host);
+        } catch (JSDisconnectedException) {
+        } catch (JSException) {
+        } catch (OperationCanceledException) {
+        } finally {
+            objectReference?.Dispose();
+            objectReference = null;
         }
-        catch (JSDisconnectedException)
-        {
-        }
-        catch (JSException)
-        {
-        }
-
-        objectReference?.Dispose();
     }
 }

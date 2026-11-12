@@ -4,6 +4,14 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ## [Unreleased] — 2.0.1
 
+### OverlayLib and CanvasLib
+
+#### Internal
+
+- Fixed canceled browser cleanup during `OverlayWindow` and `AccessibilityMirrorLayer` disposal so retired components
+  do not raise another renderer failure. Overlay callbacks are always released, and mirror disposal runs only once.
+  Active create/update failures remain observable; no consumer API changes are required.
+
 ### BaseLib integration with current development
 
 #### Public interface

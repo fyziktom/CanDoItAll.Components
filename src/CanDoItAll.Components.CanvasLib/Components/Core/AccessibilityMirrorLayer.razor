@@ -46,6 +46,7 @@
     private readonly CanvasSceneHost sceneHost = new();
     private ElementReference host;
     private string? pendingSnapshotKey;
+    private bool disposed;
 
     [Parameter, EditorRequired]
     public AccessibilityMirrorSnapshot Snapshot { get; set; } = default!;
@@ -77,22 +78,20 @@
         sceneHost.MarkApplied();
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (!sceneHost.IsInitialized)
-        {
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
+        if (!sceneHost.IsInitialized) {
             return;
         }
 
-        try
-        {
+        try {
             await new JsInteropBridge(JsRuntime).InvokeVoidAsync("CanDoItAll.accessibilityMirrorLayer.dispose", host);
-        }
-        catch (JSDisconnectedException)
-        {
-        }
-        catch (JSException)
-        {
+        } catch (JSDisconnectedException) {
+        } catch (JSException) {
+        } catch (OperationCanceledException) {
         }
     }
 }
