@@ -20,25 +20,29 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private string ResolveCssClass()
-    {
-        return Look switch
-        {
+    private string ResolveCssClass() {
+        return Look switch {
             InputLook.Plain => "form-select",
             InputLook.Filled => "form-select ui-select ui-select--filled",
             _ => "form-select ui-select ui-select--outlined"
         };
     }
 
-    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
-    {
+    protected override string? FormatValueAsString(TValue? value)
+        => value is bool booleanValue ? (booleanValue ? "true" : "false") : base.FormatValueAsString(value);
+
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage) {
+        if (typeof(TValue) == typeof(string)) {
+            result = (TValue)(object)(value ?? string.Empty);
+            validationErrorMessage = null;
+            return true;
+        }
+
         var targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
         var isNullable = targetType != typeof(TValue);
 
-        if (string.IsNullOrEmpty(value))
-        {
-            if (isNullable || default(TValue) is null)
-            {
+        if (string.IsNullOrEmpty(value)) {
+            if (isNullable || default(TValue) is null) {
                 result = default!;
                 validationErrorMessage = null;
                 return true;
@@ -49,22 +53,19 @@
             return false;
         }
 
-        if (targetType.IsEnum)
-        {
-            if (Enum.TryParse(targetType, value, out var enumResult))
-            {
+        if (targetType == typeof(bool)) {
+            if (bool.TryParse(value, out var booleanValue)) {
+                result = (TValue)(object)booleanValue;
+                validationErrorMessage = null;
+                return true;
+            }
+        } else if (targetType.IsEnum) {
+            if (Enum.TryParse(targetType, value, out var enumResult)) {
                 result = (TValue)enumResult!;
                 validationErrorMessage = null;
                 return true;
             }
-
-            result = default!;
-            validationErrorMessage = $"The {DisplayName ?? FieldIdentifier.FieldName} field is not valid.";
-            return false;
-        }
-
-        if (BindConverter.TryConvertTo<TValue>(value, CultureInfo.InvariantCulture, out var parsedValue))
-        {
+        } else if (BindConverter.TryConvertTo<TValue>(value, CultureInfo.InvariantCulture, out var parsedValue)) {
             result = parsedValue!;
             validationErrorMessage = null;
             return true;
