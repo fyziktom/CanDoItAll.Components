@@ -29,7 +29,6 @@
 
 @code {
     private IPageHeaderOutlet? registeredOutlet;
-    private PageHeaderPresentation? registeredPresentation;
 
     [CascadingParameter]
     public IPageHeaderOutlet? Outlet { get; set; }
@@ -62,25 +61,18 @@
         if (!ReferenceEquals(registeredOutlet, Outlet)) {
             registeredOutlet?.Clear(this);
             registeredOutlet = Outlet;
-            registeredPresentation = null;
         }
         if (registeredOutlet is null) {
             return;
         }
 
         var presentation = new PageHeaderPresentation(Title, Description, Eyebrow, Compact, Actions, Stats);
-        if (presentation == registeredPresentation) {
-            return;
-        }
-
-        registeredPresentation = presentation;
         registeredOutlet.Register(this, presentation);
     }
 
     public void Dispose() {
         registeredOutlet?.Clear(this);
         registeredOutlet = null;
-        registeredPresentation = null;
     }
 }
 

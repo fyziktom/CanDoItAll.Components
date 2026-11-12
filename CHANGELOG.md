@@ -10,6 +10,7 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 - Added optional `IPageHeaderOutlet` / `PageHeaderPresentation` shell composition. A cascaded outlet renders page
   title, description, actions and stats in the owning shell; pages still render inline without one.
+  Each parameter update refreshes the outlet so reused fragments display their current captured values.
 - Changed `TextAreaInput` to preserve pending drafts across unchanged parent renders and retain the semantic
   `TextAreaSize` / `Rows`, `Disabled`, `ReadOnly`, and `Change` contract while supporting `EditForm` validation.
 - Added eight explicitly selectable robot SVG assets (`assets/identity/avatars/robot-01.svg` through `robot-08.svg`).

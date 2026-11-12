@@ -1,5 +1,6 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace CanDoItAll.Components.BaseLib.Tests;
 
@@ -41,15 +42,44 @@ public sealed class PageHeaderOutletTests {
         Assert.Same(actions, outlet.Presentation?.Actions);
         Assert.Same(stats, outlet.Presentation?.Stats);
 
+        var registrationCount = outlet.RegistrationCount;
         cut.Render(parameters => parameters.Add(value => value.Value, outlet).Add(value => value.ChildContent, header));
-        Assert.Equal(1, outlet.RegistrationCount);
+        Assert.True(outlet.RegistrationCount > registrationCount);
+        registrationCount = outlet.RegistrationCount;
         title = "Agents";
         cut.Render(parameters => parameters.Add(value => value.Value, outlet).Add(value => value.ChildContent, header));
         Assert.Equal("Agents", outlet.Presentation?.Title);
-        Assert.Equal(2, outlet.RegistrationCount);
+        Assert.True(outlet.RegistrationCount > registrationCount);
 
         cut.Render(parameters => parameters.Add(value => value.Value, outlet).Add(value => value.ChildContent, _ => { }));
         Assert.Same(owner, outlet.ClearedOwner);
+    }
+
+    [Fact]
+    public void HeaderRefreshesTheOutletWhenTheSameFragmentCapturesUpdatedValues() {
+        using var context = new BunitContext();
+        var outlet = context.Render<StatsOutlet>();
+        var count = 0;
+        RenderFragment stats = builder => builder.AddContent(0, $"{count} projects");
+        RenderFragment header = builder => {
+            builder.OpenComponent<PageHeader>(0);
+            builder.AddAttribute(1, nameof(PageHeader.Title), "Projects");
+            builder.AddAttribute(2, nameof(PageHeader.Stats), stats);
+            builder.CloseComponent();
+        };
+        var cut = context.Render<CascadingValue<IPageHeaderOutlet>>(parameters => parameters
+            .Add(value => value.Value, outlet.Instance)
+            .Add(value => value.ChildContent, header));
+
+        Assert.Equal("0 projects", outlet.Markup);
+
+        count = 2;
+        cut.Render(parameters => parameters
+            .Add(value => value.Value, outlet.Instance)
+            .Add(value => value.ChildContent, header));
+
+        Assert.Same(stats, outlet.Instance.Presentation?.Stats);
+        Assert.Equal("2 projects", outlet.Markup);
     }
 
     [Fact]
@@ -72,6 +102,29 @@ public sealed class PageHeaderOutletTests {
         Assert.Same(owner, previous.ClearedOwner);
         Assert.Same(owner, next.Owner);
         Assert.Equal("Projects", next.Presentation?.Title);
+    }
+
+    private sealed class StatsOutlet : ComponentBase, IPageHeaderOutlet {
+        private object? owner;
+        public PageHeaderPresentation? Presentation { get; private set; }
+
+        public void Register(object owner, PageHeaderPresentation presentation) {
+            this.owner = owner;
+            Presentation = presentation;
+            StateHasChanged();
+        }
+
+        public void Clear(object owner) {
+            if (ReferenceEquals(this.owner, owner)) {
+                this.owner = null;
+                Presentation = null;
+                StateHasChanged();
+            }
+        }
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder) {
+            builder.AddContent(0, Presentation?.Stats);
+        }
     }
 
     private sealed class RecordingOutlet : IPageHeaderOutlet {
