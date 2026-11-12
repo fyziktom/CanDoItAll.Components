@@ -6,7 +6,7 @@ Charts provides a friendly, typed Blazor boundary around ApexCharts. Use it for 
 
 ## Quick start
 
-Register the services, add the package stylesheet once in the host, and render `CdaChart` with typed series and options:
+Register the services, add the stylesheet and theme scripts once in the host, and render `CdaChart` with typed series and options:
 
 ```csharp
 // Program.cs
@@ -19,12 +19,17 @@ builder.Services.AddCanDoItAllCharts();
 @* App.razor <head> *@
 <ChartsHeadAssets />
 
+@* App.razor <body>, before the Blazor startup script *@
+<ChartsBodyAssets />
+
 <CdaChart Title="Weekly sign-ups"
           Description="New accounts by week."
           Series="@series"
           Options="@options"
           AccessibleSummary="Sign-ups increased from 14 to 31 across four weeks." />
 ```
+
+`ChartsBodyAssets` loads the theme adapter that resolves chart text, grid, palette and tooltip colors and watches theme changes. If an earlier host asset component (for example `CanvasLibBodyAssets`) already loads BaseLib's `theme-tokens.js`, use `ChartsBodyAssets IncludeThemeTokens="false"` to load the shared helper only once. Omitting `ChartsBodyAssets` leaves the chart with its default light colors.
 
 Keep your reporting data in application models and map it to `CdaChartSeries`/`CdaChartPoint` at the UI boundary. `CdaChartOptions` holds the chart type, axes, legend, curve, labels, animation, and palette choices; `CdaChart` renders a useful empty state when there is no data.
 

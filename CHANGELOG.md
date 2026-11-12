@@ -39,6 +39,8 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 - Changed fixed light cards (including HeroCard gradients), chips, navigation menus, ribbon/step controls, notifications and tooltips to use
   the current semantic theme tokens. Existing component parameters and human-avatar defaults are unchanged.
+- Changed selection-list metadata to the semantic muted foreground so timestamps remain readable in dark mode.
+- Documented the required chart body assets and single shared theme-token loader for initial and live theme colors.
 - Fixed checkbox and indeterminate glyph contrast at nested theme boundaries and solid default-button dark hover
   contrast. BaseLib SVG charts now consume the shared chart palette and grid-border tokens.
 
