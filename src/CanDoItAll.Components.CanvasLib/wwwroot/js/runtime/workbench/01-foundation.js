@@ -917,9 +917,14 @@
         return depth;
     }
 
+    function isActiveDragNode(state, nodeId) {
+        return state.interaction?.moved === true &&
+            Array.isArray(state.interaction.nodeIds) &&
+            state.interaction.nodeIds.includes(nodeId);
+    }
+
     function getNodeMobility(state, node) {
-        if (Array.isArray(state.interaction?.nodeIds) &&
-            state.interaction.nodeIds.includes(node.id)) {
+        if (isActiveDragNode(state, node.id)) {
             return 1;
         }
 
@@ -942,8 +947,6 @@
         return visibleNodes.map(node => {
             const base = getBaseNodePosition(state, node);
             const size = getNodeSize(state, node);
-            const isActiveDragNode = Array.isArray(state.interaction?.nodeIds) &&
-                state.interaction.nodeIds.includes(node.id);
             return [
                 node.id,
                 node.parentId || "",
@@ -953,7 +956,7 @@
                 round(size.height),
                 node.family || "",
                 node.isInlineTextNode ? "1" : "0",
-                isActiveDragNode ? "1" : "0"
+                isActiveDragNode(state, node.id) ? "1" : "0"
             ].join("|");
         }).join(";");
     }
@@ -980,8 +983,7 @@
                 preferredSideX: horizontalDelta >= 0 ? 1 : -1,
                 preferredSideY: Math.abs(verticalDelta) > 4 ? Math.sign(verticalDelta) : 1,
                 mobility: getNodeMobility(state, node),
-                isActiveDragNode: Array.isArray(state.interaction?.nodeIds) &&
-                    state.interaction.nodeIds.includes(node.id)
+                isActiveDragNode: isActiveDragNode(state, node.id)
             };
         });
     }
@@ -1142,6 +1144,10 @@
 
             const parentPosition = positions.get(parent.id);
             const itemPosition = positions.get(item.id);
+            const requiredVerticalDistance = ((parent.size.height + item.size.height) / 2) + 42;
+            if (Math.abs(itemPosition.y - parentPosition.y) >= requiredVerticalDistance) {
+                continue;
+            }
             const preferredSide = item.preferredSideX || 1;
             const requiredDistance = ((parent.size.width + item.size.width) / 2) + 42;
             const targetX = parentPosition.x + (preferredSide * requiredDistance);

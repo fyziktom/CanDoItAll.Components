@@ -34,6 +34,22 @@ Use BaseLib for ordinary, document-style product UI. Choose [OverlayLib](../CanD
 
 ## What is included
 
+`NativeValueInput<TValue>` integrates native number/date controls with an `EditContext`.
+Use nullable or required numeric values, `DateOnly` or `DateTime`, bind `Value`, and handle
+`PendingChanged` to disable commands while input is incomplete. Set `DisplayName` to the
+visible field label for validation messages. The BaseLib JavaScript initializer supplies
+the browser's `badInput` flag so an unfinished nullable value is retained through blur and
+related renders instead of becoming empty. Ordinary valid clearing remains supported.
+The Components sandbox route `/native-value-input` demonstrates this lifetime. Fast native typing retains the browser's unfinished text through parent renders, including an invalid exponent such as `2e`.
+Use `DateType="InputDateType.DateTimeLocal"` with `DateTime` or `DateTime?` for native local
+date/time input. The default date mode is unchanged; unsupported type/mode pairs fail explicitly.
+
+`NativeFormInspector` inspects browser validity and focuses the first invalid control for
+a supplied `FormId`. `InspectAsync` returns typed `NativeFormValidity`; optional
+`SectionIndexAttribute` and `PanelsSelector` identify the containing editor section.
+Call `FocusInvalidAsync` after showing that section. The wrapper owns its lazy browser
+module and disposal; the feature owns its validation decisions, draft and commands.
+
 The catalog is grouped by the way developers assemble pages: visual status and actions; cards and metric panels; forms and data display; layout and navigation; dialog, tooltip, and notification feedback; and supporting typography. Compatibility components remain listed so existing consumers can migrate intentionally.
 
 ## Compact, task-first composition

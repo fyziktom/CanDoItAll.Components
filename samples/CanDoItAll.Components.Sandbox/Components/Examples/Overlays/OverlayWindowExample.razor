@@ -16,6 +16,8 @@
     @if (overlayWindowState.IsVisible)
     {
         <OverlayWindow WindowId="sandbox-overlay-window" Title="Inspector window" Kicker="OverlayLib" Summary="@OverlayWindowSummary" TestId="sandbox-overlay-window" State="@overlayWindowState" StateChanged="HandleOverlayWindowStateChanged" DefaultWidth="360" DefaultHeight="300" MinHeight="220" MaxWidth="460" DefaultPlacement="top-right" ContainerSelector="[data-testid='sandbox-overlay-window-frame']" SafeTopSelector="[data-testid='sandbox-overlay-window-safe-top']">
+            <HeaderLeading><Icon Name="manage_search" /></HeaderLeading>
+            <HeaderStatus><StatusBadge Text="Ready" Tone="success" /></HeaderStatus>
             <ChildContent>
                 <Stack GapScale="LayoutGap.Medium">
                     <TextBlock TextStyle="@(TextStyle.Body2)" Value="@OverlayWindowBodyCopy" />

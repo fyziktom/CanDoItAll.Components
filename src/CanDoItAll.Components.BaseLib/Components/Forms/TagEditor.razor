@@ -18,7 +18,7 @@
 
         <input id="@InputId"
                class="cad-tag-textedit__input zy-tag-textedit__input"
-               value="@pendingValue"
+               value="@PendingInput"
                aria-label="@AriaLabel"
                aria-labelledby="@ResolveLabelledBy()"
                @oninput="HandleInputAsync"
@@ -113,7 +113,13 @@
     [CascadingParameter(Name = "FormFieldLabelId")]
     public string? FormFieldLabelId { get; set; }
 
-    private string pendingValue = string.Empty;
+    [Parameter]
+    public string PendingInput { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> PendingInputChanged { get; set; }
+    public bool IsInputFocused => inputHasFocus;
+    private bool inputHasFocus;
     private bool isFocused;
     private static readonly ChipPaletteEntry[] ChipPalette =
     [
@@ -151,7 +157,7 @@
         .Where(item => item is not null)
         .Cast<string>()
         .Where(item => !Value.Contains(item, StringComparer.Ordinal))
-        .Where(item => string.IsNullOrWhiteSpace(pendingValue) || item.Contains(pendingValue.Trim(), StringComparison.OrdinalIgnoreCase))
+        .Where(item => string.IsNullOrWhiteSpace(PendingInput) || item.Contains(PendingInput.Trim(), StringComparison.OrdinalIgnoreCase))
         .Distinct(StringComparer.Ordinal)
         .Take(8)
         .ToArray();
@@ -166,21 +172,23 @@
 
     private async Task HandleInputAsync(ChangeEventArgs args)
     {
-        pendingValue = args.Value?.ToString() ?? string.Empty;
-        if (!pendingValue.Contains(',', StringComparison.Ordinal))
+        PendingInput = args.Value?.ToString() ?? string.Empty;
+        if (!PendingInput.Contains(',', StringComparison.Ordinal))
         {
+            await PendingInputChanged.InvokeAsync(PendingInput);
             return;
         }
 
         var next = Value.ToList();
-        var parts = pendingValue.Split(',', StringSplitOptions.None);
+        var parts = PendingInput.Split(',', StringSplitOptions.None);
 
         foreach (var value in parts.Take(parts.Length - 1))
         {
             TryAddTag(next, value);
         }
 
-        pendingValue = parts[^1].TrimStart();
+        PendingInput = parts[^1].TrimStart();
+        await PendingInputChanged.InvokeAsync(PendingInput);
         await UpdateValueAsync(next);
     }
 
@@ -197,7 +205,7 @@
             return;
         }
 
-        if (args.Key == "Backspace" && pendingValue.Length == 0 && Value.Count > 0)
+        if (args.Key == "Backspace" && PendingInput.Length == 0 && Value.Count > 0)
         {
             await RemoveTagAsync(Value[^1]);
         }
@@ -210,29 +218,33 @@
 
     private void HandleFocusAsync()
     {
+        inputHasFocus = true;
         isFocused = true;
     }
 
     private async Task HandleBlurAsync()
     {
+        inputHasFocus = false;
         await Task.Delay(150);
         isFocused = false;
     }
 
     private async Task AddCurrentTagAsync()
     {
-        await AddTagAsync(pendingValue);
+        await AddTagAsync(PendingInput);
     }
 
     private async Task AddTagAsync(string? value)
     {
         var next = Value.ToList();
-        if (TryAddTag(next, value))
+        var added = TryAddTag(next, value);
+        PendingInput = string.Empty;
+        await PendingInputChanged.InvokeAsync(PendingInput);
+        if (added)
         {
             await UpdateValueAsync(next);
         }
 
-        pendingValue = string.Empty;
     }
 
     private async Task RemoveTagAsync(string value)

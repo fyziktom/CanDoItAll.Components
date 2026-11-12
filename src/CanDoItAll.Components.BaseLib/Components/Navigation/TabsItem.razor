@@ -40,9 +40,13 @@
         Parent?.RegisterItem(this);
     }
 
-    protected override void OnParametersSet()
-    {
-        Parent?.RegisterItem(this);
+    private (string? Text, string? Icon, bool Disabled, bool Visible, string? BadgeText)? observedHeader;
+
+    protected override void OnParametersSet() {
+        var header = (Text, Icon, Disabled, Visible, BadgeText);
+        var changed = observedHeader.HasValue && observedHeader.Value != header;
+        observedHeader = header;
+        Parent?.RegisterItem(this, presentationChanged: changed);
     }
 
     public void Dispose()

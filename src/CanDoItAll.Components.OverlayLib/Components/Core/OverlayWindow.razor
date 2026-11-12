@@ -12,60 +12,34 @@
          data-cda-overlay-window="@WindowId"
          @ref="host"
          @onclick:stopPropagation="true">
-    @if (State.IsMinimized)
-    {
-        <div class="cda-overlay-window__chip cw-floating-window__chip">
+    @if (ShowHeader || State.IsMinimized) {
+        <header class="@(State.IsMinimized ? "cda-overlay-window__chip cw-floating-window__chip" : "cda-overlay-window__header cw-floating-window__header")">
             <div class="cda-overlay-window__drag cw-floating-window__drag" data-cda-overlay-drag="true" data-cw-window-drag="true">
-                @if (!string.IsNullOrWhiteSpace(Kicker))
-                {
-                    <p class="cda-overlay-window__kicker cw-panel-kicker">@Kicker</p>
+                @if (HeaderLeading is not null) {
+                    <div class="cda-overlay-window__leading">@HeaderLeading</div>
                 }
-                <strong class="cda-overlay-window__chip-title cw-floating-window__chip-title">@Title</strong>
-            </div>
-            <div class="cda-overlay-window__chip-actions cw-floating-window__chip-actions">
-                <button type="button"
-                        class="cda-overlay-window__action cw-floating-window__action"
-                        aria-label="@RestoreLabel"
-                        title="@RestoreLabel"
-                        @onclick="RestoreWindowAsync">
-                    <Icon Name="open_in_full" />
-                </button>
-                <button type="button"
-                        class="cda-overlay-window__action cw-floating-window__action"
-                        aria-label="@HideLabel"
-                        title="@HideLabel"
-                        @onclick="HideWindowAsync">
-                    <Icon Name="visibility_off" />
-                </button>
-            </div>
-        </div>
-    }
-    else
-    {
-        @if (ShowHeader)
-        {
-            <header class="cda-overlay-window__header cw-floating-window__header">
-                <div class="cda-overlay-window__drag cw-floating-window__drag" data-cda-overlay-drag="true" data-cw-window-drag="true">
-                    @if (!string.IsNullOrWhiteSpace(Kicker))
-                    {
+                <div class="cda-overlay-window__heading">
+                    @if (!string.IsNullOrWhiteSpace(Kicker)) {
                         <p class="cda-overlay-window__kicker cw-panel-kicker">@Kicker</p>
                     }
-                    <h3 class="cda-overlay-window__title cw-floating-window__title">@Title</h3>
-
-                    @if (!string.IsNullOrWhiteSpace(Summary))
-                    {
-                        <p class="cda-overlay-window__summary cw-floating-window__summary">@Summary</p>
+                    <h3 class="cda-overlay-window__title cw-floating-window__title" title="@Title">@Title</h3>
+                    @if (!State.IsMinimized && !string.IsNullOrWhiteSpace(Summary)) {
+                        <p class="cda-overlay-window__summary cw-floating-window__summary" title="@Summary">@Summary</p>
                     }
                 </div>
-
-                <div class="cda-overlay-window__actions cw-floating-window__actions">
-                    <button type="button"
-                            class="cda-overlay-window__action cw-floating-window__action"
-                            aria-label="@MinimizeLabel"
-                            title="@MinimizeLabel"
-                            @onclick="MinimizeWindowAsync">
-                        <Icon Name="minimize" />
-                    </button>
+            </div>
+            @if (HeaderStatus is not null) {
+                <div class="cda-overlay-window__status">@HeaderStatus</div>
+            }
+            <div class="cda-overlay-window__actions cw-floating-window__actions">
+                <button type="button"
+                        class="cda-overlay-window__action cw-floating-window__action"
+                        aria-label="@(State.IsMinimized ? RestoreLabel : MinimizeLabel)"
+                        title="@(State.IsMinimized ? RestoreLabel : MinimizeLabel)"
+                        @onclick="@(() => State.IsMinimized ? RestoreWindowAsync() : MinimizeWindowAsync())">
+                    <Icon Name="@(State.IsMinimized ? "open_in_full" : "minimize")" />
+                </button>
+                @if (!State.IsMinimized) {
                     <button type="button"
                             class="cda-overlay-window__action cw-floating-window__action"
                             aria-label="@NormalizeLabel"
@@ -74,18 +48,19 @@
                             @onclick="NormalizeWindowAsync">
                         <Icon Name="restart_alt" />
                     </button>
-                    <button type="button"
-                            class="cda-overlay-window__action cw-floating-window__action"
-                            aria-label="@HideLabel"
-                            title="@HideLabel"
-                            @onclick="HideWindowAsync">
-                        <Icon Name="visibility_off" />
-                    </button>
-                </div>
-            </header>
-        }
-
-        <div class="cda-overlay-window__body cw-floating-window__body @BodyClass">
+                }
+                <button type="button"
+                        class="cda-overlay-window__action cw-floating-window__action"
+                        aria-label="@HideLabel"
+                        title="@HideLabel"
+                        @onclick="HideWindowAsync">
+                    <Icon Name="visibility_off" />
+                </button>
+            </div>
+        </header>
+    }
+    @if (!State.IsMinimized || KeepContentMountedWhenMinimized) {
+        <div class="cda-overlay-window__body cw-floating-window__body @BodyClass" hidden="@State.IsMinimized">
             @ChildContent
         </div>
     }
@@ -101,6 +76,8 @@
     private DotNetObjectReference<OverlayWindow>? objectReference;
     private string? appliedStateKey;
     private string? pendingStateKey;
+    private bool hidePending;
+    private bool disposed;
 
     /// <summary>Stable identifier for this window instance, used as the JS interop key and persisted with its geometry.</summary>
     [Parameter, EditorRequired]
@@ -117,6 +94,12 @@
     /// <summary>Supporting sentence rendered under <see cref="Title"/>.</summary>
     [Parameter]
     public string Summary { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? HeaderLeading { get; set; }
+
+    [Parameter]
+    public RenderFragment? HeaderStatus { get; set; }
 
     /// <summary>Accessible name for the window's root region.</summary>
     [Parameter]
@@ -194,6 +177,9 @@
     [Parameter]
     public bool ShowHeader { get; set; } = true;
 
+    [Parameter]
+    public bool KeepContentMountedWhenMinimized { get; set; }
+
     /// <summary>Controlled geometry and visibility state (position, size, minimized, hidden). The host owns this value and updates it via <see cref="StateChanged"/>.</summary>
     [Parameter, EditorRequired]
     public OverlayWindowState State { get; set; } = new();
@@ -231,8 +217,10 @@
     }
 
     [JSInvokable]
-    public Task OnGeometryChanged(double? left, double? top, double? width, double? height)
-    {
+    public Task OnGeometryChanged(double? left, double? top, double? width, double? height) {
+        if (disposed || hidePending || !State.IsVisible) {
+            return Task.CompletedTask;
+        }
         var next = OverlayWindowState.Normalize(
             new OverlayWindowState
             {
@@ -266,12 +254,16 @@
     private Task NormalizeWindowAsync()
         => PublishStateAsync(new OverlayWindowState { IsVisible = true });
 
-    private Task HideWindowAsync()
-    {
+    private async Task HideWindowAsync() {
         var next = State.Clone();
         next.IsVisible = false;
         next.IsMinimized = false;
-        return PublishStateAsync(next);
+        hidePending = true;
+        try {
+            await PublishStateAsync(next);
+        } finally {
+            hidePending = false;
+        }
     }
 
     private bool IsNormalized => !State.IsMinimized && !State.HasCustomGeometry;
@@ -304,8 +296,11 @@
         return StateChanged.InvokeAsync(normalized);
     }
 
-    public async ValueTask DisposeAsync()
-    {
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
         if (string.IsNullOrWhiteSpace(appliedStateKey))
         {
             objectReference?.Dispose();

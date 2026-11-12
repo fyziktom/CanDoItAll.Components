@@ -768,6 +768,8 @@
           "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState State {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchWindowState\u003E StateChanged {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment HeaderLeading {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment HeaderStatus {get;set;}",
           "property System.Boolean AllowResize {get;set;}",
           "property System.Boolean ShowHeader {get;set;}",
           "property System.Double DefaultHeight {get;set;}",
@@ -925,6 +927,31 @@
         "members": []
       },
       {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasOverlayDialog",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.EventCallback Close {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Actions {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Body {get;set;}",
+          "property System.Boolean CanMaximize {get;set;}",
+          "property System.Boolean CanvasScoped {get;set;}",
+          "property System.Boolean FillBody {get;set;}",
+          "property System.Boolean FullScreen {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String BodyClass {get;set;}",
+          "property System.String DataTestId {get;set;}",
+          "property System.String DialogClass {get;set;}",
+          "property System.String Kicker {get;set;}",
+          "property System.String SizeToggleTestId {get;set;}",
+          "property System.String Summary {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.CanvasLib.CanvasRuntimeBodyAssets",
         "kind": "class",
         "isAbstract": false,
@@ -945,6 +972,7 @@
           "method System.Boolean ShouldCreate()",
           "method System.Boolean ShouldUpdate()",
           "method System.Void MarkApplied()",
+          "method System.Void MarkApplied(System.String stateKey)",
           "method System.Void QueueSync(System.String stateKey, System.Boolean shouldSync = optional)",
           "method System.Void Reset()",
           "property System.Boolean IsInitialized {get;set;}",
@@ -1057,8 +1085,12 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
+          "method System.Threading.Tasks.Task AcknowledgeComposerAsync(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult result)",
           "method System.Threading.Tasks.Task FitViewToSceneAsync()",
           "method System.Threading.Tasks.Task OnClipboardAction(System.String requestJson)",
+          "method System.Threading.Tasks.Task OnComposerClosed(System.Guid openingId)",
+          "method System.Threading.Tasks.Task OnComposerComparisonRequested(System.String requestJson)",
+          "method System.Threading.Tasks.Task OnComposerOpened(System.String requestJson)",
           "method System.Threading.Tasks.Task OnContextAction(System.String nodeId, System.String actionId, System.Double x, System.Double y)",
           "method System.Threading.Tasks.Task OnContextActionRequest(System.String requestJson)",
           "method System.Threading.Tasks.Task OnCreateAction(System.String requestJson)",
@@ -1070,21 +1102,30 @@
           "method System.Threading.Tasks.Task OnStateChanged(System.String stateJson, System.Int64 dispatchId = optional)",
           "method System.Threading.Tasks.Task OpenCreateDialogAsync(CanDoItAll.Components.CanvasLib.CanvasWorkbenchAction action, CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest request)",
           "method System.Threading.Tasks.Task SelectNodesAsync(System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E nodeIds, System.String primaryNodeId = optional)",
+          "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyResult\u003E ApplyComposerDraftAsync(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyRequest request)",
+          "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerCloseRequest\u003E ReadComposerCloseRequestAsync()",
+          "method System.Threading.Tasks.Task\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerDraft\u003E ReadComposerDraftAsync()",
+          "method System.Threading.Tasks.Task\u003CSystem.Boolean\u003E OnComposerCloseRequested(System.String requestJson)",
           "method System.Threading.Tasks.Task\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E GetSelectedNodeIdsAsync()",
           "method System.Threading.Tasks.Task\u003CSystem.String\u003E CaptureImageAsync()",
           "method System.Threading.Tasks.Task\u003CSystem.String\u003E GetStateJsonAsync()",
           "method System.Threading.Tasks.ValueTask DisposeAsync()",
           "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchSurface Surface {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchClipboardRequest\u003E ClipboardRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerDraft\u003E ComposerComparisonRequested {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerOpening\u003E ComposerOpened {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchContextActionRequest\u003E ContextActionRequested {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest\u003E CreateActionInvoked {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest\u003E NodeEdited {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNodesMovedEventArgs\u003E NodesMoved {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchSelectionChangedEventArgs\u003E SelectionChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Guid\u003E ComposerClosed {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E NodeOpened {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E StateChanged {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment OverlayContent {get;set;}",
-          "property Microsoft.AspNetCore.Components.RenderFragment ToolbarLeftContent {get;set;}"
+          "property Microsoft.AspNetCore.Components.RenderFragment ToolbarLeftContent {get;set;}",
+          "property System.Boolean RequiresComposerAcknowledgement {get;set;}",
+          "property System.Func\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerCloseRequest,System.Threading.Tasks.Task\u003CSystem.Boolean\u003E\u003E ConfirmComposerClose {get;set;}"
         ]
       },
       {
@@ -1267,6 +1308,155 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Guid OpeningId, System.Int64 ExpectedRevision, CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest, CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Guid OpeningId, out System.Int64 ExpectedRevision, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest {get;set;}",
+          "property System.Guid OpeningId {get;set;}",
+          "property System.Int64 ExpectedRevision {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyResult",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus Status, System.Int64 Revision)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyResult \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyResult other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus Status, out System.Int64 Revision)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus Status {get;set;}",
+          "property System.Int64 Revision {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus Applied",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus InputChanged",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus OutcomeRequiresReview",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus PendingInput",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus Retired",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerApplyStatus ShapeChanged"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerCloseRequest",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Guid OpeningId, System.Int64 Revision, System.Boolean HasPendingSubmission, System.Boolean HasUnconfirmedOutcome)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerCloseRequest \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerCloseRequest other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Guid OpeningId, out System.Int64 Revision, out System.Boolean HasPendingSubmission, out System.Boolean HasUnconfirmedOutcome)",
+          "property System.Boolean HasPendingSubmission {get;set;}",
+          "property System.Boolean HasUnconfirmedOutcome {get;set;}",
+          "property System.Guid OpeningId {get;set;}",
+          "property System.Int64 Revision {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerDraft",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Guid OpeningId, System.Int64 Revision, System.Boolean HasPendingInput, System.Boolean CanApply, CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest, CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerDraft \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerDraft other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Guid OpeningId, out System.Int64 Revision, out System.Boolean HasPendingInput, out System.Boolean CanApply, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest {get;set;}",
+          "property System.Boolean CanApply {get;set;}",
+          "property System.Boolean HasPendingInput {get;set;}",
+          "property System.Guid OpeningId {get;set;}",
+          "property System.Int64 Revision {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerOpening",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Guid OpeningId, CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest, CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerOpening \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerOpening other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Guid OpeningId, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchCreateActionRequest CreateRequest {get;set;}",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchNodeEditRequest EditRequest {get;set;}",
+          "property System.Guid OpeningId {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Guid OpeningId, System.Guid SubmissionId, CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Kind, System.String Message)",
+          "method CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResult other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Guid OpeningId, out System.Guid SubmissionId, out CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Kind, out System.String Message)",
+          "property CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Kind {get;set;}",
+          "property System.Guid OpeningId {get;set;}",
+          "property System.Guid SubmissionId {get;set;}",
+          "property System.String Message {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Committed",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind HandedOff",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Rejected",
+          "field static const CanDoItAll.Components.CanvasLib.CanvasWorkbenchComposerResultKind Unconfirmed"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.CanvasLib.CanvasWorkbenchConnectorAnchorOptions",
         "kind": "class",
         "isAbstract": false,
@@ -1324,6 +1514,8 @@
           "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchInputValue\u003E InputValues {get;set;}",
           "property System.Double X {get;set;}",
           "property System.Double Y {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E ComposerOpeningId {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E ComposerSubmissionId {get;set;}",
           "property System.String ActionId {get;set;}",
           "property System.String CreateMode {get;set;}",
           "property System.String Notes {get;set;}",
@@ -1541,6 +1733,9 @@
           "method System.Int32 GetHashCode()",
           "method System.String ToString()",
           "method System.Void Deconstruct(out System.String NodeId, out System.String Title, out System.String Notes)",
+          "property System.Boolean HasExplicitTitle {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E ComposerOpeningId {get;set;}",
+          "property System.Nullable\u003CSystem.Guid\u003E ComposerSubmissionId {get;set;}",
           "property System.String NodeId {get;set;}",
           "property System.String Notes {get;set;}",
           "property System.String Title {get;set;}"
@@ -1745,6 +1940,7 @@
           "property System.Collections.Generic.List\u003CCanDoItAll.Components.CanvasLib.CanvasWorkbenchNode\u003E Nodes {get;set;}",
           "property System.String DependencySourceId {get;set;}",
           "property System.String Mode {get;set;}",
+          "property System.String RootNodeId {get;set;}",
           "property System.String SurfaceId {get;set;}"
         ]
       },
@@ -3764,7 +3960,10 @@
           "property CanDoItAll.Components.OverlayLib.OverlayWindowState State {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.OverlayLib.OverlayWindowState\u003E StateChanged {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment HeaderLeading {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment HeaderStatus {get;set;}",
           "property System.Boolean AllowResize {get;set;}",
+          "property System.Boolean KeepContentMountedWhenMinimized {get;set;}",
           "property System.Boolean ShowHeader {get;set;}",
           "property System.Double DefaultHeight {get;set;}",
           "property System.Double DefaultWidth {get;set;}",

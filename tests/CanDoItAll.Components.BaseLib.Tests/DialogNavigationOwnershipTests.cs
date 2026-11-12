@@ -9,6 +9,7 @@ public sealed class DialogNavigationOwnershipTests {
     [Fact]
     public async Task Fragment_dialogs_keep_their_reference_and_rendered_content_until_explicit_close_all() {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         context.JSInterop.Mode = JSRuntimeMode.Loose;
         var navigation = new TestNavigation();
         using var service = new DialogService(navigation);
@@ -38,6 +39,7 @@ public sealed class DialogNavigationOwnershipTests {
     [Fact]
     public async Task Nested_owner_cancellation_removes_only_its_fragment_and_keeps_outer_dialog_active() {
         using var context = new BunitContext();
+        context.Services.AddSingleton<NotificationService>();
         context.JSInterop.Mode = JSRuntimeMode.Loose;
         var navigation = new TestNavigation();
         using var service = new DialogService(navigation);

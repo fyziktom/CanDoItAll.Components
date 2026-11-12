@@ -65,42 +65,34 @@
     [Parameter]
     public int? TabIndex { get; set; }
 
-    private void OpenFromMouse(MouseEventArgs args)
-    {
+    private void OpenFromMouse(MouseEventArgs args) {
         Open(args.ClientX, args.ClientY);
     }
 
-    private async Task OpenFromFocus()
-    {
-        if (IsDisposalStarted)
-        {
+    private async Task OpenFromFocus() {
+        if (IsDisposalStarted) {
             return;
         }
 
         var interop = GetOrCreateInterop();
-        if (interop is null)
-        {
+        if (interop is null) {
             return;
         }
 
         var anchor = await interop.GetAnchorPointAsync(triggerElement, tooltipElementId);
-        if (IsDisposalStarted || anchor is null)
-        {
+        if (IsDisposalStarted || anchor is null) {
             return;
         }
 
         Open(anchor.X, anchor.Y);
     }
 
-    private void Open(double clientX, double clientY)
-    {
-        if (IsDisposalStarted)
-        {
+    private void Open(double clientX, double clientY) {
+        if (IsDisposalStarted) {
             return;
         }
 
-        var options = new TooltipOptions
-        {
+        var options = new TooltipOptions {
             Id = tooltipElementId,
             Position = Position,
             Delay = Delay,
@@ -110,79 +102,61 @@
             CloseOnMouseLeave = CloseOnMouseLeave
         };
 
-        if (TooltipContent is not null)
-        {
+        if (TooltipContent is not null) {
             TooltipService.Open(TooltipContent, clientX, clientY, options);
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(Text))
-        {
+        if (!string.IsNullOrWhiteSpace(Text)) {
             TooltipService.Open(Text, clientX, clientY, options);
         }
     }
 
-    private void CloseIfConfigured()
-    {
-        if (CloseOnMouseLeave)
-        {
-            TooltipService.Close();
+    private void CloseIfConfigured() {
+        if (!IsDisposalStarted && CloseOnMouseLeave) {
+            TooltipService.Close(tooltipElementId);
         }
     }
 
-    private string ResolveTriggerCssClass()
-    {
+    private string ResolveTriggerCssClass() {
         return CssClassBuilder.Join("inline-flex min-w-0", TriggerClass);
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (Interlocked.Exchange(ref disposalStarted, 1) != 0)
-        {
+    public async ValueTask DisposeAsync() {
+        if (Interlocked.Exchange(ref disposalStarted, 1) != 0) {
             return;
         }
 
-        if (TooltipService.Current?.Options.Id == tooltipElementId)
-        {
-            TooltipService.Close();
-        }
+        TooltipService.Close(tooltipElementId);
 
         var interop = Interlocked.Exchange(ref tooltipInterop, null);
-        if (interop is not null)
-        {
+        if (interop is not null) {
             await interop.DisposeAsync();
         }
     }
 
-    private async Task CloseFromFocusAsync()
-    {
-        if (IsDisposalStarted)
-        {
+    private async Task CloseFromFocusAsync() {
+        if (IsDisposalStarted) {
             return;
         }
 
         var interop = Volatile.Read(ref tooltipInterop);
-        if (interop is not null)
-        {
+        if (interop is not null) {
             await interop.ClearFocusedTargetAsync(triggerElement, tooltipElementId);
         }
 
-        if (!IsDisposalStarted)
-        {
+        if (!IsDisposalStarted) {
             CloseIfConfigured();
         }
     }
 
-    private TooltipInterop? GetOrCreateInterop()
-    {
-        if (IsDisposalStarted)
-        {
+    private TooltipInterop? GetOrCreateInterop() {
+        if (IsDisposalStarted) {
             return null;
         }
 
         var existing = Volatile.Read(ref tooltipInterop);
-        if (existing is not null)
-        {
+        if (existing is not null) {
             return existing;
         }
 

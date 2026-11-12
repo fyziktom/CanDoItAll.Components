@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Bunit;
 using CanDoItAll.Components.CanvasLib;
 using Microsoft.AspNetCore.Components;
@@ -87,6 +88,7 @@ public sealed class CanvasWorkbenchStateCommitTests {
 
         Assert.Equal(2, calls);
         Assert.Equal(1.5, Assert.Single(harness.Updates).Zoom);
+        Assert.Equal(2, Assert.Single(harness.RenderOptions).GetProperty("CommittedStateDispatchId").GetInt64());
     }
 
     [Fact]
@@ -158,12 +160,65 @@ public sealed class CanvasWorkbenchStateCommitTests {
         Assert.Empty(harness.Updates);
     }
 
+    [Fact]
+    public async Task Data_refresh_during_a_pending_callback_keeps_owner_normalization_unacknowledged() {
+        await using var harness = new Harness();
+        var entered = Signal();
+        var release = Signal();
+        harness.Render(async json => {
+            harness.Accept(json);
+            entered.SetResult();
+            await release.Task;
+        });
+
+        var pending = harness.DispatchAsync(1.25, 17);
+        try {
+            await entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            harness.Surface.Nodes.Add(new() { Id = "new-data" });
+            harness.Canvas.Render(parameters => parameters.Add(component => component.Surface, harness.Surface));
+            Assert.Single(harness.Updates);
+        } finally {
+            release.TrySetResult();
+            await pending;
+        }
+
+        Assert.Equal(2, harness.Updates.Count);
+        Assert.Contains("adopted", Assert.Single(harness.Updates[^1].GroupFrames).AnchorNodeIds);
+        Assert.Equal(0, harness.RenderOptions[0].GetProperty("CommittedStateDispatchId").GetInt64());
+        Assert.Equal(17, harness.RenderOptions[1].GetProperty("CommittedStateDispatchId").GetInt64());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Only_completed_owner_callbacks_acknowledge_their_dispatch(bool reject) {
+        await using var harness = new Harness();
+        harness.Render(json => {
+            if (reject) {
+                throw new InvalidOperationException("Owner rejected the state.");
+            }
+            harness.Accept(json, normalize: false);
+            return Task.CompletedTask;
+        });
+
+        if (reject) {
+            await Assert.ThrowsAsync<InvalidOperationException>(() => harness.DispatchAsync(1.25, 31));
+        } else {
+            await harness.DispatchAsync(1.25, 31);
+        }
+        harness.Accept(harness.ClientState(1.5));
+
+        Assert.Equal(reject ? 0 : 31,
+            Assert.Single(harness.RenderOptions).GetProperty("CommittedStateDispatchId").GetInt64());
+    }
+
     private static TaskCompletionSource Signal()
         => new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     private sealed class Harness : IAsyncDisposable {
         public BunitContext Context { get; } = new();
         public List<CanvasWorkbenchUiState> Updates { get; } = [];
+        public List<JsonElement> RenderOptions { get; } = [];
         public IRenderedComponent<CanvasWorkbench> Canvas { get; private set; } = null!;
         public CanvasWorkbenchSurface Surface { get; } = new() {
             SurfaceId = "owner-state",
@@ -177,6 +232,7 @@ public sealed class CanvasWorkbenchStateCommitTests {
             Context.JSInterop.Setup<bool>("CanDoItAll.canvasWorkbench.update", invocation => {
                 var surface = Assert.IsType<CanvasWorkbenchSurface>(invocation.Arguments[1]);
                 Updates.Add(CanvasWorkbenchUiState.Parse(surface.UiState.ToJson()));
+                RenderOptions.Add(JsonSerializer.SerializeToElement(invocation.Arguments[2]));
                 return true;
             }).SetResult(true);
         }

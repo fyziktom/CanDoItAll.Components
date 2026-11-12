@@ -46,6 +46,7 @@
         const diagnosticsBody = createElement(state.document, "div", "cw-diagnostics__body");
         const minimapShell = createElement(state.document, "div", "cw-minimap");
         const minimapTitle = createElement(state.document, "p", "cw-minimap__title");
+        const minimapViewport = createElement(state.document, "div", "cw-minimap__viewport");
         const minimapCanvas = createElement(state.document, "canvas", "cw-minimap__canvas");
         const popover = createElement(state.document, "div", "cw-workbench__popover");
         const popoverTitle = createElement(state.document, "strong", "cw-workbench__popover-title");
@@ -83,7 +84,8 @@
             event.stopPropagation();
             navigateViaMinimap(state, event);
         });
-        minimapShell.appendChild(minimapCanvas);
+        minimapViewport.appendChild(minimapCanvas);
+        minimapShell.appendChild(minimapViewport);
         popover.appendChild(popoverTitle);
         popover.appendChild(popoverBody);
 
@@ -141,7 +143,7 @@
         // Measure the minimap against the canvas element itself. Measuring against the shell
         // creates a circular layout dependency where the shell grows to the canvas and the
         // canvas then re-measures to the enlarged shell, which can cover the stage on first load.
-        state.minimapSurface = createCanvasSurfaceHost(minimapCanvas, minimapCanvas);
+        state.minimapSurface = createCanvasSurfaceHost(minimapCanvas, minimapViewport);
         resize(state);
     }
 
@@ -395,8 +397,8 @@
         const safeDeltaY = Number.isFinite(deltaY) ? deltaY : 0;
         const stepCount = Math.max(1, Math.min(32, Math.trunc(Number(request?.steps) || 10)));
 
-        if (state.composer) {
-            closeComposer(state, { focusHost: false });
+        if (state.composer && closeComposer(state, { focusHost: false }) === false) {
+            return false;
         }
 
         clearContextMenu(state);
@@ -636,6 +638,14 @@
         }
 
         state.hasClipboardHandler = options?.hasClipboardHandler === true;
+        state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
+        state.requiresComposerAcknowledgement = options?.requiresComposerAcknowledgement === true;
+        state.supportsComposerComparison = options?.supportsComposerComparison === true;
+        state.supportsComposerCloseGuard = options?.supportsComposerCloseGuard === true;
+        if (state.composer?.comparisonButton) {
+            state.composer.comparisonButton.hidden = !state.supportsComposerComparison;
+            state.composer.element.setAttribute("data-retained-editor", state.supportsComposerComparison && state.supportsComposerCloseGuard ? "true" : "false");
+        }
         if (!options) {
             return;
         }
@@ -695,6 +705,10 @@
                 selectionDispatchSeed,
                 stateDispatchSeed);
             state.hasClipboardHandler = options?.hasClipboardHandler === true;
+            state.tracksComposerOpenings = options?.tracksComposerOpenings === true;
+            state.requiresComposerAcknowledgement = options?.requiresComposerAcknowledgement === true;
+            state.supportsComposerComparison = options?.supportsComposerComparison === true;
+            state.supportsComposerCloseGuard = options?.supportsComposerCloseGuard === true;
             workbenchInternals.runtime.buildWorkbench(state);
             workbenchInternals.runtime.attachEvents(state);
             workbenchInternals.runtime.setMaximized(state, resolveMaximizedState(state, options));
@@ -725,7 +739,8 @@
                 state,
                 surface,
                 requestedIsMaximized,
-                options?.preserveViewport === true);
+                options?.preserveViewport === true,
+                options?.committedStateDispatchId ?? 0);
             applyRenderOptions(state, options);
             return true;
         },
@@ -841,6 +856,21 @@
                 width: window.innerWidth || 0,
                 height: window.innerHeight || 0
             };
+        },
+        acknowledgeComposer(host, result) {
+            const state = resolveWorkbenchState(host);
+            if (state) {
+                shared.acknowledgeComposer(state, result);
+            }
+        },
+        readComposerCloseRequest(host) {
+            return shared.readComposerCloseRequest(resolveWorkbenchState(host));
+        },
+        readComposerDraft(host) {
+            return shared.readComposerDraft(resolveWorkbenchState(host));
+        },
+        applyComposerDraft(host, request) {
+            return shared.applyComposerDraft(resolveWorkbenchState(host), request);
         },
         selectNodes(host, nodeIds, primaryNodeId) {
             const state = resolveWorkbenchState(host);

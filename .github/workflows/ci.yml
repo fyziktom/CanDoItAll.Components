@@ -14,13 +14,16 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
 
-      - uses: actions/setup-node@v4
+      - name: Install WebAssembly build tools
+        run: dotnet workload install wasm-tools --skip-manifest-update --configfile NuGet.config
+
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -48,7 +51,7 @@ jobs:
           git diff --exit-code -- src/CanDoItAll.Components.BaseLib/wwwroot/css/output.css
 
       - name: Restore .NET dependencies
-        run: dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config
+        run: dotnet restore CanDoItAll.Components.slnx --configfile NuGet.config -p:Configuration=Release
 
       - name: Build
         run: dotnet build CanDoItAll.Components.slnx --configuration Release --no-restore
@@ -59,7 +62,7 @@ jobs:
       - name: Pack
         run: powershell -ExecutionPolicy Bypass -File tools/deployment/nugets/Build-NuGets.ps1 -NoBuild -NoRestore
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: nuget-packages
           path: |

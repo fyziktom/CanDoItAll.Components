@@ -230,11 +230,15 @@ body.cw-body-lock {
     cursor: default;
 }
 
-.cw-stage-surface:has(.cw-canvas-composer) .cw-canvas-host {
+.cw-stage-surface:has(.cw-canvas-composer:not([data-retained-editor="true"])) .cw-canvas-host {
     z-index: 32;
 }
 
 .cw-stage-surface:has(.cw-canvas-composer) .cw-floating-window {
+    z-index: 31 !important;
+}
+
+.cw-stage-surface:has(.cw-canvas-composer:not([data-retained-editor="true"])) .cw-floating-window {
     pointer-events: none;
 }
 

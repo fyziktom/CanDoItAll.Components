@@ -30,8 +30,217 @@
         });
     }
 
+    function readComposerCloseRequest(state) {
+        const composer = state?.composer;
+        return composer?.openingId && composer.requiresAcknowledgement ? {
+            openingId: composer.openingId, revision: composer.draftRevision,
+            hasPendingSubmission: !!composer.pendingSubmission,
+            hasUnconfirmedOutcome: !!composer.submissionFinished && composer.lastResultKind === "Unconfirmed"
+        } : null;
+    }
+
+    function readComposerDraft(state) {
+        const composer = state?.composer;
+        if (!composer?.openingId || !composer.requiresAcknowledgement) {
+            return null;
+        }
+        const create = composer.kind === "create" && composer.request.placementKind === "edit";
+        const edit = composer.kind === "note-edit";
+        if (!create && !edit) {
+            return null;
+        }
+        const inputs = create
+            ? [composer.titleInput, composer.subtitleInput, composer.notesInput, ...(composer.inputFieldEntries || []).map(entry => entry.input)]
+            : [composer.textInput];
+        const notes = composer.textInput?.value || "";
+        return {
+            openingId: composer.openingId,
+            revision: composer.draftRevision,
+            hasPendingInput: inputs.some(input => input && !input.checkValidity()),
+            canApply: !composer.pendingSubmission && (!composer.submissionFinished || composer.lastResultKind === "Rejected"),
+            createRequest: create ? {
+                ...composer.request, title: composer.titleInput?.value || "", subtitle: composer.subtitleInput?.value || "",
+                notes: composer.notesInput?.value || "", uploadedFile: null,
+                inputValues: (composer.inputFieldEntries || []).map(entry => ({ key: entry.key, value: entry.input.value || "" }))
+            } : null,
+            editRequest: edit ? {
+                nodeId: composer.nodeId, title: composer.explicitTitle ?? notes, notes,
+                hasExplicitTitle: composer.explicitTitle !== undefined
+            } : null
+        };
+    }
+
+    function applyComposerDraft(state, request) {
+        const current = readComposerDraft(state);
+        const refused = status => ({ status, revision: current?.revision ?? 0 });
+        if (!current || current.openingId !== request?.openingId) {
+            return refused("Retired");
+        }
+        if (!Number.isSafeInteger(request.expectedRevision) || request.expectedRevision !== current.revision) {
+            return refused("InputChanged");
+        }
+        if (current.hasPendingInput) {
+            return refused("PendingInput");
+        }
+        if (!current.canApply) {
+            return refused("OutcomeRequiresReview");
+        }
+        const composer = state.composer;
+        const patch = [];
+        const add = (input, value, previous) => {
+            if (typeof value !== "string" || !input && value !== previous || input?.disabled && value !== input.value || input?.readOnly && value !== input.value) {
+                return false;
+            }
+            if (input) {
+                const probe = input.cloneNode(true);
+                probe.value = value;
+                if (!probe.checkValidity() || (["number", "date", "datetime-local"].includes(probe.type) || probe.tagName === "SELECT") && probe.value !== value) {
+                    return false;
+                }
+                patch.push({ input, value });
+            }
+            return true;
+        };
+        if (current.createRequest) {
+            const proposed = request.createRequest;
+            const original = current.createRequest;
+            if (!proposed || request.editRequest || proposed.uploadedFile || proposed.actionId !== original.actionId ||
+                proposed.sourceNodeId !== original.sourceNodeId || proposed.parentNodeId !== original.parentNodeId ||
+                proposed.objectSubtype !== original.objectSubtype || proposed.placementKind !== original.placementKind) {
+                return refused("ShapeChanged");
+            }
+            const entries = composer.inputFieldEntries || [];
+            const values = proposed.inputValues || [];
+            const lookup = new Map(values.map(value => [value.key, value.value]));
+            if (values.length !== entries.length || lookup.size !== entries.length ||
+                !add(composer.titleInput, proposed.title, original.title) ||
+                !add(composer.subtitleInput, proposed.subtitle, original.subtitle) ||
+                !add(composer.notesInput, proposed.notes, original.notes) ||
+                entries.some(entry => !lookup.has(entry.key) || !add(entry.input, lookup.get(entry.key), entry.input.value))) {
+                return refused("ShapeChanged");
+            }
+        } else {
+            const proposed = request.editRequest;
+            if (!proposed || request.createRequest || proposed.nodeId !== current.editRequest.nodeId || typeof proposed.title !== "string" ||
+                !add(composer.textInput, proposed.notes, current.editRequest.notes)) {
+                return refused("ShapeChanged");
+            }
+        }
+        for (const { input, value } of patch) {
+            if (input.value === value) {
+                continue;
+            }
+            const focused = state.document.activeElement === input;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const direction = input.selectionDirection;
+            input.value = value;
+            if (focused && typeof start === "number" && typeof end === "number" && typeof input.setSelectionRange === "function") {
+                input.setSelectionRange(Math.min(start, value.length), Math.min(end, value.length), direction);
+            }
+        }
+        if (request.editRequest) {
+            composer.explicitTitle = request.editRequest.hasExplicitTitle ? request.editRequest.title : undefined;
+        }
+        composer.draftRevision++;
+        composer.submissionFinished = false;
+        composer.lastResultKind = null;
+        composer.status.textContent = "Comparison applied to this draft. Save is a separate action.";
+        updateComposerFileState(composer);
+        layoutComposer(state);
+        return { status: "Applied", revision: composer.draftRevision };
+    }
+
+    function registerComposerOpening(state, createRequest, editRequest) {
+        if (!state.tracksComposerOpenings) {
+            return;
+        }
+        const openingId = window.crypto.randomUUID();
+        const composer = state.composer;
+        composer.openingId = openingId;
+        composer.requiresAcknowledgement = state.requiresComposerAcknowledgement;
+        composer.element.setAttribute("data-retained-editor", state.supportsComposerComparison && state.supportsComposerCloseGuard &&
+            (editRequest || createRequest?.placementKind === "edit") ? "true" : "false");
+        composer.draftRevision = 0;
+        composer.draftUploadedFile = composer.uploadedFile;
+        if (composer.requiresAcknowledgement) {
+            composer.element.addEventListener("input", () => { composer.draftRevision++; });
+            composer.status = createElement(state.document, "p", "cw-canvas-composer__hint");
+            composer.status.setAttribute("role", "status");
+            composer.status.setAttribute("aria-live", "polite");
+            composer.element.querySelector(".cw-canvas-composer__card").appendChild(composer.status);
+        }
+        state.composer.opened = state.dotNetRef.invokeMethodAsync("OnComposerOpened",
+            JSON.stringify({ openingId, createRequest, editRequest }));
+        if (state.supportsComposerComparison && (editRequest || createRequest?.placementKind === "edit")) {
+            const comparison = createElement(state.document, "button", "cw-button");
+            comparison.type = "button";
+            comparison.textContent = "Compare changes";
+            comparison.dataset.testid = "canvas-composer-compare";
+            comparison.addEventListener("click", () => {
+                Promise.resolve(composer.opened).then(() => {
+                    const draft = state.composer === composer && state.supportsComposerComparison ? readComposerDraft(state) : null;
+                    if (draft) {
+                        return state.dotNetRef.invokeMethodAsync("OnComposerComparisonRequested", JSON.stringify(draft));
+                    }
+                }).catch(() => {
+                    if (state.composer === composer) {
+                        composer.status.textContent = "Comparison could not be opened. Your draft is preserved.";
+                    }
+                });
+            });
+            composer.comparisonButton = comparison;
+            const card = composer.element.querySelector(".cw-canvas-composer__card");
+            const actions = composer.createButton?.parentElement || card.querySelector(".cw-canvas-composer__actions") || card;
+            actions.appendChild(comparison);
+        }
+    }
+
+    function acknowledgeComposer(state, result) {
+        const composer = state.composer;
+        const pending = composer?.pendingSubmission;
+        if (!pending || result?.openingId !== composer.openingId || result.submissionId !== pending.id) {
+            return;
+        }
+        composer.pendingSubmission = null;
+        composer.submissionFinished = true;
+        composer.lastResultKind = result.kind;
+        composer.element.setAttribute("aria-busy", "false");
+        if (result.kind === "Committed" || result.kind === "HandedOff") {
+            if (composer.draftRevision === pending.revision) {
+                closeComposer(state, { force: true });
+                return;
+            }
+            composer.status.textContent = `${result.message} Newer text remains here. Copy it before reopening the editor.`;
+        } else {
+            composer.status.textContent = `${result.message} Your draft is preserved. Copy it before reopening the editor.`;
+        }
+        updateComposerFileState(composer);
+        layoutComposer(state);
+    }
+
+    function submitComposer(state, dispatch, payload) {
+        const composer = state.composer;
+        if (!composer.requiresAcknowledgement) {
+            dispatch(state, payload);
+            closeComposer(state);
+            return;
+        }
+        const id = window.crypto.randomUUID();
+        composer.pendingSubmission = { id, revision: composer.draftRevision };
+        composer.element.setAttribute("aria-busy", "true");
+        composer.status.textContent = "Saving… You can keep editing while the save completes.";
+        updateComposerFileState(composer);
+        const unconfirmed = () => acknowledgeComposer(state, {
+            openingId: composer.openingId, submissionId: id, kind: "Unconfirmed",
+            message: "The save result could not be confirmed. Check the original item before trying again."
+        });
+        Promise.resolve().then(() => dispatch(state, { ...payload, composerSubmissionId: id }))
+            .then(unconfirmed, unconfirmed);
+    }
+
     function commitComposer(state) {
-        if (!state.composer) {
+        if (!state.composer || state.composer.pendingSubmission || state.composer.submissionFinished) {
             return;
         }
 
@@ -40,6 +249,11 @@
                 return;
             }
 
+            const invalid = state.composer.inputFieldEntries?.find(entry => !entry.input.checkValidity());
+            if (invalid) {
+                invalid.input.reportValidity();
+                return;
+            }
             const inputValues = Array.isArray(state.composer.inputFieldEntries)
                 ? state.composer.inputFieldEntries.map(entry => ({
                     key: entry.key,
@@ -52,7 +266,7 @@
                 return;
             }
 
-            submitCreateRequest(state, {
+            submitComposer(state, submitCreateRequest, {
                 ...state.composer.request,
                 title: state.composer.titleInput ? state.composer.titleInput.value.trim() : "",
                 subtitle: state.composer.subtitleInput ? state.composer.subtitleInput.value.trim() : "",
@@ -60,8 +274,7 @@
                 objectSubtype: state.composer.request.objectSubtype || "",
                 inputValues,
                 uploadedFile: state.composer.uploadedFile || null
-            }, { focusHost: true });
-            closeComposer(state);
+            });
             return;
         }
 
@@ -71,7 +284,7 @@
         }
 
         if (state.composer.kind === "note-create") {
-            submitCreateRequest(state, {
+            submitComposer(state, submitCreateRequest, {
                 actionId: state.composer.actionId,
                 sourceNodeId: state.composer.sourceNodeId,
                 parentNodeId: state.composer.parentNodeId,
@@ -82,17 +295,17 @@
                 notes: text,
                 placementKind: state.composer.placementKind,
                 createMode: "quick-note"
-            }, { focusHost: true });
+            });
         }
         else if (state.composer.kind === "note-edit") {
-            submitNodeEdit(state, {
+            submitComposer(state, submitNodeEdit, {
                 nodeId: state.composer.nodeId,
-                title: text,
+                title: state.composer.explicitTitle ?? text,
+                hasExplicitTitle: state.composer.explicitTitle !== undefined,
                 notes: text
             });
         }
 
-        closeComposer(state);
     }
 
     function decorateComposerShell(state, title, kicker, variant) {
@@ -171,6 +384,10 @@
             return;
         }
 
+        if (composer.draftUploadedFile !== composer.uploadedFile) {
+            composer.draftUploadedFile = composer.uploadedFile;
+            composer.draftRevision++;
+        }
         if (composer.fileSummary) {
             composer.fileSummary.textContent = composer.uploadedFile
                 ? `${composer.uploadedFile.fileName} ready`
@@ -180,15 +397,43 @@
         if (composer.createButton) {
             const hasMissingRequiredInputs = Array.isArray(composer.inputFieldEntries) &&
                 composer.inputFieldEntries.some(entry => entry.isRequired && !(entry.input.value || "").trim());
-            composer.createButton.disabled = (!!composer.requiresFile && !composer.uploadedFile) || hasMissingRequiredInputs;
+            composer.createButton.disabled = !!composer.pendingSubmission || !!composer.submissionFinished || (!!composer.requiresFile && !composer.uploadedFile) || hasMissingRequiredInputs;
         }
+        if (composer.comparisonButton) {
+            composer.comparisonButton.disabled = !!composer.pendingSubmission ||
+                !!composer.submissionFinished && composer.lastResultKind !== "Rejected";
+        }
+    }
+
+    function scheduleComposerFocus(state, composer, input) {
+        const previousFocus = state.document.activeElement;
+        window.requestAnimationFrame(() => {
+            if (state.composer !== composer || !composer.element.isConnected) {
+                return;
+            }
+            layoutComposer(state);
+            updateComposerFileState(composer);
+            const currentFocus = state.document.activeElement;
+            if (!input || composer.element.contains(currentFocus) ||
+                (currentFocus !== previousFocus && currentFocus !== state.document.body)) {
+                return;
+            }
+            input.focus();
+            if (typeof input.select === "function") {
+                input.select();
+            }
+        });
     }
 
     function openCreateComposer(state, action, request) {
         clearContextMenu(state);
-        closeComposer(state, { focusHost: false });
+        if (closeComposer(state, { focusHost: false, onClosed: () => openCreateComposer(state, action, request) }) === false) {
+            return;
+        }
 
-        const shell = decorateComposerShell(state, `Create ${action.label || "item"}`, action.label || "Create", "dialog");
+        const title = state.tracksComposerOpenings && request?.placementKind === "edit"
+            ? action.label || "Edit item" : `Create ${action.label || "item"}`;
+        const shell = decorateComposerShell(state, title, action.label || "Create", "dialog");
         const setupRendererKey = (action.setupRendererKey || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "-");
         if (setupRendererKey) {
             shell.composer.dataset.setupRenderer = setupRendererKey;
@@ -324,6 +569,10 @@
                                         "text";
             }
 
+            input.required = !!field.isRequired;
+            if (inputMode === "number" || inputMode === "datetime-local") {
+                input.step = "any";
+            }
             let inputValue = inputValueLookup.get(field.key) || "";
             if (isSelect && !inputValue && field.isRequired) {
                 const selectableOptions = Array.from(input.options).filter(option => !!option.value);
@@ -505,21 +754,14 @@
             filePrompt: action.filePrompt || "Drop a file here or choose one."
         };
 
-        window.requestAnimationFrame(() => {
-            layoutComposer(state);
-            updateComposerFileState(state.composer);
-            const firstInput = inputFieldEntries[0]?.input || titleInput || subtitleInput || notesInput;
-            if (firstInput) {
-                firstInput.focus();
-                if (typeof firstInput.select === "function") {
-                    firstInput.select();
-                }
-            }
-        });
+        registerComposerOpening(state, request, null);
+        scheduleComposerFocus(state, state.composer, inputFieldEntries[0]?.input || titleInput || subtitleInput || notesInput);
     }
 
     function openInlineNoteComposer(state, options) {
-        closeComposer(state, { focusHost: false });
+        if (closeComposer(state, { focusHost: false, onClosed: () => openInlineNoteComposer(state, options) }) === false) {
+            return;
+        }
         clearContextMenu(state);
 
         const shell = decorateComposerShell(state, "", "", "note");
@@ -543,11 +785,15 @@
             textInput
         };
 
-        window.requestAnimationFrame(() => {
-            layoutComposer(state);
-            textInput.focus();
-            textInput.select();
-        });
+        registerComposerOpening(state,
+            options.kind === "note-create" ? {
+                actionId: state.composer.actionId, sourceNodeId: state.composer.sourceNodeId,
+                parentNodeId: state.composer.parentNodeId, placementKind: state.composer.placementKind,
+                x: round(options.anchorWorld.x), y: round(options.anchorWorld.y),
+                title: "", subtitle: "", notes: "", objectSubtype: "", createMode: "quick-note"
+            } : null,
+            options.kind === "note-edit" ? { nodeId: options.nodeId, title: "", notes: options.value || "" } : null);
+        scheduleComposerFocus(state, state.composer, textInput);
     }
 
     function resolveChildNoteHorizontalDirection(state, node) {
@@ -1098,5 +1344,5 @@
         openContextSubmenuByActionId(state, actionId);
     }
 
-    Object.assign(shared, { readFileAsUpload, commitComposer, decorateComposerShell, createComposerWizard, createComposerSection, updateComposerFileState, openCreateComposer, openInlineNoteComposer, buildChildNotePlacement, buildSiblingNotePlacement, openKeyboardNoteComposer, openExistingNoteEditor, executeContextAction, openContextSubmenu, openContextSubmenuByActionId, renderContextMenuLayer, renderToolboxPreview, renderToolboxPanelLayer, showContextMenu, legacyOpenNodeMetadataMenu });
+    Object.assign(shared, { readComposerCloseRequest, readComposerDraft, applyComposerDraft, acknowledgeComposer, readFileAsUpload, commitComposer, decorateComposerShell, createComposerWizard, createComposerSection, updateComposerFileState, openCreateComposer, openInlineNoteComposer, buildChildNotePlacement, buildSiblingNotePlacement, openKeyboardNoteComposer, openExistingNoteEditor, executeContextAction, openContextSubmenu, openContextSubmenuByActionId, renderContextMenuLayer, renderToolboxPreview, renderToolboxPanelLayer, showContextMenu, legacyOpenNodeMetadataMenu });
 })();

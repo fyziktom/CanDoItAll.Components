@@ -459,8 +459,8 @@
                     return;
                 }
 
-                if (state.composer) {
-                    closeComposer(state, { focusHost: false });
+                if (state.composer && closeComposer(state, { focusHost: false }) === false) {
+                    return;
                 }
 
                 clearContextMenu(state);
@@ -646,6 +646,10 @@
                 render(state);
             },
             doubleClick: event => {
+                if (!state.lastPointerTarget) {
+                    return;
+                }
+
                 if (state.recentDoubleActivationAt && (Date.now() - state.recentDoubleActivationAt) <= 340) {
                     return;
                 }

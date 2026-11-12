@@ -20,10 +20,11 @@ public sealed class CanvasSceneHost
 
     public bool ShouldUpdate() => IsInitialized && SurfaceSyncPending;
 
-    public void MarkApplied()
-    {
-        AppliedStateKey = PendingStateKey;
-        SurfaceSyncPending = false;
+    public void MarkApplied() => MarkApplied(PendingStateKey);
+
+    public void MarkApplied(string? stateKey) {
+        AppliedStateKey = stateKey;
+        SurfaceSyncPending = !string.Equals(PendingStateKey, stateKey, StringComparison.Ordinal);
         IsInitialized = true;
     }
 

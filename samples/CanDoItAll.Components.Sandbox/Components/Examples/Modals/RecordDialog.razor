@@ -1,21 +1,28 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Modals
+@inject NotificationService Notifications
 
 <Cluster Gap="LayoutGap.Small">
     <Button Text="Edit record"
             Icon="edit"
             ButtonStyle="@(ButtonStyle.Primary)"
             Click="OpenEditor" />
+    <Button Text="Notify before opening" Icon="notifications" ButtonStyle="ButtonStyle.Light" Click="Notify" />
 </Cluster>
 <Dialog IsOpen="@isOpen"
         Title="Edit record"
         Subtitle="Edit details without displacing the rest of the page. Dialog-only state is initialized when this opens."
         Size="ModalSize.Compact"
         DenseChrome="true"
+        TestId="sandbox-record-dialog"
         OnClose="CloseEditor">
     <ChildContent>
         <FormStack>
+            <Cluster Gap="LayoutGap.Small">
+                <Button Text="Notify while editing" Icon="notifications" ButtonStyle="ButtonStyle.Light" Click="Notify" />
+                <Button Text="Open nested review" Icon="difference" ButtonStyle="ButtonStyle.Light" Click="OpenReview" />
+            </Cluster>
             <FormField Text="Title">
-                <TextBox Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" />
+                <TextBox Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" data-testid="sandbox-record-title" />
             </FormField>
             <FormField Text="Review notes">
                 <TextArea Value="@notes"
@@ -23,6 +30,21 @@
                           Size="TextAreaSize.Extended" />
             </FormField>
         </FormStack>
+        <Dialog IsOpen="@reviewOpen" Title="Nested review" Subtitle="The editor stays open beneath this review."
+                Size="ModalSize.Compact" DenseChrome="true" CloseOnBackdrop="false"
+                TestId="sandbox-record-review" OnClose="CloseReview">
+            <ChildContent>
+                <Stack GapScale="LayoutGap.Medium">
+                    <TextBlock Value="Notifications stay interactive above the highest native dialog without taking focus." />
+                    <TextBox Value="@reviewNotes" ValueChanged="@(value => reviewNotes = value ?? string.Empty)"
+                             data-testid="sandbox-record-review-notes" />
+                    <Button Text="Notify during review" Icon="notifications" Click="Notify" />
+                </Stack>
+            </ChildContent>
+            <Footer>
+                <Button Text="Cancel review" Click="CloseReview" />
+            </Footer>
+        </Dialog>
     </ChildContent>
     <Footer>
         <Button Text="Cancel"
@@ -39,6 +61,8 @@
 
 @code {
     private bool isOpen;
+    private bool reviewOpen;
+    private string reviewNotes = "Retained review notes";
     private string title = "Migration review";
     private string notes = "Shared component uptake stays visible through a stable card shell and supporting metadata.";
 
@@ -53,5 +77,17 @@
         isOpen = false;
         return Task.CompletedTask;
     }
+
+    private void OpenReview() => reviewOpen = true;
+
+    private void CloseReview() => reviewOpen = false;
+
+    private void Notify() => Notifications.Notify(new NotificationMessage {
+        Summary = "Overlay notice",
+        Detail = "The same notice keeps its expiry when the modal stack changes.",
+        Severity = NotificationSeverity.Info,
+        Duration = 8000,
+        TestId = "sandbox-overlay-notice"
+    });
 
 }

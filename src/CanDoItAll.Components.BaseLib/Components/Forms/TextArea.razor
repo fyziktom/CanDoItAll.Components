@@ -9,7 +9,7 @@
               readonly="@ReadOnly"
               disabled="@Disabled"
               rows="@ResolveRows()"
-              @oninput="OnChangedAsync">@Value</textarea>
+              @bind:get="displayedValue" @bind:set="OnChangedAsync" @bind:event="oninput"></textarea>
 }
 else
 {
@@ -19,10 +19,22 @@ else
               readonly="@ReadOnly"
               disabled="@Disabled"
               rows="@ResolveRows()"
-              @onchange="OnChangedAsync">@Value</textarea>
+              @bind:get="displayedValue" @bind:set="OnChangedAsync" @bind:event="onchange"></textarea>
 }
 
 @code {
+    private string? displayedValue;
+    private string? observedValue;
+    private bool initialized;
+
+    protected override void OnParametersSet() {
+        if (!initialized || Value != observedValue) {
+            displayedValue = Value;
+        }
+        observedValue = Value;
+        initialized = true;
+    }
+
     /// <summary>The text value.</summary>
     [Parameter]
     public string? Value { get; set; }
@@ -66,14 +78,14 @@ else
     [CascadingParameter(Name = "FormFieldLabelId")]
     public string? FormFieldLabelId { get; set; }
 
-    private async Task OnChangedAsync(ChangeEventArgs args)
+    private async Task OnChangedAsync(string? next)
     {
         if (Disabled || ReadOnly)
         {
             return;
         }
 
-        var next = args.Value?.ToString();
+        displayedValue = next;
         await ValueChanged.InvokeAsync(next);
         await Change.InvokeAsync(next);
     }

@@ -18,7 +18,13 @@ Use CanvasLib for an authoring workspace, graph, process map, planning board, vi
 | `CanvasWorkbench` | Handling selection, movement, context actions, editing, clipboard, and persistence callbacks. | Canvas lifecycle, pan/zoom interaction, toolbar, accessibility mirror, and runtime interop. |
 | `CanDoItAll.canvasRuntime` | Scene models, layout, hit-region metadata, gesture meaning, and persistence. | DPR-aware canvas sizing, render invalidation, pointer capture, hit testing, and PNG mechanics for reusable canvas components. |
 | `CanvasFloatingWindow` | `CanvasWorkbenchWindowState` and the inspector's content. | A canvas-bounded, draggable, resizable window backed by OverlayLib. |
+| `CanvasOverlayDialog` | Title, content, actions, and whether a close request is accepted. | A bounded overlay with optional maximize/restore; `CanvasScoped` uses the nearest positioned canvas host. |
 | `CanvasCalendar` | Events, commands, and save/export/search callbacks. | Interactive calendar surface and its browser-side behavior. |
+
+`CanvasCalendar` serializes browser initialization and updates. A rerender during a
+pending interop call queues the latest surface without creating another controller.
+Only the state sent by that call is acknowledged; a newer queued state still applies.
+Disposal waits for an outstanding initialization before releasing its controller.
 
 The boundary is intentional: do not place business rules in JavaScript, and do not rebuild the workbench shell in every consuming page.
 
@@ -119,9 +125,38 @@ Render a `CanvasFloatingWindow` inside `OverlayContent`, and keep its state with
 
 Use the `WindowStates` dictionary on `CanvasWorkbenchUiState` when several windows should survive a route change or a saved workspace. Give each window a stable `WindowId` and dictionary key.
 
+### Optional retained composer editing
+
+Hosts using acknowledged composer submissions can opt into
+`ComposerComparisonRequested` and `ConfirmComposerClose`. The immutable
+`CanvasWorkbenchComposerDraft` identifies the opening, exact input revision, raw
+validation state and submission availability. `ApplyComposerDraftAsync` validates all
+identity, revision, outcome and field-shape conditions before changing any control.
+It changes local input only and returns a typed refusal when the original editor is
+no longer suitable. The host owns comparison policy, authorization and persistence.
+
+`ReadComposerCloseRequestAsync` and the optional close decision retain raw input on
+Continue. Replacement is delayed until the same opening/revision can close; a decision
+for old input cannot discard newer input. Pending and unconfirmed writes retain their
+existing acknowledgement barrier. Existing edit composers with both capabilities keep
+floating windows interactive; creation and consumers that do not opt in retain their
+original behavior. Inline notes can carry an explicitly reviewed title through
+`HasExplicitTitle` without deriving it again from their body.
+
 ![Canvas floating inspector over the workbench stage](../../docs/assets/canvas-floating-window.png)
 
 ## What to validate
+
+Keep collapse and expansion intent while an owner read or state callback is pending.
+The browser assigns a dispatch sequence to that intent; the component acknowledges it
+only after the owner's `StateChanged` callback completes. An older refresh of the same
+surface must retain the pending collapse state, while an acknowledged owner update can
+normalize it. Removed nodes are pruned and a different surface starts with its own state.
+The application still owns persistence; the dispatch sequence is transient bridge state.
+
+`npm run canvaslib:test-collapse-state` covers delayed and reordered refreshes, owner
+normalization and surface replacement. `CanvasWorkbenchStateCommitTests` checks the
+corresponding asynchronous Blazor callback and acknowledgement behavior.
 
 The [Sandbox Canvas route](../../samples/CanDoItAll.Components.Sandbox/README.md#canvas-and-floating-window-examples) demonstrates the real workbench, the selected-node inspector, and overlapping windows. Validate selection, drag/pan, keyboard interactions, geometry persistence, minimize/hide/show behavior, and an accessible representation of the important canvas content, not only how the stage first renders.
 

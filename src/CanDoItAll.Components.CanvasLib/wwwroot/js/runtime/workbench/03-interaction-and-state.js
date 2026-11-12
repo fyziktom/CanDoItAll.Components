@@ -261,6 +261,7 @@
         state.ui.collapsedNodeIds = [...state.collapsedIds];
         render(state);
         publishState(state);
+        state.collapseStateDispatchId = state.stateDispatchId;
     }
 
     function clearContextMenu(state) {
@@ -288,7 +289,32 @@
 
     function closeComposer(state, options) {
         const focusHost = options?.focusHost !== false;
-        const element = state.composer?.element || null;
+        const closing = state.composer;
+        const request = state.supportsComposerCloseGuard && !options?.force ? shared.readComposerCloseRequest?.(state) : null;
+        if (request) {
+            if (closing.closeDecisionPending) {
+                return false;
+            }
+            closing.closeDecisionPending = true;
+            Promise.resolve(closing.opened).then(() => state.dotNetRef.invokeMethodAsync("OnComposerCloseRequested", JSON.stringify(request)))
+                .then(approved => {
+                    const current = state.composer === closing ? shared.readComposerCloseRequest(state) : null;
+                    if (approved && current && current.revision === request.revision &&
+                        current.hasPendingSubmission === request.hasPendingSubmission && current.hasUnconfirmedOutcome === request.hasUnconfirmedOutcome) {
+                        closeComposer(state, { ...options, force: true });
+                        options?.onClosed?.();
+                    }
+                }).catch(() => {
+                    if (state.composer === closing && closing.status) {
+                        closing.status.textContent = "Closing could not be confirmed. Your editor is retained.";
+                    }
+                }).finally(() => { closing.closeDecisionPending = false; });
+            return false;
+        }
+        if (closing?.openingId && (!closing.submitted || state.supportsComposerCloseGuard)) {
+            closing.opened.then(() => state.dotNetRef.invokeMethodAsync("OnComposerClosed", closing.openingId));
+        }
+        const element = closing?.element || null;
         let removed = false;
         if (element) {
             element.remove();
@@ -300,6 +326,7 @@
         if (focusHost && removed) {
             deferHostFocus(state);
         }
+        return true;
     }
 
     function ensureHostFocus(state) {
@@ -346,8 +373,12 @@
 
         const element = state.composer.element;
         const hostRect = state.host.getBoundingClientRect();
-        const composerRect = element.getBoundingClientRect();
         const margin = 18;
+        const toolbarRect = state.host.closest(".cw-workbench-frame")?.querySelector(".cw-toolbar")?.getBoundingClientRect();
+        const topInset = toolbarRect && toolbarRect.bottom > hostRect.top && toolbarRect.top < hostRect.bottom
+            ? Math.max(margin, toolbarRect.bottom - hostRect.top + margin) : margin;
+        element.style.setProperty("--cw-composer-available-height", `${Math.max(0, hostRect.height - topInset - margin)}px`);
+        const composerRect = element.getBoundingClientRect();
         let left = anchor.x - (composerRect.width / 2);
         let top = anchor.y + 24;
 
@@ -356,7 +387,7 @@
         }
 
         left = clamp(left, margin, Math.max(margin, hostRect.width - composerRect.width - margin));
-        top = clamp(top, margin, Math.max(margin, hostRect.height - composerRect.height - margin));
+        top = clamp(top, topInset, Math.max(topInset, hostRect.height - composerRect.height - margin));
         element.style.left = `${round(left)}px`;
         element.style.top = `${round(top)}px`;
     }
@@ -1414,11 +1445,25 @@
             requestedAt,
             focusHost: options?.focusHost !== false
         };
-        state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload));
+        const composer = state.composer;
+        if (composer?.openingId) {
+            composer.submitted = true;
+            payload = { ...payload, composerOpeningId: composer.openingId };
+            return composer.opened.then(() => state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload)));
+        } else {
+            return state.dotNetRef.invokeMethodAsync("OnCreateAction", JSON.stringify(payload));
+        }
     }
 
     function submitNodeEdit(state, payload) {
-        state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload));
+        const composer = state.composer;
+        if (composer?.openingId) {
+            composer.submitted = true;
+            payload = { ...payload, composerOpeningId: composer.openingId };
+            return composer.opened.then(() => state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload)));
+        } else {
+            return state.dotNetRef.invokeMethodAsync("OnNodeEdited", JSON.stringify(payload));
+        }
     }
 
     Object.assign(shared, { hitTestNode, hitTestFrameHandle, hitTestProgressBadge, isOverlayTarget, applyFullTextTooltip, reconcileSelection, shouldClearNodeHighlightsForSelection, clearNodeHighlights, applyViewportPreviewTransform, resetViewportPreviewTransform, cancelDeferredViewportRender, scheduleDeferredViewportRender, flushDeferredViewportRender, applySelection, selectSingleNode, publishSelection, clearViewportStateCommit, createSerializedStateSnapshot, invokeStateChanged, publishState, publishStateNow, scheduleViewportStateCommit, publishNodesMoved, setSelection, toggleSelection, toggleCollapse, clearContextMenu, removeComposerElements, closeComposer, ensureHostFocus, deferHostFocus, resolveComposerAnchor, layoutComposer, render, getContextActions, isCreateAction, buildCreateRequest, resolveMenuLabel, getMenuScale, normalizeContextMenuLayout, isHiveLayout, isCompactHiveLayout, resolveMenuActionVariant, getActionMetrics, applyProgressPresetTone, fitContextMenuLabel, resolveActionGlyph, createMenuActionIcon, resolveMenuActionAriaLabel, getRadialOffsets, buildCompactHiveCoordinates, getCompactHiveOffsets, resolveContextMenuOffsets, resolveContextMenuSafeTop, getContextMenuLayerBounds, clampLayerBoundsToHost, positionContextMenu, getContextMenuOrbitRadius, getContextMenuLocalPoint, isPointInContextMenuLayer, closeContextMenuLayersFrom, syncContextMenuLayers, resolveSubmenuOrigin, ensureSubmenuLoadingIndicator, clearSubmenuLoadingIndicator, cancelPendingContextSubmenu, scheduleContextSubmenuOpen, clampLayerOriginToHost, getToolboxPanelSize, getToolboxPanelBounds, clampToolboxPanelOriginToHost, resolveToolboxPanelOrigin, createContextMenuLayer, syncContextMenuLayerShellGeometry, shiftContextMenuLayerOrigin, nudgeContextMenuLayerIntoVisibleHost, resolveQuickCreateSourceNode, submitCreateRequest, submitNodeEdit });

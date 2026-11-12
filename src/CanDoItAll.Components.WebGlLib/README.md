@@ -132,3 +132,9 @@ npm run webgllib:test-resource-ownership
 - [Repository overview](../../README.md)
 - [Run-layer boundary](../../docs/webgl/run-layer-boundary.md)
 - [Playback hosting and troubleshooting](../../docs/webgl/playback-hosting-and-troubleshooting.md)
+
+## Continuous animation surface
+
+For games and other consumers that own a custom frame loop, import `createAnimationSurface` and `THREE` from `/_content/CanDoItAll.Components.WebGlLib/js/animation-surface.js`. Pass a canvas and callbacks `{ frame(deltaSeconds, timeSeconds), visibilityChanged(visible), contextChanged(available), maximumPixelRatio }`. The returned object exposes `renderer`, `scene`, `camera`, `start()`, `stop()` and idempotent `dispose()`.
+
+This additive low-level API does not change WebGlSceneView or workbench behavior. The surface owns scheduling, resize observation, visibility, context recovery notifications and disposal of resources attached to its scene. Consumers own simulation state and must dispose detached resources before surface disposal. `frame` runs synchronously before each render; use it for browser-local updates, not network roundtrips. A hidden page stops rendering; a resumed page has a zero first delta so suspension cannot advance its simulation.

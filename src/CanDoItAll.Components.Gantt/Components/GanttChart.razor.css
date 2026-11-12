@@ -69,6 +69,49 @@
     background: var(--gantt-surface);
 }
 
+.cda-gantt--fill-height {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.cda-gantt--fill-height ::deep .cda-gantt__toolbar,
+.cda-gantt--fill-height ::deep .cda-gantt__error {
+    flex-shrink: 0;
+}
+
+.cda-gantt--fill-height .cda-gantt__viewport {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+}
+
+.cda-gantt__cell--task-heading {
+    position: relative;
+}
+
+.cda-gantt__column-resize {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 9px;
+    cursor: ew-resize;
+    touch-action: none;
+    border-right: 2px solid var(--gantt-border);
+}
+
+.cda-gantt__column-resize:hover,
+.cda-gantt__column-resize:focus-visible {
+    border-color: var(--gantt-accent);
+    background: var(--gantt-grid);
+    outline: none;
+}
+
+.cda-gantt--resizing {
+    cursor: ew-resize;
+    user-select: none;
+}
+
 .cda-gantt__content {
     position: relative;
     min-width: 100%;

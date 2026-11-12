@@ -31,12 +31,49 @@ public sealed record CanvasWorkbenchCreateActionRequest(
     string CreateMode,
     string ObjectSubtype,
     CanvasWorkbenchUploadedFile? UploadedFile,
-    IReadOnlyList<CanvasWorkbenchInputValue>? InputValues = null);
+    IReadOnlyList<CanvasWorkbenchInputValue>? InputValues = null) {
+    public Guid? ComposerOpeningId { get; init; }
+    public Guid? ComposerSubmissionId { get; init; }
+}
 
 public sealed record CanvasWorkbenchNodeEditRequest(
     string NodeId,
     string Title,
-    string Notes);
+    string Notes) {
+    public Guid? ComposerOpeningId { get; init; }
+    public Guid? ComposerSubmissionId { get; init; }
+    public bool HasExplicitTitle { get; init; }
+}
+
+public sealed record CanvasWorkbenchComposerOpening(
+    Guid OpeningId,
+    CanvasWorkbenchCreateActionRequest? CreateRequest,
+    CanvasWorkbenchNodeEditRequest? EditRequest);
+
+[JsonConverter(typeof(JsonStringEnumConverter<CanvasWorkbenchComposerResultKind>))]
+public enum CanvasWorkbenchComposerResultKind {
+    Committed,
+    Rejected,
+    Unconfirmed,
+    HandedOff
+}
+
+public sealed record CanvasWorkbenchComposerResult(
+    Guid OpeningId,
+    Guid SubmissionId,
+    CanvasWorkbenchComposerResultKind Kind,
+    string Message);
+
+public sealed record CanvasWorkbenchComposerDraft(Guid OpeningId, long Revision, bool HasPendingInput, bool CanApply,
+    CanvasWorkbenchCreateActionRequest? CreateRequest, CanvasWorkbenchNodeEditRequest? EditRequest);
+
+public sealed record CanvasWorkbenchComposerApplyRequest(Guid OpeningId, long ExpectedRevision,
+    CanvasWorkbenchCreateActionRequest? CreateRequest, CanvasWorkbenchNodeEditRequest? EditRequest);
+
+[JsonConverter(typeof(JsonStringEnumConverter<CanvasWorkbenchComposerApplyStatus>))]
+public enum CanvasWorkbenchComposerApplyStatus { Applied, Retired, InputChanged, PendingInput, OutcomeRequiresReview, ShapeChanged }
+
+public sealed record CanvasWorkbenchComposerApplyResult(CanvasWorkbenchComposerApplyStatus Status, long Revision);
 
 public sealed record CanvasWorkbenchNodePositionChange(
     string NodeId,
@@ -61,3 +98,5 @@ public sealed record CanvasWorkbenchClipboardRequest(
     string? PrimaryNodeId,
     IReadOnlyList<string> SelectedNodeIds,
     CanvasWorkbenchPoint? AnchorWorld = null);
+
+public sealed record CanvasWorkbenchComposerCloseRequest(Guid OpeningId, long Revision, bool HasPendingSubmission, bool HasUnconfirmedOutcome);

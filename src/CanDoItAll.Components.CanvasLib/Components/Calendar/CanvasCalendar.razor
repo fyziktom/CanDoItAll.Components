@@ -16,6 +16,8 @@
     private ElementReference host;
     private DotNetObjectReference<CanvasCalendar>? objectReference;
     private string? pendingSurfaceKey;
+    private Task? synchronization;
+    private bool disposed;
 
     /// <summary>The events, view state, and options that drive the live JS-hosted calendar scene.</summary>
     [Parameter, EditorRequired]
@@ -69,24 +71,27 @@
             !string.Equals(sceneHost.AppliedStateKey, pendingSurfaceKey, StringComparison.Ordinal));
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
+    protected override Task OnAfterRenderAsync(bool firstRender) {
+        if (disposed || synchronization is { IsCompleted: false }) {
+            return Task.CompletedTask;
+        }
+        synchronization = SynchronizeAsync();
+        return synchronization;
+    }
+
+    private async Task SynchronizeAsync() {
         objectReference ??= DotNetObjectReference.Create(this);
         var bridge = new JsInteropBridge(JsRuntime);
-        if (sceneHost.ShouldCreate())
-        {
-            await bridge.InvokeVoidAsync("CanDoItAll.canvasCalendar.create", host, objectReference, Surface);
-            MarkSurfaceApplied();
-            return;
+        while (!disposed && (sceneHost.ShouldCreate() || sceneHost.ShouldUpdate())) {
+            var surface = Surface;
+            var stateKey = pendingSurfaceKey;
+            if (sceneHost.ShouldCreate()) {
+                await bridge.InvokeVoidAsync("CanDoItAll.canvasCalendar.create", host, objectReference, surface);
+            } else {
+                await bridge.InvokeVoidAsync("CanDoItAll.canvasCalendar.update", host, surface);
+            }
+            sceneHost.MarkApplied(stateKey);
         }
-
-        if (!sceneHost.ShouldUpdate())
-        {
-            return;
-        }
-
-        await bridge.InvokeVoidAsync("CanDoItAll.canvasCalendar.update", host, Surface);
-        MarkSurfaceApplied();
     }
 
     [JSInvokable]
@@ -191,23 +196,23 @@
         return ExportAsync(new CanvasCalendarExportRequest(format, visibleEvents, context));
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (sceneHost.IsInitialized)
-        {
-            try
-            {
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
+        try {
+            if (synchronization is { } pending) {
+                await pending;
+            }
+            if (sceneHost.IsInitialized) {
                 await new JsInteropBridge(JsRuntime).InvokeVoidAsync("CanDoItAll.canvasCalendar.dispose", host);
             }
-            catch (JSDisconnectedException)
-            {
-            }
-            catch (JSException)
-            {
-            }
+        } catch (JSDisconnectedException) {
+        } catch (JSException) {
+        } finally {
+            objectReference?.Dispose();
         }
-
-        objectReference?.Dispose();
     }
 
     private static T? Deserialize<T>(string json)
@@ -253,10 +258,6 @@
         return string.Join(' ', classes);
     }
 
-    private void MarkSurfaceApplied()
-    {
-        sceneHost.MarkApplied();
-    }
 }
 
 

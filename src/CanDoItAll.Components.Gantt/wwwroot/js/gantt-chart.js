@@ -3,6 +3,7 @@
 
     const root = window.CanDoItAll = window.CanDoItAll || {};
     const chartStates = new WeakMap();
+    const chartOwners = new Map();
     const dragSources = new WeakMap();
     const hourMs = 60 * 60 * 1000;
     const dayMs = 24 * hourMs;
@@ -1858,7 +1859,111 @@
         syncTimelineTaskCreationListener(state);
     }
 
+    function previewTableWidth(state, width) {
+        state.host.style.setProperty("--cda-gantt-table-width", `${width}px`);
+    }
+
+    function cancelTableResize(state) {
+        const resize = state.tableResize;
+        state.tableResize = null;
+        state.host.classList.remove("cda-gantt--resizing");
+        previewTableWidth(state, state.model.options.taskTableWidth);
+        if (resize?.handle.hasPointerCapture(resize.pointerId)) {
+            resize.handle.releasePointerCapture(resize.pointerId);
+        }
+    }
+
+    function bindTableResize(state) {
+        const resolveHandle = event => event.target.closest?.("[data-gantt-column-resize]");
+        const clampWidth = (handle, width) => Math.max(Number(handle.getAttribute("aria-valuemin")),
+            Math.min(Number(handle.getAttribute("aria-valuemax")), width));
+        const commitWidth = async width => {
+            state.tableResizePending = true;
+            try {
+                await state.dotNetRef.invokeMethodAsync("ResizeTaskTableAsync", width);
+            }
+            catch (error) {
+                previewTableWidth(state, state.model.options.taskTableWidth);
+                reportInteropError(state, error);
+            }
+            finally {
+                state.tableResizePending = false;
+            }
+        };
+        const down = event => {
+            const handle = resolveHandle(event);
+            if (!handle || event.button !== 0 || state.tableResizePending || state.tableResize) {
+                return;
+            }
+            event.preventDefault();
+            handle.focus({ preventScroll: true });
+            state.tableResize = { handle, pointerId: event.pointerId, x: event.clientX,
+                width: state.model.options.taskTableWidth, preview: state.model.options.taskTableWidth };
+            handle.setPointerCapture(event.pointerId);
+            state.host.classList.add("cda-gantt--resizing");
+        };
+        const move = event => {
+            const resize = state.tableResize;
+            if (resize?.pointerId !== event.pointerId) {
+                return;
+            }
+            resize.preview = clampWidth(resize.handle, resize.width + event.clientX - resize.x);
+            previewTableWidth(state, resize.preview);
+        };
+        const up = event => {
+            const resize = state.tableResize;
+            if (resize?.pointerId !== event.pointerId) {
+                return;
+            }
+            move(event);
+            const width = resize.preview;
+            cancelTableResize(state);
+            previewTableWidth(state, width);
+            void commitWidth(width);
+        };
+        const cancel = event => {
+            if (state.tableResize?.pointerId === event.pointerId) {
+                cancelTableResize(state);
+            }
+        };
+        const key = event => {
+            const handle = resolveHandle(event);
+            if (!handle) {
+                return;
+            }
+            if (event.key === "Escape" && state.tableResize) {
+                cancelTableResize(state);
+                event.preventDefault();
+                return;
+            }
+            const step = event.shiftKey ? 64 : 16;
+            const width = event.key === "ArrowLeft" ? state.model.options.taskTableWidth - step
+                : event.key === "ArrowRight" ? state.model.options.taskTableWidth + step
+                : event.key === "Home" ? Number(handle.getAttribute("aria-valuemin"))
+                : event.key === "End" ? Number(handle.getAttribute("aria-valuemax")) : null;
+            if (width === null) {
+                return;
+            }
+            event.preventDefault();
+            if (!state.tableResizePending && !state.tableResize) {
+                void commitWidth(clampWidth(handle, width));
+            }
+        };
+        const handlers = { pointerdown: down, pointermove: move, pointerup: up,
+            pointercancel: cancel, lostpointercapture: cancel, keydown: key };
+        for (const [name, handler] of Object.entries(handlers)) {
+            state.host.addEventListener(name, handler);
+        }
+        state.disposeTableResize = () => {
+            cancelTableResize(state);
+            for (const [name, handler] of Object.entries(handlers)) {
+                state.host.removeEventListener(name, handler);
+            }
+        };
+    }
+
     function detachDomEvents(state) {
+        state.disposeTableResize();
         state.canvas.removeEventListener("dblclick", state.doubleClickHandler);
         if (state.timelineTaskCreationListenerAttached) {
             state.canvas.removeEventListener("dblclick", state.timelineTaskCreationDoubleClickHandler);
@@ -1895,6 +2000,9 @@
                 }
                 finally {
                     chartStates.delete(state.host);
+                    if (state.ownerId) {
+                        chartOwners.delete(state.ownerId);
+                    }
                 }
             }
         }
@@ -1929,6 +2037,7 @@
             canvas.style.height = `${model.options.canvasHeight}px`;
             const state = {
                 host,
+                ownerId: modelValue.ownerId || modelValue.OwnerId,
                 canvas,
                 viewport,
                 dotNetRef,
@@ -1961,7 +2070,11 @@
                 onPointerCancel: () => cancelInteraction(state)
             });
             attachDomEvents(state);
+            bindTableResize(state);
             chartStates.set(host, state);
+            if (state.ownerId) {
+                chartOwners.set(state.ownerId, state);
+            }
             updateCursor(state);
             state.surface.measure();
             state.surface.requestRender();
@@ -1970,7 +2083,9 @@
         update(hostValue, modelValue) {
             const host = requireElement(hostValue, "host");
             const state = resolveState(host);
+            cancelTableResize(state);
             state.model = normalizeModel(modelValue);
+            previewTableWidth(state, state.model.options.taskTableWidth);
             syncTimelineTaskCreationListener(state);
             state.colors = resolveColors(state.host);
             state.interaction = null;
@@ -2061,7 +2176,11 @@
             return registration;
         },
 
-        dispose(hostValue) {
+        dispose(hostValue, ownerId) {
+            if (ownerId) {
+                disposeState(chartOwners.get(ownerId));
+                return;
+            }
             const host = requireElement(hostValue, "host");
             disposeState(chartStates.get(host));
         }

@@ -62,7 +62,7 @@
 .cda-overlay-window__chip,
 .cw-floating-window__chip {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
 }
@@ -70,11 +70,48 @@
 .cda-overlay-window__drag,
 .cw-floating-window__drag {
     min-width: 0;
-    display: grid;
-    gap: 0.18rem;
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    gap: 0.65rem;
     cursor: grab;
     user-select: none;
     touch-action: none;
+}
+
+.cda-overlay-window__heading {
+    display: grid;
+    min-width: 0;
+    gap: 0.18rem;
+}
+
+.cda-overlay-window__heading > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cda-overlay-window__leading,
+.cda-overlay-window__status {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.cda-overlay-window__status {
+    min-width: 0;
+    max-width: 40%;
+}
+
+.cda-overlay-window__leading:empty,
+.cda-overlay-window__status:empty {
+    display: none;
+}
+
+.cda-overlay-window__status > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .cda-overlay-window.is-dragging .cda-overlay-window__drag,
@@ -123,6 +160,7 @@
     justify-content: flex-end;
     gap: 0.35rem;
     flex-wrap: nowrap;
+    flex: 0 0 auto;
 }
 
 .cda-overlay-window__action,
@@ -163,6 +201,10 @@
     cursor: default;
     opacity: 0.55;
     box-shadow: none;
+}
+
+.cda-overlay-window__body[hidden] {
+    display: none !important;
 }
 
 .cda-overlay-window__body,

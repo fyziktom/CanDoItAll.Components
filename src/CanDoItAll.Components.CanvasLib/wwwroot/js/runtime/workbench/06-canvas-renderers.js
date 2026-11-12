@@ -18,7 +18,7 @@
                 : "compact";
         }
 
-        if ((state.ui.zoom || 1) <= 0.3 || projectedNodeCount >= 120) {
+        if ((state.ui.zoom || 1) <= 0.55 || projectedNodeCount >= 120) {
             return "micro";
         }
 
@@ -1599,11 +1599,17 @@
             paletteStyle.surfaceShadow);
         drawCanvasDecisionCues(context, state, node, hostBounds, paletteStyle);
         context.save();
-        setCanvasFont(context, 700, Math.max(7, 10 * state.ui.zoom));
+        const fontSize = Math.max(9, 12 * state.ui.zoom);
+        const lineHeight = fontSize + 2;
+        setCanvasFont(context, 700, fontSize);
         context.fillStyle = paletteStyle.titleText;
         context.textAlign = "center";
-        const label = (node.title || node.kind || "Node").slice(0, 12);
-        context.fillText(label, hostBounds.left + (hostBounds.width / 2), hostBounds.top + (hostBounds.height / 2) + 3);
+        const lines = wrapCanvasNodeText(state, node, "micro-title", getCanvasRuntimePrimitives(), context,
+            node.title || node.kind || "Node", Math.max(8, hostBounds.width - 12),
+            Math.max(1, Math.min(4, Math.floor((hostBounds.height - 12) / lineHeight))));
+        drawCanvasTextLines(context, lines, hostBounds.left + (hostBounds.width / 2),
+            hostBounds.top + ((hostBounds.height - lines.length * lineHeight) / 2) + fontSize,
+            lineHeight, paletteStyle.titleText);
         context.restore();
         meta.progressTitle = resolveProgressDisplay(node?.progressMode, node?.progressPercent).title;
     }

@@ -1,10 +1,16 @@
 @namespace CanDoItAll.Components.BaseLib
-@implements IDisposable
+@implements IAsyncDisposable
 @inject NotificationService NotificationService
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using Microsoft.JSInterop
 
+@if (NotificationService.ActiveOutlet == PresentationOutlet) {
+    renderedAnnouncementVersion = NotificationService.AnnouncementVersion;
 <div class="rz-notification pointer-events-none fixed inset-0 z-[90]"
-     style="z-index:900;"
-     @attributes="@NotificationAttributes">
+     style="@(IsModalOutlet ? "z-index:1300;" : "z-index:900;")"
+     aria-live="@(NotificationService.HasNewAnnouncement ? "polite" : "off")"
+     aria-atomic="false"
+     data-notification-outlet="@PresentationOutlet">
     @foreach (var group in GetMessageGroups())
     {
         <Stack GapScale="LayoutGap.Small"
@@ -67,74 +73,72 @@
         </Stack>
     }
 </div>
+}
 
 @code {
-    private readonly Dictionary<Guid, CancellationTokenSource> removalTimers = [];
+    private readonly Guid rootOutletId = Guid.NewGuid();
+    private IJSObjectReference? module;
+    private DotNetObjectReference<Notification>? reference;
+    private bool disposed;
+    private long renderedAnnouncementVersion;
 
     [Parameter]
     public NotificationPosition Position { get; set; } = NotificationPosition.BottomCenter;
 
-    private static readonly IReadOnlyDictionary<string, object> NotificationAttributes =
-        new Dictionary<string, object>
-        {
-            ["aria-live"] = "polite",
-            ["aria-atomic"] = "false"
-        };
+    [Parameter]
+    public Guid? OutletId { get; set; }
+
+    [Parameter]
+    public bool IsModalOutlet { get; set; }
+
+    private Guid PresentationOutlet => IsModalOutlet
+        ? OutletId ?? throw new InvalidOperationException("A modal notification outlet requires its dialog identity.")
+        : rootOutletId;
 
     protected override void OnInitialized()
     {
-        NotificationService.Messages.CollectionChanged += HandleNotificationsChanged;
-
-        foreach (var message in NotificationService.Messages)
-        {
-            ScheduleRemoval(message);
+        NotificationService.Changed += HandleNotificationsChanged;
+        if (!IsModalOutlet) {
+            NotificationService.RegisterRoot(rootOutletId, Position);
         }
     }
 
-    private void HandleNotificationsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
-    {
-        if (args.NewItems is not null)
-        {
-            foreach (NotificationMessage message in args.NewItems)
-            {
-                ScheduleRemoval(message);
-            }
-        }
-
-        if (args.OldItems is not null)
-        {
-            foreach (NotificationMessage message in args.OldItems)
-            {
-                CancelRemoval(message.Id);
-            }
-        }
-
-        _ = InvokeAsync(StateHasChanged);
-    }
-
-    private void ScheduleRemoval(NotificationMessage message)
-    {
-        if (message.IsPersistent)
-        {
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (disposed) {
             return;
         }
-
-        CancelRemoval(message.Id);
-
-        var timer = new CancellationTokenSource();
-        removalTimers[message.Id] = timer;
-        _ = RemoveLaterAsync(message, timer.Token);
+        NotificationService.Presented(PresentationOutlet, renderedAnnouncementVersion);
+        if (firstRender && !IsModalOutlet) {
+            IJSObjectReference imported;
+            try {
+                imported = await JS.InvokeAsync<IJSObjectReference>("import",
+                    "./_content/CanDoItAll.Components.BaseLib/Components/Feedback/Notification.razor.js");
+            } catch (Exception exception) when (disposed && exception is JSDisconnectedException or OperationCanceledException) {
+                return;
+            }
+            if (disposed) {
+                try {
+                    await imported.DisposeAsync();
+                } catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException) {
+                }
+                return;
+            }
+            module = imported;
+            reference = DotNetObjectReference.Create(this);
+            try {
+                await module.InvokeVoidAsync("connect", rootOutletId, reference);
+            } catch (Exception exception) when (disposed && exception is JSDisconnectedException or OperationCanceledException) {
+            }
+        }
     }
 
-    private async Task RemoveLaterAsync(NotificationMessage message, CancellationToken cancellationToken)
-    {
-        try
-        {
-            await Task.Delay(TimeSpan.FromMilliseconds(message.Duration!.Value), cancellationToken);
-            NotificationService.Dismiss(message);
-        }
-        catch (OperationCanceledException)
-        {
+    [JSInvokable]
+    public Task OnNotificationLayerChanged(Guid? outletId)
+        => disposed ? Task.CompletedTask : InvokeAsync(() => NotificationService.SetActiveModal(outletId));
+
+    private void HandleNotificationsChanged() {
+        if (!disposed) {
+            _ = InvokeAsync(StateHasChanged);
         }
     }
 
@@ -165,23 +169,12 @@
 
     private IEnumerable<IGrouping<NotificationPosition, NotificationMessage>> GetMessageGroups()
     {
-        return NotificationService.Messages.GroupBy(ResolveMessagePosition);
+        return NotificationService.Snapshot().GroupBy(ResolveMessagePosition);
     }
 
     private NotificationPosition ResolveMessagePosition(NotificationMessage message)
     {
-        return message.Position ?? Position;
-    }
-
-    private void CancelRemoval(Guid id)
-    {
-        if (!removalTimers.Remove(id, out var timer))
-        {
-            return;
-        }
-
-        timer.Cancel();
-        timer.Dispose();
+        return message.Position ?? NotificationService.DefaultPosition;
     }
 
     private static string ResolveNotificationCssClass(NotificationMessage message)
@@ -222,16 +215,27 @@
         };
     }
 
-    public void Dispose()
-    {
-        NotificationService.Messages.CollectionChanged -= HandleNotificationsChanged;
-        foreach (var timer in removalTimers.Values)
-        {
-            timer.Cancel();
-            timer.Dispose();
+    public async ValueTask DisposeAsync() {
+        if (disposed) {
+            return;
         }
-
-        removalTimers.Clear();
+        disposed = true;
+        NotificationService.Changed -= HandleNotificationsChanged;
+        if (!IsModalOutlet) {
+            NotificationService.UnregisterRoot(rootOutletId);
+        }
+        try {
+            if (module is not null) {
+                try {
+                    await module.InvokeVoidAsync("disconnect", rootOutletId);
+                } finally {
+                    await module.DisposeAsync();
+                }
+            }
+        } catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException) {
+        } finally {
+            reference?.Dispose();
+        }
     }
 }
 

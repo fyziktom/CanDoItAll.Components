@@ -390,10 +390,15 @@
     private string? processedUiStateKey;
     private long lastSelectionDispatchId;
     private long lastStateDispatchId;
+    private long committedStateDispatchId;
     private bool awaitingParentUiStateCommit;
     private long uiStateCommitGeneration;
     private bool preserveViewportOnNextUpdate;
     private bool? appliedHasClipboardHandler;
+    private bool? appliedTracksComposerOpenings;
+    private bool? appliedRequiresComposerAcknowledgement;
+    private bool? appliedSupportsComposerComparison;
+    private bool? appliedSupportsComposerCloseGuard;
 
     /// <summary>The nodes, links, chrome, and UI state that drive the live JS-hosted canvas scene.</summary>
     [Parameter, EditorRequired]
@@ -439,6 +444,21 @@
     [Parameter]
     public RenderFragment? OverlayContent { get; set; }
 
+    [Parameter]
+    public EventCallback<CanvasWorkbenchComposerOpening> ComposerOpened { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> ComposerClosed { get; set; }
+
+    [Parameter]
+    public bool RequiresComposerAcknowledgement { get; set; }
+
+    [Parameter]
+    public EventCallback<CanvasWorkbenchComposerDraft> ComposerComparisonRequested { get; set; }
+
+    [Parameter]
+    public Func<CanvasWorkbenchComposerCloseRequest, Task<bool>>? ConfirmComposerClose { get; set; }
+
     protected override void OnParametersSet()
         => SynchronizeSurface();
 
@@ -462,7 +482,16 @@
         preserveViewportOnNextUpdate = dataChanged &&
             sceneHost.IsInitialized &&
             string.Equals(appliedSurfaceId, Surface.SurfaceId, StringComparison.Ordinal);
-        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged);
+        if (RequiresComposerAcknowledgement && !ComposerOpened.HasDelegate) {
+            throw new InvalidOperationException("Composer acknowledgements require an opening handler.");
+        }
+        if ((ComposerComparisonRequested.HasDelegate || ConfirmComposerClose is not null) && !RequiresComposerAcknowledgement) {
+            throw new InvalidOperationException("Composer comparison requires tracked native acknowledgements.");
+        }
+        sceneHost.QueueSync(pendingDataKey, dataChanged || shouldSyncUiState || clipboardHandlerChanged ||
+            appliedTracksComposerOpenings != ComposerOpened.HasDelegate || appliedRequiresComposerAcknowledgement != RequiresComposerAcknowledgement ||
+            appliedSupportsComposerComparison != ComposerComparisonRequested.HasDelegate ||
+            appliedSupportsComposerCloseGuard != (ConfirmComposerClose is not null));
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -542,6 +571,27 @@
     }
 
     [JSInvokable]
+    public Task OnComposerOpened(string requestJson) {
+        var opening = Deserialize<CanvasWorkbenchComposerOpening>(requestJson);
+        return opening is null ? Task.CompletedTask : ComposerOpened.InvokeAsync(opening);
+    }
+
+    [JSInvokable]
+    public Task OnComposerClosed(Guid openingId) => ComposerClosed.InvokeAsync(openingId);
+
+    [JSInvokable]
+    public Task<bool> OnComposerCloseRequested(string requestJson) {
+        var request = Deserialize<CanvasWorkbenchComposerCloseRequest>(requestJson);
+        return request is not null && ConfirmComposerClose is not null ? ConfirmComposerClose(request) : Task.FromResult(false);
+    }
+
+    [JSInvokable]
+    public Task OnComposerComparisonRequested(string requestJson) {
+        var draft = Deserialize<CanvasWorkbenchComposerDraft>(requestJson);
+        return draft is null ? Task.CompletedTask : ComposerComparisonRequested.InvokeAsync(draft);
+    }
+
+    [JSInvokable]
     public Task OnCreateAction(string requestJson)
     {
         var request = Deserialize<CanvasWorkbenchCreateActionRequest>(requestJson);
@@ -573,7 +623,7 @@
 
         var state = CanvasWorkbenchUiState.Parse(stateJson);
         state.IsMaximized = isMaximized;
-        await CommitClientUiStateAsync(state);
+        await CommitClientUiStateAsync(state, dispatchId);
     }
 
     [JSInvokable]
@@ -656,14 +706,13 @@
         return FitViewAsync();
     }
 
-    private async Task FocusPrimaryNodeAsync()
-    {
-        var targetNodeId = Surface.Nodes.FirstOrDefault(node => string.Equals(node.Family, "root", StringComparison.OrdinalIgnoreCase))?.Id
+    private async Task FocusPrimaryNodeAsync() {
+        var targetNodeId = !string.IsNullOrWhiteSpace(Surface.RootNodeId) ? Surface.RootNodeId
+            : Surface.Nodes.FirstOrDefault(node => string.Equals(node.Family, "root", StringComparison.OrdinalIgnoreCase))?.Id
             ?? Surface.Nodes.FirstOrDefault(node => string.IsNullOrWhiteSpace(node.ParentId))?.Id
             ?? Surface.UiState.SelectedNodeIds.FirstOrDefault()
             ?? Surface.Nodes.FirstOrDefault()?.Id;
-        if (!sceneHost.IsInitialized || string.IsNullOrWhiteSpace(targetNodeId))
-        {
+        if (!sceneHost.IsInitialized || !Surface.Nodes.Any(node => string.Equals(node.Id, targetNodeId, StringComparison.Ordinal))) {
             return;
         }
 
@@ -764,7 +813,7 @@
         await CommitClientUiStateAsync(state);
     }
 
-    private async Task CommitClientUiStateAsync(CanvasWorkbenchUiState state) {
+    private async Task CommitClientUiStateAsync(CanvasWorkbenchUiState state, long dispatchId = 0) {
         var generation = ++uiStateCommitGeneration;
         clientUiStateKey = state.ToJson();
         processedUiStateKey = clientUiStateKey;
@@ -774,6 +823,9 @@
         var callback = StateChanged;
         try {
             await callback.InvokeAsync(clientUiStateKey);
+            if (callback.HasDelegate) {
+                committedStateDispatchId = Math.Max(committedStateDispatchId, dispatchId);
+            }
         } finally {
             if (generation == uiStateCommitGeneration && callback.HasDelegate) {
                 awaitingParentUiStateCommit = false;
@@ -880,8 +932,12 @@
     {
         sceneHost.MarkApplied();
         appliedSurfaceId = Surface.SurfaceId;
-        processedUiStateKey = pendingUiStateKey;
+        processedUiStateKey = awaitingParentUiStateCommit ? clientUiStateKey : pendingUiStateKey;
         appliedHasClipboardHandler = ClipboardRequested.HasDelegate;
+        appliedTracksComposerOpenings = ComposerOpened.HasDelegate;
+        appliedRequiresComposerAcknowledgement = RequiresComposerAcknowledgement;
+        appliedSupportsComposerComparison = ComposerComparisonRequested.HasDelegate;
+        appliedSupportsComposerCloseGuard = ConfirmComposerClose is not null;
     }
 
     private static bool IsExpectedJsInteropCancellation(Exception exception)
@@ -894,7 +950,12 @@
             !includeAutoFit && preserveViewportOnNextUpdate,
             [.. Surface.UiState.SelectedNodeIds],
             Surface.UiState.SelectedNodeIds.FirstOrDefault(),
-            ClipboardRequested.HasDelegate);
+            ClipboardRequested.HasDelegate,
+            ComposerOpened.HasDelegate,
+            RequiresComposerAcknowledgement,
+            ComposerComparisonRequested.HasDelegate,
+            ConfirmComposerClose is not null,
+            committedStateDispatchId);
 
     private bool ShouldAutoFitInitialView()
     {
@@ -915,10 +976,31 @@
         return usesDefaultViewport;
     }
 
+    public async Task AcknowledgeComposerAsync(CanvasWorkbenchComposerResult result) {
+        if (sceneHost.IsInitialized) {
+            await JsRuntime.InvokeVoidAsync("CanDoItAll.canvasWorkbench.acknowledgeComposer", host, result);
+        }
+    }
+
+    public async Task<CanvasWorkbenchComposerCloseRequest?> ReadComposerCloseRequestAsync() => sceneHost.IsInitialized
+        ? await JsRuntime.InvokeAsync<CanvasWorkbenchComposerCloseRequest?>("CanDoItAll.canvasWorkbench.readComposerCloseRequest", host)
+        : null;
+
+    public async Task<CanvasWorkbenchComposerDraft?> ReadComposerDraftAsync() => sceneHost.IsInitialized
+        ? await JsRuntime.InvokeAsync<CanvasWorkbenchComposerDraft?>("CanDoItAll.canvasWorkbench.readComposerDraft", host)
+        : null;
+
+    public async Task<CanvasWorkbenchComposerApplyResult> ApplyComposerDraftAsync(CanvasWorkbenchComposerApplyRequest request) => sceneHost.IsInitialized
+        ? await JsRuntime.InvokeAsync<CanvasWorkbenchComposerApplyResult>("CanDoItAll.canvasWorkbench.applyComposerDraft", host, request)
+        : new(CanvasWorkbenchComposerApplyStatus.Retired, 0);
+
     public async Task OpenCreateDialogAsync(CanvasWorkbenchAction action, CanvasWorkbenchCreateActionRequest request)
     {
         if (!sceneHost.IsInitialized)
         {
+            if (action.RequiresInput && ComposerOpened.HasDelegate) {
+                throw new InvalidOperationException("The canvas editor has not initialized yet.");
+            }
             await CreateActionInvoked.InvokeAsync(request);
             return;
         }
@@ -1012,7 +1094,12 @@
         bool PreserveViewport,
         IReadOnlyList<string> SelectedNodeIds,
         string? PrimaryNodeId,
-        bool HasClipboardHandler);
+        bool HasClipboardHandler,
+        bool TracksComposerOpenings,
+        bool RequiresComposerAcknowledgement,
+        bool SupportsComposerComparison,
+        bool SupportsComposerCloseGuard,
+        long CommittedStateDispatchId);
 }
 
 

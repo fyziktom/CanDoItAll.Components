@@ -4,6 +4,11 @@ Reusable controlled Gantt chart for Blazor, rendered through the generic CanvasL
 
 The host owns persistence and supplies immutable tasks and dependencies. The chart never writes data or accepts an edit internally. Title, schedule, dependency, insertion, and row-order gestures are returned as typed requests; task and empty-row double-clicks are returned as typed events. The host must handle the intent and then replace the input model when data changes.
 
+Canvas updates are serialized. If the controlled model changes during a pending
+JavaScript create or update, the chart applies the newest model after that call
+finishes. Disposal waits for an outstanding call before releasing its canvas and
+callback reference, so a late create cannot leave an orphaned instance.
+
 ## Assets
 
 Load the shared assets once in the host document:
@@ -42,6 +47,12 @@ The body wrapper loads only CanvasLib's generic canvas runtime, not its Workbenc
 
 Use `GanttTaskDragSource` to stage a caller-owned task, then drop it on the exact dependency line to replace. Insertion removes only that bridge, adds the two replacement dependencies, and returns all downstream date changes for host-side atomic persistence.
 
+The drag source serializes its own JavaScript registration and cleanup. Disposing the
+component waits for an in-flight registration, releases its listeners and object reference
+once, and prevents a later render from registering a replacement. Parameter changes during
+interop are applied after the current operation. Other charts and project writes remain
+independent.
+
 When `TimelineDoubleClicked` is handled, double-clicking empty timeline content in a task row returns `GanttTimelineDoubleClickEventArgs` with the stable row task id and the clicked UTC time snapped to the configured `SnapOrigin` and `SnapInterval`. The chart does not choose a title, duration, parent, resource, or persistence operation. A host can use the row id as an insertion anchor and open its own creation dialog. Set `AllowTimelineTaskCreation="true"` to enable this independently from schedule/title editing, or `false` to suppress its cursor, browser listener, and event. Leaving the nullable capability unset preserves compatibility by inheriting `AllowTaskEditing`.
 
 When `TaskDoubleClicked` is handled, double-clicking only the task body returns its `GanttTaskId`; resize handles, dependency ports, assignment indicators, and dependency endpoints do not trigger it. The host can open its authoritative detail editor without coupling that dialog to the reusable chart. If no task-double-click handler is supplied, the existing inline title-edit behavior remains the fallback.
@@ -51,6 +62,21 @@ When `TaskOrderChangeRequested` is handled, compact up/down actions appear besid
 The chart includes an aligned hideable task table, compact process/workflow/agent/person indicators, keyboard-accessible task titles, critical-path emphasis, dependency add/reconnect gestures, and PNG export. Dependency paths use obstacle-safe orthogonal routes, terminate directly at the successor edge, and fail explicitly if a safe route cannot be produced. Dates, canvas ticks, and PNG labels use an explicit UTC display contract. Synthetic or read-only data remains a host concern and can be marked through `ProjectionOnlySelector`, `TaskScheduleReadOnlySelector`, `TaskTitleReadOnlySelector`, `TaskDependencyReadOnlySelector`, or `TaskReadOnlySelector`.
 
 `GanttTimeScale` exposes `QuarterHour`, `Hour`, `Day`, and `Week` presets with toolbar labels `0.25 h`, `1 h`, `1 d`, and `1 w`. `Custom` preserves the existing `PixelsPerHour` contract. Fine scales create real horizontal overflow; use the scrollbar or drag empty timeline space left/right to pan. `TimeScaleChanged` and `PixelsPerHourChanged` let a host control that view state. Extremely wide timelines use an explicit fitted scale, and large PNG exports are proportionally downsampled to a bounded backing store.
+
+## Table width and viewport
+
+Drag the right edge of the **Task** header to widen task names. The separator also
+supports Left/Right arrows (16 px), Shift+Left/Right (64 px), and Home/End bounds.
+Escape or pointer cancellation restores the previous width. Preview stays in the
+browser; only the committed width crosses into .NET. The chart retains the width
+across model refreshes, zoom changes and table toggles. `TaskTableWidthChanged`
+lets the host persist it; a changed `TaskTableWidth` parameter overrides local state.
+Resizing changes view state only and remains available for read-only task models.
+
+Set `FillHeight="true"` inside a bounded flex or grid workspace to use its remaining
+height. The chart owns one vertical/horizontal scroll viewport for both task rows
+and timeline. Ancestors must allow shrinking (`min-height: 0`). Without `FillHeight`,
+the existing `MaxHeight` limit applies.
 
 ## Validation
 

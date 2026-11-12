@@ -81,6 +81,8 @@ Use `OverlayWindow` when a supporting tool - an inspector, search panel, queue, 
 
 Use `CanvasFloatingWindow` inside `CanvasWorkbench.OverlayContent` when the panel belongs to a workbench. It uses the same reliable window runtime while translating the geometry and visibility into `CanvasWorkbenchWindowState`, so the application can persist or restore it beside selection, viewport, and layout state. It is not a separate window system.
 
+Set `CanvasWorkbenchSurface.RootNodeId` when the host knows which node the focus action should select. This keeps focus on the intended root when several related nodes share the root visual family. An explicit identity must exist in `Nodes`; an absent identity causes no focus change. Hosts that leave the property empty retain the existing family-based selection.
+
 | Page-local supporting tool | Canvas-owned inspector |
 | --- | --- |
 | ![A bounded OverlayLib inspector over ordinary page content](docs/assets/overlay-window-page.png) | ![A CanvasFloatingWindow over a CanvasWorkbench stage](docs/assets/canvas-floating-window.png) |

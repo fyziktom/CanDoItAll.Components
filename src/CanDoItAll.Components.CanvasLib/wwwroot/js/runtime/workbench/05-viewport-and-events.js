@@ -2,6 +2,7 @@
     const root = window.CanDoItAll = window.CanDoItAll || {};
     const shared = root.canvasWorkbenchModule;
     if (!shared) { throw new Error('CanvasLib workbench foundation must load before 05-viewport-and-events.js.'); }
+    const nodeDragActivationDistancePx = 6;
     const workbenchInternals = new Proxy({}, {
         get(_target, property) {
             return shared.workbenchInternals?.[property];
@@ -84,7 +85,10 @@
 
     function startDragForNodeIds(state, event, nodeIds, options) {
         cancelActiveDragRender(state);
-        const draggedNodes = [...new Set((nodeIds || []).filter(id => state.lookups.byId.has(id)))];
+        const draggedNodes = [...new Set((nodeIds || []).filter(id => {
+            const node = state.lookups.byId.get(id);
+            return node && !node.isReadOnly;
+        }))];
         if (!draggedNodes.length) {
             return;
         }
@@ -108,9 +112,6 @@
             dragContext: null
         };
         clearSnapGuides(state);
-        render(state);
-        state.interaction.dragContext = buildActiveDragContext(state);
-        captureActiveDragBaseLayout(state, state.interaction);
     }
 
     function startDrag(state, event, nodeId) {
@@ -158,6 +159,13 @@
         const visibleNodes = getVisibleNodes(state);
         const layoutPositions = ensureLayoutPositions(state, visibleNodes);
         interaction.baseLayoutPositions = cloneLayoutPositionMap(layoutPositions);
+        interaction.nodeIds = interaction.nodeIds.filter(nodeId => {
+            const node = state.lookups.byId.get(nodeId);
+            return node && !node.isReadOnly && layoutPositions.has(nodeId);
+        });
+        for (const nodeId of interaction.nodeIds) {
+            interaction.startPositions[nodeId] = { ...layoutPositions.get(nodeId) };
+        }
     }
 
     function prepareActiveDragLayoutPositions(state, interaction) {
@@ -305,8 +313,23 @@
     }
 
     function updateDrag(state, event) {
-        const rawDeltaX = (event.clientX - state.interaction.startClientX) / state.ui.zoom;
-        const rawDeltaY = (event.clientY - state.interaction.startClientY) / state.ui.zoom;
+        const clientDeltaX = event.clientX - state.interaction.startClientX;
+        const clientDeltaY = event.clientY - state.interaction.startClientY;
+        const isStarting = !state.interaction.moved;
+        if (isStarting) {
+            if (Math.hypot(clientDeltaX, clientDeltaY) < nodeDragActivationDistancePx) {
+                return;
+            }
+
+            captureActiveDragBaseLayout(state, state.interaction);
+            if (!state.interaction.nodeIds.length) {
+                state.interaction = null;
+                return;
+            }
+        }
+
+        const rawDeltaX = clientDeltaX / state.ui.zoom;
+        const rawDeltaY = clientDeltaY / state.ui.zoom;
         const modifierPolicy = state.surface?.chrome?.snapGuides?.modifierPolicy || "shift-bypasses-snap";
         const bypassSnap = event.shiftKey && modifierPolicy === "shift-bypasses-snap";
         const snapResult = bypassSnap
@@ -319,7 +342,8 @@
             state.metrics.lastResolvedDragDeltaX = round(deltaX);
             state.metrics.lastResolvedDragDeltaY = round(deltaY);
         }
-        state.interaction.moved = state.interaction.moved || Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5;
+        state.interaction.moved = true;
+        state.lastPointerTarget = null;
 
         for (const nodeId of state.interaction.nodeIds) {
             const startPosition = state.interaction.startPositions[nodeId];
@@ -331,7 +355,12 @@
 
         state.interaction.resolvedPositions = null;
         prepareActiveDragLayoutPositions(state, state.interaction);
-        scheduleActiveDragRender(state);
+        if (isStarting) {
+            render(state);
+            state.interaction.dragContext = buildActiveDragContext(state);
+        } else {
+            scheduleActiveDragRender(state);
+        }
     }
 
     function updatePan(state, event) {
@@ -733,24 +762,28 @@
 
         const bounds = getSceneBounds(state, visibleNodes);
         const rect = state.host.getBoundingClientRect();
+        const toolbarRect = state.shell?.querySelector?.(".cw-toolbar")?.getBoundingClientRect();
+        const topInset = toolbarRect ? clamp(toolbarRect.bottom - rect.top, 0, rect.height / 2) : 0;
+        const availableHeight = rect.height - topInset;
         const viewportController = getViewportControllerService();
         const target = viewportController?.createFitViewTarget
             ? viewportController.createFitViewTarget({
                 bounds,
                 hostWidth: rect.width,
-                hostHeight: rect.height
+                hostHeight: availableHeight
             })
             : (() => {
                 const padding = 120;
                 const width = Math.max(bounds.maxX - bounds.minX, 320);
                 const height = Math.max(bounds.maxY - bounds.minY, 240);
-                const zoom = clamp(Math.min((rect.width - padding) / width, (rect.height - padding) / height), MIN_ZOOM, MAX_ZOOM);
+                const zoom = clamp(Math.min((rect.width - padding) / width, (availableHeight - padding) / height), MIN_ZOOM, MAX_ZOOM);
                 return {
                     zoom,
                     panX: (rect.width / 2) - ((bounds.minX + (width / 2)) * zoom),
-                    panY: (rect.height / 2) - ((bounds.minY + (height / 2)) * zoom)
+                    panY: (availableHeight / 2) - ((bounds.minY + (height / 2)) * zoom)
                 };
             })();
+        target.panY += topInset;
 
         animateViewportTransition(state, target, {
             key: "viewport",
@@ -1047,8 +1080,8 @@
 
                 shared.flushDeferredViewportRender?.(state);
 
-                if (state.composer) {
-                    closeComposer(state, { focusHost: false });
+                if (state.composer && closeComposer(state, { focusHost: false }) === false) {
+                    return;
                 }
 
                 clearContextMenu(state);
@@ -1135,6 +1168,10 @@
             pointerUp: () => finishInteraction(state),
             blur: () => finishInteraction(state),
             doubleClick: event => {
+                if (!state.lastPointerTarget) {
+                    return;
+                }
+
                 if (state.recentDoubleActivationAt && (Date.now() - state.recentDoubleActivationAt) <= 340) {
                     return;
                 }
@@ -1398,6 +1435,7 @@
             viewportStateTimer: 0,
             selectionDispatchId: Number.isFinite(selectionDispatchSeed) ? Number(selectionDispatchSeed) : 0,
             stateDispatchId: Number.isFinite(stateDispatchSeed) ? Number(stateDispatchSeed) : 0,
+            collapseStateDispatchId: 0,
             retainedFrameElements: new Map(),
             retainedLinkElements: new Map(),
             retainedNodeElements: new Map(),
@@ -1410,7 +1448,13 @@
         return state;
     }
 
-    function refresh(state, surface, isMaximized, preserveViewport) {
+    function refresh(state, surface, isMaximized, preserveViewport, committedStateDispatchId = 0) {
+        const preservePendingCollapse = state.surface?.surfaceId === surface?.surfaceId &&
+            state.collapseStateDispatchId > committedStateDispatchId;
+        const pendingCollapsedIds = preservePendingCollapse ? [...state.collapsedIds] : null;
+        if (state.surface?.surfaceId !== surface?.surfaceId) {
+            state.collapseStateDispatchId = 0;
+        }
         workbenchInternals.sceneLayout.cancelViewportAnimation(state);
         const previousNodeIds = new Set((state.surface?.nodes || []).map(node => node.id));
         const previousSelectedId = state.ui?.selectedNodeIds?.[0] || null;
@@ -1444,7 +1488,10 @@
 
         workbenchInternals.stateStore.reconcileSelection(state);
         state.highlightedIds = new Set((state.ui.highlightedNodeIds || []).filter(Boolean));
-        state.collapsedIds = toCollapsedSet(state.ui.collapsedNodeIds);
+        state.collapsedIds = toCollapsedSet(pendingCollapsedIds === null
+            ? state.ui.collapsedNodeIds
+            : pendingCollapsedIds.filter(id => state.lookups.byId.has(id)));
+        state.ui.collapsedNodeIds = [...state.collapsedIds];
         state.pointerHostPoint = null;
         state.hoveredDeleteNodeId = null;
         state.hoveredDeleteLinkKey = null;

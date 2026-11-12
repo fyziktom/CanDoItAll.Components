@@ -86,18 +86,16 @@ public sealed class DialogService : IDisposable
             : CloseAsync(dialog, result);
     }
 
-    public Task CloseAsync(DialogReference dialog, object? result = null)
+    public async Task CloseAsync(DialogReference dialog, object? result = null)
     {
         ArgumentNullException.ThrowIfNull(dialog);
 
-        if (!dialogs.Remove(dialog))
-        {
-            return Task.CompletedTask;
+        if (!dialogs.Contains(dialog) || !await dialog.ApproveCloseAsync() || !dialogs.Remove(dialog)) {
+            return;
         }
 
         dialog.TrySetResult(result);
         NotifyChanged();
-        return Task.CompletedTask;
     }
 
     public void Close(object? result = null)
@@ -112,13 +110,16 @@ public sealed class DialogService : IDisposable
 
     public void CloseAll(object? result = null)
     {
-        foreach (var dialog in dialogs.ToArray())
-        {
-            dialog.TrySetResult(result);
-        }
+        _ = CloseAllAsync(result);
+    }
 
-        dialogs.Clear();
-        NotifyChanged();
+    public async Task CloseAllAsync(object? result = null) {
+        foreach (var dialog in dialogs.AsEnumerable().Reverse().ToArray()) {
+            await CloseAsync(dialog, result);
+            if (dialogs.Contains(dialog)) {
+                return;
+            }
+        }
     }
 
     private Task<object?> OpenCore(
@@ -220,6 +221,7 @@ public sealed class DialogReference
     private readonly DialogService owner;
     private readonly TaskCompletionSource<object?> completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private CancellationTokenRegistration cancellationRegistration;
+    private Task<bool>? closeApproval;
 
     internal DialogReference(
         DialogService owner,
@@ -251,6 +253,15 @@ public sealed class DialogReference
     public DialogOptions Options { get; }
 
     public Task<object?> Result => completion.Task;
+
+    public Func<Task<bool>>? BeforeClose { get; set; }
+
+    internal Task<bool> ApproveCloseAsync() {
+        if (closeApproval is { IsCompleted: false }) {
+            return closeApproval;
+        }
+        return closeApproval = BeforeClose?.Invoke() ?? Task.FromResult(true);
+    }
 
     public Task CloseAsync(object? result = null)
     {
