@@ -11,6 +11,8 @@ All notable changes to this repository's packages are recorded here, per the cha
 - Fixed canceled browser cleanup during `OverlayWindow` and `AccessibilityMirrorLayer` disposal so retired components
   do not raise another renderer failure. Overlay callbacks are always released, and mirror disposal runs only once.
   Active create/update failures remain observable; no consumer API changes are required.
+- Fixed canvas toolbar items shrinking under pressure: actions keep their width while the existing toolbar scrolls
+  horizontally, preserving labels and click targets on crowded desktop workspaces.
 
 ### BaseLib integration with current development
 
