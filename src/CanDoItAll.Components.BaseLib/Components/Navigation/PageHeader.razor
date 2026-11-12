@@ -1,32 +1,38 @@
 @namespace CanDoItAll.Components.BaseLib
-<div class="@(Compact ? "cda-page-header cda-page-header--compact" : "cda-page-header")">
-    <div class="cda-page-header__main">
-        <div class="@(Compact ? "cda-page-header__copy cda-page-header__copy--compact" : "cda-page-header__copy")">
-            <p class="@(Compact ? "cda-page-header__eyebrow cda-page-header__eyebrow--compact" : "cda-page-header__eyebrow")">@Eyebrow</p>
-            <h1 class="@(Compact ? "cda-page-header__title cda-page-header__title--compact" : "cda-page-header__title")">@Title</h1>
-            @if (!string.IsNullOrWhiteSpace(Description))
-            {
-                <p class="@(Compact ? "cda-page-header__description cda-page-header__description--compact" : "cda-page-header__description")">@Description</p>
+@implements IDisposable
+
+@if (Outlet is null) {
+    <div class="@(Compact ? "cda-page-header cda-page-header--compact" : "cda-page-header")">
+        <div class="cda-page-header__main">
+            <div class="@(Compact ? "cda-page-header__copy cda-page-header__copy--compact" : "cda-page-header__copy")">
+                <p class="@(Compact ? "cda-page-header__eyebrow cda-page-header__eyebrow--compact" : "cda-page-header__eyebrow")">@Eyebrow</p>
+                <h1 class="@(Compact ? "cda-page-header__title cda-page-header__title--compact" : "cda-page-header__title")">@Title</h1>
+                @if (!string.IsNullOrWhiteSpace(Description)) {
+                    <p class="@(Compact ? "cda-page-header__description cda-page-header__description--compact" : "cda-page-header__description")">@Description</p>
+                }
+            </div>
+
+            @if (Stats is not null) {
+                <div class="cda-page-header__stats">
+                    @Stats
+                </div>
             }
         </div>
 
-        @if (Stats is not null)
-        {
-            <div class="cda-page-header__stats">
-                @Stats
+        @if (Actions is not null) {
+            <div class="cda-page-header__actions">
+                @Actions
             </div>
         }
     </div>
-
-    @if (Actions is not null)
-    {
-        <div class="cda-page-header__actions">
-            @Actions
-        </div>
-    }
-</div>
+}
 
 @code {
+    private IPageHeaderOutlet? registeredOutlet;
+
+    [CascadingParameter]
+    public IPageHeaderOutlet? Outlet { get; set; }
+
     /// <summary>Small label shown above <see cref="Title"/>.</summary>
     [Parameter]
     public string Eyebrow { get; set; } = string.Empty;
@@ -50,5 +56,23 @@
     /// <summary>Compact stat content rendered alongside the title/description block.</summary>
     [Parameter]
     public RenderFragment? Stats { get; set; }
+
+    protected override void OnParametersSet() {
+        if (!ReferenceEquals(registeredOutlet, Outlet)) {
+            registeredOutlet?.Clear(this);
+            registeredOutlet = Outlet;
+        }
+        if (registeredOutlet is null) {
+            return;
+        }
+
+        var presentation = new PageHeaderPresentation(Title, Description, Eyebrow, Compact, Actions, Stats);
+        registeredOutlet.Register(this, presentation);
+    }
+
+    public void Dispose() {
+        registeredOutlet?.Clear(this);
+        registeredOutlet = null;
+    }
 }
 

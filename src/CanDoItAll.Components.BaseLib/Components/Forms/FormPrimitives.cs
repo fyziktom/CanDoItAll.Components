@@ -3,14 +3,15 @@ namespace CanDoItAll.Components.BaseLib;
 public enum InputLook
 {
     Default,
+    Filled,
     Plain
 }
 
-public enum TextAreaSize
+public enum FormDensity
 {
-    Compact,
-    Standard,
-    Extended
+    Normal,
+    Comfortable,
+    Compact
 }
 
 public enum ModalSize
@@ -25,4 +26,10 @@ public enum EditableSize
 {
     Compact,
     ExtraSmall
+}
+
+public enum TextAreaSize {
+    Compact,
+    Standard,
+    Extended
 }

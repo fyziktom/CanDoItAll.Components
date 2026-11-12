@@ -1,0 +1,18 @@
+@layer components {
+  .ui-switch {
+    @apply inline-flex cursor-pointer items-center gap-2;
+  }
+
+  .ui-switch__track {
+    @apply h-5 w-9 rounded-full transition;
+    background: var(--tone-border);
+  }
+
+  .peer:checked ~ .ui-switch__track {
+    background: var(--tone-primary-solid-bg);
+  }
+
+  .peer:disabled ~ .ui-switch__track {
+    opacity: 0.4;
+  }
+}

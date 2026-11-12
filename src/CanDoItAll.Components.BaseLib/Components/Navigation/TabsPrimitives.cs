@@ -14,13 +14,19 @@ public enum TabPosition
     Right
 }
 
-public enum TabsVariant
+public enum TabsDensity
 {
-    WorkspacePrimary,
-    WorkspaceSecondary,
-    WorkspaceTertiary,
-    ModalCompact,
-    Workstation
+    Normal,
+    Comfortable,
+    Compact
+}
+
+public enum TabsRounded
+{
+    None,
+    Default,
+    Medium,
+    Large
 }
 
 public enum TabsBorderMode

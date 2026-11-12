@@ -6,6 +6,20 @@ namespace CanDoItAll.Components.BaseLib.Tests;
 
 public sealed class VisualizationHardeningTests
 {
+    [Theory]
+    [InlineData(false, "#0f172a", "#f8fafc")]
+    [InlineData(true, "#f1f5f9", "#1e293b")]
+    public void ChartKeepsAxisTextAndGridReadableInItsTheme(bool isDark, string text, string stripe) {
+        var theme = new ChartThemeColors(["#2563eb"], stripe, text, "#64748b", isDark);
+
+        var options = CdaApexChartOptionsFactory.Build(new CdaChartOptions(), [], null, theme);
+
+        Assert.Equal(text, options.Chart.ForeColor);
+        Assert.Equal("#64748b", options.Grid.BorderColor);
+        Assert.Equal(text, options.Legend.Labels.Colors);
+        Assert.Equal(isDark ? ApexCharts.Mode.Dark : ApexCharts.Mode.Light, options.Tooltip.Theme);
+    }
+
     [Fact]
     public void MermaidDefaultsToStrictRenderingWithoutHtmlLabels()
     {
@@ -40,6 +54,19 @@ public sealed class VisualizationHardeningTests
         Assert.DoesNotContain("function attachPanZoom", source, StringComparison.Ordinal);
         Assert.DoesNotContain("export function zoom", source, StringComparison.Ordinal);
         Assert.DoesNotContain("export function reset", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void MermaidJavascriptKeepsTheGlobalTooltipOutOfDocumentOverflow()
+    {
+        var source = File.ReadAllText(Path.Combine(
+            AppContext.BaseDirectory,
+            "TestAssets",
+            "mermaidDiagram.js"));
+
+        Assert.Contains("function stabilizeMermaidTooltip", source, StringComparison.Ordinal);
+        Assert.Contains("tooltip.style.position = 'fixed'", source, StringComparison.Ordinal);
+        Assert.Contains("stabilizeMermaidTooltip();", source, StringComparison.Ordinal);
     }
 
     [Fact]

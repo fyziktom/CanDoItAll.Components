@@ -1,32 +1,239 @@
+/*
+ * Chrome is the theme-aware neutral scale for structural application chrome:
+ * page backgrounds, surfaces, borders, headings, muted text, dividers, and
+ * metadata. It intentionally inverts at each `data-ui-theme` boundary (step
+ * 50 <-> 950, 100 <-> 900, ...), so `--color-chrome-500` is the only step
+ * that resolves to the same color in both themes. Do not use it for values
+ * that must stay fixed across themes (shadows, the permanently-dark nav
+ * rail) -- those consume `--color-neutral-*` directly instead.
+ */
+/*CUSTOM COLORS, Should not be used directly*/
+@theme {
+  --cus-lavender-blue-50: oklch(97.0% 0.016 274.0);
+  --cus-lavender-blue-100: oklch(94.5% 0.029 274.0);
+  --cus-lavender-blue-200: oklch(89.9% 0.054 274.0);
+  --cus-lavender-blue-300: oklch(84.0% 0.087 274.0);
+  --cus-lavender-blue-400: oklch(77.0% 0.128 274.0);
+  --cus-lavender-blue-500: oklch(69.0% 0.177 274.0);
+  --cus-lavender-blue-600: oklch(64.6% 0.180 274.0);
+  --cus-lavender-blue-700: oklch(56.6% 0.180 274.0);
+  --cus-lavender-blue-800: oklch(46.2% 0.180 274.0);
+  --cus-lavender-blue-900: oklch(33.9% 0.180 274.0);
+  --cus-lavender-blue-950: oklch(20.0% 0.128 274.0);
+
+  --cus-pervenche-50: oklch(97.0% 0.017 243.8);
+  --cus-pervenche-100: oklch(94.1% 0.034 243.8);
+  --cus-pervenche-200: oklch(88.7% 0.065 243.8);
+  --cus-pervenche-300: oklch(81.7% 0.108 243.8);
+  --cus-pervenche-400: oklch(73.5% 0.157 243.8);
+  --cus-pervenche-500: oklch(64.2% 0.157 243.8);
+  --cus-pervenche-600: oklch(60.2% 0.157 243.8);
+  --cus-pervenche-700: oklch(53.0% 0.157 243.8);
+  --cus-pervenche-800: oklch(43.6% 0.140 243.8);
+  --cus-pervenche-900: oklch(32.6% 0.104 243.8);
+  --cus-pervenche-950: oklch(20.0% 0.064 243.8);
+
+  --cus-iris-50: oklch(97.0% 0.016 282.8);
+  --cus-iris-100: oklch(92.9% 0.039 282.8);
+  --cus-iris-200: oklch(85.4% 0.081 282.8);
+  --cus-iris-300: oklch(75.8% 0.140 282.8);
+  --cus-iris-400: oklch(64.3% 0.185 282.8);
+  --cus-iris-500: oklch(51.3% 0.185 282.8);
+  --cus-iris-600: oklch(48.5% 0.185 282.8);
+  --cus-iris-700: oklch(43.4% 0.185 282.8);
+  --cus-iris-800: oklch(36.7% 0.185 282.8);
+  --cus-iris-900: oklch(28.9% 0.174 282.8);
+  --cus-iris-950: oklch(20.0% 0.121 282.8);
+
+  --cus-cold-light-50: oklch(98.7% 0.013 191.0);
+  --cus-cold-light-100: oklch(97.1% 0.031 191.0);
+  --cus-cold-light-200: oklch(94.8% 0.060 191.0);
+  --cus-cold-light-300: oklch(92.2% 0.099 191.0);
+  --cus-cold-light-400: oklch(89.2% 0.149 191.0);
+  --cus-cold-light-500: oklch(86.0% 0.150 191.0);
+  --cus-cold-light-600: oklch(75.3% 0.134 191.0);
+  --cus-cold-light-700: oklch(63.8% 0.116 191.0);
+  --cus-cold-light-800: oklch(52.1% 0.096 191.0);
+  --cus-cold-light-900: oklch(40.1% 0.076 191.0);
+  --cus-cold-light-950: oklch(28.0% 0.054 191.0);
+
+  --cus-soulstone-blue-50: oklch(97.0% 0.012 262.0);
+  --cus-soulstone-blue-100: oklch(90.3% 0.038 262.0);
+  --cus-soulstone-blue-200: oklch(80.6% 0.077 262.0);
+  --cus-soulstone-blue-300: oklch(69.2% 0.124 262.0);
+  --cus-soulstone-blue-400: oklch(56.6% 0.179 262.0);
+  --cus-soulstone-blue-500: oklch(43.0% 0.170 262.0);
+  --cus-soulstone-blue-600: oklch(40.2% 0.166 262.0);
+  --cus-soulstone-blue-700: oklch(37.3% 0.160 262.0);
+  --cus-soulstone-blue-800: oklch(34.2% 0.152 262.0);
+  --cus-soulstone-blue-900: oklch(31.1% 0.143 262.0);
+  --cus-soulstone-blue-950: oklch(28.0% 0.134 262.0);
+
+  --cus-photon-barrier-50: oklch(99.0% 0.007 212.8);
+  --cus-photon-barrier-100: oklch(97.4% 0.017 212.8);
+  --cus-photon-barrier-200: oklch(95.0% 0.032 212.8);
+  --cus-photon-barrier-300: oklch(92.3% 0.048 212.8);
+  --cus-photon-barrier-400: oklch(89.2% 0.066 212.8);
+  --cus-photon-barrier-500: oklch(85.9% 0.085 212.8);
+  --cus-photon-barrier-600: oklch(75.3% 0.122 212.8);
+  --cus-photon-barrier-700: oklch(63.8% 0.108 212.8);
+  --cus-photon-barrier-800: oklch(52.1% 0.092 212.8);
+  --cus-photon-barrier-900: oklch(40.1% 0.074 212.8);
+  --cus-photon-barrier-950: oklch(28.0% 0.054 212.8);
+
+  --cus-mint-morning-50: oklch(97.0% 0.048 186.0);
+  --cus-mint-morning-100: oklch(95.5% 0.074 186.0);
+  --cus-mint-morning-200: oklch(92.7% 0.125 186.0);
+  --cus-mint-morning-300: oklch(89.1% 0.170 186.0);
+  --cus-mint-morning-400: oklch(84.8% 0.170 186.0);
+  --cus-mint-morning-500: oklch(80.0% 0.170 186.0);
+  --cus-mint-morning-600: oklch(74.6% 0.170 186.0);
+  --cus-mint-morning-700: oklch(64.8% 0.154 186.0);
+  --cus-mint-morning-800: oklch(52.1% 0.123 186.0);
+  --cus-mint-morning-900: oklch(37.1% 0.088 186.0);
+  --cus-mint-morning-950: oklch(20.0% 0.047 186.0);
+
+  --cus-american-orange-50: oklch(98.7% 0.022 91.6);
+  --cus-american-orange-100: oklch(95.7% 0.066 90.7);
+  --cus-american-orange-200: oklch(91.4% 0.133 90.8);
+  --cus-american-orange-300: oklch(86.4% 0.189 86.6);
+  --cus-american-orange-400: oklch(80.9% 0.195 76.2);
+  --cus-american-orange-500: oklch(74.5% 0.198 60.9);
+  --cus-american-orange-600: oklch(64.7% 0.197 49.1);
+  --cus-american-orange-700: oklch(54.0% 0.181 42.9);
+  --cus-american-orange-800: oklch(46.3% 0.150 41.2);
+  --cus-american-orange-900: oklch(40.9% 0.119 40.9);
+  --cus-american-orange-950: oklch(27.9% 0.077 40.7);
+
+  --cus-cala-benirras-50: oklch(98.4% 0.014 196.0);
+  --cus-cala-benirras-100: oklch(95.7% 0.051 196.0);
+  --cus-cala-benirras-200: oklch(91.7% 0.096 195.7);
+  --cus-cala-benirras-300: oklch(86.6% 0.138 196.3);
+  --cus-cala-benirras-400: oklch(79.1% 0.152 197.2);
+  --cus-cala-benirras-500: oklch(72.2% 0.140 197.7);
+  --cus-cala-benirras-600: oklch(62.1% 0.117 199.9);
+  --cus-cala-benirras-700: oklch(52.7% 0.096 201.6);
+  --cus-cala-benirras-800: oklch(44.8% 0.078 203.4);
+  --cus-cala-benirras-900: oklch(39.1% 0.063 203.7);
+  --cus-cala-benirras-950: oklch(27.7% 0.046 207.8);
+
+  --cus-malibu-blue-50: oklch(98.4% 0.019 203.9);
+  --cus-malibu-blue-100: oklch(92.7% 0.048 211.2);
+  --cus-malibu-blue-200: oklch(85.9% 0.085 212.8);
+  --cus-malibu-blue-300: oklch(81.5% 0.132 214.8);
+  --cus-malibu-blue-400: oklch(74.6% 0.158 219.3);
+  --cus-malibu-blue-500: oklch(67.9% 0.146 223.0);
+  --cus-malibu-blue-600: oklch(58.0% 0.129 229.5);
+  --cus-malibu-blue-700: oklch(49.8% 0.107 230.9);
+  --cus-malibu-blue-800: oklch(43.6% 0.086 232.1);
+  --cus-malibu-blue-900: oklch(39.1% 0.071 235.2);
+  --cus-malibu-blue-950: oklch(30.2% 0.056 237.5);
+}
+
+/*SEMANTIC COLORS */
+@theme {
+  --color-chrome-50: var(--color-neutral-50);
+  --color-chrome-100: var(--color-neutral-100);
+  --color-chrome-200: var(--color-neutral-200);
+  --color-chrome-300: var(--color-neutral-300);
+  --color-chrome-400: var(--color-neutral-400);
+  --color-chrome-500: var(--color-neutral-500);
+  --color-chrome-600: var(--color-neutral-600);
+  --color-chrome-700: var(--color-neutral-700);
+  --color-chrome-800: var(--color-neutral-800);
+  --color-chrome-900: var(--color-neutral-900);
+  --color-chrome-950: var(--color-neutral-950);
+
+  --color-info-50: var(--cus-pervenche-50);
+  --color-info-100: var(--cus-pervenche-100);
+  --color-info-200: var(--cus-pervenche-200);
+  --color-info-300: var(--cus-pervenche-300);
+  --color-info-400: var(--cus-pervenche-400);
+  --color-info-500: var(--cus-pervenche-500);
+  --color-info-600: var(--cus-pervenche-600);
+  --color-info-700: var(--cus-pervenche-700);
+  --color-info-800: var(--cus-pervenche-800);
+  --color-info-900: var(--cus-pervenche-900);
+  --color-info-950: var(--cus-pervenche-950);
+
+  --color-success-50: var(--color-emerald-50);
+  --color-success-100: var(--color-emerald-100);
+  --color-success-200: var(--color-emerald-200);
+  --color-success-300: var(--color-emerald-300);
+  --color-success-400: var(--color-emerald-400);
+  --color-success-500: var(--color-emerald-500);
+  --color-success-600: var(--color-emerald-600);
+  --color-success-700: var(--color-emerald-700);
+  --color-success-800: var(--color-emerald-800);
+  --color-success-900: var(--color-emerald-900);
+  --color-success-950: var(--color-emerald-950);
+
+  --color-warn-50: var(--color-yellow-50);
+  --color-warn-100: var(--color-yellow-100);
+  --color-warn-200: var(--color-yellow-200);
+  --color-warn-300: var(--color-yellow-300);
+  --color-warn-400: var(--color-yellow-400);
+  --color-warn-500: var(--color-yellow-500);
+  --color-warn-600: var(--color-yellow-600);
+  --color-warn-700: var(--color-yellow-700);
+  --color-warn-800: var(--color-yellow-800);
+  --color-warn-900: var(--color-yellow-900);
+  --color-warn-950: var(--color-yellow-950);
+
+  --color-danger-50: var(--color-rose-50);
+  --color-danger-100: var(--color-rose-100);
+  --color-danger-200: var(--color-rose-200);
+  --color-danger-300: var(--color-rose-300);
+  --color-danger-400: var(--color-rose-400);
+  --color-danger-500: var(--color-rose-500);
+  --color-danger-600: var(--color-rose-600);
+  --color-danger-700: var(--color-rose-700);
+  --color-danger-800: var(--color-rose-800);
+  --color-danger-900: var(--color-rose-900);
+  --color-danger-950: var(--color-rose-950);
+
+  --color-primary-50: var(--color-neutral-50);
+  --color-primary-100: var(--color-neutral-100);
+  --color-primary-200: var(--color-neutral-200);
+  --color-primary-300: var(--color-neutral-300);
+  --color-primary-400: var(--color-neutral-400);
+  --color-primary-500: var(--color-neutral-500);
+  --color-primary-600: var(--color-neutral-600);
+  --color-primary-700: var(--color-neutral-700);
+  --color-primary-800: var(--color-neutral-800);
+  --color-primary-900: var(--color-neutral-900);
+  --color-primary-950: var(--color-neutral-950);
+
+  --color-secondary-50: var(--cus-photon-barrier-50);
+  --color-secondary-100: var(--cus-photon-barrier-100);
+  --color-secondary-200: var(--cus-photon-barrier-200);
+  --color-secondary-300: var(--cus-photon-barrier-300);
+  --color-secondary-400: var(--cus-photon-barrier-400);
+  --color-secondary-500: var(--cus-photon-barrier-500);
+  --color-secondary-600: var(--cus-photon-barrier-600);
+  --color-secondary-700: var(--cus-photon-barrier-700);
+  --color-secondary-800: var(--cus-photon-barrier-800);
+  --color-secondary-900: var(--cus-photon-barrier-900);
+  --color-secondary-950: var(--cus-photon-barrier-950);
+
+  --color-tertiary-50: var(--cus-iris-50);
+  --color-tertiary-100: var(--cus-iris-100);
+  --color-tertiary-200: var(--cus-iris-200);
+  --color-tertiary-300: var(--cus-iris-300);
+  --color-tertiary-400: var(--cus-iris-400);
+  --color-tertiary-500: var(--cus-iris-500);
+  --color-tertiary-600: var(--cus-iris-600);
+  --color-tertiary-700: var(--cus-iris-700);
+  --color-tertiary-800: var(--cus-iris-800);
+  --color-tertiary-900: var(--cus-iris-900);
+  --color-tertiary-950: var(--cus-iris-950);
+}
+
 @layer base {
-  .cad-theme-host,
-  .cad-theme-host *,
-  .cad-theme-host *::before,
-  .cad-theme-host *::after {
-    box-sizing: border-box;
-  }
-
-  .cad-theme-host button,
-  .cad-theme-host input,
-  .cad-theme-host optgroup,
-  .cad-theme-host select,
-  .cad-theme-host textarea {
-    font: inherit;
-    letter-spacing: inherit;
-  }
-
-  .cad-theme-host img,
-  .cad-theme-host picture,
-  .cad-theme-host svg,
-  .cad-theme-host video,
-  .cad-theme-host canvas {
-    display: block;
-    max-width: 100%;
-  }
-
   :root,
-  [data-cad-theme="light"] {
+  [data-ui-theme="light"] {
     color-scheme: light;
+    --ui-theme: light;
     --cad-radius-control: 0.75rem;
     --cad-radius-surface: 1rem;
     --cad-radius-panel: 1.25rem;
@@ -35,129 +242,913 @@
     --cad-space-section-gap: 1rem;
     --cad-space-surface-padding: 1rem;
     --cad-space-dialog-padding: 1rem;
-    --cad-color-page-bg: #f8fafc;
-    /* TODO: V2 candidate: --cad-color-page-bg: #fff; Sandbox overrides it. */
-    --cad-color-surface: rgba(255, 255, 255, 0.96);
-    /* TODO: V2 candidate: --cad-color-surface: #fff; Sandbox overrides it. */
-    --cad-color-surface-soft: rgba(248, 250, 252, 0.88);
-    /* TODO: V2 candidate: --cad-color-surface-soft: #fff; Sandbox overrides it. */
-    --cad-color-border: #cbd5e1;
-    /* TODO: V2 candidate: --cad-color-border: #e0e0e0; Sandbox overrides it. */
-    --cad-color-border-soft: #e2e8f0;
-    /* TODO: V2 candidate: --cad-color-border-soft: #aaa; Sandbox overrides it. */
-    --cad-color-text-strong: #020617;
-    /* TODO: V2 candidate: --cad-color-text-strong: rgba(0, 0, 0, 0.7); Sandbox overrides it. */
-    --cad-color-text: #0f172a;
-    /* TODO: V2 candidate: --cad-color-text: rgba(0, 0, 0, 0.87); Sandbox overrides it. */
-    --cad-color-text-muted: #475569;
-    /* TODO: V2 candidate: --cad-color-text-muted: rgba(64, 64, 64, 0.87); Sandbox overrides it. */
-    --cad-color-text-soft: #64748b;
-    /* TODO: V2 candidate: --cad-color-text-soft: rgba(96, 96, 96, 0.87); Sandbox overrides it. */
-    --cad-color-inverse: #f8fafc;
-    /* TODO: V2 candidate: --cad-color-inverse: #fafafa; Sandbox overrides it. */
-    --cad-shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.07);
-    --cad-shadow-strong: 0 14px 36px rgba(15, 23, 42, 0.14);
-    --cad-tone-primary-solid-bg: #0f172a;
-    --cad-tone-primary-solid-hover: #1e293b;
-    --cad-tone-primary-solid-border: #0f172a;
-    --cad-tone-primary-solid-fg: #ffffff;
-    --cad-tone-primary-soft-bg: rgba(255, 255, 255, 0.96);
-    --cad-tone-primary-soft-hover: #f8fafc;
-    --cad-tone-primary-soft-border: #cbd5e1;
-    --cad-tone-primary-soft-fg: #0f172a;
-    --cad-tone-secondary-soft-bg: #fae8ff;
-    --cad-tone-secondary-soft-hover: #f5d0fe;
-    --cad-tone-secondary-soft-border: #f0abfc;
-    --cad-tone-secondary-soft-fg: #86198f;
-    --cad-tone-success-soft-bg: #d1fae5;
-    --cad-tone-success-soft-hover: #a7f3d0;
-    --cad-tone-success-soft-border: #6ee7b7;
-    --cad-tone-success-soft-fg: #065f46;
-    --cad-tone-info-soft-bg: #e0f2fe;
-    --cad-tone-info-soft-hover: #bae6fd;
-    --cad-tone-info-soft-border: #7dd3fc;
-    --cad-tone-info-soft-fg: #075985;
-    --cad-tone-warning-soft-bg: #fef3c7;
-    --cad-tone-warning-soft-hover: #fde68a;
-    --cad-tone-warning-soft-border: #fcd34d;
-    --cad-tone-warning-soft-fg: #92400e;
-    --cad-tone-danger-soft-bg: #ffe4e6;
-    --cad-tone-danger-soft-hover: #fecdd3;
-    --cad-tone-danger-soft-border: #fda4af;
-    --cad-tone-danger-soft-fg: #9f1239; /* TODO: V2 used bare OKLCH channels (0.455 0.171 13.697), which are not a CSS color token. */
-    --cad-tone-light-soft-bg: rgba(255, 255, 255, 0.96);
-    --cad-tone-light-soft-hover: #f8fafc;
-    --cad-tone-light-soft-border: #cbd5e1;
-    --cad-tone-light-soft-fg: #475569;
-    --cad-tone-base-soft-bg: rgba(255, 255, 255, 0.96);
-    --cad-tone-base-soft-hover: #f8fafc;
-    --cad-tone-base-soft-border: #cbd5e1;
-    --cad-tone-base-soft-fg: #475569;
-    --cad-tone-dark-soft-bg: #e2e8f0;
-    --cad-tone-dark-soft-hover: #cbd5e1;
-    --cad-tone-dark-soft-border: #94a3b8;
-    --cad-tone-dark-soft-fg: #0f172a;
+
+    /* Duplicate required for theme nesting: a nested light scope must
+       restate the light mapping rather than inherit the `@theme` default. */
+    --color-chrome-50: var(--color-neutral-50);
+    --color-chrome-100: var(--color-neutral-100);
+    --color-chrome-200: var(--color-neutral-200);
+    --color-chrome-300: var(--color-neutral-300);
+    --color-chrome-400: var(--color-neutral-400);
+    --color-chrome-500: var(--color-neutral-500);
+    --color-chrome-600: var(--color-neutral-600);
+    --color-chrome-700: var(--color-neutral-700);
+    --color-chrome-800: var(--color-neutral-800);
+    --color-chrome-900: var(--color-neutral-900);
+    --color-chrome-950: var(--color-neutral-950);
+
+    --tone-page-bg: var(--color-white);
+    --tone-surface: var(--color-white);
+    --tone-surface-soft: var(--color-chrome-50);
+    --tone-border: var(--color-chrome-400);
+    --tone-border-soft: var(--color-chrome-300);
+    --tone-text-strong: color-mix(in srgb, var(--color-chrome-950) 87%, transparent);
+    --tone-text: color-mix(in srgb, var(--color-chrome-900) 87%, transparent);
+    --tone-text-muted: var(--color-chrome-600);
+    --tone-text-soft: var(--color-chrome-500);
+    --tone-inverse: var(--color-chrome-50);
+
+    --cad-shadow-soft: 0 6px 18px color-mix(in srgb, var(--color-neutral-900) 7%, transparent);
+    --cad-shadow-strong: 0 14px 36px color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
+
+    --tone-default-soft-bg: color-mix(in srgb, var(--color-white) 96%, transparent);
+    --tone-default-soft-hover: var(--color-chrome-50);
+    --tone-default-soft-border: var(--color-chrome-300);
+    --tone-default-soft-fg: var(--color-chrome-600);
+    --tone-default-solid-bg: var(--color-chrome-50);
+    --tone-default-solid-hover: var(--color-chrome-200);
+    --tone-default-solid-border: var(--color-chrome-600);
+    --tone-default-solid-fg: var(--color-chrome-950);
+
+    --tone-default-tonal-bg: var(--color-chrome-100);
+    --tone-default-tonal-hover: var(--color-chrome-200);
+
+    --tone-primary-soft-bg: color-mix(in srgb, var(--color-chrome-200) 50%, transparent);
+    --tone-primary-soft-hover: var(--color-chrome-50);
+    --tone-primary-soft-border: var(--color-chrome-300);
+    --tone-primary-soft-fg: var(--color-chrome-900);
+    --tone-primary-solid-bg: var(--color-chrome-900);
+    --tone-primary-solid-hover: var(--color-chrome-600);
+    --tone-primary-solid-border: var(--color-chrome-900);
+    --tone-primary-solid-fg: var(--color-white);
+
+    --tone-primary-tonal-bg: var(--color-chrome-100);
+    --tone-primary-tonal-hover: var(--color-chrome-200);
+
+    --tone-secondary-soft-bg: var(--color-secondary-100);
+    --tone-secondary-soft-hover: var(--color-secondary-200);
+    --tone-secondary-soft-border: var(--color-secondary-300);
+    --tone-secondary-soft-fg: var(--color-secondary-800);
+    --tone-secondary-solid-bg: var(--color-secondary-600);
+    --tone-secondary-solid-hover: var(--color-secondary-700);
+    --tone-secondary-solid-border: var(--color-secondary-600);
+    --tone-secondary-solid-fg: var(--color-white);
+
+    --tone-success-soft-bg: var(--color-success-100);
+    --tone-success-soft-hover: var(--color-success-200);
+    --tone-success-soft-border: var(--color-success-300);
+    --tone-success-soft-fg: var(--color-success-800);
+    --tone-success-solid-bg: var(--color-success-600);
+    --tone-success-solid-hover: var(--color-success-700);
+    --tone-success-solid-border: var(--color-success-600);
+    --tone-success-solid-fg: var(--color-white);
+
+    --tone-info-soft-bg: var(--color-info-100);
+    --tone-info-soft-hover: var(--color-info-200);
+    --tone-info-soft-border: var(--color-info-300);
+    --tone-info-soft-fg: var(--color-info-800);
+    --tone-info-solid-bg: var(--color-info-600);
+    --tone-info-solid-hover: var(--color-info-700);
+    --tone-info-solid-border: var(--color-info-600);
+    --tone-info-solid-fg: var(--color-white);
+
+    --tone-warning-soft-bg: var(--color-warn-100);
+    --tone-warning-soft-hover: var(--color-warn-200);
+    --tone-warning-soft-border: var(--color-warn-300);
+    --tone-warning-soft-fg: var(--color-warn-800);
+    --tone-warning-solid-bg: var(--color-warn-600);
+    --tone-warning-solid-hover: var(--color-warn-700);
+    --tone-warning-solid-border: var(--color-warn-600);
+    --tone-warning-solid-fg: var(--color-white);
+
+    --tone-danger-soft-bg: var(--color-danger-100);
+    --tone-danger-soft-hover: var(--color-danger-200);
+    --tone-danger-soft-border: var(--color-danger-300);
+    --tone-danger-soft-fg: var(--color-danger-800);
+    --tone-danger-solid-bg: var(--color-danger-600);
+    --tone-danger-solid-hover: var(--color-danger-700);
+    --tone-danger-solid-border: var(--color-danger-600);
+    --tone-danger-solid-fg: var(--color-white);
+
+    --tone-scrim: color-mix(in srgb, var(--color-neutral-950) 55%, transparent);
+
+    --tone-0-bg: var(--color-sky-100);
+    --tone-0-border: var(--color-sky-300);
+    --tone-0-fg: var(--color-sky-900);
+
+    --tone-1-bg: var(--color-pink-100);
+    --tone-1-border: var(--color-pink-300);
+    --tone-1-fg: var(--color-pink-900);
+
+    --tone-2-bg: var(--color-emerald-100);
+    --tone-2-border: var(--color-emerald-300);
+    --tone-2-fg: var(--color-emerald-900);
+
+    --tone-3-bg: var(--color-amber-100);
+    --tone-3-border: var(--color-amber-300);
+    --tone-3-fg: var(--color-amber-900);
+
+    --tone-4-bg: var(--color-violet-100);
+    --tone-4-border: var(--color-violet-300);
+    --tone-4-fg: var(--color-violet-900);
+
+    --tone-5-bg: var(--color-orange-100);
+    --tone-5-border: var(--color-orange-300);
+    --tone-5-fg: var(--color-orange-900);
+
+    --tone-6-bg: var(--color-indigo-100);
+    --tone-6-border: var(--color-indigo-300);
+    --tone-6-fg: var(--color-indigo-900);
+
+    --tone-7-bg: var(--color-teal-100);
+    --tone-7-border: var(--color-teal-300);
+    --tone-7-fg: var(--color-teal-900);
+
+    --tone-8-bg: var(--color-fuchsia-100);
+    --tone-8-border: var(--color-fuchsia-300);
+    --tone-8-fg: var(--color-fuchsia-900);
+
+    --tone-9-bg: var(--color-green-100);
+    --tone-9-border: var(--color-green-300);
+    --tone-9-fg: var(--color-green-900);
+
+    --ui-nav-bg: #07111f;
+    --ui-nav-bg-soft: #0d1b2d;
+    --ui-nav-border: color-mix(in srgb, var(--color-neutral-400) 18%, transparent);
+    --ui-nav-fg: var(--color-neutral-200);
+    --ui-nav-fg-strong: var(--color-white);
+    --ui-nav-muted: var(--color-neutral-400);
+    --ui-nav-accent: var(--color-sky-400);
+    --ui-nav-accent-soft: color-mix(in srgb, var(--color-sky-400) 14%, transparent);
+    --ui-nav-accent-soft-strong: color-mix(in srgb, var(--color-sky-400) 16%, transparent);
+    --ui-nav-accent-border: color-mix(in srgb, var(--color-sky-300) 20%, transparent);
+    --ui-nav-accent-border-strong: color-mix(in srgb, var(--color-sky-300) 28%, transparent);
+    --ui-nav-accent-fg: var(--color-sky-200);
+    --ui-nav-accent-fg-strong: var(--color-sky-300);
+    --ui-nav-accent-fg-inverse: var(--color-sky-950);
+    --ui-nav-hover-border: color-mix(in srgb, var(--color-neutral-400) 16%, transparent);
+    --ui-nav-hover-bg: color-mix(in srgb, var(--color-white) 7%, transparent);
+    --ui-nav-overlay-soft: color-mix(in srgb, var(--color-white) 5%, transparent);
+    --ui-nav-overlay-soft-strong: color-mix(in srgb, var(--color-white) 8%, transparent);
+    --ui-nav-overlay-soft-hover: color-mix(in srgb, var(--color-white) 10%, transparent);
+    --ui-nav-shadow: 0 24px 60px color-mix(in srgb, var(--color-neutral-950) 24%, transparent);
+    --ui-nav-shadow-strong: 0 28px 64px color-mix(in srgb, var(--color-neutral-950) 34%, transparent);
+    --ui-nav-backdrop: color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
+
+    /* Gantt component tokens (--ui-gantt-*): the public override surface for
+       CanDoItAll.Components.Gantt's own --gantt-* tokens (see GanttChart.razor.css
+       and CLAUDE.md rule 9). Structural tokens (surface/grid/border/text) get a
+       dark-mode override below; the rest are painted atop colored bars/badges
+       rather than page chrome, so — like --tone-* solid colors — they don't
+       invert and are declared once. */
+    --ui-gantt-surface: #ffffff;
+    --ui-gantt-surface-muted: #f7f9fc;
+    --ui-gantt-grid: #e7edf5;
+    --ui-gantt-border: #dbe3ef;
+    --ui-gantt-text: #172033;
+    --ui-gantt-text-muted: #657087;
+    --ui-gantt-accent: #236887;
+    --ui-gantt-critical: #d97706;
+    --ui-gantt-handle: #4d9f38;
+    --ui-gantt-connector: #0ea5e9;
+    --ui-gantt-progress-complete: #4d9f38;
+    --ui-gantt-progress-remaining: #dc2626;
+    --ui-gantt-effort: #a02b93;
+    --ui-gantt-handle-outline: rgba(20, 67, 36, 0.9);
+    --ui-gantt-task-border-default: rgba(15, 23, 42, 0.72);
+    --ui-gantt-task-title-text: #ffffff;
+    --ui-gantt-assignment-badge-bg: rgba(255, 255, 255, 0.2);
+    --ui-gantt-assignment-glyph-text: #ffffff;
+    --ui-gantt-dependency-port-stroke: rgba(3, 78, 112, 0.92);
+    --ui-gantt-popover-bg: rgba(15, 23, 42, 0.96);
+    --ui-gantt-popover-title-text: #ffffff;
+    --ui-gantt-popover-subtitle-text: #b8c5d8;
+    --ui-gantt-header-bg: #eef3f8;
+    --ui-gantt-header-border: #cbd6e4;
+    --ui-gantt-title-editor-bg: #ffffff;
+    --ui-gantt-title-editor-text: #172033;
+    --ui-gantt-shadow-color: rgba(30, 41, 59, 0.08);
+    --ui-gantt-table-shadow-color: rgba(30, 41, 59, 0.06);
+    --ui-gantt-assignment-indicator-text: #ffffff;
+    --ui-gantt-assignment-indicator-bg: #7c3aed;
+    --ui-gantt-assignment-indicator-border: #5b21b6;
+    --ui-gantt-assignment-tooltip-text: #ffffff;
+    --ui-gantt-assignment-tooltip-bg: #3b0764;
+    --ui-gantt-assignment-tooltip-border: #6b21a8;
+    --ui-gantt-assignment-tooltip-shadow-color: rgba(30, 41, 59, 0.22);
+
+    /* Mermaid component tokens (--ui-mermaid-*): the public override surface
+       for CanDoItAll.Components.Mermaid's own --mermaid-* tokens (see
+       MermaidDiagram.razor.css and CLAUDE.md rule 9). All of these are
+       structural chrome (title/description/toolbar/viewport/error surface),
+       so every one gets a dark-mode override below. */
+    --ui-mermaid-title-text: #0f172a;
+    --ui-mermaid-description-text: #475569;
+    --ui-mermaid-tool-bg: #ffffff;
+    --ui-mermaid-tool-border: #cbd5e1;
+    --ui-mermaid-tool-text: #0f172a;
+    --ui-mermaid-tool-hover-bg: #f8fafc;
+    --ui-mermaid-tool-hover-border: #94a3b8;
+    --ui-mermaid-viewport-bg: #ffffff;
+    --ui-mermaid-state-text: #64748b;
+    --ui-mermaid-error-bg: #fff7ed;
+    --ui-mermaid-error-border: #fed7aa;
+    --ui-mermaid-error-text: #7c2d12;
+    --ui-mermaid-error-code-bg: rgba(124, 45, 18, 0.08);
+    --ui-mermaid-error-code-text: #431407;
+
+    /* Charts component tokens (--ui-charts-*): the public override surface for
+       CanDoItAll.Components.Charts' JS-resolved palette/grid/legend/stroke
+       colors (read via charts-theme.js's readTokens call, since ApexCharts
+       consumes plain color strings baked into its options rather than reading
+       CSS custom properties itself — see CLAUDE.md rule 9). The series
+       palette and stroke default paint atop chart lines/fills rather than
+       page chrome, so — like --tone-* solid colors and --ui-gantt-*'s paint
+       tokens — they don't invert and are declared once. --ui-charts-grid-
+       stripe and --ui-charts-legend-text paint directly atop the shell's own
+       --color-chrome-* surface/text and get a dark override below instead. */
+    --ui-charts-series-1: #0f766e;
+    --ui-charts-series-2: #2563eb;
+    --ui-charts-series-3: #dc2626;
+    --ui-charts-series-4: #d97706;
+    --ui-charts-series-5: #7c3aed;
+    --ui-charts-series-6: #0891b2;
+    --ui-charts-series-7: #16a34a;
+    --ui-charts-series-8: #db2777;
+    --ui-charts-series-calm-1: #2563eb;
+    --ui-charts-series-calm-2: #0f766e;
+    --ui-charts-series-calm-3: #7c3aed;
+    --ui-charts-series-calm-4: #c2410c;
+    --ui-charts-series-calm-5: #0891b2;
+    --ui-charts-series-calm-6: #65a30d;
+    --ui-charts-grid-stripe: #f8fafc;
+    --ui-charts-legend-text: #0f172a;
+    --ui-charts-stroke-default: #64748b;
+
+    /* ZoomPanFrame component tokens (--ui-zoom-pan-*): the public override
+       surface for ZoomPanFrame.razor.css's own --cda-zoom-pan-* tokens (see
+       CLAUDE.md rule 9). All structural/chrome tokens derive from
+       --color-chrome-* and self-invert per theme; only the two pure-white
+       surface tokens need an explicit dark override below. */
+    --ui-zoom-pan-toolbar-background: var(--color-chrome-50);
+    --ui-zoom-pan-border: var(--color-chrome-300);
+    --ui-zoom-pan-tool-background: var(--color-white);
+    --ui-zoom-pan-foreground: var(--color-chrome-900);
+    --ui-zoom-pan-tool-hover-background: var(--color-chrome-100);
+    --ui-zoom-pan-border-strong: var(--color-chrome-400);
+    --ui-zoom-pan-focus: var(--tone-primary-soft-border);
+    --ui-zoom-pan-background: var(--color-white);
+
+    /* CanvasLib component tokens (--ui-canvas-*): the public override surface
+       for CanDoItAll.Components.CanvasLib's own --cw-* tokens, read both by
+       CanvasThemeTokenPack.cs's inline var() defaults and by the workbench
+       CSS files under wwwroot/css/workbench/ (see CLAUDE.md rule 9). Surface/
+       background/border/text tokens are structural chrome and get a dark
+       override below; accent/dark-card-border are paint atop an
+       already-colored element and are declared once. */
+    --ui-canvas-border-soft: rgba(15, 23, 42, 0.1);
+    --ui-canvas-shadow-soft: 0 18px 36px rgba(15, 23, 42, 0.1);
+    --ui-canvas-shadow-strong: 0 24px 56px rgba(15, 23, 42, 0.16);
+    --ui-canvas-bg-start: #fff4e5;
+    --ui-canvas-bg-mid: #f6faf7;
+    --ui-canvas-bg-end: #eef1ff;
+    --ui-canvas-accent-start: #8b5cf6;
+    --ui-canvas-accent-end: #6d28d9;
+    --ui-canvas-dark-card-border: #14b8a6;
+    --ui-canvas-panel: rgba(255, 255, 255, 0.92);
+    --ui-canvas-muted: #64748b;
+    --ui-canvas-text: #0f172a;
+    --ui-canvas-stat-chip-border: rgba(124, 58, 237, 0.12);
+    --ui-canvas-stat-chip-bg-start: rgba(255, 255, 255, 0.95);
+    --ui-canvas-stat-chip-bg-end: rgba(245, 243, 255, 0.9);
+    --ui-canvas-maximized-overlay: rgba(15, 23, 42, 0.28);
+    --ui-canvas-frame-border: rgba(255, 255, 255, 0.42);
+    --ui-canvas-stage-glow: rgba(255, 255, 255, 0.7);
+    --ui-canvas-toolbar-border: rgba(255, 255, 255, 0.48);
+    --ui-canvas-toolbar-bg: rgba(255, 255, 255, 0.62);
+    --ui-canvas-toolbar-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
+    --ui-canvas-action-border: rgba(15, 23, 42, 0.08);
+    --ui-canvas-action-bg: rgba(255, 255, 255, 0.92);
+    --ui-canvas-action-hover-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+    --ui-canvas-primary-action-start: #0f172a;
+    --ui-canvas-primary-action-end: #334155;
+    --ui-canvas-primary-action-border: rgba(255, 255, 255, 0.28);
+    --ui-canvas-ghost-action-text: rgba(255, 255, 255, 0.96);
+    --ui-canvas-zoom-rail-shadow: rgba(109, 40, 217, 0.22);
+    --ui-canvas-zoom-slider-accent: #ddd6fe;
+    --ui-canvas-zoom-pill-bg: rgba(255, 255, 255, 0.16);
+    --ui-canvas-create-rail-bg: rgba(255, 255, 255, 0.96);
+    --ui-canvas-create-rail-shadow: 0 18px 32px rgba(15, 23, 42, 0.12);
+
+    /* Shared "white text/icon atop an already-colored surface" paint token —
+       reused by primary/zoom-pill actions and by badges, chips, and overlays
+       in workbench/panels/03-help-settings-and-preview.css. Never inverts. */
+    --ui-canvas-badge-text: #fff;
+
+    /* Accent/status "tone" family used by decorative preview widgets in
+       workbench/panels/03-help-settings-and-preview.css (help nav hover,
+       menu-preview sun/accent, viewport/animation preview glows). Paint
+       atop already-colored surfaces, so declared once — no dark override. */
+    --ui-canvas-accent-violet: #7c3aed;
+    --ui-canvas-accent-soft: #c4b5fd;
+    --ui-canvas-accent-soft-strong: #a78bfa;
+    --ui-canvas-tone-info: #3b82f6;
+    --ui-canvas-tone-info-wash-start: #eff6ff;
+    --ui-canvas-tone-info-wash-end: #e0f2fe;
+    --ui-canvas-tone-indigo: #4f46e5;
+    --ui-canvas-tone-indigo-wash: #f2f4ff;
+    --ui-canvas-tone-indigo-soft: #6366f1;
+    --ui-canvas-tone-sky: #38bdf8;
+    --ui-canvas-tone-sky-strong: #0ea5e9;
+    --ui-canvas-tone-amber: #f59e0b;
+    --ui-canvas-sun-start: #fbbf24;
+    --ui-canvas-sun-end: #f97316;
+
+    /* Node/chip/marker/priority "tone" family used by
+       workbench/scene/04-scene-and-nodes.css's data-palette node surfaces
+       and its marker/chip/priority tone-* variants. Paint atop
+       already-colored surfaces — declared once, no dark override. */
+    --ui-canvas-tone-accent: #6d28d9;
+    --ui-canvas-tone-accent-wash: #ede9fe;
+    --ui-canvas-tone-accent-mid: #c4b5fd;
+    --ui-canvas-tone-accent-mid-text: #5b21b6;
+    --ui-canvas-tone-violet-deep: #581c87;
+    --ui-canvas-tone-sky-text: #0369a1;
+    --ui-canvas-tone-sky-wash: #e0f2fe;
+    --ui-canvas-tone-sky-mid: #7dd3fc;
+    --ui-canvas-tone-sky-mid-text: #0c4a6e;
+    --ui-canvas-tone-sky-deep: #0284c7;
+    --ui-canvas-tone-mint: #10b981;
+    --ui-canvas-tone-mint-deep: #059669;
+    --ui-canvas-tone-mint-text: #047857;
+    --ui-canvas-tone-mint-wash: #d1fae5;
+    --ui-canvas-tone-mint-wash-light: #ecfdf5;
+    --ui-canvas-tone-mint-mid: #6ee7b7;
+    --ui-canvas-tone-mint-mid-text: #065f46;
+    --ui-canvas-tone-warn-text: #c2410c;
+    --ui-canvas-tone-warn-wash: #ffedd5;
+    --ui-canvas-tone-warn-mid: #fb923c;
+    --ui-canvas-tone-warn-mid-text: #7c2d12;
+    --ui-canvas-tone-amber-deep: #d97706;
+    --ui-canvas-tone-danger-text: #be123c;
+    --ui-canvas-tone-danger-wash: #ffe4e6;
+    --ui-canvas-tone-danger-mid: #fb7185;
+    --ui-canvas-tone-danger-mid-text: #fff1f2;
+    --ui-canvas-tone-danger-solid: #f43f5e;
+    --ui-canvas-tone-green: #16a34a;
+    --ui-canvas-tone-green-light: #4ade80;
+    --ui-canvas-tone-red: #dc2626;
+    --ui-canvas-tone-red-light: #fca5a5;
+    --ui-canvas-tone-teal: #0f766e;
+    --ui-canvas-workflow-wash-a: #f0fdfa;
+    --ui-canvas-workflow-wash-b: #fffbeb;
+    --ui-canvas-workflow-wash-c: #f0f9ff;
+
+    /* Node data-palette surfaces (secondary/success/info/warning/danger) —
+       bg/bg-soft/text only; overlay/border/shadow derive from the tone
+       tokens above via color-mix at each use site. */
+    --ui-canvas-node-secondary-bg: #ede9fe;
+    --ui-canvas-node-secondary-bg-soft: #ddd6fe;
+    --ui-canvas-node-secondary-text: #581c87;
+    --ui-canvas-node-success-bg: #dcfce7;
+    --ui-canvas-node-success-bg-soft: #bbf7d0;
+    --ui-canvas-node-success-text: #14532d;
+    --ui-canvas-node-info-bg: #e0f2fe;
+    --ui-canvas-node-info-bg-soft: #bae6fd;
+    --ui-canvas-node-info-text: #0c4a6e;
+    --ui-canvas-node-warning-bg: #fef3c7;
+    --ui-canvas-node-warning-bg-soft: #fde68a;
+    --ui-canvas-node-warning-text: #78350f;
+    --ui-canvas-node-danger-bg: #fee2e2;
+    --ui-canvas-node-danger-bg-soft: #fecaca;
+    --ui-canvas-node-danger-text: #7f1d1d;
+
+    /* Additional tone-family members used by
+       workbench/responsive/06-motion-and-responsive.css and
+       workbench/overlays/05-overlays-and-composer.css badge/status chips. */
+    --ui-canvas-tone-warn-wash-light: #fff7ed;
+    --ui-canvas-tone-red-wash: #fef2f2;
+    --ui-canvas-tone-red-deep: #b91c1c;
+    --ui-canvas-tone-red-solid: #ef4444;
+    --ui-canvas-tone-info-deep: #1d4ed8;
+    --ui-canvas-tone-info-strong: #2563eb;
+    --ui-canvas-tone-amber-text: #b45309;
+    --ui-canvas-tone-yellow: #facc15;
+    --ui-canvas-tone-orange-light: #fdba74;
+    --ui-canvas-tone-dark: #1f2937;
+    --ui-canvas-tone-danger-strong: #e11d48;
+    --ui-canvas-tone-mint-deep-text: #064e3b;
+    --ui-canvas-tone-cyan-deep: #0e7490;
+    --ui-canvas-tone-cyan-wash: #ecfeff;
+
+    /* resolveCanvasNodePaletteStyle + 06-canvas-renderers.js literal-extraction pass -- see
+       CHANGELOG.md CanvasLib > Internal. All paint atop already-colored/decorative canvas
+       surfaces; declared once, no dark override, same as the tone family above. */
+    --ui-canvas-node-readonly-surface-fill: rgba(248, 250, 252, 0.98);
+    --ui-canvas-node-readonly-surface-stroke-selected: rgba(71, 85, 105, 0.9);
+    --ui-canvas-node-readonly-surface-stroke: rgba(148, 163, 184, 0.34);
+    --ui-canvas-node-readonly-surface-shadow: rgba(100, 116, 139, 0.12);
+    --ui-canvas-node-readonly-label-text: rgba(71, 85, 105, 0.76);
+    --ui-canvas-node-readonly-title-text: rgba(51, 65, 85, 0.94);
+    --ui-canvas-node-readonly-secondary-text: rgba(100, 116, 139, 0.92);
+    --ui-canvas-node-readonly-icon-fill: rgba(241, 245, 249, 0.94);
+    --ui-canvas-node-readonly-icon-stroke: rgba(148, 163, 184, 0.28);
+    --ui-canvas-node-readonly-icon-text: rgba(71, 85, 105, 0.96);
+    --ui-canvas-node-readonly-subtle-fill: rgba(255, 255, 255, 0.86);
+    --ui-canvas-node-readonly-subtle-stroke: rgba(148, 163, 184, 0.3);
+    --ui-canvas-node-readonly-subtle-text: rgba(51, 65, 85, 0.9);
+    --ui-canvas-node-readonly-progress-track: rgba(148, 163, 184, 0.28);
+    --ui-canvas-node-readonly-progress-text: rgba(71, 85, 105, 0.9);
+    --ui-canvas-node-primary-surface-fill: rgba(15, 23, 42, 0.98);
+    --ui-canvas-node-primary-surface-stroke-selected: rgba(248, 250, 252, 0.94);
+    --ui-canvas-node-primary-surface-stroke: rgba(51, 65, 85, 0.96);
+    --ui-canvas-node-primary-surface-shadow: rgba(15, 23, 42, 0.28);
+    --ui-canvas-node-primary-label-text: rgba(191, 219, 254, 0.78);
+    --ui-canvas-node-primary-title-text: rgba(248, 250, 252, 0.98);
+    --ui-canvas-node-primary-secondary-text: rgba(226, 232, 240, 0.84);
+    --ui-canvas-node-primary-icon-fill: rgba(255, 255, 255, 0.14);
+    --ui-canvas-node-primary-icon-stroke: rgba(255, 255, 255, 0.18);
+    --ui-canvas-node-primary-icon-text: rgba(248, 250, 252, 0.96);
+    --ui-canvas-node-primary-subtle-fill: rgba(255, 255, 255, 0.14);
+    --ui-canvas-node-primary-subtle-stroke: rgba(255, 255, 255, 0.18);
+    --ui-canvas-node-primary-subtle-text: rgba(248, 250, 252, 0.94);
+    --ui-canvas-node-primary-progress-track: rgba(248, 250, 252, 0.24);
+    --ui-canvas-node-primary-progress-text: rgba(248, 250, 252, 0.92);
+    --ui-canvas-node-secondary-surface-fill: rgba(237, 233, 254, 0.98);
+    --ui-canvas-node-secondary-surface-stroke-selected: rgba(124, 58, 237, 0.92);
+    --ui-canvas-node-secondary-surface-stroke: rgba(167, 139, 250, 0.62);
+    --ui-canvas-node-secondary-surface-shadow: rgba(109, 40, 217, 0.16);
+    --ui-canvas-node-secondary-label-text: rgba(109, 40, 217, 0.72);
+    --ui-canvas-node-secondary-title-text: rgba(88, 28, 135, 0.94);
+    --ui-canvas-node-secondary-secondary-text: rgba(107, 33, 168, 0.82);
+    --ui-canvas-node-secondary-icon-fill: rgba(255, 255, 255, 0.64);
+    --ui-canvas-node-secondary-icon-stroke: rgba(167, 139, 250, 0.4);
+    --ui-canvas-node-secondary-icon-text: rgba(109, 40, 217, 0.94);
+    --ui-canvas-node-secondary-subtle-fill: rgba(255, 255, 255, 0.74);
+    --ui-canvas-node-secondary-subtle-stroke: rgba(196, 181, 253, 0.44);
+    --ui-canvas-node-secondary-subtle-text: rgba(88, 28, 135, 0.88);
+    --ui-canvas-node-secondary-progress-track: rgba(139, 92, 246, 0.26);
+    --ui-canvas-node-secondary-progress-text: rgba(88, 28, 135, 0.88);
+    --ui-canvas-node-success-surface-fill: rgba(220, 252, 231, 0.98);
+    --ui-canvas-node-success-surface-stroke-selected: rgba(22, 163, 74, 0.92);
+    --ui-canvas-node-success-surface-stroke: rgba(74, 222, 128, 0.62);
+    --ui-canvas-node-success-surface-shadow: rgba(22, 163, 74, 0.14);
+    --ui-canvas-node-success-label-text: rgba(21, 128, 61, 0.72);
+    --ui-canvas-node-success-title-text: rgba(20, 83, 45, 0.95);
+    --ui-canvas-node-success-secondary-text: rgba(21, 128, 61, 0.82);
+    --ui-canvas-node-success-icon-fill: rgba(255, 255, 255, 0.62);
+    --ui-canvas-node-success-icon-stroke: rgba(74, 222, 128, 0.42);
+    --ui-canvas-node-success-icon-text: rgba(21, 128, 61, 0.94);
+    --ui-canvas-node-success-subtle-fill: rgba(255, 255, 255, 0.76);
+    --ui-canvas-node-success-subtle-stroke: rgba(134, 239, 172, 0.46);
+    --ui-canvas-node-success-subtle-text: rgba(20, 83, 45, 0.88);
+    --ui-canvas-node-success-progress-track: rgba(22, 163, 74, 0.22);
+    --ui-canvas-node-success-progress-text: rgba(20, 83, 45, 0.88);
+    --ui-canvas-node-info-surface-fill: rgba(224, 242, 254, 0.98);
+    --ui-canvas-node-info-surface-stroke-selected: rgba(2, 132, 199, 0.92);
+    --ui-canvas-node-info-surface-stroke: rgba(125, 211, 252, 0.64);
+    --ui-canvas-node-info-surface-shadow: rgba(2, 132, 199, 0.15);
+    --ui-canvas-node-info-label-text: rgba(14, 116, 144, 0.72);
+    --ui-canvas-node-info-title-text: rgba(12, 74, 110, 0.95);
+    --ui-canvas-node-info-secondary-text: rgba(14, 116, 144, 0.82);
+    --ui-canvas-node-info-icon-fill: rgba(255, 255, 255, 0.62);
+    --ui-canvas-node-info-icon-stroke: rgba(125, 211, 252, 0.44);
+    --ui-canvas-node-info-icon-text: rgba(2, 132, 199, 0.94);
+    --ui-canvas-node-info-subtle-fill: rgba(255, 255, 255, 0.76);
+    --ui-canvas-node-info-subtle-stroke: rgba(125, 211, 252, 0.46);
+    --ui-canvas-node-info-subtle-text: rgba(12, 74, 110, 0.88);
+    --ui-canvas-node-info-progress-track: rgba(2, 132, 199, 0.22);
+    --ui-canvas-node-info-progress-text: rgba(12, 74, 110, 0.88);
+    --ui-canvas-node-warning-surface-fill: rgba(254, 243, 199, 0.98);
+    --ui-canvas-node-warning-surface-stroke-selected: rgba(217, 119, 6, 0.92);
+    --ui-canvas-node-warning-surface-stroke: rgba(251, 191, 36, 0.64);
+    --ui-canvas-node-warning-surface-shadow: rgba(217, 119, 6, 0.15);
+    --ui-canvas-node-warning-label-text: rgba(180, 83, 9, 0.72);
+    --ui-canvas-node-warning-title-text: rgba(120, 53, 15, 0.95);
+    --ui-canvas-node-warning-secondary-text: rgba(146, 64, 14, 0.82);
+    --ui-canvas-node-warning-icon-fill: rgba(255, 255, 255, 0.58);
+    --ui-canvas-node-warning-icon-stroke: rgba(251, 191, 36, 0.42);
+    --ui-canvas-node-warning-icon-text: rgba(180, 83, 9, 0.94);
+    --ui-canvas-node-warning-subtle-fill: rgba(255, 255, 255, 0.76);
+    --ui-canvas-node-warning-subtle-stroke: rgba(252, 211, 77, 0.48);
+    --ui-canvas-node-warning-subtle-text: rgba(120, 53, 15, 0.88);
+    --ui-canvas-node-warning-progress-track: rgba(217, 119, 6, 0.22);
+    --ui-canvas-node-warning-progress-text: rgba(120, 53, 15, 0.88);
+    --ui-canvas-node-danger-surface-fill: rgba(254, 226, 226, 0.98);
+    --ui-canvas-node-danger-surface-stroke-selected: rgba(220, 38, 38, 0.94);
+    --ui-canvas-node-danger-surface-stroke: rgba(252, 165, 165, 0.7);
+    --ui-canvas-node-danger-surface-shadow: rgba(220, 38, 38, 0.16);
+    --ui-canvas-node-danger-label-text: rgba(185, 28, 28, 0.72);
+    --ui-canvas-node-danger-title-text: rgba(127, 29, 29, 0.95);
+    --ui-canvas-node-danger-secondary-text: rgba(153, 27, 27, 0.82);
+    --ui-canvas-node-danger-icon-fill: rgba(255, 255, 255, 0.6);
+    --ui-canvas-node-danger-icon-stroke: rgba(252, 165, 165, 0.46);
+    --ui-canvas-node-danger-icon-text: rgba(185, 28, 28, 0.95);
+    --ui-canvas-node-danger-subtle-fill: rgba(255, 255, 255, 0.8);
+    --ui-canvas-node-danger-subtle-stroke: rgba(252, 165, 165, 0.48);
+    --ui-canvas-node-danger-subtle-text: rgba(127, 29, 29, 0.88);
+    --ui-canvas-node-danger-progress-track: rgba(220, 38, 38, 0.22);
+    --ui-canvas-node-danger-progress-text: rgba(127, 29, 29, 0.88);
+    --ui-canvas-node-workflow-decision-surface-fill: rgba(240, 253, 250, 0.98);
+    --ui-canvas-node-workflow-decision-surface-stroke-selected: rgba(15, 118, 110, 0.96);
+    --ui-canvas-node-workflow-decision-surface-stroke: rgba(20, 184, 166, 0.64);
+    --ui-canvas-node-workflow-decision-surface-shadow: rgba(15, 118, 110, 0.16);
+    --ui-canvas-node-workflow-decision-label-text: rgba(15, 118, 110, 0.78);
+    --ui-canvas-node-workflow-decision-title-text: rgba(19, 78, 74, 0.96);
+    --ui-canvas-node-workflow-decision-secondary-text: rgba(15, 118, 110, 0.84);
+    --ui-canvas-node-workflow-decision-icon-fill: rgba(255, 251, 235, 0.86);
+    --ui-canvas-node-workflow-decision-icon-stroke: rgba(245, 158, 11, 0.46);
+    --ui-canvas-node-workflow-decision-icon-text: rgba(15, 118, 110, 0.96);
+    --ui-canvas-node-workflow-decision-subtle-fill: rgba(255, 255, 255, 0.84);
+    --ui-canvas-node-workflow-decision-subtle-stroke: rgba(20, 184, 166, 0.4);
+    --ui-canvas-node-workflow-decision-subtle-text: rgba(15, 118, 110, 0.9);
+    --ui-canvas-node-workflow-decision-progress-track: rgba(20, 184, 166, 0.24);
+    --ui-canvas-node-workflow-decision-progress-text: rgba(19, 78, 74, 0.9);
+    --ui-canvas-node-neutral-surface-fill: rgba(241, 245, 249, 0.98);
+    --ui-canvas-node-neutral-surface-stroke-selected: rgba(71, 85, 105, 0.92);
+    --ui-canvas-node-neutral-surface-stroke: rgba(148, 163, 184, 0.44);
+    --ui-canvas-node-neutral-surface-shadow: rgba(71, 85, 105, 0.1);
+    --ui-canvas-node-neutral-label-text: rgba(71, 85, 105, 0.7);
+    --ui-canvas-node-neutral-title-text: rgba(15, 23, 42, 0.94);
+    --ui-canvas-node-neutral-secondary-text: rgba(71, 85, 105, 0.84);
+    --ui-canvas-node-neutral-icon-fill: rgba(255, 255, 255, 0.72);
+    --ui-canvas-node-neutral-icon-stroke: rgba(148, 163, 184, 0.34);
+    --ui-canvas-node-neutral-icon-text: rgba(71, 85, 105, 0.94);
+    --ui-canvas-node-neutral-subtle-fill: rgba(255, 255, 255, 0.82);
+    --ui-canvas-node-neutral-subtle-stroke: rgba(148, 163, 184, 0.38);
+    --ui-canvas-node-neutral-subtle-text: rgba(30, 41, 59, 0.88);
+    --ui-canvas-node-neutral-progress-track: rgba(148, 163, 184, 0.28);
+    --ui-canvas-node-neutral-progress-text: rgba(51, 65, 85, 0.88);
+    --ui-canvas-annotation-badge-fill: rgba(255, 255, 255, 0.94);
+    --ui-canvas-annotation-badge-stroke: rgba(148, 163, 184, 0.24);
+    --ui-canvas-annotation-badge-text: rgba(15, 23, 42, 0.78);
+    --ui-canvas-decision-anchor-stroke-default: rgba(20, 184, 166, 0.92);
+    --ui-canvas-decision-body-fill: rgba(255, 255, 255, 0.98);
+    --ui-canvas-decision-branch-pill-fill: rgba(240, 253, 250, 0.98);
+    --ui-canvas-decision-branch-pill-stroke: rgba(20, 184, 166, 0.38);
+    --ui-canvas-decision-branch-pill-text: rgba(15, 118, 110, 0.98);
+    --ui-canvas-decision-cue-fork-dot-fill: rgba(15, 118, 110, 0.78);
+    --ui-canvas-decision-cue-fork-stroke: rgba(245, 158, 11, 0.58);
+    --ui-canvas-decision-cue-icon-fill-default: rgba(255, 251, 235, 0.9);
+    --ui-canvas-decision-cue-icon-stroke-default: rgba(245, 158, 11, 0.56);
+    --ui-canvas-decision-cue-shadow: rgba(15, 118, 110, 0.16);
+    --ui-canvas-decision-glyph-stroke: rgba(51, 65, 85, 0.9);
+    --ui-canvas-decision-shadow-default: rgba(15, 23, 42, 0.12);
+    --ui-canvas-decision-shadow-selected: rgba(15, 118, 110, 0.2);
+    --ui-canvas-decision-stroke-default: rgba(20, 184, 166, 0.9);
+    --ui-canvas-decision-title-text: rgba(15, 23, 42, 0.92);
+    --ui-canvas-frame-accent-fill: rgba(124, 58, 237, 0.08);
+    --ui-canvas-frame-accent-stroke: rgba(124, 58, 237, 0.72);
+    --ui-canvas-frame-chip-bg: rgba(255, 255, 255, 0.96);
+    --ui-canvas-frame-danger-fill: rgba(220, 38, 38, 0.08);
+    --ui-canvas-frame-danger-stroke: rgba(220, 38, 38, 0.72);
+    --ui-canvas-frame-label-text: rgba(15, 23, 42, 0.74);
+    --ui-canvas-frame-member-count-text: rgba(71, 85, 105, 0.84);
+    --ui-canvas-frame-success-fill: rgba(5, 150, 105, 0.08);
+    --ui-canvas-frame-success-stroke: rgba(5, 150, 105, 0.72);
+    --ui-canvas-frame-warning-fill: rgba(217, 119, 6, 0.08);
+    --ui-canvas-frame-warning-stroke: rgba(217, 119, 6, 0.72);
+    --ui-canvas-link-danger-arrow-fill: rgba(225, 29, 72, 0.96);
+    --ui-canvas-link-danger-stroke: rgba(244, 63, 94, 0.9);
+    --ui-canvas-link-default-arrow-fill: rgba(100, 116, 139, 0.58);
+    --ui-canvas-link-default-stroke: rgba(100, 116, 139, 0.44);
+    --ui-canvas-link-dependency-arrow-fill: rgba(29, 78, 216, 0.98);
+    --ui-canvas-link-dependency-stroke: rgba(37, 99, 235, 0.94);
+    --ui-canvas-link-hovered-arrow-fill: rgba(220, 38, 38, 0.96);
+    --ui-canvas-link-hovered-stroke: rgba(239, 68, 68, 0.94);
+    --ui-canvas-link-info-arrow-fill: rgba(2, 132, 199, 0.98);
+    --ui-canvas-link-info-stroke: rgba(14, 165, 233, 0.9);
+    --ui-canvas-link-label-danger-fill: rgba(254, 242, 242, 0.98);
+    --ui-canvas-link-label-danger-stroke: rgba(244, 63, 94, 0.44);
+    --ui-canvas-link-label-danger-text: rgba(159, 18, 57, 0.98);
+    --ui-canvas-link-label-default-fill: rgba(255, 255, 255, 0.96);
+    --ui-canvas-link-label-default-stroke: rgba(100, 116, 139, 0.32);
+    --ui-canvas-link-label-default-text: rgba(30, 41, 59, 0.9);
+    --ui-canvas-link-label-info-fill: rgba(240, 249, 255, 0.98);
+    --ui-canvas-link-label-info-stroke: rgba(14, 165, 233, 0.42);
+    --ui-canvas-link-label-info-text: rgba(3, 105, 161, 0.98);
+    --ui-canvas-link-label-panel-shadow: rgba(15, 23, 42, 0.1);
+    --ui-canvas-link-label-success-fill: rgba(236, 253, 245, 0.97);
+    --ui-canvas-link-label-success-stroke: rgba(20, 184, 166, 0.42);
+    --ui-canvas-link-label-success-text: rgba(15, 118, 110, 0.98);
+    --ui-canvas-link-label-warning-fill: rgba(255, 251, 235, 0.98);
+    --ui-canvas-link-label-warning-stroke: rgba(245, 158, 11, 0.46);
+    --ui-canvas-link-label-warning-text: rgba(146, 64, 14, 0.98);
+    --ui-canvas-link-preview-arrow-fill: rgba(109, 40, 217, 0.96);
+    --ui-canvas-link-preview-stroke: rgba(124, 58, 237, 0.92);
+    --ui-canvas-link-success-arrow-fill: rgba(15, 118, 110, 0.96);
+    --ui-canvas-link-success-stroke: rgba(20, 184, 166, 0.9);
+    --ui-canvas-link-user-authored-arrow-fill: rgba(14, 165, 233, 0.88);
+    --ui-canvas-link-user-authored-stroke: rgba(14, 165, 233, 0.82);
+    --ui-canvas-link-warning-arrow-fill: rgba(217, 119, 6, 0.98);
+    --ui-canvas-link-warning-stroke: rgba(245, 158, 11, 0.94);
+    --ui-canvas-marker-danger: #e11d48;
+    --ui-canvas-marker-default-fallback: #8b5cf6;
+    --ui-canvas-marker-ghost: #94a3b8;
+    --ui-canvas-marker-mint: #10b981;
+    --ui-canvas-marker-primary: #0f172a;
+    --ui-canvas-marker-sky: #38bdf8;
+    --ui-canvas-marker-warn: #f97316;
+    --ui-canvas-media-preview-caption-text: rgba(15, 23, 42, 0.76);
+    --ui-canvas-media-preview-panel-fill: rgba(241, 245, 249, 0.95);
+    --ui-canvas-media-preview-panel-stroke: rgba(148, 163, 184, 0.22);
+    --ui-canvas-port-accent-accent-color: #3b82f6;
+    --ui-canvas-port-accent-anchor: rgba(59, 130, 246, 0.94);
+    --ui-canvas-port-accent-fill: rgba(59, 130, 246, 0.18);
+    --ui-canvas-port-accent-halo: rgba(59, 130, 246, 0.18);
+    --ui-canvas-port-accent-line: rgba(59, 130, 246, 0.88);
+    --ui-canvas-port-accent-stroke: rgba(37, 99, 235, 0.48);
+    --ui-canvas-port-accent-text: rgba(219, 234, 254, 0.98);
+    --ui-canvas-port-danger-accent-color: #ef4444;
+    --ui-canvas-port-danger-anchor: rgba(239, 68, 68, 0.92);
+    --ui-canvas-port-danger-fill: rgba(239, 68, 68, 0.18);
+    --ui-canvas-port-danger-halo: rgba(239, 68, 68, 0.18);
+    --ui-canvas-port-danger-line: rgba(239, 68, 68, 0.88);
+    --ui-canvas-port-danger-stroke: rgba(220, 38, 38, 0.48);
+    --ui-canvas-port-danger-text: rgba(254, 226, 226, 0.98);
+    --ui-canvas-port-default-anchor: rgba(71, 85, 105, 0.88);
+    --ui-canvas-port-default-fill: rgba(255, 255, 255, 0.94);
+    --ui-canvas-port-default-halo: rgba(148, 163, 184, 0.16);
+    --ui-canvas-port-default-line: rgba(71, 85, 105, 0.82);
+    --ui-canvas-port-default-stroke: rgba(148, 163, 184, 0.34);
+    --ui-canvas-port-default-text: rgba(71, 85, 105, 0.96);
+    --ui-canvas-port-success-accent-color: #22c55e;
+    --ui-canvas-port-success-anchor: rgba(34, 197, 94, 0.92);
+    --ui-canvas-port-success-fill: rgba(34, 197, 94, 0.18);
+    --ui-canvas-port-success-halo: rgba(34, 197, 94, 0.18);
+    --ui-canvas-port-success-line: rgba(34, 197, 94, 0.86);
+    --ui-canvas-port-success-stroke: rgba(22, 163, 74, 0.48);
+    --ui-canvas-port-success-text: rgba(220, 252, 231, 0.98);
+    --ui-canvas-port-warning-accent-color: #f59e0b;
+    --ui-canvas-port-warning-anchor: rgba(245, 158, 11, 0.92);
+    --ui-canvas-port-warning-fill: rgba(245, 158, 11, 0.18);
+    --ui-canvas-port-warning-halo: rgba(245, 158, 11, 0.18);
+    --ui-canvas-port-warning-line: rgba(245, 158, 11, 0.88);
+    --ui-canvas-port-warning-stroke: rgba(217, 119, 6, 0.48);
+    --ui-canvas-port-warning-text: rgba(254, 243, 199, 0.98);
+    --ui-canvas-progress-complete-arc: rgba(5, 150, 105, 0.92);
+    --ui-canvas-progress-in-progress-arc: rgba(124, 58, 237, 0.92);
+    --ui-canvas-progress-text-default: rgba(15, 23, 42, 0.78);
+    --ui-canvas-progress-track-default: rgba(148, 163, 184, 0.28);
+
+    /* CanvasCalendar component tokens (--ui-calendar-*): the public override
+       surface for CanDoItAll.Components.CanvasLib's CanvasCalendar own
+       --zy-cal-* tokens (JS-injected stylesheet, calendar/core/01-foundation.js)
+       and its <canvas>-painted mini-month/timed-grid/month-grid surfaces (see
+       zy-canvas-primitives.js and CLAUDE.md rule 9). A sibling namespace to
+       --ui-canvas-*, not an instance of it, since CanvasCalendar has its own
+       component-scoped palette distinct from the CanvasWorkbench editor pack.
+       Surface/border/text/shadow tokens are structural chrome and get a dark
+       override below; accent/status/event-paint tokens are painted atop
+       already-colored elements (event chips, selection rings) and are
+       declared once. */
+    --ui-calendar-bg: #f5f7fb;
+    --ui-calendar-panel: #ffffff;
+    --ui-calendar-panel-soft: #f8fafc;
+    --ui-calendar-panel-sunken: #fbfcff;
+    --ui-calendar-border: rgba(15, 23, 42, 0.09);
+    --ui-calendar-border-soft: rgba(226, 232, 240, 0.9);
+    --ui-calendar-border-strong: rgba(79, 70, 229, 0.24);
+    --ui-calendar-text: #0f172a;
+    --ui-calendar-text-muted: #64748b;
+    --ui-calendar-text-subtle: #475569;
+    --ui-calendar-text-faint: #94a3b8;
+    --ui-calendar-heading-text: #334155;
+    --ui-calendar-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    --ui-calendar-shadow-strong: 0 26px 80px rgba(15, 23, 42, 0.32);
+    --ui-calendar-grid-major: rgba(148, 163, 184, 0.32);
+    --ui-calendar-grid-header-fill: rgba(248, 250, 252, 0.92);
+    --ui-calendar-canvas-backdrop: #eef2ff;
+
+    /* Paint atop already-colored elements (event chips, selection rings,
+       status accents) — declared once, no dark override, same as
+       --ui-canvas-*'s tone family above. */
+    --ui-calendar-accent: #4f46e5;
+    --ui-calendar-accent-soft: rgba(79, 70, 229, 0.12);
+    --ui-calendar-accent-hover: #4338ca;
+    --ui-calendar-success: #0f766e;
+    --ui-calendar-danger: #dc2626;
+    --ui-calendar-now-indicator: #ef4444;
+    --ui-calendar-current-day-fill: rgba(79, 70, 229, 0.05);
+    --ui-calendar-selected-day-fill: rgba(16, 185, 129, 0.06);
+    --ui-calendar-selected-cell-fill: rgba(79, 70, 229, 0.08);
+    --ui-calendar-preview-target-fill: rgba(16, 185, 129, 0.1);
+    --ui-calendar-range-fill: rgba(79, 70, 229, 0.12);
+    --ui-calendar-range-stroke: rgba(79, 70, 229, 0.24);
+    --ui-calendar-event-title-text: #ffffff;
+    --ui-calendar-event-stroke-selected: rgba(15, 23, 42, 0.42);
+    --ui-calendar-event-stroke: rgba(255, 255, 255, 0.36);
+    --ui-calendar-density-dot: #10b981;
+    --ui-calendar-warn: #92400e;
+    --ui-calendar-warn-soft: rgba(245, 158, 11, 0.16);
   }
 
-  [data-cad-theme="dark"] {
+  [data-ui-theme="dark"] {
     color-scheme: dark;
-    --cad-color-page-bg: #020617;
-    --cad-color-surface: rgba(15, 23, 42, 0.92);
-    --cad-color-surface-soft: rgba(30, 41, 59, 0.82);
-    --cad-color-border: rgba(148, 163, 184, 0.35);
-    --cad-color-border-soft: rgba(71, 85, 105, 0.45);
-    --cad-color-text-strong: #f8fafc;
-    --cad-color-text: #e2e8f0;
-    --cad-color-text-muted: #cbd5e1;
-    --cad-color-text-soft: #94a3b8;
-    --cad-color-inverse: #020617;
-    --cad-shadow-soft: 0 8px 22px rgba(2, 6, 23, 0.4);
-    --cad-shadow-strong: 0 16px 40px rgba(2, 6, 23, 0.55);
-    --cad-tone-primary-solid-bg: #cbd5e1;
-    --cad-tone-primary-solid-hover: #e2e8f0;
-    --cad-tone-primary-solid-border: #cbd5e1;
-    --cad-tone-primary-solid-fg: #0f172a;
-    --cad-tone-primary-soft-bg: rgba(30, 41, 59, 0.78);
-    --cad-tone-primary-soft-hover: rgba(51, 65, 85, 0.84);
-    --cad-tone-primary-soft-border: rgba(148, 163, 184, 0.35);
-    --cad-tone-primary-soft-fg: #e2e8f0;
-    --cad-tone-secondary-soft-bg: rgba(112, 26, 117, 0.32);
-    --cad-tone-secondary-soft-hover: rgba(134, 25, 143, 0.4);
-    --cad-tone-secondary-soft-border: rgba(232, 121, 249, 0.38);
-    --cad-tone-secondary-soft-fg: #f5d0fe;
-    --cad-tone-success-soft-bg: rgba(6, 95, 70, 0.34);
-    --cad-tone-success-soft-hover: rgba(6, 120, 85, 0.44);
-    --cad-tone-success-soft-border: rgba(52, 211, 153, 0.35);
-    --cad-tone-success-soft-fg: #a7f3d0;
-    --cad-tone-info-soft-bg: rgba(7, 89, 133, 0.32);
-    --cad-tone-info-soft-hover: rgba(3, 105, 161, 0.42);
-    --cad-tone-info-soft-border: rgba(56, 189, 248, 0.34);
-    --cad-tone-info-soft-fg: #bae6fd;
-    --cad-tone-warning-soft-bg: rgba(146, 64, 14, 0.34);
-    --cad-tone-warning-soft-hover: rgba(180, 83, 9, 0.42);
-    --cad-tone-warning-soft-border: rgba(251, 191, 36, 0.35);
-    --cad-tone-warning-soft-fg: #fde68a;
-    --cad-tone-danger-soft-bg: rgba(159, 18, 57, 0.34);
-    --cad-tone-danger-soft-hover: rgba(190, 24, 93, 0.42);
-    --cad-tone-danger-soft-border: rgba(251, 113, 133, 0.35);
-    --cad-tone-danger-soft-fg: #fecdd3; /* TODO: V2 used bare OKLCH channels (0.892 0.056 10.001), which are not a CSS color token. */
-    --cad-tone-light-soft-bg: rgba(30, 41, 59, 0.74);
-    --cad-tone-light-soft-hover: rgba(51, 65, 85, 0.82);
-    --cad-tone-light-soft-border: rgba(148, 163, 184, 0.28);
-    --cad-tone-light-soft-fg: #e2e8f0;
-    --cad-tone-base-soft-bg: rgba(30, 41, 59, 0.74);
-    --cad-tone-base-soft-hover: rgba(51, 65, 85, 0.82);
-    --cad-tone-base-soft-border: rgba(148, 163, 184, 0.28);
-    --cad-tone-base-soft-fg: #e2e8f0;
-    --cad-tone-dark-soft-bg: rgba(226, 232, 240, 0.14);
-    --cad-tone-dark-soft-hover: rgba(226, 232, 240, 0.2);
-    --cad-tone-dark-soft-border: rgba(148, 163, 184, 0.32);
-    --cad-tone-dark-soft-fg: #f8fafc;
-  }
+    --ui-theme: dark;
 
-  .cad-theme-host {
-    @apply block min-h-full;
-    background: var(--cad-color-page-bg);
-    color: var(--cad-color-text);
+    /* Chrome is structural, so it inverts with the application surface:
+       step 50 <-> 950, 100 <-> 900, ... A dark-scope reference to
+       `--color-chrome-X` therefore resolves to `--color-neutral-(1000-X)`,
+       which is how each mapping below reproduces its original slate step. */
+    --color-chrome-50: var(--color-neutral-950);
+    --color-chrome-100: var(--color-neutral-900);
+    --color-chrome-200: var(--color-neutral-800);
+    --color-chrome-300: var(--color-neutral-700);
+    --color-chrome-400: var(--color-neutral-600);
+    --color-chrome-500: var(--color-neutral-500);
+    --color-chrome-600: var(--color-neutral-400);
+    --color-chrome-700: var(--color-neutral-300);
+    --color-chrome-800: var(--color-neutral-200);
+    --color-chrome-900: var(--color-neutral-100);
+    --color-chrome-950: var(--color-neutral-50);
+
+    --tone-page-bg: var(--color-chrome-50);
+    --tone-surface: var(--color-chrome-50);
+    --tone-surface-soft: var(--color-chrome-100);
+    --tone-border: color-mix(in srgb, var(--color-chrome-600) 35%, transparent);
+    --tone-border-soft: color-mix(in srgb, var(--color-chrome-400) 45%, transparent);
+    --tone-text-strong: var(--color-chrome-950);
+    --tone-text: var(--color-chrome-800);
+    --tone-text-muted: var(--color-chrome-700);
+    --tone-text-soft: var(--color-chrome-600);
+    --tone-inverse: var(--color-chrome-50);
+
+    --cad-shadow-soft: 0 8px 22px color-mix(in srgb, var(--color-neutral-950) 40%, transparent);
+    --cad-shadow-strong: 0 16px 40px color-mix(in srgb, var(--color-neutral-950) 55%, transparent);
+
+    --tone-primary-solid-bg: var(--color-chrome-700);
+    --tone-primary-solid-hover: var(--color-chrome-800);
+    --tone-primary-solid-border: var(--color-chrome-700);
+    --tone-primary-solid-fg: var(--color-neutral-900);
+
+    --tone-primary-soft-bg: color-mix(in srgb, var(--color-chrome-200) 78%, transparent);
+    --tone-primary-soft-hover: color-mix(in srgb, var(--color-chrome-300) 84%, transparent);
+    --tone-primary-soft-border: color-mix(in srgb, var(--color-chrome-600) 35%, transparent);
+    --tone-primary-soft-fg: var(--color-chrome-800);
+    --tone-primary-tonal-bg: color-mix(in srgb, var(--color-chrome-200) 78%, transparent);
+    --tone-primary-tonal-hover: color-mix(in srgb, var(--color-chrome-300) 84%, transparent);
+
+    --tone-secondary-soft-bg: color-mix(in srgb, var(--color-secondary-900) 32%, transparent);
+    --tone-secondary-soft-hover: color-mix(in srgb, var(--color-secondary-800) 40%, transparent);
+    --tone-secondary-soft-border: color-mix(in srgb, var(--color-secondary-400) 38%, transparent);
+    --tone-secondary-soft-fg: var(--color-secondary-200);
+    --tone-secondary-solid-bg: var(--color-secondary-500);
+    --tone-secondary-solid-hover: var(--color-secondary-600);
+    --tone-secondary-solid-border: var(--color-secondary-500);
+    --tone-secondary-solid-fg: var(--color-secondary-950);
+
+    --tone-success-soft-bg: color-mix(in srgb, var(--color-success-800) 34%, transparent);
+    --tone-success-soft-hover: color-mix(in srgb, var(--color-success-700) 44%, transparent);
+    --tone-success-soft-border: color-mix(in srgb, var(--color-success-400) 35%, transparent);
+    --tone-success-soft-fg: var(--color-success-200);
+    --tone-success-solid-bg: var(--color-success-500);
+    --tone-success-solid-hover: var(--color-success-600);
+    --tone-success-solid-border: var(--color-success-500);
+    --tone-success-solid-fg: var(--color-success-950);
+
+    --tone-info-soft-bg: color-mix(in srgb, var(--color-info-800) 32%, transparent);
+    --tone-info-soft-hover: color-mix(in srgb, var(--color-info-700) 42%, transparent);
+    --tone-info-soft-border: color-mix(in srgb, var(--color-info-400) 34%, transparent);
+    --tone-info-soft-fg: var(--color-info-200);
+    --tone-info-solid-bg: var(--color-info-400);
+    --tone-info-solid-hover: var(--color-info-500);
+    --tone-info-solid-border: var(--color-info-400);
+    --tone-info-solid-fg: var(--color-info-950);
+
+    --tone-warning-soft-bg: color-mix(in srgb, var(--color-warn-800) 34%, transparent);
+    --tone-warning-soft-hover: color-mix(in srgb, var(--color-warn-700) 42%, transparent);
+    --tone-warning-soft-border: color-mix(in srgb, var(--color-warn-400) 35%, transparent);
+    --tone-warning-soft-fg: var(--color-warn-200);
+    --tone-warning-solid-bg: var(--color-warn-500);
+    --tone-warning-solid-hover: var(--color-warn-600);
+    --tone-warning-solid-border: var(--color-warn-500);
+    --tone-warning-solid-fg: var(--color-warn-950);
+
+    --tone-danger-soft-bg: color-mix(in srgb, var(--color-danger-800) 34%, transparent);
+    --tone-danger-soft-hover: color-mix(in srgb, var(--color-danger-700) 42%, transparent);
+    --tone-danger-soft-border: color-mix(in srgb, var(--color-danger-400) 35%, transparent);
+    --tone-danger-soft-fg: var(--color-danger-200);
+    --tone-danger-solid-bg: var(--color-danger-400);
+    --tone-danger-solid-hover: var(--color-danger-500);
+    --tone-danger-solid-border: var(--color-danger-400);
+    --tone-danger-solid-fg: var(--color-danger-950);
+
+    --tone-default-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+    --tone-default-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+    --tone-default-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+    --tone-default-soft-fg: var(--color-chrome-800);
+    --tone-default-tonal-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+    --tone-default-tonal-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+    --tone-default-solid-bg: var(--color-chrome-500);
+    --tone-default-solid-hover: var(--color-chrome-600);
+    --tone-default-solid-border: var(--color-chrome-500);
+    --tone-default-solid-fg: var(--color-chrome-950);
+
+    --tone-default-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
+    --tone-default-soft-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
+    --tone-default-soft-border: color-mix(in srgb, var(--color-chrome-600) 28%, transparent);
+    --tone-default-soft-fg: var(--color-chrome-800);
+
+    --tone-dark-soft-bg: color-mix(in srgb, var(--color-chrome-800) 14%, transparent);
+    --tone-dark-soft-hover: color-mix(in srgb, var(--color-chrome-800) 20%, transparent);
+    --tone-dark-soft-border: color-mix(in srgb, var(--color-chrome-600) 32%, transparent);
+    --tone-dark-soft-fg: var(--color-chrome-950);
+
+    --tone-scrim: color-mix(in srgb, var(--color-neutral-950) 70%, transparent);
+
+    /* Structural --ui-gantt-* tokens only — the paint tokens declared in the
+       light block above intentionally have no dark override, see that comment. */
+    --ui-gantt-surface: #111827;
+    --ui-gantt-surface-muted: #172033;
+    --ui-gantt-grid: #273449;
+    --ui-gantt-border: #334155;
+    --ui-gantt-text: #f1f5f9;
+    --ui-gantt-text-muted: #a9b5c8;
+    --ui-gantt-header-bg: #1e293b;
+    --ui-gantt-header-border: #475569;
+    --ui-gantt-title-editor-bg: #0f172a;
+    --ui-gantt-title-editor-text: #f8fafc;
+    --ui-gantt-shadow-color: rgba(0, 0, 0, 0.28);
+
+    /* All --ui-mermaid-* tokens are structural chrome, so every one declared
+       in the light block above gets a dark override here — see that comment. */
+    --ui-mermaid-title-text: #f1f5f9;
+    --ui-mermaid-description-text: #94a3b8;
+    --ui-mermaid-tool-bg: #1e293b;
+    --ui-mermaid-tool-border: #334155;
+    --ui-mermaid-tool-text: #f1f5f9;
+    --ui-mermaid-tool-hover-bg: #273449;
+    --ui-mermaid-tool-hover-border: #475569;
+    --ui-mermaid-viewport-bg: #0f172a;
+    --ui-mermaid-state-text: #94a3b8;
+    --ui-mermaid-error-bg: #431407;
+    --ui-mermaid-error-border: #9a3412;
+    --ui-mermaid-error-text: #fed7aa;
+    --ui-mermaid-error-code-bg: rgba(254, 215, 170, 0.12);
+    --ui-mermaid-error-code-text: #ffedd5;
+
+    /* --ui-charts-grid-stripe and --ui-charts-legend-text paint atop the
+       shell's own --color-chrome-* surface/text (which does invert), so
+       unlike the series palette they need a dark override too — see the
+       light block's comment above. */
+    --ui-charts-grid-stripe: #1e293b;
+    --ui-charts-legend-text: #f1f5f9;
+
+    /* Only the pure-white --ui-zoom-pan-* surfaces need a dark override —
+       the rest derive from --color-chrome-* above and self-invert. */
+    --ui-zoom-pan-tool-background: var(--color-chrome-50);
+    --ui-zoom-pan-background: var(--color-chrome-50);
+
+    /* Structural --ui-canvas-* tokens only — accent/dark-card-border are
+       declared once in the light block above and stay fixed. */
+    --ui-canvas-border-soft: rgba(148, 163, 184, 0.16);
+    --ui-canvas-shadow-soft: 0 18px 36px rgba(0, 0, 0, 0.28);
+    --ui-canvas-shadow-strong: 0 24px 56px rgba(0, 0, 0, 0.36);
+    --ui-canvas-bg-start: #201a2e;
+    --ui-canvas-bg-mid: #161c22;
+    --ui-canvas-bg-end: #161a2e;
+    --ui-canvas-panel: rgba(30, 41, 59, 0.92);
+    --ui-canvas-muted: #94a3b8;
+    --ui-canvas-text: #f1f5f9;
+    --ui-canvas-frame-border: rgba(255, 255, 255, 0.08);
+    --ui-canvas-toolbar-border: rgba(255, 255, 255, 0.1);
+    --ui-canvas-toolbar-bg: rgba(15, 23, 42, 0.72);
+    --ui-canvas-toolbar-shadow: 0 18px 34px rgba(0, 0, 0, 0.32);
+    --ui-canvas-action-border: rgba(255, 255, 255, 0.12);
+    --ui-canvas-action-bg: rgba(30, 41, 59, 0.92);
+    --ui-canvas-action-hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.32);
+    --ui-canvas-create-rail-bg: rgba(30, 41, 59, 0.96);
+    --ui-canvas-create-rail-shadow: 0 18px 32px rgba(0, 0, 0, 0.32);
+
+    /* Structural --ui-calendar-* tokens only — accent/status/event-paint
+       tokens are declared once in the light block above and stay fixed. */
+    --ui-calendar-bg: #161c26;
+    --ui-calendar-panel: #1e293b;
+    --ui-calendar-panel-soft: #24324a;
+    --ui-calendar-panel-sunken: #182234;
+    --ui-calendar-border: rgba(148, 163, 184, 0.16);
+    --ui-calendar-border-soft: rgba(148, 163, 184, 0.22);
+    --ui-calendar-border-strong: rgba(129, 140, 248, 0.36);
+    --ui-calendar-text: #f1f5f9;
+    --ui-calendar-text-muted: #94a3b8;
+    --ui-calendar-text-subtle: #cbd5e1;
+    --ui-calendar-text-faint: #64748b;
+    --ui-calendar-heading-text: #e2e8f0;
+    --ui-calendar-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+    --ui-calendar-shadow-strong: 0 26px 80px rgba(0, 0, 0, 0.48);
+    --ui-calendar-grid-major: rgba(148, 163, 184, 0.22);
+    --ui-calendar-grid-header-fill: rgba(30, 41, 59, 0.88);
+    --ui-calendar-canvas-backdrop: #1a1f36;
   }
 }

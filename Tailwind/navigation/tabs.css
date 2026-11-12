@@ -1,49 +1,56 @@
 @layer components {
   .cad-tabs {
-    --cad-tabs-accent-bg: var(--cad-tone-primary-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-primary-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-primary-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-primary-soft-fg);
-    --cad-tabs-list-border: color-mix(in srgb, var(--cad-tabs-accent-border) 34%, var(--cad-color-border-soft) 66%);
-    --cad-tabs-tab-border: color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
-    --cad-tabs-tab-hover-border: color-mix(in srgb, var(--cad-tabs-accent-border) 46%, var(--cad-color-border) 54%);
+    --cad-tabs-accent-bg: var(--tone-primary-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-primary-soft-hover);
+    --cad-tabs-accent-border: var(--tone-primary-soft-border);
+    --cad-tabs-accent-fg: var(--tone-primary-soft-fg);
+    --cad-tabs-list-border: color-mix(in srgb, var(--cad-tabs-accent-border) 34%, var(--tone-border-soft) 66%);
+    --cad-tabs-tab-border: color-mix(in srgb, var(--tone-border-soft) 82%, transparent);
+    --cad-tabs-tab-hover-border: color-mix(in srgb, var(--cad-tabs-accent-border) 46%, var(--tone-border) 54%);
     --cad-tabs-tab-active-border: color-mix(
       in srgb,
       var(--cad-tabs-accent-border) 74%,
-      var(--cad-color-border-soft) 26%
+      var(--tone-border-soft) 26%
     );
-    --cad-tabs-tab-color: var(--cad-color-text);
-    --cad-tabs-tab-hover-color: var(--cad-color-text-strong);
-    --cad-tabs-tab-active-color: var(--cad-color-text-strong);
-    --cad-tabs-tab-background: color-mix(in srgb, var(--cad-color-surface-soft) 86%, transparent);
+    --cad-tabs-tab-color: var(--tone-text);
+    --cad-tabs-tab-hover-color: var(--tone-text-strong);
+    --cad-tabs-tab-active-color: var(--tone-text-strong);
+    --cad-tabs-tab-background: color-mix(in srgb, var(--tone-surface-soft) 86%, transparent);
     --cad-tabs-tab-hover-background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--cad-color-surface) 90%, var(--cad-tabs-accent-bg) 10%) 0%,
-      color-mix(in srgb, var(--cad-color-surface-soft) 74%, var(--cad-tabs-accent-bg) 26%) 100%
+      color-mix(in srgb, var(--tone-surface) 90%, var(--cad-tabs-accent-bg) 10%) 0%,
+      color-mix(in srgb, var(--tone-surface-soft) 74%, var(--cad-tabs-accent-bg) 26%) 100%
     );
     --cad-tabs-tab-active-background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--cad-color-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
-      color-mix(in srgb, var(--cad-color-surface-soft) 58%, var(--cad-tabs-accent-bg) 42%) 100%
+      color-mix(in srgb, var(--tone-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
+      color-mix(in srgb, var(--tone-surface-soft) 58%, var(--cad-tabs-accent-bg) 42%) 100%
     );
-    --cad-tabs-tab-shadow: 0 8px 20px -22px rgba(15, 23, 42, 0.18);
-    --cad-tabs-tab-active-shadow: 0 18px 36px -28px rgba(15, 23, 42, 0.28);
+    --cad-tabs-tab-shadow: 0 8px 20px -22px color-mix(in srgb, var(--tone-text) 18%, transparent);
+    --cad-tabs-tab-active-shadow: 0 18px 36px -28px color-mix(in srgb, var(--tone-text) 28%, transparent);
     --cad-tabs-tab-indicator: color-mix(in srgb, var(--cad-tabs-accent-border) 72%, var(--cad-tabs-accent-fg) 28%);
     --cad-tabs-tab-font-size: 0.875rem;
     --cad-tabs-tab-font-weight: 650;
-    --cad-tabs-tab-padding: 0.65rem 1rem;
-    --cad-tabs-tab-min-height: 2.85rem;
-    --cad-tabs-tab-radius: 1rem 1rem 0 0;
-    /* TODO: V2 candidate: --cad-tabs-tab-radius: 0; Sandbox overrides it. */
-    --cad-tabs-panel-border: color-mix(in srgb, var(--cad-tabs-accent-border) 56%, var(--cad-color-border-soft) 44%);
+    --cad-tabs-tab-padding: 0.5rem 1rem;
+    --cad-tabs-tab-min-height: 2.5rem;
+    --cad-tabs-tab-radius-value: 0.375rem;
+    --cad-tabs-tab-radius-tl: 0;
+    --cad-tabs-tab-radius-tr: 0;
+    --cad-tabs-tab-radius-bl: 0;
+    --cad-tabs-tab-radius-br: 0;
+    --cad-tabs-panel-border: color-mix(in srgb, var(--cad-tabs-accent-border) 56%, var(--tone-border-soft) 44%);
     --cad-tabs-panel-background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--cad-color-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
-      color-mix(in srgb, var(--cad-color-surface-soft) 62%, var(--cad-tabs-accent-bg) 38%) 100%
+      color-mix(in srgb, var(--tone-surface) 82%, var(--cad-tabs-accent-bg) 18%) 0%,
+      color-mix(in srgb, var(--tone-surface-soft) 62%, var(--cad-tabs-accent-bg) 38%) 100%
     );
-    --cad-tabs-panel-shadow: 0 18px 42px -30px rgba(15, 23, 42, 0.2);
+    --cad-tabs-panel-shadow: 0 18px 42px -30px color-mix(in srgb, var(--tone-text) 20%, transparent);
     --cad-tabs-panel-padding: 1rem;
-    --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
+    --cad-tabs-panel-radius-value: 1.25rem;
+    --cad-tabs-panel-radius-tl: 0;
+    --cad-tabs-panel-radius-tr: 0;
+    --cad-tabs-panel-radius-bl: 0;
+    --cad-tabs-panel-radius-br: 0;
     --cad-tabs-badge-background: var(--cad-tabs-accent-bg);
     --cad-tabs-badge-color: var(--cad-tabs-accent-fg);
 
@@ -51,45 +58,122 @@
   }
 
   .cad-tabs--tone-primary {
-    --cad-tabs-accent-bg: var(--cad-tone-primary-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-primary-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-primary-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-primary-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-primary-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-primary-soft-hover);
+    --cad-tabs-accent-border: var(--tone-primary-soft-border);
+    --cad-tabs-accent-fg: var(--tone-primary-soft-fg);
   }
 
   .cad-tabs--tone-secondary {
-    --cad-tabs-accent-bg: var(--cad-tone-secondary-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-secondary-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-secondary-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-secondary-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-secondary-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-secondary-soft-hover);
+    --cad-tabs-accent-border: var(--tone-secondary-soft-border);
+    --cad-tabs-accent-fg: var(--tone-secondary-soft-fg);
   }
 
   .cad-tabs--tone-info {
-    --cad-tabs-accent-bg: var(--cad-tone-info-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-info-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-info-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-info-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-info-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-info-soft-hover);
+    --cad-tabs-accent-border: var(--tone-info-soft-border);
+    --cad-tabs-accent-fg: var(--tone-info-soft-fg);
   }
 
   .cad-tabs--tone-success {
-    --cad-tabs-accent-bg: var(--cad-tone-success-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-success-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-success-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-success-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-success-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-success-soft-hover);
+    --cad-tabs-accent-border: var(--tone-success-soft-border);
+    --cad-tabs-accent-fg: var(--tone-success-soft-fg);
   }
 
   .cad-tabs--tone-warning {
-    --cad-tabs-accent-bg: var(--cad-tone-warning-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-warning-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-warning-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-warning-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-warning-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-warning-soft-hover);
+    --cad-tabs-accent-border: var(--tone-warning-soft-border);
+    --cad-tabs-accent-fg: var(--tone-warning-soft-fg);
   }
 
   .cad-tabs--tone-danger {
-    --cad-tabs-accent-bg: var(--cad-tone-danger-soft-bg);
-    --cad-tabs-accent-hover-bg: var(--cad-tone-danger-soft-hover);
-    --cad-tabs-accent-border: var(--cad-tone-danger-soft-border);
-    --cad-tabs-accent-fg: var(--cad-tone-danger-soft-fg);
+    --cad-tabs-accent-bg: var(--tone-danger-soft-bg);
+    --cad-tabs-accent-hover-bg: var(--tone-danger-soft-hover);
+    --cad-tabs-accent-border: var(--tone-danger-soft-border);
+    --cad-tabs-accent-fg: var(--tone-danger-soft-fg);
+  }
+
+  .cad-tabs--rounded-none {
+    --cad-tabs-tab-radius-value: 0;
+  }
+
+  .cad-tabs--rounded-default {
+    --cad-tabs-tab-radius-value: 0.375rem;
+  }
+
+  .cad-tabs--rounded-md {
+    --cad-tabs-tab-radius-value: 0.75rem;
+  }
+
+  .cad-tabs--rounded-lg {
+    --cad-tabs-tab-radius-value: 1.25rem;
+  }
+
+  .cad-tabs--content-rounded-none {
+    --cad-tabs-panel-radius-value: 0;
+  }
+
+  .cad-tabs--content-rounded-default {
+    --cad-tabs-panel-radius-value: 0.375rem;
+  }
+
+  .cad-tabs--content-rounded-md {
+    --cad-tabs-panel-radius-value: 0.25rem;
+  }
+
+  .cad-tabs--content-rounded-lg {
+    --cad-tabs-panel-radius-value: 1.25rem;
+  }
+
+  /* Only the outer corners of a tab button round; which corners are "outer"
+     depends on which edge the tab strip sits against. */
+  .cad-tabs--position-top {
+    --cad-tabs-tab-radius-tl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-tr: var(--cad-tabs-tab-radius-value);
+  }
+
+  .cad-tabs--position-bottom {
+    --cad-tabs-tab-radius-bl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-br: var(--cad-tabs-tab-radius-value);
+  }
+
+  .cad-tabs--position-left {
+    --cad-tabs-tab-radius-tl: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-bl: var(--cad-tabs-tab-radius-value);
+  }
+
+  .cad-tabs--position-right {
+    --cad-tabs-tab-radius-tr: var(--cad-tabs-tab-radius-value);
+    --cad-tabs-tab-radius-br: var(--cad-tabs-tab-radius-value);
+  }
+
+  /* The panel's edge touching the tab strip always stays square; only the
+     opposite two corners round, so the seam between tabs and panel stays a
+     straight line regardless of which tab is active. */
+  .cad-tabs--position-top {
+    --cad-tabs-panel-radius-bl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-br: var(--cad-tabs-panel-radius-value);
+  }
+
+  .cad-tabs--position-bottom {
+    --cad-tabs-panel-radius-tl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-tr: var(--cad-tabs-panel-radius-value);
+  }
+
+  .cad-tabs--position-left {
+    --cad-tabs-panel-radius-tr: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-br: var(--cad-tabs-panel-radius-value);
+  }
+
+  .cad-tabs--position-right {
+    --cad-tabs-panel-radius-tl: var(--cad-tabs-panel-radius-value);
+    --cad-tabs-panel-radius-bl: var(--cad-tabs-panel-radius-value);
   }
 
   .cad-tabs--horizontal {
@@ -116,23 +200,21 @@
     @apply flex-row-reverse;
   }
 
-  .cad-tabs--border-auto.cad-tabs--variant-modal-compact,
-  .cad-tabs--border-auto.cad-tabs--variant-workstation,
+  .cad-tabs--border-auto.cad-tabs--density-compact,
   .cad-tabs--border-none {
     --cad-tabs-tab-border: transparent;
     --cad-tabs-tab-hover-border: transparent;
   }
 
   .cad-tabs--border-soft {
-    --cad-tabs-tab-border: color-mix(in srgb, var(--cad-color-border-soft) 80%, transparent);
-    --cad-tabs-tab-hover-border: var(--cad-color-border);
+    --cad-tabs-tab-border: color-mix(in srgb, var(--tone-border-soft) 80%, transparent);
+    --cad-tabs-tab-hover-border: var(--tone-border);
   }
 
   .cad-tabs__list {
-    @apply flex min-w-0 w-full max-w-full items-end gap-2;
+    @apply flex min-w-0 w-full max-w-full shrink-0 items-end gap-2;
     margin: 0;
-    padding: 0 0.25rem;
-    /* TODO: V2 removes the list inset; Sandbox overrides it. */
+    padding: 0;
     border-bottom: 1px solid var(--cad-tabs-list-border);
     scrollbar-width: thin;
   }
@@ -170,7 +252,10 @@
     padding: var(--cad-tabs-tab-padding);
     border: 1px solid var(--cad-tabs-tab-border);
     border-bottom-width: 0;
-    border-radius: var(--cad-tabs-tab-radius);
+    border-top-left-radius: var(--cad-tabs-tab-radius-tl);
+    border-top-right-radius: var(--cad-tabs-tab-radius-tr);
+    border-bottom-left-radius: var(--cad-tabs-tab-radius-bl);
+    border-bottom-right-radius: var(--cad-tabs-tab-radius-br);
     background: var(--cad-tabs-tab-background);
     color: var(--cad-tabs-tab-color);
     font-size: var(--cad-tabs-tab-font-size);
@@ -185,7 +270,6 @@
   .cad-tabs--vertical .cad-tabs__tab {
     @apply w-full justify-start;
     border-bottom-width: 1px;
-    border-radius: 1rem;
   }
 
   .cad-tabs__tab:hover,
@@ -196,7 +280,7 @@
   }
 
   .cad-tabs__tab:focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--cad-tone-primary-soft-border) 75%, transparent);
+    outline: 2px solid color-mix(in srgb, var(--tone-primary-soft-border) 75%, transparent);
     outline-offset: 2px;
   }
 
@@ -212,28 +296,30 @@
   .cad-tabs--horizontal .cad-tabs__tab.is-active::after {
     content: "";
     position: absolute;
-    right: 0.9rem;
-    bottom: 0.42rem;
-    left: 0.9rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
     height: 0.18rem;
-    border-radius: 9999px;
     background: var(--cad-tabs-tab-indicator);
   }
 
   .cad-tabs--position-bottom.cad-tabs--horizontal .cad-tabs__tab.is-active::after {
-    top: 0.42rem;
+    top: 0;
     bottom: auto;
   }
 
   .cad-tabs--vertical .cad-tabs__tab.is-active::after {
     content: "";
     position: absolute;
-    top: 0.7rem;
-    bottom: 0.7rem;
-    left: 0.38rem;
+    top: 0;
+    bottom: 0;
+    left: 0;
     width: 0.2rem;
-    border-radius: 9999px;
     background: var(--cad-tabs-tab-indicator);
+  }
+
+  .cad-tabs--no-slider .cad-tabs__tab.is-active::after {
+    display: none;
   }
 
   .cad-tabs--horizontal.cad-tabs--position-top .cad-tabs__tab.is-active {
@@ -248,15 +334,37 @@
   .cad-tabs__tab[aria-disabled="true"] {
     cursor: not-allowed;
     opacity: 0.72;
-    color: var(--cad-color-text-soft);
-    background: color-mix(in srgb, var(--cad-color-surface-soft) 92%, transparent);
-    border-color: color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
+    color: var(--tone-text-soft);
+    background: color-mix(in srgb, var(--tone-surface-soft) 92%, transparent);
+    border-color: color-mix(in srgb, var(--tone-border-soft) 82%, transparent);
     box-shadow: none;
   }
 
   .cad-tabs__tab:disabled::after,
   .cad-tabs__tab[aria-disabled="true"]::after {
     display: none;
+  }
+
+  .cad-tabs__tab--link {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.2em;
+  }
+
+  .cad-tabs__tab--link:hover,
+  .cad-tabs__tab--link:focus-visible {
+    border-color: transparent;
+    background: transparent;
+    text-decoration-color: currentColor;
+  }
+
+  .cad-tabs__tab--link.is-active {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .cad-tabs__icon {
@@ -299,10 +407,13 @@
     min-width: 0;
     padding: var(--cad-tabs-panel-padding);
     border: 1px solid var(--cad-tabs-panel-border);
-    border-radius: var(--cad-tabs-panel-radius);
+    border-top-left-radius: var(--cad-tabs-panel-radius-tl);
+    border-top-right-radius: var(--cad-tabs-panel-radius-tr);
+    border-bottom-left-radius: var(--cad-tabs-panel-radius-bl);
+    border-bottom-right-radius: var(--cad-tabs-panel-radius-br);
     background: var(--cad-tabs-panel-background);
     box-shadow: var(--cad-tabs-panel-shadow);
-    color: var(--cad-color-text);
+    color: var(--tone-text);
   }
 
   .cad-tabs--fill-height .cad-tabs__panel {
@@ -337,76 +448,39 @@
 
   .cad-tabs--position-left.cad-tabs--vertical .cad-tabs__panel {
     margin-left: -1px;
-    border-top-left-radius: 0;
   }
 
   .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__panel {
     margin-right: -1px;
-    border-top-right-radius: 0;
   }
 
-  .cad-tabs--variant-workspace-secondary {
+  .cad-tabs--density-comfortable {
     --cad-tabs-tab-font-size: 0.8125rem;
-    --cad-tabs-tab-padding: 0.55rem 0.9rem;
-    --cad-tabs-tab-min-height: 2.5rem;
-    --cad-tabs-panel-padding: 0.9rem;
+    --cad-tabs-tab-padding: 0.4rem 0.9rem;
+    --cad-tabs-tab-min-height: 2rem;
   }
 
-  .cad-tabs--variant-workspace-tertiary {
-    --cad-tabs-tab-font-size: 0.75rem;
-    --cad-tabs-tab-padding: 0.45rem 0.8rem;
-    --cad-tabs-tab-min-height: 2.25rem;
-    --cad-tabs-panel-padding: 0.85rem;
-  }
-
-  .cad-tabs--variant-modal-compact {
+  .cad-tabs--density-compact {
     --cad-tabs-list-border: transparent;
     --cad-tabs-tab-font-size: 0.8125rem;
-    --cad-tabs-tab-padding: 0.45rem 0.85rem;
-    --cad-tabs-tab-min-height: 2.35rem;
-    --cad-tabs-tab-radius: 9999px;
-    /* TODO: V2 candidate: --cad-tabs-tab-radius: 0; Sandbox overrides it. */
-    --cad-tabs-tab-background: color-mix(in srgb, var(--cad-color-surface-soft) 74%, transparent);
-    --cad-tabs-tab-hover-background: color-mix(in srgb, var(--cad-color-surface) 70%, var(--cad-tabs-accent-bg) 30%);
+    --cad-tabs-tab-padding: 0.3rem 0.75rem;
+    --cad-tabs-tab-min-height: 1.625rem;
+    --cad-tabs-tab-background: color-mix(in srgb, var(--tone-surface-soft) 74%, transparent);
+    --cad-tabs-tab-hover-background: color-mix(in srgb, var(--tone-surface) 70%, var(--cad-tabs-accent-bg) 30%);
     --cad-tabs-tab-active-background: var(--cad-tabs-accent-bg);
     --cad-tabs-tab-active-color: var(--cad-tabs-accent-fg);
     --cad-tabs-panel-border: transparent;
     --cad-tabs-panel-background: transparent;
     --cad-tabs-panel-shadow: none;
     --cad-tabs-panel-padding: 0.85rem 0 0;
-    --cad-tabs-panel-radius: 0;
+    --cad-tabs-panel-radius-tl: 0;
+    --cad-tabs-panel-radius-tr: 0;
+    --cad-tabs-panel-radius-bl: 0;
+    --cad-tabs-panel-radius-br: 0;
   }
 
-  .cad-tabs--variant-modal-compact .cad-tabs__tab.is-active::after {
+  .cad-tabs--density-compact .cad-tabs__tab.is-active::after {
     display: none;
-  }
-
-  .cad-tabs--variant-workstation {
-    --cad-color-text-strong: #f8fcfb;
-    --cad-color-text: #e7f0ed;
-    --cad-color-text-muted: #bdd0cb;
-    --cad-color-text-soft: #93aba5;
-    --cad-tabs-accent-bg: rgba(242, 198, 109, 0.18);
-    --cad-tabs-accent-hover-bg: rgba(242, 198, 109, 0.26);
-    --cad-tabs-accent-border: rgba(242, 198, 109, 0.46);
-    --cad-tabs-accent-fg: #fff8e9;
-    --cad-tabs-list-border: rgba(157, 194, 186, 0.28);
-    --cad-tabs-tab-border: rgba(157, 194, 186, 0.24);
-    --cad-tabs-tab-hover-border: rgba(157, 194, 186, 0.42);
-    --cad-tabs-tab-active-border: rgba(242, 198, 109, 0.48);
-    --cad-tabs-tab-color: var(--cad-color-text);
-    --cad-tabs-tab-hover-color: var(--cad-color-text-strong);
-    --cad-tabs-tab-active-color: var(--cad-tabs-accent-fg);
-    --cad-tabs-tab-background: linear-gradient(180deg, rgba(23, 42, 46, 0.82) 0%, rgba(17, 31, 35, 0.76) 100%);
-    --cad-tabs-tab-hover-background: linear-gradient(180deg, rgba(30, 53, 58, 0.94) 0%, rgba(22, 40, 45, 0.88) 100%);
-    --cad-tabs-tab-active-background: linear-gradient(180deg, rgba(41, 64, 70, 0.98) 0%, rgba(24, 40, 45, 0.94) 100%);
-    --cad-tabs-tab-active-shadow: 0 22px 44px -30px rgba(2, 6, 23, 0.6);
-    --cad-tabs-tab-indicator: rgba(242, 198, 109, 0.92);
-    --cad-tabs-panel-border: rgba(157, 194, 186, 0.28);
-    --cad-tabs-panel-background: linear-gradient(180deg, rgba(18, 31, 35, 0.96) 0%, rgba(14, 28, 31, 0.92) 100%);
-    --cad-tabs-panel-shadow: 0 24px 52px -32px rgba(2, 6, 23, 0.65);
-    --cad-tabs-panel-padding: 1rem;
-    --cad-tabs-panel-radius: 0 1.25rem 1.25rem 1.25rem;
   }
 
   @media (max-width: 900px) {
@@ -446,7 +520,10 @@
     .cad-tabs--position-right.cad-tabs--vertical .cad-tabs__panel {
       margin-left: 0;
       margin-right: 0;
-      border-radius: var(--cad-tabs-panel-radius);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--cad-tabs-panel-radius-value);
+      border-bottom-right-radius: var(--cad-tabs-panel-radius-value);
     }
   }
 }

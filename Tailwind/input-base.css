@@ -6,42 +6,53 @@
 /* @import "tailwindcss/utilities.css" layer(utilities) source(none); */
 @tailwind utilities;
 
+/* Keys Tailwind's `dark:`/`light:` variants off the `--ui-theme` custom
+   property (set per `[data-ui-theme]` scope in theme.css) via a CSS style
+   container query, rather than `prefers-color-scheme` -- this is what lets
+   a nested `ThemeHost` boundary flip `dark:`/`light:` utilities correctly
+   without the ancestor's setting leaking through. See CLAUDE.md's
+   "data-ui-theme theming attribute" rule. */
+@custom-variant dark {
+  @container style(--ui-theme: dark) {
+    @slot;
+  }
+}
+
+@custom-variant light {
+  @container style(--ui-theme: light) {
+    @slot;
+  }
+}
+
 @source "../src/CanDoItAll.Components.BaseLib";
 
 /* Temporary compatibility sources for packages that currently consume BaseLib's utility output. */
 @source "../src/CanDoItAll.Components.CanvasLib";
 @source "../src/CanDoItAll.Components.OverlayLib";
 @source "../src/CanDoItAll.Components.QRCode";
+@source "../src/CanDoItAll.Components.Charts";
 
 @import "./fonts.css";
 @import "./theme.css";
-@import "./compatibility/theme.css";
 
+@import "./layout/theme-host.css";
 @import "./layout/layout.css";
 @import "./layout/sidebar.css";
 @import "./layout/body.css";
 @import "./layout/column.css";
-@import "./layout/compatibility/radzen-layout.css";
 @import "./layout/page-shell.css";
-@import "./layout/compatibility/stacks.css";
 @import "./layout/sticky-action-footer.css";
-@import "./layout/compatibility/stats.css";
 
 @import "./cards/card.css";
-@import "./cards/compatibility/cards.css";
 @import "./cards/panel-card.css";
 @import "./cards/surface-card.css";
 @import "./cards/section-card.css";
 @import "./cards/summary-tile.css";
-@import "./cards/compatibility/sheet-section.css";
-@import "./cards/compatibility/sheet-grid.css";
-@import "./cards/compatibility/sheet-card.css";
 @import "./cards/metric-card.css";
 @import "./cards/stats-card-row.css";
 
 @import "./typography/header.css";
-@import "./typography/eyebrow.css";
-@import "./typography/compatibility/text.css";
+@import "./typography/compatibility/eyebrow.css";
 @import "./typography/text-block.css";
 @import "./typography/base-elements.css";
 
@@ -56,19 +67,28 @@
 
 @import "./feedback/alert.css";
 @import "./feedback/help-popover.css";
+@import "./feedback/help-card.css";
 @import "./feedback/status-check-list.css";
 
+@import "./forms/form-plugin.generated.css";
+@import "./forms/form-controls.css";
+@import "./forms/styled-input-base.css";
 @import "./forms/form-field.css";
 @import "./forms/prefixed-field.css";
-@import "./forms/compatibility/fields.css";
-@import "./forms/text-area.css";
 @import "./forms/secret-field.css";
 @import "./forms/form-stack.css";
 @import "./forms/form-section.css";
 @import "./forms/editable.css";
 @import "./forms/tag-editor.css";
-@import "./forms/compatibility/sheet-field.css";
 @import "./forms/entity-picker.css";
+@import "./forms/switch.css";
+@import "./forms/slider.css";
+@import "./forms/fieldset.css";
+@import "./forms/checkbox-option.css";
+@import "./forms/settings-switch-row.css";
+@import "./forms/settings-switch-label.css";
+@import "./forms/file-upload.css";
+@import "./forms/file-input.css";
 
 @import "./modals/dialog.css";
 @import "./modals/dialog-scaffold.css";
@@ -80,8 +100,8 @@
 @import "./navigation/toolbar-fields.css";
 @import "./navigation/toolbar-actions.css";
 @import "./navigation/tree-view.css";
-@import "./navigation/compatibility/tabs.css";
 @import "./navigation/tabs.css";
+@import "./navigation/secondary-tabs.css";
 @import "./navigation/side-menu.css";
 
 @import "./lists/list-detail-shell.css";

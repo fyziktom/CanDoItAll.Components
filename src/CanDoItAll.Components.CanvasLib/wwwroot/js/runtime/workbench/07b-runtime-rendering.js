@@ -34,7 +34,7 @@
                 nodeId: node.id
             });
 
-            const accent = resolveNodeAccentColor(node);
+            const accent = resolveNodeAccentColor(node, state.colors);
             const isHighlighted = hasHighlightedNodes && state.highlightedIds.has(node.id);
             const isDimmed = hasHighlightedNodes && !isHighlighted;
             const meta = {
@@ -92,7 +92,7 @@
             renderedNodeCount += 1;
         }
 
-        renderCanvasLinkLabels(surface.context, state.renderedLinks);
+        renderCanvasLinkLabels(surface.context, state.renderedLinks, state.colors);
 
         reconcileRetainedLayer(
             state.retainedNodeElements,

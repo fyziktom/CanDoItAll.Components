@@ -7,11 +7,16 @@
 
 <div class="space-y-4">
     <FormField Text="Items to aggregate" ContainerClass="max-w-xs">
-        <DropDown TValue="int"
-                  Data="@ItemCounts"
-                  Value="@itemCount"
-                  ValueChanged="HandleItemCountChanged"
-                  aria-label="Worker JavaScript items to aggregate" />
+        <SelectInput TValue="int"
+                     Value="@itemCount"
+                     ValueChanged="HandleItemCountChanged"
+                     ValueExpression="@(() => itemCount)"
+                     aria-label="Worker JavaScript items to aggregate">
+            @foreach (var count in ItemCounts)
+            {
+                <option value="@count">@count</option>
+            }
+        </SelectInput>
     </FormField>
 
     <Button Text="Run worker JS benchmark" Click="RunBenchmarkAsync" Disabled="@(worker is null)" data-testid="benchmark-worker-js-run" />

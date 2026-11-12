@@ -30,15 +30,15 @@ public sealed class RoboAvatarGeneratorTests
         var svg = RoboAvatarGenerator.RenderSvg(new RoboAvatarOptions { Id = "213735" });
 
         Assert.Contains(
-            "<g data-robo-part=\"body\" stroke=\"oklch(62.7% 0.265 303.9)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"m 5,3 h 14 l 2,2 -7.444444,16.475555 H 10.444444 L 7.4125009,14.765457 3,5 Z\"></path></g>",
+            "<g data-robo-part=\"body\" stroke=\"oklch(62.7% 0.265 303.9)\" fill=\"var(--tone-surface, #fff)\"><path d=\"m 5,3 h 14 l 2,2 -7.444444,16.475555 H 10.444444 L 7.4125009,14.765457 3,5 Z\"></path></g>",
             svg,
             StringComparison.Ordinal);
         Assert.Contains(
-            "<g data-robo-part=\"mouth\" stroke=\"oklch(68.5% 0.169 237.323)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"m 18,16 -6,3 -6,-3 v 0 z\"></path></g>",
+            "<g data-robo-part=\"mouth\" stroke=\"oklch(68.5% 0.169 237.323)\" fill=\"var(--tone-surface, #fff)\"><path d=\"m 18,16 -6,3 -6,-3 v 0 z\"></path></g>",
             svg,
             StringComparison.Ordinal);
         Assert.Contains(
-            "<g data-robo-part=\"eyes\" stroke=\"oklch(68.5% 0.169 237.323)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"m 14,12.5 2,-3 2,3 z m -8,0 2,-3 2,3 z\"></path></g>",
+            "<g data-robo-part=\"eyes\" stroke=\"oklch(68.5% 0.169 237.323)\" fill=\"var(--tone-surface, #fff)\"><path d=\"m 14,12.5 2,-3 2,3 z m -8,0 2,-3 2,3 z\"></path></g>",
             svg,
             StringComparison.Ordinal);
     }
@@ -103,7 +103,7 @@ public sealed class RoboAvatarGeneratorTests
         });
 
         Assert.Contains(
-            "<g data-robo-part=\"body\" stroke=\"oklch(64.5% 0.246 16.439)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"M 12,1.5325091 10,4 h 4 z M 12,5.5 V 4 M 7.5000007,5.5 H 16.5 c 2.77,0 5,2.1541613 5,4.829958 v 6.315639 c 0,2.675797 -2.23,4.829958 -5,4.829958 H 7.5000007 c -2.7700002,0 -5.0000005,-2.154161 -5.0000005,-4.829958 V 10.329958 C 2.5000002,7.6541613 4.7300005,5.5 7.5000007,5.5 Z\"></path></g>",
+            "<g data-robo-part=\"body\" stroke=\"oklch(64.5% 0.246 16.439)\" fill=\"var(--tone-surface, #fff)\"><path d=\"M 12,1.5325091 10,4 h 4 z M 12,5.5 V 4 M 7.5000007,5.5 H 16.5 c 2.77,0 5,2.1541613 5,4.829958 v 6.315639 c 0,2.675797 -2.23,4.829958 -5,4.829958 H 7.5000007 c -2.7700002,0 -5.0000005,-2.154161 -5.0000005,-4.829958 V 10.329958 C 2.5000002,7.6541613 4.7300005,5.5 7.5000007,5.5 Z\"></path></g>",
             svg,
             StringComparison.Ordinal);
     }

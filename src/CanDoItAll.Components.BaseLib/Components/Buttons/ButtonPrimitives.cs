@@ -1,16 +1,14 @@
 namespace CanDoItAll.Components.BaseLib;
 
-public enum ButtonStyle
+public enum ButtonTone
 {
+    Default,
     Primary,
     Secondary,
     Success,
     Info,
     Warning,
-    Danger,
-    Light,
-    Dark,
-    Base
+    Danger
 }
 
 public enum ButtonSize
@@ -20,23 +18,25 @@ public enum ButtonSize
     Large
 }
 
-public enum ButtonLook
+public enum ButtonDensity
 {
+    Normal,
+    Comfortable,
+    Compact
+}
+
+public enum ButtonRounded
+{
+    None,
     Default,
-    SheetCard,
-    SheetCardGhost,
-    SheetCardWarn,
-    Legacy,
-    LegacyGhost,
-    LegacyExtraSmall,
-    LegacyExtraSmallGhost,
-    LegacyPrimaryFullWidth
+    Medium,
+    Large
 }
 
 public enum Variant
 {
+    Solid,
     Filled,
-    Flat,
     Outlined,
     Text
 }

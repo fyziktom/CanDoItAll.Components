@@ -16,31 +16,31 @@ public sealed class CanvasThemeTokenPack
 
     public string PanelRadius { get; init; } = "22px";
 
-    public string BorderSoft { get; init; } = "rgba(15, 23, 42, 0.1)";
+    public string BorderSoft { get; init; } = "var(--ui-canvas-border-soft, rgba(15, 23, 42, 0.1))";
 
-    public string ShadowSoft { get; init; } = "0 18px 36px rgba(15, 23, 42, 0.1)";
+    public string ShadowSoft { get; init; } = "var(--ui-canvas-shadow-soft, 0 18px 36px rgba(15, 23, 42, 0.1))";
 
-    public string ShadowStrong { get; init; } = "0 24px 56px rgba(15, 23, 42, 0.16)";
+    public string ShadowStrong { get; init; } = "var(--ui-canvas-shadow-strong, 0 24px 56px rgba(15, 23, 42, 0.16))";
 
-    public string BackgroundStart { get; init; } = "#fff4e5";
+    public string BackgroundStart { get; init; } = "var(--ui-canvas-bg-start, #fff4e5)";
 
-    public string BackgroundMid { get; init; } = "#f6faf7";
+    public string BackgroundMid { get; init; } = "var(--ui-canvas-bg-mid, #f6faf7)";
 
-    public string BackgroundEnd { get; init; } = "#eef1ff";
+    public string BackgroundEnd { get; init; } = "var(--ui-canvas-bg-end, #eef1ff)";
 
-    public string AccentStart { get; init; } = "#8b5cf6";
+    public string AccentStart { get; init; } = "var(--ui-canvas-accent-start, #8b5cf6)";
 
-    public string AccentEnd { get; init; } = "#6d28d9";
+    public string AccentEnd { get; init; } = "var(--ui-canvas-accent-end, #6d28d9)";
 
-    public string DarkCard { get; init; } = "#111827";
+    public string DarkCard { get; init; } = "var(--color-neutral-900, #111827)";
 
-    public string DarkCardBorder { get; init; } = "#14b8a6";
+    public string DarkCardBorder { get; init; } = "var(--ui-canvas-dark-card-border, #14b8a6)";
 
-    public string Panel { get; init; } = "rgba(255, 255, 255, 0.92)";
+    public string Panel { get; init; } = "var(--ui-canvas-panel, rgba(255, 255, 255, 0.92))";
 
-    public string MutedText { get; init; } = "#64748b";
+    public string MutedText { get; init; } = "var(--ui-canvas-muted, #64748b)";
 
-    public string ForegroundText { get; init; } = "#0f172a";
+    public string ForegroundText { get; init; } = "var(--ui-canvas-text, #0f172a)";
 
     public IReadOnlyDictionary<string, string> ToCssVariables()
         => new Dictionary<string, string>(StringComparer.Ordinal)

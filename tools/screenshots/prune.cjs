@@ -20,11 +20,11 @@ main().catch(error => {
 
 async function main() {
   const config = loadConfig(configPath);
-  const branches = listScreenshotBranches(config.storageRepoPath);
+  const branches = listScreenshotBranches(config.storageRepoPath, config.key);
   const toDelete = branches.slice(keep);
 
   if (toDelete.length === 0) {
-    console.log(`Nothing to prune: ${branches.length} screenshots_* branch(es) in ${config.storageRepoPath}, keeping ${keep}.`);
+    console.log(`Nothing to prune: ${branches.length} ${config.key}_* branch(es) in ${config.storageRepoPath}, keeping ${keep}.`);
     return;
   }
 

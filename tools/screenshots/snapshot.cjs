@@ -22,7 +22,7 @@ async function main() {
   const config = loadConfig(configPath);
   ensureRepo(config.storageRepoPath);
 
-  const branchName = generateBranchName();
+  const branchName = generateBranchName(config.key);
 
   run("capture.cjs", configPath);
   run("diff.cjs", configPath, args.against ? ["--against", args.against] : []);

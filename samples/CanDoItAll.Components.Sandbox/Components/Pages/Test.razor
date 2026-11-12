@@ -4,20 +4,20 @@
 
 @{
     var testUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-    var isDark = testUri.Query.Contains("dark=true", StringComparison.OrdinalIgnoreCase);
+    var isDark = SandboxQueryLinks.IsDark(NavigationManager) || (ThemeState?.IsDark ?? false);
     var isRaw = testUri.Query.Contains("raw", StringComparison.OrdinalIgnoreCase)
         || testUri.Fragment.Contains("raw", StringComparison.OrdinalIgnoreCase);
 }
 
-<main class="min-h-screen @(isRaw ? "p-10" : "")" data-cad-theme="@(isDark ? "dark" : "light")" data-testid="test-page">
+<main class="min-h-screen @(isRaw ? "p-10" : "")" data-ui-theme="@(isDark ? "dark" : "light")" data-testid="test-page">
     <div class="space-y-10">
         <section class="space-y-5" aria-labelledby="test-buttons">
             <h2 id="test-buttons" class="text-2xl font-semibold">Buttons</h2>
             <section class="space-y-4" aria-labelledby="test-button">
-                <h3 id="test-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/buttons#button">&lt;Button&gt;</a></h3>
+                <h3 id="test-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/buttons", "Button")" data-sandbox-route>&lt;Button&gt;</a></h3>
 
                 <div class="grid gap-x-10 gap-y-8 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-4">
-                    @foreach (var style in ButtonStyles)
+                    @foreach (var tone in ButtonTones)
                     {
                         <section class="space-y-4">
                             @foreach (var size in ButtonSizes)
@@ -25,8 +25,8 @@
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
                                     @foreach (var variant in ButtonVariants)
                                     {
-                                        <Button Text="@variant.ToString()" ButtonStyle="@style" Size="@size" Variant="@variant" />
-                                        <Button Text="@variant.ToString()" ButtonStyle="@style" Size="@size" Variant="@variant" Disabled="true" />
+                                        <Button Text="@variant.ToString()" Tone="@tone" Size="@size" Variant="@variant" />
+                                        <Button Text="@variant.ToString()" Tone="@tone" Size="@size" Variant="@variant" Disabled="true" />
                                     }
                                 </div>
                             }
@@ -36,7 +36,7 @@
             </section>
 
             <section class="space-y-3" aria-labelledby="test-copy-button">
-                <h3 id="test-copy-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/buttons#copy-button">&lt;CopyButton&gt;</a></h3>
+                <h3 id="test-copy-button" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/buttons", "CopyButton")" data-sandbox-route>&lt;CopyButton&gt;</a></h3>
                 <div class="space-y-3">
                     <CopyButton Text="Copy token" Value="cda_test_token" />
                     <CopyButton Text="Copy token" Value="cda_test_token" Disabled="true" />
@@ -47,7 +47,7 @@
         <section class="mt-10 space-y-5" aria-labelledby="test-badges">
             <h2 id="test-badges" class="text-2xl font-semibold">Badges</h2>
             <section class="space-y-4" aria-labelledby="test-badge">
-                <h3 id="test-badge" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="/badges#badge">&lt;Badge&gt;</a></h3>
+                <h3 id="test-badge" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/badges", "Badge")" data-sandbox-route>&lt;Badge&gt;</a></h3>
                 <div class="flex flex-wrap gap-2">
                     @foreach (var tone in BadgeTones)
                     {
@@ -59,7 +59,7 @@
             @foreach (var component in BadgeComponents)
             {
                 <section class="space-y-3" aria-labelledby="@($"test-{component.Name}")">
-                    <h3 id="@($"test-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/badges", component.Name)">&lt;@component.Name&gt;</a></h3>
+                    <h3 id="@($"test-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl("/badges", component.Name)" data-sandbox-route>&lt;@component.Name&gt;</a></h3>
                     @if (component.Name == "Pill")
                     {
                         <div class="space-y-3">
@@ -99,14 +99,22 @@
                     @foreach (var component in group.Components)
                     {
                         <section class="space-y-3" aria-labelledby="@($"test-{group.Slug}-{component.Name}")">
-                            <h3 id="@($"test-{group.Slug}-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl(group.Route, component.Name)">&lt;@component.Name&gt;</a></h3>
+                            <h3 id="@($"test-{group.Slug}-{component.Name}")" class="mt-10 mb-6 font-mono text-xl font-semibold"><a href="@BuildCatalogUrl(group.Route, component.Name)" data-sandbox-route>&lt;@component.Name&gt;</a></h3>
                             @if (component.Name == "CheckBox")
                             {
-                                <div class="flex gap-4">
-                                    <CheckBox TValue="bool" Value="true" aria-label="Checked" />
-                                    <CheckBox TValue="bool" Value="false" aria-label="Unchecked" />
-                                    <CheckBox TValue="bool" Value="true" Disabled="true" aria-label="Checked and disabled" />
-                                    <CheckBox TValue="bool" Value="false" Disabled="true" aria-label="Unchecked and disabled" />
+                                <div class="space-y-3">
+                                    <div class="flex gap-4">
+                                        <CheckBox TValue="bool" Value="true" aria-label="Checked" />
+                                        <CheckBox TValue="bool" Value="false" aria-label="Unchecked" />
+                                        <CheckBox TValue="bool" Value="true" Disabled="true" aria-label="Checked and disabled" />
+                                        <CheckBox TValue="bool" Value="false" Disabled="true" aria-label="Unchecked and disabled" />
+                                    </div>
+                                    <div class="flex gap-4">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <CheckBox TValue="bool" Value="true" Look="@look" aria-label="@($"{look} look, checked")" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "Alert")
@@ -150,11 +158,32 @@
                                     <Editable TItem="TestDataRow" Item="@(new TestDataRow("Review title"))" ParameterName="@nameof(TestDataRow.Name)" Placeholder="Review title" Disabled="true" />
                                 </div>
                             }
-                            else if (component.Name == "DropDown")
+                            else if (component.Name == "SelectInput")
                             {
                                 <div class="space-y-3">
-                                    <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" aria-label="Enabled status" />
-                                    <DropDown TValue="string" Data="@DropDownValues" Value="@DropDownValues[0]" Disabled="true" aria-label="Disabled status" />
+                                    <SelectInput TValue="string" Value="@DropDownValues[0]" ValueExpression="@(() => testInputPlaceholder)" aria-label="Enabled status">
+                                        @foreach (var value in DropDownValues)
+                                        {
+                                            <option value="@value">@value</option>
+                                        }
+                                    </SelectInput>
+                                    <SelectInput TValue="string" Value="@DropDownValues[0]" ValueExpression="@(() => testInputPlaceholder)" disabled="true" aria-label="Disabled status">
+                                        @foreach (var value in DropDownValues)
+                                        {
+                                            <option value="@value">@value</option>
+                                        }
+                                    </SelectInput>
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <SelectInput TValue="string" Value="@DropDownValues[0]" ValueExpression="@(() => testInputPlaceholder)" Look="@look" aria-label="@($"{look} look")">
+                                                @foreach (var value in DropDownValues)
+                                                {
+                                                    <option value="@value">@value</option>
+                                                }
+                                            </SelectInput>
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "EntityPicker")
@@ -174,24 +203,30 @@
                             else if (component.Name == "FormField")
                             {
                                 <div class="space-y-3">
-                                    <FormField Label="Project name"><TextBox Value="Project Aurora" /></FormField>
-                                    <FormField Label="Project name"><TextBox Value="Project Aurora" Disabled="true" /></FormField>
+                                    <FormField Label="Project name"><TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" /></FormField>
+                                    <FormField Label="Project name"><TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" disabled="true" /></FormField>
                                 </div>
                             }
-                            else if (component.Name == "Numeric")
+                            else if (component.Name == "NumberInput")
                             {
                                 <div class="space-y-3">
-                                    <Numeric TValue="int" Value="42" aria-label="Enabled quantity" />
-                                    <Numeric TValue="int" Value="42" Disabled="true" aria-label="Disabled quantity" />
+                                    <NumberInput TValue="int" Value="42" ValueExpression="@(() => testIntPlaceholder)" aria-label="Enabled quantity" />
+                                    <NumberInput TValue="int" Value="42" ValueExpression="@(() => testIntPlaceholder)" disabled="true" aria-label="Disabled quantity" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <NumberInput TValue="int" Value="42" ValueExpression="@(() => testIntPlaceholder)" Look="@look" aria-label="@($"{look} look quantity")" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "PrefixedField")
                             {
                                 <div class="space-y-3">
-                                    <PrefixedField Prefix="$"><TextBox Value="120" aria-label="Prefix only" /></PrefixedField>
-                                    <PrefixedField Suffix="USD"><TextBox Value="120" aria-label="Suffix only" /></PrefixedField>
-                                    <PrefixedField Prefix="$" Suffix="USD"><TextBox Value="120" aria-label="Prefix and suffix" /></PrefixedField>
-                                    <PrefixedField Prefix="$" Suffix="USD"><TextBox Value="120" Disabled="true" aria-label="Disabled prefix and suffix" /></PrefixedField>
+                                    <PrefixedField Prefix="$"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" aria-label="Prefix only" /></PrefixedField>
+                                    <PrefixedField Suffix="USD"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" aria-label="Suffix only" /></PrefixedField>
+                                    <PrefixedField Prefix="$" Suffix="USD"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" aria-label="Prefix and suffix" /></PrefixedField>
+                                    <PrefixedField Prefix="$" Suffix="USD"><TextInput Value="120" ValueExpression="@(() => testInputPlaceholder)" disabled="true" aria-label="Disabled prefix and suffix" /></PrefixedField>
                                 </div>
                             }
                             else if (component.Name == "LineSeries")
@@ -223,6 +258,12 @@
                                 <div class="space-y-3">
                                     <SecretField Value="top-secret" />
                                     <SecretField Value="top-secret" Disabled="true" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <SecretField Value="top-secret" Look="@look" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else if (component.Name == "Tabs")
@@ -230,7 +271,7 @@
                                 <div class="space-y-6">
                                     @foreach (var tone in TabsTones)
                                     {
-                                        <Tabs Variant="TabsVariant.WorkspaceSecondary" Tone="@tone" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{tone} tone tabs")">
+                                        <Tabs Tone="@tone" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{tone} tone tabs")">
                                             <TabsItem Text="@tone.ToString()" Icon="palette">@tone.ToString() tone</TabsItem>
                                             <TabsItem Text="Inactive">Inactive tab</TabsItem>
                                             <TabsItem Text="Disabled" Disabled="true">Disabled tab</TabsItem>
@@ -239,23 +280,23 @@
 
                                     @foreach (var borderMode in TabsBorderModes)
                                     {
-                                        <Tabs Variant="TabsVariant.WorkspacePrimary" Tone="TabsTone.Primary" BorderMode="@borderMode" AriaLabel="@($"{borderMode} border tabs")">
+                                        <Tabs Tone="TabsTone.Primary" BorderMode="@borderMode" AriaLabel="@($"{borderMode} border tabs")">
                                             <TabsItem Text="@borderMode.ToString()">@borderMode.ToString() border</TabsItem>
                                             <TabsItem Text="Border mode">Second tab</TabsItem>
                                         </Tabs>
                                     }
 
-                                    @foreach (var variant in TabsVariants)
+                                    @foreach (var density in TabsDensities)
                                     {
-                                        <Tabs Variant="@variant" Tone="TabsTone.Info" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{variant} variant tabs")">
-                                            <TabsItem Text="@variant.ToString()" Icon="tabs">@variant.ToString() variant</TabsItem>
+                                        <Tabs Density="@density" Tone="TabsTone.Info" BorderMode="TabsBorderMode.Soft" AriaLabel="@($"{density} density tabs")">
+                                            <TabsItem Text="@density.ToString()" Icon="tabs">@density.ToString() density</TabsItem>
                                             <TabsItem Text="With badge" BadgeText="3">Badge tab</TabsItem>
                                         </Tabs>
                                     }
 
                                     @foreach (var position in TabPositions)
                                     {
-                                        <Tabs Variant="TabsVariant.WorkspaceTertiary" Tone="TabsTone.Success" BorderMode="TabsBorderMode.Soft" TabPosition="@position" AriaLabel="@($"{position} position tabs")">
+                                        <Tabs Tone="TabsTone.Success" BorderMode="TabsBorderMode.Soft" TabPosition="@position" AriaLabel="@($"{position} position tabs")">
                                             <TabsItem Text="@position.ToString()" Icon="@GetTabPositionIcon(position)">@position.ToString() position</TabsItem>
                                             <TabsItem Text="Details">Positioned panel</TabsItem>
                                         </Tabs>
@@ -275,18 +316,30 @@
                                     }
                                 </div>
                             }
-                            else if (component.Name == "TextArea")
+                            else if (component.Name == "TextAreaInput")
                             {
                                 <div class="space-y-3">
-                                    <TextArea Value="Review notes" />
-                                    <TextArea Value="Review notes" Disabled="true" />
+                                    <TextAreaInput Value="Review notes" ValueExpression="@(() => testInputPlaceholder)" />
+                                    <TextAreaInput Value="Review notes" ValueExpression="@(() => testInputPlaceholder)" disabled="true" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <TextAreaInput Value="@($"{look} look")" ValueExpression="@(() => testInputPlaceholder)" Look="@look" />
+                                        }
+                                    </div>
                                 </div>
                             }
-                            else if (component.Name == "TextBox")
+                            else if (component.Name == "TextInput")
                             {
                                 <div class="space-y-3">
-                                    <TextBox Value="Project Aurora" />
-                                    <TextBox Value="Project Aurora" Disabled="true" />
+                                    <TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" />
+                                    <TextInput Value="Project Aurora" ValueExpression="@(() => testInputPlaceholder)" disabled="true" />
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach (var look in InputLooks)
+                                        {
+                                            <TextInput Value="@($"{look} look")" ValueExpression="@(() => testInputPlaceholder)" Look="@look" />
+                                        }
+                                    </div>
                                 </div>
                             }
                             else
@@ -306,19 +359,22 @@
     [Parameter]
     public string? HashRouteState { get; set; }
 
-    private static readonly ButtonStyle[] ButtonStyles = Enum.GetValues<ButtonStyle>();
+    [CascadingParameter]
+    public SandboxThemeState? ThemeState { get; set; }
+
+    private static readonly ButtonTone[] ButtonTones = Enum.GetValues<ButtonTone>();
     private static readonly ButtonSize[] ButtonSizes = Enum.GetValues<ButtonSize>();
     private static readonly Variant[] ButtonVariants = Enum.GetValues<Variant>();
-    private static readonly Shade[] Shades = Enum.GetValues<Shade>();
     private static readonly BadgeTone[] BadgeTones = Enum.GetValues<BadgeTone>();
     private static readonly PillTone[] PillTones = Enum.GetValues<PillTone>();
     private static readonly AlertStyle[] AlertStyles = Enum.GetValues<AlertStyle>();
     private static readonly TabsTone[] TabsTones = Enum.GetValues<TabsTone>();
     private static readonly TabsBorderMode[] TabsBorderModes = Enum.GetValues<TabsBorderMode>();
-    private static readonly TabsVariant[] TabsVariants = Enum.GetValues<TabsVariant>();
+    private static readonly TabsDensity[] TabsDensities = Enum.GetValues<TabsDensity>();
     private static readonly TabPosition[] TabPositions = Enum.GetValues<TabPosition>();
     private static readonly string[] StatusBadgeTones = ["neutral", "success", "warning", "danger", "info", "accent"];
     private static readonly TextStyle[] TextStyles = Enum.GetValues<TextStyle>();
+    private static readonly InputLook[] InputLooks = Enum.GetValues<InputLook>();
     private static readonly TreeViewNode[] TestTreeNodes =
     [
         new()
@@ -348,6 +404,10 @@
         new() { Id = "lin", Label = "Lin Chen", Description = "Design", Meta = "Contributor" }
     ];
     private static readonly string[] DropDownValues = ["Draft", "Published"];
+
+    /// <summary>Shared ValueExpression target for display-only inputs in this raw proof page — never actually read/written.</summary>
+    private string testInputPlaceholder = string.Empty;
+    private int testIntPlaceholder = 42;
     private static readonly TestDataRow[] TestDataRows =
     [
         new("CDA-001", "Button", "Ada", "Ready", "Today", "100%"),
@@ -387,17 +447,17 @@
             new("TooltipTarget", typeof(TooltipTarget))]),
         new("Forms", "forms", "/forms", [
             new("CheckBox", typeof(CheckBox<bool>)),
-            new("DropDown", typeof(DropDown<string>)),
+            new("SelectInput", typeof(SelectInput<string>)),
             new("Editable", typeof(Editable<TestDataRow>)),
             new("EntityPicker", typeof(EntityPicker)),
             new("FileUpload", typeof(FileUpload)),
             new("FormField", typeof(FormField)),
-            new("Numeric", typeof(Numeric<int>)),
+            new("NumberInput", typeof(NumberInput<int>)),
             new("PrefixedField", typeof(PrefixedField)),
             new("SecretField", typeof(SecretField)),
             new("TagEditor", typeof(TagEditor)),
-            new("TextArea", typeof(TextArea)),
-            new("TextBox", typeof(TextBox))]),
+            new("TextAreaInput", typeof(TextAreaInput)),
+            new("TextInput", typeof(TextInput))]),
         new("Identity", "identity", "/identity", [
             new("Avatar", typeof(Avatar)),
             new("Icon", typeof(Icon))]),
@@ -427,15 +487,19 @@
             new("TextBlock", typeof(TextBlock))])
     ];
 
-    private static string BuildCatalogUrl(string route, string componentName)
+    private string BuildCatalogUrl(string route, string componentName)
     {
         var anchor = SandboxCatalogRegistry.GetSections(route)
             .FirstOrDefault(section => string.Equals(section.ComponentName, componentName, StringComparison.Ordinal))
             ?.Anchor;
 
-        return string.IsNullOrWhiteSpace(anchor)
-            ? $"{route}#{System.Text.RegularExpressions.Regex.Replace(componentName, "(?<!^)([A-Z])", "-$1").ToLowerInvariant()}"
-            : $"{route}#{anchor}";
+        anchor ??= System.Text.RegularExpressions.Regex.Replace(componentName, "(?<!^)([A-Z])", "-$1").ToLowerInvariant();
+        return SandboxQueryLinks.BuildCrossPageLink(
+            NavigationManager,
+            route,
+            SandboxQueryLinks.GetCurrentFrame(NavigationManager),
+            ThemeState?.IsDark ?? SandboxQueryLinks.IsDark(NavigationManager),
+            anchor);
     }
 
     private static string GetTabPositionIcon(TabPosition position)
@@ -498,8 +562,8 @@
                 parameters["Value"] = true;
                 parameters["AdditionalAttributes"] = new Dictionary<string, object> { ["aria-label"] = "Enabled" };
                 break;
-            case "DropDown":
-                parameters["Data"] = new[] { "Draft", "Published" };
+            case "SelectInput":
+                parameters["ChildContent"] = (RenderFragment)(builder => builder.AddMarkupContent(0, "<option>Draft</option><option>Published</option>"));
                 parameters["Value"] = "Draft";
                 break;
             case "EntityPicker":
@@ -511,7 +575,7 @@
                 parameters["Label"] = "Project name";
                 parameters["ChildContent"] = TextContent("Demo field");
                 break;
-            case "Numeric":
+            case "NumberInput":
                 parameters["Value"] = 42;
                 break;
             case "PrefixedField":
@@ -519,11 +583,11 @@
                 parameters["Suffix"] = "USD";
                 parameters["ChildContent"] = TextContent("120");
                 break;
-            case "TextArea":
+            case "TextAreaInput":
                 parameters["Value"] = "Review notes";
                 parameters["Placeholder"] = "Add a note";
                 break;
-            case "TextBox":
+            case "TextInput":
                 parameters["Value"] = "Project Aurora";
                 break;
             case "Avatar":

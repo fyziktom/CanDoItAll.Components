@@ -4,9 +4,9 @@
 <Cluster Gap="LayoutGap.Small">
     <Button Text="Edit record"
             Icon="edit"
-            ButtonStyle="@(ButtonStyle.Primary)"
+            Tone="@(ButtonTone.Primary)"
             Click="OpenEditor" />
-    <Button Text="Notify before opening" Icon="notifications" ButtonStyle="ButtonStyle.Light" Click="Notify" />
+    <Button Text="Notify before opening" Icon="notifications" Tone="ButtonTone.Secondary" Variant="Variant.Filled" Click="Notify" />
 </Cluster>
 <Dialog IsOpen="@isOpen"
         Title="Edit record"
@@ -18,16 +18,17 @@
     <ChildContent>
         <FormStack>
             <Cluster Gap="LayoutGap.Small">
-                <Button Text="Notify while editing" Icon="notifications" ButtonStyle="ButtonStyle.Light" Click="Notify" />
-                <Button Text="Open nested review" Icon="difference" ButtonStyle="ButtonStyle.Light" Click="OpenReview" />
+                <Button Text="Notify while editing" Icon="notifications" Tone="ButtonTone.Secondary" Variant="Variant.Filled" Click="Notify" />
+                <Button Text="Open nested review" Icon="difference" Tone="ButtonTone.Secondary" Variant="Variant.Filled" Click="OpenReview" />
             </Cluster>
             <FormField Text="Title">
-                <TextBox Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" data-testid="sandbox-record-title" />
+                <TextInput Value="@title" ValueChanged="@(value => title = value ?? string.Empty)" ValueExpression="@(() => title)" data-testid="sandbox-record-title" />
             </FormField>
             <FormField Text="Review notes">
-                <TextArea Value="@notes"
-                          ValueChanged="@(value => notes = value ?? string.Empty)"
-                          Size="TextAreaSize.Extended" />
+                <TextAreaInput Value="@notes"
+                               ValueChanged="@(value => notes = value ?? string.Empty)"
+                               ValueExpression="@(() => notes)"
+                               rows="10" />
             </FormField>
         </FormStack>
         <Dialog IsOpen="@reviewOpen" Title="Nested review" Subtitle="The editor stays open beneath this review."
@@ -36,7 +37,7 @@
             <ChildContent>
                 <Stack GapScale="LayoutGap.Medium">
                     <TextBlock Value="Notifications stay interactive above the highest native dialog without taking focus." />
-                    <TextBox Value="@reviewNotes" ValueChanged="@(value => reviewNotes = value ?? string.Empty)"
+                    <TextInput Value="@reviewNotes" ValueChanged="@(value => reviewNotes = value ?? string.Empty)"
                              data-testid="sandbox-record-review-notes" />
                     <Button Text="Notify during review" Icon="notifications" Click="Notify" />
                 </Stack>
@@ -48,12 +49,12 @@
     </ChildContent>
     <Footer>
         <Button Text="Cancel"
-                ButtonStyle="@(ButtonStyle.Light)"
+                Tone="@(ButtonTone.Default)"
                 Variant="@(Variant.Outlined)"
                 Click="CloseEditor" />
         <Button Text="Save"
                 Icon="save"
-                ButtonStyle="@(ButtonStyle.Primary)"
+                Tone="@(ButtonTone.Primary)"
                 Disabled="@(string.IsNullOrWhiteSpace(title))"
                 Click="CloseEditor" />
     </Footer>

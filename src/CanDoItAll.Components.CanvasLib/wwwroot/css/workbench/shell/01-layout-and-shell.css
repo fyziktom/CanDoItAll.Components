@@ -1,20 +1,32 @@
-:root {
+/* Declared on the package's own root wrapper classes, not :root — a nested
+   ThemeHost's [data-ui-theme] ancestor must be visible to var(--ui-canvas-*,
+   ...) at the point these are read, which :root would bypass (CLAUDE.md rule
+   9 / rule 8's per-host-element resolution requirement). */
+.cw-editor-shell,
+.cw-workbench-shell,
+.cdi-canvas-calendar-shell {
     --cw-stage-radius: 28px;
     --cw-card-radius: 24px;
     --cw-panel-radius: 22px;
-    --cw-border-soft: rgba(15, 23, 42, 0.1);
-    --cw-shadow-soft: 0 18px 36px rgba(15, 23, 42, 0.1);
-    --cw-shadow-strong: 0 24px 56px rgba(15, 23, 42, 0.16);
-    --cw-bg-start: #fff4e5;
-    --cw-bg-mid: #f6faf7;
-    --cw-bg-end: #eef1ff;
-    --cw-accent-purple-start: #8b5cf6;
-    --cw-accent-purple-end: #6d28d9;
-    --cw-dark-card: #111827;
-    --cw-dark-card-border: #14b8a6;
-    --cw-panel: rgba(255, 255, 255, 0.92);
-    --cw-muted: #64748b;
-    --cw-text: #0f172a;
+    --cw-border-soft: var(--ui-canvas-border-soft, rgba(15, 23, 42, 0.1));
+    --cw-shadow-soft: var(--ui-canvas-shadow-soft, 0 18px 36px rgba(15, 23, 42, 0.1));
+    --cw-shadow-strong: var(--ui-canvas-shadow-strong, 0 24px 56px rgba(15, 23, 42, 0.16));
+    --cw-bg-start: var(--ui-canvas-bg-start, #fff4e5);
+    --cw-bg-mid: var(--ui-canvas-bg-mid, #f6faf7);
+    --cw-bg-end: var(--ui-canvas-bg-end, #eef1ff);
+    --cw-accent-purple-start: var(--ui-canvas-accent-start, #8b5cf6);
+    --cw-accent-purple-end: var(--ui-canvas-accent-end, #6d28d9);
+    --cw-dark-card: var(--color-neutral-900, #111827);
+    --cw-dark-card-border: var(--ui-canvas-dark-card-border, #14b8a6);
+    --cw-panel: var(--ui-canvas-panel, rgba(255, 255, 255, 0.92));
+    --cw-muted: var(--ui-canvas-muted, #64748b);
+    --cw-text: var(--ui-canvas-text, #0f172a);
+    --cw-stat-chip-border: var(--ui-canvas-stat-chip-border, rgba(124, 58, 237, 0.12));
+    --cw-stat-chip-bg-start: var(--ui-canvas-stat-chip-bg-start, rgba(255, 255, 255, 0.95));
+    --cw-stat-chip-bg-end: var(--ui-canvas-stat-chip-bg-end, rgba(245, 243, 255, 0.9));
+    --cw-maximized-overlay: var(--ui-canvas-maximized-overlay, rgba(15, 23, 42, 0.28));
+    --cw-frame-border: var(--ui-canvas-frame-border, rgba(255, 255, 255, 0.42));
+    --cw-stage-glow: var(--ui-canvas-stage-glow, rgba(255, 255, 255, 0.7));
 }
 
 .cw-editor-shell {
@@ -126,8 +138,8 @@
     min-width: 7rem;
     padding: 0.7rem 0.95rem;
     border-radius: 1rem;
-    border: 1px solid rgba(124, 58, 237, 0.12);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 243, 255, 0.9));
+    border: 1px solid var(--cw-stat-chip-border);
+    background: linear-gradient(180deg, var(--cw-stat-chip-bg-start), var(--cw-stat-chip-bg-end));
 }
 
 .cw-stat-chip span {
@@ -168,7 +180,7 @@
     margin: 0;
     padding: 0;
     z-index: 240;
-    background: rgba(15, 23, 42, 0.28);
+    background: var(--cw-maximized-overlay);
     backdrop-filter: blur(10px);
     isolation: isolate;
 }
@@ -186,7 +198,7 @@ body.cw-body-lock {
     position: relative;
     border-radius: 1.75rem;
     overflow: clip;
-    border: 1px solid rgba(255, 255, 255, 0.42);
+    border: 1px solid var(--cw-frame-border);
     box-shadow: var(--cw-shadow-strong);
 }
 
@@ -205,7 +217,7 @@ body.cw-body-lock {
     overflow: hidden;
     isolation: isolate;
     background:
-        radial-gradient(circle at 12% 22%, rgba(255, 255, 255, 0.7) 0, rgba(255, 255, 255, 0) 24%),
+        radial-gradient(circle at 12% 22%, var(--cw-stage-glow) 0, rgba(255, 255, 255, 0) 24%),
         linear-gradient(120deg, var(--cw-bg-start) 0%, var(--cw-bg-mid) 48%, var(--cw-bg-end) 100%);
 }
 

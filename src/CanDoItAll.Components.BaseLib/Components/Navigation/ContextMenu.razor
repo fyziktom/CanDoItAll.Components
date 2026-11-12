@@ -11,7 +11,7 @@
          aria-hidden="true"
          @onclick="HandleCloseAsync"></div>
     <div @ref="menuElement"
-         @attributes='BuildAttributes("rz-context-menu fixed z-[88] w-[min(18rem,calc(100vw-2rem))] overflow-y-auto rounded-[1rem] border border-slate-200 bg-white p-2 text-sm shadow-[0_18px_48px_rgba(15,23,42,0.18)]", ResolveInitialStyle())'
+         @attributes='BuildAttributes("rz-context-menu fixed z-[88] w-[min(18rem,calc(100vw-2rem))] overflow-y-auto rounded-[1rem] border border-chrome-200 bg-white p-2 text-sm shadow-[0_18px_48px_rgba(15,23,42,0.18)]", ResolveInitialStyle())'
          role="menu"
          tabindex="0"
          aria-label="@AriaLabel"
@@ -21,11 +21,11 @@
          @onkeydown="HandleKeyDownAsync">
         @if (!string.IsNullOrWhiteSpace(Heading))
         {
-            <div class="border-b border-slate-100 px-2 py-2" role="presentation">
-                <div class="break-words text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">@Heading</div>
+            <div class="border-b border-chrome-100 px-2 py-2" role="presentation">
+                <div class="break-words text-xs font-semibold uppercase tracking-[0.16em] text-chrome-500">@Heading</div>
                 @if (!string.IsNullOrWhiteSpace(Description))
                 {
-                    <div class="mt-1 break-words text-xs leading-5 text-slate-600">@Description</div>
+                    <div class="mt-1 break-words text-xs leading-5 text-chrome-600">@Description</div>
                 }
             </div>
         }
@@ -34,7 +34,7 @@
         {
             @if (item.SeparatorBefore)
             {
-                <div class="my-1 border-t border-slate-200" role="separator"></div>
+                <div class="my-1 border-t border-chrome-200" role="separator"></div>
             }
 
             <button id="@ResolveItemElementId(item.Id)"
@@ -54,7 +54,7 @@
                     <span class="block break-words font-semibold">@item.Text</span>
                     @if (!string.IsNullOrWhiteSpace(item.Description))
                     {
-                        <span class="mt-0.5 block break-words text-xs font-normal text-slate-500">@item.Description</span>
+                        <span class="mt-0.5 block break-words text-xs font-normal text-chrome-500">@item.Description</span>
                     }
                 </span>
             </button>
@@ -231,7 +231,7 @@
 
     private static string ResolveItemCssClass(ContextMenuItem item)
         => CssClassBuilder.Join(
-            "flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-slate-700 transition hover:bg-slate-50 focus:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45",
+            "flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-chrome-700 transition hover:bg-chrome-50 focus:bg-chrome-50 disabled:cursor-not-allowed disabled:opacity-45",
             item.Danger ? "text-rose-700 hover:bg-rose-50 focus:bg-rose-50" : null);
 
     private static string SanitizeId(string value)
