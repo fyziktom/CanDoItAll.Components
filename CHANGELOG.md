@@ -22,6 +22,7 @@ All notable changes to this repository's packages are recorded here, per the cha
   and Gantt owner tracking while integrating the semantic theme and input APIs.
 - Fixed tab keyboard navigation scrolling its containing page, and retained tab strip height in full-height layouts.
 - Updated Sandbox controls to retain edits and tree examples to use theme-aware neutral backgrounds.
+- Changed secondary tab and count colors to semantic theme tokens so both selection states remain readable in dark mode.
 - Applied chart theme tokens to axis text and grid lines and refresh options after the theme reaches the child chart.
 - Kept npm asset commands compatible with the CI toolchain by removing the unsupported package-manager download policy.
 

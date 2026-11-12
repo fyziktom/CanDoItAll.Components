@@ -14,12 +14,12 @@
             {
                 var isSelected = string.Equals(item.Key, SelectedKey, StringComparison.Ordinal);
                 <button type="button"
-                        class="@(Dense ? "rounded-full border px-3.5 py-1.5 text-sm font-semibold transition" : "rounded-full border px-4 py-2 text-sm font-semibold transition") @(isSelected ? "border-chrome-900 bg-chrome-900 text-white" : "border-chrome-200 bg-white text-chrome-700 hover:border-chrome-300 hover:bg-chrome-50")"
+                        class="ui-secondary-tab @(Dense ? "rounded-full border px-3.5 py-1.5 text-sm font-semibold transition" : "rounded-full border px-4 py-2 text-sm font-semibold transition") @(isSelected ? "ui-secondary-tab--selected" : null)"
                         @onclick="() => SelectedKeyChanged.InvokeAsync(item.Key)">
                     <span>@item.Label</span>
                     @if (!string.IsNullOrWhiteSpace(item.Count))
                     {
-                        <span class="ml-2 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] @(isSelected ? "bg-white/15 text-white" : "bg-chrome-100 text-chrome-500")">@item.Count</span>
+                        <span class="ui-secondary-tab__count ml-2 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em]">@item.Count</span>
                     }
                 </button>
             }

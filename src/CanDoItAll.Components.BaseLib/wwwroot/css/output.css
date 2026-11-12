@@ -1130,12 +1130,6 @@
 .bg-white {
   background-color: var(--color-white);
 }
-.bg-white\/15 {
-  background-color: color-mix(in srgb, #fff 15%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-white) 15%, transparent);
-  }
-}
 .bg-white\/80 {
   background-color: color-mix(in srgb, #fff 80%, transparent);
   @supports (color: color-mix(in lab, red, red)) {
@@ -6853,6 +6847,31 @@
       border-top-right-radius: 0;
       border-bottom-left-radius: var(--cad-tabs-panel-radius-value);
       border-bottom-right-radius: var(--cad-tabs-panel-radius-value);
+    }
+  }
+  .ui-secondary-tab {
+    color: var(--tone-text);
+    background: var(--tone-surface);
+    border-color: var(--tone-border-soft);
+  }
+  .ui-secondary-tab:not(.ui-secondary-tab--selected):hover {
+    background: var(--tone-surface-soft);
+    border-color: var(--tone-border);
+  }
+  .ui-secondary-tab--selected {
+    color: var(--tone-primary-solid-fg);
+    background: var(--tone-primary-solid-bg);
+    border-color: var(--tone-primary-solid-border);
+  }
+  .ui-secondary-tab__count {
+    color: var(--tone-text-muted);
+    background: var(--tone-surface-soft);
+  }
+  .ui-secondary-tab--selected .ui-secondary-tab__count {
+    color: inherit;
+    background: var(--tone-primary-solid-fg);
+    @supports (color: color-mix(in lab, red, red)) {
+      background: color-mix(in srgb, var(--tone-primary-solid-fg) 15%, transparent);
     }
   }
   .cad-side-menu {
