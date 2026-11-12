@@ -22,6 +22,18 @@ Import the namespace and include the generated assets in the host document. This
 </body>
 ```
 
+## Theme colors
+
+Overlay windows and component toolboxes follow the nearest `data-ui-theme` boundary when BaseLib styles are loaded.
+Override `--ui-overlay-surface`, `--ui-overlay-surface-soft`, `--ui-overlay-border`, `--ui-overlay-border-soft`,
+`--ui-overlay-text`, `--ui-overlay-text-strong`, `--ui-overlay-text-muted`, and `--ui-overlay-shadow-color` in that
+scope to customize their chrome. Status badges use `--ui-overlay-{info,secondary,success,warning,danger}-{bg,fg,border}`.
+Set each background/foreground pair together to retain contrast.
+
+These variables resolve from BaseLib's current `--tone-*` contract at every theme boundary, including nested light
+and dark hosts. Omitting BaseLib styles keeps the existing light fallback palette; the overlay runtime and window
+state do not depend on a theme module. No additional assets or component parameters are required.
+
 ## A bounded floating inspector
 
 The host frame must be positioned and have a meaningful size. Pass selectors for the container and, when present, the toolbar that the window must not cover. Store `OverlayWindowState` in the page or feature state; the `StateChanged` callback is where drag, resize, and visibility changes come back to your application.

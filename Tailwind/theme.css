@@ -234,6 +234,8 @@
   [data-ui-theme="light"] {
     color-scheme: light;
     --ui-theme: light;
+    --ui-checkbox-checkmark: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    --ui-checkbox-indeterminate: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
     --cad-radius-control: 0.75rem;
     --cad-radius-surface: 1rem;
     --cad-radius-panel: 1.25rem;
@@ -956,6 +958,8 @@
   [data-ui-theme="dark"] {
     color-scheme: dark;
     --ui-theme: dark;
+    --ui-checkbox-checkmark: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23171717' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    --ui-checkbox-indeterminate: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='%23171717' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
 
     /* Chrome is structural, so it inverts with the application surface:
        step 50 <-> 950, 100 <-> 900, ... A dark-scope reference to
@@ -1050,9 +1054,9 @@
     --tone-default-soft-fg: var(--color-chrome-800);
     --tone-default-tonal-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
     --tone-default-tonal-hover: color-mix(in srgb, var(--color-chrome-300) 82%, transparent);
-    --tone-default-solid-bg: var(--color-chrome-500);
-    --tone-default-solid-hover: var(--color-chrome-600);
-    --tone-default-solid-border: var(--color-chrome-500);
+    --tone-default-solid-bg: var(--color-chrome-300);
+    --tone-default-solid-hover: var(--color-chrome-400);
+    --tone-default-solid-border: var(--color-chrome-400);
     --tone-default-solid-fg: var(--color-chrome-950);
 
     --tone-default-soft-bg: color-mix(in srgb, var(--color-chrome-200) 74%, transparent);
@@ -1150,5 +1154,33 @@
     --ui-calendar-grid-major: rgba(148, 163, 184, 0.22);
     --ui-calendar-grid-header-fill: rgba(30, 41, 59, 0.88);
     --ui-calendar-canvas-backdrop: #1a1f36;
+  }
+
+  /* Resolve package aliases at every boundary so nested themes keep their own palette. */
+  :root,
+  [data-ui-theme] {
+    --ui-overlay-surface: var(--tone-surface);
+    --ui-overlay-surface-soft: var(--tone-surface-soft);
+    --ui-overlay-border: var(--tone-border);
+    --ui-overlay-border-soft: var(--tone-border-soft);
+    --ui-overlay-text: var(--tone-text);
+    --ui-overlay-text-strong: var(--tone-text-strong);
+    --ui-overlay-text-muted: var(--tone-text-muted);
+    --ui-overlay-shadow-color: var(--color-neutral-950);
+    --ui-overlay-info-bg: var(--tone-info-soft-bg);
+    --ui-overlay-info-fg: var(--tone-info-soft-fg);
+    --ui-overlay-info-border: var(--tone-info-soft-border);
+    --ui-overlay-secondary-bg: var(--tone-secondary-soft-bg);
+    --ui-overlay-secondary-fg: var(--tone-secondary-soft-fg);
+    --ui-overlay-secondary-border: var(--tone-secondary-soft-border);
+    --ui-overlay-success-bg: var(--tone-success-soft-bg);
+    --ui-overlay-success-fg: var(--tone-success-soft-fg);
+    --ui-overlay-success-border: var(--tone-success-soft-border);
+    --ui-overlay-warning-bg: var(--tone-warning-soft-bg);
+    --ui-overlay-warning-fg: var(--tone-warning-soft-fg);
+    --ui-overlay-warning-border: var(--tone-warning-soft-border);
+    --ui-overlay-danger-bg: var(--tone-danger-soft-bg);
+    --ui-overlay-danger-fg: var(--tone-danger-soft-fg);
+    --ui-overlay-danger-border: var(--tone-danger-soft-border);
   }
 }

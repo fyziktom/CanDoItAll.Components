@@ -85,9 +85,17 @@
   }
 
   .ui-checkbox {
-    @apply size-4 rounded border transition focus:ring-2 focus:ring-(--tone-primary-soft-border);
+    @apply size-4 rounded border transition focus:ring-2 focus:ring-(--tone-primary-soft-border) focus:ring-offset-(--tone-surface);
     border-color: var(--tone-border);
     color: var(--tone-primary-solid-bg);
+  }
+
+  .ui-checkbox:checked {
+    background-image: var(--ui-checkbox-checkmark);
+  }
+
+  .ui-checkbox:indeterminate {
+    background-image: var(--ui-checkbox-indeterminate);
   }
 
   .ui-checkbox--outlined {

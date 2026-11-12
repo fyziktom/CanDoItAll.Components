@@ -6,7 +6,15 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ### OverlayLib and CanvasLib
 
+#### Public interface
+
+- Added `--ui-overlay-*` color overrides for overlay/toolbox surfaces, text, borders, shadows and status tones.
+  They follow each `data-ui-theme` boundary; `IncludeBaseLibStyles="false"` retains the existing light fallback.
+
 #### Internal
+
+- Changed overlay windows, toolbox search/status controls, canvas primary nodes and accent washes to retain
+  readable foreground/background pairs in dark mode. Window state, gestures and tab behavior are unchanged.
 
 - Fixed canceled browser cleanup during `OverlayWindow` and `AccessibilityMirrorLayer` disposal so retired components
   do not raise another renderer failure. Overlay callbacks are always released, and mirror disposal runs only once.
@@ -27,6 +35,11 @@ All notable changes to this repository's packages are recorded here, per the cha
   `Avatar` continues to choose bundled human portraits by default.
 
 #### Internal
+
+- Changed fixed light cards, chips, navigation menus, ribbon/step controls, notifications and tooltips to use
+  the current semantic theme tokens. Existing component parameters and human-avatar defaults are unchanged.
+- Fixed checkbox and indeterminate glyph contrast at nested theme boundaries and solid default-button dark hover
+  contrast. BaseLib SVG charts now consume the shared chart palette and grid-border tokens.
 
 - Preserved current tab header refresh, mounted panel identity, tag drafts, dialog focus/lifetime, canvas gestures,
   and Gantt owner tracking while integrating the semantic theme and input APIs.

@@ -59,7 +59,7 @@
                                 </span>
                             }
                             <button type="button"
-                                    class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold leading-none hover:bg-black/5"
+                                    class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold leading-none hover:bg-current/10"
                                     aria-label="@message.CloseAriaLabel"
                                     title="@message.CloseAriaLabel"
                                     @onclick:stopPropagation="true"
@@ -208,10 +208,10 @@
     {
         return severity switch
         {
-            NotificationSeverity.Success => "border-emerald-300 bg-emerald-50 text-emerald-900",
-            NotificationSeverity.Warning => "border-amber-300 bg-amber-50 text-amber-900",
-            NotificationSeverity.Error => "border-red-300 bg-red-50 text-red-900",
-            _ => "border-sky-300 bg-sky-50 text-sky-900"
+            NotificationSeverity.Success => "border-(--tone-success-soft-border) bg-(--tone-success-soft-bg) text-(--tone-success-soft-fg)",
+            NotificationSeverity.Warning => "border-(--tone-warning-soft-border) bg-(--tone-warning-soft-bg) text-(--tone-warning-soft-fg)",
+            NotificationSeverity.Error => "border-(--tone-danger-soft-border) bg-(--tone-danger-soft-bg) text-(--tone-danger-soft-fg)",
+            _ => "border-(--tone-info-soft-border) bg-(--tone-info-soft-bg) text-(--tone-info-soft-fg)"
         };
     }
 
