@@ -36,6 +36,9 @@ jobs:
           npm ci
           npm ci --prefix Tailwind
 
+      - name: Install Chromium for theme lifetime regressions
+        run: npx playwright install chromium
+
       - name: Build generated styles and verify component assets
         run: |
           npm run build:tailwind

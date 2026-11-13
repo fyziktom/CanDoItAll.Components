@@ -4,8 +4,9 @@
   "private": true,
   "description": "Shared CanDoItAll Blazor component libraries, sandbox, assets, and package build scripts.",
   "scripts": {
+    "baselib:test-theme-lifetime": "node --test tools/baselib/theme-lifetime.test.cjs",
     "assets:test-generated-text": "node --test tools/assets/generated-text.test.cjs",
-    "assets:verify": "npm run assets:test-generated-text && npm run canvaslib:test-readonly-drag && npm run canvaslib:test-drag-intent && npm run canvaslib:test-composer && npm run canvaslib:test-collapse-state && npm run canvaslib:test-layout && npm run overlaylib:test-resize && npm run canvaslib:verify-assets && npm run webgllib:verify-assets",
+    "assets:verify": "npm run assets:test-generated-text && npm run baselib:test-theme-lifetime && npm run canvaslib:test-readonly-drag && npm run canvaslib:test-drag-intent && npm run canvaslib:test-composer && npm run canvaslib:test-collapse-state && npm run canvaslib:test-layout && npm run overlaylib:test-resize && npm run canvaslib:verify-assets && npm run webgllib:verify-assets",
     "overlaylib:test-resize": "node --test tools/overlaylib/resize.test.cjs",
     "canvaslib:test-readonly-drag": "node --test tools/canvaslib/readonly-drag.test.cjs",
     "canvaslib:test-drag-intent": "node --test tools/canvaslib/drag-activation.test.cjs",

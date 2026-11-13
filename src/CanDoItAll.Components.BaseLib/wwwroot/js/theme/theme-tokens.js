@@ -36,7 +36,15 @@
     function watchTheme(hostValue, onChange) {
         const host = requireElement(hostValue, "host");
         const owner = findThemeOwner(host);
+        let disconnected = false;
         const observer = new MutationObserver(mutations => {
+            if (disconnected) {
+                return;
+            }
+            if (!host.isConnected) {
+                disconnect();
+                return;
+            }
             for (const mutation of mutations) {
                 if (mutation.type === "attributes" && mutation.attributeName === themeAttribute) {
                     onChange();
@@ -45,13 +53,22 @@
             }
         });
 
-        observer.observe(owner, { attributes: true, attributeFilter: [themeAttribute], subtree: true });
-
-        return {
-            disconnect() {
-                observer.disconnect();
+        function disconnect() {
+            if (disconnected) {
+                return;
             }
-        };
+            disconnected = true;
+            observer.disconnect();
+        }
+
+        if (host.isConnected) {
+            observer.observe(owner, { attributes: true, attributeFilter: [themeAttribute], subtree: true });
+            observer.observe(host.ownerDocument, { childList: true, subtree: true });
+        } else {
+            disconnect();
+        }
+
+        return { disconnect };
     }
 
     // Resolves the nearest data-ui-theme ancestor's current value directly ("light"/"dark"),
