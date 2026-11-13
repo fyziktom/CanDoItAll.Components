@@ -13,6 +13,8 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Internal
 
+- Changed the canvas stage to a solid `BackgroundMid` fill in both themes, removing the backdrop gradient and glow.
+  Existing theme tokens and the dot grid remain available; no consumer code changes are required.
 - Changed calendar labels and canvas read-only subtitles, status text and preview metadata to the semantic muted
   foreground, keeping secondary content readable in both themes without changing interactions or decorative paint.
 - Changed overlay windows, toolbox search/status controls, canvas primary nodes and accent washes to retain
