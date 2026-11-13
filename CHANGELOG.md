@@ -13,6 +13,8 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Internal
 
+- Changed calendar labels and canvas read-only subtitles, status text and preview metadata to the semantic muted
+  foreground, keeping secondary content readable in both themes without changing interactions or decorative paint.
 - Changed overlay windows, toolbox search/status controls, canvas primary nodes and accent washes to retain
   readable foreground/background pairs in dark mode. Viewport-preview labels and status notices also retain
   their matching foregrounds. Window state, gestures and tab behavior are unchanged.
@@ -42,6 +44,8 @@ All notable changes to this repository's packages are recorded here, per the cha
 - Retired theme observers when their host leaves the document, preventing later theme changes from invoking
   disposed chart or diagram callbacks. Hidden mounted hosts continue to receive theme changes.
 - Changed selection-list metadata to the semantic muted foreground so timestamps remain readable in dark mode.
+- Changed filter counts, menu descriptions, secondary typography, empty/loading labels, storage facts and input
+  placeholders to the semantic muted foreground. Existing parameters, disabled states and decorative icons are unchanged.
 - Documented the required chart body assets and single shared theme-token loader for initial and live theme colors.
 - Fixed checkbox and indeterminate glyph contrast at nested theme boundaries and solid default-button dark hover
   contrast. BaseLib SVG charts now consume the shared chart palette and grid-border tokens.
@@ -641,6 +645,7 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Internal
 
+- Changed empty-chart messages to the semantic muted foreground so they remain readable in both themes.
 - Changed: `CdaChart.razor`'s shell/empty-state/heading markup now uses the theme-aware `--color-chrome-*` Tailwind
   utilities (`border-chrome-*`, `bg-chrome-*`, `text-chrome-*`) instead of raw `slate-*` classes, so the card
   border, background, and text now invert correctly under a dark `data-ui-theme` scope. Visually unchanged in
