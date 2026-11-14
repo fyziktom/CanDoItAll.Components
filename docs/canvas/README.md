@@ -24,6 +24,26 @@ and uncertain results independently of any replacement editor. Other consumers d
 not opt in implicitly. Invalid browser input prevents submission and remains in the
 editor; numeric and local timestamp inputs accept fractional precision.
 
+### Creation and editing composers
+
+`RequiresInput` actions use a compact creation wizard. Only one section is visible;
+required `InputFields` and attachments come before optional settings and notes. Group
+related inputs with `SectionKey`, `SectionTitle` and `SectionDescription`. Back, Next
+and Skip retain the original controls and values. Create can finish from any step once
+the required values are present; invalid native input reveals its section before focus.
+Required selects with one fixed choice display that value as context; a group containing
+only fixed choices joins Details without adding a step, and still contributes its values.
+Enter in a single-line field advances to the next step. Textareas, selects, buttons
+and IME composition retain their native keyboard behavior.
+
+Pass `PlacementKind="edit"` on the existing request for a normal form instead of a
+wizard. Name, subtitle and notes appear first. Required settings stay visible; empty
+optional groups use disclosures and configured groups start expanded. Both modes
+focus the name first without stealing focus after the user chooses another control.
+Presentation does not change field keys, defaults, payloads, draft revisions or the
+host's opening, acknowledgement and close-guard responsibilities. Inline note editing
+continues to use Enter to save, Shift+Enter for a newline and Escape to request close.
+
 ## When to choose it
 
 Choose CanvasLib when the primary task benefits from spatial work: mapping dependencies, arranging plans, authoring a graph, inspecting a network, or operating a dense calendar. It earns its complexity when selection, viewport position, movable context, and visual relationships are part of the user task.

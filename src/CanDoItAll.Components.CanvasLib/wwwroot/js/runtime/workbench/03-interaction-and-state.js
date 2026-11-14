@@ -373,11 +373,17 @@
 
         const element = state.composer.element;
         const hostRect = state.host.getBoundingClientRect();
+        const viewport = state.document.documentElement;
         const margin = 18;
         const toolbarRect = state.host.closest(".cw-workbench-frame")?.querySelector(".cw-toolbar")?.getBoundingClientRect();
         const topInset = toolbarRect && toolbarRect.bottom > hostRect.top && toolbarRect.top < hostRect.bottom
             ? Math.max(margin, toolbarRect.bottom - hostRect.top + margin) : margin;
-        element.style.setProperty("--cw-composer-available-height", `${Math.max(0, hostRect.height - topInset - margin)}px`);
+        const minX = Math.max(margin, margin - hostRect.left);
+        const maxX = Math.min(hostRect.width, viewport.clientWidth - hostRect.left) - margin;
+        const minY = Math.max(topInset, margin - hostRect.top);
+        const maxY = Math.min(hostRect.height, viewport.clientHeight - hostRect.top) - margin;
+        element.style.maxWidth = `${Math.max(0, maxX - minX)}px`;
+        element.style.setProperty("--cw-composer-available-height", `${Math.max(0, maxY - minY)}px`);
         const composerRect = element.getBoundingClientRect();
         let left = anchor.x - (composerRect.width / 2);
         let top = anchor.y + 24;
@@ -386,8 +392,8 @@
             top = anchor.y - (composerRect.height / 2);
         }
 
-        left = clamp(left, margin, Math.max(margin, hostRect.width - composerRect.width - margin));
-        top = clamp(top, topInset, Math.max(topInset, hostRect.height - composerRect.height - margin));
+        left = clamp(left, minX, Math.max(minX, maxX - composerRect.width));
+        top = clamp(top, minY, Math.max(minY, maxY - composerRect.height));
         element.style.left = `${round(left)}px`;
         element.style.top = `${round(top)}px`;
     }

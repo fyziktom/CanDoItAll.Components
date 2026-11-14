@@ -69,7 +69,12 @@
                 closeNodeToolbar(state);
             }
         };
-        state.nodeToolbarScroll = () => updateNodeToolbar(state);
+        state.nodeToolbarScroll = event => {
+            updateNodeToolbar(state);
+            if (state.composer && (event.target === state.document || event.target?.contains?.(state.host))) {
+                shared.layoutComposer(state);
+            }
+        };
         state.document.addEventListener("pointerdown", state.nodeToolbarOutside, true);
         state.document.addEventListener("scroll", state.nodeToolbarScroll, true);
     }
