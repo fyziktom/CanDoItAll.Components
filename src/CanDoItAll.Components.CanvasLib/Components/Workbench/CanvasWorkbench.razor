@@ -37,14 +37,14 @@
 
                 @if (Surface.Nodes.Any(node => node.ToolbarActions.Count > 0)) {
                     <button type="button"
-                            class="cw-toolbar-action"
+                            class="cw-toolbar-action cw-toolbar-action--icon"
                             data-cw-node-actions="true"
                             aria-label="Node actions (Ctrl+M)"
                             title="@(CanOpenNodeToolbar ? "Node actions (Ctrl+M)" : "Select exactly one node with available actions")"
                             disabled="@(!CanOpenNodeToolbar)"
                             @onclick="ToggleNodeToolbarAsync">
                         <Icon Name="more_horiz" />
-                        <span>Node actions</span>
+                        <span class="sr-only">Node actions</span>
                     </button>
                 }
 

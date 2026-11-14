@@ -21,6 +21,8 @@ All notable changes to this repository's packages are recorded here, per the cha
   and stays inside the visible canvas viewport without scaling its buttons with scene zoom.
 - Changed the SandboxWasm asset check to enforce the CanvasLib manifest's runtime script order and unique
   inclusion, including the new keyboard/toolbar module. Toolbar glyphs use the compact screen-space size.
+- Changed the main Node actions entry to the existing icon-button convention so desktop canvas chrome keeps
+  its available width; its accessible label, shortcut hint, disabled explanation and labeled action toolbar remain.
 
 ### OverlayLib and CanvasLib
 
