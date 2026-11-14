@@ -7,7 +7,7 @@
     justify-content: center;
     padding: 1rem;
     box-sizing: border-box;
-    background: rgba(15, 23, 42, 0.58);
+    background: color-mix(in srgb, var(--ui-overlay-shadow-color, #0f172a) 58%, transparent);
     backdrop-filter: blur(10px);
 }
 
@@ -25,10 +25,11 @@
     display: block;
     padding: 0.75rem;
     box-sizing: border-box;
-    border: 1px solid rgba(148, 163, 184, 0.26);
+    border: 1px solid var(--ui-overlay-border-soft, rgba(148, 163, 184, 0.26));
     border-radius: 1rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
-    box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28);
+    background: var(--ui-overlay-surface, rgba(255, 255, 255, 0.98));
+    color: var(--ui-overlay-text, #0f172a);
+    box-shadow: 0 24px 64px color-mix(in srgb, var(--ui-overlay-shadow-color, #0f172a) 28%, transparent);
     overflow: hidden;
 }
 
@@ -53,7 +54,7 @@
     align-items: center;
     gap: 0.75rem;
     padding-bottom: 0.55rem;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    border-bottom: 1px solid var(--ui-overlay-border-soft, rgba(148, 163, 184, 0.2));
 }
 
 .canvas-overlay-dialog__copy {

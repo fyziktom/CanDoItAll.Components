@@ -231,7 +231,7 @@
 
     private static string ResolveItemCssClass(ContextMenuItem item)
         => CssClassBuilder.Join(
-            "flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-chrome-700 transition hover:bg-chrome-50 focus:bg-chrome-50 disabled:cursor-not-allowed disabled:opacity-45",
+            "flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-chrome-700 transition hover:bg-chrome-50 focus:bg-chrome-50 disabled:cursor-not-allowed disabled:bg-(--tone-surface-soft) disabled:text-(--tone-text-muted)",
             item.Danger ? "text-(--tone-danger-soft-fg) hover:bg-(--tone-danger-soft-bg) focus:bg-(--tone-danger-soft-bg)" : null);
 
     private static string SanitizeId(string value)

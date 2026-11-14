@@ -38,6 +38,9 @@ Reference the package and add the namespace to `_Imports.razor` or the consuming
 
 Add generated assets once in the host document. The Canvas asset components include OverlayLib in the required order; do not add hand-maintained copies of their runtime scripts.
 
+`CanvasLibHeadAssets` loads both the global workbench styles and CanvasLib's scoped CSS bundle, including
+`CanvasOverlayDialog`. It does not depend on the host's application stylesheet importing that bundle.
+
 ```razor
 @* App.razor *@
 <head>

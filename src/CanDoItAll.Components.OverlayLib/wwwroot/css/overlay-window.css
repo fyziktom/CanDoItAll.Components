@@ -199,9 +199,17 @@
 
 .cda-overlay-window__action:disabled,
 .cw-floating-window__action:disabled {
-    cursor: default;
-    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--ui-overlay-surface-soft, #f8fafc);
+    color: var(--ui-overlay-text-muted, #475569);
     box-shadow: none;
+}
+
+.cda-overlay-window__action:disabled .rz-icon,
+.cw-floating-window__action:disabled .rz-icon,
+.cda-overlay-window__action:disabled .rz-icon-fallback,
+.cw-floating-window__action:disabled .rz-icon-fallback {
+    color: inherit;
 }
 
 .cda-overlay-window__body[hidden] {
@@ -504,8 +512,9 @@
 
 .cda-component-toolbox__item:disabled,
 .cw-context-toolbox__item:disabled {
-    cursor: default;
-    opacity: 0.58;
+    cursor: not-allowed;
+    background: var(--ui-overlay-surface-soft, #f8fafc);
+    color: var(--ui-overlay-text-muted, #475569);
 }
 
 .cda-component-toolbox__item-icon,

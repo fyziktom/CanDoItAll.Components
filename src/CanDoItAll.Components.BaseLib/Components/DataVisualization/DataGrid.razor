@@ -69,13 +69,13 @@
                      Gap="LayoutGap.Small"
                      Class="mt-3 text-xs text-chrome-600">
             <button type="button"
-                    class="rounded border border-chrome-300 px-2 py-1 disabled:opacity-40"
+                    class="rounded border border-chrome-300 px-2 py-1 disabled:cursor-not-allowed disabled:bg-(--tone-surface-soft) disabled:text-(--tone-text-muted)"
                     disabled="@(currentPage == 0)"
                     aria-label="Previous page"
                     @onclick="PreviousPageAsync">Prev</button>
             <span aria-live="polite">Page @(currentPage + 1) of @TotalPages</span>
             <button type="button"
-                    class="rounded border border-chrome-300 px-2 py-1 disabled:opacity-40"
+                    class="rounded border border-chrome-300 px-2 py-1 disabled:cursor-not-allowed disabled:bg-(--tone-surface-soft) disabled:text-(--tone-text-muted)"
                     disabled="@(currentPage >= TotalPages - 1)"
                     aria-label="Next page"
                     @onclick="NextPageAsync">Next</button>

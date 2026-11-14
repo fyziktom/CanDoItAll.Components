@@ -38,7 +38,7 @@
                     <button type="button"
                             disabled="@(!canSelectCurrent || NavigationDisabled)"
                             aria-current="@(isActive ? "step" : null)"
-                            class="rz-steps-step-button group relative z-10 flex w-full flex-col items-center gap-2 rounded-[1rem] bg-transparent px-1 py-0.5 text-center shadow-none transition disabled:cursor-not-allowed disabled:opacity-45 @(ResolveStepButtonCss(isActive, isCompleted, item.Disabled))"
+                            class="rz-steps-step-button group relative z-10 flex w-full flex-col items-center gap-2 rounded-[1rem] bg-transparent px-1 py-0.5 text-center shadow-none transition disabled:cursor-not-allowed @(ResolveStepButtonCss(isActive, isCompleted, item.Disabled))"
                             style="@ResolveStepButtonStyle()"
                             @onclick="() => TrySelectAsync(stepIndex)">
                         <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold shadow-sm @(ResolveStepBadgeCss(isActive, isCompleted, item.Disabled))">
@@ -314,7 +314,7 @@
     {
         if (isDisabled)
         {
-            return "border-chrome-200 bg-chrome-100 text-chrome-400";
+            return "border-chrome-200 bg-chrome-100 text-(--tone-text-muted)";
         }
 
         if (isActive)
@@ -334,7 +334,7 @@
     {
         if (isDisabled)
         {
-            return "text-chrome-400";
+            return "text-(--tone-text-muted)";
         }
 
         if (isActive)
@@ -348,8 +348,8 @@
     private static string ResolveNavigationButtonCss(bool isPrimary)
     {
         return isPrimary
-            ? "rz-steps-nav-button rz-steps-nav-button--primary inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:bg-chrome-300"
-            : "rz-steps-nav-button rz-steps-nav-button--secondary inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50";
+            ? "rz-steps-nav-button rz-steps-nav-button--primary inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed"
+            : "rz-steps-nav-button rz-steps-nav-button--secondary inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed";
     }
 
     private static string ResolveStepButtonStyle()
@@ -357,8 +357,12 @@
         return "min-height:auto;padding:0.125rem 0.25rem;border:0;background:transparent;box-shadow:none;color:inherit;";
     }
 
-    private static string ResolveNavigationButtonStyle(bool isPrimary)
+    private string ResolveNavigationButtonStyle(bool isPrimary)
     {
+        if (NavigationDisabled) {
+            return "min-height:2.5rem;border:1px solid var(--tone-border);background:var(--tone-surface-soft);color:var(--tone-text-muted);box-shadow:none;";
+        }
+
         return isPrimary
             ? "min-height:2.5rem;border:0;background:var(--tone-primary-solid-bg);color:var(--tone-primary-solid-fg);box-shadow:var(--cad-shadow-soft);"
             : "min-height:2.5rem;border:1px solid var(--tone-border);background:var(--tone-surface);color:var(--tone-text);box-shadow:none;";

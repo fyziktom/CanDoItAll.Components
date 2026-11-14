@@ -1,7 +1,6 @@
 @layer components {
   .ui-button {
     @apply inline-flex max-w-full min-w-0 items-center justify-center gap-2 border font-semibold leading-snug transition-colors;
-    @apply disabled:cursor-not-allowed disabled:opacity-50;
     @apply rounded-md;
     @apply cursor-pointer;
   }
@@ -260,6 +259,20 @@
     color: var(--tone-primary-soft-fg);
     @apply hover:bg-(--tone-primary-soft-bg)/70;
     @apply active:bg-(--tone-primary-soft-bg);
+  }
+
+  .ui-button:is(:disabled, [aria-disabled="true"]),
+  .ui-button:is(:disabled, [aria-disabled="true"]):hover,
+  .ui-button:is(:disabled, [aria-disabled="true"]):active {
+    cursor: not-allowed;
+    border-color: var(--tone-border);
+    background: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
+    box-shadow: none;
+  }
+
+  .ui-button:is(:disabled, [aria-disabled="true"]) .cda-text-block {
+    color: inherit;
   }
 
   .ui-button__spinner {

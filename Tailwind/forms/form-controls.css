@@ -108,18 +108,24 @@
     background-color: var(--tone-surface-soft);
   }
 
-  .ui-input[disabled],
-  .ui-select[disabled],
-  .ui-checkbox[disabled] {
+  .ui-input:disabled,
+  .ui-select:disabled,
+  .ui-checkbox:disabled {
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: 1;
   }
 
-  .ui-input[disabled],
-  .ui-select[disabled] {
-    border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
-    background-color: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
-    color: color-mix(in oklch, var(--tone-text) 65%, transparent);
+  .ui-input:disabled,
+  .ui-select:disabled {
+    border-color: var(--tone-border);
+    background-color: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
+    -webkit-text-fill-color: var(--tone-text-muted);
+  }
+
+  .ui-select option:disabled {
+    background-color: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
   }
 
   .cda-prefixed-field .ui-input,

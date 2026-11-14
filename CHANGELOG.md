@@ -10,9 +10,14 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 - Added `--ui-overlay-*` color overrides for overlay/toolbox surfaces, text, borders, shadows and status tones.
   They follow each `data-ui-theme` boundary; `IncludeBaseLibStyles="false"` retains the existing light fallback.
+- Fixed `CanvasLibHeadAssets` to include CanvasLib's scoped stylesheet alongside its global workbench styles.
+  Hosts already using this asset component need no extra import for `CanvasOverlayDialog` paint and layout.
 
 #### Internal
 
+- Changed `CanvasOverlayDialog` to use the existing `--ui-overlay-*` surface, text, border and shadow tokens,
+  including live theme changes. Inline sizing no longer overrides its theme paint; no consumer changes are required.
+- Changed disabled overlay and canvas actions to retain opaque, readable labels and icons without changing callbacks.
 - Changed the canvas stage to a solid `BackgroundMid` fill in both themes, removing the backdrop gradient and glow.
   Existing theme tokens and the dot grid remain available; no consumer code changes are required.
 - Changed calendar labels and canvas read-only subtitles, status text and preview metadata to the semantic muted
@@ -41,6 +46,10 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 #### Internal
 
+- Changed disabled buttons, form controls, pickers, tabs, lists and wizard actions to readable semantic foregrounds
+  instead of compounded opacity. Native disabled behavior and existing checked/selected states are preserved.
+- Added a `CanvasOverlayDialog` example to the existing Sandbox modals page for theme and disabled-control proof.
+- Fixed the Sandbox shell stacking context so its toolbar does not intercept maximized overlay controls.
 - Changed fixed light cards (including HeroCard gradients), chips, navigation menus, ribbon/step controls, notifications and tooltips to use
   the current semantic theme tokens. Existing component parameters and human-avatar defaults are unchanged.
 - Retired theme observers when their host leaves the document, preventing later theme changes from invoking
@@ -62,6 +71,13 @@ All notable changes to this repository's packages are recorded here, per the cha
 - Applied chart theme tokens to axis text and grid lines and refresh options after the theme reaches the child chart.
 - Kept npm asset commands compatible with the CI toolchain by removing the unsupported package-manager download policy.
 
+
+### QRCode
+
+#### Internal
+
+- Changed QR captions, placeholders, dialog payloads, scan results and manual input chrome to use overlay theme tokens.
+  QR symbols keep their fixed black-on-white scan palette; no consumer code changes are required.
 
 ### BaseLib
 

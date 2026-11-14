@@ -270,6 +270,7 @@ public static class SandboxCatalogRegistry
         CreateExample("feedback-dense", SandboxGroupKey.Feedback, "Operational feedback", "Mixed severity feedback inside a busy operational surface.", ["dense"], "Alert", "StatusBadge", "SummaryTiles"),
         CreateExample("feedback-empty", SandboxGroupKey.Feedback, "No activity yet", "Shared empty and loading transitions.", ["empty"], "EmptyState", "LoadingState"),
         CreateExample("modals-default", SandboxGroupKey.Modals, "Dialog shell", "Standard dialog composition for focused confirmation and inspection flows.", ["modals", "dialog"], "Dialog"),
+        CreateCustomExample("modals-canvas-overlay", SandboxGroupKey.Modals, "Canvas overlay dialog", "/modals#canvas-overlay-dialog", "Theme-aware overlay with readable disabled controls, guarded closing and maximize/restore.", ["modals", "canvas", "disabled"], "CanvasOverlayDialog"),
         CreateExample("modals-scaffold", SandboxGroupKey.Modals, "Dialog body layouts", "DialogScaffold-based layouts for danger confirmation, inspector, and picker dialog bodies.", ["modals", "dialog", "scaffold"], "DialogScaffold", "DangerActionDialog", "InspectorDialogLayout", "PickerDialogShell"),
         CreateExample("modals-host", SandboxGroupKey.Modals, "Dialog host", "DialogHost renders whatever DialogService currently has open, mounted once at the app layout.", ["modals", "service"], "DialogHost"),
         CreateExample("data-visualization-default", SandboxGroupKey.DataVisualization, "Data grid", "Tabular series review using the shared data grid wrapper.", ["data grid", "tables"], "DataGrid", "DataGridColumn"),
@@ -488,6 +489,7 @@ public static class SandboxCatalogRegistry
             ["/modals"] =
             [
                 new("dialog", "Dialog", typeof(Dialog)),
+                new("canvas-overlay-dialog", "CanvasOverlayDialog", typeof(CanvasOverlayDialog)),
                 new("dialog-scaffold", "DialogScaffold", typeof(DialogScaffold)),
                 new("danger-action-dialog", "DangerActionDialog", typeof(DangerActionDialog)),
                 new("inspector-dialog-layout", "InspectorDialogLayout", typeof(InspectorDialogLayout)),

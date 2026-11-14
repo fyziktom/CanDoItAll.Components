@@ -8,7 +8,7 @@
 
   .cda-entity-picker[aria-disabled="True"],
   .cda-entity-picker[aria-disabled="true"] {
-    @apply opacity-70;
+    background: var(--tone-surface-soft);
   }
 
   .cda-entity-picker__header {
@@ -55,7 +55,12 @@
   }
 
   .cda-entity-picker__item:disabled {
-    @apply cursor-not-allowed opacity-55;
+    @apply cursor-not-allowed;
+    color: var(--tone-text-muted);
+  }
+
+  .cda-entity-picker__item:disabled:not(.cda-entity-picker__item--selected) {
+    background: var(--tone-surface-soft);
   }
 
   .cda-entity-picker__item--selected {

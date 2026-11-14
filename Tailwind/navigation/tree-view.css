@@ -60,7 +60,11 @@
   }
 
   .cda-treeview__row--disabled {
-    @apply cursor-not-allowed opacity-45;
+    @apply cursor-not-allowed;
+  }
+
+  .cda-treeview__row--disabled:not(.cda-treeview__row--selected) {
+    color: var(--tone-text-muted);
   }
 
   .cda-treeview__icon {

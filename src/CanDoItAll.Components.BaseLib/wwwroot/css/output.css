@@ -1356,9 +1356,6 @@
 .text-chrome-50 {
   color: var(--color-chrome-50);
 }
-.text-chrome-400 {
-  color: var(--color-chrome-400);
-}
 .text-chrome-600 {
   color: var(--color-chrome-600);
 }
@@ -1534,17 +1531,14 @@
 .disabled\:cursor-not-allowed:disabled {
   cursor: not-allowed;
 }
-.disabled\:bg-chrome-300:disabled {
-  background-color: var(--color-chrome-300);
+.disabled\:border-\(--tone-border\):disabled {
+  border-color: var(--tone-border);
 }
-.disabled\:opacity-40:disabled {
-  opacity: 40%;
+.disabled\:bg-\(--tone-surface-soft\):disabled {
+  background-color: var(--tone-surface-soft);
 }
-.disabled\:opacity-45:disabled {
-  opacity: 45%;
-}
-.disabled\:opacity-50:disabled {
-  opacity: 50%;
+.disabled\:text-\(--tone-text-muted\):disabled {
+  color: var(--tone-text-muted);
 }
 @media (width >= 40rem) {
   .sm\:col-\[\.\.\.\] {
@@ -3346,7 +3340,9 @@
   }
   .cda-badge:disabled {
     cursor: not-allowed;
-    opacity: 55%;
+    border-color: var(--tone-border);
+    background: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
   }
   .cda-badge--tone-primary, .cda-status-badge--tone-primary {
     border-color: var(--tone-primary-solid-border);
@@ -3488,12 +3484,6 @@
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
-    &:disabled {
-      cursor: not-allowed;
-    }
-    &:disabled {
-      opacity: 50%;
-    }
     border-radius: var(--radius-md);
     cursor: pointer;
   }
@@ -3957,6 +3947,16 @@
       background-color: var(--tone-primary-soft-bg);
     }
   }
+  .ui-button:is(:disabled, [aria-disabled="true"]), .ui-button:is(:disabled, [aria-disabled="true"]):hover, .ui-button:is(:disabled, [aria-disabled="true"]):active {
+    cursor: not-allowed;
+    border-color: var(--tone-border);
+    background: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
+    box-shadow: none;
+  }
+  .ui-button:is(:disabled, [aria-disabled="true"]) .cda-text-block {
+    color: inherit;
+  }
   .ui-button__spinner {
     display: inline-flex;
     height: calc(var(--spacing) * 3);
@@ -4065,7 +4065,7 @@
   }
   .cda-copy-button-icon:disabled {
     cursor: not-allowed;
-    opacity: 50%;
+    color: var(--tone-text-muted);
   }
   .cda-copy-button-icon--copied {
     color: var(--tone-success-soft-fg);
@@ -4794,23 +4794,19 @@
   .ui-checkbox--filled {
     background-color: var(--tone-surface-soft);
   }
-  .ui-input[disabled], .ui-select[disabled], .ui-checkbox[disabled] {
+  .ui-input:disabled, .ui-select:disabled, .ui-checkbox:disabled {
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: 1;
   }
-  .ui-input[disabled], .ui-select[disabled] {
+  .ui-input:disabled, .ui-select:disabled {
     border-color: var(--tone-border);
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
-    }
     background-color: var(--tone-surface-soft);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
-    }
-    color: var(--tone-text);
-    @supports (color: color-mix(in lab, red, red)) {
-      color: color-mix(in oklch, var(--tone-text) 65%, transparent);
-    }
+    color: var(--tone-text-muted);
+    -webkit-text-fill-color: var(--tone-text-muted);
+  }
+  .ui-select option:disabled {
+    background-color: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
   }
   .cda-prefixed-field .ui-input, .cda-prefixed-field .ui-select {
     min-width: 0px;
@@ -5089,7 +5085,9 @@
     --tw-ring-inset: inset;
   }
   .cad-tag-textedit__surface.is-disabled, .zy-tag-textedit__surface.is-disabled {
-    opacity: 0.64;
+    cursor: not-allowed;
+    background: var(--tone-surface-soft);
+    color: var(--tone-text-muted);
   }
   .cad-tag-textedit__chip, .zy-tag-textedit__chip, .cad-tag-textedit__suggestion, .zy-tag-textedit__suggestion {
     display: inline-flex;
@@ -5160,8 +5158,7 @@
     color: var(--tone-9-fg);
   }
   .cad-tag-textedit__chip:disabled, .zy-tag-textedit__chip:disabled, .cad-tag-textedit__suggestion:disabled, .zy-tag-textedit__suggestion:disabled {
-    cursor: default;
-    opacity: 0.7;
+    cursor: not-allowed;
   }
   .cad-tag-textedit__chip-x, .zy-tag-textedit__chip-x {
     display: inline-flex;
@@ -5233,7 +5230,7 @@
     box-shadow: var(--cad-shadow-soft);
   }
   .cda-entity-picker[aria-disabled="True"], .cda-entity-picker[aria-disabled="true"] {
-    opacity: 70%;
+    background: var(--tone-surface-soft);
   }
   .cda-entity-picker__header {
     display: flex;
@@ -5310,7 +5307,10 @@
   }
   .cda-entity-picker__item:disabled {
     cursor: not-allowed;
-    opacity: 55%;
+    color: var(--tone-text-muted);
+  }
+  .cda-entity-picker__item:disabled:not(.cda-entity-picker__item--selected) {
+    background: var(--tone-surface-soft);
   }
   .cda-entity-picker__item--selected {
     border-color: var(--tone-primary-border);
@@ -5519,7 +5519,10 @@
     gap: calc(var(--spacing) * 3.5);
   }
   .ui-file-upload__content[data-disabled="true"] {
-    opacity: 0.7;
+    color: var(--tone-text-muted);
+  }
+  .ui-file-upload__content[data-disabled="true"] .ui-file-upload__primary, .ui-file-upload__content[data-disabled="true"] .ui-file-upload__secondary {
+    color: inherit;
   }
   .ui-file-upload__icon {
     display: inline-flex;
@@ -5611,24 +5614,16 @@
   .ui-file-input--filled {
     background-color: var(--tone-surface-soft);
   }
-  .ui-file-input[disabled] {
+  .ui-file-input:disabled {
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: 1;
     border-color: var(--tone-border);
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklch, var(--tone-border) 65%, transparent);
-    }
     background-color: var(--tone-surface-soft);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklch, var(--tone-surface-soft) 65%, transparent);
-    }
-    color: var(--tone-text);
-    @supports (color: color-mix(in lab, red, red)) {
-      color: color-mix(in oklch, var(--tone-text) 65%, transparent);
-    }
+    color: var(--tone-text-muted);
   }
-  .ui-file-input[disabled]::file-selector-button {
+  .ui-file-input:disabled::file-selector-button {
     cursor: not-allowed;
+    color: var(--tone-text-muted);
   }
   .cda-dialog-layer {
     position: fixed;
@@ -6181,7 +6176,9 @@
   }
   .cda-treeview__row--disabled {
     cursor: not-allowed;
-    opacity: 45%;
+  }
+  .cda-treeview__row--disabled:not(.cda-treeview__row--selected) {
+    color: var(--tone-text-muted);
   }
   .cda-treeview__icon {
     display: inline-flex;
@@ -6643,16 +6640,9 @@
   }
   .cad-tabs__tab:disabled, .cad-tabs__tab[aria-disabled="true"] {
     cursor: not-allowed;
-    opacity: 0.72;
-    color: var(--tone-text-soft);
+    color: var(--tone-text-muted);
     background: var(--tone-surface-soft);
-    @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, var(--tone-surface-soft) 92%, transparent);
-    }
     border-color: var(--tone-border-soft);
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in srgb, var(--tone-border-soft) 82%, transparent);
-    }
     box-shadow: none;
   }
   .cad-tabs__tab:disabled::after, .cad-tabs__tab[aria-disabled="true"]::after {
