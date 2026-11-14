@@ -17,7 +17,8 @@ All notable changes to this repository's packages are recorded here, per the cha
   optional setting groups use disclosures; configured groups remain open. Existing input keys, payloads,
   draft revisions and acknowledgement/close contracts are unchanged; consumers need no new parameters.
 - Changed composer placement to keep its header, scrolling body and actions inside the visible canvas viewport,
-  including when the canvas extends below the page viewport; the canvas toolbar still reserves its space.
+  including when the canvas extends below the page viewport or optional groups expand and collapse; the canvas
+  toolbar still reserves its space.
 
 ### CanvasLib selected-node actions
 

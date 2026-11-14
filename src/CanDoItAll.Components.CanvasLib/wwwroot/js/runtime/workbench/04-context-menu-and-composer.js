@@ -344,6 +344,12 @@
             }
         });
 
+        composer.addEventListener("toggle", event => {
+            if (event.target?.tagName === "DETAILS" && state.composer?.element === composer) {
+                layoutComposer(state);
+            }
+        }, true);
+
         const card = createElement(state.document, "div", "cw-canvas-composer__card");
         if (kicker) {
             card.appendChild(createElement(state.document, "p", "cw-canvas-composer__kicker", kicker));

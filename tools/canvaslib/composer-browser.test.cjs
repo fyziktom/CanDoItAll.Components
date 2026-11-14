@@ -228,6 +228,41 @@ test("long creation and edit forms keep their header and footer outside the one 
     }
 });
 
+test("native optional disclosure expansion and collapse keep edit actions visible without replacing fields", async t => {
+    const page = await fixture(t, true, {
+        hostStyle: ".cw-workbench-frame{height:1007px;margin-top:73px}.cw-canvas-host{height:1007px}",
+        action: { inputFields: Array.from({ length: 8 }, (_, index) => ({ key: `optional${index}`, label: `Setting ${index}`,
+            sectionKey: "settings", sectionTitle: "Optional settings" })) },
+        request: { x: 900, y: 270 }
+    });
+    const composer = page.locator(".cw-canvas-composer");
+    const section = composer.locator("details");
+    const initial = await composer.boundingBox();
+    const firstInput = await page.getByLabel("Setting 0", { exact: true }).elementHandle();
+    for (const open of [true, false, true]) {
+        await section.evaluate(element => {
+            window.disclosureToggled = new Promise(resolve => element.addEventListener("toggle", () => resolve(), { once: true }));
+        });
+        await section.locator("summary").click();
+        await page.evaluate(() => disclosureToggled);
+        assert.equal(await section.evaluate(element => element.open), open);
+        const bounds = await composer.boundingBox();
+        const footer = await composer.locator(".cw-canvas-composer__actions").boundingBox();
+        assert.ok(footer.y + footer.height <= 1062.5, JSON.stringify({ initial, bounds, footer }));
+        if (open) {
+            assert.ok(bounds.height > initial.height);
+            await page.getByLabel("Setting 0", { exact: true }).fill("Retained setting");
+        }
+        assert.equal(await firstInput.evaluate(input => input === state.composer.inputFieldEntries[0].input), true);
+    }
+    assert.equal(await page.getByLabel("Setting 0", { exact: true }).inputValue(), "Retained setting");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.waitForFunction(() => calls.some(call => call.method === "OnCreateAction"));
+    const payload = await page.evaluate(() => JSON.parse(calls.find(call => call.method === "OnCreateAction").args[0]));
+    assert.equal(payload.title, "Initial name");
+    assert.equal(payload.inputValues[0].value, "Retained setting");
+});
+
 test("creation and edit footers fit the visible viewport when the canvas extends below and to its right", async t => {
     for (const edit of [false, true]) {
         const page = await fixture(t, edit, {
