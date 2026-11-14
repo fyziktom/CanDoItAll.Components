@@ -35,6 +35,19 @@
                     </button>
                 }
 
+                @if (Surface.Nodes.Any(node => node.ToolbarActions.Count > 0)) {
+                    <button type="button"
+                            class="cw-toolbar-action"
+                            data-cw-node-actions="true"
+                            aria-label="Node actions (Ctrl+M)"
+                            title="@(CanOpenNodeToolbar ? "Node actions (Ctrl+M)" : "Select exactly one node with available actions")"
+                            disabled="@(!CanOpenNodeToolbar)"
+                            @onclick="ToggleNodeToolbarAsync">
+                        <Icon Name="more_horiz" />
+                        <span>Node actions</span>
+                    </button>
+                }
+
                 @ToolbarLeftContent
             </div>
 
@@ -234,6 +247,8 @@
                                     <p><strong>Tab</strong> creates a child note when the canvas host is focused.</p>
                                     <p><strong>Enter</strong> creates a sibling note.</p>
                                     <p><strong>Ctrl/Cmd + X</strong>, <strong>Ctrl/Cmd + C</strong>, and <strong>Ctrl/Cmd + V</strong> use the shared canvas clipboard.</p>
+                                    <p><strong>Ctrl + M</strong> opens the selected node's actions. <strong>Ctrl + I</strong> invokes its copy-identifier action when provided by the host.</p>
+                                    <p><strong>Escape</strong> dismisses node actions. Toolbar buttons retain normal Tab, Enter, and Space behavior; shortcuts leave text fields and other overlays alone.</p>
                                     <p><strong>m</strong> toggles the minimap, <strong>d</strong> toggles diagnostics, and <strong>+</strong>, <strong>-</strong>, <strong>0</strong> control zoom and fit.</p>
                                     <p><strong>?</strong> or <strong>h</strong> opens help, and <strong>Escape</strong> returns to Select mode before clearing selection.</p>
                                 </div>
@@ -386,6 +401,8 @@
     private string? appliedSurfaceId;
     private string? pendingDataKey;
     private string? pendingUiStateKey;
+    private string? toolbarSelectionStateKey;
+    private IReadOnlyList<string> toolbarSelection = [];
     private string? clientUiStateKey;
     private string? processedUiStateKey;
     private long lastSelectionDispatchId;
@@ -468,6 +485,11 @@
         menuScalePercent = ClampMenuScalePercent(Surface.UiState.MenuActionScale);
         pendingDataKey = SerializeSurfaceData(Surface);
         pendingUiStateKey = Surface.UiState.ToJson();
+        if (!string.Equals(toolbarSelectionStateKey, pendingUiStateKey, StringComparison.Ordinal) ||
+            !string.Equals(appliedSurfaceId, Surface.SurfaceId, StringComparison.Ordinal)) {
+            toolbarSelectionStateKey = pendingUiStateKey;
+            toolbarSelection = Surface.UiState.SelectedNodeIds;
+        }
 
         var dataChanged = !string.Equals(sceneHost.AppliedStateKey, pendingDataKey, StringComparison.Ordinal);
         var parentCommittedClientState = string.Equals(clientUiStateKey, pendingUiStateKey, StringComparison.Ordinal);
@@ -547,7 +569,9 @@
         }
 
         var selectedNodeIds = Deserialize<List<string>>(selectedNodeIdsJson) ?? [];
+        toolbarSelection = selectedNodeIds;
         await SelectionChanged.InvokeAsync(new CanvasWorkbenchSelectionChangedEventArgs(primaryNodeId, selectedNodeIds));
+        await InvokeAsync(StateHasChanged);
     }
 
     [JSInvokable]
@@ -790,6 +814,15 @@
         }
 
         await JsRuntime.InvokeVoidAsync("CanDoItAll.canvasWorkbench.toggleMinimap", host);
+    }
+
+    private bool CanOpenNodeToolbar
+        => toolbarSelection.Count == 1 && Surface.Nodes.Any(node => node.Id == toolbarSelection[0] && node.ToolbarActions.Count > 0);
+
+    private async Task ToggleNodeToolbarAsync() {
+        if (sceneHost.IsInitialized && CanOpenNodeToolbar) {
+            await JsRuntime.InvokeVoidAsync("CanDoItAll.canvasWorkbench.toggleNodeToolbar", host);
+        }
     }
 
     private async Task ToggleDiagnosticsAsync()

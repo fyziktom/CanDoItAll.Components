@@ -1,3 +1,51 @@
+.cw-node-toolbar {
+    position: absolute;
+    z-index: 610;
+    display: flex;
+    gap: 0.375rem;
+    padding: 0.5rem;
+    overflow-x: auto;
+    box-sizing: border-box;
+    border: 1px solid var(--cw-action-border);
+    border-radius: 0.875rem;
+    background: var(--cw-action-bg);
+    color: var(--cw-text);
+    box-shadow: var(--cw-toolbar-shadow);
+    pointer-events: auto;
+}
+
+.cw-node-toolbar[hidden] {
+    display: none;
+}
+
+.cw-node-toolbar__action {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.cw-node-toolbar__action .cw-context-menu__icon {
+    position: static;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.125rem;
+}
+
+.cw-node-toolbar__action .cw-context-menu__glyph {
+    font-size: 1.125rem;
+    line-height: 1;
+}
+
+.cw-node-toolbar__action[data-tone="danger"] {
+    color: var(--tone-danger-soft-fg);
+    background: var(--tone-danger-soft-bg);
+    border-color: var(--tone-danger-soft-border);
+}
 
 .cw-context-menu__backdrop.is-submenu {
     background:

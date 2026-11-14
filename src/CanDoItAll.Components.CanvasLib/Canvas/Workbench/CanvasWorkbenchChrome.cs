@@ -59,6 +59,8 @@ public sealed class CanvasWorkbenchAction
 
     public string ShortcutKey { get; set; } = string.Empty;
 
+    public CanvasWorkbenchKeyboardCommand KeyboardCommand { get; set; }
+
     public string MenuSize { get; set; } = "normal";
 
     public string SubmenuLayout { get; set; } = string.Empty;

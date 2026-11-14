@@ -70,37 +70,12 @@ public sealed class CanvasWorkbenchClipboardContractTests
     }
 
     [Fact]
-    public void WorkbenchShortcutRoutersSuppressAcceptedRepeatedCommandsWithoutRedispatching()
-    {
-        string[] routerFileNames =
-        [
-            "05-viewport-and-events.js",
-            "07a-runtime-interaction-router.js"
-        ];
-
-        foreach (var routerFileName in routerFileNames)
-        {
-            var router = ReadSource(
-                "src",
-                "CanDoItAll.Components.CanvasLib",
-                "wwwroot",
-                "js",
-                "runtime",
-                "workbench",
-                routerFileName);
-            var keyDown = ReadSection(router, "keyDown: event =>", "state.host.addEventListener(\"pointerdown\"");
-
-            Assert.Contains("target === state.host || state.host.contains(target)", keyDown, StringComparison.Ordinal);
-            Assert.DoesNotContain("state.document.body", keyDown, StringComparison.Ordinal);
-            Assert.DoesNotContain("state.document.documentElement", keyDown, StringComparison.Ordinal);
-            Assert.DoesNotContain("closest?.(\".cw-workbench-shell\")", keyDown, StringComparison.Ordinal);
-            Assert.Contains("if (isEditable)", keyDown, StringComparison.Ordinal);
-            Assert.Contains("const shouldDispatch = !event.repeat;", keyDown, StringComparison.Ordinal);
-
-            AssertPreventsDefaultOnlyAfterAccepted(keyDown, "requestClipboardCut(state, shouldDispatch)");
-            AssertPreventsDefaultOnlyAfterAccepted(keyDown, "copySelectionToClipboard(state, shouldDispatch)");
-            AssertPreventsDefaultOnlyAfterAccepted(keyDown, "requestClipboardPaste(state, shouldDispatch)");
-            AssertPreventsDefaultOnlyAfterAccepted(keyDown, "requestClipboardDuplicate(state, shouldDispatch)");
+    public void Both_workbench_routes_use_the_shared_keyboard_boundary() {
+        foreach (var file in new[] { "05-viewport-and-events.js", "07a-runtime-interaction-router.js" }) {
+            var source = ReadSource("src", "CanDoItAll.Components.CanvasLib", "wwwroot", "js", "runtime", "workbench", file);
+            var keyDown = ReadSection(source, "keyDown: event =>", "state.host.addEventListener(\"pointerdown\"");
+            Assert.Contains("shared.routeWorkbenchKeyDown(state, event)", keyDown, StringComparison.Ordinal);
+            Assert.DoesNotContain("requestClipboard", keyDown, StringComparison.Ordinal);
         }
     }
 
@@ -151,15 +126,6 @@ public sealed class CanvasWorkbenchClipboardContractTests
 
         Assert.Contains("state.hasClipboardHandler = options?.hasClipboardHandler === true", runtimeEntry, StringComparison.Ordinal);
         Assert.Contains("ClipboardRequested.HasDelegate", component, StringComparison.Ordinal);
-    }
-
-    private static void AssertPreventsDefaultOnlyAfterAccepted(string source, string requestExpression)
-    {
-        var requestIndex = source.IndexOf($"if ({requestExpression})", StringComparison.Ordinal);
-        Assert.True(requestIndex >= 0, $"Could not find acceptance check for '{requestExpression}'.");
-
-        var preventDefaultIndex = source.IndexOf("event.preventDefault();", requestIndex, StringComparison.Ordinal);
-        Assert.True(preventDefaultIndex > requestIndex, $"'{requestExpression}' must be accepted before preventDefault.");
     }
 
     private static string ReadSource(params string[] segments)

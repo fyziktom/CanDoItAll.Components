@@ -228,6 +228,7 @@
     function normalizeAction(action) {
         return {
             ...action,
+            keyboardCommand: action?.keyboardCommand || "None",
             description: action?.description || "",
             menuLabel: action?.menuLabel || "",
             menuSize: action?.menuSize || "normal",
@@ -423,6 +424,7 @@
                 chips: Array.isArray(node.chips) ? node.chips : [],
                 footerChips: Array.isArray(node.footerChips) ? node.footerChips : [],
                 contextActions: Array.isArray(node.contextActions) ? node.contextActions.map(normalizeAction) : [],
+                toolbarActions: Array.isArray(node.toolbarActions) ? node.toolbarActions.map(normalizeAction) : [],
                 isInlineTextNode: !!node?.isInlineTextNode,
                 inlineText: node?.inlineText || "",
                 inlineTextPlaceholder: node?.inlineTextPlaceholder || "Write note",

@@ -4,6 +4,24 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ## [Unreleased] — 2.0.1
 
+### CanvasLib selected-node actions
+
+#### Public interface
+
+- Added `CanvasWorkbenchNode.ToolbarActions` and `CanvasWorkbenchAction.KeyboardCommand` (`None` or
+  `CopyIdentifier`). Reuse host-owned action descriptors to offer a fixed-size selected-node toolbar via
+  Ctrl+M or the visible Node actions button; Ctrl+I requests the advertised identifier action through
+  `ContextActionRequested`. Empty action lists preserve consumers without inventing delete or copy semantics.
+
+#### Internal
+
+- Changed both canvas keyboard routes to share one scoped dispatcher. Editing controls, nested canvases and
+  overlays retain their own keys; native toolbar activation and existing host clipboard commands are preserved.
+  Unimplemented shortcuts are not consumed. The toolbar retires on selection/removal, outside click or Escape,
+  and stays inside the visible canvas viewport without scaling its buttons with scene zoom.
+- Changed the SandboxWasm asset check to enforce the CanvasLib manifest's runtime script order and unique
+  inclusion, including the new keyboard/toolbar module. Toolbar glyphs use the compact screen-space size.
+
 ### OverlayLib and CanvasLib
 
 #### Public interface

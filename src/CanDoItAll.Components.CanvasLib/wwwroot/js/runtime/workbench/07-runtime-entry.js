@@ -131,6 +131,7 @@
         state.popoverTitle = popoverTitle;
         state.popoverBody = popoverBody;
         state.statusNotice = statusNotice;
+        shared.createNodeToolbar(state);
         state.sceneHitRegistry = createCanvasHitRegistry();
         state.sceneHotZones = [];
         state.sceneGeometry = {
@@ -466,9 +467,12 @@
         state.host.removeEventListener("wheel", state.handlers.wheel);
         state.host.removeEventListener("contextmenu", state.handlers.contextMenu);
         state.document.removeEventListener("keydown", state.handlers.keyDown);
+        state.document.removeEventListener("pointerdown", state.nodeToolbarOutside, true);
+        state.document.removeEventListener("scroll", state.nodeToolbarScroll, true);
     }
 
     function disposeWorkbenchStateCore(state, options) {
+        shared.closeNodeToolbar(state);
         state.isDisposed = true;
         state.themeWatcher?.disconnect();
         destroyCanvasSurfaceHost(state.frameSurface);
@@ -754,6 +758,12 @@
                 options?.committedStateDispatchId ?? 0);
             applyRenderOptions(state, options);
             return true;
+        },
+        toggleNodeToolbar(host) {
+            const state = resolveWorkbenchState(host);
+            if (state) {
+                shared.toggleNodeToolbar(state);
+            }
         },
         fitView(host) {
             const state = resolveWorkbenchState(host);

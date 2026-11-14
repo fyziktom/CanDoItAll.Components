@@ -18,8 +18,11 @@
     <StatusBadge Text="@InspectorWindowStateLabel" Tone="@InspectorWindowStateTone" />
 </div>
 <Alert AlertStyle="AlertStyle.Info" data-testid="canvas-event-status">@lastWorkbenchEvent</Alert>
+<SmallText>Focus the canvas and press Ctrl+M for node actions or Ctrl+I for the host-owned identifier command. Escape closes the toolbar.</SmallText>
+<output data-testid="canvas-node-action-status">@lastNodeAction</output>
 <div class="sandbox-canvas-host">
     <CanvasWorkbench Surface="@Surface"
+                     ContextActionRequested="HandleNodeAction"
                      SelectionChanged="HandleSelectionChanged"
                      NodesMoved="HandleNodesMoved"
                      StateChanged="HandleStateChanged">
@@ -69,6 +72,8 @@
     private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState();
     private CanvasWorkbenchWindowState activityState = CreateActivityWindowState();
     private readonly Dictionary<string, CanvasWorkbenchNodePositionChange> nodePositionOverrides = new(StringComparer.Ordinal);
+    private string lastNodeAction = "No node action requested.";
+    private readonly HashSet<string> removedNodeIds = new(StringComparer.Ordinal);
     private string selectedLabel = "Nothing selected";
     private string lastWorkbenchEvent = "No workbench interaction recorded yet.";
 
@@ -77,15 +82,47 @@
         get
         {
             var surface = SandboxCanvasSamples.CreateWorkbenchSurface(uiState, inspectorState);
-            foreach (var node in surface.Nodes)
+            surface.Nodes.RemoveAll(node => removedNodeIds.Contains(node.Id));
+            surface.Links.RemoveAll(link => removedNodeIds.Contains(link.SourceId) || removedNodeIds.Contains(link.TargetId));
+            foreach (var node in surface.Nodes) {
+                node.ToolbarActions = [
+                    new() { ActionId = CopyIdentifierAction, Label = "Copy identifier", Icon = "copy", KeyboardCommand = CanvasWorkbenchKeyboardCommand.CopyIdentifier },
+                    new() { ActionId = InspectNodeAction, Label = "Inspect", Icon = "open" },
+                    new() { ActionId = RemoveNodeAction, Label = "Remove node", Description = "Remove this node and its descendants from the sample.", Icon = "delete", Tone = "danger" }
+                ];
+                node.ContextActions = node.ToolbarActions;
                 if (nodePositionOverrides.TryGetValue(node.Id, out var position))
                 {
                     node.X = position.X;
                     node.Y = position.Y;
                 }
+            }
 
             return surface;
         }
+    }
+
+    private const string CopyIdentifierAction = "sandbox:copy-identifier";
+    private const string InspectNodeAction = "sandbox:inspect-node";
+    private const string RemoveNodeAction = "sandbox:remove-node";
+
+    private Task HandleNodeAction(CanvasWorkbenchContextActionRequest request) {
+        lastNodeAction = $"{request.ActionId}: {request.NodeId}";
+        if (request.ActionId == RemoveNodeAction && request.NodeId is not null) {
+            var nodes = Surface.Nodes;
+            var pending = new Stack<string>([request.NodeId]);
+            while (pending.TryPop(out var nodeId)) {
+                if (!removedNodeIds.Add(nodeId)) {
+                    continue;
+                }
+                foreach (var child in nodes.Where(node => node.ParentId == nodeId)) {
+                    pending.Push(child.Id);
+                }
+            }
+            uiState.SelectedNodeIds.RemoveAll(removedNodeIds.Contains);
+            selectedLabel = nodes.FirstOrDefault(node => node.Id == uiState.SelectedNodeIds.FirstOrDefault())?.Title ?? "Nothing selected";
+        }
+        return Task.CompletedTask;
     }
 
     private Task HandleSelectionChanged(CanvasWorkbenchSelectionChangedEventArgs args)

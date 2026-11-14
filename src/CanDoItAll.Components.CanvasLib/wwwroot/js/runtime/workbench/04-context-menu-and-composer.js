@@ -426,6 +426,7 @@
     }
 
     function openCreateComposer(state, action, request) {
+        shared.closeNodeToolbar?.(state);
         clearContextMenu(state);
         if (closeComposer(state, { focusHost: false, onClosed: () => openCreateComposer(state, action, request) }) === false) {
             return;
@@ -1278,6 +1279,7 @@
     }
 
     function showContextMenu(state, options) {
+        shared.closeNodeToolbar?.(state);
         clearContextMenu(state);
         const actions = options.actions || getContextActions(state, options.node);
         if (!actions.length) {

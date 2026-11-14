@@ -191,4 +191,16 @@ verifyGeneratedFile(headComponentPath, buildHeadComponent(manifest));
 verifyGeneratedFile(bodyComponentPath, buildBodyComponent(manifest));
 verifyGeneratedFile(runtimeBodyComponentPath, buildRuntimeBodyComponent(manifest));
 
-console.log("CanvasLib asset sources, public outputs, and generated include components are in sync.");
+const wasmIndexPath = path.join(repoRoot, "samples/CanDoItAll.Components.SandboxWasm/wwwroot/index.html");
+const wasmIndex = fs.readFileSync(wasmIndexPath, "utf8");
+let previousScriptIndex = -1;
+for (const entry of manifest.runtimeScripts) {
+  const script = `<script src="${entry.output}"></script>`;
+  const index = wasmIndex.indexOf(script);
+  if (index <= previousScriptIndex || wasmIndex.indexOf(script, index + script.length) !== -1) {
+    throw new Error(`SandboxWasm must include '${entry.output}' exactly once in CanvasLib manifest order.`);
+  }
+  previousScriptIndex = index;
+}
+
+console.log("CanvasLib asset sources, public outputs, generated components, and SandboxWasm runtime scripts are in sync.");

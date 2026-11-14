@@ -37,7 +37,7 @@
     }
 
     function isOverlayTarget(target) {
-        return !!target?.closest?.(".cw-context-menu, .cw-canvas-composer, .cw-workbench__popover, .cw-minimap, .cw-status-notice");
+        return !!target?.closest?.(".cw-node-toolbar, .cw-context-menu, .cw-canvas-composer, .cw-workbench__popover, .cw-minimap, .cw-status-notice");
     }
 
     function applyFullTextTooltip(element, text) {
@@ -393,6 +393,7 @@
     }
 
     function applyViewportPreviewTransform(state) {
+        shared.updateNodeToolbar?.(state);
         if (!state?.canvasStack) {
             return;
         }
@@ -504,6 +505,7 @@
             workbenchInternals.scenePatching.scheduleNodeMeasurement(state);
         }
         resetViewportPreviewTransform(state);
+        shared.updateNodeToolbar?.(state);
 
         if (state.metrics) {
             const elapsedMs = Math.max(0, workbenchInternals.instrumentation.now() - startedAt);
