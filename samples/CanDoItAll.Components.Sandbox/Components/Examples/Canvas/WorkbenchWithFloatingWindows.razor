@@ -14,14 +14,21 @@
                 Click="SelectThreeWorkbenchNodes" data-testid="select-three-canvas-nodes" />
         <Button Text="Move selected" Tone="@(ButtonTone.Default)" Variant="@(Variant.Outlined)"
                 Click="MoveSelectedWorkbenchNodes" data-testid="move-selected-canvas-nodes" />
+        <Button Text="Create sample item" Variant="@(Variant.Outlined)" Click="OpenSampleCreate"
+                data-testid="canvas-create-sample" />
+        <Button Text="Edit sample item" Variant="@(Variant.Outlined)" Click="OpenSampleEdit"
+                data-testid="canvas-edit-sample" />
     </Cluster>
     <StatusBadge Text="@InspectorWindowStateLabel" Tone="@InspectorWindowStateTone" />
 </div>
 <Alert AlertStyle="AlertStyle.Info" data-testid="canvas-event-status">@lastWorkbenchEvent</Alert>
 <SmallText>Focus the canvas and press Ctrl+M for node actions or Ctrl+I for the host-owned identifier command. Escape closes the toolbar.</SmallText>
 <output data-testid="canvas-node-action-status">@lastNodeAction</output>
+<SmallText>Double-click the inline note to edit it. Creation shows one step at a time; editing starts with the name.</SmallText>
+<output data-testid="canvas-composer-status">@lastComposerEvent</output>
 <div class="sandbox-canvas-host">
-    <CanvasWorkbench Surface="@Surface"
+    <CanvasWorkbench @ref="workbench" Surface="@Surface"
+                     CreateActionInvoked="HandleComposerRequest" NodeEdited="HandleNoteEdit"
                      ContextActionRequested="HandleNodeAction"
                      SelectionChanged="HandleSelectionChanged"
                      NodesMoved="HandleNodesMoved"
@@ -68,6 +75,12 @@
 </div>
 
 @code {
+    private CanvasWorkbench? workbench;
+    private string sampleTitle = "Sample item";
+    private string sampleNotes = "Existing supporting context.";
+    private string inlineNote = "Double-click to edit this note.";
+    private List<CanvasWorkbenchInputValue> sampleInputs = [new() { Key = "target", Value = "https://example.test" }];
+    private string lastComposerEvent = "No composer request submitted.";
     private CanvasWorkbenchUiState uiState = SandboxCanvasSamples.CreateWorkbenchUiState();
     private CanvasWorkbenchWindowState inspectorState = SandboxCanvasSamples.CreateInspectorWindowState();
     private CanvasWorkbenchWindowState activityState = CreateActivityWindowState();
@@ -82,6 +95,10 @@
         get
         {
             var surface = SandboxCanvasSamples.CreateWorkbenchSurface(uiState, inspectorState);
+            surface.Nodes.Add(new() {
+                Id = InlineNoteId, Title = inlineNote, InlineText = inlineNote, IsInlineTextNode = true,
+                X = 480, Y = 480, Family = "note", Kind = "note"
+            });
             surface.Nodes.RemoveAll(node => removedNodeIds.Contains(node.Id));
             surface.Links.RemoveAll(link => removedNodeIds.Contains(link.SourceId) || removedNodeIds.Contains(link.TargetId));
             foreach (var node in surface.Nodes) {
@@ -105,6 +122,45 @@
     private const string CopyIdentifierAction = "sandbox:copy-identifier";
     private const string InspectNodeAction = "sandbox:inspect-node";
     private const string RemoveNodeAction = "sandbox:remove-node";
+    private const string InlineNoteId = "sandbox-inline-note";
+    private const string SampleEditorAction = "sandbox:sample-editor";
+
+    private Task OpenSampleCreate() => OpenSampleEditor(false);
+
+    private Task OpenSampleEdit() => OpenSampleEditor(true);
+
+    private Task OpenSampleEditor(bool edit) {
+        var action = new CanvasWorkbenchAction {
+            ActionId = SampleEditorAction, Label = edit ? "Edit sample item" : "sample item",
+            SubmitLabel = edit ? "Save" : "Create", TitleLabel = "Name", RequiresInput = true,
+            InputFields = [
+                new() { Key = "target", Label = "Target URL", InputMode = "url", IsRequired = true, SectionKey = "connection", SectionTitle = "Connection" },
+                new() { Key = "owner", Label = "Owner email", InputMode = "email", SectionKey = "people", SectionTitle = "People" },
+                new() { Key = "capacity", Label = "Capacity", InputMode = "number", SectionKey = "capacity", SectionTitle = "Capacity" }
+            ]
+        };
+        var request = new CanvasWorkbenchCreateActionRequest(SampleEditorAction, null, 480, 280, null,
+            edit ? sampleTitle : string.Empty, string.Empty, edit ? sampleNotes : string.Empty,
+            edit ? "edit" : "canvas", "command", string.Empty, null, edit ? sampleInputs : null);
+        return workbench?.OpenCreateDialogAsync(action, request) ?? Task.CompletedTask;
+    }
+
+    private Task HandleComposerRequest(CanvasWorkbenchCreateActionRequest request) {
+        sampleTitle = request.Title;
+        sampleNotes = request.Notes;
+        sampleInputs = request.InputValues?.ToList() ?? [];
+        lastComposerEvent = $"{request.PlacementKind}: {request.Title}; notes: {request.Notes}; " +
+            string.Join("; ", sampleInputs.Select(value => $"{value.Key}={value.Value}"));
+        return Task.CompletedTask;
+    }
+
+    private Task HandleNoteEdit(CanvasWorkbenchNodeEditRequest request) {
+        if (request.NodeId == InlineNoteId) {
+            inlineNote = request.Notes;
+            lastComposerEvent = $"Inline note: {request.Notes}";
+        }
+        return Task.CompletedTask;
+    }
 
     private Task HandleNodeAction(CanvasWorkbenchContextActionRequest request) {
         lastNodeAction = $"{request.ActionId}: {request.NodeId}";

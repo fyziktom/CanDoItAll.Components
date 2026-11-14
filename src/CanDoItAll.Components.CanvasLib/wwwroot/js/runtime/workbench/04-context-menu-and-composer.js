@@ -146,6 +146,13 @@
         composer.submissionFinished = false;
         composer.lastResultKind = null;
         composer.status.textContent = "Comparison applied to this draft. Save is a separate action.";
+        if (!composer.steps) {
+            for (const section of composer.sections || []) {
+                if (section.optional && section.inputs.some(input => !!input.value)) {
+                    section.section.open = true;
+                }
+            }
+        }
         updateComposerFileState(composer);
         layoutComposer(state);
         return { status: "Applied", revision: composer.draftRevision };
@@ -246,12 +253,13 @@
 
         if (state.composer.kind === "create") {
             if (state.composer.requiresFile && !state.composer.uploadedFile) {
+                revealComposerControl(state, state.composer.fileInput);
                 return;
             }
 
-            const invalid = state.composer.inputFieldEntries?.find(entry => !entry.input.checkValidity());
+            const invalid = findInvalidComposerInput(state.composer);
             if (invalid) {
-                invalid.input.reportValidity();
+                reportComposerInput(state, invalid);
                 return;
             }
             const inputValues = Array.isArray(state.composer.inputFieldEntries)
@@ -260,12 +268,6 @@
                     value: (entry.input.value || "").trim()
                 }))
                 : [];
-            const hasMissingRequiredInputs = Array.isArray(state.composer.inputFieldEntries) &&
-                state.composer.inputFieldEntries.some(entry => entry.isRequired && !(entry.input.value || "").trim());
-            if (hasMissingRequiredInputs) {
-                return;
-            }
-
             submitComposer(state, submitCreateRequest, {
                 ...state.composer.request,
                 title: state.composer.titleInput ? state.composer.titleInput.value.trim() : "",
@@ -310,25 +312,43 @@
 
     function decorateComposerShell(state, title, kicker, variant) {
         const composer = createElement(state.document, "div", `cw-canvas-composer ${variant ? `is-${variant}` : ""}`);
+        composer.setAttribute("role", "dialog");
+        composer.setAttribute("aria-label", title || "Note editor");
         composer.addEventListener("pointerdown", event => event.stopPropagation());
         composer.addEventListener("wheel", event => {
             event.stopPropagation();
         }, { passive: true });
         composer.addEventListener("keydown", event => {
+            if (event.defaultPrevented || event.isComposing) {
+                return;
+            }
             if (event.key === "Escape") {
                 event.preventDefault();
                 closeComposer(state);
                 return;
             }
 
-            if (event.key === "Enter" && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+            if (event.key === "Enter" && !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey && !event.repeat) {
                 const tagName = event.target?.tagName?.toLowerCase?.() || "";
+                if (tagName === "button" || tagName === "select" || tagName === "summary") {
+                    return;
+                }
                 if (variant === "note" || tagName !== "textarea") {
                     event.preventDefault();
-                    commitComposer(state);
+                    if (state.composer?.steps && state.composer.stepIndex < state.composer.steps.length - 1) {
+                        advanceComposerStep(state);
+                    } else {
+                        commitComposer(state);
+                    }
                 }
             }
         });
+
+        composer.addEventListener("toggle", event => {
+            if (event.target?.tagName === "DETAILS" && state.composer?.element === composer) {
+                layoutComposer(state);
+            }
+        }, true);
 
         const card = createElement(state.document, "div", "cw-canvas-composer__card");
         if (kicker) {
@@ -344,26 +364,9 @@
         return { composer, card };
     }
 
-    function createComposerWizard(document, steps) {
-        if (!Array.isArray(steps) || steps.length === 0) {
-            return null;
-        }
-
-        const wizard = createElement(document, "ol", "cw-canvas-composer__wizard");
-        for (const step of steps) {
-            const item = createElement(document, "li", "cw-canvas-composer__wizard-item");
-            item.appendChild(createElement(document, "span", "cw-canvas-composer__wizard-step", `Step ${step.number}`));
-            item.appendChild(createElement(document, "strong", "cw-canvas-composer__wizard-label", step.title));
-            wizard.appendChild(item);
-        }
-
-        return wizard;
-    }
-
-    function createComposerSection(document, stepNumber, title, description) {
-        const section = createElement(document, "section", "cw-canvas-composer__section");
-        const header = createElement(document, "div", "cw-canvas-composer__section-header");
-        header.appendChild(createElement(document, "span", "cw-canvas-composer__section-step", String(stepNumber).padStart(2, "0")));
+    function createComposerSection(document, title, description, collapsible) {
+        const section = createElement(document, collapsible ? "details" : "section", "cw-canvas-composer__section");
+        const header = createElement(document, collapsible ? "summary" : "div", "cw-canvas-composer__section-header");
 
         const copy = createElement(document, "div", "cw-canvas-composer__section-copy");
         copy.appendChild(createElement(document, "strong", null, title));
@@ -377,6 +380,74 @@
         section.appendChild(header);
         section.appendChild(body);
         return { section, body };
+    }
+
+    function findInvalidComposerInput(composer, section) {
+        return composer.inputFieldEntries?.find(entry => (!section || section.inputs.includes(entry.input)) &&
+            (!entry.input.checkValidity() || entry.isRequired && !(entry.input.value || "").trim()));
+    }
+
+    function revealComposerControl(state, input) {
+        const composer = state.composer;
+        const section = composer.sections?.find(item => item.inputs.includes(input));
+        if (section) {
+            if (composer.steps) {
+                showComposerStep(state, composer.steps.indexOf(section), false);
+            }
+            section.section.open = true;
+        }
+        layoutComposer(state);
+        (input === composer.fileInput ? composer.fileTrigger : input)?.focus();
+        if (input === composer.fileInput && composer.validation) {
+            composer.validation.textContent = "Choose the required file before continuing.";
+            composer.validation.hidden = false;
+        }
+    }
+
+    function reportComposerInput(state, entry) {
+        revealComposerControl(state, entry.input);
+        if (state.composer.validation) {
+            state.composer.validation.textContent = entry.input.validationMessage || `Complete ${entry.label || entry.key} before continuing.`;
+            state.composer.validation.hidden = false;
+        }
+        entry.input.reportValidity();
+    }
+
+    function showComposerStep(state, index, focus = true) {
+        const composer = state.composer;
+        if (!composer?.steps || index < 0 || index >= composer.steps.length) {
+            return;
+        }
+        composer.stepIndex = index;
+        composer.steps.forEach((step, stepIndex) => { step.section.hidden = stepIndex !== index; });
+        const step = composer.steps[index];
+        composer.stepStatus.textContent = `Step ${index + 1} of ${composer.steps.length} · ${step.title}${step.optional ? " (optional)" : ""}`;
+        composer.backButton.disabled = index === 0;
+        composer.nextButton.hidden = index === composer.steps.length - 1;
+        composer.nextButton.textContent = step.optional && step.inputs.every(input => !input.value) ? "Skip" : "Next";
+        composer.scroll.scrollTop = 0;
+        layoutComposer(state);
+        if (focus) {
+            (step.inputs.find(input => !input.disabled && !input.hidden && input.type !== "file") || composer.fileTrigger || composer.createButton)?.focus();
+        }
+    }
+
+    function advanceComposerStep(state) {
+        const composer = state.composer;
+        const step = composer?.steps?.[composer.stepIndex];
+        if (!step) {
+            return;
+        }
+        const invalid = findInvalidComposerInput(composer, step);
+        if (invalid) {
+            reportComposerInput(state, invalid);
+            return;
+        }
+        if (step.inputs.includes(composer.fileInput) && !composer.uploadedFile) {
+            revealComposerControl(state, composer.fileInput);
+            return;
+        }
+        showComposerStep(state, composer.stepIndex + 1);
     }
 
     function updateComposerFileState(composer) {
@@ -432,7 +503,8 @@
             return;
         }
 
-        const title = state.tracksComposerOpenings && request?.placementKind === "edit"
+        const isEditing = request?.placementKind === "edit";
+        const title = isEditing
             ? action.label || "Edit item" : `Create ${action.label || "item"}`;
         const shell = decorateComposerShell(state, title, action.label || "Create", "dialog");
         const setupRendererKey = (action.setupRendererKey || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "-");
@@ -444,29 +516,27 @@
         const dialogBody = createElement(state.document, "div", "cw-canvas-composer__dialog-body");
         const overview = createElement(state.document, "div", "cw-canvas-composer__overview");
         const scroll = createElement(state.document, "div", "cw-canvas-composer__scroll");
-        const sectionSteps = [];
-        const appendSection = (title, description) => {
-            const stepNumber = sectionSteps.length + 1;
-            sectionSteps.push({ number: stepNumber, title });
-            const section = createComposerSection(state.document, stepNumber, title, description);
+        const sections = [];
+        const appendSection = (title, description, optional = false, kind = "inputs") => {
+            const section = { ...createComposerSection(state.document, title, description, isEditing && optional),
+                title, optional, kind, inputs: [] };
+            sections.push(section);
             scroll.appendChild(section.section);
-            return section.body;
+            return section;
         };
         const showDefaultTextFields = action.showDefaultTextFields !== false;
         let titleInput = null;
         let subtitleInput = null;
         let notesInput = null;
-        let defaultFields = null;
-        let notesFields = null;
 
         if (action.description) {
             overview.appendChild(createElement(state.document, "p", "cw-canvas-composer__intro", action.description));
         }
 
         if (showDefaultTextFields) {
-            const detailsSection = appendSection("Details", "Name the item and keep the create request readable on the canvas.");
-            defaultFields = createElement(state.document, "div", "cw-canvas-composer__fields");
-            detailsSection.appendChild(defaultFields);
+            const detailsSection = appendSection("Details", "Name the item and add supporting context.", false, "details");
+            const defaultFields = createElement(state.document, "div", "cw-canvas-composer__fields");
+            detailsSection.body.appendChild(defaultFields);
 
             const titleField = createElement(state.document, "label", "cw-canvas-composer__field");
             titleField.appendChild(createElement(state.document, "span", null, action.titleLabel || "Title"));
@@ -476,6 +546,7 @@
             titleInput.placeholder = action.titlePlaceholder || "";
             titleField.appendChild(titleInput);
             defaultFields.appendChild(titleField);
+            detailsSection.inputs.push(titleInput);
 
             const subtitleField = createElement(state.document, "label", "cw-canvas-composer__field");
             subtitleField.appendChild(createElement(state.document, "span", null, action.subtitleLabel || "Subtitle"));
@@ -485,6 +556,7 @@
             subtitleInput.placeholder = action.subtitlePlaceholder || "";
             subtitleField.appendChild(subtitleInput);
             defaultFields.appendChild(subtitleField);
+            detailsSection.inputs.push(subtitleInput);
 
             const notesField = createElement(state.document, "label", "cw-canvas-composer__field");
             notesField.appendChild(createElement(state.document, "span", null, action.notesLabel || "Notes"));
@@ -493,14 +565,12 @@
             notesInput.placeholder = action.notesPlaceholder || "";
             notesField.appendChild(notesInput);
 
-            const notesSection = appendSection(
-                "Notes",
-                action.requiresFile
-                    ? "Capture the supporting context after the required file is attached."
-                    : "Capture the supporting context and next-step guidance for the new item.");
-            notesFields = createElement(state.document, "div", "cw-canvas-composer__fields");
+            const notesSection = isEditing ? detailsSection : appendSection(
+                "Notes", "Add optional supporting context, or finish without notes.", true, "notes");
+            const notesFields = createElement(state.document, "div", "cw-canvas-composer__fields");
             notesFields.appendChild(notesField);
-            notesSection.appendChild(notesFields);
+            notesSection.body.appendChild(notesFields);
+            notesSection.inputs.push(notesInput);
         }
 
         const inputValueLookup = new Map();
@@ -524,13 +594,17 @@
                 return existing;
             }
 
+            const optional = !(action.inputFields || []).some(candidate =>
+                (candidate.sectionKey || "inputs") === sectionKey && candidate.isRequired);
             const section = appendSection(
-                field.sectionTitle || "Inputs",
-                field.sectionDescription || "Complete the typed fields required before the item can be created.");
+                field.sectionTitle || "Settings",
+                field.sectionDescription || (optional ? "Optional settings. Leave empty to use the defaults." : "Complete the required fields marked with *."),
+                optional);
             const fields = createElement(state.document, "div", "cw-canvas-composer__fields");
-            section.appendChild(fields);
-            inputFieldSections.set(sectionKey, fields);
-            return fields;
+            section.body.appendChild(fields);
+            section.fields = fields;
+            inputFieldSections.set(sectionKey, section);
+            return section;
         };
 
         for (const field of action.inputFields || []) {
@@ -587,30 +661,49 @@
                 input.placeholder = field.placeholder || "";
             }
             fieldWrapper.appendChild(input);
-            inputFields.appendChild(fieldWrapper);
-            const notifyInputChanged = () => {
-                if (state.composer) {
-                    updateComposerFileState(state.composer);
+            if (isSelect && field.isRequired) {
+                const options = Array.from(input.options).filter(option => !!option.value);
+                if (options.length === 1 && input.value === options[0].value) {
+                    input.hidden = true;
+                    input.disabled = true;
+                    fieldWrapper.appendChild(createElement(state.document, "span", "cw-canvas-composer__fixed-value", options[0].textContent));
                 }
-            };
-            input.addEventListener("input", notifyInputChanged);
-            input.addEventListener("change", notifyInputChanged);
+            }
+            inputFields.fields.appendChild(fieldWrapper);
+            inputFields.inputs.push(input);
             inputFieldEntries.push({
                 key: field.key,
+                label: field.label || field.key,
                 input,
                 isRequired: !!field.isRequired
             });
         }
 
+        for (const section of [...sections]) {
+            if (section.kind !== "inputs" || !section.inputs.length || !section.inputs.every(input => input.hidden && input.disabled)) {
+                continue;
+            }
+            let details = sections.find(item => item.kind === "details" || item.kind === "context");
+            if (!details) {
+                details = appendSection("Context", "", false, "context");
+                overview.appendChild(details.section);
+            }
+            details.body.appendChild(section.fields);
+            details.inputs.push(...section.inputs);
+            section.section.remove();
+            sections.splice(sections.indexOf(section), 1);
+        }
+
         let uploadedFile = request?.uploadedFile || null;
         let fileSummary = null;
         let fileInput = null;
+        let fileTrigger = null;
         if (action.requiresFile) {
             const uploadSection = appendSection(
                 "Attachment",
                 action.supportsDragDrop
                     ? "Drop the required file here or choose it from disk."
-                    : "Choose the required file from disk before you create the item.");
+                    : "Choose the required file from disk before you create the item.", false, "attachment");
             const uploadField = createElement(state.document, "div", "cw-canvas-composer__upload");
             const uploadTitle = createElement(state.document, "span", "cw-canvas-composer__upload-title", action.filePrompt || "Drop a file here or choose one.");
             uploadField.appendChild(uploadTitle);
@@ -625,7 +718,7 @@
                 fileInput.accept = action.acceptedFileTypes;
             }
 
-            const fileTrigger = createElement(state.document, "button", "cw-button cw-canvas-composer__file-trigger", "Choose file");
+            fileTrigger = createElement(state.document, "button", "cw-button cw-canvas-composer__file-trigger", "Choose file");
             fileTrigger.type = "button";
             fileTrigger.dataset.tone = "ghost";
             const dropCopy = createElement(state.document, "span", null, action.supportsDragDrop ? "Click or drop a file here." : "Click to choose a file.");
@@ -635,7 +728,8 @@
             dropZone.appendChild(dropCopy);
             dropZone.appendChild(fileSummary);
             uploadField.appendChild(dropZone);
-            uploadSection.appendChild(uploadField);
+            uploadSection.body.appendChild(uploadField);
+            uploadSection.inputs.push(fileInput);
 
             const assignUpload = async file => {
                 uploadedFile = await readFileAsUpload(file);
@@ -712,11 +806,6 @@
             }
         }
 
-        const wizard = createComposerWizard(state.document, sectionSteps);
-        if (wizard) {
-            overview.appendChild(wizard);
-        }
-
         const actions = createElement(state.document, "div", "cw-canvas-composer__actions");
         const cancel = createElement(state.document, "button", "cw-button");
         cancel.type = "button";
@@ -724,12 +813,45 @@
         cancel.addEventListener("click", () => closeComposer(state));
         actions.appendChild(cancel);
 
+        const steps = isEditing ? null : [
+            ...sections.filter(section => section.kind === "details"),
+            ...sections.filter(section => section.kind !== "details" && section.kind !== "context" && !section.optional),
+            ...sections.filter(section => section.optional && section.kind !== "notes"),
+            ...sections.filter(section => section.kind === "notes")
+        ];
+        let stepStatus = null;
+        let backButton = null;
+        let nextButton = null;
+        if (steps?.length > 1) {
+            stepStatus = createElement(state.document, "p", "cw-canvas-composer__step-status");
+            stepStatus.setAttribute("aria-live", "polite");
+            overview.appendChild(stepStatus);
+            backButton = createElement(state.document, "button", "cw-button", "Back");
+            backButton.type = "button";
+            backButton.addEventListener("click", () => showComposerStep(state, state.composer.stepIndex - 1));
+            actions.appendChild(backButton);
+            nextButton = createElement(state.document, "button", "cw-button", "Next");
+            nextButton.type = "button";
+            nextButton.addEventListener("click", () => advanceComposerStep(state));
+            actions.appendChild(nextButton);
+        }
+        for (const section of sections) {
+            if (isEditing && section.optional) {
+                section.section.open = section.inputs.some(input => !!input.value);
+            }
+        }
+
         const create = createElement(state.document, "button", "cw-button");
         create.type = "button";
         create.dataset.tone = "accent";
         create.textContent = action.submitLabel || action.label || "Create";
         create.addEventListener("click", () => commitComposer(state));
         actions.appendChild(create);
+
+        const validation = createElement(state.document, "p", "cw-canvas-composer__validation");
+        validation.setAttribute("role", "alert");
+        validation.hidden = true;
+        actions.prepend(validation);
 
         if (overview.childElementCount > 0) {
             dialogBody.appendChild(overview);
@@ -747,16 +869,42 @@
             subtitleInput,
             notesInput,
             inputFieldEntries,
+            sections,
+            steps: stepStatus ? steps : null,
+            stepIndex: 0,
+            stepStatus,
+            backButton,
+            nextButton,
+            scroll,
+            validation,
             createButton: create,
             requiresFile: !!action.requiresFile,
             uploadedFile,
             fileSummary,
             fileInput,
+            fileTrigger,
             filePrompt: action.filePrompt || "Drop a file here or choose one."
         };
 
+        const composer = state.composer;
+        const inputChanged = () => {
+            if (state.composer !== composer) {
+                return;
+            }
+            validation.hidden = true;
+            updateComposerFileState(composer);
+            if (composer.steps) {
+                const step = composer.steps[composer.stepIndex];
+                nextButton.textContent = step.optional && step.inputs.every(input => !input.value) ? "Skip" : "Next";
+            }
+        };
+        shell.composer.addEventListener("input", inputChanged);
+        shell.composer.addEventListener("change", inputChanged);
+        if (composer.steps) {
+            showComposerStep(state, 0, false);
+        }
         registerComposerOpening(state, request, null);
-        scheduleComposerFocus(state, state.composer, inputFieldEntries[0]?.input || titleInput || subtitleInput || notesInput);
+        scheduleComposerFocus(state, composer, titleInput || composer.steps?.[0]?.inputs.find(input => !input.disabled && !input.hidden && input.type !== "file") || inputFieldEntries.find(entry => !entry.input.disabled && !entry.input.hidden)?.input || fileTrigger || subtitleInput || notesInput || create);
     }
 
     function openInlineNoteComposer(state, options) {
@@ -768,6 +916,7 @@
         const shell = decorateComposerShell(state, "", "", "note");
         const noteEditor = createElement(state.document, "div", "cw-note-editor");
         const textInput = createElement(state.document, "textarea", "cw-note-editor__input");
+        textInput.setAttribute("aria-label", "Note text");
         textInput.value = options.value || "";
         textInput.placeholder = options.placeholder || state.surface.chrome.inlineNotePlaceholder || "Write note";
         noteEditor.appendChild(textInput);
@@ -1346,5 +1495,5 @@
         openContextSubmenuByActionId(state, actionId);
     }
 
-    Object.assign(shared, { readComposerCloseRequest, readComposerDraft, applyComposerDraft, acknowledgeComposer, readFileAsUpload, commitComposer, decorateComposerShell, createComposerWizard, createComposerSection, updateComposerFileState, openCreateComposer, openInlineNoteComposer, buildChildNotePlacement, buildSiblingNotePlacement, openKeyboardNoteComposer, openExistingNoteEditor, executeContextAction, openContextSubmenu, openContextSubmenuByActionId, renderContextMenuLayer, renderToolboxPreview, renderToolboxPanelLayer, showContextMenu, legacyOpenNodeMetadataMenu });
+    Object.assign(shared, { readComposerCloseRequest, readComposerDraft, applyComposerDraft, acknowledgeComposer, readFileAsUpload, commitComposer, decorateComposerShell, createComposerSection, updateComposerFileState, openCreateComposer, openInlineNoteComposer, buildChildNotePlacement, buildSiblingNotePlacement, openKeyboardNoteComposer, openExistingNoteEditor, executeContextAction, openContextSubmenu, openContextSubmenuByActionId, renderContextMenuLayer, renderToolboxPreview, renderToolboxPanelLayer, showContextMenu, legacyOpenNodeMetadataMenu });
 })();

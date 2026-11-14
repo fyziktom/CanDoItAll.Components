@@ -4,6 +4,22 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ## [Unreleased] — 2.0.1
 
+### CanvasLib composer editing
+
+#### Internal
+
+- Changed inline note editors to use the existing canvas surface, text and muted tokens in both themes.
+  Enter saves, Shift+Enter adds a line, and Escape cancels through the existing host-owned close guard.
+- Changed creation composers to show one section at a time, with required settings and attachments before optional
+  notes. Back/Next/Skip retain all fields, and Create can finish once required values are present; invalid fields
+  are revealed before focus and validation. Name receives initial focus without stealing later user focus.
+- Changed requests with `PlacementKind="edit"` to show a normal name-first form without creation steps. Empty
+  optional setting groups use disclosures; configured groups remain open. Existing input keys, payloads,
+  draft revisions and acknowledgement/close contracts are unchanged; consumers need no new parameters.
+- Changed composer placement to keep its header, scrolling body and actions inside the visible canvas viewport,
+  including when the canvas extends below the page viewport or optional groups expand and collapse; the canvas
+  toolbar still reserves its space.
+
 ### CanvasLib selected-node actions
 
 #### Public interface
