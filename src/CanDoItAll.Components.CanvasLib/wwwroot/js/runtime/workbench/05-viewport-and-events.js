@@ -9,7 +9,7 @@
         }
     });
     const { contextSubmenuHoverDelayMs, MIN_ZOOM, MAX_ZOOM, selectionModel, getRequiredRootService, getTextMeasureService, getViewportControllerService, getAnimationTimelineService, clear, createElement, createSvgElement, normalizeInputField, normalizeInputValue, clamp, debounce, now, createWorkbenchMetrics, formatMetricDuration, cloneWorkbenchMetrics, incrementMetric, resetLastDragPatchMetrics, recordDragPatchMetrics, round, normalizeAction, normalizeAnnotation, normalizeCompactPath, normalizeDiagnosticsOptions, normalizeMinimapOptions, normalizeClipboardOptions, normalizeTooltipPopoverOptions, normalizeMarqueeOptions, normalizeSnapGuideOptions, normalizeConnectorAnchorOptions, normalizeTransformHandleOptions, normalizeGroupFrame, normalizeProgressPercent, normalizeMenuActionScale, normalizeSurface, toSelectionSet, toCollapsedSet, getDefaultNodeSize, resolveBaseNodeSize, estimateNodeSizeFromText, getNodeSize, buildNodeLookup, isNodeVisible, getVisibleNodes, getProjectionOverscanPx, collectProjectedContextNodeIds, isNodeProjectedInViewport, getProjectedNodes, getBaseNodePosition, getNodeDepth, getNodeMobility, buildResolvedLayoutKey, buildLayoutItems, getCollisionPaddingX, getCollisionPaddingY, getOverlapDelta, chooseCollisionAxis, resolveCollisionDirection, applyCollisionSeparation, enforceParentClearance, enforceSiblingSpacing, relaxTowardBase, computeResolvedNodePositions, ensureLayoutPositions, getNodePosition, getSceneBounds, clampPanToScene, setPan, syncMenuScaleCss, serializeState, legacyApplySceneTransform, cancelViewportAnimation, updateViewportTransform, animateViewportTransition, getLinkAnchorPoint, getLinkRetainedKey, getLinkPathData, updateLinkElement, shouldRenderArrow, getExpandedFrameNodeIds, getFrameRetainedKey, createFrameElement, updateFrameElement, getFrameBounds, legacyRenderGroupFrames, resolveChipToneClass, createProgressMarker, resolveProgressDisplay, createProgressBadge, resolveProgressPresetBadgeOptions, resolveMarkerGlyph, createMarkerBadge, createPriorityBadge, appendNodeIndicators, renderInlineTextNode, createNodeMedia, createCompactPathButton, renderStandardNode, createRetainedNodeElement, getNodeRetainedContentKey, updateNodeElementChrome, renderNodeElementContent, buildActiveDragContext, positionFloatingOverlayWithinHost, hidePopover, legacyShowPopover, invokeAnnotationAction, renderNodeAnnotations, updateConnectorAnchorHover, getConnectorAnchorPoints, hideStatusNotice, showStatusNotice, renderEmptyStateOverlay, clearSnapGuides, legacyRenderSnapGuides, legacyRenderConnectorAnchorOverlay, getSelectionBounds, legacyRenderTransformHandlesOverlay, resolveSnapAdjustment, legacyRenderDebugDecorations, legacyBuildDiagnosticsSnapshot, renderDiagnosticsOverlay, navigateViaMinimap, resolveClipboardAnchor, buildClipboardPayload, copySelectionToClipboard, requestClipboardDuplicate, toggleMinimap, toggleDiagnostics, invalidateMeasuredLayout, legacyMeasureRenderedNodeSizes, legacyScheduleNodeMeasurement, getHostPoint, worldToHostPoint, getWorldPoint, hitTestNode, hitTestFrameHandle, hitTestProgressBadge, isOverlayTarget, applyFullTextTooltip, reconcileSelection, applySelection, selectSingleNode, publishSelection, clearViewportStateCommit, createSerializedStateSnapshot, invokeStateChanged, publishState, publishStateNow, scheduleViewportStateCommit, publishNodesMoved, setSelection, toggleSelection, toggleCollapse, clearContextMenu, closeComposer, ensureHostFocus, deferHostFocus, resolveComposerAnchor, layoutComposer, render, getContextActions, isCreateAction, buildCreateRequest, resolveMenuLabel, getMenuScale, isCompactHiveLayout, resolveMenuActionVariant, getActionMetrics, applyProgressPresetTone, fitContextMenuLabel, resolveActionGlyph, createMenuActionIcon, resolveMenuActionAriaLabel, getRadialOffsets, buildCompactHiveCoordinates, getCompactHiveOffsets, resolveContextMenuOffsets, resolveContextMenuSafeTop, getContextMenuLayerBounds, clampLayerBoundsToHost, positionContextMenu, getContextMenuOrbitRadius, getContextMenuLocalPoint, isPointInContextMenuLayer, closeContextMenuLayersFrom, syncContextMenuLayers, resolveSubmenuOrigin, ensureSubmenuLoadingIndicator, clearSubmenuLoadingIndicator, cancelPendingContextSubmenu, scheduleContextSubmenuOpen, clampLayerOriginToHost, getToolboxPanelSize, getToolboxPanelBounds, clampToolboxPanelOriginToHost, resolveToolboxPanelOrigin, createContextMenuLayer, shiftContextMenuLayerOrigin, nudgeContextMenuLayerIntoVisibleHost, resolveQuickCreateSourceNode, submitCreateRequest, submitNodeEdit, readFileAsUpload, commitComposer, decorateComposerShell, createComposerWizard, createComposerSection, updateComposerFileState, openCreateComposer, openInlineNoteComposer, buildChildNotePlacement, buildSiblingNotePlacement, openKeyboardNoteComposer, openExistingNoteEditor, executeContextAction, openContextSubmenu, openContextSubmenuByActionId, renderContextMenuLayer, renderToolboxPreview, renderToolboxPanelLayer, showContextMenu, legacyOpenNodeMetadataMenu } = shared;
-    const { requestClipboardCut, requestClipboardPaste } = shared;
+    const { requestClipboardCut, requestClipboardPaste, resolveCanvasColors } = shared;
     function startPan(state, event) {
         clearSnapGuides(state);
         if (state.anchorLayer) {
@@ -1219,130 +1219,7 @@
                     label: isGroupSelection ? `${state.selectedIds.size} selected` : undefined
                 });
             },
-            keyDown: event => {
-                const target = event.target;
-                const tagName = target?.tagName?.toLowerCase?.() || "";
-                const isCanvasKeyTarget = target === state.host || state.host.contains(target);
-                if (!isCanvasKeyTarget) {
-                    return;
-                }
-
-                const isEditable = tagName === "input" || tagName === "textarea" || target?.isContentEditable;
-                if (isEditable) {
-                    if (event.key === "Escape") {
-                        event.preventDefault();
-                        closeComposer(state);
-                    }
-
-                    return;
-                }
-
-                if (shared.routeContextMenuShortcut?.(state, event)) {
-                    return;
-                }
-
-                const lowerKey = (event.key || "").toLowerCase();
-                const usesCommandModifier = event.ctrlKey || event.metaKey;
-                const isClipboardShortcut = lowerKey === "x" || lowerKey === "c" || lowerKey === "v" || lowerKey === "d";
-                if (usesCommandModifier && !event.altKey && isClipboardShortcut) {
-                    const shouldDispatch = !event.repeat;
-
-                    switch (lowerKey) {
-                        case "x":
-                            if (requestClipboardCut(state, shouldDispatch)) {
-                                event.preventDefault();
-                            }
-
-                            return;
-                        case "c":
-                            if (copySelectionToClipboard(state, shouldDispatch)) {
-                                event.preventDefault();
-                            }
-
-                            return;
-                        case "v":
-                            if (requestClipboardPaste(state, shouldDispatch)) {
-                                event.preventDefault();
-                            }
-
-                            return;
-                        case "d":
-                            if (requestClipboardDuplicate(state, shouldDispatch)) {
-                                event.preventDefault();
-                            }
-
-                            return;
-                    }
-                }
-
-                if (event.key === "Tab" && !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
-                    event.preventDefault();
-                    openKeyboardNoteComposer(state, "child");
-                    return;
-                }
-
-                if (event.key === "Enter" && !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
-                    event.preventDefault();
-                    openKeyboardNoteComposer(state, "sibling");
-                    return;
-                }
-
-                switch (event.key) {
-                    case "+":
-                    case "=":
-                        event.preventDefault();
-                        setZoomPercent(state, (state.ui.zoom * 100) + 10);
-                        break;
-                    case "-":
-                        event.preventDefault();
-                        setZoomPercent(state, (state.ui.zoom * 100) - 10);
-                        break;
-                    case "0":
-                        event.preventDefault();
-                        fitView(state);
-                        break;
-                    case "?":
-                    case "h":
-                    case "H":
-                        event.preventDefault();
-                        toggleHelp(state);
-                        break;
-                    case "d":
-                    case "D":
-                        event.preventDefault();
-                        toggleDiagnostics(state);
-                        break;
-                    case "m":
-                    case "M":
-                        event.preventDefault();
-                        toggleMinimap(state);
-                        break;
-                    case "Escape":
-                        event.preventDefault();
-                        {
-                            if (state.helpOpen) {
-                                toggleHelp(state);
-                                render(state);
-                                ensureHostFocus(state);
-                                return;
-                            }
-
-                            const hadContextMenu = state.contextMenu?.style.display !== "none";
-                            const hadComposer = !!state.composer;
-                            clearContextMenu(state);
-                            closeComposer(state);
-                            shared.clearNodeHighlights?.(state, { render: true, publish: true });
-                            if (!hadContextMenu && !hadComposer) {
-                                setSelection(state, [], true);
-                            }
-                            else {
-                                render(state);
-                                ensureHostFocus(state);
-                            }
-                        }
-                        break;
-                }
-            }
+            keyDown: event => shared.routeWorkbenchKeyDown(state, event)
         };
 
         state.host.addEventListener("pointerdown", state.handlers.pointerDown);
@@ -1365,6 +1242,8 @@
             host,
             shell: host.closest(".cw-workbench-shell"),
             document: host.ownerDocument,
+            colors: resolveCanvasColors(host.closest(".cw-workbench-shell") || host),
+            themeWatcher: null,
             dotNetRef,
             animationTimeline,
             surface: normalizedSurface,

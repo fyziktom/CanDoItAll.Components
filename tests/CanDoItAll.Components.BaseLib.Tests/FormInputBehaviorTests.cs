@@ -10,7 +10,7 @@ public sealed class FormInputBehaviorTests
     public async Task A_pending_textarea_callback_keeps_current_input_through_an_unchanged_parent_render() {
         using var context = new BunitContext();
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        var cut = context.Render<TextArea>(parameters => parameters
+        var cut = context.Render<TextAreaInput>(parameters => parameters
             .Add(component => component.Value, "Original")
             .Add(component => component.Immediate, true)
             .Add(component => component.ValueChanged, _ => release.Task));
@@ -29,11 +29,11 @@ public sealed class FormInputBehaviorTests
 
     [Fact]
     public async Task ControlledTextAreaEmitsBothCallbacksWithoutMutatingItsValue() {
-        var area = new TextArea();
+        var area = new TextAreaInput();
         var callbacks = new List<string>();
-        SetProperty(area, nameof(TextArea.Value), "Original textarea value");
-        SetProperty(area, nameof(TextArea.ValueChanged), EventCallback.Factory.Create<string?>(this, value => callbacks.Add($"value:{value}")));
-        SetProperty(area, nameof(TextArea.Change), EventCallback.Factory.Create<string?>(this, value => callbacks.Add($"change:{value}")));
+        SetProperty(area, nameof(TextAreaInput.Value), "Original textarea value");
+        SetProperty(area, nameof(TextAreaInput.ValueChanged), EventCallback.Factory.Create<string?>(this, value => callbacks.Add($"value:{value}")));
+        SetProperty(area, nameof(TextAreaInput.Change), EventCallback.Factory.Create<string?>(this, value => callbacks.Add($"change:{value}")));
 
         await InvokePrivateAsync(area, "OnChangedAsync", "Current multiline\nvalue");
 
@@ -45,13 +45,13 @@ public sealed class FormInputBehaviorTests
     [InlineData(true, false)]
     [InlineData(false, true)]
     public async Task DisabledOrReadOnlyTextAreaRejectsNativeValueCallbacks(bool disabled, bool readOnly) {
-        var area = new TextArea();
+        var area = new TextAreaInput();
         var calls = 0;
-        SetProperty(area, nameof(TextArea.Disabled), disabled);
-        SetProperty(area, nameof(TextArea.ReadOnly), readOnly);
-        SetProperty(area, nameof(TextArea.Value), "Kept textarea value");
-        SetProperty(area, nameof(TextArea.ValueChanged), EventCallback.Factory.Create<string?>(this, _ => calls++));
-        SetProperty(area, nameof(TextArea.Change), EventCallback.Factory.Create<string?>(this, _ => calls++));
+        SetProperty(area, nameof(TextAreaInput.Disabled), disabled);
+        SetProperty(area, nameof(TextAreaInput.ReadOnly), readOnly);
+        SetProperty(area, nameof(TextAreaInput.Value), "Kept textarea value");
+        SetProperty(area, nameof(TextAreaInput.ValueChanged), EventCallback.Factory.Create<string?>(this, _ => calls++));
+        SetProperty(area, nameof(TextAreaInput.Change), EventCallback.Factory.Create<string?>(this, _ => calls++));
 
         await InvokePrivateAsync(area, "OnChangedAsync", "Refused value");
 
@@ -133,38 +133,6 @@ public sealed class FormInputBehaviorTests
         Assert.Equal("tag-editor", attributes["data-testid"]);
         Assert.Contains("cad-tag-textedit", attributes["class"].ToString(), StringComparison.Ordinal);
         Assert.Contains("caller-class", attributes["class"].ToString(), StringComparison.Ordinal);
-    }
-
-    [Fact]
-    public async Task DisabledTextBoxDoesNotInvokeChangeCallbacks()
-    {
-        var callbackCount = 0;
-        var textBox = new TextBox();
-        SetProperty(textBox, nameof(TextBox.Disabled), true);
-        SetProperty(textBox, nameof(TextBox.Value), "before");
-        SetProperty(
-            textBox,
-            nameof(TextBox.ValueChanged),
-            EventCallback.Factory.Create<string?>(this, _ => callbackCount++));
-
-        await InvokeChangeAsync(textBox, "OnChangedAsync", "after");
-
-        Assert.Equal("before", textBox.Value);
-        Assert.Equal(0, callbackCount);
-    }
-
-    [Fact]
-    public async Task ControlledTextBoxEmitsValueWithoutMutatingParameter()
-    {
-        string? emittedValue = null;
-        var textBox = new TextBox();
-        SetProperty(textBox, nameof(TextBox.Value), "before");
-        SetProperty(textBox, nameof(TextBox.ValueChanged), EventCallback.Factory.Create<string?>(this, value => emittedValue = value));
-
-        await InvokeChangeAsync(textBox, "OnChangedAsync", "after");
-
-        Assert.Equal("before", textBox.Value);
-        Assert.Equal("after", emittedValue);
     }
 
     [Fact]

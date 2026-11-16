@@ -24,6 +24,26 @@ and uncertain results independently of any replacement editor. Other consumers d
 not opt in implicitly. Invalid browser input prevents submission and remains in the
 editor; numeric and local timestamp inputs accept fractional precision.
 
+### Creation and editing composers
+
+`RequiresInput` actions use a compact creation wizard. Only one section is visible;
+required `InputFields` and attachments come before optional settings and notes. Group
+related inputs with `SectionKey`, `SectionTitle` and `SectionDescription`. Back, Next
+and Skip retain the original controls and values. Create can finish from any step once
+the required values are present; invalid native input reveals its section before focus.
+Required selects with one fixed choice display that value as context; a group containing
+only fixed choices joins Details without adding a step, and still contributes its values.
+Enter in a single-line field advances to the next step. Textareas, selects, buttons
+and IME composition retain their native keyboard behavior.
+
+Pass `PlacementKind="edit"` on the existing request for a normal form instead of a
+wizard. Name, subtitle and notes appear first. Required settings stay visible; empty
+optional groups use disclosures and configured groups start expanded. Both modes
+focus the name first without stealing focus after the user chooses another control.
+Presentation does not change field keys, defaults, payloads, draft revisions or the
+host's opening, acknowledgement and close-guard responsibilities. Inline note editing
+continues to use Enter to save, Shift+Enter for a newline and Escape to request close.
+
 ## When to choose it
 
 Choose CanvasLib when the primary task benefits from spatial work: mapping dependencies, arranging plans, authoring a graph, inspecting a network, or operating a dense calendar. It earns its complexity when selection, viewport position, movable context, and visual relationships are part of the user task.
@@ -61,6 +81,27 @@ Node selection does not activate dragging. A six-screen-pixel movement threshold
 crowded nodes stationary during clicks and double-clicks, then admits the existing drag,
 snap and release path. See [node drag intent](node-drag-intent.md) for the interaction
 boundary and validation contract.
+
+## Selected-node actions and keyboard ownership
+
+Populate `CanvasWorkbenchNode.ToolbarActions` with existing `CanvasWorkbenchAction` descriptors that the
+host permits for that node. The workbench shows a Node actions button and accepts Ctrl+M when exactly one
+eligible node is selected. The single toolbar uses screen pixels and follows the node within the visible
+canvas bounds; Escape, outside click, selection changes and removal close it. Deletion is only an action
+supplied by the host (a `delete` icon is rendered as a cross); no universal delete capability is inferred.
+
+Mark the identifier action with `KeyboardCommand = CanvasWorkbenchKeyboardCommand.CopyIdentifier` to
+accept Ctrl+I. Both toolbar clicks and this shortcut emit the existing `ContextActionRequested`; the host
+still owns identifier formatting, clipboard writes and mutation admission. Keep other action roles at `None`.
+For read-only previews, omit mutating actions. The existing `ClipboardRequested` boundary remains separate
+for Ctrl/Cmd+C, X, V and D.
+
+Keyboard commands belong to the focused canvas, not the document. Inputs, selects, contenteditable regions,
+overlays and nested canvases retain their own keyboard behavior. Toolbar buttons retain native Tab, Enter
+and Space behavior. Repeated accepted commands are suppressed without redispatch; unimplemented commands
+such as Undo/Redo remain untouched. Ctrl+M is canvas-specific and otherwise retains browser behavior;
+Meta+M is not offered because it can minimize a macOS window. The visible Node actions button is the pointer
+alternative. The existing `/canvas` workbench example reports each host action and can remove a sample node.
 
 ## Adding a floating inspector
 

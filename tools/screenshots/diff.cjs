@@ -33,11 +33,11 @@ async function main() {
   }
 
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  const branches = listScreenshotBranches(config.storageRepoPath);
+  const branches = listScreenshotBranches(config.storageRepoPath, config.key);
   const against = args.against || branches[0];
 
   if (!against) {
-    console.log("No prior screenshots_* branch found — nothing to diff against (first run).");
+    console.log(`No prior ${config.key}_* branch found — nothing to diff against (first run).`);
     writeResults(dataDir, { against: null, results: [] });
     return;
   }

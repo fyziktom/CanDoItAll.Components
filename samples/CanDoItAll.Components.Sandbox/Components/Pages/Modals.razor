@@ -27,6 +27,15 @@
                             <RecordDialog />
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "CanvasOverlayDialog")
+                    {
+                        <ExampleBlock Title="Canvas overlay dialog"
+                                      Description="Theme-aware overlay with readable disabled controls and owner-controlled closing."
+                                      SourceId="examples/Modals/CanvasOverlay.razor"
+                                      ApiTypes="@CanvasOverlayApiTypes">
+                            <CanvasOverlay />
+                        </ExampleBlock>
+                    }
                     else if (section.ComponentName == "DialogScaffold")
                     {
                         <ExampleBlock Title="Dialog scaffold layout"
@@ -84,6 +93,7 @@
     private static readonly IReadOnlyList<SandboxPageSection> Sections = SandboxCatalogRegistry.GetSections("/modals");
 
     private static readonly IReadOnlyList<Type> DialogApiTypes = [typeof(Dialog)];
+    private static readonly IReadOnlyList<Type> CanvasOverlayApiTypes = [typeof(CanvasOverlayDialog)];
     private static readonly IReadOnlyList<Type> DialogScaffoldApiTypes = [typeof(DialogScaffold)];
     private static readonly IReadOnlyList<Type> DangerActionDialogApiTypes = [typeof(DangerActionDialog)];
     private static readonly IReadOnlyList<Type> InspectorDialogLayoutApiTypes = [typeof(InspectorDialogLayout)];

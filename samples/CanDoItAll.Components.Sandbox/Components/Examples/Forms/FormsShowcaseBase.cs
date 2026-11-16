@@ -8,7 +8,18 @@ namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms;
 public abstract class FormsShowcaseBase : ComponentBase
 {
     protected bool IsDisabled => false;
-    protected InputFormState FormState { get; } = new("Quarterly migration review with extended ownership and escalation notes for all teams involved", "Platform architecture review board", "Review", 90, "long-secret", true, true, false, "This example deliberately uses a longer note so the textarea, labels, and spacing prove that shared field components can tolerate editorial copy without becoming unreadable.");
+    protected InputFormState FormState { get; private set; } = new(
+        "Quarterly migration review with extended ownership and escalation notes for all teams involved",
+        "Platform architecture review board",
+        "Review",
+        90,
+        "long-secret",
+        true,
+        true,
+        false,
+        "This example deliberately uses a longer note so the textarea, labels, and spacing prove that shared field components can tolerate editorial copy without becoming unreadable.",
+        new DateTime(2000, 1, 1)
+        );
 
     protected string TitlePlaceholder => "Long titles should wrap predictably and still read well.";
     protected string NotesPlaceholder => "Explain context, risk, and reviewer expectations.";
@@ -33,6 +44,10 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected int uploadedFileCount;
     protected long uploadedTotalSizeBytes;
     protected IReadOnlyList<string> uploadedFileNames = [];
+    protected int fileInputSelectionCount;
+    protected string? fileInputFileName;
+    protected bool CanReadStorage { get; set; } = true;
+    protected bool CanWriteStorage { get; set; }
 
     protected string PriorityLabel => AdvancedState.Priority switch { >= 85 => "High review priority", >= 55 => "Standard review priority", _ => "Low review priority" };
     protected string SelectedReviewerLabel => ReviewerOptions.FirstOrDefault(item => item.Id == AdvancedState.ReviewerId)?.Label ?? "No lane";
@@ -43,15 +58,44 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected string UploadedTotalSizeLabel => uploadedTotalSizeBytes == 0 ? "0 B" : FormatBytes(uploadedTotalSizeBytes);
     protected string EditableSummary => $"{EditableState.Title} | {EditableState.Confidence}% | {EditableState.EffortHours:0.0} h | {(EditableState.RequiresApproval ? "approval" : "self-review")}";
 
-    protected Task HandleTitleChanged(string? value) => Task.CompletedTask;
-    protected Task HandleOwnerChanged(string? value) => Task.CompletedTask;
-    protected Task HandleStatusChanged(string? value) => Task.CompletedTask;
-    protected Task HandleConfidenceChanged(int value) => Task.CompletedTask;
-    protected Task HandleSecretChanged(string? value) => Task.CompletedTask;
-    protected Task HandleReminderChanged(bool value) => Task.CompletedTask;
-    protected Task HandleNotesChanged(string? value) => Task.CompletedTask;
-    protected Task HandleApprovalChanged(bool value) => Task.CompletedTask;
-    protected Task HandlePublishChanged(bool value) => Task.CompletedTask;
+    protected Task HandleTitleChanged(string? value) {
+        FormState = FormState with { Title = value ?? string.Empty };
+        return Task.CompletedTask;
+    }
+    protected Task HandleOwnerChanged(string? value) {
+        FormState = FormState with { Owner = value ?? string.Empty };
+        return Task.CompletedTask;
+    }
+    protected Task HandleStatusChanged(string? value) {
+        FormState = FormState with { Status = value ?? string.Empty };
+        return Task.CompletedTask;
+    }
+    protected Task HandleConfidenceChanged(int value) {
+        FormState = FormState with { Confidence = value };
+        return Task.CompletedTask;
+    }
+    protected Task HandleSecretChanged(string? value) {
+        FormState = FormState with { Secret = value ?? string.Empty };
+        return Task.CompletedTask;
+    }
+    protected Task HandleReminderChanged(bool value) {
+        FormState = FormState with { RemindersEnabled = value };
+        return Task.CompletedTask;
+    }
+    protected Task HandleNotesChanged(string? value) {
+        FormState = FormState with { Notes = value ?? string.Empty };
+        return Task.CompletedTask;
+    }
+    protected Task HandleApprovalChanged(bool value) {
+        FormState = FormState with { RequiresApproval = value };
+        return Task.CompletedTask;
+    }
+    protected Task HandlePublishChanged(bool value) {
+        FormState = FormState with { PublishExternally = value };
+        return Task.CompletedTask;
+    }
+    protected Task HandleCanReadStorageChanged(bool value) { CanReadStorage = value; return Task.CompletedTask; }
+    protected Task HandleCanWriteStorageChanged(bool value) { CanWriteStorage = value; return Task.CompletedTask; }
     protected Task HandlePriorityChanged(int value) { AdvancedState.Priority = value; advancedChangeCount++; return Task.CompletedTask; }
     protected Task HandleBudgetCodeChanged(string? value) { AdvancedState.BudgetCode = value ?? string.Empty; advancedChangeCount++; return Task.CompletedTask; }
     protected Task HandleTagsChanged(IReadOnlyList<string> value) { AdvancedState.Tags = value; advancedChangeCount++; return Task.CompletedTask; }
@@ -60,12 +104,42 @@ public abstract class FormsShowcaseBase : ComponentBase
     protected Task HandleAdvancedReset() { AdvancedState = CreateAdvancedState(); advancedChangeCount++; return Task.CompletedTask; }
     protected Task HandleEditableChanged(EditableReviewItem item) { EditableState = item; editableSaveCount++; return Task.CompletedTask; }
     protected Task HandleUploadChanged(InputFileChangeEventArgs args) { var files = args.GetMultipleFiles(10); uploadSelectionCount++; uploadedFileCount = files.Count; uploadedTotalSizeBytes = files.Sum(file => file.Size); uploadedFileNames = files.Select(file => $"{file.Name} ({FormatBytes(file.Size)})").ToArray(); return Task.CompletedTask; }
+    protected Task HandleFileInputChanged(InputFileChangeEventArgs args) { fileInputSelectionCount++; fileInputFileName = args.File.Name; return Task.CompletedTask; }
     private static string FormatBytes(long bytes) { string[] suffixes = ["B", "KB", "MB", "GB"]; double value = bytes; var index = 0; while (value >= 1024d && index < suffixes.Length - 1) { value /= 1024d; index++; } return index == 0 ? $"{value:0} {suffixes[index]}" : $"{value:0.0} {suffixes[index]}"; }
     private static AdvancedInputState CreateAdvancedState() => new() { Priority = 92, BudgetCode = "COMPONENT-PUBLISHING-READINESS-TRANSFER-REFERENCE", Tags = ["accessibility", "mobile-layout", "publishing", "visual-proof"], ReviewerId = "release", NotifyLeads = true };
     private static EditableReviewItem CreateEditableState() => new() { Title = "Quarterly migration review with extended ownership and escalation notes", Confidence = 91, EffortHours = 18.75, RequiresApproval = true };
 
+    protected NativeInputModel NativeModel { get; } = new();
+    protected NativeInputModel NativeInvalidModel { get; } = new() { Title = null };
+
     protected sealed record SelectOption(string Text, string Value);
-    protected sealed record InputFormState(string Title, string Owner, string Status, int Confidence, string Secret, bool RemindersEnabled, bool RequiresApproval, bool PublishExternally, string Notes);
+
+    protected sealed record InputFormState(
+        string Title,
+        string Owner,
+        string Status,
+        int Confidence,
+        string Secret,
+        bool RemindersEnabled,
+        bool RequiresApproval,
+        bool PublishExternally,
+        string Notes,
+        DateTime Date
+        );
     protected sealed class AdvancedInputState { public int Priority { get; set; } public string BudgetCode { get; set; } = string.Empty; public IReadOnlyList<string> Tags { get; set; } = []; public string ReviewerId { get; set; } = string.Empty; public bool NotifyLeads { get; set; } }
     public sealed class EditableReviewItem { public string Title { get; set; } = string.Empty; public int Confidence { get; set; } public double EffortHours { get; set; } public bool RequiresApproval { get; set; } }
+
+    /// <summary>Mutable model backing the EditForm-integrated form examples (validation state, DateInput, enum-typed SelectInput).</summary>
+    public sealed class NativeInputModel
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(80)]
+        public string? Title { get; set; } = "Quarterly migration review";
+
+        public DateOnly? DueDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
+
+        public ReviewStatus? Status { get; set; } = ReviewStatus.Review;
+    }
+
+    public enum ReviewStatus { Draft, Review, Blocked, Approved }
 }

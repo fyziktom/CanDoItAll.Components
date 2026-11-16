@@ -1,0 +1,136 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+@inherits NavigationExampleBase
+
+<div class="space-y-6">
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Rounded.None" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="Square outer corners on the tab and the panel." />
+                </div>
+                <Tabs SelectedIndex="1" Rounded="@(TabsRounded.None)" ContentRounded="@(TabsRounded.None)"
+                      AriaLabel="Rounded none tabs" data-testid="tabs-lab-rounded-none">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Options">
+                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="No radius anywhere in the control." />
+                        </TabsItem>
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Rounded.Default" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="The baseline shape used everywhere else in this catalog." />
+                </div>
+                <Tabs SelectedIndex="1" AriaLabel="Rounded default tabs" data-testid="tabs-lab-rounded-default">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Options">
+                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="A small radius on the outer corners only." />
+                        </TabsItem>
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Rounded.Medium" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="Matches Button's Medium rounded corner scale." />
+                </div>
+                <Tabs SelectedIndex="1" Rounded="@(TabsRounded.Medium)" ContentRounded="@(TabsRounded.Medium)"
+                      AriaLabel="Rounded medium tabs" data-testid="tabs-lab-rounded-medium">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Options">
+                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="A more noticeable outer-corner radius." />
+                        </TabsItem>
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Rounded.Large" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="The softest available shape." />
+                </div>
+                <Tabs SelectedIndex="1" Rounded="@(TabsRounded.Large)" ContentRounded="@(TabsRounded.Large)"
+                      AriaLabel="Rounded large tabs" data-testid="tabs-lab-rounded-large">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Options">
+                            <TextBlock TextStyle="@(TextStyle.Body2)" Value="Only the two outer corners round, even at this scale." />
+                        </TabsItem>
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="Density.Comfortable" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="Sits between Normal and Compact, matching Button/Input's comfortable scale." />
+                </div>
+                <Tabs SelectedIndex="1" Density="@(TabsDensity.Comfortable)"
+                      AriaLabel="Comfortable density tabs" data-testid="tabs-lab-density-comfortable">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Options" />
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="NoSlider" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="Disables the active-tab underline indicator." />
+                </div>
+                <Tabs SelectedIndex="1" NoSlider="true"
+                      AriaLabel="No slider tabs" data-testid="tabs-lab-no-slider">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Options" />
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="NoContent" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="Renders only the tab strip, no panel wrapper below it." />
+                </div>
+                <Tabs SelectedIndex="1" NoContent="true"
+                      AriaLabel="No content tabs" data-testid="tabs-lab-no-content">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Options" />
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+        <Card>
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <TextBlock TextStyle="@(TextStyle.Subtitle2)" Value="TabsItem.Link" />
+                    <TextBlock TextStyle="@(TextStyle.Note)" Value="A tab with Link set renders as an anchor styled like a link." />
+                </div>
+                <Tabs SelectedIndex="0" AriaLabel="Link tab" data-testid="tabs-lab-link">
+                    <TabItems>
+                        <TabsItem Text="Preview" />
+                        <TabsItem Text="Documentation" Link="https://github.com/fyziktom/CanDoItAll.Components" />
+                    </TabItems>
+                </Tabs>
+            </div>
+        </Card>
+    </div>
+</div>

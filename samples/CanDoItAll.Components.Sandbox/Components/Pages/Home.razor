@@ -39,7 +39,7 @@
                     </div>
                 }
                 <div class="space-y-1">
-                    <a href="test" data-sandbox-route class="sandbox-toc-group block">Test</a>
+                    <a href="@BuildGroupLink("/test")" data-sandbox-route class="sandbox-toc-group block">Test</a>
                     <p class="sandbox-toc-items"><a href="@BuildGroupLink("/test")" data-sandbox-route>All</a>, <a href="@BuildRawTestLink()" data-sandbox-route>All (raw)</a></p>
                 </div>
             </div>
@@ -51,6 +51,9 @@
     [CascadingParameter]
     public SandboxToolbarState? ToolbarState { get; set; }
 
+    [CascadingParameter]
+    public SandboxThemeState? ThemeState { get; set; }
+
     /// <summary>Unused directly; accepted so the hash-routing shim in Routes.razor can route
     /// here (as it does for every other catalog page) without an unknown-parameter error.</summary>
     [Parameter]
@@ -61,11 +64,12 @@
             NavigationManager,
             route,
             frame: SandboxQueryLinks.GetCurrentFrame(NavigationManager),
-            isDark: false,
+            isDark: ThemeState?.IsDark ?? SandboxQueryLinks.IsDark(NavigationManager),
             fragment: anchor);
 
-    private static string BuildRawTestLink()
-        => SandboxQueryLinks.UseHashRouting ? "#test?raw" : "test?raw";
+    private string BuildRawTestLink()
+        => SandboxQueryLinks.BuildRawTestLink(
+            ThemeState?.IsDark ?? SandboxQueryLinks.IsDark(NavigationManager));
 
     private IReadOnlyList<SandboxPageSection> VisibleSections(IReadOnlyList<SandboxPageSection> sections)
         => SandboxCatalogRegistry.FilterVisible(sections, ToolbarState is { ShowUnused: true });

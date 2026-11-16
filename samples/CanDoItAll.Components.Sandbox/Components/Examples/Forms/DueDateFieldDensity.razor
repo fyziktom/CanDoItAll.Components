@@ -1,0 +1,18 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Cluster Gap="LayoutGap.Medium">
+    @foreach (var density in FormDensities)
+    {
+        <FormField Text="@density.ToString()">
+            <DateInput TValue="DateOnly?"
+                       Value="@NativeModel.DueDate"
+                       ValueChanged="@(value => NativeModel.DueDate = value)"
+                       Density="@density" />
+        </FormField>
+    }
+</Cluster>
+
+@code {
+    private static readonly FormDensity[] FormDensities = Enum.GetValues<FormDensity>();
+}

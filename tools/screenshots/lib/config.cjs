@@ -2,6 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { DEFAULT_KEY } = require("./branch-name.cjs");
 
 const REQUIRED_KEYS = ["baseUrl", "viewports", "themes", "alternatives", "storageRepoPath", "outputDir"];
 
@@ -17,6 +18,7 @@ function loadConfig(configPath) {
 
   return {
     ...config,
+    key: config.key ?? DEFAULT_KEY,
     configDir,
     outputDir: path.resolve(configDir, config.outputDir),
     storageRepoPath: path.resolve(configDir, config.storageRepoPath),
@@ -44,6 +46,10 @@ function validateConfig(config, resolvedPath) {
 
   if (typeof config.alternatives !== "object" || config.alternatives === null || Array.isArray(config.alternatives) || Object.keys(config.alternatives).length === 0) {
     throw new Error(`Config "alternatives" must be a non-empty object mapping alternative name to a query-string fragment (e.g. {"default": "", "dense": "scenario=dense-content"}) in ${resolvedPath}`);
+  }
+
+  if (config.key !== undefined && (typeof config.key !== "string" || !/^[a-z0-9-]+$/.test(config.key))) {
+    throw new Error(`Config "key" must be a string matching /^[a-z0-9-]+$/ (used as a git branch-name prefix) in ${resolvedPath}`);
   }
 
   if (config.sessionStorage !== undefined &&

@@ -116,7 +116,7 @@ public static partial class XmlDocLookup
         var text = string.Join(' ', builder.ToString().Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
 
         // Inline tags are padded so they never fuse with neighbouring words; that padding leaves a
-        // stray space when the tag is followed by punctuation ("see ButtonStyle ." -> "see ButtonStyle.").
+        // stray space when the tag is followed by punctuation ("see ButtonStyle ." -> "see ButtonTone.").
         text = SpaceBeforePunctuation().Replace(text, "$1");
 
         return text.Length == 0 ? null : text;

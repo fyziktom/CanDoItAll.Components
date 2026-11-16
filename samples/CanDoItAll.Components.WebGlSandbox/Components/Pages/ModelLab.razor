@@ -8,12 +8,12 @@
         <Header>
             <PageHeader Eyebrow="Model diagnostics" Title="Model Lab" Description="Inspect one generic asset at a time with primitive fallback, GLB profiles, import bounds, and runtime diagnostics.">
                 <Actions>
-                    <Button Text="Primitive" Icon="deployed_code" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.Primitive)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.Primitive))" />
-                    <Button Text="Model low" Icon="view_in_ar" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.MixedGlb)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.MixedGlb))" />
-                    <Button Text="Model high" Icon="texture" Size="ButtonSize.Small" ButtonStyle="@ProfileStyle(WebGlAssetQualityProfiles.HighDetailGlb)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.HighDetailGlb))" />
-                    <Button Text="Bounds" Icon="select_all" Size="ButtonSize.Small" ButtonStyle="@(debugBounds ? ButtonStyle.Primary : ButtonStyle.Light)" Variant="Variant.Outlined" Click="@ToggleDebugBounds" />
-                    <Button Text="Recipe JSON" Icon="data_object" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@ExportRecipeJson" />
-                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Click="@CaptureProofAsync" />
+                    <Button Text="Primitive" Icon="deployed_code" Size="ButtonSize.Small" Tone="@ProfileStyle(WebGlAssetQualityProfiles.Primitive)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.Primitive))" />
+                    <Button Text="Model low" Icon="view_in_ar" Size="ButtonSize.Small" Tone="@ProfileStyle(WebGlAssetQualityProfiles.MixedGlb)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.MixedGlb))" />
+                    <Button Text="Model high" Icon="texture" Size="ButtonSize.Small" Tone="@ProfileStyle(WebGlAssetQualityProfiles.HighDetailGlb)" Variant="Variant.Outlined" Click="@(() => SetProfile(WebGlAssetQualityProfiles.HighDetailGlb))" />
+                    <Button Text="Bounds" Icon="select_all" Size="ButtonSize.Small" Tone="@(debugBounds ? ButtonTone.Primary : ButtonTone.Default)" Variant="Variant.Outlined" Click="@ToggleDebugBounds" />
+                    <Button Text="Recipe JSON" Icon="data_object" Size="ButtonSize.Small" Tone="ButtonTone.Default" Variant="Variant.Outlined" Click="@ExportRecipeJson" />
+                    <Button Text="Snapshot" Icon="photo_camera" Size="ButtonSize.Small" Tone="ButtonTone.Info" Click="@CaptureProofAsync" />
                 </Actions>
             </PageHeader>
         </Header>

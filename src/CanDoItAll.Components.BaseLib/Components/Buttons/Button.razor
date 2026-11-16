@@ -48,23 +48,23 @@ else
 
     /// <summary>Semantic tone of the action. Reserve <c>Primary</c> for the one action that carries the surface.</summary>
     [Parameter]
-    public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Primary;
+    public ButtonTone Tone { get; set; } = ButtonTone.Primary;
 
     /// <summary>Control height and padding scale.</summary>
     [Parameter]
     public ButtonSize Size { get; set; } = ButtonSize.Medium;
 
-    /// <summary>Emphasis treatment: filled, outlined, or text.</summary>
+    /// <summary>Emphasis treatment: solid, filled (tonal), outlined, or text.</summary>
     [Parameter]
-    public Variant Variant { get; set; } = Variant.Filled;
+    public Variant Variant { get; set; } = Variant.Solid;
 
-    /// <summary>Tonal shade applied on top of <see cref="ButtonStyle"/>.</summary>
+    /// <summary>Vertical padding scale, independent of <see cref="Size"/>.</summary>
     [Parameter]
-    public Shade Shade { get; set; } = Shade.Default;
+    public ButtonDensity Density { get; set; } = ButtonDensity.Normal;
 
-    /// <summary>Escape hatch to legacy or sheet-card presets. Leave at <c>Default</c> for the standard button language.</summary>
+    /// <summary>Corner radius scale.</summary>
     [Parameter]
-    public ButtonLook Look { get; set; } = ButtonLook.Default;
+    public ButtonRounded Rounded { get; set; } = ButtonRounded.Default;
 
     /// <summary>Blocks interaction. The button is also disabled while busy or while a click is in flight.</summary>
     [Parameter]
@@ -147,23 +147,13 @@ else
 
     private string ResolveButtonCssClass()
     {
-        if (Look != ButtonLook.Default)
-        {
-            return Look switch
-            {
-                ButtonLook.SheetCard => "cad-card-button zy-card-button",
-                ButtonLook.SheetCardGhost => "cad-card-button zy-card-button cad-card-button--ghost zy-card-button--ghost",
-                ButtonLook.SheetCardWarn => "cad-card-button zy-card-button cad-card-button--warn zy-card-button--warn",
-                ButtonLook.Legacy => "btn",
-                ButtonLook.LegacyGhost => "btn ghost",
-                ButtonLook.LegacyExtraSmall => "btn xs",
-                ButtonLook.LegacyExtraSmallGhost => "btn xs ghost",
-                ButtonLook.LegacyPrimaryFullWidth => "btn primary w-full",
-                _ => string.Empty
-            };
-        }
-
-        return $"rz-button cda-button {ResolveSizeCssClass()} {ResolveVariantCssClass()} {ResolveToneCssClass()}";
+        return CssClassBuilder.Join(
+            "ui-button",
+            ResolveSizeCssClass(),
+            ResolveDensityCssClass(),
+            ResolveVariantCssClass(),
+            ResolveToneCssClass(),
+            ResolveRoundedCssClass());
     }
 
     private RenderFragment RenderButtonContent(string? iconName)
@@ -175,7 +165,7 @@ else
             if (IsBusy)
             {
                 builder.OpenElement(sequence++, "span");
-                builder.AddAttribute(sequence++, "class", "cda-button__spinner");
+                builder.AddAttribute(sequence++, "class", "ui-button__spinner");
                 builder.CloseElement();
             }
             else if (iconName is not null)
@@ -199,7 +189,7 @@ else
             if (!string.IsNullOrWhiteSpace(Token))
             {
                 builder.OpenElement(sequence++, "span");
-                builder.AddAttribute(sequence++, "class", "cda-button__token");
+                builder.AddAttribute(sequence++, "class", "ui-button__token");
                 builder.AddContent(sequence++, Token);
                 builder.CloseElement();
             }
@@ -207,7 +197,7 @@ else
             if (ChildContent is not null)
             {
                 builder.OpenElement(sequence++, "span");
-                builder.AddAttribute(sequence++, "class", "rz-button-text");
+                builder.AddAttribute(sequence++, "class", "ui-button__label");
                 builder.AddContent(sequence++, ChildContent);
                 builder.CloseElement();
                 return;
@@ -216,7 +206,7 @@ else
             if (!string.IsNullOrWhiteSpace(Text))
             {
                 builder.OpenElement(sequence++, "span");
-                builder.AddAttribute(sequence++, "class", "rz-button-text");
+                builder.AddAttribute(sequence++, "class", "ui-button__label");
                 builder.AddContent(sequence++, Text);
                 builder.CloseElement();
                 return;
@@ -232,19 +222,17 @@ else
         };
     }
 
-    private string ResolveStyleCss()
+    private string ResolveToneCssClass()
     {
-        return ButtonStyle switch
+        return Tone switch
         {
-            ButtonStyle.Light => "cda-button--tone-light",
-            ButtonStyle.Secondary => "cda-button--tone-secondary",
-            ButtonStyle.Success => "cda-button--tone-success",
-            ButtonStyle.Info => "cda-button--tone-info",
-            ButtonStyle.Warning => "cda-button--tone-warning",
-            ButtonStyle.Danger => "cda-button--tone-danger",
-            ButtonStyle.Dark => "cda-button--tone-dark",
-            ButtonStyle.Base => "cda-button--tone-base",
-            _ => "cda-button--tone-primary"
+            ButtonTone.Primary => "ui-button--tone-primary",
+            ButtonTone.Secondary => "ui-button--tone-secondary",
+            ButtonTone.Success => "ui-button--tone-success",
+            ButtonTone.Info => "ui-button--tone-info",
+            ButtonTone.Warning => "ui-button--tone-warning",
+            ButtonTone.Danger => "ui-button--tone-danger",
+            _ => "ui-button--tone-default"
         };
     }
 
@@ -252,9 +240,9 @@ else
     {
         return Size switch
         {
-            ButtonSize.Small => "cda-button--size-sm",
-            ButtonSize.Large => "cda-button--size-lg",
-            _ => "cda-button--size-md"
+            ButtonSize.Small => "ui-button--size-sm",
+            ButtonSize.Large => "ui-button--size-lg",
+            _ => "ui-button--size-md"
         };
     }
 
@@ -262,15 +250,32 @@ else
     {
         return Variant switch
         {
-            Variant.Outlined => "cda-button--outlined",
-            Variant.Text => "cda-button--text",
-            _ => "cda-button--filled"
+            Variant.Solid => "ui-button--solid",
+            Variant.Outlined => "ui-button--outlined",
+            Variant.Text => "ui-button--text",
+            _ => "ui-button--filled"
         };
     }
 
-    private string ResolveToneCssClass()
+    private string? ResolveDensityCssClass()
     {
-        return ResolveStyleCss();
+        return Density switch
+        {
+            ButtonDensity.Comfortable => "ui-button--density-comfortable",
+            ButtonDensity.Compact => "ui-button--density-compact",
+            _ => null
+        };
+    }
+
+    private string? ResolveRoundedCssClass()
+    {
+        return Rounded switch
+        {
+            ButtonRounded.None => "ui-button--rounded-none",
+            ButtonRounded.Medium => "ui-button--rounded-md",
+            ButtonRounded.Large => "ui-button--rounded-lg",
+            _ => null
+        };
     }
 
     private static string FormatBoolean(bool value)

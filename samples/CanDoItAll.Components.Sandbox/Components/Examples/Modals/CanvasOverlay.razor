@@ -1,0 +1,46 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Modals
+@using CanDoItAll.Components.CanvasLib
+
+<Button Text="Open canvas overlay" Click="() => isOpen = true" data-testid="sandbox-canvas-overlay-open" />
+
+@if (isOpen) {
+    <CanvasOverlayDialog AriaLabel="Canvas overlay example"
+                         Kicker="Shared overlay"
+                         Title="Readable actions"
+                         Summary="Enabled and disabled controls retain their state when the theme changes."
+                         CanMaximize="true"
+                         DataTestId="sandbox-canvas-overlay"
+                         Close="Close">
+        <Actions>
+            <Button Text="Close" Variant="Variant.Outlined" Click="Close" data-testid="sandbox-canvas-overlay-close" />
+        </Actions>
+        <Body>
+            <Stack GapScale="LayoutGap.Medium">
+                <Cluster Gap="LayoutGap.Small">
+                    <Button Text="Enabled action" Variant="Variant.Outlined" Click="() => actionCount++" />
+                    <Button Text="Unavailable action" Variant="Variant.Outlined" Disabled="true" Click="() => actionCount++" />
+                    <Button Text="Unavailable link" Href="/forms" Disabled="true" />
+                </Cluster>
+                <TextBlock Value="@($"Completed actions: {actionCount}")" />
+                <fieldset disabled>
+                    <legend>Saved values (editing unavailable)</legend>
+                    <Stack GapScale="LayoutGap.Small">
+                        <TextInput Value="Visible disabled text" aria-label="Disabled overlay text" />
+                        <SelectInput TValue="string" Value='@("saved")' aria-label="Disabled overlay choice">
+                            <option value="saved">Saved choice</option>
+                        </SelectInput>
+                        <TextAreaInput Value="Disabled notes remain readable." aria-label="Disabled overlay notes" />
+                    </Stack>
+                </fieldset>
+                <CheckBox TValue="bool" Value="true" Disabled="true" aria-label="Disabled checked overlay option" />
+            </Stack>
+        </Body>
+    </CanvasOverlayDialog>
+}
+
+@code {
+    private bool isOpen;
+    private int actionCount;
+
+    private void Close() => isOpen = false;
+}

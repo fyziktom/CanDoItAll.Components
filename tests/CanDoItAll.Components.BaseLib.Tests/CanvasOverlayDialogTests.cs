@@ -6,6 +6,13 @@ namespace CanDoItAll.Components.BaseLib.Tests;
 
 public sealed class CanvasOverlayDialogTests : BunitContext {
     [Fact]
+    public void Head_assets_include_the_scoped_dialog_stylesheet() {
+        var assets = Render<CanvasLibHeadAssets>();
+
+        Assert.Single(assets.FindAll("link[href='_content/CanDoItAll.Components.CanvasLib/CanDoItAll.Components.CanvasLib.bundle.scp.css']"));
+    }
+
+    [Fact]
     public void Maximize_is_instance_owned_and_stays_inside_its_canvas() {
         var first = Render<CanvasOverlayDialog>(parameters => parameters
             .Add(component => component.CanvasScoped, true)

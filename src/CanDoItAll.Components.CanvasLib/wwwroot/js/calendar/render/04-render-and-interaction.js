@@ -110,11 +110,43 @@
     return rows;
   }
 
+  CalendarController.prototype.miniMonthColors = function() {
+    var colors = this.state.colors;
+    return {
+      panelFill: colors.panel,
+      panelStroke: colors.borderSoft,
+      label: colors.headingText,
+      muted: colors.textMuted,
+      selectedFill: colors.accent,
+      selectedText: colors.eventTitleText,
+      rangeFill: colors.rangeFill,
+      rangeStroke: colors.rangeStroke,
+      todayStroke: colors.success,
+      offMonthText: colors.textFaint,
+      density: colors.densityDot
+    };
+  };
+
+  CalendarController.prototype.timedGridColors = function() {
+    var colors = this.state.colors;
+    return {
+      panelFill: colors.panel,
+      panelStroke: colors.borderSoft,
+      headerFill: colors.gridHeaderFill,
+      gridMajor: colors.gridMajor,
+      gridMinor: colors.borderSoft,
+      axisText: colors.textMuted,
+      headerText: colors.headingText,
+      currentDayFill: colors.currentDayFill,
+      selectedDayFill: colors.selectedDayFill
+    };
+  };
+
   CalendarController.prototype.render = function() {
     this.state.visibleEvents = this.getVisibleEvents(this.state.view === 'list' ? this.state.listScope : this.state.view);
     this.refreshUi();
     if (this.state.view === 'list') {
-      this.surface.clear('#ffffff');
+      this.surface.clear(this.state.colors.panel);
       return;
     }
 
@@ -122,10 +154,10 @@
     var size = this.surface.size;
     this.registry.clear();
     this.state.layoutCache = {};
-    this.surface.clear('#f5f7fb');
+    this.surface.clear(this.state.colors.bg);
 
     ctx.save();
-    ctx.fillStyle = '#eef2ff';
+    ctx.fillStyle = this.state.colors.canvasBackdrop;
     ctx.fillRect(0, 0, size.width, size.height);
     ctx.restore();
 
@@ -173,14 +205,14 @@
         width: sideWidth,
         height: stageHeight,
         radius: 22,
-        fill: 'rgba(255,255,255,.92)',
-        stroke: 'rgba(15,23,42,.08)',
+        fill: this.state.colors.panel,
+        stroke: this.state.colors.borderSoft,
         shadowColor: 'rgba(15,23,42,.06)',
         shadowBlur: 16,
         shadowOffsetY: 8
       });
       ctx.save();
-      ctx.fillStyle = '#475569';
+      ctx.fillStyle = this.state.colors.headingText;
       ctx.font = '700 12px "Segoe UI",sans-serif';
       ctx.fillText('Mini months', sidebarX + 16, stageY + 24);
       ctx.restore();
@@ -203,7 +235,8 @@
           rangeStartKey: weekStart,
           rangeEndKey: weekEnd,
           todayKey: DateMath.todayKey(),
-          densityMap: densityMap
+          densityMap: densityMap,
+          colors: this.miniMonthColors()
         });
         mini.cells.forEach(function(cell) {
           this.registry.add(cell.bounds, {
@@ -260,15 +293,15 @@
       width: mainWidth,
       height: mainPanelHeight,
       radius: 22,
-      fill: 'rgba(255,255,255,.94)',
-      stroke: 'rgba(15,23,42,.08)',
+      fill: this.state.colors.panel,
+      stroke: this.state.colors.borderSoft,
       shadowColor: 'rgba(15,23,42,.07)',
       shadowBlur: 18,
       shadowOffsetY: 8
     });
 
     ctx.save();
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = this.state.colors.panel;
     ctx.fillRect(mainX + 1, stageY + 1, mainWidth - 2, allDayHeight);
     ctx.restore();
 
@@ -286,7 +319,8 @@
       endHour: this.options.businessHoursEnd,
       slotMinutes: this.options.slotMinutes,
       currentDayKey: getDateKeyFromIso(new Date().toISOString(), this.state.timezone, this.state.locale),
-      selectedDateKey: this.state.selectedDateKey
+      selectedDateKey: this.state.selectedDateKey,
+      colors: this.timedGridColors()
     });
     this.state.layoutCache.timed = {
       mode: mode,
@@ -310,7 +344,7 @@
 
     ctx.save();
     ctx.font = '700 11px "Segoe UI",sans-serif';
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = this.state.colors.textMuted;
     ctx.fillText('All day', mainX + 10, stageY + 18);
     ctx.restore();
 
@@ -456,13 +490,13 @@
       var nowRect = grid.dayRects[todayColumn];
       var nowY = grid.bodyY + ((nowMinutes - (this.options.businessHoursStart * 60)) * grid.minuteHeight);
       ctx.save();
-      ctx.strokeStyle = '#ef4444';
+      ctx.strokeStyle = this.state.colors.nowIndicator;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(nowRect.x + 2, nowY);
       ctx.lineTo(nowRect.x + nowRect.width - 2, nowY);
       ctx.stroke();
-      ctx.fillStyle = '#ef4444';
+      ctx.fillStyle = this.state.colors.nowIndicator;
       ctx.beginPath();
       ctx.arc(nowRect.x + 8, nowY, 4, 0, Math.PI * 2);
       ctx.fill();
@@ -482,13 +516,13 @@
       height: item.bounds.height,
       radius: 12,
       fill: event.color,
-      stroke: isSelected ? 'rgba(15,23,42,.42)' : 'rgba(255,255,255,.36)',
+      stroke: isSelected ? this.state.colors.eventStrokeSelected : this.state.colors.eventStroke,
       lineWidth: isSelected ? 2 : 1
     });
     ctx.restore();
 
     ctx.save();
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = this.state.colors.eventTitleText;
     ctx.font = '700 12px "Segoe UI",sans-serif';
     ctx.textBaseline = 'top';
     var title = fitText(ctx, event.title, item.bounds.width - 12, '...');
@@ -515,11 +549,11 @@
       height: segment.bounds.height,
       radius: 9,
       fill: event.color,
-      stroke: isSelected ? 'rgba(15,23,42,.4)' : 'rgba(255,255,255,.32)',
+      stroke: isSelected ? this.state.colors.eventStrokeSelected : this.state.colors.eventStroke,
       lineWidth: isSelected ? 2 : 1
     });
     ctx.save();
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = this.state.colors.eventTitleText;
     ctx.font = '700 11px "Segoe UI",sans-serif';
     ctx.textBaseline = 'middle';
     ctx.fillText(fitText(ctx, event.title, segment.bounds.width - 10, '...'), segment.bounds.x + 6, segment.bounds.y + (segment.bounds.height / 2));
@@ -540,8 +574,8 @@
       width: bounds.width,
       height: bounds.height,
       radius: 22,
-      fill: 'rgba(255,255,255,.94)',
-      stroke: 'rgba(15,23,42,.08)',
+      fill: this.state.colors.panel,
+      stroke: this.state.colors.borderSoft,
       shadowColor: 'rgba(15,23,42,.07)',
       shadowBlur: 18,
       shadowOffsetY: 8
@@ -560,7 +594,7 @@
     for (var dayIndex = 0; dayIndex < 7; dayIndex += 1) {
       var labelIndex = (this.options.weekStartsOn + dayIndex) % 7;
       ctx.save();
-      ctx.fillStyle = '#64748b';
+      ctx.fillStyle = this.state.colors.textMuted;
       ctx.font = '700 11px "Segoe UI",sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(DAY_SHORT[labelIndex], bounds.x + (dayIndex * cellWidth) + (cellWidth / 2), bounds.y + 18);
@@ -575,16 +609,16 @@
         var isToday = cell.dateKey === DateMath.todayKey();
         var isPreviewTarget = this.state.interaction && this.state.interaction.targetDateKey === cell.dateKey;
         ctx.save();
-        ctx.fillStyle = isPreviewTarget ? 'rgba(16,185,129,.1)' : (isSelected ? 'rgba(79,70,229,.08)' : '#ffffff');
+        ctx.fillStyle = isPreviewTarget ? this.state.colors.previewTargetFill : (isSelected ? this.state.colors.selectedCellFill : this.state.colors.panel);
         ctx.fillRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
-        ctx.strokeStyle = 'rgba(226,232,240,.95)';
+        ctx.strokeStyle = this.state.colors.borderSoft;
         ctx.strokeRect(x, y, cellWidth, cellHeight);
         if (isToday) {
-          ctx.strokeStyle = '#0f766e';
+          ctx.strokeStyle = this.state.colors.success;
           ctx.lineWidth = 2;
           ctx.strokeRect(x + 3, y + 3, cellWidth - 6, cellHeight - 6);
         }
-        ctx.fillStyle = cell.inMonth ? '#0f172a' : '#94a3b8';
+        ctx.fillStyle = cell.inMonth ? this.state.colors.text : this.state.colors.textFaint;
         ctx.font = '700 12px "Segoe UI",sans-serif';
         ctx.fillText(String(DateMath.parseDateKey(cell.dateKey).day), x + 8, y + 18);
         ctx.restore();
@@ -621,11 +655,11 @@
             height: chipBounds.height,
             radius: 7,
             fill: event.color,
-            stroke: this.state.selectedEventId === event.id ? 'rgba(15,23,42,.4)' : 'rgba(255,255,255,.3)',
+            stroke: this.state.selectedEventId === event.id ? this.state.colors.eventStrokeSelected : this.state.colors.eventStroke,
             lineWidth: this.state.selectedEventId === event.id ? 2 : 1
           });
           ctx.save();
-          ctx.fillStyle = '#ffffff';
+          ctx.fillStyle = this.state.colors.eventTitleText;
           ctx.font = '700 10px "Segoe UI",sans-serif';
           ctx.textBaseline = 'middle';
           ctx.fillText(fitText(ctx, event.title, chipBounds.width - 8, '...'), chipBounds.x + 4, chipBounds.y + 8);
@@ -645,7 +679,7 @@
             height: 16
           };
           ctx.save();
-          ctx.fillStyle = '#475569';
+          ctx.fillStyle = this.state.colors.textSubtle;
           ctx.font = '700 10px "Segoe UI",sans-serif';
           ctx.fillText('+' + (items.length - visibleLimit) + ' more', moreBounds.x + 2, moreBounds.y + 11);
           ctx.restore();
@@ -663,11 +697,11 @@
             height: 15,
             radius: 7,
             fill: this.state.interaction.previewEvent.color,
-            stroke: 'rgba(15,23,42,.22)',
+            stroke: this.state.colors.eventStroke,
             lineWidth: 1
           });
           ctx.save();
-          ctx.fillStyle = '#ffffff';
+          ctx.fillStyle = this.state.colors.eventTitleText;
           ctx.font = '700 10px "Segoe UI",sans-serif';
           ctx.textBaseline = 'middle';
           ctx.fillText(fitText(ctx, this.state.interaction.previewEvent.title || 'Preview', cellWidth - 22, '...'), x + 10, y + cellHeight - 14);

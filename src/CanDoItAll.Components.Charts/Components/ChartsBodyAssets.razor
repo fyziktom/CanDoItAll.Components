@@ -1,0 +1,17 @@
+@namespace CanDoItAll.Components.Charts
+
+@if (IncludeThemeTokens)
+{
+    <script src="_content/CanDoItAll.Components.BaseLib/js/theme/theme-tokens.js"></script>
+}
+<script src="_content/CanDoItAll.Components.Charts/js/charts-theme.js"></script>
+
+@code {
+    /// <summary>
+    /// Loads BaseLib's shared <c>theme-tokens.js</c> module ahead of <c>charts-theme.js</c>.
+    /// Disable when another already-rendered *BodyAssets component already loads it, to avoid
+    /// loading the script twice.
+    /// </summary>
+    [Parameter]
+    public bool IncludeThemeTokens { get; set; } = true;
+}

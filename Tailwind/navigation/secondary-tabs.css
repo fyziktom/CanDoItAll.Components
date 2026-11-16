@@ -1,0 +1,28 @@
+@layer components {
+  .ui-secondary-tab {
+    color: var(--tone-text);
+    background: var(--tone-surface);
+    border-color: var(--tone-border-soft);
+  }
+
+  .ui-secondary-tab:not(.ui-secondary-tab--selected):hover {
+    background: var(--tone-surface-soft);
+    border-color: var(--tone-border);
+  }
+
+  .ui-secondary-tab--selected {
+    color: var(--tone-primary-solid-fg);
+    background: var(--tone-primary-solid-bg);
+    border-color: var(--tone-primary-solid-border);
+  }
+
+  .ui-secondary-tab__count {
+    color: var(--tone-text-muted);
+    background: var(--tone-surface-soft);
+  }
+
+  .ui-secondary-tab--selected .ui-secondary-tab__count {
+    color: inherit;
+    background: color-mix(in srgb, var(--tone-primary-solid-fg) 15%, transparent);
+  }
+}

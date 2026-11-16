@@ -82,6 +82,8 @@ public sealed class CanvasWorkbenchNode
 
     public List<CanvasWorkbenchAction> ContextActions { get; set; } = [];
 
+    public List<CanvasWorkbenchAction> ToolbarActions { get; set; } = [];
+
     public List<CanvasWorkbenchPort> InputPorts { get; set; } = [];
 
     public List<CanvasWorkbenchPort> OutputPorts { get; set; } = [];

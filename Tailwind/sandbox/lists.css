@@ -6,11 +6,11 @@
   @apply flex min-w-0 items-start flex-wrap justify-between gap-4 pb-[0.85rem];
   @apply last:border-b-0 last:pb-0;
   @apply max-sm:gap-[0.35rem];
-  border-bottom: 1px solid color-mix(in srgb, var(--cad-color-border-soft) 82%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--tone-border-soft) 82%, transparent);
 }
 
 .sandbox-kv-item strong {
-  @apply min-w-0 text-(--cad-color-text-strong) wrap-anywhere;
+  @apply min-w-0 text-(--tone-text-strong) wrap-anywhere;
 }
 
 .sandbox-kv-item span {
@@ -27,7 +27,7 @@
 }
 
 .sandbox-toc-group {
-  @apply font-bold text-(--cad-color-text-strong) no-underline;
+  @apply font-bold text-(--tone-text-strong) no-underline;
 }
 
 .sandbox-toc-group:hover,
@@ -41,7 +41,7 @@
 }
 
 .sandbox-toc-items a {
-  @apply text-(--cad-tone-info-soft-fg) no-underline;
+  @apply text-(--tone-info-soft-fg) no-underline;
   line-height: 1.8;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .sandbox-toc-group.is-unused {
-  color: var(--cad-tone-danger-soft-fg);
+  color: var(--tone-danger-soft-fg);
 }
 
 .sandbox-toc-items a.is-unused:after {
@@ -64,7 +64,7 @@
 }
 
 .sandbox-toc-items a.is-unused {
-  color: var(--cad-tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
+  color: var(--tone-danger-soft-fg); /* TODO: V2 removed the oklch() wrapper after restoring a complete color token. */
 }
 
 .sandbox-proof-list {
@@ -72,5 +72,5 @@
 }
 
 .sandbox-proof-list p {
-  @apply m-0 text-[0.92rem] leading-[1.6] text-(--cad-color-text-muted);
+  @apply m-0 text-[0.92rem] leading-[1.6] text-(--tone-text-muted);
 }

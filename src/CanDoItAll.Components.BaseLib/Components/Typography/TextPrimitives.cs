@@ -16,6 +16,7 @@ public enum TextStyle
     Small,
     Note,
     Eyebrow,
+    EyebrowCaption,
     Mono,
     Footer,
     Muted

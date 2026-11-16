@@ -4,8 +4,13 @@
 <Toolbar data-testid="sandbox-navigation-toolbar-fields">
     <ToolbarRow>
         <ToolbarFields>
-            <TextBox Value="@toolbarFieldsQuery" ValueChanged="@(value => toolbarFieldsQuery = value ?? string.Empty)" Immediate="true" Placeholder="Search records" aria-label="Search records" />
-            <DropDown TValue="string" Data="@ToolbarScopes" Value="@toolbarFieldsScope" ValueChanged="@(value => toolbarFieldsScope = value ?? ToolbarScopeAll)" aria-label="Field scope" />
+            <TextInput Value="@toolbarFieldsQuery" ValueChanged="@(value => toolbarFieldsQuery = value ?? string.Empty)" ValueExpression="@(() => toolbarFieldsQuery)" Immediate="true" placeholder="Search records" aria-label="Search records" />
+            <SelectInput TValue="string" Value="@toolbarFieldsScope" ValueChanged="@(value => toolbarFieldsScope = value ?? ToolbarScopeAll)" ValueExpression="@(() => toolbarFieldsScope)" aria-label="Field scope">
+                @foreach (var scope in ToolbarScopes)
+                {
+                    <option value="@scope">@scope</option>
+                }
+            </SelectInput>
         </ToolbarFields>
     </ToolbarRow>
 </Toolbar>

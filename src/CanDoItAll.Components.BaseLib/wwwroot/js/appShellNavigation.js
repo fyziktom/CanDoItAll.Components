@@ -8,13 +8,12 @@ window.CanDoItAll.appShellNavigation = (function () {
         return Number.isFinite(parsed) ? parsed : fallback;
     }
 
-    function resolveRows(sidebar) {
-        const navigation = sidebar.querySelector(".cda-shell-nav");
+    function resolveRows(navigation) {
         if (!navigation) {
             return 0;
         }
 
-        const button = navigation.querySelector(".cda-shell-nav-button");
+        const button = navigation.firstElementChild;
         const navigationStyle = window.getComputedStyle(navigation);
         const buttonHeight = button?.getBoundingClientRect().height || 44;
         const gap = parsePixels(navigationStyle.rowGap, 6);
@@ -26,8 +25,8 @@ window.CanDoItAll.appShellNavigation = (function () {
         return Math.max(1, Math.floor((availableHeight + gap) / rowPitch));
     }
 
-    function notify(sidebar, dotNetRef) {
-        const rows = resolveRows(sidebar);
+    function notify(navigation, dotNetRef) {
+        const rows = resolveRows(navigation);
         if (rows <= 0) {
             return;
         }
@@ -37,8 +36,8 @@ window.CanDoItAll.appShellNavigation = (function () {
             });
     }
 
-    function observe(id, sidebar, dotNetRef) {
-        if (!sidebar || !dotNetRef) {
+    function observe(id, sidebar, navigation, dotNetRef) {
+        if (!sidebar || !navigation || !dotNetRef) {
             return;
         }
 
@@ -48,17 +47,13 @@ window.CanDoItAll.appShellNavigation = (function () {
         const schedule = function () {
             window.cancelAnimationFrame(animationFrame);
             animationFrame = window.requestAnimationFrame(function () {
-                notify(sidebar, dotNetRef);
+                notify(navigation, dotNetRef);
             });
         };
 
         const resizeObserver = new window.ResizeObserver(schedule);
         resizeObserver.observe(sidebar);
-
-        const navigation = sidebar.querySelector(".cda-shell-nav");
-        if (navigation) {
-            resizeObserver.observe(navigation);
-        }
+        resizeObserver.observe(navigation);
 
         const mutationObserver = new window.MutationObserver(schedule);
         mutationObserver.observe(sidebar, {

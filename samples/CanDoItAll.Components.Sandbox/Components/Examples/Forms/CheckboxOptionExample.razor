@@ -1,0 +1,13 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
+@inherits FormsShowcaseBase
+
+<Grid Gap="LayoutGap.Large"
+      ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
+    <CheckboxOption TValue="bool" Value="@CanReadStorage" ValueChanged="HandleCanReadStorageChanged"
+                     Disabled="@IsDisabled" Text="Can read storage driver catalogs"
+                     data-testid="agents-catalog-storage-read" />
+
+    <CheckboxOption TValue="bool" Value="@CanWriteStorage" ValueChanged="HandleCanWriteStorageChanged"
+                     Disabled="@IsDisabled" Muted="true" Text="Can write storage driver catalogs"
+                     data-testid="agents-catalog-storage-write" />
+</Grid>

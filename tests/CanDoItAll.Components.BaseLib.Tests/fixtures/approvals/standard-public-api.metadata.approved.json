@@ -323,28 +323,6 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.BuilderStatBox",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.BuilderStatStrip",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
-        ]
-      },
-      {
         "name": "CanDoItAll.Components.BaseLib.Button",
         "kind": "class",
         "isAbstract": false,
@@ -352,10 +330,10 @@
         "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
         "members": [
           "ctor()",
-          "property CanDoItAll.Components.BaseLib.ButtonLook Look {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonDensity Density {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonRounded Rounded {get;set;}",
           "property CanDoItAll.Components.BaseLib.ButtonSize Size {get;set;}",
-          "property CanDoItAll.Components.BaseLib.ButtonStyle ButtonStyle {get;set;}",
-          "property CanDoItAll.Components.BaseLib.Shade Shade {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonTone Tone {get;set;}",
           "property CanDoItAll.Components.BaseLib.Variant Variant {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback Click {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
@@ -371,22 +349,30 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.ButtonLook",
+        "name": "CanDoItAll.Components.BaseLib.ButtonDensity",
         "kind": "enum",
         "isAbstract": false,
         "isSealed": true,
         "baseType": "System.Enum",
         "members": [
           "field System.Int32 value__",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook Default",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook Legacy",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyExtraSmall",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyExtraSmallGhost",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyGhost",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook LegacyPrimaryFullWidth",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook SheetCard",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook SheetCardGhost",
-          "field static const CanDoItAll.Components.BaseLib.ButtonLook SheetCardWarn"
+          "field static const CanDoItAll.Components.BaseLib.ButtonDensity Comfortable",
+          "field static const CanDoItAll.Components.BaseLib.ButtonDensity Compact",
+          "field static const CanDoItAll.Components.BaseLib.ButtonDensity Normal"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.ButtonRounded",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded Default",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded Large",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded Medium",
+          "field static const CanDoItAll.Components.BaseLib.ButtonRounded None"
         ]
       },
       {
@@ -403,22 +389,20 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.ButtonStyle",
+        "name": "CanDoItAll.Components.BaseLib.ButtonTone",
         "kind": "enum",
         "isAbstract": false,
         "isSealed": true,
         "baseType": "System.Enum",
         "members": [
           "field System.Int32 value__",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Base",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Danger",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Dark",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Info",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Light",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Primary",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Secondary",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Success",
-          "field static const CanDoItAll.Components.BaseLib.ButtonStyle Warning"
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Danger",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Default",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Info",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Primary",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Secondary",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Success",
+          "field static const CanDoItAll.Components.BaseLib.ButtonTone Warning"
         ]
       },
       {
@@ -571,6 +555,26 @@
           "property System.Boolean Disabled {get;set;}",
           "property System.String FormFieldLabelId {get;set;}",
           "property System.String Name {get;set;}",
+          "property TValue Value {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.CheckboxOption\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.BaseLib.FormDensity Density {get;set;}",
+          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E Change {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E ValueChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
+          "property System.Boolean Muted {get;set;}",
+          "property System.String Name {get;set;}",
+          "property System.String Text {get;set;}",
           "property TValue Value {get;set;}"
         ]
       },
@@ -731,7 +735,8 @@
         "members": [
           "ctor()",
           "method System.Threading.Tasks.ValueTask DisposeAsync()",
-          "property CanDoItAll.Components.BaseLib.ButtonStyle ButtonStyle {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonDensity Density {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonTone Tone {get;set;}",
           "property CanDoItAll.Components.BaseLib.CopyButtonDisplayMode DisplayMode {get;set;}",
           "property CanDoItAll.Components.BaseLib.CopyButtonSize Size {get;set;}",
           "property CanDoItAll.Components.BaseLib.Variant Variant {get;set;}",
@@ -796,22 +801,6 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.CreatorAvatar",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
-        "members": [
-          "ctor()",
-          "property System.Boolean UseDefaultImageWhenMissing {get;set;}",
-          "property System.String Alt {get;set;}",
-          "property System.String Class {get;set;}",
-          "property System.String DefaultImageSeed {get;set;}",
-          "property System.String FallbackText {get;set;}",
-          "property System.String ImageUrl {get;set;}"
-        ]
-      },
-      {
         "name": "CanDoItAll.Components.BaseLib.CreatorLine",
         "kind": "class",
         "isAbstract": false,
@@ -859,17 +848,6 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.DashboardActions",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
-        ]
-      },
-      {
         "name": "CanDoItAll.Components.BaseLib.DataGridColumn\u003CTItem\u003E",
         "kind": "class",
         "isAbstract": false,
@@ -905,14 +883,14 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.DebugToggle",
+        "name": "CanDoItAll.Components.BaseLib.DateInput\u003CTValue\u003E",
         "kind": "class",
         "isAbstract": false,
         "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
         "members": [
           "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
+          "property Microsoft.AspNetCore.Components.Forms.InputDateType Type {get;set;}"
         ]
       },
       {
@@ -1071,27 +1049,6 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.DropDown\u003CTValue\u003E",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Object\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E ValueChanged {get;set;}",
-          "property System.Boolean AllowClear {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Collections.IEnumerable Data {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Placeholder {get;set;}",
-          "property System.String TextProperty {get;set;}",
-          "property System.String ValueProperty {get;set;}",
-          "property TValue Value {get;set;}"
-        ]
-      },
-      {
         "name": "CanDoItAll.Components.BaseLib.EditableSize",
         "kind": "enum",
         "isAbstract": false,
@@ -1246,6 +1203,26 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.FileInput",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "property CanDoItAll.Components.BaseLib.FormDensity Density {get;set;}",
+          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CMicrosoft.AspNetCore.Components.Forms.InputFileChangeEventArgs\u003E Change {get;set;}",
+          "property System.Boolean Disabled {get;set;}",
+          "property System.Boolean Multiple {get;set;}",
+          "property System.String Accept {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String FormFieldLabelId {get;set;}",
+          "property System.String Name {get;set;}",
+          "property System.String TestHookId {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.FileUpload",
         "kind": "class",
         "isAbstract": false,
@@ -1294,6 +1271,19 @@
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
           "property System.String Class {get;set;}",
           "property System.String Text {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.FormDensity",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.FormDensity Comfortable",
+          "field static const CanDoItAll.Components.BaseLib.FormDensity Compact",
+          "field static const CanDoItAll.Components.BaseLib.FormDensity Normal"
         ]
       },
       {
@@ -1436,6 +1426,22 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.HelpCard",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Boolean\u003E VisibleChanged {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
+          "property System.Boolean Visible {get;set;}",
+          "property System.String CloseAriaLabel {get;set;}",
+          "property System.String Heading {get;set;}",
+          "property System.String Icon {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.HelpPopover",
         "kind": "class",
         "isAbstract": false,
@@ -1525,6 +1531,17 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.IPageHeaderOutlet",
+        "kind": "interface",
+        "isAbstract": true,
+        "isSealed": false,
+        "baseType": "",
+        "members": [
+          "method System.Void Clear(System.Object owner)",
+          "method System.Void Register(System.Object owner, CanDoItAll.Components.BaseLib.PageHeaderPresentation presentation)"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.ISideMenuItem",
         "kind": "interface",
         "isAbstract": true,
@@ -1562,38 +1579,6 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.ImmersiveRibbonTabs\u003CTTab\u003E",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.EventCallback OnToggleCollapsed {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CTTab\u003E OnTabSelected {get;set;}",
-          "property Microsoft.AspNetCore.Components.RenderFragment\u003CTTab\u003E PanelContent {get;set;}",
-          "property System.Boolean IsCollapsed {get;set;}",
-          "property System.Collections.Generic.IReadOnlyList\u003CTTab\u003E Tabs {get;set;}",
-          "property System.Func\u003CTTab,System.String\u003E TabLabel {get;set;}",
-          "property System.Func\u003CTTab,System.String\u003E TabTestId {get;set;}",
-          "property System.String ActiveTabClass {get;set;}",
-          "property System.String AriaLabel {get;set;}",
-          "property System.String ChromeClass {get;set;}",
-          "property System.String CollapsedToggleLabel {get;set;}",
-          "property System.String ControlsClass {get;set;}",
-          "property System.String ExpandedToggleLabel {get;set;}",
-          "property System.String PanelClass {get;set;}",
-          "property System.String PanelTestId {get;set;}",
-          "property System.String RootClass {get;set;}",
-          "property System.String RootTestId {get;set;}",
-          "property System.String TabClass {get;set;}",
-          "property System.String TabsClass {get;set;}",
-          "property System.String ToggleClass {get;set;}",
-          "property System.String ToggleTestId {get;set;}",
-          "property TTab ActiveTab {get;set;}"
-        ]
-      },
-      {
         "name": "CanDoItAll.Components.BaseLib.InlineActions",
         "kind": "class",
         "isAbstract": false,
@@ -1613,6 +1598,7 @@
         "members": [
           "field System.Int32 value__",
           "field static const CanDoItAll.Components.BaseLib.InputLook Default",
+          "field static const CanDoItAll.Components.BaseLib.InputLook Filled",
           "field static const CanDoItAll.Components.BaseLib.InputLook Plain"
         ]
       },
@@ -2075,23 +2061,13 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.Numeric\u003CTValue\u003E",
+        "name": "CanDoItAll.Components.BaseLib.NumberInput\u003CTValue\u003E",
         "kind": "class",
         "isAbstract": false,
         "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
         "members": [
-          "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CTValue\u003E ValueChanged {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Object Max {get;set;}",
-          "property System.Object Min {get;set;}",
-          "property System.Object Step {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Format {get;set;}",
-          "property TValue Value {get;set;}"
+          "ctor()"
         ]
       },
       {
@@ -2102,6 +2078,8 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
+          "method System.Void Dispose()",
+          "property CanDoItAll.Components.BaseLib.IPageHeaderOutlet Outlet {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment Actions {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment Stats {get;set;}",
           "property System.Boolean Compact {get;set;}",
@@ -2119,7 +2097,7 @@
         "members": [
           "ctor()",
           "property CanDoItAll.Components.BaseLib.ButtonSize Size {get;set;}",
-          "property CanDoItAll.Components.BaseLib.ButtonStyle ButtonStyle {get;set;}",
+          "property CanDoItAll.Components.BaseLib.ButtonTone Tone {get;set;}",
           "property CanDoItAll.Components.BaseLib.TooltipPosition Position {get;set;}",
           "property CanDoItAll.Components.BaseLib.Variant Variant {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback Click {get;set;}",
@@ -2139,25 +2117,25 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.PageHeaderActions",
+        "name": "CanDoItAll.Components.BaseLib.PageHeaderPresentation",
         "kind": "class",
         "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "isSealed": true,
+        "baseType": "",
         "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.PageHeaderCopy",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
+          "ctor(System.String Title, System.String Description, System.String Eyebrow, System.Boolean Compact, Microsoft.AspNetCore.Components.RenderFragment Actions, Microsoft.AspNetCore.Components.RenderFragment Stats)",
+          "method CanDoItAll.Components.BaseLib.PageHeaderPresentation \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.PageHeaderPresentation other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.String Title, out System.String Description, out System.String Eyebrow, out System.Boolean Compact, out Microsoft.AspNetCore.Components.RenderFragment Actions, out Microsoft.AspNetCore.Components.RenderFragment Stats)",
+          "property Microsoft.AspNetCore.Components.RenderFragment Actions {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Stats {get;set;}",
+          "property System.Boolean Compact {get;set;}",
+          "property System.String Description {get;set;}",
+          "property System.String Eyebrow {get;set;}",
+          "property System.String Title {get;set;}"
         ]
       },
       {
@@ -2232,6 +2210,7 @@
         "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
         "members": [
           "ctor()",
+          "property CanDoItAll.Components.BaseLib.FormDensity Density {get;set;}",
           "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Change {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ValueChanged {get;set;}",
@@ -2375,57 +2354,6 @@
         "members": [
           "ctor()",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.ProfileField",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property System.Boolean Compact {get;set;}",
-          "property System.Boolean Full {get;set;}",
-          "property System.Boolean Third {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.ProfileTagChip",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property System.String Class {get;set;}",
-          "property System.String Text {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.ProfileTagChipRow",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property System.String Class {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.ProfileToggle",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property System.Boolean Compact {get;set;}"
         ]
       },
       {
@@ -2671,6 +2599,17 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.SelectInput\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
+        "members": [
+          "ctor()",
+          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.SelectionListItem",
         "kind": "class",
         "isAbstract": false,
@@ -2738,90 +2677,6 @@
           "field static const CanDoItAll.Components.BaseLib.Shade Default",
           "field static const CanDoItAll.Components.BaseLib.Shade Light",
           "field static const CanDoItAll.Components.BaseLib.Shade Lighter"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.SheetCard",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property System.Boolean Package {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.SheetCardHeading",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property System.String Href {get;set;}",
-          "property System.String Subtitle {get;set;}",
-          "property System.String Title {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.SheetCardTop",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.SheetField",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property Microsoft.AspNetCore.Components.RenderFragment Icon {get;set;}",
-          "property System.Boolean AsLabel {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.SheetGrid",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property System.Boolean Packages {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.SheetNote",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property System.String Text {get;set;}"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.SheetSection",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
         ]
       },
       {
@@ -3399,6 +3254,21 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CTValue\u003E",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.Forms.InputBase\u003CTValue\u003E",
+        "members": [
+          "method System.Threading.Tasks.Task SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView parameters)",
+          "property CanDoItAll.Components.BaseLib.FormDensity Density {get;set;}",
+          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
+          "property System.String Class {get;set;}",
+          "property System.String FormFieldLabelId {get;set;}",
+          "property System.String Style {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.SummaryTile",
         "kind": "class",
         "isAbstract": false,
@@ -3497,15 +3367,19 @@
           "property CanDoItAll.Components.BaseLib.TabPosition TabPosition {get;set;}",
           "property CanDoItAll.Components.BaseLib.TabRenderMode RenderMode {get;set;}",
           "property CanDoItAll.Components.BaseLib.TabsBorderMode BorderMode {get;set;}",
+          "property CanDoItAll.Components.BaseLib.TabsDensity Density {get;set;}",
           "property CanDoItAll.Components.BaseLib.TabsOverflowMode OverflowMode {get;set;}",
           "property CanDoItAll.Components.BaseLib.TabsPanelOverflowMode PanelOverflowMode {get;set;}",
+          "property CanDoItAll.Components.BaseLib.TabsRounded ContentRounded {get;set;}",
+          "property CanDoItAll.Components.BaseLib.TabsRounded Rounded {get;set;}",
           "property CanDoItAll.Components.BaseLib.TabsTone Tone {get;set;}",
-          "property CanDoItAll.Components.BaseLib.TabsVariant Variant {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Int32\u003E Change {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Int32\u003E SelectedIndexChanged {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
           "property Microsoft.AspNetCore.Components.RenderFragment TabItems {get;set;}",
           "property System.Boolean FillHeight {get;set;}",
+          "property System.Boolean NoContent {get;set;}",
+          "property System.Boolean NoSlider {get;set;}",
           "property System.Int32 SelectedIndex {get;set;}",
           "property System.String AriaLabel {get;set;}"
         ]
@@ -3524,6 +3398,19 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.TabsDensity",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.TabsDensity Comfortable",
+          "field static const CanDoItAll.Components.BaseLib.TabsDensity Compact",
+          "field static const CanDoItAll.Components.BaseLib.TabsDensity Normal"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.TabsItem",
         "kind": "class",
         "isAbstract": false,
@@ -3538,6 +3425,7 @@
           "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.Object\u003E AdditionalAttributes {get;set;}",
           "property System.String BadgeText {get;set;}",
           "property System.String Icon {get;set;}",
+          "property System.String Link {get;set;}",
           "property System.String Text {get;set;}"
         ]
       },
@@ -3569,6 +3457,20 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.TabsRounded",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.TabsRounded Default",
+          "field static const CanDoItAll.Components.BaseLib.TabsRounded Large",
+          "field static const CanDoItAll.Components.BaseLib.TabsRounded Medium",
+          "field static const CanDoItAll.Components.BaseLib.TabsRounded None"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.TabsTone",
         "kind": "enum",
         "isAbstract": false,
@@ -3582,21 +3484,6 @@
           "field static const CanDoItAll.Components.BaseLib.TabsTone Secondary",
           "field static const CanDoItAll.Components.BaseLib.TabsTone Success",
           "field static const CanDoItAll.Components.BaseLib.TabsTone Warning"
-        ]
-      },
-      {
-        "name": "CanDoItAll.Components.BaseLib.TabsVariant",
-        "kind": "enum",
-        "isAbstract": false,
-        "isSealed": true,
-        "baseType": "System.Enum",
-        "members": [
-          "field System.Int32 value__",
-          "field static const CanDoItAll.Components.BaseLib.TabsVariant ModalCompact",
-          "field static const CanDoItAll.Components.BaseLib.TabsVariant WorkspacePrimary",
-          "field static const CanDoItAll.Components.BaseLib.TabsVariant WorkspaceSecondary",
-          "field static const CanDoItAll.Components.BaseLib.TabsVariant WorkspaceTertiary",
-          "field static const CanDoItAll.Components.BaseLib.TabsVariant Workstation"
         ]
       },
       {
@@ -3628,28 +3515,6 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.TagTextEdit",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E ValueChanged {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Boolean SingleTag {get;set;}",
-          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Suggestions {get;set;}",
-          "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Value {get;set;}",
-          "property System.Int32 MaxLength {get;set;}",
-          "property System.Int32 MaxTags {get;set;}",
-          "property System.String Hint {get;set;}",
-          "property System.String InputId {get;set;}",
-          "property System.String InputTestId {get;set;}",
-          "property System.String Placeholder {get;set;}",
-          "property System.String TestId {get;set;}"
-        ]
-      },
-      {
         "name": "CanDoItAll.Components.BaseLib.TagTextValueNormalizer",
         "kind": "class",
         "isAbstract": true,
@@ -3663,24 +3528,19 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.TextArea",
+        "name": "CanDoItAll.Components.BaseLib.TextAreaInput",
         "kind": "class",
         "isAbstract": false,
         "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CSystem.String\u003E",
         "members": [
           "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
           "property CanDoItAll.Components.BaseLib.TextAreaSize Size {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ValueChanged {get;set;}",
           "property System.Boolean Disabled {get;set;}",
           "property System.Boolean Immediate {get;set;}",
           "property System.Boolean ReadOnly {get;set;}",
-          "property System.Int32 Rows {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Placeholder {get;set;}",
-          "property System.String Value {get;set;}"
+          "property System.Int32 Rows {get;set;}"
         ]
       },
       {
@@ -3710,22 +3570,14 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.TextBox",
+        "name": "CanDoItAll.Components.BaseLib.TextInput",
         "kind": "class",
         "isAbstract": false,
         "isSealed": false,
-        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "baseType": "CanDoItAll.Components.BaseLib.StyledInputBase\u003CSystem.String\u003E",
         "members": [
           "ctor()",
-          "property CanDoItAll.Components.BaseLib.InputLook Look {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Change {get;set;}",
-          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E ValueChanged {get;set;}",
-          "property System.Boolean Disabled {get;set;}",
-          "property System.Boolean Immediate {get;set;}",
-          "property System.Boolean ReadOnly {get;set;}",
-          "property System.String FormFieldLabelId {get;set;}",
-          "property System.String Placeholder {get;set;}",
-          "property System.String Value {get;set;}"
+          "property System.Boolean Immediate {get;set;}"
         ]
       },
       {
@@ -3740,6 +3592,7 @@
           "field static const CanDoItAll.Components.BaseLib.TextStyle Body2",
           "field static const CanDoItAll.Components.BaseLib.TextStyle Caption",
           "field static const CanDoItAll.Components.BaseLib.TextStyle Eyebrow",
+          "field static const CanDoItAll.Components.BaseLib.TextStyle EyebrowCaption",
           "field static const CanDoItAll.Components.BaseLib.TextStyle Footer",
           "field static const CanDoItAll.Components.BaseLib.TextStyle H1",
           "field static const CanDoItAll.Components.BaseLib.TextStyle H2",
@@ -4151,8 +4004,8 @@
         "members": [
           "field System.Int32 value__",
           "field static const CanDoItAll.Components.BaseLib.Variant Filled",
-          "field static const CanDoItAll.Components.BaseLib.Variant Flat",
           "field static const CanDoItAll.Components.BaseLib.Variant Outlined",
+          "field static const CanDoItAll.Components.BaseLib.Variant Solid",
           "field static const CanDoItAll.Components.BaseLib.Variant Text"
         ]
       },
@@ -4246,29 +4099,6 @@
         ]
       },
       {
-        "name": "CanDoItAll.Components.BaseLib.ZyWorkspaceModal",
-        "kind": "class",
-        "isAbstract": false,
-        "isSealed": false,
-        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
-        "members": [
-          "ctor()",
-          "property Microsoft.AspNetCore.Components.EventCallback OnClose {get;set;}",
-          "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}",
-          "property Microsoft.AspNetCore.Components.RenderFragment Footer {get;set;}",
-          "property Microsoft.AspNetCore.Components.RenderFragment HeaderActions {get;set;}",
-          "property System.Boolean CloseOnBackdrop {get;set;}",
-          "property System.Boolean IsOpen {get;set;}",
-          "property System.String AdditionalClass {get;set;}",
-          "property System.String AriaLabel {get;set;}",
-          "property System.String Eyebrow {get;set;}",
-          "property System.String Size {get;set;}",
-          "property System.String Subtitle {get;set;}",
-          "property System.String TestId {get;set;}",
-          "property System.String Title {get;set;}"
-        ]
-      },
-      {
         "name": "CanDoItAll.Components.BaseLib._Imports",
         "kind": "class",
         "isAbstract": false,
@@ -4292,7 +4122,8 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
-          "method System.Void Dispose()",
+          "method System.Threading.Tasks.Task HandleChartThemeChangedAsync()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
           "property CanDoItAll.Components.Charts.CdaChartOptions Options {get;set;}",
           "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.Object\u003E AdditionalAttributes {get;set;}",
           "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.Charts.CdaChartSeries\u003E Series {get;set;}",
@@ -4388,6 +4219,7 @@
         "isSealed": true,
         "baseType": "",
         "members": [
+          "field static const System.String StrokeDefault",
           "field static readonly System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Calm",
           "field static readonly System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Energetic",
           "property static System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Default {get;}"
@@ -4454,6 +4286,17 @@
           "field static const CanDoItAll.Components.Charts.CdaChartType Donut",
           "field static const CanDoItAll.Components.Charts.CdaChartType Line",
           "field static const CanDoItAll.Components.Charts.CdaChartType Pie"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.Charts.ChartsBodyAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeThemeTokens {get;set;}"
         ]
       },
       {
@@ -4745,6 +4588,17 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.Mermaid.MermaidBodyAssets",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+        "members": [
+          "ctor()",
+          "property System.Boolean IncludeThemeTokens {get;set;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.Mermaid.MermaidDiagram",
         "kind": "class",
         "isAbstract": false,
@@ -4753,6 +4607,7 @@
         "members": [
           "ctor()",
           "method System.Threading.Tasks.Task HandleNodeClickedAsync(CanDoItAll.Components.Mermaid.MermaidNodeClickEventArgs args)",
+          "method System.Threading.Tasks.Task HandleThemeChangedAsync()",
           "method System.Threading.Tasks.ValueTask DisposeAsync()",
           "property CanDoItAll.Components.Mermaid.MermaidDiagramOptions Options {get;set;}",
           "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.Mermaid.MermaidNodeClickEventArgs\u003E NodeClicked {get;set;}",
@@ -4791,7 +4646,8 @@
         "isSealed": false,
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
-          "ctor()"
+          "ctor()",
+          "property System.Boolean IncludeBaseLibStyles {get;set;}"
         ]
       },
       {
@@ -4976,7 +4832,8 @@
         "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
         "members": [
           "ctor()",
-          "property System.Boolean IncludeCanvasRuntimeAssets {get;set;}"
+          "property System.Boolean IncludeCanvasRuntimeAssets {get;set;}",
+          "property System.Boolean IncludeThemeTokens {get;set;}"
         ]
       },
       {

@@ -1,13 +1,32 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
 @inherits FormsShowcaseBase
 
-<FormField Text="Status">
-    <DropDown TValue="string"
-              Data="@StatusOptions"
-              TextProperty="@nameof(SelectOption.Text)"
-              ValueProperty="@nameof(SelectOption.Value)"
-              Value="@FormState.Status"
-              ValueChanged="HandleStatusChanged"
-              Placeholder="Select status"
-              Disabled="@IsDisabled" />
-</FormField>
+<Grid Gap="LayoutGap.Large" ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
+    <FormField Text="Status">
+        <SelectInput TValue="string"
+                     Value="@FormState.Status"
+                     ValueChanged="HandleStatusChanged"
+                     ValueExpression="@(() => FormState.Status)"
+                     disabled="@IsDisabled">
+            <option value="">Select status</option>
+            @foreach (var option in StatusOptions)
+            {
+                <option value="@option.Value">@option.Text</option>
+            }
+        </SelectInput>
+    </FormField>
+
+    <FormField Text="Status (enum values, disabled option)">
+        <SelectInput TValue="ReviewStatus?"
+                     Value="@NativeModel.Status"
+                     ValueChanged="@(value => NativeModel.Status = value)"
+                     ValueExpression="@(() => NativeModel.Status)"
+                     data-testid="native-status">
+            <option value="">Unset</option>
+            @foreach (var status in Enum.GetValues<ReviewStatus>())
+            {
+                <option value="@status" disabled="@(status == ReviewStatus.Blocked)">@status</option>
+            }
+        </SelectInput>
+    </FormField>
+</Grid>

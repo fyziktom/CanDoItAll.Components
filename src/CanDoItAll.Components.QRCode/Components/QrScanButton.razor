@@ -4,7 +4,7 @@
 <PageHeaderActionButton Icon="@Icon"
                         Label="@Label"
                         TooltipText="@TooltipText"
-                        ButtonStyle="@ButtonStyle"
+                        Tone="@Tone"
                         Variant="@Variant"
                         Size="@Size"
                         Disabled="@Disabled"
@@ -30,7 +30,7 @@
 
     /// <summary>Semantic tone of the trigger button.</summary>
     [Parameter]
-    public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Light;
+    public ButtonTone Tone { get; set; } = ButtonTone.Default;
 
     /// <summary>Emphasis treatment of the trigger button.</summary>
     [Parameter]

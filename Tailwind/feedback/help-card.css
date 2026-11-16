@@ -1,0 +1,39 @@
+@layer components {
+  .ui-help-card {
+    @apply relative flex items-center gap-3 rounded-xl border p-4 pr-10;
+  }
+
+  .ui-help-card__icon {
+    @apply flex shrink-0 items-center justify-center text-lg;
+  }
+
+  .ui-help-card__content {
+    @apply min-w-0;
+  }
+
+  .ui-help-card__heading {
+    @apply mb-1 text-sm font-semibold;
+  }
+
+  .ui-help-card__body {
+    @apply text-sm leading-6;
+  }
+
+  .ui-help-card__close {
+    @apply absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border-0;
+  }
+}
+
+/* Token reads, not expressible via @apply. Slightly darker than the ambient page background. */
+.ui-help-card {
+  background: var(--color-chrome-100);
+  border-color: var(--color-chrome-300);
+}
+
+.ui-help-card__icon {
+  color: var(--color-chrome-400);
+}
+
+.ui-help-card__close:hover {
+  background: var(--color-chrome-200);
+}

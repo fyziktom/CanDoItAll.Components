@@ -2,9 +2,10 @@
 @inherits FormsShowcaseBase
 
 <FormField Text="Notes">
-    <TextArea Value="@FormState.Notes"
-              ValueChanged="HandleNotesChanged"
-              Size="TextAreaSize.Extended"
-              Placeholder="@NotesPlaceholder"
-              Disabled="@IsDisabled" />
+    <TextAreaInput Value="@FormState.Notes"
+                   ValueChanged="HandleNotesChanged"
+                   ValueExpression="@(() => FormState.Notes)"
+                   rows="10"
+                   placeholder="@NotesPlaceholder"
+                   disabled="@IsDisabled" />
 </FormField>

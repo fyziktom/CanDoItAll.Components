@@ -25,6 +25,10 @@ function focusFixture(kind) {
             child.parent = this;
             this.children.push(child);
         },
+        prepend(child) {
+            child.parent = this;
+            this.children.unshift(child);
+        },
         contains(child) { return this === child || this.children.some(item => item.contains(child)); },
         remove() { this.parent.children = this.parent.children.filter(child => child !== this); },
         focus() { document.activeElement = this; },
@@ -125,10 +129,11 @@ for (const kind of ["create", "note"]) {
 
 function fixture(valid) {
     const calls = [];
-    const input = { value: "", checkValidity: () => valid, reportValidity: () => calls.push("invalid") };
+    const input = { value: "", focus() {}, checkValidity: () => valid, reportValidity: () => calls.push("invalid") };
     const shared = {
         submitCreateRequest: (_state, payload) => calls.push(payload),
-        closeComposer: state => { state.composer = null; }
+        closeComposer: state => { state.composer = null; },
+        layoutComposer() {}
     };
     const source = fs.readFileSync(path.join(__dirname,
         "../../src/CanDoItAll.Components.CanvasLib/wwwroot/js/runtime/workbench/04-context-menu-and-composer.js"), "utf8");
@@ -195,8 +200,9 @@ test("cancel retires only its original opening after registration", async () => 
 test("composer actions fit the actual canvas below its toolbar", () => {
     const { shared, state } = interactionFixture({ clamp: (n, min, max) => Math.max(min, Math.min(max, n)), round: Math.round });
     const style = { setProperty: (key, value) => { style[key] = value; } };
+    state.document = { documentElement: { clientWidth: 1920, clientHeight: 1080 } };
     state.host = {
-        getBoundingClientRect: () => ({ top: 258, bottom: 898, width: 1830, height: 640 }),
+        getBoundingClientRect: () => ({ left: 50, top: 258, bottom: 898, width: 1830, height: 640 }),
         closest: () => ({ querySelector: () => ({ getBoundingClientRect: () => ({ top: 274, bottom: 341 }) }) })
     };
     state.composer = {

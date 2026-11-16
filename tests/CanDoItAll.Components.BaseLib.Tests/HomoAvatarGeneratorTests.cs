@@ -30,15 +30,15 @@ public sealed class HomoAvatarGeneratorTests
         var svg = HomoAvatarGenerator.RenderSvg(new HomoAvatarOptions { Id = "213735" });
 
         Assert.Contains(
-            "<g data-homo-part=\"body\" stroke=\"oklch(79.5% 0.184 86.047)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"M 9,4 H 15 A 6,6 0 0 1 21,10 V 15 A 6,6 0 0 1 15,21 H 9 A 6,6 0 0 1 3,15 V 10 A 6,6 0 0 1 9,4 Z M 4,8.5 C 5,3 10.5,2.7 12.2,3.6 C 13,2.9 19,3.3 20.5,8.5 M 1.6,12.5 A 1,1 0 1 1 3.6,12.5 A 1,1 0 1 1 1.6,12.5 Z M 20.4,12.5 A 1,1 0 1 1 22.4,12.5 A 1,1 0 1 1 20.4,12.5 Z\"></path></g>",
+            "<g data-homo-part=\"body\" stroke=\"oklch(79.5% 0.184 86.047)\" fill=\"var(--tone-surface, #fff)\"><path d=\"M 9,4 H 15 A 6,6 0 0 1 21,10 V 15 A 6,6 0 0 1 15,21 H 9 A 6,6 0 0 1 3,15 V 10 A 6,6 0 0 1 9,4 Z M 4,8.5 C 5,3 10.5,2.7 12.2,3.6 C 13,2.9 19,3.3 20.5,8.5 M 1.6,12.5 A 1,1 0 1 1 3.6,12.5 A 1,1 0 1 1 1.6,12.5 Z M 20.4,12.5 A 1,1 0 1 1 22.4,12.5 A 1,1 0 1 1 20.4,12.5 Z\"></path></g>",
             svg,
             StringComparison.Ordinal);
         Assert.Contains(
-            "<g data-homo-part=\"mouth\" stroke=\"oklch(71.5% 0.143 215.221)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"M 8,17 H 16\"></path></g>",
+            "<g data-homo-part=\"mouth\" stroke=\"oklch(71.5% 0.143 215.221)\" fill=\"var(--tone-surface, #fff)\"><path d=\"M 8,17 H 16\"></path></g>",
             svg,
             StringComparison.Ordinal);
         Assert.Contains(
-            "<g data-homo-part=\"eyes\" stroke=\"oklch(71.5% 0.143 215.221)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"M 6.4,10.5 A 2.1,2.1 0 1 1 10.6,10.5 A 2.1,2.1 0 1 1 6.4,10.5 Z M 8.1,10.5 A 0.4,0.4 0 1 1 8.9,10.5 A 0.4,0.4 0 1 1 8.1,10.5 Z M 13.4,10.5 A 2.1,2.1 0 1 1 17.6,10.5 A 2.1,2.1 0 1 1 13.4,10.5 Z M 15.1,10.5 A 0.4,0.4 0 1 1 15.9,10.5 A 0.4,0.4 0 1 1 15.1,10.5 Z\"></path></g>",
+            "<g data-homo-part=\"eyes\" stroke=\"oklch(71.5% 0.143 215.221)\" fill=\"var(--tone-surface, #fff)\"><path d=\"M 6.4,10.5 A 2.1,2.1 0 1 1 10.6,10.5 A 2.1,2.1 0 1 1 6.4,10.5 Z M 8.1,10.5 A 0.4,0.4 0 1 1 8.9,10.5 A 0.4,0.4 0 1 1 8.1,10.5 Z M 13.4,10.5 A 2.1,2.1 0 1 1 17.6,10.5 A 2.1,2.1 0 1 1 13.4,10.5 Z M 15.1,10.5 A 0.4,0.4 0 1 1 15.9,10.5 A 0.4,0.4 0 1 1 15.1,10.5 Z\"></path></g>",
             svg,
             StringComparison.Ordinal);
     }
@@ -103,7 +103,7 @@ public sealed class HomoAvatarGeneratorTests
         });
 
         Assert.Contains(
-            "<g data-homo-part=\"body\" stroke=\"oklch(70.5% 0.213 47.604)\" fill=\"var(--cad-color-surface, #fff)\"><path d=\"M 5,12.5 A 7,9.5 0 1 1 19,12.5 A 7,9.5 0 1 1 5,12.5 Z M 6,5 C 9,3.3 14,2.8 18,7\"></path></g>",
+            "<g data-homo-part=\"body\" stroke=\"oklch(70.5% 0.213 47.604)\" fill=\"var(--tone-surface, #fff)\"><path d=\"M 5,12.5 A 7,9.5 0 1 1 19,12.5 A 7,9.5 0 1 1 5,12.5 Z M 6,5 C 9,3.3 14,2.8 18,7\"></path></g>",
             svg,
             StringComparison.Ordinal);
     }

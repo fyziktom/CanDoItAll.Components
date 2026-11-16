@@ -1,9 +1,30 @@
 @namespace CanDoItAll.Components.Sandbox.Components.Examples.Forms
 @inherits FormsShowcaseBase
+@using Microsoft.AspNetCore.Components.Forms
 
-<FormField Text="Title">
-    <TextBox Value="@FormState.Title"
-             ValueChanged="HandleTitleChanged"
-             Placeholder="@TitlePlaceholder"
-             Disabled="@IsDisabled" />
-</FormField>
+<Grid Gap="LayoutGap.Large" ColumnTemplate="repeat(auto-fit,minmax(16rem,1fr))">
+    <FormField Text="Title">
+        <TextInput Value="@FormState.Title"
+                   ValueChanged="HandleTitleChanged"
+                   ValueExpression="@(() => FormState.Title)"
+                   placeholder="@TitlePlaceholder"
+                   disabled="@IsDisabled" />
+    </FormField>
+
+    <FormField Text="Title (filled look, disabled)">
+        <TextInput Value="@FormState.Title"
+                   ValueChanged="HandleTitleChanged"
+                   ValueExpression="@(() => FormState.Title)"
+                   Look="InputLook.Filled"
+                   disabled="true"
+                   data-testid="native-title-disabled" />
+    </FormField>
+
+    <EditForm Model="NativeInvalidModel">
+        <DataAnnotationsValidator />
+        <FormField Text="Title (validation error state)">
+            <TextInput @bind-Value="NativeInvalidModel.Title" data-testid="native-title-invalid" />
+            <ValidationMessage For="@(() => NativeInvalidModel.Title)" />
+        </FormField>
+    </EditForm>
+</Grid>

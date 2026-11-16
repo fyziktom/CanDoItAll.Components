@@ -3,9 +3,11 @@
 <Grid Gap="LayoutGap.Large" Columns="1" ColumnsLg="2">
     <div class="space-y-4">
         <FormField Text="Copy source">
-            <TextBox
-                Value="https://sandbox.candoitall.dev/review/component-proof/copy-button?request=approve-shared-component-update-and-publish-acceptance-evidence"
-                ReadOnly="true"
+            <TextInput
+                Value="@copySourceValue"
+                ValueChanged="@(value => copySourceValue = value ?? string.Empty)"
+                ValueExpression="@(() => copySourceValue)"
+                readonly="true"
                 id="sandbox-actions-copy-source-input"
                 data-testid="sandbox-actions-copy-source" />
         </FormField>
@@ -65,3 +67,7 @@
         </div>
     </div>
 </Grid>
+
+@code {
+    private string copySourceValue = "https://sandbox.candoitall.dev/review/component-proof/copy-button?request=approve-shared-component-update-and-publish-acceptance-evidence";
+}

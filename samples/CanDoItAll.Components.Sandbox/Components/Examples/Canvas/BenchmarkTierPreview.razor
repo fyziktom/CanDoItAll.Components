@@ -5,12 +5,12 @@
         @foreach (var definition in Definitions)
         {
             <Button Text="@definition.Label"
-                    ButtonStyle="@(definition.Key == BenchmarkState.SelectedTierKey ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Tone="@(definition.Key == BenchmarkState.SelectedTierKey ? ButtonTone.Primary : ButtonTone.Default)"
                     Variant="@(definition.Key == BenchmarkState.SelectedTierKey ? Variant.Filled : Variant.Outlined)"
                     Click="@(() => BenchmarkState.SelectTier(definition.Key))"
                     data-testid="@($"canvas-benchmark-tier-{definition.Key}")" />
         }
-        <Button Text="Run benchmark" ButtonStyle="@(ButtonStyle.Success)" IsBusy="@BenchmarkState.IsRunning"
+        <Button Text="Run benchmark" Tone="@(ButtonTone.Success)" IsBusy="@BenchmarkState.IsRunning"
                 Click="BenchmarkState.RunAsync" data-testid="canvas-benchmark-run" />
         @if (!string.IsNullOrWhiteSpace(BenchmarkState.LastMeasuredLabel))
         {
@@ -28,7 +28,7 @@
     </SummaryTiles>
 
     <div
-        class="min-h-[26rem] w-full min-w-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-50/80 p-3"
+        class="min-h-[26rem] w-full min-w-0 overflow-hidden rounded-[1.75rem] border border-chrome-200 bg-chrome-50/80 p-3"
         data-testid="canvas-benchmark-retained-preview">
         <CanvasWorkbench Surface="@SelectedDefinition.Surface" />
     </div>

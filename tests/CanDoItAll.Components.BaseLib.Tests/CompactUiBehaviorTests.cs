@@ -26,7 +26,7 @@ public sealed class CompactUiBehaviorTests
     public void TextAreaSizeSelectsRowsFromExpectedContentLength(TextAreaSize size, string expectedRows)
     {
         using var context = new BunitContext();
-        var cut = context.Render<TextArea>(parameters => parameters
+        var cut = context.Render<TextAreaInput>(parameters => parameters
             .Add(component => component.Size, size));
 
         Assert.Equal(expectedRows, cut.Find("textarea").GetAttribute("rows"));
@@ -36,7 +36,7 @@ public sealed class CompactUiBehaviorTests
     public void ExplicitTextAreaRowsOverrideSemanticSize()
     {
         using var context = new BunitContext();
-        var cut = context.Render<TextArea>(parameters => parameters
+        var cut = context.Render<TextAreaInput>(parameters => parameters
             .Add(component => component.Size, TextAreaSize.Extended)
             .Add(component => component.Rows, 4));
 
@@ -202,7 +202,7 @@ public sealed class CompactUiBehaviorTests
         Assert.DoesNotContain("sm:flex-row", cut.Find("div").ClassList);
         Assert.NotNull(cut.Find(".cda-secret-field__control"));
         Assert.Contains("flex-wrap", cut.Find(".cda-secret-field__actions").ClassList);
-        Assert.Equal("Show 30s", cut.Find(".cda-secret-field__reveal .rz-button-text").TextContent.Trim());
+        Assert.Equal("Show 30s", cut.Find(".cda-secret-field__reveal .ui-button__label").TextContent.Trim());
     }
 
     [Fact]

@@ -44,22 +44,25 @@
     var style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = ''
-      + '.zy-calendar-shell{--zy-cal-border:rgba(15,23,42,.09);--zy-cal-border-strong:rgba(79,70,229,.24);--zy-cal-bg:#f5f7fb;--zy-cal-panel:#ffffff;--zy-cal-panel-soft:#f8fafc;--zy-cal-text:#0f172a;--zy-cal-muted:#64748b;--zy-cal-accent:#4f46e5;--zy-cal-accent-soft:rgba(79,70,229,.12);--zy-cal-success:#0f766e;--zy-cal-danger:#dc2626;--zy-cal-shadow:0 18px 40px rgba(15,23,42,.08);container-type:inline-size;font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-text);}'
+      + '.zy-calendar-host-workspace{--zy-cal-border:var(--ui-calendar-border,rgba(15,23,42,.09));--zy-cal-border-strong:var(--ui-calendar-border-strong,rgba(79,70,229,.24));--zy-cal-border-soft:var(--ui-calendar-border-soft,rgba(226,232,240,.9));--zy-cal-bg:var(--ui-calendar-bg,#f5f7fb);--zy-cal-panel:var(--ui-calendar-panel,#ffffff);--zy-cal-panel-soft:var(--ui-calendar-panel-soft,#f8fafc);--zy-cal-panel-sunken:var(--ui-calendar-panel-sunken,#fbfcff);--zy-cal-text:var(--ui-calendar-text,#0f172a);--zy-cal-muted:var(--ui-calendar-text-muted,#64748b);--zy-cal-text-subtle:var(--ui-calendar-text-subtle,#475569);--zy-cal-heading-text:var(--ui-calendar-heading-text,#334155);--zy-cal-accent:var(--ui-calendar-accent,#4f46e5);--zy-cal-accent-soft:var(--ui-calendar-accent-soft,rgba(79,70,229,.12));--zy-cal-accent-hover:var(--ui-calendar-accent-hover,#4338ca);--zy-cal-success:var(--ui-calendar-success,#0f766e);--zy-cal-danger:var(--ui-calendar-danger,#dc2626);--zy-cal-warn:var(--ui-calendar-warn,#92400e);--zy-cal-warn-soft:var(--ui-calendar-warn-soft,rgba(245,158,11,.16));--zy-cal-shadow:var(--ui-calendar-shadow,0 18px 40px rgba(15,23,42,.08));--zy-cal-shadow-strong:var(--ui-calendar-shadow-strong,0 26px 80px rgba(15,23,42,.32));--zy-cal-event-title-text:var(--ui-calendar-event-title-text,#ffffff);}'
+      + '.zy-calendar-shell{container-type:inline-size;font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-text);}'
       + '.zy-calendar-shell *{box-sizing:border-box;}'
+      + '.zy-calendar-backdrop,.zy-calendar-choice-backdrop{font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;}'
+      + '.zy-calendar-backdrop *,.zy-calendar-choice-backdrop *{box-sizing:border-box;}'
       + '.zy-calendar-toolbar{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;width:100%;margin:0 0 6px;padding:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;-webkit-overflow-scrolling:touch;}'
       + '.zy-calendar-toolbar-group{display:inline-flex;align-items:center;gap:4px;flex-wrap:nowrap;min-width:0;white-space:nowrap;flex:0 0 auto;}'
-      + '.zy-calendar-toolbar-divider{display:inline-flex;align-items:center;justify-content:center;color:rgba(100,116,139,.9);font:700 12px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;user-select:none;}'
-      + '.zy-calendar-button,.zy-calendar-view-button{border:1px solid var(--zy-cal-border);background:#fff;color:var(--zy-cal-text);border-radius:12px;padding:9px 14px;font:600 13px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .15s ease;}'
-      + '.zy-calendar-button:hover,.zy-calendar-view-button:hover{background:#f8fafc;border-color:rgba(79,70,229,.26);}'
-      + '.zy-calendar-button:focus-visible,.zy-calendar-view-button:focus-visible,.zy-calendar-export-button:focus-visible,.zy-calendar-toolbar-input:focus-visible,.zy-calendar-canvas:focus-visible,.zy-calendar-editor-input:focus-visible,.zy-calendar-editor-textarea:focus-visible,.zy-calendar-editor-select:focus-visible{outline:2px solid rgba(79,70,229,.5);outline-offset:2px;}'
-      + '.zy-calendar-button-primary{background:var(--zy-cal-accent);color:#fff;border-color:var(--zy-cal-accent);}'
-      + '.zy-calendar-button-primary:hover{background:#4338ca;border-color:#4338ca;color:#fff;}'
+      + '.zy-calendar-toolbar-divider{display:inline-flex;align-items:center;justify-content:center;color:var(--zy-cal-muted);font:700 12px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;user-select:none;}'
+      + '.zy-calendar-button,.zy-calendar-view-button{border:1px solid var(--zy-cal-border);background:var(--zy-cal-panel);color:var(--zy-cal-text);border-radius:12px;padding:9px 14px;font:600 13px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .15s ease;}'
+      + '.zy-calendar-button:hover,.zy-calendar-view-button:hover{background:var(--zy-cal-panel-soft);border-color:color-mix(in srgb,var(--zy-cal-accent) 26%,transparent);}'
+      + '.zy-calendar-button:focus-visible,.zy-calendar-view-button:focus-visible,.zy-calendar-export-button:focus-visible,.zy-calendar-toolbar-input:focus-visible,.zy-calendar-canvas:focus-visible,.zy-calendar-editor-input:focus-visible,.zy-calendar-editor-textarea:focus-visible,.zy-calendar-editor-select:focus-visible{outline:2px solid color-mix(in srgb,var(--zy-cal-accent) 50%,transparent);outline-offset:2px;}'
+      + '.zy-calendar-button-primary{background:var(--zy-cal-accent);color:var(--zy-cal-event-title-text);border-color:var(--zy-cal-accent);}'
+      + '.zy-calendar-button-primary:hover{background:var(--zy-cal-accent-hover);border-color:var(--zy-cal-accent-hover);color:var(--zy-cal-event-title-text);}'
       + '.zy-calendar-button-danger{color:var(--zy-cal-danger);}'
-      + '.zy-calendar-button-danger:hover{background:rgba(220,38,38,.05);border-color:rgba(220,38,38,.2);}'
-      + '.zy-calendar-view-switcher,.zy-calendar-scope-switcher{display:flex;align-items:center;gap:6px;padding:4px;border:1px solid var(--zy-cal-border);background:#fff;border-radius:14px;}'
+      + '.zy-calendar-button-danger:hover{background:color-mix(in srgb,var(--zy-cal-danger) 5%,transparent);border-color:color-mix(in srgb,var(--zy-cal-danger) 20%,transparent);}'
+      + '.zy-calendar-view-switcher,.zy-calendar-scope-switcher{display:flex;align-items:center;gap:6px;padding:4px;border:1px solid var(--zy-cal-border);background:var(--zy-cal-panel);border-radius:14px;}'
       + '.zy-calendar-mobile-view-field{display:none;align-items:center;flex:0 0 auto;}'
       + '.zy-calendar-mobile-view-select{display:none;min-width:112px;}'
-      + '.zy-calendar-view-button.is-active{background:var(--zy-cal-accent);color:#fff;border-color:var(--zy-cal-accent);}'
+      + '.zy-calendar-view-button.is-active{background:var(--zy-cal-accent);color:var(--zy-cal-event-title-text);border-color:var(--zy-cal-accent);}'
       + '.zy-calendar-export-button{display:inline-flex;align-items:center;justify-content:center;gap:.42rem;}'
       + '.zy-calendar-export-button .export-trigger-icon{width:.95rem;height:.95rem;flex-shrink:0;}'
       + '.zy-calendar-export-button .export-trigger-label{font:700 11px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;}'
@@ -68,27 +71,27 @@
       + '.zy-calendar-toolbar-meta{display:inline-flex;align-items:center;gap:0;flex-wrap:nowrap;min-width:0;}'
       + '.zy-calendar-period-label{font:700 13px/1.1 "Segoe UI","Helvetica Neue",Arial,sans-serif;letter-spacing:-.02em;white-space:nowrap;}'
       + '.zy-calendar-period-subtitle{display:none;}'
-      + '.zy-calendar-toolbar-input{border:1px solid var(--zy-cal-border);border-radius:999px;padding:0 9px;background:#fff;color:var(--zy-cal-text);font:700 10px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;min-height:26px;height:26px;min-width:96px;max-width:108px;box-shadow:none;}'
+      + '.zy-calendar-toolbar-input{border:1px solid var(--zy-cal-border);border-radius:999px;padding:0 9px;background:var(--zy-cal-panel);color:var(--zy-cal-text);font:700 10px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;min-height:26px;height:26px;min-width:96px;max-width:108px;box-shadow:none;}'
       + '.zy-calendar-toolbar-icon{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;line-height:1;flex-shrink:0;font:800 12px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;}'
       + '.zy-calendar-toolbar-nav-icon{font-size:14px;}'
-      + '.zy-calendar-toolbar-event-plus{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:999px;background:rgba(255,255,255,.16);font:800 11px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;flex-shrink:0;}'
-      + '.zy-calendar-toolbar .zy-calendar-button-primary .zy-calendar-toolbar-event-plus{background:rgba(67,40,121,.14);color:currentColor;}'
-      + '.zy-calendar-toolbar .zy-calendar-button-primary,.zy-calendar-toolbar-menu-item{background:linear-gradient(135deg,#f2ebff 0%,#ddd0ff 100%);border-color:rgba(124,58,237,.2);color:#432879;box-shadow:0 10px 24px rgba(124,58,237,.12);}'
-      + '.zy-calendar-toolbar .zy-calendar-button-primary:hover,.zy-calendar-toolbar-menu-item:hover{background:linear-gradient(135deg,#ebe1ff 0%,#cfbeff 100%);border-color:rgba(107,70,193,.24);color:#352066;}'
+      + '.zy-calendar-toolbar-event-plus{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:999px;background:color-mix(in srgb,var(--zy-cal-event-title-text) 16%,transparent);font:800 11px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;flex-shrink:0;}'
+      + '.zy-calendar-toolbar .zy-calendar-button-primary .zy-calendar-toolbar-event-plus{background:color-mix(in srgb,var(--zy-cal-accent-hover) 14%,transparent);color:currentColor;}'
+      + '.zy-calendar-toolbar .zy-calendar-button-primary,.zy-calendar-toolbar-menu-item{background:linear-gradient(135deg,color-mix(in srgb,var(--zy-cal-accent) 12%,var(--zy-cal-panel)) 0%,color-mix(in srgb,var(--zy-cal-accent) 28%,var(--zy-cal-panel)) 100%);border-color:color-mix(in srgb,var(--zy-cal-accent) 24%,transparent);color:var(--zy-cal-accent-hover);box-shadow:0 10px 24px color-mix(in srgb,var(--zy-cal-accent) 16%,transparent);}'
+      + '.zy-calendar-toolbar .zy-calendar-button-primary:hover,.zy-calendar-toolbar-menu-item:hover{background:linear-gradient(135deg,color-mix(in srgb,var(--zy-cal-accent) 18%,var(--zy-cal-panel)) 0%,color-mix(in srgb,var(--zy-cal-accent) 36%,var(--zy-cal-panel)) 100%);border-color:color-mix(in srgb,var(--zy-cal-accent) 30%,transparent);color:var(--zy-cal-accent-hover);}'
       + '.zy-calendar-toolbar .zy-calendar-button-primary .export-trigger-icon,.zy-calendar-toolbar-menu-item .export-trigger-icon{fill:currentColor;}'
       + '.zy-calendar-toolbar-icon-button{width:26px;min-width:26px;padding:0;}'
       + '.zy-calendar-toolbar-icon-button svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;}'
       + '.zy-calendar-toolbar-menu-shell{position:relative;display:inline-flex;align-items:center;}'
       + '.zy-calendar-toolbar-menu-shell.is-open .zy-calendar-toolbar-menu-popover{display:flex;}'
-      + '.zy-calendar-toolbar-menu-popover{position:fixed;top:0;left:0;display:none;flex-direction:column;gap:8px;min-width:152px;padding:12px;border:1px solid rgba(226,232,240,.95);border-radius:18px;background:rgba(255,255,255,.98);box-shadow:0 18px 40px rgba(15,23,42,.18);z-index:60;}'
+      + '.zy-calendar-toolbar-menu-popover{position:fixed;top:0;left:0;display:none;flex-direction:column;gap:8px;min-width:152px;padding:12px;border:1px solid var(--zy-cal-border-soft);border-radius:18px;background:color-mix(in srgb,var(--zy-cal-panel) 98%,transparent);box-shadow:0 18px 40px rgba(15,23,42,.18);z-index:60;}'
       + '.zy-calendar-toolbar-menu-item{display:flex;align-items:center;justify-content:flex-start;gap:8px;width:100%;min-height:32px;padding:0 11px;border-radius:14px;border:1px solid transparent;font:700 11px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;cursor:pointer;transition:transform .15s ease,filter .15s ease;}'
-      + '.zy-calendar-toolbar-menu-item:focus-visible{outline:2px solid rgba(79,70,229,.5);outline-offset:2px;}'
+      + '.zy-calendar-toolbar-menu-item:focus-visible{outline:2px solid color-mix(in srgb,var(--zy-cal-accent) 50%,transparent);outline-offset:2px;}'
       + '.zy-calendar-toolbar-menu-item .export-trigger-icon{width:14px;height:14px;flex-shrink:0;}'
       + '.zy-calendar-stage-shell{position:relative;}'
-      + '.zy-calendar-utility-backdrop{position:absolute;inset:0;display:none;align-items:flex-start;justify-content:center;padding:42px 16px 18px;background:rgba(245,247,251,.82);backdrop-filter:blur(5px);z-index:4;}'
+      + '.zy-calendar-utility-backdrop{position:absolute;inset:0;display:none;align-items:flex-start;justify-content:center;padding:42px 16px 18px;background:color-mix(in srgb,var(--zy-cal-bg) 82%,transparent);backdrop-filter:blur(5px);z-index:4;}'
       + '.zy-calendar-utility-backdrop.is-open{display:flex;}'
-      + '.zy-calendar-utility-dialog{width:min(420px,100%);border-radius:22px;border:1px solid rgba(226,232,240,.95);background:#fff;box-shadow:0 26px 60px rgba(15,23,42,.2);overflow:hidden;}'
-      + '.zy-calendar-utility-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 18px 14px;border-bottom:1px solid rgba(226,232,240,.9);background:#fbfcff;}'
+      + '.zy-calendar-utility-dialog{width:min(420px,100%);border-radius:22px;border:1px solid var(--zy-cal-border-soft);background:var(--zy-cal-panel);box-shadow:0 26px 60px rgba(15,23,42,.2);overflow:hidden;}'
+      + '.zy-calendar-utility-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--zy-cal-border-soft);background:var(--zy-cal-panel-sunken);}'
       + '.zy-calendar-utility-title{margin:0;font:700 19px/1.15 "Segoe UI","Helvetica Neue",Arial,sans-serif;letter-spacing:-.02em;}'
       + '.zy-calendar-utility-body{display:flex;flex-direction:column;gap:12px;padding:18px;}'
       + '.zy-calendar-utility-body p{margin:0;color:var(--zy-cal-muted);font:500 13px/1.5 "Segoe UI","Helvetica Neue",Arial,sans-serif;}'
@@ -101,27 +104,27 @@
       + '.zy-calendar-statusbar{display:none;margin:0 0 4px;}'
       + '.zy-calendar-statusbar.is-visible{display:block;}'
       + '.zy-calendar-chip-row{display:none;}'
-      + '.zy-calendar-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;background:#eef2ff;color:#3730a3;font:700 11px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;text-transform:uppercase;}'
-      + '.zy-calendar-chip-muted{background:#e2e8f0;color:#475569;}'
-      + '.zy-calendar-chip-ok{background:rgba(15,118,110,.12);color:#0f766e;}'
-      + '.zy-calendar-chip-warn{background:rgba(245,158,11,.16);color:#92400e;}'
-      + '.zy-calendar-canvas-shell{position:relative;border:1px solid var(--zy-cal-border);border-radius:22px;background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);box-shadow:var(--zy-cal-shadow);overflow:hidden;min-height:680px;}'
+      + '.zy-calendar-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;background:color-mix(in srgb,var(--zy-cal-accent) 12%,var(--zy-cal-panel));color:var(--zy-cal-accent-hover);font:700 11px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;text-transform:uppercase;}'
+      + '.zy-calendar-chip-muted{background:var(--zy-cal-border-soft);color:var(--zy-cal-text-subtle);}'
+      + '.zy-calendar-chip-ok{background:color-mix(in srgb,var(--zy-cal-success) 12%,var(--zy-cal-panel));color:var(--zy-cal-success);}'
+      + '.zy-calendar-chip-warn{background:var(--zy-cal-warn-soft);color:var(--zy-cal-warn);}'
+      + '.zy-calendar-canvas-shell{position:relative;border:1px solid var(--zy-cal-border);border-radius:22px;background:linear-gradient(180deg,var(--zy-cal-panel) 0%,var(--zy-cal-panel-soft) 100%);box-shadow:var(--zy-cal-shadow);overflow:hidden;min-height:680px;}'
       + '.zy-calendar-canvas{display:block;width:100%;height:min(78vh,900px);min-height:680px;background:transparent;cursor:default;}'
-      + '.zy-calendar-list-shell{display:none;border:1px solid var(--zy-cal-border);border-radius:22px;background:#fff;box-shadow:var(--zy-cal-shadow);overflow:hidden;}'
+      + '.zy-calendar-list-shell{display:none;border:1px solid var(--zy-cal-border);border-radius:22px;background:var(--zy-cal-panel);box-shadow:var(--zy-cal-shadow);overflow:hidden;}'
       + '.zy-calendar-list-shell.is-visible{display:block;}'
-      + '.zy-calendar-list-header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--zy-cal-border);background:#fbfcff;}'
+      + '.zy-calendar-list-header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--zy-cal-border);background:var(--zy-cal-panel-sunken);}'
       + '.zy-calendar-list-table-wrap{overflow:auto;max-height:min(76vh,860px);}'
       + '.zy-calendar-list-table{width:100%;border-collapse:collapse;min-width:920px;}'
-      + '.zy-calendar-list-table th,.zy-calendar-list-table td{padding:12px 14px;text-align:left;border-bottom:1px solid rgba(226,232,240,.9);font:500 13px/1.35 "Segoe UI","Helvetica Neue",Arial,sans-serif;vertical-align:top;}'
-      + '.zy-calendar-list-table th{position:sticky;top:0;background:#f8fafc;color:#475569;font-weight:700;z-index:1;}'
+      + '.zy-calendar-list-table th,.zy-calendar-list-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--zy-cal-border-soft);font:500 13px/1.35 "Segoe UI","Helvetica Neue",Arial,sans-serif;vertical-align:top;}'
+      + '.zy-calendar-list-table th{position:sticky;top:0;background:var(--zy-cal-panel-soft);color:var(--zy-cal-text-subtle);font-weight:700;z-index:1;}'
       + '.zy-calendar-list-row-title{font-weight:700;color:var(--zy-cal-text);display:block;margin-bottom:4px;}'
       + '.zy-calendar-list-row-meta{font-size:12px;color:var(--zy-cal-muted);}'
       + '.zy-calendar-list-col-actions{width:88px;}'
       + '.zy-calendar-list-actions{display:flex;flex-wrap:nowrap;gap:8px;margin-top:0;align-items:flex-start;}'
-      + '.zy-calendar-list-icon-button{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border-radius:12px;border:1px solid rgba(148,163,184,.26);background:#fff;color:#475569;box-shadow:0 8px 20px rgba(15,23,42,.08);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background-color .18s ease,color .18s ease;}'
-      + '.zy-calendar-list-icon-button:hover,.zy-calendar-list-icon-button:focus-visible{transform:translateY(-1px);border-color:rgba(99,102,241,.38);box-shadow:0 12px 24px rgba(99,102,241,.18);outline:none;}'
+      + '.zy-calendar-list-icon-button{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border-radius:12px;border:1px solid color-mix(in srgb,var(--zy-cal-text-subtle) 26%,transparent);background:var(--zy-cal-panel);color:var(--zy-cal-text-subtle);box-shadow:0 8px 20px rgba(15,23,42,.08);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background-color .18s ease,color .18s ease;}'
+      + '.zy-calendar-list-icon-button:hover,.zy-calendar-list-icon-button:focus-visible{transform:translateY(-1px);border-color:color-mix(in srgb,var(--zy-cal-accent) 38%,transparent);box-shadow:0 12px 24px color-mix(in srgb,var(--zy-cal-accent) 18%,transparent);outline:none;}'
       + '.zy-calendar-list-icon-button svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;}'
-      + '.zy-calendar-list-icon-button-primary{background:linear-gradient(135deg,#6d5efc 0%,#4f46e5 100%);border-color:rgba(79,70,229,.68);color:#fff;box-shadow:0 14px 28px rgba(79,70,229,.24);}'
+      + '.zy-calendar-list-icon-button-primary{background:linear-gradient(135deg,color-mix(in srgb,var(--zy-cal-accent) 70%,white) 0%,var(--zy-cal-accent) 100%);border-color:color-mix(in srgb,var(--zy-cal-accent) 68%,transparent);color:var(--zy-cal-event-title-text);box-shadow:0 14px 28px color-mix(in srgb,var(--zy-cal-accent) 24%,transparent);}'
       + '.zy-calendar-list-row-time{white-space:normal;min-width:150px;}'
       + '.zy-calendar-list-row-time-line{display:block;}'
       + '.zy-calendar-list-row-time-line + .zy-calendar-list-row-time-line{margin-top:2px;color:var(--zy-cal-muted);}'
@@ -132,62 +135,114 @@
       + '.zy-calendar-panel-title{font:700 18px/1.2 "Segoe UI","Helvetica Neue",Arial,sans-serif;letter-spacing:-.02em;margin:0 0 8px;}'
       + '.zy-calendar-panel-copy{margin:0;color:var(--zy-cal-muted);font:500 13px/1.45 "Segoe UI","Helvetica Neue",Arial,sans-serif;}'
       + '.zy-calendar-stat-grid{display:flex;flex-wrap:nowrap;gap:8px;margin-top:12px;overflow-x:auto;overflow-y:hidden;padding-bottom:2px;scrollbar-width:thin;}'
-      + '.zy-calendar-stat{flex:1 1 0;min-width:84px;padding:10px 12px;border-radius:14px;background:var(--zy-cal-panel-soft);border:1px solid rgba(226,232,240,.9);}'
+      + '.zy-calendar-stat{flex:1 1 0;min-width:84px;padding:10px 12px;border-radius:14px;background:var(--zy-cal-panel-soft);border:1px solid var(--zy-cal-border-soft);}'
       + '.zy-calendar-stat-label{display:block;font:700 10px/1.05 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;}'
       + '.zy-calendar-stat-value{display:block;font:700 15px/1.1 "Segoe UI","Helvetica Neue",Arial,sans-serif;word-break:break-word;}'
       + '.zy-calendar-event-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px;}'
-      + '.zy-calendar-event-meta-item{padding:11px 12px;border:1px solid rgba(226,232,240,.9);border-radius:14px;background:#f8fafc;}'
+      + '.zy-calendar-event-meta-item{padding:11px 12px;border:1px solid var(--zy-cal-border-soft);border-radius:14px;background:var(--zy-cal-panel-soft);}'
       + '.zy-calendar-event-meta-label{display:block;font:700 11px/1.1 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}'
       + '.zy-calendar-event-meta-value{display:block;font:600 13px/1.35 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-text);word-break:break-word;}'
       + '.zy-calendar-event-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}'
       + '.zy-calendar-live-region{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}'
       + '.zy-calendar-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.42);display:none;align-items:flex-start;justify-content:center;padding:32px 18px;z-index:70;}'
       + '.zy-calendar-backdrop.is-open{display:flex;}'
-      + '.zy-calendar-editor{position:relative;width:min(920px,100%);max-height:calc(100vh - 64px);overflow:auto;border-radius:24px;background:#fff;box-shadow:0 26px 80px rgba(15,23,42,.32);border:1px solid rgba(255,255,255,.7);}'
+      + '.zy-calendar-editor{position:relative;width:min(920px,100%);max-height:calc(100vh - 64px);overflow:auto;border-radius:24px;background:var(--zy-cal-panel);box-shadow:var(--zy-cal-shadow-strong);border:1px solid color-mix(in srgb,var(--zy-cal-panel) 70%,transparent);}'
       + '.zy-calendar-host-workspace .zy-calendar-backdrop{top:calc(var(--clay-topbar-height,84px) + 12px);right:12px;bottom:12px;left:calc(var(--clay-sidebar-width,300px) + 12px);padding:0;align-items:stretch;justify-content:stretch;background:rgba(15,23,42,.28);backdrop-filter:blur(4px);}'
       + 'body.clay-shell-ready.clay-sidebar-collapsed .zy-calendar-host-workspace .zy-calendar-backdrop{left:calc(var(--clay-sidebar-collapsed-width,98px) + 12px);}'
       + '.zy-calendar-host-workspace .zy-calendar-editor{width:100%;max-width:none;height:100%;max-height:none;display:flex;flex-direction:column;overflow:hidden;border-radius:26px;}'
       + '.zy-calendar-host-workspace .zy-calendar-editor form{display:flex;flex-direction:column;min-height:0;height:100%;}'
       + '.zy-calendar-host-workspace .zy-calendar-editor-body{flex:1 1 auto;min-height:0;overflow:auto;padding-bottom:18px;}'
       + '.zy-calendar-host-workspace .zy-calendar-editor-footer{flex-shrink:0;}'
-      + '.zy-calendar-editor-header{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px;padding:22px 24px 18px;border-bottom:1px solid var(--zy-cal-border);background:#fbfcff;}'
+      + '.zy-calendar-editor-header{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px;padding:22px 24px 18px;border-bottom:1px solid var(--zy-cal-border);background:var(--zy-cal-panel-sunken);}'
       + '.zy-calendar-editor-title{font:700 24px/1.1 "Segoe UI","Helvetica Neue",Arial,sans-serif;letter-spacing:-.03em;margin:0;}'
       + '.zy-calendar-editor-body{padding:22px 24px;display:flex;flex-direction:column;gap:16px;}'
       + '.zy-calendar-editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}'
       + '.zy-calendar-editor-field{display:flex;flex-direction:column;gap:7px;}'
-      + '.zy-calendar-editor-label{font:700 12px/1.1 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:#334155;}'
-      + '.zy-calendar-editor-input,.zy-calendar-editor-textarea,.zy-calendar-editor-select{border:1px solid var(--zy-cal-border);border-radius:14px;padding:11px 13px;background:#fff;color:var(--zy-cal-text);font:500 14px/1.3 "Segoe UI","Helvetica Neue",Arial,sans-serif;width:100%;}'
+      + '.zy-calendar-editor-label{font:700 12px/1.1 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-heading-text);}'
+      + '.zy-calendar-editor-input,.zy-calendar-editor-textarea,.zy-calendar-editor-select{border:1px solid var(--zy-cal-border);border-radius:14px;padding:11px 13px;background:var(--zy-cal-panel);color:var(--zy-cal-text);font:500 14px/1.3 "Segoe UI","Helvetica Neue",Arial,sans-serif;width:100%;}'
       + '.zy-calendar-editor-textarea{min-height:112px;resize:vertical;}'
       + '.zy-calendar-editor-inline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}'
-      + '.zy-calendar-editor-checkbox{display:inline-flex;align-items:center;gap:8px;font:600 13px/1.2 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:#334155;}'
-      + '.zy-calendar-editor-footer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:18px 24px 24px;border-top:1px solid var(--zy-cal-border);background:#fff;}'
+      + '.zy-calendar-editor-checkbox{display:inline-flex;align-items:center;gap:8px;font:600 13px/1.2 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-heading-text);}'
+      + '.zy-calendar-editor-footer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:18px 24px 24px;border-top:1px solid var(--zy-cal-border);background:var(--zy-cal-panel);}'
       + '.zy-calendar-editor-note{font:500 12px/1.35 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-muted);}'
       + '.zy-calendar-playlist-search{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}'
       + '.zy-calendar-playlist-results,.zy-calendar-playlist-list{display:flex;flex-direction:column;gap:10px;}'
-      + '.zy-calendar-playlist-result,.zy-calendar-playlist-card{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:16px;border:1px solid rgba(226,232,240,.9);background:#f8fafc;}'
+      + '.zy-calendar-playlist-result,.zy-calendar-playlist-card{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:16px;border:1px solid var(--zy-cal-border-soft);background:var(--zy-cal-panel-soft);}'
       + '.zy-calendar-playlist-result-head,.zy-calendar-playlist-card-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:10px;}'
       + '.zy-calendar-playlist-title{font:700 14px/1.25 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-text);text-decoration:none;}'
       + '.zy-calendar-playlist-title:hover{text-decoration:underline;}'
       + '.zy-calendar-playlist-meta{font:500 12px/1.4 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-muted);}'
       + '.zy-calendar-playlist-events{display:flex;flex-wrap:wrap;gap:8px;}'
-      + '.zy-calendar-playlist-event-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#fff;border:1px solid rgba(203,213,225,.95);font:600 11px/1.2 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:#334155;text-decoration:none;}'
-      + '.zy-calendar-playlist-event-chip:hover{text-decoration:none;border-color:rgba(79,70,229,.28);color:#3730a3;}'
+      + '.zy-calendar-playlist-event-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:var(--zy-cal-panel);border:1px solid var(--zy-cal-border-soft);font:600 11px/1.2 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-heading-text);text-decoration:none;}'
+      + '.zy-calendar-playlist-event-chip:hover{text-decoration:none;border-color:color-mix(in srgb,var(--zy-cal-accent) 28%,transparent);color:var(--zy-cal-accent-hover);}'
       + '.zy-calendar-playlist-result-actions{display:flex;flex-wrap:wrap;gap:8px;}'
       + '.zy-calendar-button[disabled],.zy-calendar-view-button[disabled],.zy-calendar-export-button[disabled]{opacity:.55;cursor:not-allowed;}'
       + '.zy-calendar-choice-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.42);display:none;align-items:center;justify-content:center;padding:18px;z-index:3;}'
       + '.zy-calendar-choice-backdrop.is-open{display:flex;}'
-      + '.zy-calendar-choice-dialog{width:min(480px,100%);border-radius:20px;background:#fff;border:1px solid rgba(226,232,240,.9);box-shadow:0 24px 60px rgba(15,23,42,.24);padding:20px;display:flex;flex-direction:column;gap:14px;}'
-      + '.zy-calendar-inline-message{display:none;padding:11px 13px;border-radius:14px;background:#eef2ff;color:#3730a3;font:600 13px/1.35 "Segoe UI","Helvetica Neue",Arial,sans-serif;}'
+      + '.zy-calendar-choice-dialog{width:min(480px,100%);border-radius:20px;background:var(--zy-cal-panel);border:1px solid var(--zy-cal-border-soft);box-shadow:0 24px 60px rgba(15,23,42,.24);padding:20px;display:flex;flex-direction:column;gap:14px;}'
+      + '.zy-calendar-inline-message{display:none;padding:11px 13px;border-radius:14px;background:color-mix(in srgb,var(--zy-cal-accent) 12%,var(--zy-cal-panel));color:var(--zy-cal-accent-hover);font:600 13px/1.35 "Segoe UI","Helvetica Neue",Arial,sans-serif;}'
       + '.zy-calendar-inline-message.is-visible{display:block;}'
-      + '.zy-calendar-inline-message.is-error{background:rgba(220,38,38,.1);color:#991b1b;}'
-      + '.zy-calendar-inline-message.is-success{background:rgba(15,118,110,.1);color:#0f766e;}'
-      + '.zy-calendar-loading{position:absolute;inset:0;background:rgba(255,255,255,.76);display:none;align-items:center;justify-content:center;font:700 14px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:#334155;backdrop-filter:blur(2px);z-index:2;}'
+      + '.zy-calendar-inline-message.is-error{background:color-mix(in srgb,var(--zy-cal-danger) 10%,var(--zy-cal-panel));color:var(--zy-cal-danger);}'
+      + '.zy-calendar-inline-message.is-success{background:color-mix(in srgb,var(--zy-cal-success) 10%,var(--zy-cal-panel));color:var(--zy-cal-success);}'
+      + '.zy-calendar-loading{position:absolute;inset:0;background:color-mix(in srgb,var(--zy-cal-panel) 76%,transparent);display:none;align-items:center;justify-content:center;font:700 14px/1 "Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--zy-cal-heading-text);backdrop-filter:blur(2px);z-index:2;}'
       + '.zy-calendar-loading.is-visible{display:flex;}'
       + '@container (max-width:1280px){.zy-calendar-body{grid-template-columns:minmax(0,1fr);}.zy-calendar-panel{order:-1;}.zy-calendar-canvas{height:min(72vh,820px);min-height:620px;}}'
       + '@media (max-width:1280px){.zy-calendar-body{grid-template-columns:minmax(0,1fr);}.zy-calendar-panel{order:-1;}.zy-calendar-canvas{height:min(72vh,820px);min-height:620px;}}'
       + '@media (max-width:1024px){.zy-calendar-host-workspace .zy-calendar-backdrop{top:calc(var(--clay-topbar-height,84px) + 10px);right:10px;bottom:10px;left:10px;}}'
       + '@media (max-width:720px){.zy-calendar-toolbar{gap:6px;padding-bottom:2px;}.zy-calendar-view-switcher{display:none;}.zy-calendar-mobile-view-field,.zy-calendar-mobile-view-select{display:inline-flex;}.zy-calendar-mobile-view-select{display:block;}.zy-calendar-toolbar-menu-popover{right:auto;left:0;}.zy-calendar-utility-backdrop{padding:18px 10px 10px;}.zy-calendar-body{padding:14px;gap:14px;}.zy-calendar-canvas{height:68vh;min-height:560px;}.zy-calendar-editor-grid{grid-template-columns:minmax(0,1fr);}.zy-calendar-editor-header,.zy-calendar-editor-body,.zy-calendar-editor-footer{padding-left:16px;padding-right:16px;}.zy-calendar-host-workspace .zy-calendar-backdrop{top:calc(var(--clay-topbar-height,84px) + 8px);right:8px;bottom:8px;left:8px;}.zy-calendar-host-workspace .zy-calendar-editor{border-radius:24px;}}';
     document.head.appendChild(style);
+  }
+
+  // CanvasCalendar's <canvas>-painted colors (mini-month, timed grid, month grid, event
+  // chips in zy-canvas-primitives.js) read through BaseLib's shared theme-tokens.js module
+  // when present (CLAUDE.md rule 8), falling back to an inline getComputedStyle read so
+  // callers degrade gracefully when it isn't loaded. Fallback literals mirror the
+  // --ui-calendar-* tokens declared in Tailwind/theme.css (see CLAUDE.md rule 9).
+  var calendarColorTokenMap = {
+    bg: { cssVar: '--ui-calendar-bg', fallback: '#f5f7fb' },
+    canvasBackdrop: { cssVar: '--ui-calendar-canvas-backdrop', fallback: '#eef2ff' },
+    panel: { cssVar: '--ui-calendar-panel', fallback: '#ffffff' },
+    panelSoft: { cssVar: '--ui-calendar-panel-soft', fallback: '#f8fafc' },
+    border: { cssVar: '--ui-calendar-border', fallback: 'rgba(15, 23, 42, 0.09)' },
+    borderSoft: { cssVar: '--ui-calendar-border-soft', fallback: 'rgba(226, 232, 240, 0.9)' },
+    text: { cssVar: '--ui-calendar-text', fallback: '#0f172a' },
+    textMuted: { cssVar: '--ui-calendar-text-muted', fallback: '#64748b' },
+    textSubtle: { cssVar: '--ui-calendar-text-subtle', fallback: '#475569' },
+    textFaint: { cssVar: '--ui-calendar-text-faint', fallback: '#94a3b8' },
+    headingText: { cssVar: '--ui-calendar-heading-text', fallback: '#334155' },
+    gridMajor: { cssVar: '--ui-calendar-grid-major', fallback: 'rgba(148, 163, 184, 0.32)' },
+    gridHeaderFill: { cssVar: '--ui-calendar-grid-header-fill', fallback: 'rgba(248, 250, 252, 0.92)' },
+    accent: { cssVar: '--ui-calendar-accent', fallback: '#4f46e5' },
+    success: { cssVar: '--ui-calendar-success', fallback: '#0f766e' },
+    nowIndicator: { cssVar: '--ui-calendar-now-indicator', fallback: '#ef4444' },
+    currentDayFill: { cssVar: '--ui-calendar-current-day-fill', fallback: 'rgba(79, 70, 229, 0.05)' },
+    selectedDayFill: { cssVar: '--ui-calendar-selected-day-fill', fallback: 'rgba(16, 185, 129, 0.06)' },
+    selectedCellFill: { cssVar: '--ui-calendar-selected-cell-fill', fallback: 'rgba(79, 70, 229, 0.08)' },
+    previewTargetFill: { cssVar: '--ui-calendar-preview-target-fill', fallback: 'rgba(16, 185, 129, 0.1)' },
+    rangeFill: { cssVar: '--ui-calendar-range-fill', fallback: 'rgba(79, 70, 229, 0.12)' },
+    rangeStroke: { cssVar: '--ui-calendar-range-stroke', fallback: 'rgba(79, 70, 229, 0.24)' },
+    eventTitleText: { cssVar: '--ui-calendar-event-title-text', fallback: '#ffffff' },
+    eventStrokeSelected: { cssVar: '--ui-calendar-event-stroke-selected', fallback: 'rgba(15, 23, 42, 0.42)' },
+    eventStroke: { cssVar: '--ui-calendar-event-stroke', fallback: 'rgba(255, 255, 255, 0.36)' },
+    densityDot: { cssVar: '--ui-calendar-density-dot', fallback: '#10b981' }
+  };
+
+  function readCalendarColorsInline(host, tokenMap) {
+    var style = window.getComputedStyle(host);
+    var resolved = {};
+    for (var propertyName in tokenMap) {
+      if (Object.prototype.hasOwnProperty.call(tokenMap, propertyName)) {
+        var entry = tokenMap[propertyName];
+        resolved[propertyName] = style.getPropertyValue(entry.cssVar).trim() || entry.fallback;
+      }
+    }
+    return resolved;
+  }
+
+  function resolveCalendarColors(host) {
+    return window.CanDoItAll && window.CanDoItAll.themeTokens
+      ? window.CanDoItAll.themeTokens.readTokens(host, calendarColorTokenMap)
+      : readCalendarColorsInline(host, calendarColorTokenMap);
   }
 
   function asText(value) {
@@ -874,5 +929,5 @@
   }
 
   var shared = window.ZyCanvasCalendarModule = window.ZyCanvasCalendarModule || {};
-  Object.assign(shared, { CanvasSurface, HitRegistry, DateMath, drawMiniMonth, drawTimedGrid, fillRoundedPanel, fitText, wrapText, STYLE_ID, DAY_SHORT, MONTH_SHORT, TIMEZONE_FALLBACKS, injectStyles, asText, asNumber, clamp, safeObject, safeArray, copy, escapeHtml, padNumber, ensureDateKey, normalizeIsoString, minutesToClockLabel, formatterKey, getFormatter, getZonedParts, zonedPartsToDateKey, getDateKeyFromIso, getMinutesFromIso, formatDateKeyLabel, formatDateTimeLabel, formatRangeLabel, formatRangeLabelLines, renderListRangeLabel, renderCalendarActionIcon, renderCalendarToolbarIcon, renderCalendarListActionButton, renderCalendarToolbarIconButton, renderCalendarExportMenuItem, renderCalendarAddEventButton, toLocalInputValue, parseLocalInputValue, zonedLocalToUtcIso, localInputToUtcIso, buildUtcIsoFromDateKeyMinutes, addMinutesToIso, addDaysToIso, durationMinutes, createLocalEventId, normalizeEvent, pluralize, formatConnectionLabel, compareEvents, getEventSpan, compareDateKeys, eventSpansDate, eventIntersectsRange, buildDensityMap, buildTimeZoneList, buildDefaultEvent, formatPeriodLabel, scopeRange });
+  Object.assign(shared, { CanvasSurface, HitRegistry, DateMath, drawMiniMonth, drawTimedGrid, fillRoundedPanel, fitText, wrapText, STYLE_ID, DAY_SHORT, MONTH_SHORT, TIMEZONE_FALLBACKS, injectStyles, asText, asNumber, clamp, safeObject, safeArray, copy, escapeHtml, padNumber, ensureDateKey, normalizeIsoString, minutesToClockLabel, formatterKey, getFormatter, getZonedParts, zonedPartsToDateKey, getDateKeyFromIso, getMinutesFromIso, formatDateKeyLabel, formatDateTimeLabel, formatRangeLabel, formatRangeLabelLines, renderListRangeLabel, renderCalendarActionIcon, renderCalendarToolbarIcon, renderCalendarListActionButton, renderCalendarToolbarIconButton, renderCalendarExportMenuItem, renderCalendarAddEventButton, toLocalInputValue, parseLocalInputValue, zonedLocalToUtcIso, localInputToUtcIso, buildUtcIsoFromDateKeyMinutes, addMinutesToIso, addDaysToIso, durationMinutes, createLocalEventId, normalizeEvent, pluralize, formatConnectionLabel, compareEvents, getEventSpan, compareDateKeys, eventSpansDate, eventIntersectsRange, buildDensityMap, buildTimeZoneList, buildDefaultEvent, formatPeriodLabel, scopeRange, resolveCalendarColors });
 })();
