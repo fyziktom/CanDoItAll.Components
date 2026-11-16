@@ -452,7 +452,8 @@ public static class SandboxCatalogRegistry
                 new("toolbar-fields", "ToolbarFields", typeof(ToolbarFields)),
                 new("toolbar-row", "ToolbarRow", typeof(ToolbarRow)),
                 new("tree-view", "TreeView", typeof(TreeView)),
-                new("tree-view-node-row", "TreeViewNodeRow", typeof(TreeViewNodeRow))
+                new("tree-view-node-row", "TreeViewNodeRow", typeof(TreeViewNodeRow)),
+                new("workspace-tab-strip", "WorkspaceTabStrip", typeof(WorkspaceTabStrip))
             ],
             ["/layout"] =
             [
@@ -500,7 +501,8 @@ public static class SandboxCatalogRegistry
             [
                 new("diff-viewer", "DiffViewer", typeof(DiffViewer)),
                 new("timeline", "Timeline", typeof(Timeline)),
-                new("timeline-stepper", "TimelineStepper", typeof(TimelineStepper))
+                new("timeline-stepper", "TimelineStepper", typeof(TimelineStepper)),
+                new("periodic-table", "PeriodicTable", typeof(PeriodicTable))
             ],
             ["/storage"] =
             [

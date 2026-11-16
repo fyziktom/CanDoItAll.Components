@@ -2222,6 +2222,113 @@
         ]
       },
       {
+        "name": "CanDoItAll.Components.BaseLib.PeriodicTable",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.BaseLib.PeriodicTableChoice\u003E ElementChosen {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Nullable\u003CSystem.Int32\u003E\u003E SelectedNumberChanged {get;set;}",
+          "property System.Boolean ShowSearch {get;set;}",
+          "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Int32,CanDoItAll.Components.BaseLib.PeriodicTableElementState\u003E States {get;set;}",
+          "property System.Nullable\u003CSystem.Int32\u003E SelectedNumber {get;set;}",
+          "property System.String AriaLabel {get;set;}",
+          "property System.String ElementTestIdPrefix {get;set;}",
+          "property System.String ListAriaLabel {get;set;}",
+          "property System.String SearchLabel {get;set;}",
+          "property System.String UnavailableText {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.PeriodicTableChoice",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(CanDoItAll.Components.BaseLib.PeriodicTableElement Element, CanDoItAll.Components.BaseLib.PeriodicTableChoiceSource Source)",
+          "method CanDoItAll.Components.BaseLib.PeriodicTableChoice \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.PeriodicTableChoice other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out CanDoItAll.Components.BaseLib.PeriodicTableElement Element, out CanDoItAll.Components.BaseLib.PeriodicTableChoiceSource Source)",
+          "property CanDoItAll.Components.BaseLib.PeriodicTableChoiceSource Source {get;set;}",
+          "property CanDoItAll.Components.BaseLib.PeriodicTableElement Element {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.PeriodicTableChoiceSource",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.PeriodicTableChoiceSource List",
+          "field static const CanDoItAll.Components.BaseLib.PeriodicTableChoiceSource Table"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.PeriodicTableElement",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Int32 AtomicNumber, System.String Symbol, System.String Name, System.Int32 Period, System.Int32 Group, System.Char Block, System.Int32 Row, System.Int32 Column)",
+          "method CanDoItAll.Components.BaseLib.PeriodicTableElement \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.PeriodicTableElement other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Int32 AtomicNumber, out System.String Symbol, out System.String Name, out System.Int32 Period, out System.Int32 Group, out System.Char Block, out System.Int32 Row, out System.Int32 Column)",
+          "property System.Char Block {get;set;}",
+          "property System.Int32 AtomicNumber {get;set;}",
+          "property System.Int32 Column {get;set;}",
+          "property System.Int32 Group {get;set;}",
+          "property System.Int32 Period {get;set;}",
+          "property System.Int32 Row {get;set;}",
+          "property System.String Name {get;set;}",
+          "property System.String OtherName {get;set;}",
+          "property System.String Symbol {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.PeriodicTableElementState",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor(System.Boolean Available = optional, System.String Note = optional)",
+          "method CanDoItAll.Components.BaseLib.PeriodicTableElementState \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.PeriodicTableElementState other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "method System.Void Deconstruct(out System.Boolean Available, out System.String Note)",
+          "property System.Boolean Available {get;set;}",
+          "property System.String Note {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.PeriodicTableElements",
+        "kind": "class",
+        "isAbstract": true,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "method static CanDoItAll.Components.BaseLib.PeriodicTableElement ByNumber(System.Int32 atomicNumber)",
+          "method static CanDoItAll.Components.BaseLib.PeriodicTableElement BySymbol(System.String symbol)",
+          "method static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.PeriodicTableElement\u003E Search(System.String query, System.Int32 maxResults = optional)",
+          "property static System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.PeriodicTableElement\u003E All {get;}"
+        ]
+      },
+      {
         "name": "CanDoItAll.Components.BaseLib.PickerDialogShell",
         "kind": "class",
         "isAbstract": false,
@@ -3364,6 +3471,7 @@
         "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
         "members": [
           "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
           "property CanDoItAll.Components.BaseLib.TabPosition TabPosition {get;set;}",
           "property CanDoItAll.Components.BaseLib.TabRenderMode RenderMode {get;set;}",
           "property CanDoItAll.Components.BaseLib.TabsBorderMode BorderMode {get;set;}",
@@ -4058,6 +4166,68 @@
         "members": [
           "ctor()",
           "property Microsoft.AspNetCore.Components.RenderFragment ChildContent {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.WorkspaceTab",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "",
+        "members": [
+          "ctor()",
+          "method CanDoItAll.Components.BaseLib.WorkspaceTab \u003CClone\u003E$()",
+          "method System.Boolean Equals(CanDoItAll.Components.BaseLib.WorkspaceTab other)",
+          "method System.Boolean Equals(System.Object obj)",
+          "method System.Int32 GetHashCode()",
+          "method System.String ToString()",
+          "property System.Boolean CanClose {get;set;}",
+          "property System.Boolean IsDirty {get;set;}",
+          "property System.Boolean IsPinned {get;set;}",
+          "property System.String Href {get;set;}",
+          "property System.String Icon {get;set;}",
+          "property System.String Id {get;set;}",
+          "property System.String Subtitle {get;set;}",
+          "property System.String Title {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.WorkspaceTabStrip",
+        "kind": "class",
+        "isAbstract": false,
+        "isSealed": false,
+        "baseType": "CanDoItAll.Components.BaseLib.StyledComponentBase",
+        "members": [
+          "ctor()",
+          "method System.Threading.Tasks.ValueTask DisposeAsync()",
+          "property CanDoItAll.Components.BaseLib.WorkspaceTabStripDensity Density {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback ClearRecent {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Activate {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Close {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E CloseOthers {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E CloseToRight {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E MoveLeft {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E MoveRight {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E Reopen {get;set;}",
+          "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.String\u003E TogglePin {get;set;}",
+          "property Microsoft.AspNetCore.Components.RenderFragment Trailing {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.WorkspaceTab\u003E Items {get;set;}",
+          "property System.Collections.Generic.IReadOnlyList\u003CCanDoItAll.Components.BaseLib.WorkspaceTab\u003E RecentItems {get;set;}",
+          "property System.Int32 OverviewThreshold {get;set;}",
+          "property System.String ActiveId {get;set;}",
+          "property System.String AriaLabel {get;set;}"
+        ]
+      },
+      {
+        "name": "CanDoItAll.Components.BaseLib.WorkspaceTabStripDensity",
+        "kind": "enum",
+        "isAbstract": false,
+        "isSealed": true,
+        "baseType": "System.Enum",
+        "members": [
+          "field System.Int32 value__",
+          "field static const CanDoItAll.Components.BaseLib.WorkspaceTabStripDensity Compact",
+          "field static const CanDoItAll.Components.BaseLib.WorkspaceTabStripDensity Normal"
         ]
       },
       {

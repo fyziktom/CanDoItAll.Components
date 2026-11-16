@@ -1,0 +1,195 @@
+/*
+  PeriodicTable (Components/DataDisplay/PeriodicTable.razor): 118 element buttons on the conventional 18-column grid,
+  the lanthanoid and actinoid rows below a small gap, and the searchable list alternative. Block colours, the
+  unavailable hatch, the chosen fill and the focus ring use theme tokens only; the choice and unavailability are also
+  shown by marks (a check mark and a cross) and a dashed border, never by colour alone.
+*/
+@layer components {
+  .ui-periodic-table {
+    /* Component geometry: the narrowest cell (a narrower container scrolls the table sideways inside the component),
+       the gap between cells and the widest the table grows on a wide page. */
+    --ui-periodic-table-cell-min: 1.1rem;
+    --ui-periodic-table-gap: 2px;
+    --ui-periodic-table-max-width: 60rem;
+
+    @apply flex w-full min-w-0 max-w-full flex-col gap-2;
+    color: var(--tone-text);
+    /* Cell typography scales with the component's width (cqi units below). */
+    container-type: inline-size;
+  }
+
+  .ui-periodic-table__scroller {
+    @apply min-w-0 max-w-full overflow-x-auto overflow-y-hidden;
+    /* Room for the focus ring of the edge cells, which the scroll box would otherwise clip. */
+    padding: 3px;
+    scrollbar-width: thin;
+  }
+
+  .ui-periodic-table__grid {
+    display: grid;
+    grid-template-columns: repeat(18, minmax(var(--ui-periodic-table-cell-min), 1fr));
+    /* Seven periods, a small gap, then the lanthanoid and actinoid rows (display rows 9 and 10). */
+    grid-template-rows: repeat(7, auto) 0.4rem repeat(2, auto);
+    gap: var(--ui-periodic-table-gap);
+    min-width: calc(18 * var(--ui-periodic-table-cell-min) + 17 * var(--ui-periodic-table-gap));
+    max-width: var(--ui-periodic-table-max-width);
+  }
+
+  .ui-periodic-table__element {
+    @apply relative flex min-w-0 cursor-pointer flex-col items-center justify-center p-0 leading-none;
+    /* Square cells that fill their column, never shorter than two lines of text. */
+    justify-self: stretch;
+    align-self: start;
+    aspect-ratio: 1;
+    min-height: 2rem;
+    border: 1px solid var(--tone-border-soft);
+    border-radius: 0.1875rem;
+    color: var(--tone-text-strong);
+    background-color: var(--tone-surface);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ui-periodic-table__element:hover {
+    border-color: var(--tone-border);
+  }
+
+  .ui-periodic-table__element--block-s {
+    background-color: var(--tone-info-soft-bg);
+  }
+
+  .ui-periodic-table__element--block-p {
+    background-color: var(--tone-success-soft-bg);
+  }
+
+  .ui-periodic-table__element--block-d {
+    background-color: var(--tone-warning-soft-bg);
+  }
+
+  .ui-periodic-table__element--block-f {
+    background-color: var(--tone-danger-soft-bg);
+  }
+
+  /* Number, symbol and marks line grow with the table, but only once the cells grow past the 2rem minimum height and
+     more slowly than the cells, so the three lines always fit inside the borders. */
+  .ui-periodic-table__number {
+    font-size: clamp(0.55rem, 1.4cqi, 0.75rem);
+    color: var(--tone-text-muted);
+  }
+
+  .ui-periodic-table__symbol {
+    font-size: clamp(0.72rem, calc(2.2cqi - 2px), 1.125rem);
+    font-weight: 600;
+  }
+
+  /* Unavailable: dashed, hatched and marked with a cross; it stays focusable and choosable. */
+  .ui-periodic-table__element--unavailable {
+    border-style: dashed;
+    border-color: var(--tone-border);
+    color: var(--tone-text-muted);
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0 3px,
+      color-mix(in srgb, var(--tone-text-soft) 30%, transparent) 3px 5px
+    );
+  }
+
+  /* Chosen: a solid fill plus the check mark and aria-pressed. */
+  .ui-periodic-table__element--chosen {
+    border-color: var(--tone-primary-solid-border);
+    color: var(--tone-primary-solid-fg);
+    background-color: var(--tone-primary-solid-bg);
+  }
+
+  .ui-periodic-table__element--chosen .ui-periodic-table__number {
+    color: inherit;
+  }
+
+  /* The cross and the check mark share a line of their own below the symbol, kept (empty) in every cell so the
+     numbers and symbols line up; corner marks would cover three-digit numbers in narrow cells. */
+  .ui-periodic-table__marks {
+    @apply flex items-center justify-center gap-px leading-none;
+    min-height: 1em;
+    font-size: clamp(0.55rem, 1.4cqi, 0.8rem);
+    font-weight: 700;
+  }
+
+  .ui-periodic-table__element:focus-visible {
+    z-index: 1;
+    outline: 2px solid var(--tone-info-solid-bg);
+    outline-offset: 1px;
+  }
+
+  /* The "57–71" and "89–103" placeholders in group 3 of periods 6 and 7. */
+  .ui-periodic-table__series {
+    @apply self-center justify-self-center text-center leading-tight;
+    font-size: clamp(0.5rem, 1.4cqi, 0.7rem);
+    color: var(--tone-text-muted);
+  }
+
+  .ui-periodic-table__find {
+    @apply flex w-full min-w-0 flex-col gap-1;
+    max-width: min(100%, 24rem);
+  }
+
+  .ui-periodic-table__find-label {
+    @apply text-xs font-semibold;
+    color: var(--tone-text-muted);
+  }
+
+  .ui-periodic-table__list {
+    @apply m-0 flex max-h-48 list-none flex-col gap-px overflow-y-auto rounded-md p-0.5;
+    border: 1px solid var(--tone-border-soft);
+    background-color: var(--tone-surface);
+  }
+
+  .ui-periodic-table__list[hidden] {
+    display: none;
+  }
+
+  .ui-periodic-table__option {
+    @apply cursor-pointer rounded px-2 py-0.5 text-sm;
+  }
+
+  .ui-periodic-table__option:hover {
+    background-color: var(--tone-default-soft-hover);
+  }
+
+  .ui-periodic-table__option[aria-selected="true"] {
+    @apply font-semibold;
+  }
+
+  .ui-periodic-table__option-check {
+    @apply mr-1;
+  }
+
+  .ui-periodic-table__option--unavailable {
+    color: var(--tone-text-muted);
+  }
+
+  .ui-periodic-table__option:focus-visible {
+    outline: 2px solid var(--tone-info-solid-bg);
+    outline-offset: -2px;
+  }
+
+  /* Forced colours drop fills, hatches and shadows: outlines keep the choice and the focus visible, beside the marks. */
+  @media (forced-colors: active) {
+    .ui-periodic-table__element--unavailable {
+      border-style: dashed;
+    }
+
+    .ui-periodic-table__element--chosen {
+      outline: 2px solid currentColor;
+      outline-offset: -4px;
+    }
+
+    .ui-periodic-table__element:focus-visible {
+      outline: 3px solid currentColor;
+      outline-offset: 1px;
+    }
+
+    .ui-periodic-table__option:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: -2px;
+    }
+  }
+}

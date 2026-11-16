@@ -1,0 +1,95 @@
+@namespace CanDoItAll.Components.BaseLib
+@inherits StyledComponentBase
+@implements IAsyncDisposable
+
+<div @ref="root" @attributes='BuildAttributes("ui-periodic-table")'>
+    <div class="ui-periodic-table__scroller">
+        <div class="ui-periodic-table__grid" role="group" aria-label="@AriaLabel">
+            @foreach (var cell in cells)
+            {
+                var element = cell.Element;
+                var state = StateOf(element);
+                var chosen = SelectedNumber == element.AtomicNumber;
+                var label = LabelOf(element, state);
+                <button type="button"
+                        class="@ElementClass(cell, state, chosen)"
+                        style="@cell.Placement"
+                        data-z="@element.AtomicNumber"
+                        data-symbol="@element.Symbol"
+                        data-testid="@TestId(element.Symbol)"
+                        tabindex="@(element.AtomicNumber == activeNumber ? 0 : -1)"
+                        aria-label="@label"
+                        title="@label"
+                        aria-pressed="@(chosen ? "true" : "false")"
+                        aria-disabled="@(state.Available ? null : "true")"
+                        @onclick="cell.Choose"
+                        @onkeydown="HandleTableKeyDown">
+                    <span class="ui-periodic-table__number">@element.AtomicNumber</span>
+                    <span class="ui-periodic-table__symbol">@element.Symbol</span>
+                    <span class="ui-periodic-table__marks" aria-hidden="true">
+                        @if (!state.Available)
+                        {
+                            <span class="ui-periodic-table__mark">×</span>
+                        }
+                        @if (chosen)
+                        {
+                            <span class="ui-periodic-table__check">✓</span>
+                        }
+                    </span>
+                </button>
+            }
+            <span class="ui-periodic-table__series" style="grid-row:6;grid-column:3" aria-hidden="true">57–71</span>
+            <span class="ui-periodic-table__series" style="grid-row:7;grid-column:3" aria-hidden="true">89–103</span>
+        </div>
+    </div>
+
+    @if (ShowSearch)
+    {
+        <div class="ui-periodic-table__find">
+            <label class="ui-periodic-table__find-label" for="@SearchId">@SearchLabel</label>
+            <input id="@SearchId"
+                   type="search"
+                   class="form-input ui-input ui-input--outlined ui-input--density-compact ui-periodic-table__search"
+                   role="combobox"
+                   aria-autocomplete="list"
+                   aria-controls="@ListId"
+                   aria-expanded="@(matches.Count > 0 ? "true" : "false")"
+                   autocomplete="off"
+                   spellcheck="false"
+                   data-testid="@TestId("search")"
+                   @bind="Query"
+                   @bind:event="oninput"
+                   @onkeydown="HandleSearchKeyDownAsync" />
+            <ul id="@ListId"
+                class="ui-periodic-table__list"
+                role="listbox"
+                aria-label="@ListAriaLabel"
+                data-testid="@TestId("list")"
+                hidden="@(matches.Count == 0)">
+                @foreach (var match in matches)
+                {
+                    var option = match;
+                    var state = StateOf(option);
+                    var selected = SelectedNumber == option.AtomicNumber;
+                    <li @key="option.AtomicNumber"
+                        id="@OptionId(option)"
+                        class="@OptionClass(state)"
+                        role="option"
+                        tabindex="-1"
+                        data-z="@option.AtomicNumber"
+                        data-testid="@TestId("option-" + option.Symbol)"
+                        aria-selected="@(selected ? "true" : "false")"
+                        title="@LabelOf(option, state)"
+                        @onclick="() => ChooseAsync(option, PeriodicTableChoiceSource.List)"
+                        @onkeydown="args => HandleOptionKeyDownAsync(args, option)">
+                        @if (selected)
+                        {
+                            <span class="ui-periodic-table__option-check" aria-hidden="true">✓</span>
+                        }
+                        @OptionText(option, state)
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
