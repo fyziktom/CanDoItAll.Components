@@ -1,0 +1,138 @@
+@namespace CanDoItAll.Components.WebGlSandbox.Components.Pages
+@page "/image-view"
+@using System.Globalization
+@using CanDoItAll.Components.Common
+
+<PageTitle>Image View</PageTitle>
+
+<div class="webgl-page" data-testid="image-view-page">
+    <PageScaffold MaxWidthClass="max-w-[1180px]">
+        <Header>
+            <PageHeader Eyebrow="WebGlLib image display" Title="Float image view and window histogram"
+                        Description="Raw sample planes drawn through a display window: drag the window's edges or the window on the histogram, pan and zoom the images, double-click to fit." />
+        </Header>
+        <ChildContent>
+            <Stack GapScale="LayoutGap.Medium">
+                <SectionCard Title="Display">
+                    <Cluster Gap="LayoutGap.Medium" AlignItems="AlignItems.End">
+                        <FormField Text="Image">
+                            <SelectInput TValue="string" @bind-Value="sourceName" data-testid="image-source">
+                                <option value="signal">Signal (float32, masked)</option>
+                                <option value="counts">Counts (uint16)</option>
+                                <option value="attenuated">Step wedge (float32, with a reference)</option>
+                            </SelectInput>
+                        </FormField>
+                        <FormField Text="Displayed quantity">
+                            <SelectInput TValue="WebGlImageDisplayMode" Value="mode" ValueChanged="ModeChanged" ValueExpression="() => mode" data-testid="image-mode">
+                                <option value="@WebGlImageDisplayMode.Linear">Samples</option>
+                                <option value="@WebGlImageDisplayMode.NegativeLogRatio">-ln(I / Iref)</option>
+                            </SelectInput>
+                        </FormField>
+                        <FormField Text="Gamma">
+                            <TextInput @bind-Value="gammaText" type="number" min="0.1" step="0.1" data-testid="image-gamma" />
+                        </FormField>
+                        <label class="webgl-image-check"><CheckBox TValue="bool" @bind-Value="invert" data-testid="image-invert" /> Invert</label>
+                        <label class="webgl-image-check"><CheckBox TValue="bool" @bind-Value="smooth" data-testid="image-smooth" /> Smooth</label>
+                        <label class="webgl-image-check"><CheckBox TValue="bool" @bind-Value="outline" data-testid="image-region" /> Region and profile row</label>
+                        <label class="webgl-image-check"><CheckBox TValue="bool" @bind-Value="compare" data-testid="image-compare" /> Compare under one window</label>
+                        <Button Text="Fit window" Icon="fit_screen" Variant="Variant.Outlined" Click="FitAsync" data-testid="image-fit" />
+                    </Cluster>
+                </SectionCard>
+                <div class="webgl-image-views">
+                    <figure class="webgl-image-figure">
+                        <WebGlFloatImageView @ref="primary" Id="sandbox-image-primary" Source="@Primary" Window="@window" Gamma="@Gamma" Invert="@invert"
+                                             Mode="@mode" Smooth="@smooth" Region="@(outline ? new WebGlImageRegion(40, 30, 90, 60) : null)"
+                                             ProfileRow="@(outline ? 100 : null)" AriaLabel="Sample image" OnProbe="Probe" OnLoaded="ImageLoaded"
+                                             data-testid="image-primary" />
+                        <figcaption data-testid="image-caption">@caption</figcaption>
+                    </figure>
+                    @if (compare)
+                    {
+                        <figure class="webgl-image-figure">
+                            <WebGlFloatImageView Id="sandbox-image-compare" Source="@Compared" Window="@window" Gamma="@Gamma" Invert="@invert" Mode="@mode"
+                                                 Smooth="@smooth" AriaLabel="Compared image" data-testid="image-compare-view" />
+                            <figcaption>The same window: a 15 % brighter acquisition stays brighter.</figcaption>
+                        </figure>
+                    }
+                </div>
+                <WebGlImageWindowHistogram ViewId="sandbox-image-primary" LinkedViewIds="@(compare ? ["sandbox-image-compare"] : null)"
+                                           @bind-Window="window" ScaleRevision="scaleRevision" StatsChanged="Stats" data-testid="image-histogram" />
+                <p class="webgl-image-note" data-testid="image-probe">@probeText</p>
+                <p class="webgl-image-note" data-testid="image-stats">@statsText</p>
+            </Stack>
+        </ChildContent>
+    </PageScaffold>
+</div>
+
+@code {
+    private WebGlFloatImageView? primary;
+    private string sourceName = "signal";
+    private WebGlImageDisplayMode mode = WebGlImageDisplayMode.Linear;
+    private string? gammaText = "1";
+    private bool invert, smooth, outline, compare;
+    private WebGlImageWindow? window;
+    private int scaleRevision;
+    private string caption = "";
+    private string probeText = "Point at the image to read a pixel.";
+    private string statsText = "";
+
+    private double Gamma => double.TryParse(gammaText, NumberStyles.Float, CultureInfo.InvariantCulture, out double g) && g > 0 ? g : 1;
+
+    private WebGlImageSource Primary => Source(sourceName);
+
+    private WebGlImageSource Compared => sourceName == "signal" ? Source("signal-brighter") : Source(sourceName);
+
+    private static WebGlImageSource Source(string name)
+    {
+        int w = WebGlSandboxImages.Width, h = WebGlSandboxImages.Height;
+        return name switch
+        {
+            "counts" => new WebGlImageSource("counts", "/sandbox-images/counts", w, h) { ElementType = WebGlImageElementType.UInt16, Label = "counts" },
+            "attenuated" => new WebGlImageSource("attenuated", "/sandbox-images/attenuated", w, h) { ReferenceUrl = "/sandbox-images/reference", Label = "transmitted signal" },
+            "signal-brighter" => new WebGlImageSource("signal-brighter", "/sandbox-images/signal-brighter", w, h) { MaskUrl = "/sandbox-images/mask", Label = "signal" },
+            _ => new WebGlImageSource("signal", "/sandbox-images/signal", w, h) { MaskUrl = "/sandbox-images/mask", Label = "signal" },
+        };
+    }
+
+    private bool fitAfterRender;
+
+    // Another displayed quantity needs its own window: fitted once the view has the new mode.
+    private void ModeChanged(WebGlImageDisplayMode value)
+    {
+        mode = value;
+        fitAfterRender = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!fitAfterRender) return;
+        fitAfterRender = false;
+        await FitAsync();
+        StateHasChanged();
+    }
+
+    // A new image gets its own suggested window.
+    private void ImageLoaded(WebGlImageLoadResult result)
+    {
+        caption = result.Ok
+            ? string.Create(CultureInfo.InvariantCulture, $"{result.Key}: {result.Width} × {result.Height}, {result.ValidCount} valid pixels, mean {result.Mean:G5}")
+            : result.Message ?? "";
+        window = result.SuggestedWindow;
+        scaleRevision++;
+    }
+
+    private async Task FitAsync()
+    {
+        if (primary is null) return;
+        window = await primary.SuggestWindowAsync();
+        scaleRevision++;
+    }
+
+    private void Probe(WebGlImageProbe? probe) =>
+        probeText = probe is null ? "Point at the image to read a pixel."
+            : string.Create(CultureInfo.InvariantCulture, $"row {probe.Row}, column {probe.Column}: {(probe.Value is { } v ? v.ToString("G6", CultureInfo.InvariantCulture) : "–")}{(probe.Reference is { } r ? $" (reference {r:G6})" : "")}{(probe.Invalid ? " — invalid" : "")}");
+
+    private void Stats(WebGlImageWindowStats s) =>
+        statsText = string.Create(CultureInfo.InvariantCulture,
+            $"{s.Count} values from {s.Minimum:G5} to {s.Maximum:G5}; {100 * s.BelowFraction:F1} % below the window (black), {100 * s.AboveFraction:F1} % above it (white).");
+}

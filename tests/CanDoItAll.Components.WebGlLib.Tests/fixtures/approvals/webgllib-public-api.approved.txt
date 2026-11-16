@@ -1,4 +1,54 @@
 src/CanDoItAll.Components.WebGlLib/ComponentNamespaceMarker.cs:3: public static class ComponentNamespaceMarker
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:15: public partial class WebGlFloatImageView : IAsyncDisposable
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:37: public string? Id { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:41: public WebGlImageSource? Source { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:45: public WebGlImageWindow? Window { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:49: public double Gamma { get; set; } = 1;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:53: public bool Invert { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:56: public WebGlImageDisplayMode Mode { get; set; } = WebGlImageDisplayMode.Linear;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:60: public bool Smooth { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:64: public WebGlImageRegion? Region { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:68: public double? ProfileRow { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:71: public string AriaLabel { get; set; } = "Image";
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:74: public string? Class { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:78: public string? InvalidColor { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:82: public string? RegionColor { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:86: public string? ProfileColor { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:90: public bool ShowStatus { get; set; } = true;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:94: public EventCallback<WebGlImageProbe?> OnProbe { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:98: public EventCallback<WebGlImageLoadResult> OnLoaded { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:101: public EventCallback<WebGlImageViewStatusEventArgs> OnStatusChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:104: public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:107: public string ElementId => string.IsNullOrWhiteSpace(Id) ? generatedId : Id;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:110: public WebGlImageViewStatus Status { get; private set; } = WebGlImageViewStatus.Ready;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:113: public WebGlImageLoadResult? Loaded { get; private set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:116: public WebGlImageWindow? EffectiveWindow => Window ?? automaticWindow;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:124: public async ValueTask<WebGlImageWindow?> SuggestWindowAsync(double lowQuantile = 0.005, double highQuantile = 0.995)
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:134: public async ValueTask ResetViewAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:203: public Task NotifyProbe(WebGlImageProbe? probe) => OnProbe.InvokeAsync(probe);
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:207: public async Task NotifyStatus(string kind, string message)
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlFloatImageView.razor.cs:222: public async ValueTask DisposeAsync()
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:14: public partial class WebGlImageWindowHistogram : IAsyncDisposable
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:28: public string ViewId { get; set; } = "";
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:32: public IReadOnlyList<string>? LinkedViewIds { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:36: public WebGlImageWindow? Window { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:40: public EventCallback<WebGlImageWindow?> WindowChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:44: public EventCallback<WebGlImageWindow> WindowInput { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:48: public EventCallback<WebGlImageWindowStats> StatsChanged { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:52: public int ScaleRevision { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:56: public int Bins { get; set; } = 64;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:60: public string? Label { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:64: public string CountLabel { get; set; } = "pixels";
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:67: public string AriaLabel { get; set; } = "Histogram of the displayed values with the display window: drag an edge of the window or the window itself";
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:70: public int ViewBoxWidth { get; set; } = 400;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:73: public int ViewBoxHeight { get; set; } = 80;
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:76: public string? Class { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:79: public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:86: public async ValueTask<WebGlImageWindowStats?> GetStatsAsync() =>
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:135: public Task NotifyWindowChanged(double low, double high)
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:144: public Task NotifyWindowInput(double low, double high) => WindowInput.InvokeAsync(new WebGlImageWindow(low, high));
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:148: public Task NotifyStats(WebGlImageWindowStats stats) => StatsChanged.InvokeAsync(stats);
+src/CanDoItAll.Components.WebGlLib/Components/Image/WebGlImageWindowHistogram.razor.cs:150: public async ValueTask DisposeAsync()
 src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.CommandResults.cs:5: public partial class WebGlSceneView
 src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:5: public partial class WebGlSceneView
 src/CanDoItAll.Components.WebGlLib/Components/Scene/WebGlSceneView.Interop.cs:7: public Task FitViewAsync()
@@ -251,6 +301,57 @@ src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:50: p
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:52: public Dictionary<string, string> Metadata { get; set; } = [];
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:55: public sealed class WebGlModelImportRecipeResolver
 src/CanDoItAll.Components.WebGlLib/WebGl/Assets/WebGlModelImportOptions.cs:57: public WebGlModelImportOptions Resolve(WebGlAssetCatalog catalog, WebGlAssetDefinition asset, WebGlAssetVariant? variant = null)
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageDisplayMode.cs:4: public enum WebGlImageDisplayMode
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageDisplayState.cs:10: public static WebGlImageDisplayState From(
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageDisplayState.cs:16: public object ToJs() => new
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageDisplayState.cs:28: public static object SourceToJs(WebGlImageSource source) => new
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageDisplayState.cs:41: public static string ModeName(WebGlImageDisplayMode mode) =>
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageDisplayState.cs:44: public static string ElementTypeName(WebGlImageElementType type) => type switch
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageDisplayState.cs:63: public static WebGlImageElementType? ParseElementType(string? name) => name?.Trim().ToLowerInvariant() switch
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageElementType.cs:7: public enum WebGlImageElementType
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageElementTypes.cs:4: public static class WebGlImageElementTypes
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageElementTypes.cs:10: public static WebGlImageElementType? Parse(string? name) => WebGlImageDisplayState.ParseElementType(name);
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageElementTypes.cs:13: public static string NameOf(WebGlImageElementType type) => WebGlImageDisplayState.ElementTypeName(type);
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:7: public sealed record WebGlImageLoadResult
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:10: public string Key { get; init; } = "";
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:13: public bool Ok { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:16: public bool Superseded { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:19: public string? Message { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:21: public int Width { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:23: public int Height { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:26: public long ValidCount { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:28: public double? Mean { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:30: public double? Minimum { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:32: public double? Maximum { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:34: public double? SuggestedLow { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:36: public double? SuggestedHigh { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:39: public bool Drawable { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageLoadResult.cs:42: public WebGlImageWindow? SuggestedWindow =>
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageProbe.cs:9: public sealed record WebGlImageProbe(int Column, int Row, double? Value, double? Reference, bool Invalid);
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageRegion.cs:4: public readonly record struct WebGlImageRegion(double X, double Y, double Width, double Height)
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageRegion.cs:7: public bool IsEmpty => !(Width > 0 && Height > 0);
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageSource.cs:12: public sealed record WebGlImageSource(string Key, string Url, int Width, int Height)
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageSource.cs:15: public WebGlImageElementType ElementType { get; init; } = WebGlImageElementType.Float32;
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageSource.cs:18: public string? MaskUrl { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageSource.cs:21: public string? ReferenceUrl { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageSource.cs:24: public WebGlImageElementType? ReferenceElementType { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageSource.cs:27: public string? Label { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageViewStatus.cs:4: public enum WebGlImageViewStatus
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageViewStatus.cs:23: public sealed record WebGlImageViewStatusEventArgs(WebGlImageViewStatus Status, string Message);
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindow.cs:7: public readonly record struct WebGlImageWindow(double Low, double High)
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindow.cs:10: public bool IsValid => double.IsFinite(Low) && double.IsFinite(High) && High > Low;
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindow.cs:13: public double Width => High - Low;
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindow.cs:16: public WebGlImageWindow Union(WebGlImageWindow other) => new(Math.Min(Low, other.Low), Math.Max(High, other.High));
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:7: public sealed record WebGlImageWindowStats
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:9: public long Count { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:11: public double? Minimum { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:13: public double? Maximum { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:15: public double? Low { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:17: public double? High { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:19: public double ScaleLow { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:21: public double ScaleHigh { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:23: public double BelowFraction { get; init; }
+src/CanDoItAll.Components.WebGlLib/WebGl/Image/WebGlImageWindowStats.cs:25: public double AboveFraction { get; init; }
 src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:3: public sealed class WebGlCameraCommand
 src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:5: public string CommandId { get; set; } = string.Empty;
 src/CanDoItAll.Components.WebGlLib/WebGl/Interaction/WebGlCameraCommand.cs:7: public string Action { get; set; } = string.Empty;

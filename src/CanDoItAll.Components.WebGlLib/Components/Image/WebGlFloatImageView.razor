@@ -1,0 +1,16 @@
+@namespace CanDoItAll.Components.WebGlLib
+@implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
+
+@* The canvas is drawn by webgl-image-display.js; Blazor owns the host's attributes and the status line only. *@
+<div @ref="host"
+     id="@ElementId"
+     class="@CssClass"
+     data-ui-webgl-image=""
+     @attributes="AdditionalAttributes">
+    <canvas @ref="canvas" class="ui-webgl-image__canvas" role="img" aria-label="@AriaLabel"></canvas>
+    @if (ShowStatus && !string.IsNullOrEmpty(statusMessage))
+    {
+        <p class="ui-webgl-image__status" role="status">@statusMessage</p>
+    }
+</div>

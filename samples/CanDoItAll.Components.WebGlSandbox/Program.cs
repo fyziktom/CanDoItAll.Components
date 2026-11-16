@@ -32,6 +32,11 @@ if (Directory.Exists(externalModelRoot))
 
 app.UseAntiforgery();
 app.MapStaticAssets();
+// Raw sample planes for the image view proof page (/image-view).
+app.MapGet("/sandbox-images/{name}", (string name) =>
+    CanDoItAll.Components.WebGlSandbox.WebGlSandboxImages.Bytes(name) is { } bytes
+        ? Results.File(bytes, "application/octet-stream")
+        : Results.NotFound());
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

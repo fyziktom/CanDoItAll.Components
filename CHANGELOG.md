@@ -53,6 +53,32 @@ All notable changes to this repository's packages are recorded here, per the cha
   is an enhancement only: a refused or unavailable module (prerendering, a closed circuit, a strict bUnit renderer)
   is ignored and selection still works.
 
+### WebGlLib float image view and display-window histogram
+
+#### Public interface
+
+- Added `WebGlFloatImageView`: raw sample planes (`WebGlImageSource` with `WebGlImageElementType` float, signed and
+  unsigned integers; optional invalid-pixel mask and reference plane) drawn with WebGL2 through a display window
+  (`WebGlImageWindow`), gamma, inversion and smoothing, as the samples or as `WebGlImageDisplayMode.NegativeLogRatio`
+  against the reference. It outlines a `WebGlImageRegion` and a profile row, pans, zooms and fits on double-click,
+  reports the pixel under the pointer (`OnProbe`), load results with statistics and a suggested window (`OnLoaded`,
+  `SuggestWindowAsync`) and what it can draw (`OnStatusChanged`: no WebGL2, a lost context, too large, a failed load —
+  values and statistics stay available). Display only: samples are never changed.
+- Added `WebGlImageWindowHistogram`: the histogram of a view's displayed values (linked by `ViewId`, further views by
+  `LinkedViewIds`) on a scale that stays while the window changes; edges and the window are dragged or stepped with
+  keys, linked views follow in the browser, `WindowChanged` (bindable) reports the committed window, `WindowInput`
+  the moving one, `StatsChanged` the fractions below and above it; `ScaleRevision` refits the scale.
+- Added `WebGlImageElementTypes` (descriptor names), `WebGlImageLoadResult`, `WebGlImageProbe`,
+  `WebGlImageViewStatus(EventArgs)` and `WebGlImageWindowStats`. Existing WebGlLib components are unchanged.
+  Proof: WebGlSandbox `/image-view`.
+
+#### Internal
+
+- Added the ES module `wwwroot/js/image/webgl-image-display.js` (loaded on demand by both components; read-only
+  proof hooks on `window.CanDoItAll.webglImage`), `wwwroot/css/image/webgl-image.css` (`.ui-webgl-image*`,
+  `.ui-webgl-histogram*`, BaseLib theme tokens with fallbacks, forced-colours rules) in the asset manifest, so
+  `WebGlLibHeadAssets` links it, and `InternalsVisibleTo` for the WebGlLib tests.
+
 ### BaseLib workspace tab strip
 
 #### Public interface
