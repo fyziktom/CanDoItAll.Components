@@ -1,6 +1,9 @@
 @namespace CanDoItAll.Components.BaseLib
 @inherits StyledComponentBase
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 <CascadingValue Value="this" IsFixed="true">
     <div style="display:none">
@@ -24,11 +27,11 @@
 @if (visibleItems.Count > 0)
 {
     <div @attributes="BuildRootAttributes()">
-        <div class="cad-tabs__list"
+        <div @ref="tabList"
+             class="cad-tabs__list"
              role="tablist"
              aria-label="@ResolveAriaLabel()"
-             aria-orientation="@ResolveAriaOrientation()"
-             onkeydown="@NativeNavigationKeyHandler">
+             aria-orientation="@ResolveAriaOrientation()">
             @for (var index = 0; index < visibleItems.Count; index++)
             {
                 var visibleIndex = index;
@@ -125,11 +128,17 @@
         builder.CloseComponent();
     };
 
+    private const string NavigationKeysModulePath = "./_content/CanDoItAll.Components.BaseLib/Components/Navigation/Tabs.razor.js";
+
     private readonly List<TabsItem> items = [];
     private readonly string componentId = $"cad-tabs-{Guid.NewGuid():N}";
 
     private int focusedVisibleIndex = -1;
     private int? pendingFocusVisibleIndex;
+    private ElementReference tabList;
+    private string? guardedTabListId;
+    private IJSObjectReference? navigationKeysModule;
+    private bool disposed;
 
     /// <summary>The index, among visible <see cref="TabsItem"/> children, of the selected tab.</summary>
     [Parameter]
@@ -212,6 +221,8 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await GuardNavigationKeysAsync();
+
         if (!pendingFocusVisibleIndex.HasValue)
         {
             return;
@@ -224,6 +235,67 @@
         if (focusIndex >= 0 && focusIndex < visibleItems.Count)
         {
             await visibleItems[focusIndex].ButtonReference.FocusAsync();
+        }
+    }
+
+    // Keeps the navigation keys of the tab list (the arrows along its orientation, Home, End and Space) from scrolling
+    // the page while the .NET key handler moves the selection. A listener added by the colocated module instead of an
+    // inline onkeydown attribute, so pages with a strict Content Security Policy (no 'unsafe-inline' scripts) keep the
+    // behaviour. The list element is re-created when tabs become visible again after none were, so each new element is
+    // guarded once.
+    private async Task GuardNavigationKeysAsync()
+    {
+        var listId = tabList.Id;
+        if (disposed || string.IsNullOrEmpty(listId) || string.Equals(listId, guardedTabListId, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        guardedTabListId = listId;
+        try
+        {
+            var module = navigationKeysModule ??= await JS.InvokeAsync<IJSObjectReference?>("import", NavigationKeysModulePath);
+            if (module is null)
+            {
+                return;
+            }
+
+            if (disposed)
+            {
+                navigationKeysModule = null;
+                await module.DisposeAsync();
+                return;
+            }
+
+            await module.InvokeVoidAsync("guardNavigationKeys", tabList);
+        }
+        catch (Exception)
+        {
+            // The guard is only an enhancement: tab selection and focus work without it, so it must never break
+            // rendering. Static or prerendered output has no JS interop (InvalidOperationException), a closed circuit
+            // throws JSDisconnectedException, a failed module load throws JSException, and test renderers refuse
+            // unplanned interop calls with their own exception types (bUnit's strict mode). The element is not retried.
+        }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        disposed = true;
+        var module = navigationKeysModule;
+        navigationKeysModule = null;
+        if (module is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await module.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+            // The circuit is gone and the browser already released the module.
         }
     }
 
@@ -635,8 +707,4 @@
     }
 
     private bool IsHorizontal => TabPosition is TabPosition.Top or TabPosition.Bottom;
-
-    private string NativeNavigationKeyHandler => IsHorizontal
-        ? "if (['ArrowLeft','ArrowRight','Home','End',' '].includes(event.key)) event.preventDefault();"
-        : "if (['ArrowUp','ArrowDown','Home','End',' '].includes(event.key)) event.preventDefault();";
 }

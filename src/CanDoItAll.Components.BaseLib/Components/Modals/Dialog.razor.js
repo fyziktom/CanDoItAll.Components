@@ -143,6 +143,30 @@ export function closeDialog(instanceId) {
     }
 
     if (restoreFocus && previousActiveElement instanceof HTMLElement && previousActiveElement.isConnected) {
-        previousActiveElement.focus({ preventScroll: true });
+        restoreFocusTo(previousActiveElement);
     }
+}
+
+// A Button stays disabled while its click handler runs, and a handler that awaits the dialog it opened completes only
+// after the dialog closed: the focus then returns to the button once it is enabled again, unless it moved meanwhile.
+function restoreFocusTo(element) {
+    if (!element.matches(':disabled')) {
+        element.focus({ preventScroll: true });
+        return;
+    }
+
+    let timer;
+    const observer = new MutationObserver(() => {
+        if (element.isConnected && element.matches(':disabled')) {
+            return;
+        }
+
+        observer.disconnect();
+        clearTimeout(timer);
+        if (element.isConnected && (document.activeElement === document.body || document.activeElement === null)) {
+            element.focus({ preventScroll: true });
+        }
+    });
+    observer.observe(element, { attributes: true, attributeFilter: ['disabled'] });
+    timer = setTimeout(() => observer.disconnect(), 5000);
 }

@@ -1,0 +1,115 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.Navigation
+
+<Stack GapScale="LayoutGap.Small" data-testid="sandbox-navigation-workspace-tabs">
+    <WorkspaceTabStrip Items="@tabs"
+                       ActiveId="@activeId"
+                       RecentItems="@recent"
+                       AriaLabel="Open workspaces"
+                       Activate="@(id => activeId = id)"
+                       Close="Close"
+                       CloseOthers="CloseOthers"
+                       CloseToRight="CloseToRight"
+                       MoveLeft="@(id => Move(id, -1))"
+                       MoveRight="@(id => Move(id, 1))"
+                       TogglePin="TogglePin"
+                       Reopen="Reopen"
+                       ClearRecent="@(() => recent.Clear())">
+        <Trailing>
+            <Button Text="Open another" Icon="add" Size="ButtonSize.Small" Variant="Variant.Outlined" Click="Open" />
+        </Trailing>
+    </WorkspaceTabStrip>
+    <p class="m-0 text-sm text-[var(--tone-text-muted)]" aria-live="polite">
+        Shown: <strong>@(tabs.FirstOrDefault(t => t.Id == activeId)?.Title ?? "nothing")</strong> · @tabs.Count open · @recent.Count recently closed
+    </p>
+</Stack>
+
+@code {
+    private int next = 6;
+    private string? activeId = "w2";
+
+    private List<WorkspaceTab> tabs =
+    [
+        new() { Id = "w1", Title = "Dashboard", Icon = "dashboard", Subtitle = "Home", IsPinned = true, CanClose = false },
+        new() { Id = "w2", Title = "Quarterly delivery plan", Icon = "deployed_code", Subtitle = "Projects / Delivery" },
+        new() { Id = "w3", Title = "Supplier review with a deliberately long title that truncates", Icon = "deployed_code", Subtitle = "Projects / Procurement", IsDirty = true },
+        new() { Id = "w4", Title = "Release checklist", Icon = "checklist", Subtitle = "Projects / Release" },
+        new() { Id = "w5", Title = "Capacity calendar", Icon = "calendar_month", Subtitle = "Planning" }
+    ];
+
+    private List<WorkspaceTab> recent =
+    [
+        new() { Id = "r1", Title = "Archived budget review", Subtitle = "Projects / Finance" }
+    ];
+
+    private void Close(string id)
+    {
+        var index = tabs.FindIndex(t => t.Id == id);
+        if (index < 0)
+        {
+            return;
+        }
+        recent.Insert(0, tabs[index] with { IsPinned = false });
+        tabs.RemoveAt(index);
+        if (activeId == id)
+        {
+            activeId = tabs.Count == 0 ? null : tabs[Math.Min(index, tabs.Count - 1)].Id;
+        }
+    }
+
+    private void CloseOthers(string id)
+    {
+        foreach (var tab in tabs.Where(t => t.Id != id && !t.IsPinned && t.CanClose).ToList())
+        {
+            Close(tab.Id);
+        }
+        activeId = id;
+    }
+
+    private void CloseToRight(string id)
+    {
+        var index = tabs.FindIndex(t => t.Id == id);
+        foreach (var tab in tabs.Skip(index + 1).Where(t => !t.IsPinned && t.CanClose).ToList())
+        {
+            Close(tab.Id);
+        }
+    }
+
+    private void Move(string id, int delta)
+    {
+        var index = tabs.FindIndex(t => t.Id == id);
+        var target = index + delta;
+        if (index >= 0 && target >= 0 && target < tabs.Count)
+        {
+            (tabs[index], tabs[target]) = (tabs[target], tabs[index]);
+        }
+    }
+
+    private void TogglePin(string id)
+    {
+        var index = tabs.FindIndex(t => t.Id == id);
+        if (index >= 0)
+        {
+            var tab = tabs[index] with { IsPinned = !tabs[index].IsPinned };
+            tabs.RemoveAt(index);
+            tabs.Insert(tabs.Count(t => t.IsPinned), tab);
+        }
+    }
+
+    private void Reopen(string id)
+    {
+        var tab = recent.FirstOrDefault(t => t.Id == id);
+        if (tab is not null)
+        {
+            recent.Remove(tab);
+            tabs.Add(tab);
+            activeId = tab.Id;
+        }
+    }
+
+    private void Open()
+    {
+        var id = $"w{next++}";
+        tabs.Add(new() { Id = id, Title = $"Workspace {id[1..]}", Icon = "deployed_code", Subtitle = "Projects / New" });
+        activeId = id;
+    }
+}

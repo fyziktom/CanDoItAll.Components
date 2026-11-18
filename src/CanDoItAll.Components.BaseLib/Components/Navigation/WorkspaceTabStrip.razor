@@ -1,0 +1,455 @@
+@namespace CanDoItAll.Components.BaseLib
+@inherits StyledComponentBase
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+
+<div @ref="root" @attributes='BuildAttributes(RootClass)'>
+    <div class="ui-workspace-tabs__list" role="tablist" aria-label="@AriaLabel">
+        @foreach (var tab in Items)
+        {
+            var active = IsActive(tab);
+            <div @key="tab.Id" class="@TabClass(tab, active)" data-tab-id="@tab.Id">
+                @if (tab.Href is { Length: > 0 } href)
+                {
+                    <a href="@href"
+                       role="tab"
+                       class="ui-workspace-tab__activate"
+                       aria-selected="@(active ? "true" : "false")"
+                       aria-current="@(active ? "page" : null)"
+                       title="@TooltipOf(tab)">
+                        @TabLabel(tab)
+                    </a>
+                }
+                else
+                {
+                    <button type="button"
+                            role="tab"
+                            class="ui-workspace-tab__activate"
+                            aria-selected="@(active ? "true" : "false")"
+                            title="@TooltipOf(tab)"
+                            @onclick="() => Activate.InvokeAsync(tab.Id)">
+                        @TabLabel(tab)
+                    </button>
+                }
+                @if (HasTabMenu || CanCloseFromStrip(tab))
+                {
+                    <span class="ui-workspace-tab__actions">
+                        @if (HasTabMenu)
+                        {
+                            <button type="button"
+                                    class="ui-workspace-tab__action ui-workspace-tab__menu-trigger"
+                                    title="Tab actions"
+                                    aria-label="@($"Tab actions for {tab.Title}")"
+                                    aria-haspopup="menu"
+                                    aria-expanded="@(menu == MenuKind.Tab && menuTabId == tab.Id ? "true" : "false")"
+                                    @onclick="() => OpenMenuAsync(MenuKind.Tab, tab.Id)">
+                                <Icon Name="more_horiz" />
+                            </button>
+                        }
+                        @if (CanCloseFromStrip(tab))
+                        {
+                            <button type="button"
+                                    class="ui-workspace-tab__action ui-workspace-tab__close"
+                                    title="Close tab"
+                                    aria-label="@($"Close {tab.Title}")"
+                                    @onclick="() => Close.InvokeAsync(tab.Id)">
+                                <Icon Name="close" />
+                            </button>
+                        }
+                    </span>
+                }
+            </div>
+        }
+    </div>
+
+    @if (ShowOverview || ShowRecent || Trailing is not null)
+    {
+        <div class="ui-workspace-tabs__controls">
+            @if (ShowOverview)
+            {
+                <button type="button"
+                        class="ui-workspace-tabs__control"
+                        data-menu="overview"
+                        aria-haspopup="menu"
+                        aria-expanded="@(menu == MenuKind.Overview ? "true" : "false")"
+                        @onclick="() => OpenMenuAsync(MenuKind.Overview, null)">
+                    <Icon Name="tab" />
+                    <span>All tabs (@Items.Count)</span>
+                </button>
+            }
+            @if (ShowRecent)
+            {
+                <button type="button"
+                        class="ui-workspace-tabs__control"
+                        data-menu="recent"
+                        aria-haspopup="menu"
+                        aria-expanded="@(menu == MenuKind.Recent ? "true" : "false")"
+                        @onclick="() => OpenMenuAsync(MenuKind.Recent, null)">
+                    <Icon Name="history" />
+                    <span>Reopen (@RecentItems.Count)</span>
+                </button>
+            }
+            @Trailing
+        </div>
+    }
+
+    <ContextMenu IsOpen="@(menu != MenuKind.None)"
+                 X="@menuX"
+                 Y="@menuY"
+                 Heading="@MenuHeading"
+                 AriaLabel="@MenuAriaLabel"
+                 Items="@MenuItems"
+                 ItemSelected="HandleMenuSelectionAsync"
+                 OnClose="CloseMenu" />
+</div>
+
+@code {
+    private enum MenuKind { None, Tab, Overview, Recent }
+
+    private const string TabPrefix = "tab:";
+    private const string RecentPrefix = "recent:";
+    private const string ClearRecentId = "clear-recent";
+    private const string PinCommand = "pin";
+    private const string MoveLeftCommand = "move-left";
+    private const string MoveRightCommand = "move-right";
+    private const string CloseCommand = "close";
+    private const string CloseOthersCommand = "close-others";
+    private const string CloseToRightCommand = "close-right";
+
+    private ElementReference root;
+    private IJSObjectReference? module;
+    private string? revealedId;
+    private MenuKind menu;
+    private string? menuTabId;
+    private double menuX;
+    private double menuY;
+
+    /// <summary>The opened workspaces, in strip order.</summary>
+    [Parameter]
+    public IReadOnlyList<WorkspaceTab> Items { get; set; } = [];
+
+    /// <summary>The <see cref="WorkspaceTab.Id"/> of the shown workspace; it is marked selected and scrolled into view.</summary>
+    [Parameter]
+    public string? ActiveId { get; set; }
+
+    /// <summary>Recently closed workspaces offered by the Reopen menu (shown when <see cref="Reopen"/> is handled).</summary>
+    [Parameter]
+    public IReadOnlyList<WorkspaceTab> RecentItems { get; set; } = [];
+
+    /// <summary>Accessible name of the tab list.</summary>
+    [Parameter]
+    public string AriaLabel { get; set; } = "Open workspaces";
+
+    /// <summary>The "All tabs" menu appears from this many open tabs; the strip itself scrolls horizontally.</summary>
+    [Parameter]
+    public int OverviewThreshold { get; set; } = 4;
+
+    /// <summary>Spacing of the strip's own chrome.</summary>
+    [Parameter]
+    public WorkspaceTabStripDensity Density { get; set; } = WorkspaceTabStripDensity.Normal;
+
+    /// <summary>Optional controls placed after the tab list, such as an "open" action.</summary>
+    [Parameter]
+    public RenderFragment? Trailing { get; set; }
+
+    /// <summary>Raised when a tab without <see cref="WorkspaceTab.Href"/> is chosen. A tab with an address navigates instead.</summary>
+    [Parameter]
+    public EventCallback<string> Activate { get; set; }
+
+    /// <summary>Raised by a tab's close control or its menu; the host removes the tab and shows another one.</summary>
+    [Parameter]
+    public EventCallback<string> Close { get; set; }
+
+    /// <summary>Raised by "Close other tabs" in a tab's menu (offered when handled).</summary>
+    [Parameter]
+    public EventCallback<string> CloseOthers { get; set; }
+
+    /// <summary>Raised by "Close tabs to the right" in a tab's menu (offered when handled).</summary>
+    [Parameter]
+    public EventCallback<string> CloseToRight { get; set; }
+
+    /// <summary>Raised by "Move left" in a tab's menu (offered when handled).</summary>
+    [Parameter]
+    public EventCallback<string> MoveLeft { get; set; }
+
+    /// <summary>Raised by "Move right" in a tab's menu (offered when handled).</summary>
+    [Parameter]
+    public EventCallback<string> MoveRight { get; set; }
+
+    /// <summary>Raised by "Pin tab" / "Unpin tab" in a tab's menu (offered when handled).</summary>
+    [Parameter]
+    public EventCallback<string> TogglePin { get; set; }
+
+    /// <summary>Raised with a recently closed tab's id chosen in the Reopen menu.</summary>
+    [Parameter]
+    public EventCallback<string> Reopen { get; set; }
+
+    /// <summary>Raised by "Clear the list" in the Reopen menu (offered when handled).</summary>
+    [Parameter]
+    public EventCallback ClearRecent { get; set; }
+
+    private string RootClass => Density == WorkspaceTabStripDensity.Compact
+        ? "ui-workspace-tabs ui-workspace-tabs--compact"
+        : "ui-workspace-tabs";
+
+    private bool HasTabMenu => TogglePin.HasDelegate || MoveLeft.HasDelegate || MoveRight.HasDelegate
+        || CloseOthers.HasDelegate || CloseToRight.HasDelegate;
+
+    private bool ShowOverview => Items.Count >= Math.Max(2, OverviewThreshold);
+
+    private bool ShowRecent => RecentItems.Count > 0 && Reopen.HasDelegate;
+
+    private bool CanCloseFromStrip(WorkspaceTab tab) => tab.CanClose && !tab.IsPinned && Close.HasDelegate;
+
+    private bool IsActive(WorkspaceTab tab) => string.Equals(tab.Id, ActiveId, StringComparison.Ordinal);
+
+    private static string TabClass(WorkspaceTab tab, bool active)
+        => "ui-workspace-tab"
+           + (active ? " ui-workspace-tab--active" : string.Empty)
+           + (tab.IsPinned ? " ui-workspace-tab--pinned" : string.Empty);
+
+    private static string TooltipOf(WorkspaceTab tab)
+        => string.IsNullOrWhiteSpace(tab.Subtitle) ? tab.Title : $"{tab.Title} — {tab.Subtitle}";
+
+    private RenderFragment TabLabel(WorkspaceTab tab) => @<text>
+        @if (!string.IsNullOrWhiteSpace(tab.Icon))
+        {
+            <Icon Name="@tab.Icon" Class="ui-workspace-tab__icon" />
+        }
+        <span class="ui-workspace-tab__title">@tab.Title</span>
+        @if (tab.IsDirty)
+        {
+            <span class="ui-workspace-tab__dirty" role="img" aria-label="unsaved changes" title="Unsaved changes"></span>
+        }
+        @if (tab.IsPinned)
+        {
+            <Icon Name="push_pin" Class="ui-workspace-tab__pin" />
+            <span class="sr-only">pinned</span>
+        }
+    </text>;
+
+    private WorkspaceTab? MenuTab => menu == MenuKind.Tab
+        ? Items.FirstOrDefault(t => string.Equals(t.Id, menuTabId, StringComparison.Ordinal))
+        : null;
+
+    private string? MenuHeading => menu switch
+    {
+        MenuKind.Tab => MenuTab?.Title,
+        MenuKind.Overview => "Open tabs",
+        MenuKind.Recent => "Recently closed",
+        _ => null
+    };
+
+    private string MenuAriaLabel => menu switch
+    {
+        MenuKind.Overview => "Open tabs",
+        MenuKind.Recent => "Recently closed tabs",
+        _ => "Tab actions"
+    };
+
+    private IReadOnlyList<ContextMenuItem> MenuItems => menu switch
+    {
+        MenuKind.Tab when MenuTab is { } tab => TabMenuItems(tab),
+        MenuKind.Overview => Items.Select(t => new ContextMenuItem
+        {
+            Id = TabPrefix + t.Id,
+            Text = t.Title,
+            Description = t.Subtitle ?? string.Empty,
+            Icon = IsActive(t) ? "check" : t.Icon ?? string.Empty
+        }).ToList(),
+        MenuKind.Recent => RecentMenuItems(),
+        _ => []
+    };
+
+    private List<ContextMenuItem> TabMenuItems(WorkspaceTab tab)
+    {
+        var index = IndexOf(tab.Id);
+        var items = new List<ContextMenuItem>();
+        if (TogglePin.HasDelegate)
+        {
+            items.Add(new() { Id = PinCommand, Text = tab.IsPinned ? "Unpin tab" : "Pin tab", Icon = "push_pin" });
+        }
+        if (MoveLeft.HasDelegate)
+        {
+            items.Add(new() { Id = MoveLeftCommand, Text = "Move left", Icon = "chevron_left", Disabled = index <= 0 });
+        }
+        if (MoveRight.HasDelegate)
+        {
+            items.Add(new() { Id = MoveRightCommand, Text = "Move right", Icon = "chevron_right", Disabled = index < 0 || index >= Items.Count - 1 });
+        }
+        var separate = items.Count > 0;
+        if (CanCloseFromStrip(tab))
+        {
+            items.Add(new() { Id = CloseCommand, Text = "Close tab", Icon = "close", SeparatorBefore = separate });
+            separate = false;
+        }
+        if (CloseOthers.HasDelegate)
+        {
+            items.Add(new() { Id = CloseOthersCommand, Text = "Close other tabs", Icon = "tab_close", Disabled = Items.Count < 2, SeparatorBefore = separate });
+            separate = false;
+        }
+        if (CloseToRight.HasDelegate)
+        {
+            items.Add(new() { Id = CloseToRightCommand, Text = "Close tabs to the right", Icon = "tab_close_right", Disabled = index < 0 || index >= Items.Count - 1, SeparatorBefore = separate });
+        }
+        return items;
+    }
+
+    private List<ContextMenuItem> RecentMenuItems()
+    {
+        var items = RecentItems.Select(t => new ContextMenuItem
+        {
+            Id = RecentPrefix + t.Id,
+            Text = t.Title,
+            Description = t.Subtitle ?? string.Empty,
+            Icon = "restore"
+        }).ToList();
+        if (ClearRecent.HasDelegate && items.Count > 0)
+        {
+            items.Add(new() { Id = ClearRecentId, Text = "Clear the list", Icon = "delete_sweep", SeparatorBefore = true });
+        }
+        return items;
+    }
+
+    private int IndexOf(string id)
+    {
+        for (var i = 0; i < Items.Count; i++)
+        {
+            if (string.Equals(Items[i].Id, id, StringComparison.Ordinal))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private async Task OpenMenuAsync(MenuKind kind, string? tabId)
+    {
+        var anchor = await AnchorAsync(kind, tabId);
+        menuX = anchor[0];
+        menuY = anchor[1];
+        menuTabId = tabId;
+        menu = kind;
+    }
+
+    private async Task<double[]> AnchorAsync(MenuKind kind, string? tabId)
+    {
+        try
+        {
+            module ??= await JS.InvokeAsync<IJSObjectReference>("import", ModulePath);
+            var trigger = kind switch
+            {
+                MenuKind.Tab => "tab",
+                MenuKind.Overview => "overview",
+                _ => "recent"
+            };
+            var position = await module.InvokeAsync<double[]?>("anchorOf", root, trigger, tabId);
+            return position is { Length: 2 } ? position : [16, 16];
+        }
+        catch (JSDisconnectedException)
+        {
+            return [16, 16];
+        }
+    }
+
+    private void CloseMenu()
+    {
+        menu = MenuKind.None;
+        menuTabId = null;
+    }
+
+    private async Task HandleMenuSelectionAsync(string id)
+    {
+        var kind = menu;
+        var tabId = menuTabId;
+        CloseMenu();
+        if (kind == MenuKind.Overview && id.StartsWith(TabPrefix, StringComparison.Ordinal))
+        {
+            var chosen = Items.FirstOrDefault(t => t.Id == id[TabPrefix.Length..]);
+            if (chosen?.Href is { Length: > 0 } href)
+            {
+                Navigation.NavigateTo(href);
+            }
+            else if (chosen is not null)
+            {
+                await Activate.InvokeAsync(chosen.Id);
+            }
+            return;
+        }
+        if (kind == MenuKind.Recent)
+        {
+            if (id == ClearRecentId)
+            {
+                await ClearRecent.InvokeAsync();
+            }
+            else if (id.StartsWith(RecentPrefix, StringComparison.Ordinal))
+            {
+                await Reopen.InvokeAsync(id[RecentPrefix.Length..]);
+            }
+            return;
+        }
+        if (kind != MenuKind.Tab || tabId is null)
+        {
+            return;
+        }
+        await (id switch
+        {
+            PinCommand => TogglePin.InvokeAsync(tabId),
+            MoveLeftCommand => MoveLeft.InvokeAsync(tabId),
+            MoveRightCommand => MoveRight.InvokeAsync(tabId),
+            CloseCommand => Close.InvokeAsync(tabId),
+            CloseOthersCommand => CloseOthers.InvokeAsync(tabId),
+            CloseToRightCommand => CloseToRight.InvokeAsync(tabId),
+            _ => Task.CompletedTask
+        });
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (menu == MenuKind.Tab && MenuTab is null)
+        {
+            CloseMenu();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (ActiveId is null || string.Equals(revealedId, ActiveId, StringComparison.Ordinal))
+        {
+            return;
+        }
+        revealedId = ActiveId;
+        try
+        {
+            module ??= await JS.InvokeAsync<IJSObjectReference>("import", ModulePath);
+            await module.InvokeVoidAsync("reveal", root, ActiveId);
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+        catch (InvalidOperationException)
+        {
+            // Static rendering: JS interop is unavailable and nothing needs to scroll yet.
+        }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (module is null)
+        {
+            return;
+        }
+        try
+        {
+            await module.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+    }
+
+    internal const string ModulePath = "./_content/CanDoItAll.Components.BaseLib/Components/Navigation/WorkspaceTabStrip.razor.js";
+}

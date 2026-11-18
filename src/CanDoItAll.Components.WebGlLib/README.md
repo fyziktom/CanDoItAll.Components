@@ -80,6 +80,31 @@ dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Compone
 dotnet build samples/CanDoItAll.Components.WebGlLibOnlyViewer/CanDoItAll.Components.WebGlLibOnlyViewer.csproj --no-restore /p:UseComponentsWebGlLibPackage=true /p:ComponentsWebGlLibPackageVersion=0.1.0
 ```
 
+## Image Display
+
+`WebGlFloatImageView` draws raw sample planes (float or integer, little-endian, row zero at the top) fetched from
+same-origin URLs, through a display window, gamma, inversion and smoothing, optionally as -ln(I / Iref) against a
+reference plane, with masked and non-finite pixels marked. `WebGlImageWindowHistogram` bins a view's displayed values
+and moves the window of the views it links to while its edges or the window are dragged; the page receives the window
+when the drag ends. Both need only `<WebGlLibHeadAssets />` (their module is imported on demand):
+
+```razor
+<WebGlFloatImageView Id="plane" Source="@source" Window="@window" Gamma="@gamma" OnLoaded="Loaded" />
+<WebGlImageWindowHistogram ViewId="plane" @bind-Window="window" ScaleRevision="@fits" />
+
+@code {
+    private WebGlImageSource source = new("plane-1", "/data/plane-1.bin", 1024, 768) { MaskUrl = "/data/mask-1.bin", Label = "signal" };
+    private WebGlImageWindow? window;
+    private int fits;
+
+    private void Loaded(WebGlImageLoadResult result) { window = result.SuggestedWindow; fits++; }
+}
+```
+
+Without WebGL2 the image is not drawn, but it is loaded, so statistics, the probe and the histogram keep working.
+Browser proof: `window.CanDoItAll.webglImage.proof('#plane')`, `.readPixel('#plane', x, y)`, `.histogram(svg)`.
+Sandbox: WebGlSandbox `/image-view`.
+
 ## Adding Assets
 
 Place GLB/GLTF files under `wwwroot/assets`, add logical ids to an app-owned `WebGlAssetCatalog`, and provide primitive fallbacks for model categories that may be missing. Run:

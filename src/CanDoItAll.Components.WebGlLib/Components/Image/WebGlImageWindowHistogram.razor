@@ -1,0 +1,11 @@
+@namespace CanDoItAll.Components.WebGlLib
+@implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
+
+@* The plot is drawn by webgl-image-display.js inside this element; Blazor owns its attributes only. *@
+<svg @ref="svg"
+     class="@CssClass"
+     viewBox="@ViewBox"
+     aria-label="@AriaLabel"
+     data-ui-webgl-histogram=""
+     @attributes="AdditionalAttributes"></svg>

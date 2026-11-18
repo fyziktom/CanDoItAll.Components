@@ -1,0 +1,64 @@
+@namespace CanDoItAll.Components.Sandbox.Components.Examples.DataDisplay
+
+<Stack GapScale="LayoutGap.Small" data-testid="sandbox-data-display-periodic-table">
+    <PeriodicTable @bind-SelectedNumber="selectedNumber"
+                   States="@States"
+                   ElementChosen="@(choice => lastChoice = choice)"
+                   ElementTestIdPrefix="ptable-"
+                   data-testid="ptable" />
+    <Cluster Gap="LayoutGap.Small">
+        <p class="m-0 text-sm text-[var(--tone-text-muted)]" aria-live="polite">
+            @if (lastChoice is { } choice)
+            {
+                @($"Chosen in the {(choice.Source == PeriodicTableChoiceSource.List ? "list" : "table")}: ")<strong>@choice.Element.Name</strong>@($" ({choice.Element.Symbol}, Z {choice.Element.AtomicNumber}, block {choice.Element.Block}){NoteOf(choice.Element)}")
+            }
+            else
+            {
+                <text>Bound atomic number: <strong>@(selectedNumber?.ToString() ?? "none")</strong>. Elements without a stable isotope are unavailable in this sample.</text>
+            }
+        </p>
+        <Button Text="Clear the choice"
+                Icon="close"
+                Size="ButtonSize.Small"
+                Variant="Variant.Outlined"
+                Disabled="@(selectedNumber is null)"
+                Click="Clear" />
+    </Cluster>
+</Stack>
+
+@code {
+    private int? selectedNumber = 26;
+    private PeriodicTableChoice? lastChoice;
+
+    // A sample stock list: elements without a stable isotope (technetium, promethium and polonium onwards) are
+    // unavailable but still choosable; a few common metals carry their density as a note.
+    private static readonly IReadOnlyDictionary<int, PeriodicTableElementState> States = BuildStates();
+
+    private static Dictionary<int, PeriodicTableElementState> BuildStates()
+    {
+        var states = new Dictionary<int, PeriodicTableElementState>
+        {
+            [26] = new(Note: "density 7.874 g/cm³"),
+            [29] = new(Note: "density 8.96 g/cm³"),
+            [79] = new(Note: "density 19.32 g/cm³"),
+            [82] = new(Note: "density 11.34 g/cm³")
+        };
+        foreach (var number in new[] { 43, 61 }.Concat(Enumerable.Range(84, 35)))
+        {
+            states[number] = new(Available: false, Note: "no stable isotope");
+        }
+
+        return states;
+    }
+
+    private static string NoteOf(PeriodicTableElement element)
+        => States.TryGetValue(element.AtomicNumber, out var state)
+            ? $" — {(state.Available ? string.Empty : "unavailable, ")}{state.Note}"
+            : string.Empty;
+
+    private void Clear()
+    {
+        selectedNumber = null;
+        lastChoice = null;
+    }
+}

@@ -43,6 +43,15 @@
                             <RolloutStepper />
                         </ExampleBlock>
                     }
+                    else if (section.ComponentName == "PeriodicTable")
+                    {
+                        <ExampleBlock Title="Element picker"
+                                      Description="The 118 elements on the conventional 18-column table, the lanthanoids and actinoids below, coloured by block. The host marks elements unavailable (dashed, hatched, ×) or adds a note through States; the choice is marked ✓ and pressed. One tab stop: arrow keys, Home and End move, Enter or Space choose; the search field lists matches by symbol, atomic number or name. Narrow frames scroll the table sideways inside the component."
+                                      SourceId="examples/DataDisplay/PeriodicTableDemo.razor"
+                                      ApiTypes="@PeriodicTableApiTypes">
+                            <PeriodicTableDemo />
+                        </ExampleBlock>
+                    }
                 </section>
             }
 
@@ -57,5 +66,7 @@
     private static readonly IReadOnlyList<Type> DiffViewerApiTypes = [typeof(DiffViewer)];
     private static readonly IReadOnlyList<Type> TimelineApiTypes = [typeof(Timeline)];
     private static readonly IReadOnlyList<Type> TimelineStepperApiTypes = [typeof(TimelineStepper)];
+    private static readonly IReadOnlyList<Type> PeriodicTableApiTypes =
+        [typeof(PeriodicTable), typeof(PeriodicTableElementState), typeof(PeriodicTableChoice), typeof(PeriodicTableElement)];
 
 }

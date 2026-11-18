@@ -452,6 +452,44 @@
     ]
   },
   {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlFloatImageView",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+    "members": [
+      "ctor()",
+      "method System.Threading.Tasks.Task NotifyProbe(CanDoItAll.Components.WebGlLib.WebGlImageProbe probe)",
+      "method System.Threading.Tasks.Task NotifyStatus(System.String kind, System.String message)",
+      "method System.Threading.Tasks.ValueTask DisposeAsync()",
+      "method System.Threading.Tasks.ValueTask ResetViewAsync()",
+      "method System.Threading.Tasks.ValueTask\u003CSystem.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindow\u003E\u003E SuggestWindowAsync(System.Double lowQuantile = optional, System.Double highQuantile = optional)",
+      "property CanDoItAll.Components.WebGlLib.WebGlImageDisplayMode Mode {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlImageLoadResult Loaded {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlImageSource Source {get;set;}",
+      "property CanDoItAll.Components.WebGlLib.WebGlImageViewStatus Status {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlImageLoadResult\u003E OnLoaded {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlImageProbe\u003E OnProbe {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlImageViewStatusEventArgs\u003E OnStatusChanged {get;set;}",
+      "property System.Boolean Invert {get;set;}",
+      "property System.Boolean ShowStatus {get;set;}",
+      "property System.Boolean Smooth {get;set;}",
+      "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.Object\u003E AdditionalAttributes {get;set;}",
+      "property System.Double Gamma {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageRegion\u003E Region {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindow\u003E EffectiveWindow {get;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindow\u003E Window {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E ProfileRow {get;set;}",
+      "property System.String AriaLabel {get;set;}",
+      "property System.String Class {get;set;}",
+      "property System.String ElementId {get;}",
+      "property System.String Id {get;set;}",
+      "property System.String InvalidColor {get;set;}",
+      "property System.String ProfileColor {get;set;}",
+      "property System.String RegionColor {get;set;}"
+    ]
+  },
+  {
     "name": "CanDoItAll.Components.WebGlLib.WebGlHoverState",
     "kind": "class",
     "isAbstract": false,
@@ -464,6 +502,251 @@
       "property System.Double ScreenX {get;set;}",
       "property System.Double ScreenY {get;set;}",
       "property System.String ObjectId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageDisplayMode",
+    "kind": "enum",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.Enum",
+    "members": [
+      "field System.Int32 value__",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageDisplayMode Linear",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageDisplayMode NegativeLogRatio"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageElementType",
+    "kind": "enum",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.Enum",
+    "members": [
+      "field System.Int32 value__",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType Float32",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType Float64",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType Int16",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType Int32",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType Int64",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType Int8",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType UInt16",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType UInt32",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType UInt64",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageElementType UInt8"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageElementTypes",
+    "kind": "class",
+    "isAbstract": true,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "method static System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageElementType\u003E Parse(System.String name)",
+      "method static System.String NameOf(CanDoItAll.Components.WebGlLib.WebGlImageElementType type)"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageLoadResult",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlImageLoadResult \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlImageLoadResult other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "property System.Boolean Drawable {get;set;}",
+      "property System.Boolean Ok {get;set;}",
+      "property System.Boolean Superseded {get;set;}",
+      "property System.Int32 Height {get;set;}",
+      "property System.Int32 Width {get;set;}",
+      "property System.Int64 ValidCount {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindow\u003E SuggestedWindow {get;}",
+      "property System.Nullable\u003CSystem.Double\u003E Maximum {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E Mean {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E Minimum {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E SuggestedHigh {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E SuggestedLow {get;set;}",
+      "property System.String Key {get;set;}",
+      "property System.String Message {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageProbe",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.Int32 Column, System.Int32 Row, System.Nullable\u003CSystem.Double\u003E Value, System.Nullable\u003CSystem.Double\u003E Reference, System.Boolean Invalid)",
+      "method CanDoItAll.Components.WebGlLib.WebGlImageProbe \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlImageProbe other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.Int32 Column, out System.Int32 Row, out System.Nullable\u003CSystem.Double\u003E Value, out System.Nullable\u003CSystem.Double\u003E Reference, out System.Boolean Invalid)",
+      "property System.Boolean Invalid {get;set;}",
+      "property System.Int32 Column {get;set;}",
+      "property System.Int32 Row {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E Reference {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E Value {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageRegion",
+    "kind": "struct",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.ValueType",
+    "members": [
+      "ctor(System.Double X, System.Double Y, System.Double Width, System.Double Height)",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlImageRegion other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.Double X, out System.Double Y, out System.Double Width, out System.Double Height)",
+      "property System.Boolean IsEmpty {get;}",
+      "property System.Double Height {get;set;}",
+      "property System.Double Width {get;set;}",
+      "property System.Double X {get;set;}",
+      "property System.Double Y {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageSource",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(System.String Key, System.String Url, System.Int32 Width, System.Int32 Height)",
+      "method CanDoItAll.Components.WebGlLib.WebGlImageSource \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlImageSource other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.String Key, out System.String Url, out System.Int32 Width, out System.Int32 Height)",
+      "property CanDoItAll.Components.WebGlLib.WebGlImageElementType ElementType {get;set;}",
+      "property System.Int32 Height {get;set;}",
+      "property System.Int32 Width {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageElementType\u003E ReferenceElementType {get;set;}",
+      "property System.String Key {get;set;}",
+      "property System.String Label {get;set;}",
+      "property System.String MaskUrl {get;set;}",
+      "property System.String ReferenceUrl {get;set;}",
+      "property System.String Url {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageViewStatus",
+    "kind": "enum",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.Enum",
+    "members": [
+      "field System.Int32 value__",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageViewStatus ContextLost",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageViewStatus LoadFailed",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageViewStatus Ready",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageViewStatus TooLarge",
+      "field static const CanDoItAll.Components.WebGlLib.WebGlImageViewStatus Unavailable"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageViewStatusEventArgs",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor(CanDoItAll.Components.WebGlLib.WebGlImageViewStatus Status, System.String Message)",
+      "method CanDoItAll.Components.WebGlLib.WebGlImageViewStatusEventArgs \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlImageViewStatusEventArgs other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out CanDoItAll.Components.WebGlLib.WebGlImageViewStatus Status, out System.String Message)",
+      "property CanDoItAll.Components.WebGlLib.WebGlImageViewStatus Status {get;set;}",
+      "property System.String Message {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageWindow",
+    "kind": "struct",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "System.ValueType",
+    "members": [
+      "ctor(System.Double Low, System.Double High)",
+      "method CanDoItAll.Components.WebGlLib.WebGlImageWindow Union(CanDoItAll.Components.WebGlLib.WebGlImageWindow other)",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlImageWindow other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "method System.Void Deconstruct(out System.Double Low, out System.Double High)",
+      "property System.Boolean IsValid {get;}",
+      "property System.Double High {get;set;}",
+      "property System.Double Low {get;set;}",
+      "property System.Double Width {get;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageWindowHistogram",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": false,
+    "baseType": "Microsoft.AspNetCore.Components.ComponentBase",
+    "members": [
+      "ctor()",
+      "method System.Threading.Tasks.Task NotifyStats(CanDoItAll.Components.WebGlLib.WebGlImageWindowStats stats)",
+      "method System.Threading.Tasks.Task NotifyWindowChanged(System.Double low, System.Double high)",
+      "method System.Threading.Tasks.Task NotifyWindowInput(System.Double low, System.Double high)",
+      "method System.Threading.Tasks.ValueTask DisposeAsync()",
+      "method System.Threading.Tasks.ValueTask\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindowStats\u003E GetStatsAsync()",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindow\u003E WindowInput {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindowStats\u003E StatsChanged {get;set;}",
+      "property Microsoft.AspNetCore.Components.EventCallback\u003CSystem.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindow\u003E\u003E WindowChanged {get;set;}",
+      "property System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String,System.Object\u003E AdditionalAttributes {get;set;}",
+      "property System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E LinkedViewIds {get;set;}",
+      "property System.Int32 Bins {get;set;}",
+      "property System.Int32 ScaleRevision {get;set;}",
+      "property System.Int32 ViewBoxHeight {get;set;}",
+      "property System.Int32 ViewBoxWidth {get;set;}",
+      "property System.Nullable\u003CCanDoItAll.Components.WebGlLib.WebGlImageWindow\u003E Window {get;set;}",
+      "property System.String AriaLabel {get;set;}",
+      "property System.String Class {get;set;}",
+      "property System.String CountLabel {get;set;}",
+      "property System.String Label {get;set;}",
+      "property System.String ViewId {get;set;}"
+    ]
+  },
+  {
+    "name": "CanDoItAll.Components.WebGlLib.WebGlImageWindowStats",
+    "kind": "class",
+    "isAbstract": false,
+    "isSealed": true,
+    "baseType": "",
+    "members": [
+      "ctor()",
+      "method CanDoItAll.Components.WebGlLib.WebGlImageWindowStats \u003CClone\u003E$()",
+      "method System.Boolean Equals(CanDoItAll.Components.WebGlLib.WebGlImageWindowStats other)",
+      "method System.Boolean Equals(System.Object obj)",
+      "method System.Int32 GetHashCode()",
+      "method System.String ToString()",
+      "property System.Double AboveFraction {get;set;}",
+      "property System.Double BelowFraction {get;set;}",
+      "property System.Double ScaleHigh {get;set;}",
+      "property System.Double ScaleLow {get;set;}",
+      "property System.Int64 Count {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E High {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E Low {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E Maximum {get;set;}",
+      "property System.Nullable\u003CSystem.Double\u003E Minimum {get;set;}"
     ]
   },
   {

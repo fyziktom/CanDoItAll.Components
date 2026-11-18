@@ -1,0 +1,179 @@
+/* WebGlLib image display: WebGlFloatImageView and WebGlImageWindowHistogram (js/image/webgl-image-display.js).
+   Colours follow the BaseLib theme tokens when BaseLib's stylesheet is loaded (light and dark); the fallbacks keep a
+   page without it readable. Override the --ui-webgl-image-* and --ui-webgl-histogram-* properties to restyle. */
+
+.ui-webgl-image {
+    --ui-webgl-image-height: 22rem;
+    /* A scientific image sits on a dark neutral field in both themes (the chrome palette reverses in dark mode). */
+    --ui-webgl-image-background: var(--color-neutral-900, #1c1c1f);
+    --ui-webgl-image-border: var(--tone-border-soft, rgba(127, 127, 127, 0.3));
+    position: relative;
+    display: block;
+    inline-size: 100%;
+    block-size: var(--ui-webgl-image-height);
+    min-block-size: 8rem;
+    overflow: hidden;
+    border: 1px solid var(--ui-webgl-image-border);
+    border-radius: var(--cad-radius-panel, 0.5rem);
+    background: var(--ui-webgl-image-background);
+}
+
+.ui-webgl-image__canvas {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    cursor: grab;
+    touch-action: none;
+}
+
+.ui-webgl-image.is-panning .ui-webgl-image__canvas {
+    cursor: grabbing;
+}
+
+.ui-webgl-image__status {
+    position: absolute;
+    inset: auto 0.5rem 0.5rem 0.5rem;
+    margin: 0;
+    padding: 0.375rem 0.5rem;
+    border: 1px solid var(--tone-warning-soft-border, rgba(180, 120, 0, 0.45));
+    border-radius: var(--cad-radius-panel, 0.5rem);
+    background: var(--tone-warning-soft-bg, #fff4d6);
+    color: var(--tone-warning-soft-fg, #5c3d00);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+}
+
+.ui-webgl-histogram {
+    --ui-webgl-histogram-background: var(--tone-surface-soft, #fbfbfc);
+    --ui-webgl-histogram-border: var(--tone-border-soft, #e2e6ea);
+    --ui-webgl-histogram-frame: var(--tone-text-muted, #6c757d);
+    --ui-webgl-histogram-text: var(--tone-text, #212529);
+    --ui-webgl-histogram-bar: var(--tone-primary-solid-bg, #4f6fa8);
+    --ui-webgl-histogram-clipped: var(--tone-text-muted, #8a939b);
+    --ui-webgl-histogram-window: var(--tone-danger-solid-bg, #c62f3f);
+    --ui-webgl-histogram-focus: var(--tone-primary-solid-bg, #1f5fd1);
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border: 1px solid var(--ui-webgl-histogram-border);
+    border-radius: var(--cad-radius-panel, 0.5rem);
+    background: var(--ui-webgl-histogram-background);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.ui-webgl-histogram text {
+    font-family: inherit;
+    font-size: 9px;
+    fill: var(--ui-webgl-histogram-text);
+}
+
+.ui-webgl-histogram__frame {
+    fill: none;
+    stroke: var(--ui-webgl-histogram-frame);
+    stroke-width: 0.6;
+}
+
+.ui-webgl-histogram__bars {
+    fill: var(--ui-webgl-histogram-bar);
+    fill-opacity: 0.8;
+    stroke: none;
+}
+
+.ui-webgl-histogram__clipped {
+    fill: var(--ui-webgl-histogram-clipped);
+    fill-opacity: 0.3;
+    stroke: none;
+}
+
+.ui-webgl-histogram__band {
+    fill: var(--ui-webgl-histogram-focus);
+    fill-opacity: 0.06;
+}
+
+.ui-webgl-histogram__band.is-hot,
+.ui-webgl-histogram.is-drag-band .ui-webgl-histogram__band {
+    fill-opacity: 0.14;
+}
+
+.ui-webgl-histogram__edge,
+.ui-webgl-histogram__band-key {
+    outline: none;
+}
+
+.ui-webgl-histogram__edge-line {
+    stroke: var(--ui-webgl-histogram-window);
+    stroke-width: 1.2;
+}
+
+.ui-webgl-histogram__grip {
+    fill: var(--ui-webgl-histogram-background);
+    stroke: var(--ui-webgl-histogram-window);
+    stroke-width: 1.2;
+}
+
+.ui-webgl-histogram__edge.is-hot .ui-webgl-histogram__grip,
+.ui-webgl-histogram.is-drag-low .ui-webgl-histogram__edge[data-edge="low"] .ui-webgl-histogram__grip,
+.ui-webgl-histogram.is-drag-high .ui-webgl-histogram__edge[data-edge="high"] .ui-webgl-histogram__grip {
+    fill: var(--ui-webgl-histogram-window);
+}
+
+.ui-webgl-histogram:not(.is-pointer-focus) .ui-webgl-histogram__edge:focus-visible .ui-webgl-histogram__grip {
+    stroke: var(--ui-webgl-histogram-focus);
+    stroke-width: 2;
+}
+
+.ui-webgl-histogram__band-key {
+    fill: transparent;
+}
+
+.ui-webgl-histogram:not(.is-pointer-focus) .ui-webgl-histogram__band-key:focus-visible {
+    stroke: var(--ui-webgl-histogram-focus);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 2;
+}
+
+.ui-webgl-histogram__edge-value,
+.ui-webgl-histogram__band-value {
+    visibility: hidden;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: var(--ui-webgl-histogram-background);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+}
+
+.ui-webgl-histogram.is-drag-low .ui-webgl-histogram__edge[data-edge="low"] .ui-webgl-histogram__edge-value,
+.ui-webgl-histogram.is-drag-high .ui-webgl-histogram__edge[data-edge="high"] .ui-webgl-histogram__edge-value,
+.ui-webgl-histogram:not(.is-pointer-focus) .ui-webgl-histogram__edge:focus-visible .ui-webgl-histogram__edge-value,
+.ui-webgl-histogram.is-drag-band .ui-webgl-histogram__band-value,
+.ui-webgl-histogram:not(.is-pointer-focus) .ui-webgl-histogram__band-key:focus-visible ~ .ui-webgl-histogram__band-value {
+    visibility: visible;
+}
+
+@media (forced-colors: active) {
+    .ui-webgl-image,
+    .ui-webgl-histogram {
+        border-color: CanvasText;
+    }
+
+    .ui-webgl-histogram__grip,
+    .ui-webgl-histogram__edge-line,
+    .ui-webgl-histogram__frame {
+        stroke: CanvasText;
+    }
+
+    .ui-webgl-histogram__bars {
+        fill: CanvasText;
+    }
+
+    .ui-webgl-histogram__band {
+        fill: Highlight;
+    }
+
+    .ui-webgl-histogram__edge:focus-visible .ui-webgl-histogram__grip,
+    .ui-webgl-histogram__band-key:focus-visible {
+        stroke: Highlight;
+    }
+}

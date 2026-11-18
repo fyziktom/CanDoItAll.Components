@@ -111,6 +111,15 @@
                         <SideMenuWorkspace />
                     </ExampleBlock>
                 }
+                else if (section.ComponentName == "WorkspaceTabStrip")
+                {
+                    <ExampleBlock Title="Opened workspaces"
+                                  Description="One horizontally scrolling row of opened workspaces: pinned and unsaved markers, close, a tab menu for pin, move and close others or right, an All tabs menu and Reopen for recently closed ones. The host owns the tab list; give each tab an Href so a bookmark or reload restores it."
+                                  SourceId="examples/Navigation/WorkspaceTabStripDemo.razor"
+                                  ApiTypes="@WorkspaceTabStripApiTypes">
+                        <WorkspaceTabStripDemo />
+                    </ExampleBlock>
+                }
                 else if (section.ComponentName == "ContextMenu")
                 {
                     <ExampleBlock Title="Trigger-driven context menu"
@@ -255,6 +264,7 @@
     private static readonly IReadOnlyList<Type> PageHeaderApiTypes = [typeof(PageHeader)];
     private static readonly IReadOnlyList<Type> SideMenuApiTypes = [typeof(SideMenu), typeof(SideMenuItem)];
     private static readonly IReadOnlyList<Type> ContextMenuApiTypes = [typeof(ContextMenu)];
+    private static readonly IReadOnlyList<Type> WorkspaceTabStripApiTypes = [typeof(WorkspaceTabStrip), typeof(WorkspaceTab)];
     private static readonly IReadOnlyList<Type> FilterBarApiTypes = [typeof(FilterBar)];
     private static readonly IReadOnlyList<Type> LegalTocApiTypes = [typeof(LegalToc)];
     private static readonly IReadOnlyList<Type> LegalTocNavApiTypes = [typeof(LegalTocNav)];

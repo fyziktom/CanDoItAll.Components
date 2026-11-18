@@ -4,6 +4,109 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ## [Unreleased] — 2.0.1
 
+### BaseLib dialogs return the focus to the button that opened them
+
+#### Behaviour
+
+- A `Dialog` (and so every `DialogService` dialog) closed with Escape, its close button or a result now returns the
+  focus to the button that opened it also when that button was a `Button` whose `Click` handler awaits the dialog: such
+  a button is disabled while its handler runs, which ends only after the dialog closed, so the focus fell to the page.
+  The dialog's script now waits until the button is enabled again (at most 5 s) and focuses it then, unless the focus
+  moved elsewhere meanwhile. Nothing changes for an opener that is enabled when the dialog closes.
+  Proof: IoniSim's browser test WIZ-09 (the editor's "Apply template…" dialog, closed with Escape).
+
+### BaseLib periodic table
+
+#### Public interface
+
+- Added `PeriodicTable`: the 118 elements as buttons (atomic number and symbol) on the conventional 18-column table,
+  coloured by block (s, p, d, f), with the lanthanoids La–Lu and actinoids Ac–Lr in two rows below a small gap and
+  the "57–71" / "89–103" placeholders in group 3. Bind `@bind-SelectedNumber` (atomic number, null for none) and
+  handle `ElementChosen` (`PeriodicTableChoice`: the element and `PeriodicTableChoiceSource.Table` or `List`; raised
+  on every choice, after `SelectedNumberChanged`). Pass `States` (atomic number → `PeriodicTableElementState(Available,
+  Note)`; elements without an entry are available): an unavailable element stays focusable and choosable (the host
+  decides what that means), is dashed, hatched and marked ×, carries `aria-disabled="true"`, and its note is in its
+  accessible name and tooltip (`UnavailableText` names the state). The choice is marked ✓ and `aria-pressed="true"`,
+  never by colour only. The table is one tab stop: arrow keys move to the next element in the row or the nearest one
+  in the next row, Home/End to the row's ends, Enter, Space or a click choose. `ShowSearch` (default true) adds a
+  combobox listing up to 12 matches (exact symbol, exact atomic number, then name prefixes, other spellings included).
+  `ElementTestIdPrefix` adds `data-testid` hooks (`{prefix}{Symbol}`, `{prefix}search`, `{prefix}list`,
+  `{prefix}option-{Symbol}`); element buttons always carry `data-z` and `data-symbol`. Narrow containers scroll the
+  table sideways inside the component, never the page. Existing components are unchanged.
+  Proof: Sandbox `/data-display#periodic-table`.
+- Added `PeriodicTableElements` (`All`, `ByNumber`, `BySymbol`, `Search`) and `PeriodicTableElement` (`AtomicNumber`,
+  `Symbol`, `Name`, `Period`, `Group`, `Block`, `Row`, `Column`, `OtherName`) with the current IUPAC symbols and
+  English names (aluminium, caesium, sulfur; Nh, Mc, Ts, Og). Layout choice: IUPAC's conventional table, so all
+  fifteen lanthanoids and actinoids (including La, Lu, Ac and Lr) sit in display rows 9 and 10, columns 3–17, with
+  `Group` 0 and `Block` 'f'; helium is 's'. Hosts preferring the Lu/Lr-in-group-3 convention can classify by
+  `AtomicNumber` themselves.
+
+#### Internal
+
+- Added `Tailwind/data-display/periodic-table.css` (`.ui-periodic-table*`, theme tokens only: the soft info, success,
+  warning and danger tones colour the s, p, d and f blocks; a forced-colours rule keeps the focus and the choice
+  visible) and the colocated `PeriodicTable.razor.js` (moves the focus; keeps the handled keys from scrolling the
+  page and Enter in the search field from submitting a form). No inline event-handler attributes, so a strict
+  Content Security Policy keeps the behaviour.
+
+### BaseLib tabs under a strict Content Security Policy
+
+#### Public interface
+
+- `Tabs` now implements `IAsyncDisposable` to release its browser module; the renderer disposes it, so consumers need
+  no change.
+
+#### Internal
+
+- Changed `Tabs` to keep its navigation keys (the arrows along its `aria-orientation`, Home, End and Space) from
+  scrolling the page through a listener added by the colocated `Tabs.razor.js` instead of an inline `onkeydown`
+  attribute, which a strict Content Security Policy (`script-src 'self'`) refuses. Same keys and behaviour. The guard
+  is an enhancement only: a refused or unavailable module (prerendering, a closed circuit, a strict bUnit renderer)
+  is ignored and selection still works.
+
+### WebGlLib float image view and display-window histogram
+
+#### Public interface
+
+- Added `WebGlFloatImageView`: raw sample planes (`WebGlImageSource` with `WebGlImageElementType` float, signed and
+  unsigned integers; optional invalid-pixel mask and reference plane) drawn with WebGL2 through a display window
+  (`WebGlImageWindow`), gamma, inversion and smoothing, as the samples or as `WebGlImageDisplayMode.NegativeLogRatio`
+  against the reference. It outlines a `WebGlImageRegion` and a profile row, pans, zooms and fits on double-click,
+  reports the pixel under the pointer (`OnProbe`), load results with statistics and a suggested window (`OnLoaded`,
+  `SuggestWindowAsync`) and what it can draw (`OnStatusChanged`: no WebGL2, a lost context, too large, a failed load —
+  values and statistics stay available). Display only: samples are never changed.
+- Added `WebGlImageWindowHistogram`: the histogram of a view's displayed values (linked by `ViewId`, further views by
+  `LinkedViewIds`) on a scale that stays while the window changes; edges and the window are dragged or stepped with
+  keys, linked views follow in the browser, `WindowChanged` (bindable) reports the committed window, `WindowInput`
+  the moving one, `StatsChanged` the fractions below and above it; `ScaleRevision` refits the scale.
+- Added `WebGlImageElementTypes` (descriptor names), `WebGlImageLoadResult`, `WebGlImageProbe`,
+  `WebGlImageViewStatus(EventArgs)` and `WebGlImageWindowStats`. Existing WebGlLib components are unchanged.
+  Proof: WebGlSandbox `/image-view`.
+
+#### Internal
+
+- Added the ES module `wwwroot/js/image/webgl-image-display.js` (loaded on demand by both components; read-only
+  proof hooks on `window.CanDoItAll.webglImage`), `wwwroot/css/image/webgl-image.css` (`.ui-webgl-image*`,
+  `.ui-webgl-histogram*`, BaseLib theme tokens with fallbacks, forced-colours rules) in the asset manifest, so
+  `WebGlLibHeadAssets` links it, and `InternalsVisibleTo` for the WebGlLib tests.
+
+### BaseLib workspace tab strip
+
+#### Public interface
+
+- Added `WorkspaceTabStrip` with `WorkspaceTab` and `WorkspaceTabStripDensity` for a single, horizontally scrolling
+  row of opened workspaces. A tab with `Href` is a link (the host maps the new location back to its tab, so bookmarks
+  and reloads restore it; Ctrl+click opens a browser tab); without `Href` it raises `Activate`. It shows unsaved and
+  pinned markers, a close control (`Close`), a tab menu offering only the handled commands (`TogglePin`, `MoveLeft`,
+  `MoveRight`, `CloseOthers`, `CloseToRight`), an "All tabs" menu from `OverviewThreshold` open tabs and a Reopen menu
+  for `RecentItems` (`Reopen`, `ClearRecent`). The host owns the tab list and its persistence; existing components are
+  unchanged. Proof: Sandbox `/navigation#workspace-tab-strip`.
+
+#### Internal
+
+- Added `Tailwind/navigation/workspace-tab-strip.css` (`.ui-workspace-tabs*`, theme tokens only) and the colocated
+  `WorkspaceTabStrip.razor.js` (menu anchoring for keyboard and pointer, scrolling the shown tab into view).
+
 ### CanvasLib composer editing
 
 #### Internal
