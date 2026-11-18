@@ -4,6 +4,17 @@ All notable changes to this repository's packages are recorded here, per the cha
 
 ## [Unreleased] — 2.0.1
 
+### BaseLib dialogs return the focus to the button that opened them
+
+#### Behaviour
+
+- A `Dialog` (and so every `DialogService` dialog) closed with Escape, its close button or a result now returns the
+  focus to the button that opened it also when that button was a `Button` whose `Click` handler awaits the dialog: such
+  a button is disabled while its handler runs, which ends only after the dialog closed, so the focus fell to the page.
+  The dialog's script now waits until the button is enabled again (at most 5 s) and focuses it then, unless the focus
+  moved elsewhere meanwhile. Nothing changes for an opener that is enabled when the dialog closes.
+  Proof: IoniSim's browser test WIZ-09 (the editor's "Apply template…" dialog, closed with Escape).
+
 ### BaseLib periodic table
 
 #### Public interface
